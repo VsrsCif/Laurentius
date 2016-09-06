@@ -1,0 +1,546 @@
+<div class ="sidebar" >    
+    <h2>Kazalo:</h2>
+    <ul>
+        <li><a href="#home:purpose">Namen</a><br  /></li>
+        <li><a href="#home:dataexchange">Izmenjava dokumentov in podatkov</a><br  /></li>
+        <li><a href="#home:whyebms">Zakaj ebMS 3.0 (AS4 profil)</a><br  /></li>
+        <li><a href="#home:b2b-protocols">Primerjava obstoječih B2B protokolov</a><br  /></li>
+
+    </ul>
+</div>
+<div class="main">
+    <article class='content'>
+        <h1 id="home:purpose">Namen</h1>
+
+        Namen aplikacije <b>Laurentius</b> je primer uporabe obstoječih odprtokodnih tehnologij za implementacijo 
+        <a href="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/core/ebms_core-3.0-spec.html" >ebMS 3.0 protokola</a> za 
+        izmenjavo elektronskih dokumentov in podatkov.  Namen je tudi predstavljen v prosojnicah na <a href="documents/Prosojnice-SVEV-izvajalci_v01.pdf">tej povezavi. </a>
+
+        <h1 id="home:dataexchange">Izmenjava dokumentov in podatkov</h1>
+
+        Elektronska izmenjava podatkov med podjetji in organizacijami ni novost v modernem
+        poslovanju. V preteklosti je nastalo veliko standardov, ki urejajo elektronsko izmenjavo
+        podatkov. Starejši standardi so večinoma namenski in se osredotočajo na obliko zapisa in tipe
+        podatkov, ki jih vsebujejo sporočila, da so primerni za avtomatizirano obdelavo. Ker so bile
+        integracije informacijskih sistemov izdelane po meri in v omejenem številu, problemi izdelave novih integracij,  
+        varnosti, zanesljivosti, ..., niso tako izraziti. Prednosti elektronske izmenjave podatkov spodbujajo nova povezovanja s
+        partnerji, s katerimi elektronsko poslovanje še ni vzpostavljeno. Z rastjo števila partnerjev s
+        katerimi se elektronsko izmenjuje podatke, postane smotrno iskanje rešitve, ki omogoča na enoten način:
+        <ul>
+            <li>zagotavljanje pristnosti sporočil;</li>
+            <li>identifikacija pošiljatelja sporočila;</li>
+            <li>varnost prenosa sporočil;</li>
+            <li>zanesljivost prenosa sporočil;</li>
+            <li>dokazljivost prenosa;</li>
+            <li>parametrizirano nastavljanje različnih koreografij vročanja;</li>
+            <li>vročanje različnih oblik datotek;</li>
+            <li>enostavno dodajanje in spreminjanje novih uporabnikov in izvajalcev storitev;</li>
+            <li>uporaba samo odprtih, dobro dokumentiranih, splošno uporabnih standardih in tehnologij;</li>
+        </ul>
+
+        Enotna rešitev pomeni:
+        <ul>
+            <li>večja transperentnost pri izmenjavi podatkov;</li>
+            <li>cenejše vzdrževanje integracij;</li>
+            <li>nižji stroški izdelave  novih integeracije;</li>
+            <li>večja povezljivost.</li>
+        </ul>
+
+        <img src="img/purpose.png" alt="Purpose" width="680"/>
+
+        <h1 id="home:whyebms">Zakaj ebMS 3.0 (AS4 profil)</h1>
+
+        <table>
+            <thead><td><center><b>Prednosti</b></center></td><td><center><b>Slabosti</b></center></td></thead>
+            <tr><td>
+                    <ul>                    
+                        <li>Odprti/zastonjski standard</li>
+                        <li>Združuje obstoječe spletne standarde za varnost ( WS-Security), zanesljivost:( WS-RM),..</li>
+                        <li>SOAP s priponkami</li>
+                        <li>Bogate izkušnje B2B ebMS 2.0</li>
+                        <li>Vsebina in transportni podatki  so ločeni </li>
+                        <li>Omogoča poslovne transakcije</li>
+                        <li>Uporabljajo jih zadnji evropski projekti velikih razsežnost (LSP) e-CODEX, e-SENS</li>
+                        <li>Holodeck-b2b alternativa: WS-Standardi: apache-cxf, axis 2.0, apache-camel )</li>
+                        <li>Manjši stroški pri vzpostavljanju elektronskega poslovanja z več različnimi partnerji</li>
+                    </ul>
+                </td><td style="vertical-align: text-top;">
+                    <ul>                    
+                        <li>Malo odprtih rešitev/tehnologij, ki podpirajo, ta standard.</li>
+                        <li>Sheme sporočil, niso del opisa servisa (implementacija: avtomatsko generiranje klienta)</li>
+                        <li>Večji začetni stroški vzpostavitve sistema.</li>
+                </td>
+            </tr>
+        </table>
+
+        <H1 id="home:b2b-protocols" >Primerjava obstoječih B2B protokolov</H1>
+        <h4>Jože Rihtaršič, 12.2.2016</h4><br/>
+        <p><BR />
+        </p>
+        <p>Danes obstaja paleta B2B standardov in
+            tehničnih rešitev, ki omogočajo elektronsko poslovanje. Standardi
+            za računalniško izmenjavo podatkov (angl. <I>Electronic data
+                interchange</I>) so v uporabi že več kot 30 let in omogočajo
+            elektronsko poslovanje med različnimi podjetji. Standardi, kot so
+            UN/EDIFACT, ANSI ASC X12, trADACOMS in ODDETTE, so se razvijali in
+            uporabljali v posameznih industrijah in/ali v posameznih regijah.
+            Elektronsko poslovanje je potekalo predvsem na podlagi sklenjenih
+            individualnih pogodb oz. na način: vsak z vsakim (angl. <I>Peer to
+                peer</I>, v nadaljevanju P2P) (EDI, b.l.). Praviloma je standard
+            določal dve komponenti: 
+        </p>
+        <p><BR />
+        </p>
+        <UL>
+            <LI><p><SPAN LANG="sl-SI">transport</SPAN><SPAN LANG="sl-SI"><SPAN STYLE="background: transparent">
+                            z uporabo protokolov FTP, SMTP, HTTP ali preko zaprtih omrežij z
+                            dodano vrednostjo</SPAN></SPAN><SPAN LANG="sl-SI"> (angl. </SPAN><SPAN LANG="sl-SI"><I>Value
+                            added networks</I></SPAN><SPAN LANG="sl-SI">, v nadaljevanju VAN). </SPAN>
+                </p>
+            <LI><p>nabor, obliko in semantiko
+                    sporočil, ki pokrivajo specifičnosti industrij<SPAN STYLE="background: transparent">e,
+                        kateri je standard namenjen.</SPAN> 
+                </p>
+        </UL>
+        <p><BR />
+        </p>
+        <p>Standard AS1 je bil eden prvih, ki je
+            zagotavljal avtentičnost sporočil s pomočjo elektronskih podpisov,
+            omogočal šifriranje sporočil ter zagotavljal sledljivost sporočil
+            skladno z MDN konvencijo (angl. <I>Message disposition notification</I>),
+            določeno v standardu RFC3795. Standard temelji na protokolih SMTP in
+            S/MIME. Razlika med starejšimi RIP standardi in AS1 je v
+            osredotočenosti slednjega na pravno-veljavni transport sporočil in
+            v tem, da se ne spušča v vsebino sporočil. Standard AS2 ravno tako
+            kot AS1 predpisuje izvedbo transporta s pomočjo elektronskih
+            podpisov in šifriranja sporočil ter temelji na protokolih
+            HTTP/HTTPS in S/MIME standardu (AS1 Networking, b.l.).</p>
+        <p><BR />
+        </p>
+        <p>WSDL sam po
+            sebi ni transportni protokol, temveč je standard za zapis spletnih
+            storitev (angl. <I>Web Services Description Language</I>). Z izrazom
+            standard WSDL se v nadaljevanju označuje izmenjava SOAP sporočil s
+            „po meri“ narejenim protokolom, ki ga določa WSDL zapis
+            (Bundesministerium für Justiz Austria, &amp; Ministerio de la
+            Justicia Spain, 2012). WSDL vmesniki so danes splošno v uporabi pri
+            integraciji različnih informacijskih sistemov. Priljubljeni so
+            zaradi velike palete programskih ogrodij v različnih programskih
+            jezikih, ki podpirajo enostavne integracije na podlagi WSDL
+            vmesnikov, pa tudi zato, ker so sporočila zapisana na način, ki
+            omogoča enostavno urejanje, oblikovanje in preverjanje pravilnosti
+            podatkov. 
+        </p>
+        <p><BR />
+        </p>
+        <P ALIGN=CENTER ><I>Tabela 1: Primerjava
+                B2B standardov</I></p>
+        <P ALIGN=CENTER ><BR />
+        </p>
+        <table WIDTH="680" CELLPADDING="0" CELLSPACING="0" class="styled-table">
+
+            <tr>
+                <td>
+                    <p ALIGN=CENTER><b>Funkcionalnosti/standardi</b></p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER><b>ebMS</b></p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER><b>AS1/AS2</b></p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER><b>RIP standardi</b></p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER><b>WSDL</b></p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER><b>WS-I</b></p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p ALIGN=CENTER STYLE="font-weight: normal">Javno dostopna
+                        specifikacija</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✓</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✓</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✓</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✓</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✓</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p ALIGN=CENTER STYLE="font-weight: normal">Omogoča prenos RIP
+                        sporočil</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✓</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✓</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✓</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✗</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✗</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p ALIGN=CENTER STYLE="font-weight: normal">Omogoča prenos XML
+                        sporočil</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✓</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✓</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✓</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✓</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✓</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p ALIGN=CENTER STYLE="font-weight: normal">Omogoča prenos PDF in
+                        ostalih binarnih vsebin</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✓</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✓</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✓</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✓</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✓</p>
+                </td> 
+            </tr>
+            <tr>
+                <td>
+                    <p ALIGN=CENTER STYLE="font-weight: normal">Varni prenos sporočil
+                        z avtentikacijo</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✓</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✓</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>delno</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✓</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✓</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p ALIGN=CENTER STYLE="font-weight: normal">Vgrajeni mehanizmi za
+                        zanesljiv prenos sporočil</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✓</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER><FONT SIZE=2><SPAN STYLE="background: transparent">V
+                            izdelavi</SPAN></p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>delno</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✗</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✓</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p ALIGN=CENTER STYLE="font-weight: normal">Možnost izdelave
+                        pravno veljavnega potrdila o prenosu</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✓</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✗</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>delno</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✗</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✗</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p ALIGN=CENTER STYLE="font-weight: normal">Vgrajen mehanizem
+                        logiranja in sledenja 
+                    </p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✓</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✓</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✓</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✗</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✓</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p ALIGN=CENTER STYLE="font-weight: normal">Omogoča določanje
+                        poslovnih procesov</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✓</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✗</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✗</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✗</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>delno</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p ALIGN=CENTER STYLE="font-weight: normal">Možnost uporabe vlog
+                        in akcij v transportnem delu sporočila</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✓</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✗</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✗</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✗</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✗</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p ALIGN=CENTER STYLE="font-weight: normal">Obstajajo ogrodja za
+                        preverjanje skladnosti rešitev</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✓</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✓</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✗</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✗</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✓</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p ALIGN=CENTER STYLE="font-weight: normal">Uporaba digitalnih
+                        certifikatov digitalnega šifriranja</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✓</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✓</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✓</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✓</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✓</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p ALIGN=CENTER STYLE="font-weight: normal">Podpora za XML
+                        šifriranje</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✓</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER><BR />
+                    </p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER STYLE="font-weight: normal">✗</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✓</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✓</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p ALIGN=CENTER STYLE="font-weight: normal">Obstajajo odprtokodne
+                        rešitve</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✓</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✓</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER STYLE="font-weight: normal">✗</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✓</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✓</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p ALIGN=CENTER STYLE="font-weight: normal">Možnost sinhrone in
+                        asinhrone izmenjave sporočil</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✓</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>AS2</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✗</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✗</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✗</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p ALIGN=CENTER STYLE="font-weight: normal">Možnost uporabe
+                        spodaj ležečega protokola SMTP</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✓</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✓</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✓</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✗</p>
+                </td>
+                <td>
+                    <p ALIGN=CENTER>✗</p>
+                </td>
+            </tr>
+        </table>
+        <P ALIGN=CENTER ><I><BR />Vir:
+                OASIS, Comparing ebXML messaging (ebMS) AS2 for EDI, EDI VAN and Web
+                Service messaging, 2007a.</I></p>
+
+        <p>Interoperabilnostni profili za spletne
+            storitve <SPAN STYLE="background: transparent">WS-I sklad </SPAN>vključujejo
+            najboljše prakse in pravila za uporabo različnih spletnih
+            standardov za zanesljiv in varen prenos, naslavljanje, dodajanje
+            priponk itd. Problem WS-I sklada je v tem, d<SPAN STYLE="background: transparent">a
+                je presplošen </SPAN>za konkretno uporabo. LSP projekta
+            PEPPOL in SPOCS sta zato predpisala dodatne omejitve uporabe teh
+            standardov za interoperabilno pravno-veljavno izmenjavo dokumentov
+            (Bundesministerium für Justiz Austria &amp; Ministerio de la
+            Justicia Spain, 2012).</p>
+        <p><BR />
+        </p>
+        <p>Protokol ebMS 3.0 temelji na spletnih
+            standardih: SOAP 1.1 in 1.2 (z možnostjo prenosa priponk), Web
+            Services Security: SOAP Message Security 1.0 in 1.1, WS-Reliability
+            1.1, WS-ReliableMessaging 1.1, WS-Attachment in je transportna
+            komponenta standarda ebXML 3.0 za celovito B2B komunikacijo. Za
+            razliko od svojega predhodnika ebXML 2.0 je ebXML 3.0 popolnoma
+            skladen z WS-I skladi. Prednost ebMS 3.0 pred ebMS 2.0 je tudi, da so
+            transportni metapodatki izvzeti iz vsebinskega dela SOAP sporočila
+            ter prestavljeni v zaglavne bloke SOAP sporočila. Ločitev
+            vsebinskih in transportnih podatkov je ebMS 3.0 naredilo
+            komunikacijsko nevtralen, primeren za transport različnih vrst
+            datotek (OASIS, 2007a; Bundesministerium für Justiz Austria, &amp;
+            Ministerio de la Justicia Spain, 2012). Standard ebMS 3.0 tako
+            zagotavlja varnost, zanesljivost in dokazljivost prenosa različnih
+            oblik datotek, hkrati pa omogoča različne poslovne transakcije
+            (Tabela 1).</p>
+
+        <h3>Viri in literatura</h3>
+
+        <ul>
+            <li>EDI (b.l.). V Wikipediji. Najdeno 17. aprila 2015 na spletnem naslovu http://en.wikipedia.org/wiki/Electronic_data_interchange</li>
+            <li>AS1 Networking (b.l.). V Wikipediji. Najdeno 17. aprila 2015 na spletnem naslovu http://en.wikipedia.org/wiki/AS1_%28networking%29</li>
+            <li>Bundesministerium für Justiz Austria, & Ministerio de la Justicia Spain. (2012). e-CODEX: Deliverable 5.3 Concept of Implementation. Najdeno 15. maja. 2015 na spletnem naslovu http://www.e-codex.eu/fileadmin/user_upload/media/deliverables/e-CODEX D5.3 Concept of Implementation v1.pdf</li>
+            <li>Organization for the Advancement of Structured Information Standards-OASIS. (2007a). Comparing ebXML messaging (ebMS) AS2 for EDI, EDI VAN and Web Service messaging (prosojnice). Najdeno 17. aprila 2015 na spletnem naslovu http://www.oasis-open.org/committees/download.php/23458/Comparing%20messaging%20systems%20for%20B2B.pdf </li>
+
+        </ul>
+
+    </article>
+</div>

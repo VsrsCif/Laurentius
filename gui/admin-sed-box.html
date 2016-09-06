@@ -1,0 +1,117 @@
+<div class ="sidebar" >    
+    <h2>Kazalo:</h2>
+    <ul >
+        <li><a href="#/gui/Laurentius:application" >Aplikacija Laurentius</a>
+            <ul style="padding-left: 23px">
+                <li><a href="#gui/Laurentius:login"  >Prijavno okno</a></li> 
+                <li><a href="#gui/Laurentius:workspace" >Delavno okolje</a></li> 
+                <li><a href="#gui/Laurentius:tools" >Sklopi orodij</a></li> 
+            </ul></li>
+        <li><a href="#gui/admin-sed-box:admin" >Administracija: SED-predali</a>
+            <ul style="padding-left: 23px">            
+                <li><a href="#gui/admin-sed-box:add-edit" >Urejanje SED-predala</a></li> 
+                <li><a href="#gui/admin-sed-box:export" >Izvoz dohodne pošte</a></li> 
+                <li><a href="#gui/admin-sed-box:execute" >Izvajanje procesov</a></li> 
+
+            </ul>
+        <li><a href="#gui/admin-sed-user" >Administracija: Uporabniki</a>
+            <ul style="padding-left: 23px">            
+                <li><a href="#gui/admin-sed-user:user" >Seznam uporabnikov</a></li> 
+                <li><a href="#gui/admin-sed-user:add-edit" >Urejanje uporabnika</a></li> 
+            </ul>
+        </li>
+        <li><a href="#gui/admin-keystore" >Administracija: Certifikati</a>
+            <ul style="padding-left: 23px">            
+                <li><a href="#gui/admin-keystore:list" >Seznam shramb</a></li> 
+                <li><a href="#gui/admin-keystore:add-edit" >Urejanje shrambe</a></li> 
+            </ul>
+        </li>
+        <li><a href="#gui/admin-sed-tasks" >Administracija opravil</a>
+            <ul style="padding-left: 23px">            
+                <li><a href="#gui/admin-sed-tasks:list" >Seznam tipov opravil</a></li> 
+                <li><a href="#gui/admin-sed-tasks:add-edit" >Dodajanje, urejanje tipa opravila</a></li> 
+                <li><a href="#gui/admin-sed-tasks:cron-add-edit" >Dodajanje, urejanje urnika opravil</a></li> 
+                <li><a href="#gui/admin-sed-tasks:backup" >Opravilo: varnostna kopija</a></li> 
+                <li><a href="#gui/admin-sed-tasks:archive" >Opravilo: arhiv</a></li> 
+                <li><a href="#gui/admin-sed-tasks:report" >Opravilo: poročilo</a></li> 
+                <li><a href="#gui/admin-sed-tasks:zpp-plugin" >Opravilo: Vročanje ZPP</a></li> 
+            </ul>
+        </li>
+        <li><a href="#gui/admin-plugin" >Administracija dodatkov</a>
+            <ul style="padding-left: 23px">            
+                <li><a href="#gui/admin-plugin:list" >Seznam dodatkov</a></li> 
+                <li><a href="#gui/admin-plugin:add-edit" >Dodajanje, urejanje dodatka</a></li> 
+
+            </ul>
+        </li>
+        <li><a href="#pmode/pmode" >Administracija: PMODE</a></li>
+    </ul>
+</div>
+<div class="main">
+    <article class='content'>
+       <h1 id="gui/admin-sed-box:admin">Admin sedbox</h1>
+       Administracija <b>SED predalov</b> (SED-Box) se nahaja v sklopu orodij <b>Nastavitve</b>
+       (Settings) orodje SED-Predal (SED-Box). Urejanje predalov omogoča določanje aktivnosti, 
+       lastnosti izvoza dohodne pošte in parametre izvajanja procesov ob dohodni pošti.
+       <h2 id="gui/admin-sed-box:sedbox">SED-box</h2>
+       Orodje <b>SED-Box</b> prikazuje seznam predalov, ki so določeni v Laurentius.
+       V orodni vrstici seznama so gumbi za dodajanje spreminjanje in brisanje e-predala.<br /><br />
+       <img src="img/gui/sb-list.png" alt="SEDBox admin" width="680"/> <br />
+       <br />
+       Ob kliki na gumb <b>Dodaj</b>(add),  <b>Uredi</b>(Edit) ali dvojnem kliku na izbrano 
+       vstico se prikaže dialog za dodajanje/urejanje predala.<br /><br />
+       <center>
+        <img src="img/gui/sb-edit.png" alt="SEDBox admin" width="500"/> <br />
+       </center><br />
+       <h2 id="gui/admin-sed-box:add-edit">Dodajanje, urejanje SED-predala</h2>      
+       <ul>
+           <li><b>SED-Predal(SED-box):</b> ob dodajanju novega predala se določi predpona predala (tomi.novak oz. racunovodstvo, kar izdela 
+               predala tomi.novak@sed-domena.si oz. racunodstvo@sed-domena.si). Pripona oz. domena predala je določena v nastavitvah Laurentius aplikacije.
+               <b>Predpona predala mora biti enolična.</b></li>
+           <li><b>Pričetek aktivnosti (Active from date):</b> parametere določa datum, ko je postal aktiven. Če je datum v prihodnost, 
+               je prispela pošta za ta predal vrnjena z napako: naslovnik ne obstaja oz. je neaktiven </li>
+           <li><b>Konec aktivnosti (Active to date):</b> parametere določa datum, ko je postal predal ne-aktiven. Po tem datumu je prispela 
+               pošta za ta predal vrnjena z napako: naslovnik ne obstaja oz. je neaktiven. Ko je predal označen kot neaktive se ga
+           ne da več aktivirati!</li>
+       </ul>
+       <h2 id="gui/admin-sed-box:export">Izvoz dohodne pošte</h2>
+       
+       Parametri določajo lastnosti izvoza pošiljke na datotečni sistem. Avtomatski izvoz je namenjen 
+       lažjemu prevzemanju dohodne pošte v zaledne sisteme in je narejen kot alternativa prevzemanju 
+       dohodne pošte preko spletnih servisov.<br />
+       Vnosna polja za nastavitve izvoza:<br />
+       <ul>
+           <li><b>Izvozi metapodatke(Export metadata):</b> ob izvozu se shranjujo tudi metapodatki dohodne pošte. 
+               Metapodatki so v xml obliki in so narejeni po shemi <a href="">msh-out-mail.xsd</a></li>
+           <li><b>Maska datoteke(FileMask):</b> določa obliko imena datoteke npr: <code >${Id}_${SenderEBox}_${Service}</code>.
+               V maski so lahko uporabljeni parametri dohodne pošiljke, ki so v shemi: <b>msh-out-mail.xsd</b>.</li>
+           <li><b>Mapa izvoza(Folder):</b>  določa izvozno mapo npr: <code>c:\sed-export</code> ali <code>${sed-home}\sed-export</code></li>
+       </ul>
+
+        <h2 id="gui/admin-sed-box:execute">Izvajanje procesov</h2>
+       Ob prispetju dohodne pošte se lahko določi zaganjanje skript oz. aplikacij. Zaganjanje procesov se izvaja preko vrste 
+       SEDExecutionQueue vrste, kjer se v nastavitvah določi maksimalno število sočasnih procesov. S tem je zagotovljeno 
+       obladovanje večjih obremenitev ob povečanemu številu dohodnih pošiljk. <br />
+       Vnosna polja za nastavitve zaganjanje procesov<br />
+       <ul>
+           <li><b>ukaz(Command):</b> je pote do skripte oz aplikacije <code>c:\export-script.bat</code> oz. 
+               <code>${sed.home}\scripts\export-appl.exe</code>. </li>
+           <li><b>Parametri: (parameters)</b> kot prvi parameter je vedno sezmam datotek v dohodni pošti 
+               (Poti so ločeni znakom za ločevanje poti kot ga določa OS: windows: ';', Linux: ':'), nato sledijo
+               parametri določeni v tej lastnosti. Parametri so lahko fiksni oz. parametri dohodne pošte, npr:
+               <code >${Id} ${SenderEBox} ${Service}</code> </li>           
+       </ul>
+       Primer zagona skripte: za <br />
+       
+       <ul>
+           <li>Izvoz: Maska datoteke: <code>${Id}_${Service}</code> </li>
+           <li>Izvoz: Mapa izvoza: <code>c:\export\</code> </li>
+           <li>Proces: ukaz: <code>c:\export-script.bat</code> </li>
+           <li>Proces:Parametri: <code>${Id} ${SenderEBox} ${Service}</code> </li>
+       </ul>
+       <code>
+       c:\export-script.bat c:\export\1_service_1.xml;c:\export\1_service_2.pdf 1 racunovodstvo@sed-domena.si service
+       </code>
+
+    </article>  
+</div>

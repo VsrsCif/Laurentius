@@ -1,0 +1,109 @@
+<div class ="sidebar" >    
+    <h2>Kazalo:</h2>
+ <ul>
+        <li><a href="#install:quickwildfly">Hitra namestitev na aplikacijski strežnik wildfly</a><br  /></li>
+        <li><a href="#install/build:start">Izgradnja aplikacije Laurentius</a><br  /></li>
+        <li><a href="#install/wildfly:start">Namestitev na aplikacijski strežnik wildfly</a><br  /></li>
+    </ul>
+</div>
+<div class="main">
+    <article class='content'>
+
+   
+
+        <h1 id="install/build:start">Izgradnja</h1>
+
+        Projekt Laurentius je sestavljen s pomočjo <a href="https://maven.apache.org/">maven 3.x</a> tehnologije. 
+        Za izgradnjo aplikacije je potrebno imeti nameščeno java 1.8+ in maven 3.x.<br /> Aplikacija uporablja 
+        Java Cryptography Extension (JCE). Za pravilno izgradnjo in delovanje je potrebno namestiti dodatek z varnostnimi pravili
+        "Java Cryptography Extension (JCE) Unlimited Strength" v mapo: "<java-home>/lib/security".  <br />
+            Dodatek je za javo 1.8 dosegljiv na naslovu:  http://www.oracle.com/technetwork/java/javase/downloads/jce8-download-2133166.html.            
+            <br /><br />
+            Na spletnem naslovu:  <a href="https://github.com/VsrsCif/Laurentius">https://github.com/VsrsCif/Laurentius</a> prenesi izvorno kodo lokalno na disk. 
+            (Priporočamo z klikom na Gumb <b>DownloadZip</b>. Preneseni arhiv Laurentius-master.zip odpakiraj v mapo "Laurentius-master".)<br />
+            V ukazni vrstici (linux: bash, windows: cmd), se postavi v odpakirano mapo in poženi maven ukaz za izgradjo aplikacije:
+            <pre><code>mvn clean install</code></pre>
+            Komponente so uspešno izgrajene, ko se na zaslonu izpiše:
+            <pre><code>    
+Reactor Summary:
+Laurentius ...................... SUCCESS [0.794s]
+ebms-msh-xsd .................. SUCCESS [0.265s]
+Laurentius-wsdl ................. SUCCESS [0.176s]
+Laurentius-commons .............. SUCCESS [0.069s]
+ebms-msh-libs ................. SUCCESS [0.004s]
+Laurentius-dao .................. SUCCESS [0.034s]
+Laurentius-ws ................... SUCCESS [0.028s]
+Laurentius-web .................. SUCCESS [0.066s]
+Laurentius-module ............... SUCCESS [0.007s]
+ebms-msh-cxf .................. SUCCESS [0.023s]
+ebms-msh-ejb .................. SUCCESS [0.010s]
+ebms-msh-ws ................... SUCCESS [0.008s]
+ebms-msh-ear .................. SUCCESS [0.007s]
+ebms-msh-module ............... SUCCESS [0.002s]
+Laurentius-zpp-plugin ........... SUCCESS [0.126s]
+Laurentius-plugins .............. SUCCESS [0.004s]
+------------------------------------------------
+BUILD SUCCESS
+------------------------------------------------------------------------
+</code></pre>
+
+            Po kočnani izgradnji so narejeni naslednji moduli:
+            <ul>
+                <li><b>Laurentius-dao.jar</b>: implementacija skupnih storitev za shranjevanje in branje entitet.            
+                    <br />Modul se nahaja v podmapi:<br /><code>Laurentius-dao/target/Laurentius-dao.jar</code></li>                
+                <li><b>ebms-msh.ear</b>: implememntacija spletnih ebMS 3.0 storitev za izmenjavo ebMS 3.0 sporočil med MSH moduli. Sporočila so 
+                    podpisana/kriptirana skladno z p-mode konfiguracijo.<br />Po uspešni namestivti na lokalni računalnik, so storitve dostopne na naslovu:
+                    <a href="http://localhost:8080/Laurentius/ebms?wsdl">http://localhost:8080/Laurentius/ebms?wsdl</a>.
+                    <br />Modul se nahaja v podmapi: <br /><code>ebms-msh-module/ebms-msh-ear/target/ebms-msh.ear</code>                
+                </li>
+                <li><b>Laurentius-ws.war</b>: implementacija spletnih storitev za integracijo z zalednimi sistemi. 
+                    Po uspešni namestitvi so storitve dostopne na naslovu: 
+                    <a href="http://localhost:8080/Laurentius-ws/sed-mailbox?wsdl">http://localhost:8080/Laurentius-ws/sed-mailbox?wsdl</a>.
+                    <br />Modul se nahaja v podmapi: <br /><code>Laurentius-module/Laurentius-ws/target/Laurentius-ws.war</code></li>            
+                <li><b>Laurentius-webgui.war</b>: implementacija spletnega vmesnika za nadzor delovanja aplikacije.
+                    Po uspešni namestitvi je aplikacija dostopna na naslovu: 
+                    <a href="http://localhost:8080/Laurentius-webgui/">http://localhost:8080/Laurentius-webgui/</a>.            
+                    <br />Modul se nahaja v podmapi:<br /><code>Laurentius-module/Laurentius-web/target/Laurentius-webgui.war</code></li>                
+                <li><b>plugin-zpp.war.war</b>: implementacija ZPP plugin modula, ki je implementacija SVEV 2.0 koreografijo izmenjave sporočil.
+                    Po uspešni namestitvi so administracijske strani dostopne: 
+                    <a href="http://localhost:8080/Laurentius-webgui/">http://localhost:8080/zpp-plugin/</a>.
+                    <br />Modul se nahaja v podmapi:<br /><code>Laurentius-module/Laurentius-web/target/Laurentius-webgui.war</code></li>                
+            </ul>
+            Po kočnani izgradnji so narejeni naslednje skupne knjižnice:
+            <ul>
+                <li><b>ebms-msh-xsd-1.0.jar</b>: v knjižnici so generirani java objekti izgrajenih iz shem: SOAP_1.1.xsd (http://schemas.xmlsoap.org/soap/envelope/)
+                    ,SOAP_1.2.xsd (http://www.w3.org/2003/05/soap-envelope/), xml.xsd (http://www.w3.org/2001/03/xml.xsd)
+                    , ebms-header-3_0-200704.xsd (http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/core/ebms-header-3_0-200704.xsd)
+                    , ebbp-signals-2.0.xsd  (http://docs.oasis-open.org/ebxml-bp/2.0.4/ebbp-signals-2.0.4.xsd)
+                    , xenc-schema.xsd  (http://www.w3.org/TR/xmlenc-core/xenc-schema.xsd)
+                    , xmldsig-core-schema.xsd (http://www.w3.org/TR/xmldsig-core/xmldsig-core-schema.xsd)
+                    , xlink.xsd (http://www.w3.org/TR/xml-i18n-bp/xmlspec/xlink.xsd);
+                    <br />knjižnica se nahaja v podmapi:<br /><code>Laurentius-libs/ebms-msh-xsd/target/ebms-msh-xsd-1.0.jar</code></li>    
+                <li><b>Laurentius-wsdl-1.0.jar</b>: v knjižnici je izgranjen java klient (API) spletnih storitev modula Laurentius-ws. 
+                    Knjižnica se lahko uporabi za izdelavo integracije  zalednih sitemov preko spletnih storitev z Laurentius aplikacijo ;
+                    <br />knjižnica se nahaja v podmapi:<br /><code>Laurentius-libs/Laurentius-wsdl/target/Laurentius-wsdl-1.0.jar</code></li>  
+                <li><b>Laurentius-commons-1.0.jar</b>: Knjižnica združuje skupna orodja in statične šifrante;
+                    <br />knjižnica se nahaja v podmapi:<br /><code>Laurentius-libs/Laurentius-commons-wsdl/target/Laurentius-commons-1.0.jar</code></li>  
+
+            </ul>
+
+                <h3>Namestitev aplikacije</h3>
+            v mapo wildfly-10.0.0.Final/standalone/
+            <pre><code>
+copy "[buildFolder]\Laurentius\ebms-msh-module\ebms-msh-ear\target\ebms-msh.ear" [wildfly-home]\standalone\deployments\
+copy "[buildFolder]\Laurentius\Laurentius-module\Laurentius-ws\target\Laurentius-ws.war" [wildfly-home]\standalone\deployments\
+copy "[buildFolder]\Laurentius\Laurentius-module\Laurentius-web\target\Laurentius-webgui.war" [wildfly-home]\standalone\deployments\</code></pre>
+
+            <h3>Priprava sed-home mape</h3>
+            V mapi <code>[buildFolder]\Laurentius\Laurentius-standalone\home_dir_template</code> je primer prednastavljenih datotek. 
+            Presnemi mapo v c:\temp\home-dir)
+            <pre><code>copy  [buildFolder]\Laurentius\Laurentius-standalone\home_dir_template c:\temp\sed-homer</code></pre>
+
+            Nato ponovno poženi strežnik z naslednjimi nastavitvami:
+            <pre><code>./standalone.sh -c standalone-ebms.xml -Dorg.sed.msh.hibernate.hbm2ddl.auto=create -Dsed.home=c:\temp\sed-home</code></pre>
+
+            <b>OPOZORILO</b><br />
+            aplikacijo s parametrom <b>org.sed.msh.hibernate.hbm2ddl.auto=create</b> poženi samo prvič. Parameter omogoči izdelavo baznih tabel. 
+         
+    </article>  
+</div>

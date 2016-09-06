@@ -1,0 +1,118 @@
+<div class ="sidebar" >    
+    <h2>Kazalo:</h2>
+    <ul>
+        <li><a href="#install:quickwildfly">Hitra namestitev na aplikacijski strežnik wildfly</a><br  /></li>
+        <li><a href="#install/build:start">Izgradnja aplikacije Laurentius</a><br  /></li>
+        <li><a href="#install/wildfly:start">Namestitev na aplikacijski strežnik wildfly</a><br  /></li>
+    </ul>
+</div>
+<div class="main">
+    <article class='content'>
+
+        <h1 id="install:start">Opis aplikacije Laurentius</h1>
+        Aplikacija  <b>Laurentius</b>, je JEE aplikacije, ki za svoje delovanje potrebuje:
+        <ul>
+        <li><b>minimalne zahteve strojne opreme: Pomnilnik (RAM) 2G in diskovna enota, ki je velika vsaj 10 GB</b>.
+            Namestitev aplikacije: cca. 300MB.</li>
+        <li><b>izbira OS je omejena na delovanje "javanskega tolmača JRE 1.8+"</b> Aplikacija je testirana v OS Windows 8+in OS Linux.</li>
+        <li><b>"javanski tolmač" JRE 1.8+</b>.</li>
+        <li><b>aplikacijski strežnik:</b> Namestitev je prilagojena za namestitev na aplikacijski strežnik: <b><i>wildfly-10.1.0.Final</i></b>.</li>
+        <li><b>podatkovna baza:</b>. Za dostop do baznih objektov aplikacija uporablja knjižnico: <a href="http://hibernate.org/">hibernate (5.x)</a>. Izbira baze je tako omejena 
+        na seznam baz, ki jih podpira hibernate. Aplikacija je bila testirana na bazah: h2, postgresql in oracle 11.</li>
+    </ul>
+
+
+        <h1 id="install:quickwildfly">Hitra namestitev na aplikacijski strežnik wildfly-10.1.0.Final</h1>
+        <b>Opozorilo: Hitra namestitev uporablja podatkovna bazo h2 in ni primerna za produkcijsko uporabo.</b>
+        <br /><br />
+
+        Za delovanje aplikacije je potrebno namestiti <a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html">"javanski tolmač" JDK 1.8+</a> 
+        ali <a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html">javansko programsko okolje JDK 1.8+</a>. Ker aplikacija 
+        uporablja kriptografski dodatek: "Java Cryptography Extension (JCE), je potrebno namestiti dodatek z varnostnimi pravili
+        <a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html">"Java Cryptography Extension (JCE) Unlimited Strength"</a>.
+        <br /><br />
+        Aplikacija Laurentius je ti. java poslovna aplikacija (JEE), ki za svoje delovanje potrebuje aplikacijski strežnik wildfly-10.1.0.Final, ki je dosegljiv 
+        na povezavi <a href="http://wildfly.org/downloads/">wildfly aplikacijski strežnik</a>. Aplikacijski strežnik namestite tako, 
+        da razširite (zip) vsebino namestitvenega paketa v mapo, v katero želite namestiti aplikacijski strežnik. Npr.: <br />
+        Windows OS:<pre><code>c:\Server\</code></pre>
+        Linux OS:<pre><code>/opt/Server/</code></pre>
+        Mapa strežnika ( primer: <code>c:\Server\wildfly-10.1.0.Final</code> in <code>/opt/Server/wildfly-10.1.0.Final</code>)  
+        je v nadaljevanju označena z: [WILDFLY_HOME].
+        <br /><br />
+
+        Delovanje aplikacijskega strežnika preverite tako, da poženete skripto:<br />nastavitve
+        Windows OS:<pre><code>[WILDFLY_HOME]\bin\standalone.bat</code></pre>
+        Linux OS:<pre><code>[WILDFLY_HOME]/bin/standalone.sh</code></pre><br />
+        in v brskalniku vnesite naslov <a href="http://localhost:8080/">http://localhost:8080/</a>. Test je uspešen, če se prikaže
+        pozdravna stran aplikacijskega strežnika Widlfy.<b> Za nadaljevanje namestive strežnik ugasnite.</b> <br /><br />
+
+
+        Za hitro namestitev aplikacije <b>Laurentius</b> potrebujete še namestitveni paket 
+        <a href="https://github.com/VsrsCif/Laurentius/releases">Laurentius-[date_time].zip</a>, ki je dosegljiv spletni strani github https://github.com/VsrsCif/Laurentius/releases. 
+        Odpakirajte vsebino namestitvenega paketa npr.: v mapo:<br />
+        Windows OS:<br /> <pre><code>c:\Server\</code></pre>
+        Linux:<br /> <pre><code>/opt/Server/</code></pre>
+
+        Nato poženite skripto za namestitev:<br />        
+        <pre><code>Laurentius-[yyyy-mm-dd]/widlfly-10/deploy-sed.(bat|sh) --init -w [WILDFLY_HOME]</code></pre>
+        Vsi parametri skripte deploy-sed.(bat|sh) so opisani <a href="#install:deploy-script">na koncu poglavja.</a><br />
+        Skripta namesti:
+        <ul>
+            <li><b>Laurentius knjižnice</b> v mapo: WILDFLY_HOME/modules/org/sed/main</li>
+            <li><b>Laurentius module</b> v mapo: WILDFLY_HOME/standalone/deployments</li>
+            <li><b>nastavitve aplikacijskega strenika</b> v primeru parametra --init se namestijo nastavitve 
+                <code>standalone-ebms.xml, sed-users.properties, sed-roles.properties </code> v mapo: WILDFLY_HOME/standalone/config</li>
+            <li><b>Laurentius zagonske skripte</b>  v primeru parametra --init se namestijo zagonske skripte v v mapo: WILDFLY_HOME/bin</li>
+             <li><b>nastavitve Laurentius</b> v primeru parametra --init se namestijo demo nastavitve v mapo [SED_HOME]. </li>
+        </ul>
+       
+
+        za prvi zagon poženite skripto
+        <br />
+        Windows OS:<pre><code>[WILDFLY_HOME]\bin\demo-start.bat --init</code></pre>
+        Linux:<br /> <pre><code>[WILDFLY_HOME]/bin/demo-start.sh --init</code></pre>
+        <b>Ob zagonu skripte "demo-start.(bat|sh) --init" se generirajo bazni objekti ter se napolnijo z demo podatki.</b><br /><br />
+        Ob naslednjih zagonih aplikacijskega strežnika parameter --init ni več potreben.<br />
+        Vsi parametri skripte demo-start.(bat|sh) so opisani <a href="#install:start-script">na koncu poglavja.</a><br />
+
+        Dostop do spletnih storitev za povezovanje s drugimi ebMS 3.0 MSH sistemi je na naslovu :<br />
+        <a href="http://localhost:8081/Laurentius/ebms">http://localhost:8081/Laurentius/ebms</a><br />
+
+        
+        Dostop do spletnih storitev za izdelavo integracije z zalednimi sistemi je:<br />
+        <a href="http://localhost:8080/Laurentius-ws/sed-mailbox?wsdl">http://localhost:8080/Laurentius-ws/sed-mailbox?wsdl</a><br />
+
+      
+        Dostop do spletnega klienta za nadzor in nastavitve  Laurentius aplikacije je na naslovu:
+        <a href="http://localhost:8080/Laurentius-webgui/">http://localhost:8080/Laurentius-webgui/</a><br /><br />
+
+        V demo aplikaciji sta nastavljena dva uporabnika:
+        <br /><br />
+        <table class="styled-table">
+            <tr><th>Uporabniško ime</th><th>geslo</th><th>vloge</th></tr>
+            <tr><td>sed</td><td>sed1234</td><td>USER</td></tr>
+            <tr><td>admin</td><td>admin1234</td><td>USER,ADMIN</td></tr>
+        </table>
+        
+        
+         <h2  id="install:deploy-script">Parametri skripte deploy-sed.(bat|sh)</h2>
+        <pre><code>deploy-sed.(bat|sh) --init -b [SED_BUNDLE] -w [WILDFLY_HOME] -s [SED_HOME]</code></pre>
+        <ul><li>--init: parameter "inicializira" mapo [SED_HOME] in nastavitve wildfly strežnika.</li>
+            <li>-w   WILDFLY_HOME - pot do wildfly aplikacijskega strežnika. Npr.: c:\temp\wildfly-10.0.0.Final</li>
+            <li>-b   SED_BUNDLE   - pot do "razširjenega" Laurentius paketa. če parameter ni podan je privzeta mapa: "..\".</li>
+            <li>-s   SED_HOME     - pot do [SED_HOME] mape. Če ni podana je privzeta mapa '[WILDFLY_HOME]\standalone\data\sed-home'.</li>
+        </ul>
+        
+         <h2  id="install:start-script">Parametri skripte demo-start.(bat|sh)</h2>
+        <pre><code>demo-start.(bat|sh) --init -b [SED_BUNDLE] -w [WILDFLY_HOME] -s [SED_HOME]</code></pre>
+        <ul>
+            <li>--init parameter "inicializira" bazne objekte. V primeru, da so že izdelani se bazni objakti najprej izbrišejo. 
+                Po izdelavi baznih objektov se tabele napolnijo z demo podatki določenimi v datoteki: <code>[SED_HOME]\sed-settings.xml</code></li>
+            <li>-w   WILDFLY_HOME -  pot do wildfly aplikacijskega strežnika. V primeru da parametere ni podan je privzeta mapa "..\" .</li>   
+            <li>-s   SED_HOME     - pot do [SED_HOME] mape. Če parameter ni podan je privzeta mapa '[WILDFLY_HOME]\standalone\data\sed-home'.</li>
+        </ul>
+        
+        
+        
+    </article>  
+</div>

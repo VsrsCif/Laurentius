@@ -1,1 +1,149 @@
-My Page
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Laurentius</title>
+        <meta name="description" content="Secure e-delivery with ebMS 3.0" />
+        <meta name="keywords" content="b2b, open source, e-delivery, ebMS 3.0" />
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+        <link type="text/css"  rel="stylesheet" href="css/style.css" media="screen" />        
+
+        <script type="text/javascript" src="js/jquery-2.2.0.min.js"></script>  
+        <script type="text/javascript" src="codehighlight/highlight.pack.js"></script>  
+        <link rel="stylesheet" href="codehighlight/agate.css">
+
+        <script type="text/javascript">
+            var lastPage = "";
+            function init() {
+                var currentHash = window.location.hash.replace(/^#\/?/, "");
+                if (currentHash === "") {
+                    loadPage("home");
+                } else {
+                    loadPage(currentHash);
+                }
+                return false;
+            }
+
+
+            function loadPage(currentHash) {
+
+
+                var page = currentHash;
+                if (currentHash.indexOf(":") > 0) {
+                    nvg = currentHash.split(":");
+                    page = nvg[0];
+                }
+                $('#entryPage').load(page + '.html', function () {
+
+                    // do other stuff load is completed
+                    $('pre code').each(function (i, block) {
+                        hljs.highlightBlock(block);
+                    });
+                });
+                
+                if (currentHash.indexOf(":") > 0) {
+                    window.window.location.hash = '#/' + currentHash;
+                }
+
+
+
+                return true;
+            } // for onload
+
+            window.addEventListener("hashchange", function () {
+                // When the step is entered hash in the location is updated
+                // (just few lines above from here), so the hash change is 
+                // triggered and we would call `load` again on the same element.
+                //
+                // To avoid this we store last entered hash and compare.
+
+                var currentHash = window.location.hash.replace(/^#\/?/, "");
+                var page = currentHash;
+                if (currentHash.indexOf(":") > 0) {
+                    nvg = currentHash.split(":");
+                    page = nvg[0];
+
+
+                }
+
+                if (lastPage === "" || page !== lastPage) {
+                    loadPage(page);
+                    lastPage = page;
+                    if (currentHash.indexOf(":") > 0) {
+                        window.window.location.hash = '#/' + currentHash;
+
+                    }
+
+                }
+            });
+
+
+
+        </script>
+
+    </head>
+    <body  onload="init()" >
+        <!-- Start header, logo,  top menu , main menu-->
+        <header role="banner">
+            <div class="inner">
+                <a href="index.html" rel="home"><div  class="page-header-logo">
+                        <div class="logo" style="position: absolute; top: -30px; left: -115px;">
+                            <img src ="img/first-page.svg" alt="LOGO" height='200' />
+                            <h1 > Laurentius</h1>                            
+                        </div>
+                    </div>
+                </a>
+                <a href="http://www.sodisce.si" >
+                    <img src ="img/logo-vsrs.png" alt="vsrs-logo" height='120'  style="position: absolute;top:-8px; right: 0px;"/>
+                </a>
+                <!-- Start top menu -->
+                <ul class="menu-top-nav" style="position: relative;top:120px; right: 0px;"  >                    
+                    <li style="float:right; padding-right: 5px;z-index:1000;"><div id="google_translate_element"></div><script type="text/javascript">
+                        function googleTranslateElementInit() {
+                            new google.translate.TranslateElement({pageLanguage: 'sl', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+                        }
+                        </script><script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+                    </li></ul><!-- End top menu -->
+
+                <!-- end #top-nav -->
+
+                <nav class="menu-top-nav" style="position: relative;top:120px;">
+                    <ul  >
+                        <li ><a href="#/home" >O projektu</a></li>
+                        <li ><a href="#/ebms" >eMS 3.0</a></li>
+                        <li ><a href="#/arhitecture">Arihtektura</a></li>
+                        <li ><a href="#/install">Izgradnja in namestitev</a></li>
+                        <li ><a href="#/documentation">Dokumentacija</a></li>
+                    </ul>    	<!-- end ul -->
+
+                    <!-- end ul -->	
+                </nav>
+                <!-- end nav -->
+            </div>
+            <!-- end .inner -->
+        </header>
+        <!-- END  header, logo,  top menu -->
+        <!-- end header -->
+
+        <main id="content" class="group" role="main">
+
+            <div  id="entryPage" >
+
+            </div>
+            <!-- end .main -->	
+
+
+
+
+        </main>
+        <!-- end #content -->
+
+        <footer role="contentinfo">
+            <div class="inner">                
+
+            </div>
+            <!-- end .inner -->
+        </footer>
+        <!-- end footer -->
+
+    </body>
+</html>

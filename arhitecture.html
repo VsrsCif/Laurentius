@@ -1,0 +1,237 @@
+
+<div class ="sidebar" >    
+    <h2>Kazalo:</h2>
+    <ul>
+        <li><a href="#arhitecture:logicalModel">Logični model</a></li> 
+        <li><a href="#arhitecture:status">Statusi izhodne in dohodne pošte</a></li> 
+    </ul>
+</div>
+<div class="main">
+    <article class='content'>
+        <h1 id="arhitecture:logicalModel">Logični model</h1>
+        <h4>Jože Rihtaršič, 12.2.2016</h4><br/>
+
+        Aplikacija Laurentius je sestavljena iz modulov:
+        <ul><li>modul SED-WS: spletni servisi (WSDL) namenjeni integraciji z zalednimi sistemi;</li>
+            <li>modul vtičniki: modul omogoča dodajanje vtičnikov za izvajanje „poslovnih tokov“ v
+                storitvah vročanja, ter možnost izvajanja dodatnih kontrol dohodnih sporočil;</li>
+            <li>modul ebMS 3.0: implementacija ebMS 3.0 standarda;</li>
+            <li>modul GUI: Grafični vmesnik za nadzor in spremljanje dohodne in izhodne pošte.</li>
+        </ul>    
+
+        <img src="img/logical-model.png" alt="Logični model" width="680"/>
+
+        <h2 >Modul SED-WS</h2>
+        Namen modula spletnega vmesnika je omogočiti izdelavo integracije Laurentius z zalednimi sistemi za pošiljanje izhodne in prevzemanje dohodne pošte v zaledne sisteme.
+        Naloga modula je tudi izdelava evidence izhodnih in dohodnih pošiljk ter beleženje in hranjenje vseh dogodkov na izhodni in
+        dohodni pošti. Dodatno je pri izhodni pošti naloga preverjanje skladnosti sporočil s „p-mode“ nastavitvami. 
+        Pri tem se preverja obstoj p-mode konfiguracije za naslovnika, poslovni kontekst „storitev, akcija“, vsebovanost metapodatkov in 
+        vsebin, ki jih sporočilo mora vsebovati. 
+
+        <h2>Modul vtičniki</h2>
+        Namen modula je omogočiti poljubno poslovno logiko pri preverjanju dohodne in izhodne pošte ter omogočiti avtomatizirano izvajanje „poslovnih tokov“ v posameznih storitvah. Kot primer je priložen vtičnik, ki skrbi za elektronsko vročanje v storitvi ZPPDelivery. Kjer pri izhodni pošti zgenerira ključ za simetrično šifriranje ter šifrira vse vsebine. Ob sprejemu povratnice vrne ključ za dešifriranje pošiljatelju povratnice. Na drugi strani ob sprejemu pošiljke s storitvijo ZPPDelivery avtomatično izdela povratnico, jo podpiše z naslovnikovim certifikatom ter jo posreduje pošiljatelju pošiljke. Hkrati naslovniku posreduje dohodno pošiljko „Obvestilo o prispeli pošiljki“. Ob sprejemu ključa za dešifriranje, dešifrira dohodno pošiljko in jo preko SED-WS v dešifrirani obliki omogoči za prevzem v zaledne sisteme. 
+        Pri izhodni pošti sta modula SED-WS in modul „vtičniki“ povezana preko JMS tehnologije. Tako lahko administrator določa število „worker-jev“, ki pošiljajo pošiljke v ciljne sisteme. 
+        <h2>Modul ebMS 3.0</h2>
+        Namen modula je implementacija ebMS 3.0 standarda za varno in zanesljivo vročanje. Modul glede na p-mode konfiguracijo zapakira sporočilo ebms 3.0 obliko, jo podpiše/kriptira, opremi s parametri za zanesljiv prenos ter jo posreduje v naslovnikov sistem. Na naslovnikovi strani preveri veljavnost popisa, avtenticira pošiljatelja ter poišče ustrezno p-mode konfiguracijo. (Pravila izmenjave ti. „e-delivery agreement“ se nahaja v p-mode konfiguraciji, ki mora biti usklajena med pošiljateljem in prejemnikom). V primeru uspešnega sprejema se dohodno sporočilo preko modula „SED-WS“ omogoči na prevzem v zaledne sisteme. V primeru neveljavnega podpisa in neskladja s p-mode konfiguracijo pošiljatelju vrne ustrezno EBMS 3.0 napako.
+        <h2>Modul GUI – grafični vmesnik</h2>
+        Grafični vmesnik je namenjen za administracijo Laurentius aplikacije ter za pregled izhodne in dohodne pošte za posamezne predale.  Administracija Laurentius vsebuje izdelavo in urejanje posameznih p-mode nastavitev., dodajanje novih predalov ter nastavitev za spremljanje delovanja aplikacije Laurentius. V primeru pregleda izhodno dohodne pošte za posamezne e-predale omogoča pregled in iskanje izhodne in dohodne pošte ter pregled vseh dogodkov pri vročanju oz. prejemu pošte.
+
+
+        <h1 id="arhitecture:status">Statusi izhodne in dohodne pošte</h1>
+        Pošiljka pri odpremi in sprejemu gre skozi različne statuse. Statuse pošiljke spreminjajo dogodki na pošiljki ti. "eventi". Ni pa nujno,
+        da vsak dogodek na pošiljki spremeni status pošiljke. Npr. V statusu pošiljanje se lahko izvede več dogodkov: kriptiranje, podpisovanje, "plugin obdelava" itd.
+        Pri vseh dogodkih (posledično sprembah statusa) se beleži čas dogodka, aplikacijo, ki je prožila dogodek, ter v primeru človeškega posega: id uporabnika, ki je sprožil dogodek.
+        <h2>Izhodna pošta</h2>
+        Prvi status izhodne pošiljke je "SUBMITTED". Pošiljka je uspešno dodana v pošiljanje, če je skladna, s katero izmed PMode konfiguracijo. Končni status pošiljke je status SENT. 
+        V primeru, da je v pošiljko v statusu ERROR, je potreben administratorski poseg, ki odstrani vzrok napake ter ponovno sproži pošiljanje oz. pošiljke izbriše.
+
+        V nadaljevanju je opis statusov z barvnimi oznakami. Barve posamezne pošiljke se prikazujejo v uporabniški aplikaciji, 
+        pri posamezni pošiljki. <br /><br />
+        <img src="img/statuses-outmail.png" alt="Outmail statuses" width="680"/>
+        <table class="styled-table">
+
+            <tbody>
+                <tr>
+                    <th>Status</th>
+                    <th>Barva</th>
+                    <th>Naziv</th>
+                    <th>Opis</th>
+                </tr>
+                <tr>
+                    <td>SUBMITTED</td>
+                    <td style="background-color: orange;">orange</td>
+                    <td>Pripravljena</td>
+                    <td>Pošiljka uspešno oddana v odpremo. V primeru, da je pošiljka nepopolna: ne obstaja PMode konfiguracija ali 
+                        pošiljka ni skladna s PMode konfiguracijo se pošiljka zavrne, še pred sprejemom.</td>
+                </tr>
+                <tr>
+                    <td>SCHEDULE</td>
+                    <td style="background-color: green;">green</td>
+                    <td>Ponovno pošiljanje</td>
+                    <td>Zaradi napake pri pošiljanju (TCP/HTTP),se pošiljka ponovno poskuša oddati skladno z urnikom ReceptionAwareness/Retry)</td>
+                </tr>
+                <tr>
+                    <td>PUSHING</td>
+                    <td style="background-color: gray;">gray</td>
+                    <td>V pošiljanju</td>
+                    <td>Pošiljka se pripravi za odpremo (kriptiranje, podpisovanje itd.) ter se poskuša oddati v naslovnikov MSH. 
+                        V tem statusu so lahko samo sporočila, ki imajo MEP (mesage exchange pattern) določeno pošiljanje PUSH.
+                        V primeru TCP/HTTP, SOAP napake se skladno s PMODE konfiguracijo (ReceptionAwareness/Retry) ponovno poskuša oddati. Pri tem pošiljka preide v status RESEND.
+                        V primeru napake pri pripravi na pošiljanje in po preteku števila poskusov oddaje, se pošiljka prestavi v status "ERROR".</td>
+                </tr>
+                <tr>
+                    <td>PULLREADY</td>
+                    <td style="background-color: gray;">gray</td>
+                    <td>V pošiljanju</td>
+                    <td>Pošiljka je pripravljena na prevzem in čaka na signal za PULL. V tem statusu so lahko samo sporočila,
+                    ki imajo MEP (mesage exchange pattern) določeno pošiljanje PULL 
+                    
+                    
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>SENT</td>
+                    <td style="background-color: blue;">blue</td>
+                    <td>Odpravljeno</td>
+                    <td>Pošiljka je upešno dostavljena na naslovnikov MSH</td>
+                </tr>            
+                <tr>
+                    <td>ERROR</td>
+                    <td style="background-color: red;">red</td>
+                    <td>Napaka</td>
+                    <td>Napaka pri pripravi na odpremo oz. pošiljka se v predvidenih poskusih ni uspela prenesti na naslovnikov MSH. Zato se je pošiljanje končalo.
+                        Koda napake!
+                    </td>
+                </tr>            
+                <tr>
+                    <td>EBMSERROR</td>
+                    <td style="background-color: darkred;">darkred</td>
+                    <td>EBMS Napaka</td>
+                    <td>Naslovnik ne obstaja, napačna vsebina, neveljavni certifikati itd.
+                    </td>
+                </tr>
+                <tr>
+                    <td>DELETED</td>
+                    <td style="background-color: black;">black</td>
+                    <td>Izbrisana</td>
+                    <td>Pošiljka je „ročno“ izbrisana</td>
+                </tr>
+            </tbody>
+        </table>
+
+
+
+
+
+        <h2>Dohodna pošta</h2>
+        V primeru, da za dohodno pošiljko obstaja PMode konfiguracija in je skladna s konfiguracijo, se pošiljka zapiše v tabelo dohodne pošte s statusom:
+        RECEIVE. V primeru, da ne obstaja PMode konfiguracija oz. pošiljka ni skladna s konfiguracijo, se pošiljatelju vrne ustrezno sporočilo. 
+        Pošiljka je na voljo za prevzem v zaledne sisteme, ko je v statusu RECEIVED. Ko aplikacija prevzame pošiljke se ta nastavi v status DELIVERED.
+
+        V nadaljevanju je opis statusov z barvnimi oznakami. Barve posamezne pošiljke se prikazujejo v uporabniški aplikaciji, 
+        pri posamezni pošiljki. <br /><br />
+        <img src="img/statuses-inmail.png" alt="Inmail statuses" width="680"/>
+        <table class="styled-table">        
+            <tbody>
+                <tr>
+                    <th>Status</th>
+                    <th>Barva</th>
+                    <th>Naziv</th>
+                    <th>Opis</th>
+                </tr>
+                <tr>
+                    <td>RECEIVE</td>
+                    <td style="background-color: orange;">orange</td>
+                    <td>V sprejemu</td>
+                    <td>Sporočilo sprejeto. Za pošiljko obstaja PMode konfiguracija in je skladna z nastavitvami v PMode konfiguraciji.</td>
+                </tr>
+                <tr>
+                    <td>PROCESS</td>
+                    <td style="background-color: gray;">gray</td>
+                    <td>V obdelavi</td>
+                    <td>V primeru, da se za sprejeto pošiljko zaganjajo "plugin" procedure, se pošiljki spremeni status v PROCESS.</td>
+                </tr>
+                <tr>
+                    <td>RECEIVED</td>
+                    <td style="background-color: green;">green</td>
+                    <td>Sprejeto</td>
+                    <td>Pošiljka je pripravljena za prevzem v končno aplikacijo. </td></tr>
+                <tr>
+                    <td>LOCKED</td>
+                    <td style="background-color: lightgray;">lightgray</td>
+                    <td>V prevzemanju</td>
+                    <td>Pošiljka je v prevzemanju v zaledni sistem. V primeru, da prevzemanje traja dlje časa lahko končna aplikacija 
+                        v času prevzemanja zaklene pošiljko.</td>
+                </tr>                      
+                <tr>
+                    <td>DELIVERED</td>
+                    <td style="background-color: blue;">blue</td>
+                    <td>Pošiljka dostavljena v kočno aplikacijo</td>
+                    <td>Pošiljka je uspešno prevzeta v kočno aplikacijo</td>
+                </tr>            
+                <tr>
+                    <td>ERROR</td>
+                    <td style="background-color: red;">red</td>
+                    <td>Napaka</td>
+                    <td>Napaka procesiranju dohodne pošte. Potreben je poseg administratorja</td>
+                </tr>
+                <tr>
+                    <td>DELETED</td>
+                    <td style="background-color: black;">black</td>
+                    <td>Izbrisana</td>
+                    <td>Dohodna pošiljka je izbrisana. Pošiljko lahko izbriše administrator ali končna aplikacija v primeru, da je pošiljka brez predmetna</td>
+                </tr>            
+            </tbody>
+        </table>
+        <br/><br/><br/>
+        Statusi pošiljke od pričetka pošiljanja do prevzema v končni sistem.
+        <img src="img/statuses.png" alt="Statuses" width="680"/>
+
+        <h1 id="arhitecture:project"> Projekt Laurentius</h1>
+        Projekt Laurentius je izdelan z maven tehnologijo, kar omogoča CI (Continuous integration) razvoj ter uporabo različnih IDE, ki podpirajo maven projekte. Aplikacija je sestavljena modularno in sledi logičnemu modelu predstavljenem na začetku tega dokumenta. 
+
+        Sestava embs-sed projekta:
+        <ul><li><b>Laurentius:</b>  osnovni projekt določa vse plugin-e in verzije odvisnih knjižnic;
+                <ul>
+                    <li><b>Laurentius-libs:</b>  skupne knjižnice, ki jih uporabljajo posamezni moduli;        
+                        <ul>
+                            <li><b>ebms-msh-xsd:</b>  modul generira java objekte iz ebMS 3.0 shem. 
+                                <a href="http://schemas.xmlsoap.org/soap/envelope/">SOAP_1.1.xsd</a>,
+                                <a href="http://www.w3.org/2003/05/soap-envelope/">SOAP_1.2.xsd</a>,
+                                <a href="http://www.w3.org/2001/03/xml.xsd" >xml.xsd</a>,
+                                <a href="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/core/ebms-header-3_0-200704.xsd" >ebms-header-3_0-200704.xsd</a>,
+                                <a href="http://docs.oasis-open.org/ebxml-bp/2.0.4/ebbp-signals-2.0.4.xsd" >ebbp-signals-2.0.xsd</a>,
+                                <a href="http://www.w3.org/TR/xmlenc-core/xenc-schema.xsd" >xenc-schema.xsd</a>, 
+                                <a href="http://www.w3.org/TR/xmldsig-core/xmldsig-core-schema.xsd" >xmldsig-core-schema.xsd</a>, 
+                                <a href="http://www.w3.org/TR/xml-i18n-bp/xmlspec/xlink.xsd" >xlink.xsd</a>.
+                            </li>
+                            <li><b>Laurentius-wsdl:</b>modul generira java klienta in WS-API iz spletnega opisa (wsdl) SED-WS modula.</li>
+                            <li><b>Laurentius-plugin:</b>Vmesnik za pisanje vtičnikov.</li>
+                            <li><b>Laurentius-commons:</b>skupna orodja in šifiranti.</li>                
+                        </ul>
+                    </li>
+
+                    <li><b>Laurentius-module:</b> implementacija Laurentius spletnih storitev.
+                        <ul>
+                            <li><b>Laurentius-web:</b> implementacija web-gui vmesnika.</li>
+                            <li><b>Laurentius-ws:</b> implementacija api-vmesnika - spletne storitve.</li>
+                        </ul>
+                    </li>
+
+                    <li><b>ebms-msh-module:</b> implementacija Laurentius spletnih storitev.
+                        <ul>
+                            <li><b>ebms-msh-cxf:</b> implementacija cxf - interceptorja z funkcionalnostmi MSH (ebms 3.0) .</li>
+                            <li><b>ebms-msh-ejb:</b> implementacija JMS Vrste, .</li>
+                            <li><b>ebms-msh-ws:</b> implementacija vstopne točne za povezovanje MSH</li>
+                            <li><b>ebms-msh-ear:</b> izdelava namestitvenega paketa (ear) za namesitev na JEE aplikacijski strežnik </li>
+                        </ul>
+                    </li>
+                    <li><b>ebms-msh-standalone:</b> Standalone aplikacija za namene testiranja in spozavanja z aplikacjo Laurentius.</li>
+                </ul>
+            </li>
+
+        </ul>
+
+    </article>  
+</div>

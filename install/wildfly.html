@@ -1,0 +1,173 @@
+<div class ="sidebar" >    
+    <h2>Kazalo:</h2>
+    <ul>
+        <li><a href="#install:quickwildfly">Hitra namestitev na aplikacijski strežnik wildfly</a><br  /></li>
+        <li><a href="#install/build:start">Izgradnja aplikacije Laurentius</a><br  /></li>
+        <li><a href="#install/wildfly:start">Namestitev na aplikacijski strežnik wildfly</a><br  /></li>
+    </ul>
+</div>
+<div class="main">
+    <article class='content'>
+
+        <h1 id="install/wildfly:start">Namestitev na aplikacijski strežnik wildfly</h1>
+        Nadaljna navodila vsebujejo razlago demo nastavitev na aplikacijski strežnik wildfly-10.1.0.Final. 
+        Navodila tako vsebujejo opis vseh spremembe v standardni nastavivi aplikacijskega strežnika wildfly za namestitev
+        aplikacije Laurentius.<br /><br />
+        
+        Namen navodil je pomoč pri razumevanju nastavitev aplikacijskega strežnika <b>Wildfly</b>.
+        Podrobnejša navodila namestitve aplikacijskega strežnika so opisana  
+        na naslovu <a href="http://wildfly.org/">wildfly</a>.<br /><br />
+        
+      
+
+        
+        Na povezavi <a href="http://wildfly.org/downloads/">wildfly downloads</a>  prenesi aplikacijski 
+        strežnik <b>Java EE7 Full & Web Distribution</b> 10.1.0.Final. Arhiv odpakiraj v namestitveno mapo(npr.:
+        c:\temp\wildfly-10.1.0.Final v nadaljevanju: [WILDFLY_HOME]):
+
+        <h3>1. Popravek modula: org.apache.ws.security</h3>
+        Aplikacija trenutno uporablja apache-cxf knjižnice, ki so nameščeni v wildfly aplikacijskem strežniku. 
+        Za uporabo je potreben manjši popravek v namestitveni datoteki:
+        <pre><code>wildfly-10.1.0.Final/modules/system/layers/base/org/apache/ws/security/main/module.xml</code></pre>
+
+
+        kjer je med odvisne module potrebno dodati vrstico:
+        <pre><code>&lt;module name="javax.mail.api" /></code></pre>
+        modul  org.apache.ws.security ima tako odvisne module:
+        <pre><code>&lt;dependencies>
+  &lt;module name="javax.api" />
+  &lt;module name="javax.mail.api" />
+  &lt;module name="javax.xml.bind.api" services="import"/>
+  &lt;module name="com.sun.xml.bind" services="import"/>
+  &lt;module name="javax.xml.rpc.api" />
+  &lt;module name="org.apache.commons.codec" />
+  &lt;module name="org.apache.commons.logging" />
+  &lt;module name="org.apache.neethi" />
+  &lt;module name="org.apache.santuario.xmlsec" />
+  &lt;module name="org.apache.xalan" />
+  &lt;module name="org.joda.time" />
+  &lt;module name="org.opensaml" />
+  &lt;module name="org.slf4j" />
+&lt;/dependencies></code></pre>
+        <br />
+        <h3>Nastavitve standalone-ebms.xml</h3>
+        V mapi:  wildfly-10.1.0.Final/standalone/configuration
+        naredi kopijo: standalone.xml
+        <pre><code>copy standalone.xml standalone-ebms.xml</code></pre>
+        Za urejanje odpri datoteko <code>standalone-ebms.xml</code>. V razdelek:
+        <pre><code>&lt;server xmlns="urn:jboss:domain:3.0">
+  &lt;extensions> ….</code></pre>
+        Dodaj vrstico: 
+        <pre><code>&lt;extension module="org.wildfly.extension.messaging-activemq"/></code></pre> 
+
+        Nato dodaj modul  urn:jboss:domain:messaging-activemq:1.0
+        <pre><code> &lt;subsystem xmlns="urn:jboss:domain:messaging-activemq:1.0">
+            &lt;server name="default">
+                &lt;security-setting name="#">
+                    &lt;role name="guest" send="true" consume="true" create-non-durable-queue="true" delete-non-durable-queue="true"/>
+                &lt;/security-setting>
+                &lt;address-setting name="#" dead-letter-address="jms.queue.DLQ" expiry-address="jms.queue.ExpiryQueue" max-size-bytes="10485760" page-size-bytes="2097152" message-counter-history-day-limit="10"/>
+                &lt;http-connector name="http-connector" socket-binding="http" endpoint="http-acceptor"/>
+                &lt;http-connector name="http-connector-throughput" socket-binding="http" endpoint="http-acceptor-throughput">
+                    &lt;param name="batch-delay" value="50"/>
+                &lt;/http-connector>
+                &lt;in-vm-connector name="in-vm" server-id="0"/>
+                &lt;http-acceptor name="http-acceptor" http-listener="default"/>
+                &lt;http-acceptor name="http-acceptor-throughput" http-listener="default">
+                    &lt;param name="batch-delay" value="50"/>
+                    &lt;param name="direct-deliver" value="false"/>
+                &lt;/http-acceptor>
+                &lt;in-vm-acceptor name="in-vm" server-id="0"/>
+                &lt;jms-queue name="ExpiryQueue" entries="java:/jms/queue/ExpiryQueue"/>
+                &lt;jms-queue name="DLQ" entries="java:/jms/queue/DLQ"/>
+		&lt;jms-queue name="MSHQueue" entries="java:/jms/queue/MSHQueue"/>
+                &lt;jms-queue name="SEDExecutionQueue" entries="java:/jms/queue/SEDExecutionQueue"/>
+                &lt;jms-queue name="SEDScheduleQueue" entries="java:/jms/queue/SEDScheduleQueue"/>
+                &lt;connection-factory name="InVmConnectionFactory" connectors="in-vm" entries="java:jboss/ConnectionFactory"/>
+                &lt;connection-factory name="RemoteConnectionFactory" connectors="http-connector" entries="java:jboss/exported/jms/RemoteConnectionFactory"/>
+                &lt;pooled-connection-factory name="activemq-ra" transaction="xa" connectors="in-vm" entries="java:/JmsXA java:jboss/DefaultJMSConnectionFactory"/>
+            &lt;/server>
+        &lt;/subsystem></code></pre> 
+
+        V modul <code>&lt;subsystem xmlns="urn:jboss:domain:ejb3:4.0"></code> dodaj:
+        <pre><code>&lt;mdb>
+    &lt;resource-adapter-ref resource-adapter-name="${ejb.resource-adapter-name:activemq-ra.rar}"/>
+    &lt;bean-instance-pool-ref pool-name="mdb-strict-max-pool"/>
+&lt;/mdb></code></pre>
+
+        <h3 id="install:wf-users">Določanje uporabnikov</h3>
+        V razdelek <code>&lt;subsystem xmlns="urn:jboss:domain:security:1.2"></code> dodaj
+        <b>sed-realm</b> varnostno domeno. 
+        <pre><code>
+&lt;security-domain name="sed-realm" cache-type="default">
+    &lt;authentication>
+        &lt;login-module code="org.jboss.security.auth.spi.UsersRolesLoginModule" flag="required">
+            &lt;module-option name="usersProperties" value="${jboss.server.config.dir}/sed-users.properties"/>
+            &lt;module-option name="rolesProperties" value="${jboss.server.config.dir}/sed-roles.properties"/>
+        &lt;/login-module>
+    &lt;/authentication>
+&lt;/security-domain>
+            </code></pre>
+        ter v mapo <code> wildfly-10.1.0.Final/standalone/configuration</code>
+        naredi tekstovni datoteki:<br /> 
+
+        sed-users.properties
+        <pre><code>
+#uporabnisko ime=geslo
+sed=sed1234
+admin=admin1234</code></pre>
+        sed-roles.properties
+        <pre><code>
+#uporabnisko ime=role1,rola1
+sed=USER
+admin=ADMIN,USER</code></pre>
+
+
+
+        <h3>Dodajanje jdbc knjižnice  in bazne povezave za postgres</h3>
+        Na spletni strani „https://jdbc.postgresql.org/download.html“ pridobi primereno jdbc knjižnico za nameščeno postgresql bazo. <br />
+        Posgresql driver se bo namestil s pomočjo jboss-cli ukazov, zato v mapi: <br />
+        <code>wildfly-10.1.0.Final/bin</code>določi widlfly admin uporabnika tako da poženem skripto (in izbereš  userType: a) Management User):<br />
+        <code>./add-user.(sh|bat)</code><br /><br />
+
+
+
+        Nato poženi aplikacijski strežnik:<br />
+        <code>./standalone.(sh|bat) -c standalone-ebms.xml</code>
+
+        Po končanem štartu strežnika zaženi CLI konzolo:  
+        <code>./jboss-cli.sh  oz. ./jboss-cli.bat</code>
+        V ukazno vrstico nato vpiši connect  in [enter]<br />
+
+        Za namestitev ojdbc knjižnice prekopirajo ukaz in popravi pot in verzijo do posgresql knjižnice.:
+        <pre><code>[standalone@localhost:9990 /] module add --name=org.postgres --resources=[potDoMapeZKnjiznico]/postgresql-x.x-x.jdbc42.jar --dependencies=javax.api,javax.transaction.api</code></pre>
+
+        Nato določi ojdbc knjižnico
+        <pre><code>[standalone@localhost:9990 /]/subsystem=datasources/jdbc-driver=postgres:add(driver-name="postgres",driver-module-name="org.postgres",driver-class-name=org.postgresql.Driver</code></pre>
+
+        Nato določi povezavo na bazo:
+        <pre><code>[standalone@localhost:9990 /]data-source add --jndi-name=java:/dsEBMS_SED --name=ebMSSEDPool --connection-url=jdbc:postgresql://localhost/db_sed --driver-name=postgres --user-name=[username] --password=[password]</code></pre>
+
+
+
+        <h3>Namestitev aplikacije</h3>
+        v mapo wildfly-10.1.0.Final/standalone/
+        <pre><code>
+copy "[buildFolder]\Laurentius\ebms-msh-module\ebms-msh-ear\target\ebms-msh.ear" [wildfly-home]\standalone\deployments\
+copy "[buildFolder]\Laurentius\Laurentius-module\Laurentius-ws\target\Laurentius-ws.war" [wildfly-home]\standalone\deployments\
+copy "[buildFolder]\Laurentius\Laurentius-module\Laurentius-web\target\Laurentius-webgui.war" [wildfly-home]\standalone\deployments\</code></pre>
+
+        <h3>Priprava sed-home mape</h3>
+        V mapi <code>[buildFolder]\Laurentius\Laurentius-standalone\home_dir_template</code> je primer prednastavljenih datotek. 
+        Presnemi mapo v c:\temp\home-dir)
+        <pre><code>copy  [buildFolder]\Laurentius\Laurentius-standalone\home_dir_template c:\temp\sed-homer</code></pre>
+
+        Nato ponovno poženi strežnik z naslednjimi nastavitvami:
+        <pre><code>./standalone.sh -c standalone-ebms.xml -Dorg.sed.msh.hibernate.hbm2ddl.auto=create -Dsed.home=c:\temp\sed-home</code></pre>
+
+        <b>OPOZORILO</b><br />
+        aplikacijo s parametrom <b>org.sed.msh.hibernate.hbm2ddl.auto=create</b> poženi samo prvič. Parameter omogoči izdelavo baznih tabel. 
+
+
+    </article>  
+</div>

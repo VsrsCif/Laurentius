@@ -1,0 +1,93 @@
+<div class ="sidebar" >    
+    <h2>Kazalo:</h2>
+    <ul >
+        <li><a href="#/gui/Laurentius:application" >Aplikacija Laurentius</a>
+            <ul style="padding-left: 23px">
+                <li><a href="#gui/Laurentius:login"  >Prijavno okno</a></li> 
+                <li><a href="#gui/Laurentius:workspace" >Delavno okolje</a></li> 
+                <li><a href="#gui/Laurentius:tools" >Sklopi orodij</a></li> 
+            </ul></li>
+        <li><a href="#gui/admin-sed-box:admin" >Administracija: SED-predali</a>
+            <ul style="padding-left: 23px">            
+                <li><a href="#gui/admin-sed-box:add-edit" >Urejanje SED-predala</a></li> 
+                <li><a href="#gui/admin-sed-box:export" >Izvoz dohodne pošte</a></li> 
+                <li><a href="#gui/admin-sed-box:execute" >Izvajanje procesov</a></li> 
+
+            </ul>
+        <li><a href="#gui/admin-sed-user" >Administracija: Uporabniki</a>
+            <ul style="padding-left: 23px">            
+                <li><a href="#gui/admin-sed-user:user" >Seznam uporabnikov</a></li> 
+                <li><a href="#gui/admin-sed-user:add-edit" >Urejanje uporabnika</a></li> 
+            </ul>
+        </li>
+        <li><a href="#gui/admin-keystore" >Administracija: Certifikati</a>
+            <ul style="padding-left: 23px">            
+                <li><a href="#gui/admin-keystore:list" >Seznam shramb</a></li> 
+                <li><a href="#gui/admin-keystore:add-edit" >Urejanje shrambe</a></li> 
+            </ul>
+        </li>
+        <li><a href="#gui/admin-sed-tasks" >Administracija opravil</a>
+            <ul style="padding-left: 23px">            
+                <li><a href="#gui/admin-sed-tasks:list" >Seznam tipov opravil</a></li> 
+                <li><a href="#gui/admin-sed-tasks:add-edit" >Dodajanje, urejanje tipa opravila</a></li> 
+                <li><a href="#gui/admin-sed-tasks:cron-add-edit" >Dodajanje, urejanje urnika opravil</a></li> 
+                <li><a href="#gui/admin-sed-tasks:backup" >Opravilo: varnostna kopija</a></li> 
+                <li><a href="#gui/admin-sed-tasks:archive" >Opravilo: arhiv</a></li> 
+                <li><a href="#gui/admin-sed-tasks:report" >Opravilo: poročilo</a></li> 
+                <li><a href="#gui/admin-sed-tasks:zpp-plugin" >Opravilo: Vročanje ZPP</a></li> 
+            </ul>
+        </li>
+        <li><a href="#gui/admin-plugin" >Administracija dodatkov</a>
+            <ul style="padding-left: 23px">            
+                <li><a href="#gui/admin-plugin:list" >Seznam dodatkov</a></li> 
+                <li><a href="#gui/admin-plugin:add-edit" >Dodajanje, urejanje dodatka</a></li> 
+
+            </ul>
+        </li>
+        <li><a href="#pmode/pmode" >Administracija: PMODE</a></li>
+    </ul>
+</div>
+<div class="main">
+    <article class='content'>
+        <h1 id="gui/Laurentius:application">Aplikacija Laurentius</h1>
+        Uporabniški vmesnik (GUI )aplikacija Laurentius omogoča pregled dohodne 
+        in izhodne pošte ter spreminjanje nastavitev aplikacije Laurentius. 
+        Za namene testiranja povezav je v aplikacijo doddana tudi možnost 
+        generiranja enostavnih sporočil. 
+
+        <h2 id="gui/Laurentius:login">Prijava</h2>
+        Demo nastavitev ima izdelana dva uporabnika:<br /><br />
+        <table class="styled-table">
+            <tr><th>Uporabniško ime</th><th>geslo</th><th>vloge</th></tr>
+            <tr><td>sed</td><td>sed1234</td><td>USER</td></tr>
+            <tr><td>admin</td><td>admin1234</td><td>USER,ADMIN</td></tr>
+        </table>
+        <br />
+        <img src="img/gui/app-login.png" alt="GUI Login" width="680"/> 
+
+        <h2 id="gui/Laurentius:workspace">Delavno okolje</h2>
+        Delovno okolje je sestaljeno iz:
+        <ul>
+            <li>Orodna vrstica: gumbi za proženje akcij</li>
+            <li>Izbira sklopa orodij (Izhodna pošta, dohodna pošta, pmode nastavitve, administracija vtičnikov (plugin) itd.)</li>
+            <li>Glavna delovna površina (seznam pošiljk in podrobnosti pošiljk.) </li>
+        </ul><br />
+        <img src="img/gui/app-workspace.png" alt="GUI workspace" width="680"/>
+
+        <h2 id="gui/Laurentius:tools">Sklopi orodij</h2>
+
+        Sklopi orodij se nahajajo na levi strani zaslona. Ob izbiri sklopa orodij  se prikaže seznam orodij :
+        <ul>
+            <li><b>Dohodna pošta</b>: seznam dohodne pošte omogoča pregled nad dogodki in metapodatki dohodne pošte.</li>
+            <li><b>Izhodna pošta</b>: seznam izhodne pošte omogoča preglede nad dogodki in metapodatki izhodne pošte.</li>
+            <li><b>PMode nastavitve</b>: konfiguracija poslovnih transakcij, varnosti in zaneljivosti prenosa.  </li>
+            <li><b>Vtičniki</b>: konfiguracija vtičnikov (pluginov) za avtomatski sprejem, obdelavo in pošiljanje dohodne in izhodne pošte</li>
+            <li><b>Nastavitve</b>: nastavitve sed-predalov, uporabnikov, certifikatov in dnevniških opravil.</li>   
+
+        </ul><br />
+        <img  style="float: right" src="img/gui/app-tools.png" alt="GUI workspace" width="300"/>
+
+
+
+    </article>  
+</div>

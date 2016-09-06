@@ -1,0 +1,398 @@
+@charset "utf-8";
+
+html, body, div{
+    margin:0;
+    padding:0;
+    border:0;
+    outline:0;
+    font-size:100%;
+    font:inherit;
+    vertical-align:baseline;
+}
+
+article,aside,details,figcaption,figure,footer,header,hgroup,main,menu,nav,section{
+    display:block;
+}
+
+
+nav ul{
+    list-style:none;
+}
+
+header[role="banner"]{
+    /*background:#053b5b;*/
+    background:transparent;
+    height: 150px;
+    width: 100%;
+    
+}
+
+
+
+
+.page-header-logo{
+  /*  background:  #053b5b url(../img/logo.png) no-repeat;*/
+}
+
+.inner{
+    margin: 0 auto;
+    position: relative;
+    width: 1020px;
+}
+
+
+
+table{
+    border-collapse:collapse;
+    border-spacing:0;
+}
+
+/* 2.1 BODY DEFAULTS
+--------------------------------------------------------- */
+
+html{
+    margin-bottom: 1px;
+    min-height: 100%;
+}
+body {
+    background: #F0F0F0;
+    color: #444;
+    font-family: Georgia, serif;
+    font-size: 62.5%;
+}
+body {
+    font-size: 16px;
+}
+
+code {
+    font-size: 12px;
+    font-family: "Courier New", Courier, monospace;
+}
+p, blockquote, footer {
+    font-size: 1em;
+    line-height: 1.5;
+}
+/* 2.2 LINK STYLES
+--------------------------------------------------------- */
+a, a:visited{
+    color: #0090D2;
+    text-decoration: none;
+}
+a:hover {color: #0063A6;}
+a:active,a:focus{
+    color: #0063A6;
+    position: relative;
+    top: 1px;
+}
+
+
+/* 2. BASE
+-----------------------------------------------------------------------------------------------
+===============================================================================================*/
+
+.sidebar { 
+  display:block;
+  float: right;
+  width: 275px;
+  padding: 0 10px 10px 10px;
+}
+
+
+.sidebar ul
+{ width: 275px; 
+  padding: 0; 
+  margin: 0;}
+
+.sidebar li
+{ list-style: circle; 
+  padding: 0 }
+
+.sidebar li a, .sidebar li a:hover
+{ padding: 0;
+  display: block;
+  background: transparent;} 
+
+.sidebar li a.selected
+{ color: #444;
+  text-decoration: none;} 
+
+#content[role="main"]{
+    background: #FFF;
+    border-top: 30px solid #0090D2;
+    margin: -35px auto 0;
+    padding: 24px 0 0 0;
+    width: 1020px;
+}
+.main{
+    border-right:4px solid #F0F0F0;
+    float:left;
+    margin:0 18px 0 0;
+    padding:0 18px 0 0;
+    position: relative;
+    width: 685px;
+}
+
+footer[role="contentinfo"]{
+    margin: 40px 0 0 0;
+    padding: 0 0 40px 0;
+}
+
+code {
+    width: 680px;
+}
+
+/* 2.1 HEADER STYLES
+--------------------------------------------------------- */
+header .logo{ 
+    height: 124px;
+    margin: 0;
+    padding-top: 30px;
+    width: 505px;
+}
+header .logo h1{
+    color: #FFF;
+    font-family: Arial,sans-serif;
+    font-size: 32px;
+    font-style: italic;
+    font-weight: 400;
+    margin: 0;
+    left: 150px;
+    line-height: 1;
+    position: relative;
+    text-transform: none;
+    top: -135px;
+}
+header .logo h2{
+    color: #FFF;
+    font-family: Arial,sans-serif;
+    font-size: 22px;
+    font-style: italic;
+    font-weight: 400;
+    margin: 0;
+    left: 195px;
+    line-height: 1;
+    position: relative;
+    text-transform: none;
+    top: -25px;
+}
+
+/*************************************************/
+/*Menu */
+.menu-top-nav{
+    color: #fff;
+    font-size: 14px;
+    position: absolute;
+    right: 0;
+    top: 10px;
+}
+.menu-top-nav li{
+    float: left;
+    position: relative;
+    list-style: none;
+    text-decoration: none;
+}
+.menu-top-nav li a{
+    color: #000;
+    padding: 0 4px;
+}
+
+
+.menu-top-nav ul {
+
+    list-style: outside none none;
+    margin: 0;
+    position: absolute;
+    top: 100%;
+    width: 100%;
+    padding: 5px;
+   /* background:#053b5b;*/
+}
+
+
+/* 2.1.2 MAIN NAV STYLES */
+header .inner nav {
+    left: 0px;
+    padding: 0 10px;
+    position: relative;
+    top: 14px;
+    width: 980px;
+    z-index: 3;  
+
+} 
+
+header .inner nav ul{
+    color: #fff;
+    float: left;
+    font-family: 'Helvetica Neue',Arial,sans-serif;
+    letter-spacing: 1px;
+    /*margin:0 0 0 -10px;
+    background: #053b5b url(../img/menu.png) repeat-x;*/
+
+}
+header .inner nav ul li{
+    float: left;
+    padding:0 9px;
+}
+header .inner nav ul li a{
+    color: #fff;
+    font-size:14px;
+    padding: 15px 10px 13px;
+}
+header .inner nav ul li a:hover{
+    text-decoration: underline;
+}
+
+
+
+/* 2.2 POST STYLES
+--------------------------------------------------------- */
+
+.content {
+    padding: 0 0 0 20px ; 
+    text-align:justify;
+
+}
+
+.content h1{
+    font-size: 26px;
+    font-weight: bold;
+    font-style: italic;
+    vertical-align: central;
+    padding: 10px 10px 0 20px ;   
+}
+.content h2{
+    font-size: 22px;
+    font-weight: bold;    
+    vertical-align: central;
+    padding: 5px 5px 0 20px ;    
+}
+.content h4{
+    font-size: 12px;
+    font-weight: normal;    
+    font-style: italic;
+    vertical-align: central;
+    margin: -20px 0 0 0;    
+    padding: 0 0 0 40px ;   
+}
+
+
+/* 2.2.1 POST HEADER */
+.post header{
+    float:left;
+    margin: 0 0 20px;
+    padding:0 0 10px 166px;
+    width:inherit;
+}
+.post h1{
+    line-height: 1.3;
+}
+
+/* 2.2.2 POST ENTRY */
+.post .entry {
+    float: right;
+    width: 500px;
+}
+
+
+/* 2.7 SUBFOOTER STYLES
+--------------------------------------------------------- */
+#sub-footer{
+    background: #F0F0F0;
+    clear:both;
+    float:left;
+    margin:20px 0 0;
+    padding:20px;
+    width:980px;
+}
+#sub-footer h3{
+    border-top-color: #BFBFBF;
+}
+#sub-footer div:first-of-type{
+    float:left;
+    margin:0 20px 0 0;
+    width:690px;
+}
+#sub-footer > div > .mod, #sub-footer #crp_related {
+    float:left;
+    margin:0 35px 0 0;
+    padding: 0;
+    width: 310px;
+}
+#sub-footer div:last-child div{
+    float:left;
+    margin: 0;
+    width:270px;
+}
+#sub-footer div:last-child > .mod{
+    float:left;
+    margin:0;
+}
+.sub-footer li a,
+#sub-footer div .mod ul.related li a {
+    border-bottom:1px solid #BFBFBF;
+    font-size: 14px;
+}
+.sub-footer li:last-child a,
+#sub-footer div .mod ul.related li:last-child a{
+    border-bottom: none;
+} 
+#sub-footer div .mod img{
+    border-color: #BFBFBF;
+}
+
+
+/* 2.8 FOOTER STYLES
+--------------------------------------------------------- */
+footer[role="contentinfo"] .inner p{
+    font-size: 0.85em;
+    padding: 0 0 10px 184px;
+}
+footer[role="contentinfo"] .inner p#copyright{
+    background: #F0F0F0 url(images/footerlogo.jpg) no-repeat 20px 0;
+    /*margin: 0 0 10px 0;*/
+}
+.w3c-logo {
+    float: right;
+    margin-left: 20px;
+    width: 64px;
+    border: none;
+    background: transparent;
+}
+
+/* 3. EXTRAS
+-----------------------------------------------------------------------------------------------
+===============================================================================================*/
+.group:after {
+    content: ".";
+    display: block;
+    height: 0;
+    visibility: hidden;
+    clear: both;
+}
+/* IE pretty stick (via @simplebits) */
+* html .group {
+    height: 1%;
+} /* IE6 */
+*:first-child+html .group {
+    min-height: 1px;
+} /* IE7 */
+
+
+.styled-table {
+    border: 1px solid #444 ; 
+    
+}
+.styled-table  td {
+    border: 1px solid #444 ; 
+    
+}
+
+.styled-table  th {
+    border: 1px solid #444 ; 
+    background-color: lightsteelblue;   
+}
+
+
+.dateField input {
+  width: 80px;
+}
