@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      >
+    <composite:interface>
+    </composite:interface>
+
+    <composite:implementation >
+
+        <h1>#{msg['TaskDefinitions']}</h1>
+        <p:panel id="TaskDesc" toggleTitle="#{msg['INFO']}" header="#{msg['TaskDefinitions']}" 
+                 toggleable="true"  collapsed="true">
+            <h:outputText value="#{msg['TaskDefDesc']}"></h:outputText>
+        </p:panel>
+        <p:dataTable id="TblTaskType" 
+                     var="sp" 
+                     value="#{adminSEDTaskTypeView.list}"
+                     selectionMode="single"
+                     selection="#{adminSEDTaskTypeView.selected}"
+                     rowKey="#{sp.type}"
+
+                     style="padding: 0px; margin: 0px"
+                     scrollable="true" 
+                     scrollHeight="200"    
+
+                     >
+            <p:ajax event="rowDblselect" listener="#{adminSEDTaskTypeView.startEditSelected()}" 
+                    update=":dlgTaskType:taskTypeDialogForm:taskType"
+                    oncomplete="PF('taskTypeDialog').show()"/>
+
+            <f:facet name="header">
+                <p:commandButton value="#{msg['Add']}"  styleClass="toolbar-Button" icon="ui-icon-sed-add" 
+                                 actionListener="#{adminSEDTaskTypeView.createEditable()}"
+                                 oncomplete="PF('taskTypeDialog').show()" 
+                                 update=":dlgTaskType:taskTypeDialogForm:taskType"
+
+                                 />
+                <p:commandButton value="#{msg['Edit']}"  styleClass="toolbar-Button" icon="ui-icon-sed-edit" 
+                                 oncomplete="PF('taskTypeDialog').show()"                                                                   
+                                 actionListener="#{adminSEDTaskTypeView.startEditSelected()}"
+                                 update=":dlgTaskType:taskTypeDialogForm:taskType"
+                                 />
+                <p:commandButton value="#{msg['Delete']}" styleClass="toolbar-Button" icon="ui-icon-sed-remove" 
+                                 actionListener="#{adminSEDTaskTypeView.removeSelected()}" update=":forms:SettingsCron:TblTaskType" />
+
+            </f:facet>
+            <p:column headerText="#{msg['Type']}" width="120">
+                <h:outputText value="#{sp.type}" />
+            </p:column>
+            <p:column headerText="#{msg['Name']}" width="160">
+                <h:outputText value="#{sp.name}"></h:outputText>                
+            </p:column>
+            <p:column headerText="#{msg['JNDI']}">
+                <h:outputText value="#{sp.jndi}"></h:outputText>                
+            </p:column>
+            <p:column headerText="#{msg['Description']}">
+                <h:outputText value="#{sp.description}" ></h:outputText>                
+            </p:column>
+
+        </p:dataTable>
+
+
+
+
+
+        <h1>#{msg['CronJobs']}</h1>
+        <p:panel id="CronDesc" toggleTitle="INFO" header="#{msg['CronJobs']}" 
+                 toggleable="true"  collapsed="true">
+            <h:outputText value="#{msg['CronDefDesc']}"></h:outputText>
+        </p:panel>
+        <p:dataTable id="TblCron" 
+                     var="sp" 
+                     value="#{adminSEDCronJobView.list}"
+                     selectionMode="single"
+                     selection="#{adminSEDCronJobView.selected}"
+                     rowKey="#{sp.id}"
+
+                     style="padding: 0px; margin: 0px"
+                     scrollable="true" 
+                     scrollHeight="400"                     
+                     >
+            <p:ajax event="rowDblselect" listener="#{adminSEDCronJobView.startEditSelected()}" 
+                    update=":dlgcron:cronDialogForm:cronJob"
+                    oncomplete="PF('cronDialog').show()"/>
+
+            <f:facet name="header">
+                <p:commandButton value="#{msg['Add']}"  styleClass="toolbar-Button" icon="ui-icon-sed-add" 
+                                 actionListener="#{adminSEDCronJobView.createEditable()}"
+                                 oncomplete="PF('cronDialog').show()" 
+                                 update=":dlgcron:cronDialogForm:cronJob"
+
+                                 />
+                <p:commandButton value="#{msg['Edit']}"  styleClass="toolbar-Button" icon="ui-icon-sed-edit" 
+                                 oncomplete="PF('cronDialog').show()"                                                                   
+                                 actionListener="#{adminSEDCronJobView.startEditSelected()}"
+                                 update=":dlgcron:cronDialogForm:cronJob"
+                                 />
+                <p:commandButton value="#{msg['Delete']}" styleClass="toolbar-Button" icon="ui-icon-sed-remove" 
+                                 actionListener="#{adminSEDCronJobView.removeSelected()}" update=":forms:SettingsCron:TblCron" />
+
+            </f:facet>
+            <p:column headerText="#{msg['Id']}" width="60">
+                <h:outputText value="#{sp.id}" /></p:column>
+
+
+            <p:column headerText="#{msg['Name']}" >
+                <h:outputText value="#{sp.name}"></h:outputText>                
+            </p:column>
+            <p:column headerText="#{msg['TaskType']}" width="120">
+                <h:outputText value="#{sp.SEDTask.taskType}" ></h:outputText>                
+            </p:column>
+
+            <p:column headerText="#{msg['Active']}" width="60">
+                <h:selectBooleanCheckbox value="#{sp.active}" disabled="true" />
+            </p:column>
+            <p:column headerText="#{msg['Second']}" width="80">
+                <h:outputText value="#{sp.second}"></h:outputText>                
+            </p:column>
+            <p:column headerText="#{msg['Minute']}" width="80">
+                <h:outputText value="#{sp.minute}"></h:outputText>                
+            </p:column>
+            <p:column headerText="#{msg['Hour']}" width="80">
+                <h:outputText value="#{sp.hour}" ></h:outputText>                
+            </p:column>
+            <p:column headerText="#{msg['DayOfMonth']}" width="80">
+                <h:outputText value="#{sp.dayOfMonth}" ></h:outputText>                
+            </p:column>
+            <p:column headerText="#{msg['Month']}" width="80">
+                <h:outputText value="#{sp.month}" ></h:outputText>                
+            </p:column>
+            <p:column headerText="#{msg['DayOfWeek']}" width="80">
+                <h:outputText value="#{sp.dayOfWeek}" ></h:outputText>                
+            </p:column>
+
+        </p:dataTable>
+
+
+
+
+
+
+    </composite:implementation>
+
+</html>

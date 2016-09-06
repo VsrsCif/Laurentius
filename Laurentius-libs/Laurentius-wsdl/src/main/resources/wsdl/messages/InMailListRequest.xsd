@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 (http://www.altova.com) by XMLSpy 2007 Professional Ed., Installed for 5 users (with SMP from 2007-02-06 to 2008-02-07) (CIF VSRS) -->
+<!--Metadata: 
+Owner: Supreme Court Republic of Slovenia 
+Product: SVEV-MSH
+Product Version: 1.0.0
+Artifact Type: Schema
+Descriptive Name: SVEV exception
+Date: 20151101 (1 November 2015)
+Author: Joze Rihtarsic
+-->
+<!-- 
+Copyright 2015, Supreme Court Republic of Slovenia 
+
+ Licensed under the EUPL, Version 1.1 or – as soon they will be approved by 
+ the European Commission - subsequent versions of the EUPL (the "Licence");
+ You may not use this work except in compliance with the Licence.
+ You may obtain a copy of the Licence at:
+
+ https://joinup.ec.europa.eu/software/page/eupl
+
+ Unless required by applicable law or agreed to in writing, software 
+ distributed under the Licence is distributed on an "AS IS" basis, WITHOUT 
+ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the Licence for the specific language governing permissions and  
+ limitations under the Licence.
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://si.laurentius."
+           xmlns:con="http://si.laurentius.Control"
+           targetNamespace="http://si.laurentius."
+>
+    <xs:import namespace="http://si.laurentius.Control" schemaLocation="./Control.xsd"/>
+    <xs:element name="InMailListRequest">
+        <xs:complexType>
+            <xs:annotation>
+                <xs:documentation xml:lang="sl"> 
+                    Poizvedba za pridobivanje sezname izhodne pošte.
+                </xs:documentation>
+            </xs:annotation>
+            <xs:sequence>
+                <xs:element name="Control" type="con:Control" />
+                <xs:element name="Data">                  
+                    <xs:complexType>
+                        <xs:attribute name="senderEBox" use="optional">
+                            <xs:annotation>
+                                <xs:documentation xml:lang="sl">Pošiljateljev elektronski naslov.</xs:documentation>
+                            </xs:annotation>
+                            <xs:simpleType>
+                                <xs:restriction base="xs:token">
+                                    <xs:maxLength value="64"/>
+                                    <xs:pattern value="[_\-a-zA-Z0-9\.\+]+@[a-zA-Z0-9](\.?[\-a-zA-Z0-9]*[a-zA-Z0-9])*"/>
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="receiverEBox" use="optional">
+                            <xs:annotation>
+                                <xs:documentation xml:lang="sl">Naslovnikov elektronski naslov.</xs:documentation>
+                            </xs:annotation>
+                            <xs:simpleType>
+                                <xs:restriction base="xs:token">
+                                    <xs:maxLength value="64"/>
+                                    <xs:pattern value="[_\-a-zA-Z0-9\.\+]+@[a-zA-Z0-9](\.?[\-a-zA-Z0-9]*[a-zA-Z0-9])*"/>
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:attribute>
+                      
+                        <xs:attribute name="receivedDateFrom" type="xs:dateTime" use="optional">
+                            <xs:annotation>
+                                <xs:documentation>Če je podatek "vnesen", servis vrača vse pošiljke z datumom sprejema večjim od vnesenega datuma </xs:documentation>
+                            </xs:annotation>
+                        </xs:attribute>
+                        <xs:attribute name="receivedDateTo" type="xs:dateTime" use="optional">
+                            <xs:annotation>
+                                <xs:documentation>Če je podatek "vnesen", servis vrača vse pošiljke z datumom sprejema manjšim  od vnesenega datuma </xs:documentation>
+                            </xs:annotation>
+                        </xs:attribute>
+                        <xs:attribute name="status" use="optional">
+                            <xs:annotation>
+                                <xs:documentation>Status pošiljke. Če status ni podan  je prevzeti status za pošiljke za prevzem. 
+                                </xs:documentation>
+                            </xs:annotation>
+                            <xs:simpleType>
+                                <xs:restriction base="xs:token">
+                                    <xs:length value="20"/>
+                                    <xs:enumeration value="received"/>
+                                    <xs:enumeration value="processed"/>                                    
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="service" use="required">
+                            <xs:annotation>
+                                <xs:documentation xml:lang="sl">Storitve odpreme, ki jo določena v PMode parametrih </xs:documentation>
+                            </xs:annotation>
+                            <xs:simpleType>
+                                <xs:restriction base="xs:token">
+                                    <xs:maxLength value="64"/>
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="action" use="required">
+                            <xs:annotation>
+                                <xs:documentation xml:lang="sl">Akcija v storitvi odpreme, ki jo določena v PMode parametrih  (npr: RegistredMail, LegalZPP, LegalZKP in LegalZUP, SMTPDelivery) </xs:documentation>
+                            </xs:annotation>
+                            <xs:simpleType>
+                                <xs:restriction base="xs:token">
+                                    <xs:maxLength value="64"/>
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="conversationId" use="optional">
+                            <xs:annotation>
+                                <xs:documentation xml:lang="sl">enolična oznaka "poslovne transakcije" v izmenjavi podaktov. V primeru, da ni podan je v prvem sporočilo določen kot senderMessageId.  </xs:documentation>
+                            </xs:annotation>
+                            <xs:simpleType>
+                                <xs:restriction base="xs:string">
+                                    <xs:maxLength value="64"/>
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:attribute>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

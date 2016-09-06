@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN'
+    'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'>
+<html xmlns='http://www.w3.org/1999/xhtml'
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>SED - Login page</title>
+        <link href="public/login.css" rel="stylesheet" />
+
+    </h:head>
+    <h:body class="LoginPage">
+
+        <div align='right' style="width: 100%">
+            <div  align='left' class="LoginTitle">
+                <b style='font-size:70px;line-height:70px;color: whitesmoke;top:75px;left:180px;position: relative'>SED</b><br/>
+                <b style='font-size:30px;line-height:30px;color: black;top:60px;left:220px;position: relative'>Secure e-Delivery</b>
+            </div>        
+        </div>
+
+
+        <h:form >
+            <center>            
+                <p:panel header="Login MEPS" style="width:600px">
+                    <p:fragment autoUpdate="true">
+                        <h:form>
+                            <p:panelGrid styleClass="panelGridNoBorder">
+                                <p:row>
+                                    <p:column><p:outputLabel for="username" value="Username:"/></p:column>
+                                    <p:column><p:inputText id="username" value="#{loginManager.username}" required="true" /></p:column>
+                                    <p:column><h:message for="username"/></p:column>
+                                </p:row>
+                                <p:row>
+                                    <p:column><p:outputLabel for="password" value="Password"/></p:column>
+                                    <p:column><p:password id="password" value="#{loginManager.password}" required="true" /></p:column>
+                                    <p:column><h:message for="password"/></p:column>
+                                </p:row>
+                                <p:row>
+                                    <p:column colspan="3">
+                                        <p:commandButton value="Login" actionListener="#{loginManager.login}"
+                                                         class="image-Button" icon="ui-icon-sed-ok"/></p:column>
+                                </p:row>
+                                <p:row>
+                                    <p:column colspan="3"><h:messages globalOnly="true"/></p:column>
+                                </p:row>
+                            </p:panelGrid>
+                        </h:form>
+                    </p:fragment>
+                    <div style="float:right;color: gray; margin-top: 30px;font-size:12px">
+                        Version: <p:outputLabel value="#{MEPSPluginData.buildVersion}" />                        
+                    </div>
+                </p:panel>
+            </center>
+        </h:form>
+
+    </h:body>
+</html>

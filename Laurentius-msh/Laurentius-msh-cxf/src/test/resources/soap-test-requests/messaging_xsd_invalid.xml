@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope">
+	<env:Header xmlns:env="http://www.w3.org/2003/05/soap-envelope" >
+            <ns2:Messaging xmlns:ns2="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/"
+                           xmlns:ns3="http://schemas.xmlsoap.org/soap/envelope/" 
+                           xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" 
+                           env:mustUnderstand="true" >
+                <ns2:InvalidElement>Invalid element value</ns2:InvalidElement>
+            </ns2:Messaging>
+		</env:Header>
+	<soap:Body><test>Invalid ebms 3.0 header: Messaging</test></soap:Body>
+</soap:Envelope>

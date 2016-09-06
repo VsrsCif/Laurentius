@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- edited with XMLSpy v2008 (http://www.altova.com) by XMLSpy 2007 Professional Ed., Installed for 5 users (with SMP from 2007-02-06 to 2008-02-07) (CIF VSRS) -->
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:fo="http://www.w3.org/1999/XSL/Format" xmlns:msh="http://msh.laurentius.si/outbox/mail"  xmlns:java="http://xml.apache.org/xslt/java" exclude-result-prefixes="java"   >
+    <xsl:output method="xml" indent="yes"/>
+    <xsl:template match="/">
+        <fo:root font-family="Arial" font-size="12pt">
+            <fo:layout-master-set>
+                <fo:simple-page-master master-name="A4-portrait" page-height="29.7cm" page-width="21.0cm" margin="2cm">
+                    <fo:region-body/>
+                </fo:simple-page-master>
+            </fo:layout-master-set>
+            <fo:page-sequence master-reference="A4-portrait">
+                <xsl:variable name="varFormatedSentDate">
+                    <xsl:call-template name="currentDateTime" />					
+                </xsl:variable>
+                <fo:flow flow-name="xsl-region-body">
+                    <fo:block font-size="18pt" font-weight="bold">OBVESTILO O PRISPELI POŠILJKI</fo:block>
+                    <fo:block font-size="12pt" font-weight="bold" linefeed-treatment="preserve">					
+                        Pošiljatelj</fo:block>
+                    <fo:block font-size="12pt">
+                        <xsl:value-of select="/msh:MSHOutMail/@senderName"/>
+                    </fo:block>
+                    <fo:block font-size="12pt">
+                        <xsl:value-of select="/msh:MSHOutMail/@senderEBox"/>
+                    </fo:block>
+                    <fo:block font-size="12pt" font-weight="bold" linefeed-treatment="preserve">					
+                        Naslovnik</fo:block>
+                    <fo:block font-size="12pt">
+                        <xsl:value-of select="/msh:MSHOutMail/@receiverName"/>
+                    </fo:block>
+                    <fo:block font-size="12pt">
+                        <xsl:value-of select="/msh:MSHOutMail/@receiverEBox"/>
+                    </fo:block>
+                    <fo:block font-size="12pt" font-weight="bold" linefeed-treatment="preserve">
+                        Zadeva : Obvestilo o prispeli pošiljki in pouk o posledicah neprevzema					
+                    </fo:block>
+                    <fo:block font-size="12pt" linefeed-treatment="preserve">
+					 
+                        Obveščamo vas, da je v vaš varen elektronski predal dne <xsl:value-of select="$varFormatedSentDate"/> prispela pošiljka z oznako <xsl:value-of select="/msh:MSHOutMail/@id"/>. Pošiljko lahko prevzamete v roku 15 dni v vašem varnem elektronskem predalu na naslovu <xsl:value-of select="/msh:MSHOutMail/@receiverEBox"/>  Rok za prevzem začne teči od dne <xsl:value-of select="$varFormatedSentDate"/>. Če v tem roku pošiljke ne boste prevzeli, se bo po sedmem odstavku 141.a člena ZPP s potekom tega roka vročitev štela za opravljeno.
+
+                    </fo:block>
+                    <!-- new line -->
+                    <fo:block font-size="12pt" font-weight="bold">Naša oznaka</fo:block>
+                    <fo:block font-size="12pt" linefeed-treatment="preserve">
+                        <xsl:value-of select="/msh:MSHOutMail/@id"/>
+                    </fo:block>
+                    <fo:block font-size="12pt" font-weight="bold">	
+                        Maribor, <xsl:call-template name="currentDateTime"/>
+                    </fo:block>
+                </fo:flow>
+            </fo:page-sequence>
+        </fo:root>
+    </xsl:template>
+
+    <xsl:template name="currentDateTime">
+        <xsl:value-of select="java:si.laurentius.commons.utils.XSLTExtensions.currentDateTime()"/>
+    </xsl:template>
+</xsl:stylesheet>

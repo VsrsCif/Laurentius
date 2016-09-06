@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PModes xmlns="http://svev.msh.org/pmode" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:schemaLocation="http://svev.msh.org/pmode
+ Z:\sluzba\code\SVEV2.0\Laurentius\Laurentius-libs\Laurentius-commons\src\main\resources\schemas\pmode.xsd">
+    <PMode id="DeliveryWithReceipt:sed-court.si" isTemplate="false">
+        <Agreement>SELF-TEST:00001</Agreement>
+        <MEP>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/oneWay</MEP>
+        <MEPbinding>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/push</MEPbinding>
+        <Initiator>
+            <Role>si-svev:sender</Role>
+        </Initiator>
+        <Responder>
+            <Role>si-svev:receiver</Role>
+        </Responder>
+        <Leg type="fore-channel">
+            <Protocol>
+                <Address chunked="false" connectionTimeout="120000" receiveTimeout="180000">http://localhost:8080/Laurentius/ebms?wsdl</Address>
+            </Protocol>
+            <BusinessInfo>
+                <Service>DeliveryWithReceipt</Service>
+                <Action direction="out">Delivery</Action>
+                <PayloadProfiles action="Delivery" maxSize="10000000">
+                    <PayloadProfile name="Content" required="true"/>
+                </PayloadProfiles>
+                <MPC>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/defaultMPC</MPC>
+            </BusinessInfo>
+            <Security WSSVersion="1.1">
+                <X509>
+                    <Signature algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha512" hashFunction="http://www.w3.org/2001/04/xmlenc#sha256">
+                        <Certificate alias="msh.e-box-a.si"/>
+                        <Sign signAttachments="true" signCertAlias="msh.e-box-a.si" signElements="true">
+                            <Elements>
+                                <XPath xpath="env:Body">
+                                    <Namespace namespace="http://www.w3.org/2003/05/soap-envelope" prefix="env"/>
+                                </XPath>
+                                <XPath xpath="env:Header/eb3:Messaging">
+                                    <Namespace namespace="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/" prefix="eb3"/>
+                                    <Namespace namespace="http://www.w3.org/2003/05/soap-envelope" prefix="env"/>
+                                </XPath>
+                            </Elements>
+                        </Sign>
+                    </Signature>
+                </X509>
+            </Security>
+        </Leg>
+        <ReceptionAwareness>
+            <Retry maxRetries="5" multiplyPeriod="3" period="2000"/>
+            <DuplicateDetection windowPeriode="P1Y"/>
+        </ReceptionAwareness>
+    </PMode>
+
+	
+    <PMode id="LegalDelivery_ZPP:sed-court.si" isTemplate="false">
+        <Agreement>SELF-TEST:00002</Agreement>
+        <MEP>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/oneWay</MEP>
+        <MEPbinding>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/push</MEPbinding>
+        <Initiator>
+            <Role>si-svev:sender</Role>
+        </Initiator>
+        <Responder>
+            <Role>si-svev:receiver</Role>
+        </Responder>
+        <Leg type="fore-channel">
+            <Protocol>
+                <Address chunked="false" connectionTimeout="120000" receiveTimeout="180000">http://localhost:8080/Laurentius/ebms?wsdl</Address>
+            </Protocol>
+            <BusinessInfo>
+                <Service inPlugin="java:global/plugin-zpp/ZPPInInterceptor!si.laurentius.commons.interfaces.SoapInterceptorInterface" outPlugin="java:global/plugin-zpp/ZPPOutInterceptor!si.laurentius.commons.interfaces.SoapInterceptorInterface">LegalDelivery_ZPP</Service>
+                <Action direction="out">DeliveryNotification</Action>
+                <Action after="DeliveryNotification" direction="out">FictionNotification</Action>
+                <Action after="DeliveryNotification" direction="in">AdviceOfDelivery</Action>
+                <PayloadProfiles action="DeliveryNotification" maxSize="10000000">
+                    <PayloadProfile MIME="application/pdf" name="DeliveryNotification" required="true"/>
+                    <PayloadProfile name="Content" required="true"/>
+                </PayloadProfiles>
+                <PayloadProfiles action="AdviceOfDelivery" maxSize="10000000">
+                    <PayloadProfile MIME="application/pdf" name="AdviceOfDelivery" required="true"/>
+                </PayloadProfiles>
+                <PayloadProfiles action="FictionNotification" maxSize="10000000">
+                    <PayloadProfile MIME="application/pdf" name="FictionNotification" required="true"/>
+                </PayloadProfiles>
+                <MPC>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/defaultMPC</MPC>
+            </BusinessInfo>
+            <Security WSSVersion="1.1">
+                <X509>
+                    <Signature algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha512" hashFunction="http://www.w3.org/2001/04/xmlenc#sha256">
+                        <Certificate alias="msh.e-box-a.si"/>
+                        <Sign signAttachments="true" signCertAlias="msh.e-box-a.si" signElements="true">
+                            <Elements>
+                                <XPath xpath="env:Body">
+                                    <Namespace namespace="http://www.w3.org/2003/05/soap-envelope" prefix="env"/>
+                                </XPath>
+                                <XPath xpath="env:Header/eb3:Messaging">
+                                    <Namespace namespace="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/" prefix="eb3"/>
+                                    <Namespace namespace="http://www.w3.org/2003/05/soap-envelope" prefix="env"/>
+                                </XPath>
+                            </Elements>
+                        </Sign>
+                    </Signature>
+                </X509>
+            </Security>
+        </Leg>
+        <ReceptionAwareness>
+            <Retry maxRetries="5" multiplyPeriod="3" period="2000"/>
+            <DuplicateDetection windowPeriode="P1Y"/>
+        </ReceptionAwareness>
+    </PMode>
+    
+</PModes>

@@ -1,0 +1,111 @@
+<!-- edited with XMLSpy v2008 (http://www.altova.com) by XMLSpy 2007 Professional Ed., Installed for 5 users (with SMP from 2007-02-06 to 2008-02-07) (CIF VSRS) -->
+<PModes xmlns="http://svev.msh.org/pmode" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://svev.msh.org/pmode Z:\sluzba\code\SVEV2.0\Laurentius\Laurentius-commons\src\main\resources\schemas\pmode.xsd">
+    <PMode id="legal-delivery-template" isTemplate="true">
+        <Agreement>agreement-value</Agreement>
+        <MEP>http://www.oasis-open.org/committees/ebxml-msg/one-way</MEP>
+        <MEPbinding>http://www.oasis-open.org/committees/ebxml-msg/push</MEPbinding>
+        <Leg>
+            <Protocol>
+                <Address>http://someAddress:8080/msh-target</Address>
+                <SOAPVersion>1.2</SOAPVersion>
+            </Protocol>
+            <BusinessInfo>
+                <Service>Delivery_Service</Service>
+                <Action>Delivery_Action</Action>
+                <PayloadProfiles maxSize="10000000">
+                    <PayloadProfile required="true"/>
+                </PayloadProfiles>
+                <MPC>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/defaultMPC</MPC>
+            </BusinessInfo>
+            <ErrorHandling>
+                <Report>
+                    <AsResponse>true</AsResponse>
+                </Report>
+            </ErrorHandling>
+            <Security WSSVersion="1.1">
+                <X509>
+                    <Signature hashFunction="http://www.w3.org/2001/04/xmlenc#sha256" algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha512">
+                        <Sign>
+                            <Elements>
+                                <XPath xpath="env:Body">
+                                    <Namespace prefix="env" namespace="http://www.w3.org/2003/05/soap-envelope"/>
+                                </XPath>
+                                <XPath xpath="env:Header/eb3:Messaging">
+                                    <Namespace prefix="eb3" namespace="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/"/>
+                                    <Namespace prefix="env" namespace="http://www.w3.org/2003/05/soap-envelope"/>
+                                </XPath>
+                            </Elements>
+                        </Sign>
+                    </Signature>
+                </X509>
+                <SendReceipt sendReceipt="true" replyPattern="response"/>
+            </Security>
+        </Leg>
+    </PMode>
+    <PMode id="legal-delivery:e-box-a.si" isTemplate="true" extends="legal-delivery-template">
+        <Agreement>www.sodisce.si</Agreement>
+        <Initiator>
+            <PartyId type="urn:oasis:names:tc:ebcore:partyid-type:unregistered:si-svev:provider:e-box">vrhovno.sodisce@e-sodisce.si</PartyId>
+            <PartyId type="urn:oasis:names:tc:ebcore:partyid-type:unregistered:si-svev:provider:name">Testno Sodišče RS</PartyId>
+            <Role>si-svev:sender</Role>
+        </Initiator>
+        <Responder>
+            <PartyId type="urn:oasis:names:tc:ebcore:partyid-type:unregistered:si-svev:e-box">svev@e-predal.si</PartyId>
+            <Role>si-svev:receiver</Role>
+        </Responder>
+        <Leg type="fore-channel">
+            <Protocol>
+                <Address>http://localhost:8080/svev-msh-ws/ebms</Address>
+            </Protocol>
+            <BusinessInfo>
+                <Service>LegalDelivery</Service>
+                <Action direction="out" >DeliveryNotification</Action>
+                <Action direction="out" after="DeliveryNotification"  >FictionNotification</Action>
+                <Action direction="in" after="DeliveryNotification"  >AdviceOfDelivery</Action>
+                <PayloadProfiles maxSize="10000000" action="DeliveryNotification" >
+                    <PayloadProfile MIME="application/pdf" name="DeliveryNotification" required="true"/>
+                    <PayloadProfile  name="Content" required="true"/>
+                </PayloadProfiles>
+                <PayloadProfiles maxSize="10000000" action="AdviceOfDelivery" >
+                    <PayloadProfile MIME="application/pdf" name="AdviceOfDelivery" required="true"/>
+                </PayloadProfiles>
+                <PayloadProfiles maxSize="10000000" action="FictionNotification" >
+                    <PayloadProfile MIME="application/pdf" name="FictionNotification" required="true"/>
+                </PayloadProfiles>
+
+                <MPC>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/defaultMPC</MPC>
+            </BusinessInfo>
+            <Security WSSVersion="1.1">
+                <X509>
+                    <Signature>
+                        <Certificate alias="msh.e-box-a.si" signaturePropertyFile="msh_e-box-a_sign.properties" veryfyReceiptPropertyFile="msh_e-box-a_signVer.properties"/>
+                    </Signature>
+                </X509>
+            </Security>
+        </Leg>
+        <Leg type="back-channel">
+            <Protocol>
+                <Address>http://localhost:8080/svev-msh-ws/ebms</Address>
+            </Protocol>
+            <Security WSSVersion="1.1">
+                <X509>
+                    <Signature>
+                        <Certificate alias="msh.e-box-a.si" signaturePropertyFile="msh_e-box-a_sign.properties" veryfyReceiptPropertyFile="msh_e-box-a_signVer.properties"/>
+                    </Signature>
+                </X509>
+            </Security>
+        </Leg>
+        <ReceptionAwareness>
+            <Retry maxRetries="5" period="2000" multiplyPeriod="3"/>
+            <DuplicateDetection windowPeriode="P1Y"/>
+        </ReceptionAwareness>
+    </PMode>
+    <PMode id="LegalDelivery_ZPP:e-box-a.si:e-box-a.si" extends="legal-delivery:e-box-a.si">
+        <Agreement>www.sodisce.si</Agreement>
+        <Leg>
+            <BusinessInfo>
+                <Service>LegalDelivery_ZPP</Service>
+            </BusinessInfo>
+        </Leg>
+    </PMode>
+</PModes>

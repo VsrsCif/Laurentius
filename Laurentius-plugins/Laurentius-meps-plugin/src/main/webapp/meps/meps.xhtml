@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+
+      >
+
+    <h:head>
+        <title>SED User GUI</title>
+        <link href="resources/css/main.css" rel="stylesheet" />
+        <link href="resources/css/icons.css" rel="stylesheet" />
+
+    </h:head>
+
+    <h:body>
+        <h:form id="meps-forms" >
+
+            <p:growl id="messages" showDetail="true" />
+            <!-- main window -->    
+            <p:layout id="MEPSPlugin" >
+
+                <p:layoutUnit position="center"   >
+
+                    <p:panelGrid  columns="2" columnClasses="label,value" style="width: 580px">
+                        <f:facet name="header">
+
+                            <h:outputText value="Plugin" />
+
+                        </f:facet>
+
+
+
+                        <h:outputText value="MEPS-home" />
+                        <h:inputText value="" style="width: 100%"/>
+
+                        <h:outputText value="MEPS 1" />
+                        <h:inputText value="1" style="width: 100%"/>
+
+                        <h:outputText value="MEPS 2" />
+                        <h:inputText value="3" style="width: 100%"/>
+                    </p:panelGrid>
+                </p:layoutUnit>                       
+            </p:layout>
+        </h:form>
+
+
+    </h:body>
+</html>

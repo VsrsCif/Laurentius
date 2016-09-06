@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>si.vsrs.cif.sed</groupId>
+        <artifactId>Laurentius</artifactId>
+        <version>1.0</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>Laurentius-app</artifactId>
+    <packaging>pom</packaging>
+
+    <name>Laurentius-app</name>
+    <url>www.sodisce.si</url>
+    <organization>
+        <name>Supreme Court Republic of Slovenia</name>
+        <url>http://www.sodisce.si/</url>
+    </organization>
+    <licenses>
+        <license>
+            <name>European Union Public Licence (EUPL)</name>
+            <url>https://joinup.ec.europa.eu/software/page/eupl</url>
+            <distribution>repo</distribution>
+            <comments>European Free/Open Source Software (F/OSS) licence</comments>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>jrc</id>
+            <name>Jože Rihtaršič</name>
+            <email>joze.rihtarsic@sodisce.si</email>
+            <organization>Supreme Court Republic of Slovenia</organization>
+            <organizationUrl>http://www.sodisce.si/</organizationUrl>
+            <roles>
+                <role>architect</role>
+                <role>developer</role>
+            </roles>
+        </developer>
+    </developers>
+
+    <modules>
+        <module>Laurentius-ws</module>
+        <module>Laurentius-web</module>
+    </modules>
+</project>

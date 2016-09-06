@@ -1,0 +1,89 @@
+
+.ui-icon-sed-add {    
+    width:  22px !important;
+    height:  22px !important;
+    background-image: url('../images/add.png') !important;
+
+}
+.ui-icon-sed-remove {    
+    width:  22px !important;
+    height:  22px !important;
+    background-image: url('../images/remove.png') !important;
+
+}
+.ui-icon-sed-edit {    
+    width:  22px !important;
+    height:  22px !important;
+    background-image: url('../images/edit.png') !important;
+
+}
+
+.ui-icon-sed-exit {    
+    width:  22px !important;
+    height:  22px !important;
+    background-image: url('../images/exit22.png') !important;
+
+}
+
+.ui-icon-sed-showHidePanel {
+    width:  22px !important;
+    height:  22px !important;
+    background-image: url('../images/dataPanelShow.png') !important;
+}
+
+/** FLAGS **/
+.ui-icon-sed-flag-red {
+    width:  22px !important;
+    height:  22px !important;
+    background-image: url('../images/flag-red.png') !important;
+}
+
+.ui-icon-sed-flag-gray {
+    width:  22px !important;
+    height:  22px !important;
+    background-image: url('../images/flag-gray.png') !important;
+}
+
+.ui-icon-sed-flag-green {
+    width:  22px !important;
+    height:  22px !important;
+    background-image: url('../images/flag-green.png') !important;
+}
+
+.ui-icon-sed-flag-blue {
+    width:  22px !important;
+    height:  22px !important;
+    background-image: url('../images/flag-blue.png') !important;
+}
+
+.ui-icon-sed-flag-all {
+    width:  22px !important;
+    height:  22px !important;
+    background-image: url('../images/flag-all.png') !important;
+}
+.ui-icon-sed-flag-yellow {
+    background-image: url('../images/flag-yellow.png') !important;
+}
+
+.ui-icon-sed-ok {
+    width:  22px !important;
+    height:  22px !important;
+    background-image: url('../images/ok.png') !important;
+}
+.ui-icon-sed-cancel {
+    width:  22px !important;
+    height:  22px !important;
+
+    background-image: url('../images/cancel.png') !important;
+}
+.ui-icon-sed-refresh{
+    width:  22px !important;
+    height:  22px !important;
+    background-image: url('../images/refresh.png') !important;
+}
+
+.ui-icon-sed-search{
+    width:  22px !important;
+    height:  22px !important;
+    background-image: url('../images/search.png') !important;
+}

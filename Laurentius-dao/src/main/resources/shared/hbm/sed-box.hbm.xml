@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>    
+    <class name="si.laurentius.ebox.SEDBox"
+           table="LAU_BOX">
+        <id name="BoxName" type="java.lang.String" >
+            <column name="sed_box" length="512" />            
+        </id>        
+        <property column="Active_Date_From" name="ActiveFromDate"  length="1024" type="java.util.Date" />       
+        <property column="Active_Date_To" name="ActiveToDate"  length="32" type="java.util.Date" />    
+        <component name="Export" class="si.laurentius.ebox.Export">
+            <property column="EXPORT_ACTIVE" name="Active"  type="java.lang.Boolean" />    
+            <property column="EXPORT_METADATA" name="ExportMetaData"  type="java.lang.Boolean" />                
+            <property column="EXPORT_FOLDER" name="Folder" type="java.lang.String" length="512"  />    
+            <property column="EXPORT_FILE_MASK" name="FileMask" type="java.lang.String" length="512"  />    
+        </component>
+        <component name="Execute" class="si.laurentius.ebox.Execute">
+            <property column="EXECUTE_ACTIVE" name="Active"  type="java.lang.Boolean" />    
+            <property column="EXECUTE_COMMAND" name="Command"  type="java.lang.String" length="512"  /> 
+            <property column="EXECUTE_PARAMETERS" name="Parameters" type="java.lang.String" length="512"  />    
+            
+        </component>
+        <!-- bag name="sedUsers"  access="field" table="sed_user_sedbox" 
+                inverse="true"  fetch="select" lazy="false"    >        
+            <key>
+                <column name="sed_box" not-null="true" />        
+            </key>
+            <many-to-many entity-si.laurentius.user.SEDUser" >
+                <column name="userid" not-null="true" />
+            </many-to-many>
+        </bag -->  
+    </class>    
+    <query si.laurentius.ebox.SEDBox.getAll" ><![CDATA[SELECT p FROM SEDBox p order by p.BoxName asc]]></query>
+    <query si.laurentius.ebox.SEDBox.getByName" ><![CDATA[SELECT p FROM SEDBox p where p.BoxName=:BoxName]]></query>
+
+</hibernate-mapping>

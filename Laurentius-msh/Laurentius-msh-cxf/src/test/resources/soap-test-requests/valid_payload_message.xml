@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope">
+    <env:Header xmlns:env="http://www.w3.org/2003/05/soap-envelope" >
+        <ns2:Messaging xmlns:ns2="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/"
+                       xmlns:ns3="http://schemas.xmlsoap.org/soap/envelope/" 
+                       xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" 
+                       env:mustUnderstand="true" >
+            <ns2:UserMessage>
+                <ns2:MessageInfo>
+                    <ns2:Timestamp>2016-08-05T22:33:10.095+02:00</ns2:Timestamp>
+                    <ns2:MessageId>cdf30e4e-c784-4942-b5a3-32e73d16db21@test.org</ns2:MessageId>
+                </ns2:MessageInfo>
+                <ns2:PartyInfo>
+                    <ns2:From>
+                        <ns2:PartyId type="urn:oasis:names:tc:ebcore:partyid-type:unregistered">a</ns2:PartyId>
+                        <ns2:Role>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/initiator</ns2:Role>
+                    </ns2:From>               
+                    <ns2:To>
+                        <ns2:PartyId type="urn:oasis:names:tc:ebcore:partyid-type:unregistered">b</ns2:PartyId>
+                        <ns2:Role>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/responder</ns2:Role>
+                    </ns2:To>
+                </ns2:PartyInfo>
+                <ns2:CollaborationInfo>                    
+                    <ns2:Service type="test2">test2</ns2:Service>
+                    <ns2:Action>submitMessage</ns2:Action>
+                    <ns2:ConversationId>13752e23-5797-4562-9966-9bce82978d82</ns2:ConversationId>
+                </ns2:CollaborationInfo>				
+                <ns2:PayloadInfo>
+                    <ns2:PartInfo href="cid:72e3c588-dffd-4039-8809-b08f7a598ff6">
+                        <ns2:Description xml:lang="sl">Mail body</ns2:Description>
+                        <ns2:PartProperties>
+                            <ns2:Property name="CompressionType">application/gzip</ns2:Property>
+                            <ns2:Property name="Name">out4322131109597792231.</ns2:Property>
+                            <ns2:Property name="Filename">out4322131109597792231..txt</ns2:Property>
+                            <ns2:Property name="CharacterSet">UTF-8</ns2:Property>
+                            <ns2:Property name="MimeType">plain/text</ns2:Property>
+                            <ns2:Property name="IsEncrypted">false</ns2:Property>
+                        </ns2:PartProperties>
+                    </ns2:PartInfo>
+                </ns2:PayloadInfo>
+            </ns2:UserMessage>
+        </ns2:Messaging>
+    </env:Header>
+    <soap:Body />
+</soap:Envelope>

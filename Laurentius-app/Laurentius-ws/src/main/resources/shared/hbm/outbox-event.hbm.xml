@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>    
+    <class name="si.laurentius.outbox.event.OutEvent"
+           table="LAU_OUTBOX_EVENT">
+        <id name="Id" type="java.math.BigInteger" >
+            <column name="ID" scale="0" />
+            <generator class="sequence">
+                <param name="sequence">SEQ_LAU_OUTBOX_EVENT</param>
+            </generator>
+        </id>
+        <property column="MAIL_ID" name="MailId" type="java.math.BigInteger" scale="0"  index="idx_out_event_mail_id" />
+        <property column="SENDER_MSG_ID" name="SenderMessageId"  length="64" type="java.lang.String" index="idx_out_even_send_msg_id" />
+        <property column="SENDER_EBOX" name="SenderEBox"  length="64" type="java.lang.String" index="idx_out_even_sender_ebox_msg_id" />
+        <property column="STATUS" name="Status"  length="32" type="java.lang.String" />
+        <property column="EVENT_DATE" name="Date"   type="java.util.Date" />        
+        <property column="DESCRIPTION" name="Description"  length="512" type="java.lang.String"   />        
+        <property column="USER_ID" name="UserId"  length="64" type="java.lang.String" />
+        <property column="APPLICATION_ID" name="ApplicationId"  length="128" type="java.lang.String" />
+    </class>    
+    
+    <sql-query name="si.laurentius.outbox.event.OutEvent.getList">
+        <return class="si.laurentius.outbox.event.OutEvent" />	
+   <![CDATA[SELECT 
+                ev.id, 
+                ev.mail_id, 
+                ev.sender_msg_id, 
+                ev.status, 
+                ev.date, 
+                ev.description, 
+                ev.user_id, 
+                ev.application_id
+              FROM 
+                public.sed_outbox_event ev, 
+                public.sed_outbox im
+              WHERE 
+                ev.mail_id = im.id
+                and im.sender_ebox = :senderEBox
+                and (ev.mail_id = :mailId or :mailId is null)
+                and (ev.sender_msg_id = :senderMessageId or :senderMessageId='')
+                order by id asc]]>
+    </sql-query>    
+    <sql-query name="si.laurentius.outbox.event.OutEvent.getMailEventList">
+        <return class="si.laurentius.outbox.event.OutEvent" />	
+   <![CDATA[SELECT 
+  ev.*
+FROM 
+  sed_outbox_event ev
+WHERE ev.mail_id = :mailId  
+  order by id desc]]>
+    </sql-query>                         
+</hibernate-mapping>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      >
+    <composite:interface>
+    </composite:interface>
+
+    <composite:implementation >
+        <h1>#{msg['SED-Boxes']}</h1>
+        <p:panel id="horizontal" toggleTitle="#{msg['INFO']}" header="#{msg['SED-Boxes']}" 
+                 toggleable="true"  collapsed="true">
+            <h:outputText value="#{msg['SEDBoxDesc']}"></h:outputText>
+        </p:panel>
+
+
+        <p:dataTable id="TblSedBox" 
+                     var="sp" 
+                     value="#{adminSEDBoxView.list}"
+                     selectionMode="single"
+                     selection="#{adminSEDBoxView.selected}"
+                     rowKey="#{sp.boxName}"
+
+                     style="padding: 0px; margin: 0px"
+                     scrollable="true" 
+                     scrollHeight="200px"                         
+                     >
+            <p:ajax event="rowDblselect" listener="#{adminSEDBoxView.startEditSelected()}" 
+                    update=":dlgsedbox:sedboxDialogForm:sedboxDetails"  
+                    oncomplete="PF('sedboxDialog').show()"/>
+
+            <f:facet name="header">
+                <p:commandButton value="#{msg['Add']}" styleClass="toolbar-Button" icon="ui-icon-sed-add" 
+                                 update=":dlgsedbox:sedboxDialogForm:sedboxDetails" 
+                                 actionListener="#{adminSEDBoxView.createEditable()}"
+                                 oncomplete="PF('sedboxDialog').show()"  />
+                <p:commandButton value="#{msg['Edit']}" styleClass="toolbar-Button" icon="ui-icon-sed-edit" 
+                                 update=":dlgsedbox:sedboxDialogForm:sedboxDetails" 
+                                 actionListener="#{adminSEDBoxView.startEditSelected()}"
+                                 oncomplete="PF('sedboxDialog').show()" />
+                <p:commandButton value="#{msg['Delete']}" styleClass="toolbar-Button" icon="ui-icon-sed-remove" 
+                                 actionListener="#{adminSEDBoxView.removeSelected()}"
+                                 update=":forms:SettingsSEDBoxes:TblSedBox" />
+
+            </f:facet>
+
+
+            <p:column headerText="#{msg['SED-Box']}" width="200">
+                <h:outputText value="#{sp.boxName}" />
+            </p:column>
+            <p:column headerText="#{msg['ActiveFromDate']}" width="80">
+                <h:outputText value="#{sp.activeFromDate}"  ><f:convertDateTime pattern="dd.MM.yyyy"  timeZone="CET" /></h:outputText>                
+            </p:column>
+            <p:column headerText="#{msg['ActiveToDate']}" width="80">
+                <h:outputText value="#{sp.activeToDate}"  ><f:convertDateTime pattern="dd.MM.yyyy" timeZone="CET" /></h:outputText>                
+            </p:column>
+            <p:column headerText="#{msg['Export']}" width="60">
+                <h:selectBooleanCheckbox value="#{sp.export.active}" disabled="true" />
+            </p:column>
+            <p:column headerText="#{msg['MetaData']}" width="60">
+                <h:selectBooleanCheckbox value="#{sp.export.exportMetaData}" disabled="true" />
+            </p:column>
+
+            <p:column headerText="#{msg['Folder']}">
+                <h:outputText value="#{sp.export.folder}" />
+            </p:column>
+            <p:column headerText="#{msg['Execution']}" width="60">
+                <h:selectBooleanCheckbox value="#{sp.execute.active}" disabled="true" />
+            </p:column>
+            <p:column headerText="#{msg['Command']}" >
+                <h:outputText value="#{sp.execute.command}" />               
+            </p:column>
+
+        </p:dataTable>
+
+
+
+    </composite:implementation>
+
+</html>

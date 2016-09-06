@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      >
+    <composite:interface>
+    </composite:interface>
+
+    <composite:implementation >
+        <h1>#{msg['Users']}</h1>
+        <p:panel id="horizontal" toggleTitle="#{msg['INFO']}" header="#{msg['Users']}" 
+                 toggleable="true"  collapsed="true">
+            <h:outputText value="#{msg['SEDUserDefDesc']}"></h:outputText>
+        </p:panel>
+
+        <p:dataTable id="TblSedUser" 
+                     var="sp" 
+                     value="#{adminSEDUserView.list}"
+                     selectionMode="single"
+                     selection="#{adminSEDUserView.selected}"
+                     rowKey="#{sp.userId}"
+
+                     style="padding: 0px; margin: 0px"
+                     scrollable="true" 
+                     scrollHeight="200px"                     
+                     >
+
+            <p:ajax event="rowDblselect" listener="#{adminSEDUserView.startEditSelected()}" 
+                    update=":dlguser:userDialogForm:userDetails"
+                    oncomplete="PF('userDialog').show()"/>
+
+            <f:facet name="header">
+                <p:commandButton value="#{msg['Add']}" styleClass="toolbar-Button" icon="ui-icon-sed-add" 
+                                 update=":dlguser:userDialogForm:userDetails" 
+                                 actionListener="#{adminSEDUserView.createEditable()}"
+                                 oncomplete="PF('userDialog').show()" />
+                <p:commandButton value="#{msg['Edit']}" styleClass="toolbar-Button" icon="ui-icon-sed-edit" 
+                                 actionListener="#{adminSEDUserView.startEditSelected()}"
+                                 update=":dlguser:userDialogForm:userDetails" 
+                                 oncomplete="PF('userDialog').show()" />
+                <p:commandButton value="#{msg['Delete']}" styleClass="toolbar-Button" icon="ui-icon-sed-remove" 
+                                 actionListener="#{adminSEDUserView.removeSelected()}" update=":forms:SettingsUsers:TblSedUser" />
+
+            </f:facet>
+
+            <p:column style="width:16px">
+                <p:rowToggler />
+            </p:column>
+            <p:column headerText="#{msg['Username']}" width="250">
+                <h:outputText value="#{sp.userId}" />
+            </p:column>              
+            <p:column headerText="#{msg['ActiveFromDate']}" width="60">
+                <h:outputText value="#{sp.activeFromDate}" ><f:convertDateTime pattern="dd.MM.yyyy"  timeZone="CET" /></h:outputText>                
+            </p:column>
+            <p:column headerText="#{msg['ActiveToDate']}" width="60">
+                <h:outputText value="#{sp.activeToDate}" ><f:convertDateTime pattern="dd.MM.yyyy" timeZone="CET" /></h:outputText>                
+            </p:column>
+            <p:rowExpansion>
+                <p:dataList value="#{sp.SEDBoxes}" var="ebox"  type="unordered" itemType="none">
+                    #{ebox.boxName}
+                </p:dataList>
+            </p:rowExpansion>
+
+        </p:dataTable>
+
+    </composite:implementation>
+
+</html>

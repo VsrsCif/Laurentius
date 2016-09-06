@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 (http://www.altova.com) by XMLSpy 2007 Professional Ed., Installed for 5 users (with SMP from 2007-02-06 to 2008-02-07) (CIF VSRS) -->
+<!--Metadata: 
+Owner: Supreme Court Republic of Slovenia 
+Product: SVEV-MSH
+Product Version: 1.0.0
+Artifact Type: Schema
+Descriptive Name: SVEV exception
+Date: 20150612 (12 June 2012)
+Author: Joze Rihtarsic
+-->
+<!-- 
+Copyright 2015, Supreme Court Republic of Slovenia 
+
+ Licensed under the EUPL, Version 1.1 or – as soon they will be approved by 
+ the European Commission - subsequent versions of the EUPL (the "Licence");
+ You may not use this work except in compliance with the Licence.
+ You may obtain a copy of the Licence at:
+
+ https://joinup.ec.europa.eu/software/page/eupl
+
+ Unless required by applicable law or agreed to in writing, software 
+ distributed under the Licence is distributed on an "AS IS" basis, WITHOUT 
+ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the Licence for the specific language governing permissions and  
+ limitations under the Licence.
+-->
+<xs:schema xmlns="http://si.laurentius." xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:con="http://si.laurentius.RControl" targetNamespace="http://si.laurentius.">
+    <xs:import namespace="http://si.laurentius.RControl" schemaLocation="./RControl.xsd"/>
+    <xs:element name="SubmitMailResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="RControl" type="con:RControl"/>
+                <xs:element name="RData">
+                    <xs:complexType>
+                        <xs:attribute name="mailId" use="required" type="xs:integer">
+                            <xs:annotation>
+                                <xs:documentation xml:lang="sl">Enolična oznaka pošiljke, ki jo ob sprejemu določi sed.
+                                </xs:documentation>
+                            </xs:annotation>                            
+                        </xs:attribute>
+                        <xs:attribute name="senderMessageId" use="required">
+                            <xs:annotation>
+                                <xs:documentation xml:lang="sl"> Enolična oznaka pošiljke pošiljatelja. Kombinacija:  @senderEBox  in @senderMessageId mora bit enolična. ID se uporablja tudi za kontrolo pri oddaji pošiljke v vročanje.  Namen atributa je kontrola, ali je pošiljka že bila oddana v dostavo. 
+                                    V primeru, da se sendereBox in senderMessageId že nahaja v tabeli za transport. Servis vrne mshMessageId " in submitDate prve uspešne oddaje sporočila v vročanje. Element RControl/returnValue je v tem primeru WARNING (value="2)) </xs:documentation>
+                            </xs:annotation>
+                            <xs:simpleType>
+                                <xs:restriction base="xs:string">
+                                    <xs:maxLength value="64"/>
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="submittedDate" type="xs:dateTime" use="required">
+                            <xs:annotation>
+                                <xs:documentation xml:lang="sl">Datum oddaje pošiljke v vročanje. V primeru, da se senderBox in senderMessageId že nahaja v tabeli za transport. Servis vrne čas prve uspešne oddaje sporočila v vročanje</xs:documentation>
+                            </xs:annotation>
+                        </xs:attribute>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

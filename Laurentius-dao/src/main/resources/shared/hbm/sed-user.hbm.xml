@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>    
+    <class name="si.laurentius.user.SEDUser"
+           table="LAU_USER">
+        <id name="UserId" type="java.lang.String" >
+            <column name="userid" length="512" />            
+        </id>        
+        <property column="Active_Date_From" name="ActiveFromDate"  length="1024" type="java.util.Date" />       
+        <property column="Active_Date_To" name="ActiveToDate"  length="32" type="java.util.Date" />        
+        
+        <bag name="sedBoxes"  access="field" table="sed_user_sedbox" 
+             inverse="false"  fetch="select" lazy="false" >
+            <key>
+                <column name="userid" not-null="true" />
+            </key>
+            <many-to-many entity-si.laurentius.ebox.SEDBox" unique="true">
+                <column name="sed_box" not-null="true" />
+            </many-to-many>
+        </bag>
+        
+        
+    </class>    
+    <query si.laurentius.user.SEDUser.getAll" ><![CDATA[SELECT p FROM SEDUser p]]></query>
+    <query si.laurentius.user.SEDUser.getByUserId" ><![CDATA[SELECT p FROM SEDUser p where p.UserId=:id]]></query>
+
+</hibernate-mapping>

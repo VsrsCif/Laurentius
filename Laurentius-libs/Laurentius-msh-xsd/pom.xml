@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>si.vsrs.cif.sed</groupId>
+        <artifactId>Laurentius</artifactId>
+        <version>1.0</version>
+        <relativePath>../../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>Laurentius-msh-xsd</artifactId>
+
+    <name>Laurentius-msh-xsd</name>
+    <description>Modul generates java object from  ebMS 3.0 xml entities:
+        - SOAP_1.1.xsd (http://schemas.xmlsoap.org/soap/envelope/)
+        - SOAP_1.2.xsd (http://www.w3.org/2003/05/soap-envelope/)  
+        - xml.xsd (http://www.w3.org/2001/03/xml.xsd)
+        
+        - ebms-header-3_0-200704.xsd (http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/core/ebms-header-3_0-200704.xsd)
+        - ebbp-signals-2.0.xsd  (http://docs.oasis-open.org/ebxml-bp/2.0.4/ebbp-signals-2.0.4.xsd)
+        - xenc-schema.xsd  (http://www.w3.org/TR/xmlenc-core/xenc-schema.xsd)
+        - xmldsig-core-schema.xsd (http://www.w3.org/TR/xmldsig-core/xmldsig-core-schema.xsd)
+        - xlink.xsd (http://www.w3.org/TR/xml-i18n-bp/xmlspec/xlink.xsd)      
+        - XAdES-1.1.1.xsd (http://uri.etsi.org/01903/v1.1.1/XAdES.xsd)
+    </description>
+    <organization>
+        <name>Supreme Court Republic of Slovenia</name>
+        <url>http://www.sodisce.si/</url>
+    </organization>
+    <licenses>
+        <license>
+            <name>European Union Public Licence (EUPL)</name>
+            <url>https://joinup.ec.europa.eu/software/page/eupl</url>
+            <distribution>repo</distribution>
+            <comments>European Free/Open Source Software (F/OSS) licence</comments>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>jrc</id>
+            <name>Jože Rihtaršič</name>
+            <email>joze.rihtarsic@sodisce.si</email>
+            <organization>Supreme Court Republic of Slovenia</organization>
+            <organizationUrl>http://www.sodisce.si/</organizationUrl>
+            <roles>
+                <role>architect</role>
+                <role>developer</role>
+            </roles>
+        </developer>
+    </developers>
+
+    <build>
+        <plugins>    
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jaxb2-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+</project>

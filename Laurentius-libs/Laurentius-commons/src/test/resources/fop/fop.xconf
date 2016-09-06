@@ -1,0 +1,33 @@
+<fop version="1.0">
+<fonts>
+    <substitutions>
+      <substitution>
+        <from font-family=".*" />
+        <to font-family="Arial"/>
+      </substitution>
+    </substitutions>
+  </fonts>
+
+<renderers>
+   <renderer mime="application/pdf">
+
+       <fonts>
+<substitutions>
+      <substitution>
+        <from font-family=".*" />
+        <to font-family="Arial"/>
+      </substitution>
+    </substitutions>
+           <font kerning="yes" embed-url="/sluzba/code/SVEV2.0/laurentius.home/svev/fonts/ArialMT.ttf" embedding-mode="subset">
+               <font-triplet name="Arial" style="normal" weight="normal"/>
+           </font>
+	       <font kerning="yes" embed-url="/sluzba/code/SVEV2.0/laurentius.home/svev/fonts/Arial-BoldMT.ttf" embedding-mode="subset">
+               <font-triplet name="Arial" style="normal" weight="bold"/>
+           </font>
+             </fonts>
+   </renderer>
+</renderers>
+</fop>
+
+
+
