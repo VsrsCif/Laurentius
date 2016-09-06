@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope">
-	<env:Header xmlns:env="http://www.w3.org/2003/05/soap-envelope" />		
-	<soap:Body><test>Missing ebms 3.0 header: Messaging</test></soap:Body>
-</soap:Envelope>

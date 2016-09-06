@@ -1,7 +1,0 @@
-<jboss-deployment-structure>
-    <deployment>
-        <dependencies>
-            <module name="org.sed" />         
-        </dependencies>
-    </deployment>
-</jboss-deployment-structure>
