@@ -11,7 +11,8 @@ jdk:
   
 script:  
   #run all tests 
-  - mvn -P CI-BuildWithReports sonar:sonar -Dsonar.host.url=https://sonarqube.com -Dsonar.login=$SONAR_TOKEN
+  - mvn -P CI-BuildWithReports 
+  #sonar:sonar -Dsonar.host.url=https://sonarqube.com -Dsonar.login=$SONAR_TOKEN
 
 
 branches:
