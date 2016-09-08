@@ -7,8 +7,8 @@
       http://www.jboss.org/j2ee/schema/jboss-web_5_1.xsd">
     
     <!-- Realm that will be used -->
-    <!-- security-domain>java:/jaas/sed-realm</security-domain -->
-    <security-domain>sed-realm</security-domain>
+    <!-- security-domain>java:/jaas/laurentius-realm"</security-domain -->
+    <security-domain>laurentius-realm</security-domain>
     <!-- URL to access the web module -->
     <context-root>zpp-plugin</context-root>
 

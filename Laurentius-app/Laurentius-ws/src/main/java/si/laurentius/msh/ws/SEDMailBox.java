@@ -111,9 +111,9 @@ import si.laurentius.msh.ws.utils.SEDRequestUtils;
  * @author Jože Rihtaršič
  */
 @Interceptors(JEELogInterceptor.class)
-@WebService(serviceName = "sed-mailbox", portName = "SEDMailBoxWSPort",
-    endpointInterface = "si.laurentius.SEDMailBoxWS", targetNamespace = "http://si.laurentius.",
-    wsdlLocation = "WEB-INF/wsdl/sed-mailbox.wsdl")
+@WebService(serviceName = "mailbox", portName = "SEDMailBoxWSPort",
+    endpointInterface = "si.laurentius.SEDMailBoxWS", targetNamespace = "http://si.laurentius",
+    wsdlLocation = "WEB-INF/wsdl/mailbox.wsdl")
 public class SEDMailBox implements SEDMailBoxWS {
 
   private static final SEDLogger LOG = new SEDLogger(SEDMailBox.class);

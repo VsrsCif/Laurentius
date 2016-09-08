@@ -53,7 +53,7 @@ import si.laurentius.commons.utils.SEDLogger;
 public class TestLoad {
 
     public static String MAILBOX_ADDRESS =
-            "http://10.48.0.101:8580/Laurentius-ws/sed-mailbox?wsdl";
+            "http://10.48.0.101:8580/Laurentius-ws/mailbox?wsdl";
     public static String BLOB_FOLDER = "/sluzba/code/data/test-pdf/";
 
     public static String[] SENDER_NAMES = new String[]{

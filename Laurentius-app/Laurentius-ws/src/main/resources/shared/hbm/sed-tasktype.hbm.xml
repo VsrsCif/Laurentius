@@ -28,8 +28,8 @@
         <property column="MANDATORY" name="Mandatory"   type="java.lang.Boolean"/>
     </class>
     
-    <query si.laurentius.cron.SEDTaskType.getByType" ><![CDATA[SELECT p FROM SEDTaskType p WHERE p.type = :type]]></query>     
-    <query si.laurentius.cron.SEDTaskType.getAll" ><![CDATA[SELECT p FROM SEDTaskType p order by id asc]]></query>
+    <query name="si.laurentius.cron.SEDTaskType.getByType" ><![CDATA[SELECT p FROM SEDTaskType p WHERE p.type = :type]]></query>     
+    <query name="si.laurentius.cron.SEDTaskType.getAll" ><![CDATA[SELECT p FROM SEDTaskType p order by id asc]]></query>
     
 
 </hibernate-mapping>

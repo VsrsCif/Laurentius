@@ -42,7 +42,7 @@ import si.laurentius.commons.utils.xml.XMLUtils;
  *
  * @author sluzba
  */
-@WebServiceProvider(serviceName = "ebms")
+@WebServiceProvider(serviceName = "msh")
 @ServiceMode(value = Service.Mode.MESSAGE)
 @BindingType(SOAPBinding.SOAP12HTTP_BINDING)
 @org.apache.cxf.interceptor.InInterceptors(interceptors = {

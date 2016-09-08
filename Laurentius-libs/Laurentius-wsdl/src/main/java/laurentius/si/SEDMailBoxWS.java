@@ -15,7 +15,7 @@ import javax.xml.bind.annotation.XmlSeeAlso;
  * Generated source version: 2.2
  * 
  */
-@WebService(name = "SEDMailBoxWS", targetNamespace = "http://si.laurentius.")
+@WebService(name = "SEDMailBoxWS", targetNamespace = "http://si.laurentius")
 @SOAPBinding(parameterStyle = SOAPBinding.ParameterStyle.BARE)
 @XmlSeeAlso({
     laurentius.si.ObjectFactory.class,
@@ -44,9 +44,9 @@ public interface SEDMailBoxWS {
      * @throws SEDException_Exception
      */
     @WebMethod(action = "http://si.laurentius.submitMail")
-    @WebResult(name = "SubmitMailResponse", targetNamespace = "http://si.laurentius.", partName = "SubmitMailResponse")
+    @WebResult(name = "SubmitMailResponse", targetNamespace = "http://si.laurentius", partName = "SubmitMailResponse")
     public SubmitMailResponse submitMail(
-        @WebParam(name = "SubmitMailRequest", targetNamespace = "http://si.laurentius.", partName = "SubmitMailRequest")
+        @WebParam(name = "SubmitMailRequest", targetNamespace = "http://si.laurentius", partName = "SubmitMailRequest")
         SubmitMailRequest submitMailRequest)
         throws SEDException_Exception
     ;
@@ -62,9 +62,9 @@ public interface SEDMailBoxWS {
      * @throws SEDException_Exception
      */
     @WebMethod(action = "http://si.laurentius.getOutMailList")
-    @WebResult(name = "OutMailListResponse", targetNamespace = "http://si.laurentius.", partName = "OutMailListResponse")
+    @WebResult(name = "OutMailListResponse", targetNamespace = "http://si.laurentius", partName = "OutMailListResponse")
     public OutMailListResponse getOutMailList(
-        @WebParam(name = "OutMailListRequest", targetNamespace = "http://si.laurentius.", partName = "OutMailListRequest")
+        @WebParam(name = "OutMailListRequest", targetNamespace = "http://si.laurentius", partName = "OutMailListRequest")
         OutMailListRequest outMailListRequest)
         throws SEDException_Exception
     ;
@@ -80,9 +80,9 @@ public interface SEDMailBoxWS {
      * @throws SEDException_Exception
      */
     @WebMethod(action = "http://si.laurentius.getInMailList")
-    @WebResult(name = "InMailListResponse", targetNamespace = "http://si.laurentius.", partName = "InMailListResponse")
+    @WebResult(name = "InMailListResponse", targetNamespace = "http://si.laurentius", partName = "InMailListResponse")
     public InMailListResponse getInMailList(
-        @WebParam(name = "InMailListRequest", targetNamespace = "http://si.laurentius.", partName = "IntMailListRequest")
+        @WebParam(name = "InMailListRequest", targetNamespace = "http://si.laurentius", partName = "IntMailListRequest")
         InMailListRequest intMailListRequest)
         throws SEDException_Exception
     ;
@@ -98,9 +98,9 @@ public interface SEDMailBoxWS {
      * @throws SEDException_Exception
      */
     @WebMethod(action = "http://si.laurentius.getInMailEventList")
-    @WebResult(name = "InMailEventListResponse", targetNamespace = "http://si.laurentius.", partName = "InMailEventListResponse")
+    @WebResult(name = "InMailEventListResponse", targetNamespace = "http://si.laurentius", partName = "InMailEventListResponse")
     public InMailEventListResponse getInMailEventList(
-        @WebParam(name = "InMailEventListRequest", targetNamespace = "http://si.laurentius.", partName = "InMailEventListRequest")
+        @WebParam(name = "InMailEventListRequest", targetNamespace = "http://si.laurentius", partName = "InMailEventListRequest")
         InMailEventListRequest inMailEventListRequest)
         throws SEDException_Exception
     ;
@@ -116,9 +116,9 @@ public interface SEDMailBoxWS {
      * @throws SEDException_Exception
      */
     @WebMethod(action = "http://si.laurentius.getOutMailEventList")
-    @WebResult(name = "OutMailEventListResponse", targetNamespace = "http://si.laurentius.", partName = "OutMailEventListResponse")
+    @WebResult(name = "OutMailEventListResponse", targetNamespace = "http://si.laurentius", partName = "OutMailEventListResponse")
     public OutMailEventListResponse getOutMailEventList(
-        @WebParam(name = "OutMailEventListRequest", targetNamespace = "http://si.laurentius.", partName = "OutMailEventListRequest")
+        @WebParam(name = "OutMailEventListRequest", targetNamespace = "http://si.laurentius", partName = "OutMailEventListRequest")
         OutMailEventListRequest outMailEventListRequest)
         throws SEDException_Exception
     ;
@@ -134,9 +134,9 @@ public interface SEDMailBoxWS {
      * @throws SEDException_Exception
      */
     @WebMethod(action = "http://si.laurentius.modifyInMail")
-    @WebResult(name = "ModifyInMailResponse", targetNamespace = "http://si.laurentius.", partName = "ModifyInMailResponse")
+    @WebResult(name = "ModifyInMailResponse", targetNamespace = "http://si.laurentius", partName = "ModifyInMailResponse")
     public ModifyInMailResponse modifyInMail(
-        @WebParam(name = "ModifyInMailRequest", targetNamespace = "http://si.laurentius.", partName = "ModifyInMailRequest")
+        @WebParam(name = "ModifyInMailRequest", targetNamespace = "http://si.laurentius", partName = "ModifyInMailRequest")
         ModifyInMailRequest modifyInMailRequest)
         throws SEDException_Exception
     ;
@@ -152,9 +152,9 @@ public interface SEDMailBoxWS {
      * @throws SEDException_Exception
      */
     @WebMethod(action = "http://si.laurentius.modifyOutMail")
-    @WebResult(name = "ModifyOutMailResponse", targetNamespace = "http://si.laurentius.", partName = "ModifyOutMailResponse")
+    @WebResult(name = "ModifyOutMailResponse", targetNamespace = "http://si.laurentius", partName = "ModifyOutMailResponse")
     public ModifyOutMailResponse modifyOutMail(
-        @WebParam(name = "ModifyOutMailRequest", targetNamespace = "http://si.laurentius.", partName = "ModifyOutMailRequest")
+        @WebParam(name = "ModifyOutMailRequest", targetNamespace = "http://si.laurentius", partName = "ModifyOutMailRequest")
         ModifyOutMailRequest modifyOutMailRequest)
         throws SEDException_Exception
     ;
@@ -170,9 +170,9 @@ public interface SEDMailBoxWS {
      * @throws SEDException_Exception
      */
     @WebMethod(action = "http://si.laurentius.getInMail")
-    @WebResult(name = "GetInMailResponse", targetNamespace = "http://si.laurentius.", partName = "GetInMailResponse")
+    @WebResult(name = "GetInMailResponse", targetNamespace = "http://si.laurentius", partName = "GetInMailResponse")
     public GetInMailResponse getInMail(
-        @WebParam(name = "GetInMailRequest", targetNamespace = "http://si.laurentius.", partName = "GetInMailRequest")
+        @WebParam(name = "GetInMailRequest", targetNamespace = "http://si.laurentius", partName = "GetInMailRequest")
         GetInMailRequest getInMailRequest)
         throws SEDException_Exception
     ;

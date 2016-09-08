@@ -9,19 +9,19 @@
         <property column="Active_Date_From" name="ActiveFromDate"  length="1024" type="java.util.Date" />       
         <property column="Active_Date_To" name="ActiveToDate"  length="32" type="java.util.Date" />        
         
-        <bag name="sedBoxes"  access="field" table="sed_user_sedbox" 
+        <bag name="sedBoxes"  access="field" table="lau_user_sedbox" 
              inverse="false"  fetch="select" lazy="false" >
             <key>
                 <column name="userid" not-null="true" />
             </key>
-            <many-to-many entity-si.laurentius.ebox.SEDBox" unique="true">
-                <column name="sed_box" not-null="true" />
+            <many-to-many entity-name="si.laurentius.ebox.SEDBox" unique="true">
+                <column name="lau_box" not-null="true" />
             </many-to-many>
         </bag>
         
         
     </class>    
-    <query si.laurentius.user.SEDUser.getAll" ><![CDATA[SELECT p FROM SEDUser p]]></query>
-    <query si.laurentius.user.SEDUser.getByUserId" ><![CDATA[SELECT p FROM SEDUser p where p.UserId=:id]]></query>
+    <query name="si.laurentius.user.SEDUser.getAll" ><![CDATA[SELECT p FROM SEDUser p]]></query>
+    <query name="si.laurentius.user.SEDUser.getByUserId" ><![CDATA[SELECT p FROM SEDUser p where p.UserId=:id]]></query>
 
 </hibernate-mapping>

@@ -19,7 +19,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="errorCode" type="{http://si.laurentius.}SEDExceptionCode" minOccurs="0"/>
+ *         &lt;element name="errorCode" type="{http://si.laurentius}SEDExceptionCode" minOccurs="0"/>
  *         &lt;element name="message" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="errorDump" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *       &lt;/sequence>
@@ -41,11 +41,11 @@ public class SEDException
     implements Serializable
 {
 
-    @XmlElement(namespace = "http://si.laurentius.")
+    @XmlElement(namespace = "http://si.laurentius")
     protected SEDExceptionCode errorCode;
-    @XmlElement(namespace = "http://si.laurentius.")
+    @XmlElement(namespace = "http://si.laurentius")
     protected String message;
-    @XmlElement(namespace = "http://si.laurentius.")
+    @XmlElement(namespace = "http://si.laurentius")
     protected String errorDump;
 
     /**

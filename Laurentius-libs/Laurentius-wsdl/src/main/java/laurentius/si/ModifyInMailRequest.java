@@ -42,7 +42,7 @@ import control.laurentius.si.Control;
  *                   &lt;/simpleType>
  *                 &lt;/attribute>
  *                 &lt;attribute name="mailId" use="required" type="{http://www.w3.org/2001/XMLSchema}integer" />
- *                 &lt;attribute name="action" use="required" type="{http://si.laurentius.}ModifyActionCode" />
+ *                 &lt;attribute name="action" use="required" type="{http://si.laurentius}ModifyActionCode" />
  *               &lt;/restriction>
  *             &lt;/complexContent>
  *           &lt;/complexType>
@@ -137,7 +137,7 @@ public class ModifyInMailRequest
      *         &lt;/simpleType>
      *       &lt;/attribute>
      *       &lt;attribute name="mailId" use="required" type="{http://www.w3.org/2001/XMLSchema}integer" />
-     *       &lt;attribute name="action" use="required" type="{http://si.laurentius.}ModifyActionCode" />
+     *       &lt;attribute name="action" use="required" type="{http://si.laurentius}ModifyActionCode" />
      *     &lt;/restriction>
      *   &lt;/complexContent>
      * &lt;/complexType>

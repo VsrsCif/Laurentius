@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <con:soapui-project id="d55e8025-6873-40bf-9490-778240e87fd0" activeEnvironment="Default" name="SEDMailBoxWS" resourceRoot="" soapui-version="5.2.1" abortOnError="false" runType="SEQUENTIAL" xmlns:con="http://eviware.com/soapui/config">
     <con:settings/>
-    <con:interface xsi:type="con:WsdlInterface" id="07b351d6-95c8-4773-ab6b-0db9c9b6f966" wsaVersion="NONE" name="SEDMailBoxPortBinding" type="wsdl" bindingName="{http://si.laurentius.}SEDMailBoxPortBinding" soapVersion="1_1" anonymous="optional" definition="http://localhost:8080/Laurentius-ws/sed-mailbox?wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <con:interface xsi:type="con:WsdlInterface" id="07b351d6-95c8-4773-ab6b-0db9c9b6f966" wsaVersion="NONE" name="SEDMailBoxPortBinding" type="wsdl" bindingName="{http://si.laurentius.}SEDMailBoxPortBinding" soapVersion="1_1" anonymous="optional" definition="http://localhost:8080/Laurentius-ws/mailbox?wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <con:settings/>
-        <con:definitionCache type="TEXT" rootPart="http://localhost:8080/Laurentius-ws/sed-mailbox?wsdl">
+        <con:definitionCache type="TEXT" rootPart="http://localhost:8080/Laurentius-ws/mailbox?wsdl">
             <con:part>
-                <con:url>http://localhost:8080/Laurentius-ws/sed-mailbox?wsdl</con:url>
-                <con:content><![CDATA[<definitions name="SEDMailBoxWS" targetNamespace="http://si.laurentius." xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://si.laurentius." xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns="http://schemas.xmlsoap.org/soap/encoding/" xmlns="http://schemas.xmlsoap.org/wsdl/">
+                <con:url>http://localhost:8080/Laurentius-ws/mailbox?wsdl</con:url>
+                <con:content><![CDATA[<definitions name="SEDMailBoxWS" targetNamespace="http://si.laurentius" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://si.laurentius" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns="http://schemas.xmlsoap.org/soap/encoding/" xmlns="http://schemas.xmlsoap.org/wsdl/">
   <documentation>WSDL določa servise za integracijo s SVEV-MSH modulom
         * za odpremo pošiljke preko MSH modula
         * prevzemanje statusov izhodnih pošiljk
@@ -21,21 +21,21 @@
         - Izdelava wsdl vmesnika</documentation>
   <types>
     <xsd:schema>
-      <xsd:import namespace="http://si.laurentius." schemaLocation="http://localhost:8080/Laurentius-ws/sed-mailbox?xsd=exception/sedexception.xsd"/>
-      <xsd:import namespace="http://si.laurentius." schemaLocation="http://localhost:8080/Laurentius-ws/sed-mailbox?xsd=messages/SubmitMailRequest.xsd"/>
-      <xsd:import namespace="http://si.laurentius." schemaLocation="http://localhost:8080/Laurentius-ws/sed-mailbox?xsd=messages/SubmitMailResponse.xsd"/>
-      <xsd:import namespace="http://si.laurentius." schemaLocation="http://localhost:8080/Laurentius-ws/sed-mailbox?xsd=messages/OutMailListRequest.xsd"/>
-      <xsd:import namespace="http://si.laurentius." schemaLocation="http://localhost:8080/Laurentius-ws/sed-mailbox?xsd=messages/OutMailListResponse.xsd"/>
-      <xsd:import namespace="http://si.laurentius." schemaLocation="http://localhost:8080/Laurentius-ws/sed-mailbox?xsd=messages/OutMailEventListRequest.xsd"/>
-      <xsd:import namespace="http://si.laurentius." schemaLocation="http://localhost:8080/Laurentius-ws/sed-mailbox?xsd=messages/OutMailEventListResponse.xsd"/>
-      <xsd:import namespace="http://si.laurentius." schemaLocation="http://localhost:8080/Laurentius-ws/sed-mailbox?xsd=messages/InMailListRequest.xsd"/>
-      <xsd:import namespace="http://si.laurentius." schemaLocation="http://localhost:8080/Laurentius-ws/sed-mailbox?xsd=messages/InMailListResponse.xsd"/>
-      <xsd:import namespace="http://si.laurentius." schemaLocation="http://localhost:8080/Laurentius-ws/sed-mailbox?xsd=messages/ModifyInMailRequest.xsd"/>
-      <xsd:import namespace="http://si.laurentius." schemaLocation="http://localhost:8080/Laurentius-ws/sed-mailbox?xsd=messages/ModifyInMailResponse.xsd"/>
-      <xsd:import namespace="http://si.laurentius." schemaLocation="http://localhost:8080/Laurentius-ws/sed-mailbox?xsd=messages/InMailEventListRequest.xsd"/>
-      <xsd:import namespace="http://si.laurentius." schemaLocation="http://localhost:8080/Laurentius-ws/sed-mailbox?xsd=messages/InMailEventListResponse.xsd"/>
-      <xsd:import namespace="http://si.laurentius." schemaLocation="http://localhost:8080/Laurentius-ws/sed-mailbox?xsd=messages/GetInMailRequest.xsd"/>
-      <xsd:import namespace="http://si.laurentius." schemaLocation="http://localhost:8080/Laurentius-ws/sed-mailbox?xsd=messages/GetInMailResponse.xsd"/>
+      <xsd:import namespace="http://si.laurentius" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=exception/sedexception.xsd"/>
+      <xsd:import namespace="http://si.laurentius" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/SubmitMailRequest.xsd"/>
+      <xsd:import namespace="http://si.laurentius" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/SubmitMailResponse.xsd"/>
+      <xsd:import namespace="http://si.laurentius" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/OutMailListRequest.xsd"/>
+      <xsd:import namespace="http://si.laurentius" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/OutMailListResponse.xsd"/>
+      <xsd:import namespace="http://si.laurentius" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/OutMailEventListRequest.xsd"/>
+      <xsd:import namespace="http://si.laurentius" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/OutMailEventListResponse.xsd"/>
+      <xsd:import namespace="http://si.laurentius" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/InMailListRequest.xsd"/>
+      <xsd:import namespace="http://si.laurentius" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/InMailListResponse.xsd"/>
+      <xsd:import namespace="http://si.laurentius" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/ModifyInMailRequest.xsd"/>
+      <xsd:import namespace="http://si.laurentius" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/ModifyInMailResponse.xsd"/>
+      <xsd:import namespace="http://si.laurentius" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/InMailEventListRequest.xsd"/>
+      <xsd:import namespace="http://si.laurentius" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/InMailEventListResponse.xsd"/>
+      <xsd:import namespace="http://si.laurentius" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/GetInMailRequest.xsd"/>
+      <xsd:import namespace="http://si.laurentius" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/GetInMailResponse.xsd"/>
     </xsd:schema>
   </types>
   <message name="InMailEventListResponse">
@@ -216,14 +216,14 @@
   </binding>
   <service name="SEDMailBoxWS">
     <port binding="tns:SEDMailBoxPortBinding" name="SEDMailBoxWSPort">
-      <soap:address location="http://localhost:8080/Laurentius-ws/sed-mailbox"/>
+      <soap:address location="http://localhost:8080/Laurentius-ws/mailbox"/>
     </port>
   </service>
 </definitions>]]></con:content>
                 <con:type>http://schemas.xmlsoap.org/wsdl/</con:type>
             </con:part>
             <con:part>
-                <con:url>http://localhost:8080/Laurentius-ws/sed-mailbox?xsd=exception/sedexception.xsd</con:url>
+                <con:url>http://localhost:8080/Laurentius-ws/mailbox?xsd=exception/sedexception.xsd</con:url>
                 <con:content><![CDATA[<!--Metadata: 
 Owner: Supreme Court Republic of Slovenia 
 Product: SVEV-MSH
@@ -246,7 +246,7 @@ Author: Joze Rihtarsic-->
  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the Licence for the specific language governing permissions and  
  limitations under the Licence.-->
-<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://si.laurentius." xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://si.laurentius.">
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://si.laurentius" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://si.laurentius">
   <xs:element name="SEDException" type="tns:SEDException"/>
   <xs:complexType name="SEDException">
     <xs:sequence>
@@ -274,7 +274,7 @@ Author: Joze Rihtarsic-->
                 <con:type>http://www.w3.org/2001/XMLSchema</con:type>
             </con:part>
             <con:part>
-                <con:url>http://localhost:8080/Laurentius-ws/sed-mailbox?xsd=messages/SubmitMailRequest.xsd</con:url>
+                <con:url>http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/SubmitMailRequest.xsd</con:url>
                 <con:content><![CDATA[<!--Metadata: 
 Owner: Supreme Court Republic of Slovenia 
 Product: SVEV-MSH
@@ -297,9 +297,9 @@ Author: Joze Rihtarsic-->
  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the Licence for the specific language governing permissions and  
  limitations under the Licence.-->
-<xs:schema targetNamespace="http://si.laurentius." xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://si.laurentius.outbox/mail" xmlns:con="http://si.laurentius.Control" xmlns="http://si.laurentius.">
-  <xs:import namespace="http://si.laurentius.Control" schemaLocation="http://localhost:8080/Laurentius-ws/sed-mailbox?xsd=messages/Control.xsd"/>
-  <xs:import namespace="http://si.laurentius.outbox/mail" schemaLocation="http://localhost:8080/Laurentius-ws/sed-mailbox?xsd=entities/outbox-mail.xsd"/>
+<xs:schema targetNamespace="http://si.laurentius" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://si.laurentius.outbox/mail" xmlns:con="http://si.laurentius.Control" xmlns="http://si.laurentius">
+  <xs:import namespace="http://si.laurentius.Control" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/Control.xsd"/>
+  <xs:import namespace="http://si.laurentius.outbox/mail" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=entities/outbox-mail.xsd"/>
   <xs:element name="SubmitMailRequest">
     <xs:complexType>
       <xs:sequence>
@@ -318,7 +318,7 @@ Author: Joze Rihtarsic-->
                 <con:type>http://www.w3.org/2001/XMLSchema</con:type>
             </con:part>
             <con:part>
-                <con:url>http://localhost:8080/Laurentius-ws/sed-mailbox?xsd=messages/Control.xsd</con:url>
+                <con:url>http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/Control.xsd</con:url>
                 <con:content><![CDATA[<!--Metadata: 
 Owner: Supreme Court Republic of Slovenia 
 Product: SVEV-MSH
@@ -389,7 +389,7 @@ Author: Joze Rihtarsic-->
                 <con:type>http://www.w3.org/2001/XMLSchema</con:type>
             </con:part>
             <con:part>
-                <con:url>http://localhost:8080/Laurentius-ws/sed-mailbox?xsd=entities/outbox-mail.xsd</con:url>
+                <con:url>http://localhost:8080/Laurentius-ws/mailbox?xsd=entities/outbox-mail.xsd</con:url>
                 <con:content><![CDATA[<!--Metadata: 
 Owner: Supreme Court Republic of Slovenia 
 Product: SVEV-MSH
@@ -413,8 +413,8 @@ Author: Joze Rihtarsic-->
  See the Licence for the specific language governing permissions and  
  limitations under the Licence.-->
 <xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://si.laurentius.outbox/mail" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns3="http://si.laurentius.outbox/property" xmlns:ns2="http://si.laurentius.outbox/payload" xmlns:ns1="http://si.laurentius.outbox/mail">
-  <xs:import namespace="http://si.laurentius.outbox/property" schemaLocation="http://localhost:8080/Laurentius-ws/sed-mailbox?xsd=entities/outbox-property.xsd"/>
-  <xs:import namespace="http://si.laurentius.outbox/payload" schemaLocation="http://localhost:8080/Laurentius-ws/sed-mailbox?xsd=entities/outbox-payload.xsd"/>
+  <xs:import namespace="http://si.laurentius.outbox/property" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=entities/outbox-property.xsd"/>
+  <xs:import namespace="http://si.laurentius.outbox/payload" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=entities/outbox-payload.xsd"/>
   <xs:element name="OutMail" type="ns1:OutMailType"/>
   <xs:complexType name="OutMailType">
     <xs:annotation>
@@ -571,7 +571,7 @@ Author: Joze Rihtarsic-->
                 <con:type>http://www.w3.org/2001/XMLSchema</con:type>
             </con:part>
             <con:part>
-                <con:url>http://localhost:8080/Laurentius-ws/sed-mailbox?xsd=entities/outbox-property.xsd</con:url>
+                <con:url>http://localhost:8080/Laurentius-ws/mailbox?xsd=entities/outbox-property.xsd</con:url>
                 <con:content><![CDATA[<!--Metadata: 
 Owner: Supreme Court Republic of Slovenia 
 Product: SVEV-MSH
@@ -639,7 +639,7 @@ Author: Joze Rihtarsic-->
                 <con:type>http://www.w3.org/2001/XMLSchema</con:type>
             </con:part>
             <con:part>
-                <con:url>http://localhost:8080/Laurentius-ws/sed-mailbox?xsd=entities/outbox-payload.xsd</con:url>
+                <con:url>http://localhost:8080/Laurentius-ws/mailbox?xsd=entities/outbox-payload.xsd</con:url>
                 <con:content><![CDATA[<!--Metadata: 
 Owner: Supreme Court Republic of Slovenia 
 Product: SVEV-MSH
@@ -768,7 +768,7 @@ Author: Joze Rihtarsic-->
                 <con:type>http://www.w3.org/2001/XMLSchema</con:type>
             </con:part>
             <con:part>
-                <con:url>http://localhost:8080/Laurentius-ws/sed-mailbox?xsd=messages/SubmitMailResponse.xsd</con:url>
+                <con:url>http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/SubmitMailResponse.xsd</con:url>
                 <con:content><![CDATA[<!--edited with XMLSpy v2008 (http://www.altova.com) by XMLSpy 2007 Professional Ed., Installed for 5 users (with SMP from 2007-02-06 to 2008-02-07) (CIF VSRS)-->
 <!--Metadata: 
 Owner: Supreme Court Republic of Slovenia 
@@ -792,8 +792,8 @@ Author: Joze Rihtarsic-->
  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the Licence for the specific language governing permissions and  
  limitations under the Licence.-->
-<xs:schema targetNamespace="http://si.laurentius." xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:con="http://si.laurentius.RControl" xmlns="http://si.laurentius.">
-  <xs:import namespace="http://si.laurentius.RControl" schemaLocation="http://localhost:8080/Laurentius-ws/sed-mailbox?xsd=messages/RControl.xsd"/>
+<xs:schema targetNamespace="http://si.laurentius" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:con="http://si.laurentius.RControl" xmlns="http://si.laurentius">
+  <xs:import namespace="http://si.laurentius.RControl" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/RControl.xsd"/>
   <xs:element name="SubmitMailResponse">
     <xs:complexType>
       <xs:sequence>
@@ -830,7 +830,7 @@ Author: Joze Rihtarsic-->
                 <con:type>http://www.w3.org/2001/XMLSchema</con:type>
             </con:part>
             <con:part>
-                <con:url>http://localhost:8080/Laurentius-ws/sed-mailbox?xsd=messages/RControl.xsd</con:url>
+                <con:url>http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/RControl.xsd</con:url>
                 <con:content><![CDATA[<!--Metadata: 
 Owner: Supreme Court Republic of Slovenia 
 Product: SVEV-MSH
@@ -905,7 +905,7 @@ Author: Joze Rihtarsic-->
                 <con:type>http://www.w3.org/2001/XMLSchema</con:type>
             </con:part>
             <con:part>
-                <con:url>http://localhost:8080/Laurentius-ws/sed-mailbox?xsd=messages/OutMailListRequest.xsd</con:url>
+                <con:url>http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/OutMailListRequest.xsd</con:url>
                 <con:content><![CDATA[<!--edited with XMLSpy v2008 (http://www.altova.com) by XMLSpy 2007 Professional Ed., Installed for 5 users (with SMP from 2007-02-06 to 2008-02-07) (CIF VSRS)-->
 <!--Metadata: 
 Owner: Supreme Court Republic of Slovenia 
@@ -929,8 +929,8 @@ Author: Joze Rihtarsic-->
  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the Licence for the specific language governing permissions and  
  limitations under the Licence.-->
-<xs:schema targetNamespace="http://si.laurentius." xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:con="http://si.laurentius.Control" xmlns="http://si.laurentius.">
-  <xs:import namespace="http://si.laurentius.Control" schemaLocation="http://localhost:8080/Laurentius-ws/sed-mailbox?xsd=messages/Control.xsd"/>
+<xs:schema targetNamespace="http://si.laurentius" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:con="http://si.laurentius.Control" xmlns="http://si.laurentius">
+  <xs:import namespace="http://si.laurentius.Control" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/Control.xsd"/>
   <xs:element name="OutMailListRequest">
     <xs:complexType>
       <xs:annotation>
@@ -1023,7 +1023,7 @@ Author: Joze Rihtarsic-->
                 <con:type>http://www.w3.org/2001/XMLSchema</con:type>
             </con:part>
             <con:part>
-                <con:url>http://localhost:8080/Laurentius-ws/sed-mailbox?xsd=messages/OutMailListResponse.xsd</con:url>
+                <con:url>http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/OutMailListResponse.xsd</con:url>
                 <con:content><![CDATA[<!--edited with XMLSpy v2008 (http://www.altova.com) by XMLSpy 2007 Professional Ed., Installed for 5 users (with SMP from 2007-02-06 to 2008-02-07) (CIF VSRS)-->
 <!--Metadata: 
 Owner: Supreme Court Republic of Slovenia 
@@ -1047,9 +1047,9 @@ Author: Joze Rihtarsic-->
  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the Licence for the specific language governing permissions and  
  limitations under the Licence.-->
-<xs:schema targetNamespace="http://si.laurentius." xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://si.laurentius.outbox/mail" xmlns:con="http://si.laurentius.RControl" xmlns="http://si.laurentius.">
-  <xs:import namespace="http://si.laurentius.RControl" schemaLocation="http://localhost:8080/Laurentius-ws/sed-mailbox?xsd=messages/RControl.xsd"/>
-  <xs:import namespace="http://si.laurentius.outbox/mail" schemaLocation="http://localhost:8080/Laurentius-ws/sed-mailbox?xsd=entities/outbox-mail.xsd"/>
+<xs:schema targetNamespace="http://si.laurentius" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://si.laurentius.outbox/mail" xmlns:con="http://si.laurentius.RControl" xmlns="http://si.laurentius">
+  <xs:import namespace="http://si.laurentius.RControl" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/RControl.xsd"/>
+  <xs:import namespace="http://si.laurentius.outbox/mail" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=entities/outbox-mail.xsd"/>
   <xs:element name="OutMailListResponse">
     <xs:complexType>
       <xs:annotation>
@@ -1071,7 +1071,7 @@ Author: Joze Rihtarsic-->
                 <con:type>http://www.w3.org/2001/XMLSchema</con:type>
             </con:part>
             <con:part>
-                <con:url>http://localhost:8080/Laurentius-ws/sed-mailbox?xsd=messages/OutMailEventListRequest.xsd</con:url>
+                <con:url>http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/OutMailEventListRequest.xsd</con:url>
                 <con:content><![CDATA[<!--edited with XMLSpy v2008 (http://www.altova.com) by XMLSpy 2007 Professional Ed., Installed for 5 users (with SMP from 2007-02-06 to 2008-02-07) (CIF VSRS)-->
 <!--Metadata: 
 Owner: Supreme Court Republic of Slovenia 
@@ -1095,8 +1095,8 @@ Author: Joze Rihtarsic-->
  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the Licence for the specific language governing permissions and  
  limitations under the Licence.-->
-<xs:schema targetNamespace="http://si.laurentius." xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:con="http://si.laurentius.Control" xmlns="http://si.laurentius.">
-  <xs:import namespace="http://si.laurentius.Control" schemaLocation="http://localhost:8080/Laurentius-ws/sed-mailbox?xsd=messages/Control.xsd"/>
+<xs:schema targetNamespace="http://si.laurentius" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:con="http://si.laurentius.Control" xmlns="http://si.laurentius">
+  <xs:import namespace="http://si.laurentius.Control" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/Control.xsd"/>
   <xs:element name="OutMailEventListRequest">
     <xs:complexType>
       <xs:annotation>
@@ -1141,7 +1141,7 @@ Author: Joze Rihtarsic-->
                 <con:type>http://www.w3.org/2001/XMLSchema</con:type>
             </con:part>
             <con:part>
-                <con:url>http://localhost:8080/Laurentius-ws/sed-mailbox?xsd=messages/OutMailEventListResponse.xsd</con:url>
+                <con:url>http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/OutMailEventListResponse.xsd</con:url>
                 <con:content><![CDATA[<!--edited with XMLSpy v2008 (http://www.altova.com) by XMLSpy 2007 Professional Ed., Installed for 5 users (with SMP from 2007-02-06 to 2008-02-07) (CIF VSRS)-->
 <!--Metadata: 
 Owner: Supreme Court Republic of Slovenia 
@@ -1165,9 +1165,9 @@ Author: Joze Rihtarsic-->
  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the Licence for the specific language governing permissions and  
  limitations under the Licence.-->
-<xs:schema targetNamespace="http://si.laurentius." xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://si.laurentius.outbox/event" xmlns:con="http://si.laurentius.RControl" xmlns="http://si.laurentius.">
-  <xs:import namespace="http://si.laurentius.RControl" schemaLocation="http://localhost:8080/Laurentius-ws/sed-mailbox?xsd=messages/RControl.xsd"/>
-  <xs:import namespace="http://si.laurentius.outbox/event" schemaLocation="http://localhost:8080/Laurentius-ws/sed-mailbox?xsd=entities/outbox-event.xsd"/>
+<xs:schema targetNamespace="http://si.laurentius" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://si.laurentius.outbox/event" xmlns:con="http://si.laurentius.RControl" xmlns="http://si.laurentius">
+  <xs:import namespace="http://si.laurentius.RControl" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/RControl.xsd"/>
+  <xs:import namespace="http://si.laurentius.outbox/event" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=entities/outbox-event.xsd"/>
   <xs:element name="OutMailEventListResponse">
     <xs:complexType>
       <xs:annotation>
@@ -1189,7 +1189,7 @@ Author: Joze Rihtarsic-->
                 <con:type>http://www.w3.org/2001/XMLSchema</con:type>
             </con:part>
             <con:part>
-                <con:url>http://localhost:8080/Laurentius-ws/sed-mailbox?xsd=entities/outbox-event.xsd</con:url>
+                <con:url>http://localhost:8080/Laurentius-ws/mailbox?xsd=entities/outbox-event.xsd</con:url>
                 <con:content><![CDATA[<!--Metadata: 
 Owner: Supreme Court Republic of Slovenia 
 Product: SVEV-MSH
@@ -1290,7 +1290,7 @@ Author: Joze Rihtarsic-->
                 <con:type>http://www.w3.org/2001/XMLSchema</con:type>
             </con:part>
             <con:part>
-                <con:url>http://localhost:8080/Laurentius-ws/sed-mailbox?xsd=messages/InMailListRequest.xsd</con:url>
+                <con:url>http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/InMailListRequest.xsd</con:url>
                 <con:content><![CDATA[<!--edited with XMLSpy v2008 (http://www.altova.com) by XMLSpy 2007 Professional Ed., Installed for 5 users (with SMP from 2007-02-06 to 2008-02-07) (CIF VSRS)-->
 <!--Metadata: 
 Owner: Supreme Court Republic of Slovenia 
@@ -1314,8 +1314,8 @@ Author: Joze Rihtarsic-->
  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the Licence for the specific language governing permissions and  
  limitations under the Licence.-->
-<xs:schema targetNamespace="http://si.laurentius." xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:con="http://si.laurentius.Control" xmlns="http://si.laurentius.">
-  <xs:import namespace="http://si.laurentius.Control" schemaLocation="http://localhost:8080/Laurentius-ws/sed-mailbox?xsd=messages/Control.xsd"/>
+<xs:schema targetNamespace="http://si.laurentius" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:con="http://si.laurentius.Control" xmlns="http://si.laurentius">
+  <xs:import namespace="http://si.laurentius.Control" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/Control.xsd"/>
   <xs:element name="InMailListRequest">
     <xs:complexType>
       <xs:annotation>
@@ -1408,7 +1408,7 @@ Author: Joze Rihtarsic-->
                 <con:type>http://www.w3.org/2001/XMLSchema</con:type>
             </con:part>
             <con:part>
-                <con:url>http://localhost:8080/Laurentius-ws/sed-mailbox?xsd=messages/InMailListResponse.xsd</con:url>
+                <con:url>http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/InMailListResponse.xsd</con:url>
                 <con:content><![CDATA[<!--edited with XMLSpy v2008 (http://www.altova.com) by XMLSpy 2007 Professional Ed., Installed for 5 users (with SMP from 2007-02-06 to 2008-02-07) (CIF VSRS)-->
 <!--Metadata: 
 Owner: Supreme Court Republic of Slovenia 
@@ -1432,9 +1432,9 @@ Author: Joze Rihtarsic-->
  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the Licence for the specific language governing permissions and  
  limitations under the Licence.-->
-<xs:schema targetNamespace="http://si.laurentius." xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://si.laurentius.inbox/mail" xmlns:con="http://si.laurentius.RControl" xmlns="http://si.laurentius.">
-  <xs:import namespace="http://si.laurentius.RControl" schemaLocation="http://localhost:8080/Laurentius-ws/sed-mailbox?xsd=messages/RControl.xsd"/>
-  <xs:import namespace="http://si.laurentius.inbox/mail" schemaLocation="http://localhost:8080/Laurentius-ws/sed-mailbox?xsd=entities/inbox-mail.xsd"/>
+<xs:schema targetNamespace="http://si.laurentius" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://si.laurentius.inbox/mail" xmlns:con="http://si.laurentius.RControl" xmlns="http://si.laurentius">
+  <xs:import namespace="http://si.laurentius.RControl" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/RControl.xsd"/>
+  <xs:import namespace="http://si.laurentius.inbox/mail" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=entities/inbox-mail.xsd"/>
   <xs:element name="InMailListResponse">
     <xs:complexType>
       <xs:annotation>
@@ -1456,7 +1456,7 @@ Author: Joze Rihtarsic-->
                 <con:type>http://www.w3.org/2001/XMLSchema</con:type>
             </con:part>
             <con:part>
-                <con:url>http://localhost:8080/Laurentius-ws/sed-mailbox?xsd=entities/inbox-mail.xsd</con:url>
+                <con:url>http://localhost:8080/Laurentius-ws/mailbox?xsd=entities/inbox-mail.xsd</con:url>
                 <con:content><![CDATA[<!--Metadata: 
 Owner: Supreme Court Republic of Slovenia 
 Product: SVEV-MSH
@@ -1480,8 +1480,8 @@ Author: Joze Rihtarsic-->
  See the Licence for the specific language governing permissions and  
  limitations under the Licence.-->
 <xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://si.laurentius.inbox/mail" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns3="http://si.laurentius.inbox/property" xmlns:ns2="http://si.laurentius.inbox/payload" xmlns:ns1="http://si.laurentius.inbox/mail">
-  <xs:import namespace="http://si.laurentius.inbox/property" schemaLocation="http://localhost:8080/Laurentius-ws/sed-mailbox?xsd=entities/inbox-property.xsd"/>
-  <xs:import namespace="http://si.laurentius.inbox/payload" schemaLocation="http://localhost:8080/Laurentius-ws/sed-mailbox?xsd=entities/inbox-payload.xsd"/>
+  <xs:import namespace="http://si.laurentius.inbox/property" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=entities/inbox-property.xsd"/>
+  <xs:import namespace="http://si.laurentius.inbox/payload" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=entities/inbox-payload.xsd"/>
   <xs:element name="InMail" type="ns1:InMailType"/>
   <xs:complexType name="InMailType">
     <xs:annotation>
@@ -1638,7 +1638,7 @@ Author: Joze Rihtarsic-->
                 <con:type>http://www.w3.org/2001/XMLSchema</con:type>
             </con:part>
             <con:part>
-                <con:url>http://localhost:8080/Laurentius-ws/sed-mailbox?xsd=entities/inbox-property.xsd</con:url>
+                <con:url>http://localhost:8080/Laurentius-ws/mailbox?xsd=entities/inbox-property.xsd</con:url>
                 <con:content><![CDATA[<!--Metadata: 
 Owner: Supreme Court Republic of Slovenia 
 Product: SVEV-MSH
@@ -1706,7 +1706,7 @@ Author: Joze Rihtarsic-->
                 <con:type>http://www.w3.org/2001/XMLSchema</con:type>
             </con:part>
             <con:part>
-                <con:url>http://localhost:8080/Laurentius-ws/sed-mailbox?xsd=entities/inbox-payload.xsd</con:url>
+                <con:url>http://localhost:8080/Laurentius-ws/mailbox?xsd=entities/inbox-payload.xsd</con:url>
                 <con:content><![CDATA[<!--Metadata: 
 Owner: Supreme Court Republic of Slovenia 
 Product: SVEV-MSH
@@ -1835,7 +1835,7 @@ Author: Joze Rihtarsic-->
                 <con:type>http://www.w3.org/2001/XMLSchema</con:type>
             </con:part>
             <con:part>
-                <con:url>http://localhost:8080/Laurentius-ws/sed-mailbox?xsd=messages/ModifyInMailRequest.xsd</con:url>
+                <con:url>http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/ModifyInMailRequest.xsd</con:url>
                 <con:content><![CDATA[<!--edited with XMLSpy v2008 (http://www.altova.com) by XMLSpy 2007 Professional Ed., Installed for 5 users (with SMP from 2007-02-06 to 2008-02-07) (CIF VSRS)-->
 <!--Metadata: 
 Owner: Supreme Court Republic of Slovenia 
@@ -1859,8 +1859,8 @@ Author: Joze Rihtarsic-->
  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the Licence for the specific language governing permissions and  
  limitations under the Licence.-->
-<xs:schema targetNamespace="http://si.laurentius." xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:con="http://si.laurentius.Control" xmlns="http://si.laurentius.">
-  <xs:import namespace="http://si.laurentius.Control" schemaLocation="http://localhost:8080/Laurentius-ws/sed-mailbox?xsd=messages/Control.xsd"/>
+<xs:schema targetNamespace="http://si.laurentius" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:con="http://si.laurentius.Control" xmlns="http://si.laurentius">
+  <xs:import namespace="http://si.laurentius.Control" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/Control.xsd"/>
   <xs:element name="ModifyInMailRequest">
     <xs:complexType>
       <xs:annotation>
@@ -1909,7 +1909,7 @@ Author: Joze Rihtarsic-->
                 <con:type>http://www.w3.org/2001/XMLSchema</con:type>
             </con:part>
             <con:part>
-                <con:url>http://localhost:8080/Laurentius-ws/sed-mailbox?xsd=messages/ModifyInMailResponse.xsd</con:url>
+                <con:url>http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/ModifyInMailResponse.xsd</con:url>
                 <con:content><![CDATA[<!--edited with XMLSpy v2008 (http://www.altova.com) by XMLSpy 2007 Professional Ed., Installed for 5 users (with SMP from 2007-02-06 to 2008-02-07) (CIF VSRS)-->
 <!--Metadata: 
 Owner: Supreme Court Republic of Slovenia 
@@ -1933,9 +1933,9 @@ Author: Joze Rihtarsic-->
  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the Licence for the specific language governing permissions and  
  limitations under the Licence.-->
-<xs:schema targetNamespace="http://si.laurentius." xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://si.laurentius.inbox/event" xmlns:con="http://si.laurentius.RControl" xmlns="http://si.laurentius.">
-  <xs:import namespace="http://si.laurentius.RControl" schemaLocation="http://localhost:8080/Laurentius-ws/sed-mailbox?xsd=messages/RControl.xsd"/>
-  <xs:import namespace="http://si.laurentius.inbox/event" schemaLocation="http://localhost:8080/Laurentius-ws/sed-mailbox?xsd=entities/inbox-event.xsd"/>
+<xs:schema targetNamespace="http://si.laurentius" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://si.laurentius.inbox/event" xmlns:con="http://si.laurentius.RControl" xmlns="http://si.laurentius">
+  <xs:import namespace="http://si.laurentius.RControl" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/RControl.xsd"/>
+  <xs:import namespace="http://si.laurentius.inbox/event" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=entities/inbox-event.xsd"/>
   <xs:element name="ModifyInMailResponse">
     <xs:complexType>
       <xs:annotation>
@@ -1960,7 +1960,7 @@ Author: Joze Rihtarsic-->
                 <con:type>http://www.w3.org/2001/XMLSchema</con:type>
             </con:part>
             <con:part>
-                <con:url>http://localhost:8080/Laurentius-ws/sed-mailbox?xsd=entities/inbox-event.xsd</con:url>
+                <con:url>http://localhost:8080/Laurentius-ws/mailbox?xsd=entities/inbox-event.xsd</con:url>
                 <con:content><![CDATA[<!--Metadata: 
 Owner: Supreme Court Republic of Slovenia 
 Product: SVEV-MSH
@@ -2051,7 +2051,7 @@ Author: Joze Rihtarsic-->
                 <con:type>http://www.w3.org/2001/XMLSchema</con:type>
             </con:part>
             <con:part>
-                <con:url>http://localhost:8080/Laurentius-ws/sed-mailbox?xsd=messages/InMailEventListRequest.xsd</con:url>
+                <con:url>http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/InMailEventListRequest.xsd</con:url>
                 <con:content><![CDATA[<!--edited with XMLSpy v2008 (http://www.altova.com) by XMLSpy 2007 Professional Ed., Installed for 5 users (with SMP from 2007-02-06 to 2008-02-07) (CIF VSRS)-->
 <!--Metadata: 
 Owner: Supreme Court Republic of Slovenia 
@@ -2075,8 +2075,8 @@ Author: Joze Rihtarsic-->
  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the Licence for the specific language governing permissions and  
  limitations under the Licence.-->
-<xs:schema targetNamespace="http://si.laurentius." xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:con="http://si.laurentius.Control" xmlns="http://si.laurentius.">
-  <xs:import namespace="http://si.laurentius.Control" schemaLocation="http://localhost:8080/Laurentius-ws/sed-mailbox?xsd=messages/Control.xsd"/>
+<xs:schema targetNamespace="http://si.laurentius" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:con="http://si.laurentius.Control" xmlns="http://si.laurentius">
+  <xs:import namespace="http://si.laurentius.Control" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/Control.xsd"/>
   <xs:element name="InMailEventListRequest">
     <xs:complexType>
       <xs:annotation>
@@ -2111,7 +2111,7 @@ Author: Joze Rihtarsic-->
                 <con:type>http://www.w3.org/2001/XMLSchema</con:type>
             </con:part>
             <con:part>
-                <con:url>http://localhost:8080/Laurentius-ws/sed-mailbox?xsd=messages/InMailEventListResponse.xsd</con:url>
+                <con:url>http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/InMailEventListResponse.xsd</con:url>
                 <con:content><![CDATA[<!--edited with XMLSpy v2008 (http://www.altova.com) by XMLSpy 2007 Professional Ed., Installed for 5 users (with SMP from 2007-02-06 to 2008-02-07) (CIF VSRS)-->
 <!--Metadata: 
 Owner: Supreme Court Republic of Slovenia 
@@ -2135,9 +2135,9 @@ Author: Joze Rihtarsic-->
  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the Licence for the specific language governing permissions and  
  limitations under the Licence.-->
-<xs:schema targetNamespace="http://si.laurentius." xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://si.laurentius.inbox/event" xmlns:con="http://si.laurentius.RControl" xmlns="http://si.laurentius.">
-  <xs:import namespace="http://si.laurentius.RControl" schemaLocation="http://localhost:8080/Laurentius-ws/sed-mailbox?xsd=messages/RControl.xsd"/>
-  <xs:import namespace="http://si.laurentius.inbox/event" schemaLocation="http://localhost:8080/Laurentius-ws/sed-mailbox?xsd=entities/inbox-event.xsd"/>
+<xs:schema targetNamespace="http://si.laurentius" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://si.laurentius.inbox/event" xmlns:con="http://si.laurentius.RControl" xmlns="http://si.laurentius">
+  <xs:import namespace="http://si.laurentius.RControl" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/RControl.xsd"/>
+  <xs:import namespace="http://si.laurentius.inbox/event" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=entities/inbox-event.xsd"/>
   <xs:element name="InMailEventListResponse">
     <xs:complexType>
       <xs:annotation>
@@ -2159,7 +2159,7 @@ Author: Joze Rihtarsic-->
                 <con:type>http://www.w3.org/2001/XMLSchema</con:type>
             </con:part>
             <con:part>
-                <con:url>http://localhost:8080/Laurentius-ws/sed-mailbox?xsd=messages/GetInMailRequest.xsd</con:url>
+                <con:url>http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/GetInMailRequest.xsd</con:url>
                 <con:content><![CDATA[<!--edited with XMLSpy v2008 (http://www.altova.com) by XMLSpy 2007 Professional Ed., Installed for 5 users (with SMP from 2007-02-06 to 2008-02-07) (CIF VSRS)-->
 <!--Metadata: 
 Owner: Supreme Court Republic of Slovenia 
@@ -2183,9 +2183,9 @@ Author: Joze Rihtarsic-->
  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the Licence for the specific language governing permissions and  
  limitations under the Licence.-->
-<xs:schema targetNamespace="http://si.laurentius." xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://si.laurentius.mshmail" xmlns:con="http://si.laurentius.Control" xmlns="http://si.laurentius.">
-  <xs:import namespace="http://si.laurentius.Control" schemaLocation="http://localhost:8080/Laurentius-ws/sed-mailbox?xsd=messages/Control.xsd"/>
-  <xs:import namespace="http://si.laurentius.inbox/mail" schemaLocation="http://localhost:8080/Laurentius-ws/sed-mailbox?xsd=entities/inbox-mail.xsd"/>
+<xs:schema targetNamespace="http://si.laurentius" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://si.laurentius.mshmail" xmlns:con="http://si.laurentius.Control" xmlns="http://si.laurentius">
+  <xs:import namespace="http://si.laurentius.Control" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/Control.xsd"/>
+  <xs:import namespace="http://si.laurentius.inbox/mail" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=entities/inbox-mail.xsd"/>
   <xs:element name="GetInMailRequest">
     <xs:complexType>
       <xs:annotation>
@@ -2220,7 +2220,7 @@ Author: Joze Rihtarsic-->
                 <con:type>http://www.w3.org/2001/XMLSchema</con:type>
             </con:part>
             <con:part>
-                <con:url>http://localhost:8080/Laurentius-ws/sed-mailbox?xsd=messages/GetInMailResponse.xsd</con:url>
+                <con:url>http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/GetInMailResponse.xsd</con:url>
                 <con:content><![CDATA[<!--edited with XMLSpy v2008 (http://www.altova.com) by XMLSpy 2007 Professional Ed., Installed for 5 users (with SMP from 2007-02-06 to 2008-02-07) (CIF VSRS)-->
 <!--Metadata: 
 Owner: Supreme Court Republic of Slovenia 
@@ -2244,9 +2244,9 @@ Author: Joze Rihtarsic-->
  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the Licence for the specific language governing permissions and  
  limitations under the Licence.-->
-<xs:schema targetNamespace="http://si.laurentius." xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://si.laurentius.inbox/mail" xmlns:con="http://si.laurentius.RControl" xmlns="http://si.laurentius.">
-  <xs:import namespace="http://si.laurentius.RControl" schemaLocation="http://localhost:8080/Laurentius-ws/sed-mailbox?xsd=messages/RControl.xsd"/>
-  <xs:import namespace="http://si.laurentius.inbox/mail" schemaLocation="http://localhost:8080/Laurentius-ws/sed-mailbox?xsd=entities/inbox-mail.xsd"/>
+<xs:schema targetNamespace="http://si.laurentius" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://si.laurentius.inbox/mail" xmlns:con="http://si.laurentius.RControl" xmlns="http://si.laurentius">
+  <xs:import namespace="http://si.laurentius.RControl" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/RControl.xsd"/>
+  <xs:import namespace="http://si.laurentius.inbox/mail" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=entities/inbox-mail.xsd"/>
   <xs:element name="GetInMailResponse">
     <xs:complexType>
       <xs:annotation>
@@ -2269,7 +2269,7 @@ Author: Joze Rihtarsic-->
             </con:part>
         </con:definitionCache>
         <con:endpoints>
-            <con:endpoint>http://localhost:8080/Laurentius-ws/sed-mailbox</con:endpoint>
+            <con:endpoint>http://localhost:8080/Laurentius-ws/mailbox</con:endpoint>
         </con:endpoints>
         <con:operation id="c663fa59-7d11-4dbb-a4f2-78e74d0a92cb" isOneWay="false" action="http://si.laurentius.submitMail" name="submitMail" bindingOperationName="submitMail" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional">
             <con:settings/>
@@ -2278,9 +2278,9 @@ Author: Joze Rihtarsic-->
                     <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
                 </con:settings>
                 <con:encoding>UTF-8</con:encoding>
-                <con:endpoint>http://localhost:8080/Laurentius-ws/sed-mailbox</con:endpoint>
+                <con:endpoint>http://localhost:8080/Laurentius-ws/mailbox</con:endpoint>
                 <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" 
-xmlns:ebms="http://si.laurentius." 
+xmlns:ebms="http://si.laurentius" 
 xmlns:mail="http://si.laurentius.outbox/mail" 
 xmlns:prop="http://si.laurentius.outbox/property"
 xmlns:pay="http://si.laurentius.outbox/payload">
@@ -2626,8 +2626,8 @@ NEE5QTg5MDlCNTEwRkNDQjJCPl0+Pg0Kc3RhcnR4cmVmDQoxMTYNCiUlRU9GDQo=</pay:OutPart>
                     <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
                 </con:settings>
                 <con:encoding>UTF-8</con:encoding>
-                <con:endpoint>http://localhost:8080/Laurentius-ws/sed-mailbox</con:endpoint>
-                <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ebms="http://si.laurentius.">
+                <con:endpoint>http://localhost:8080/Laurentius-ws/mailbox</con:endpoint>
+                <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ebms="http://si.laurentius">
    <soapenv:Header/>
    <soapenv:Body>
       <ebms:OutMailListRequest>
@@ -2652,8 +2652,8 @@ NEE5QTg5MDlCNTEwRkNDQjJCPl0+Pg0Kc3RhcnR4cmVmDQoxMTYNCiUlRU9GDQo=</pay:OutPart>
                     <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
                 </con:settings>
                 <con:encoding>UTF-8</con:encoding>
-                <con:endpoint>http://localhost:8080/Laurentius-ws/sed-mailbox</con:endpoint>
-                <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ebms="http://si.laurentius.">
+                <con:endpoint>http://localhost:8080/Laurentius-ws/mailbox</con:endpoint>
+                <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ebms="http://si.laurentius">
    <soapenv:Header/>
    <soapenv:Body>
       <ebms:InMailListRequest>
@@ -2678,8 +2678,8 @@ NEE5QTg5MDlCNTEwRkNDQjJCPl0+Pg0Kc3RhcnR4cmVmDQoxMTYNCiUlRU9GDQo=</pay:OutPart>
                     <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
                 </con:settings>
                 <con:encoding>UTF-8</con:encoding>
-                <con:endpoint>http://localhost:8080/Laurentius-ws/sed-mailbox</con:endpoint>
-                <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ebms="http://si.laurentius.">
+                <con:endpoint>http://localhost:8080/Laurentius-ws/mailbox</con:endpoint>
+                <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ebms="http://si.laurentius">
    <soapenv:Header/>
    <soapenv:Body>
       <ebms:InMailEventListRequest>
@@ -2705,8 +2705,8 @@ NEE5QTg5MDlCNTEwRkNDQjJCPl0+Pg0Kc3RhcnR4cmVmDQoxMTYNCiUlRU9GDQo=</pay:OutPart>
                     <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
                 </con:settings>
                 <con:encoding>UTF-8</con:encoding>
-                <con:endpoint>http://localhost:8080/Laurentius-ws/sed-mailbox</con:endpoint>
-                <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ebms="http://si.laurentius.">
+                <con:endpoint>http://localhost:8080/Laurentius-ws/mailbox</con:endpoint>
+                <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ebms="http://si.laurentius">
    <soapenv:Header/>
    <soapenv:Body>
       <ebms:OutMailEventListRequest>
@@ -2731,8 +2731,8 @@ NEE5QTg5MDlCNTEwRkNDQjJCPl0+Pg0Kc3RhcnR4cmVmDQoxMTYNCiUlRU9GDQo=</pay:OutPart>
                     <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
                 </con:settings>
                 <con:encoding>UTF-8</con:encoding>
-                <con:endpoint>http://localhost:8080/Laurentius-ws/sed-mailbox</con:endpoint>
-                <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ebms="http://si.laurentius.">
+                <con:endpoint>http://localhost:8080/Laurentius-ws/mailbox</con:endpoint>
+                <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ebms="http://si.laurentius">
    <soapenv:Header/>
    <soapenv:Body>
       <ebms:ModifyInMailRequest>
@@ -2757,8 +2757,8 @@ NEE5QTg5MDlCNTEwRkNDQjJCPl0+Pg0Kc3RhcnR4cmVmDQoxMTYNCiUlRU9GDQo=</pay:OutPart>
                     <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
                 </con:settings>
                 <con:encoding>UTF-8</con:encoding>
-                <con:endpoint>http://localhost:8080/Laurentius-ws/sed-mailbox</con:endpoint>
-                <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ebms="http://si.laurentius.">
+                <con:endpoint>http://localhost:8080/Laurentius-ws/mailbox</con:endpoint>
+                <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ebms="http://si.laurentius">
    <soapenv:Header/>
    <soapenv:Body>
       <ebms:GetInMailRequest>

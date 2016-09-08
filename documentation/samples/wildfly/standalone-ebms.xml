@@ -382,7 +382,7 @@
                         <auth-module code="Dummy"/>
                     </authentication-jaspi>
                 </security-domain>
-                <security-domain name="sed-realm" cache-type="default">
+                <security-domain name="laurentius-realm"" cache-type="default">
                     <authentication>
                         <login-module code="org.jboss.security.auth.spi.UsersRolesLoginModule" flag="required">
                             <module-option name="usersProperties" value="${jboss.server.config.dir}/sed-users.properties"/>

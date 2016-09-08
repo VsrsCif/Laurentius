@@ -6,9 +6,9 @@ rm -rf ../standalone/deployments/*.deployed
 export JAVA_HOME=/opt/java/jdk1.8.0_60/
 
 
-cp "/Laurentius/Laurentius-libs/Laurentius-msh-xsd/target/Laurentius-msh-xsd-1.0.jar" ../modules/org/sed/main/
-cp "/Laurentius/Laurentius-libs/Laurentius-wsdl/target/Laurentius-wsdl-1.0.jar" ../modules/org/sed/main/
-cp "Laurentius/Laurentius-libs/Laurentius-commons/target/Laurentius-commons-1.0.jar" ../modules/org/sed/main/
+cp "/Laurentius/Laurentius-libs/Laurentius-msh-xsd/target/Laurentius-msh-xsd-1.0.jar" ../modules/si.laurentius/main/
+cp "/Laurentius/Laurentius-libs/Laurentius-wsdl/target/Laurentius-wsdl-1.0.jar" ../modules/si.laurentius/main/
+cp "Laurentius/Laurentius-libs/Laurentius-commons/target/Laurentius-commons-1.0.jar" ../modules/si.laurentius/main/
 
 
 
@@ -24,9 +24,9 @@ cp "/Laurentius/Laurentius-dao/target/Laurentius-dao.jar" ../standalone/deployme
 
 
 
-#./standalone.sh -c standalone-ebms.xml -Dlaurentius.home=/opt/servers/wildfly-10.0.0.Final/laurentius.home -Dorg.sed.msh.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+#./standalone.sh -c standalone-ebms.xml -Dlaurentius.home=/opt/servers/wildfly-10.0.0.Final/laurentius.home -Dsi.laurentius.msh.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
 
 
-./standalone.sh -c standalone-ebms.xml -Dlaurentius.home=/opt/servers/wildfly-10.0.0.Final/laurentius.home -Dorg.sed.msh.hibernate.hbm2ddl.auto=create -Dorg.sed.msh.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect -Dorg.sed.msh.sender.workers.count=7
+./standalone.sh -c standalone-ebms.xml -Dlaurentius.home=/opt/servers/wildfly-10.0.0.Final/laurentius.home -Dsi.laurentius.msh.hibernate.hbm2ddl.auto=create -Dsi.laurentius.msh.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect -Dsi.laurentius.msh.sender.workers.count=7
 
 

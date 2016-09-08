@@ -29,8 +29,8 @@
   ev.user_id, 
   ev.application_id
 FROM 
-  sed_inbox_event ev, 
-  sed_inbox im
+  lau_inbox_event ev, 
+  lau_inbox im
 WHERE 
   ev.mail_id = im.id
   and im.receiver_ebox = :receiverEBox
@@ -42,7 +42,7 @@ WHERE
    <![CDATA[SELECT 
   ev.*
 FROM 
-  sed_inbox_event ev
+  lau_inbox_event ev
 WHERE ev.mail_id = :mailId  
   order by id desc]]>
     </sql-query>     

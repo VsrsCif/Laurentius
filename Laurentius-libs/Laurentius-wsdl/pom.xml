@@ -73,7 +73,7 @@
                     <bindingDirectory>${basedir}/src/main/resources/bindings</bindingDirectory>
                     <wsdlDirectory>${basedir}/src/main/resources/wsdl</wsdlDirectory>
                     <wsdlFiles>
-                        <wsdlFile>sed-mailbox.wsdl</wsdlFile>
+                        <wsdlFile>mailbox.wsdl</wsdlFile>
                     </wsdlFiles>                    
                     <sourceDestDir>${basedir}/src/main/java/</sourceDestDir>
                     <vmArgs>

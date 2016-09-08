@@ -47,7 +47,7 @@
     </scm>
 
     <properties>
-        <war.final.name>Laurentius-webgui</war.final.name>
+        <war.final.name>laurentius-web</war.final.name>
     </properties>
 
     <dependencies>
@@ -103,7 +103,7 @@
                         <manifestEntries>                            
                             <implementation-version>${project.version}</implementation-version>             
                             <Implementation-Build>${buildNumber}</Implementation-Build>                            
-                            <Dependencies>org.sed</Dependencies>
+                            <Dependencies>si.laurentius</Dependencies>
                         </manifestEntries>
                         
                     </archive>                                 

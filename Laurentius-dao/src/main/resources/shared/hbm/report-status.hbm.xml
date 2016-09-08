@@ -9,14 +9,14 @@
     <sql-query name="si.laurentius.report.getInMailStatusesByBox">
         <return  class="si.laurentius.report.Status"/>
         SELECT status, count(id)
-        FROM sed_inbox
+        FROM lau_inbox
         WHERE receiver_ebox = :sedBox
         GROUP BY status                 
     </sql-query>
     <sql-query name="si.laurentius.report.getOutMailStatusesByBox">
         <return  class="si.laurentius.report.Status"/>
         SELECT status, count(id)
-        FROM sed_outbox
+        FROM lau_outbox
         WHERE sender_ebox = :sedBox
         GROUP BY status                 
     </sql-query>

@@ -76,7 +76,7 @@
                         <manifestEntries>                            
                             <!-- implementation-version>${project.version}</implementation-version>             
                             <Implementation-Build>${buildNumber}</Implementation-Build -->
-                            <Dependencies>org.sed</Dependencies>
+                            <Dependencies>si.laurentius</Dependencies>
                         </manifestEntries>
                 
                     </archive>

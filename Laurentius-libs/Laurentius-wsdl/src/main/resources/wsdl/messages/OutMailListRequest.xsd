@@ -25,9 +25,9 @@ Copyright 2015, Supreme Court Republic of Slovenia
  See the Licence for the specific language governing permissions and  
  limitations under the Licence.
 -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://si.laurentius."
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://si.laurentius"
            xmlns:con="http://si.laurentius.Control"
-           targetNamespace="http://si.laurentius."
+           targetNamespace="http://si.laurentius"
 >
     <xs:import namespace="http://si.laurentius.Control" schemaLocation="./Control.xsd"/>
     <xs:element name="OutMailListRequest">

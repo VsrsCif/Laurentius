@@ -71,7 +71,7 @@
     </SEDPlugins>
     <SEDProperties>
         <ns5:SEDProperty key="sed.domain" value="sed-domain.org" group="SED"/>
-        <ns5:SEDProperty key="org.sed.pmode" value="pmode-conf.xml" group="SYSTEM"/>
+        <ns5:SEDProperty key="si.laurentius.pmode" value="pmode-conf.xml" group="SYSTEM"/>
     </SEDProperties>
     <SEDUsers>
         <ns6:SEDUser userId="sed" activeFromDate="2016-04-20+02:00">

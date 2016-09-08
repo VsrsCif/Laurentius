@@ -15,6 +15,6 @@
         
         
     </class>    
-    <query si.laurentius.plugin.SEDPlugin.getAll" ><![CDATA[SELECT p FROM SEDPlugin p]]></query>    
+    <query name="si.laurentius.plugin.SEDPlugin.getAll" ><![CDATA[SELECT p FROM SEDPlugin p]]></query>    
 
 </hibernate-mapping>

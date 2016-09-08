@@ -15,19 +15,19 @@ public enum SOAPExceptionCode {
   /**
      *
      */
-  SoapVersionMismatch("SoapVersionMismatch", new QName("http://si.laurentius.", "0001"),
+  SoapVersionMismatch("SoapVersionMismatch", new QName("http://si.laurentius", "0001"),
       "Soap version does not match init soap version.", 0),
 
   /**
      *
      */
-  InvalidSoapVersion("InvalidSoapVersion", new QName("http://si.laurentius.", "0002"),
+  InvalidSoapVersion("InvalidSoapVersion", new QName("http://si.laurentius", "0002"),
       "Invalid soap message: %s", 1),
 
   /**
      *
      */
-  SoapParseFailure("SoapParseFailure", new QName("http://si.laurentius.", "0003"),
+  SoapParseFailure("SoapParseFailure", new QName("http://si.laurentius", "0003"),
       "Invalid Soap message: %s", 1),
 
   /**

@@ -40,7 +40,7 @@ public class SEDSystemProperties {
    * messages.
    * </p>
    */
-  public static final String SYS_PROP_DB_DIALECT = "org.sed.msh.hibernate.dialect";
+  public static final String SYS_PROP_DB_DIALECT = "si.laurentius.msh.hibernate.dialect";
   /**
    * System property for database dialect
    *
@@ -49,7 +49,7 @@ public class SEDSystemProperties {
    * messages.
    * </p>
    */
-  public static final String SYS_PROP_DB_HBM2DLL = "org.sed.msh.hibernate.hbm2ddl";
+  public static final String SYS_PROP_DB_HBM2DLL = "si.laurentius.msh.hibernate.hbm2ddl";
   /**
    * System property for out qeue workers.
    *
@@ -58,7 +58,7 @@ public class SEDSystemProperties {
    * messages.
    * </p>
    */
-  public static final String SYS_PROP_EXECUTION_WORKERS = "org.sed.msh.execution.workers.count";
+  public static final String SYS_PROP_EXECUTION_WORKERS = "si.laurentius.msh.execution.workers.count";
   /**
    * Default value for plugin folder name.
    *
@@ -96,7 +96,7 @@ public class SEDSystemProperties {
   /**
    *
    */
-  public static final String SYS_PROP_HOME_DIR_DEF = "laurentius.home";
+  public static final String SYS_PROP_HOME_DIR_DEF = "laurentius-home";
 
   /**
    * System property for init lookups file.
@@ -105,12 +105,12 @@ public class SEDSystemProperties {
    * System property define init lookups file. File is absolute path to init file home directory.
    * </p>
    */
-  public static final String SYS_PROP_INIT_LOOKUPS = "org.sed.init.lookups";
+  public static final String SYS_PROP_INIT_LOOKUPS = "si.laurentius.init.lookups";
 
   /**
    *
    */
-  public static final String SYS_PROP_JNDI_JMS_PREFIX = "org.sed.jndi.jms.prefix";
+  public static final String SYS_PROP_JNDI_JMS_PREFIX = "si.laurentius.jndi.jms.prefix";
   /**
    * System property for JNID prefix: wildfly: java:/jms/ jetty: java:comp/env/ junit test: ''
    *
@@ -119,7 +119,7 @@ public class SEDSystemProperties {
    * messages.
    * </p>
    */
-  public static final String SYS_PROP_JNDI_PREFIX = "org.sed.jndi.prefix";
+  public static final String SYS_PROP_JNDI_PREFIX = "si.laurentius.jndi.prefix";
 
   /**
    * System property for pmode configuration file.
@@ -128,7 +128,7 @@ public class SEDSystemProperties {
    * System property define pmode configuration file. File is relative to SED home directory.
    * </p>
    */
-  public static final String SYS_PROP_PMODE = "org.sed.pmode";
+  public static final String SYS_PROP_PMODE = "si.laurentius.pmode";
   /**
    * Default value for pmode configuration file name.
    *
@@ -147,7 +147,7 @@ public class SEDSystemProperties {
    * messages.
    * </p>
    */
-  public static final String SYS_PROP_QUEUE_SENDER_WORKERS = "org.sed.msh.sender.workers.count";
+  public static final String SYS_PROP_QUEUE_SENDER_WORKERS = "si.laurentius.msh.sender.workers.count";
 
   static {
     if (getProperty(SYS_PROP_QUEUE_SENDER_WORKERS) == null) {

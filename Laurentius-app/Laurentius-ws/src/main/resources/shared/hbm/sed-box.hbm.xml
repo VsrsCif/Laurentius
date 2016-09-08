@@ -4,7 +4,7 @@
     <class name="si.laurentius.ebox.SEDBox"
            table="LAU_BOX">
         <id name="BoxName" type="java.lang.String" >
-            <column name="sed_box" length="512" />            
+            <column name="lau_box" length="512" />            
         </id>        
         <property column="Active_Date_From" name="ActiveFromDate"  length="1024" type="java.util.Date" />       
         <property column="Active_Date_To" name="ActiveToDate"  length="32" type="java.util.Date" />    
@@ -20,17 +20,17 @@
             <property column="EXECUTE_PARAMETERS" name="Parameters" type="java.lang.String" length="512"  />    
             
         </component>
-        <!-- bag name="sedUsers"  access="field" table="sed_user_sedbox" 
+        <!-- bag name="sedUsers"  access="field" table="lau_user_sedbox" 
                 inverse="true"  fetch="select" lazy="false"    >        
             <key>
-                <column name="sed_box" not-null="true" />        
+                <column name="lau_box" not-null="true" />        
             </key>
-            <many-to-many entity-si.laurentius.user.SEDUser" >
+            <many-to-many entity-name="si.laurentius.user.SEDUser" >
                 <column name="userid" not-null="true" />
             </many-to-many>
         </bag -->  
     </class>    
-    <query si.laurentius.ebox.SEDBox.getAll" ><![CDATA[SELECT p FROM SEDBox p order by p.BoxName asc]]></query>
-    <query si.laurentius.ebox.SEDBox.getByName" ><![CDATA[SELECT p FROM SEDBox p where p.BoxName=:BoxName]]></query>
+    <query name="si.laurentius.ebox.SEDBox.getAll" ><![CDATA[SELECT p FROM SEDBox p order by p.BoxName asc]]></query>
+    <query name="si.laurentius.ebox.SEDBox.getByName" ><![CDATA[SELECT p FROM SEDBox p where p.BoxName=:BoxName]]></query>
 
 </hibernate-mapping>

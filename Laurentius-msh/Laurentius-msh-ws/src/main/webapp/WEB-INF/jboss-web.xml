@@ -3,7 +3,7 @@
            xmlns="http://www.jboss.com/xml/ns/javaee"
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://www.jboss.com/xml/ns/javaee http://www.jboss.org/j2ee/schema/jboss-web_10_0.xsd">
-    <context-root>/Laurentius</context-root>
-    <server-instance>msh-server</server-instance> <!-- does mapping to server -->
-    <virtual-host>msh-host</virtual-host>  <!-- does mapping to host inside server -->
+    <context-root>/laurentius</context-root>
+    <server-instance>laurentius-msh-server</server-instance> <!-- does mapping to server -->
+    <virtual-host>laurentius-msh-host</virtual-host>  <!-- does mapping to host inside server -->
 </jboss-web>

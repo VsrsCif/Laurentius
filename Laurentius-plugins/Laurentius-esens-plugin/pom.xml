@@ -119,7 +119,7 @@ Plugin received message from "Producer" submits to receivers MSH with parametere
                         <manifestEntries>                            
                             <implementation-version>${project.version}</implementation-version>             
                             <Implementation-Build>${buildNumber}</Implementation-Build>                            
-                            <Dependencies>org.apache.cxf,org.apache.cxf.impl,org.apache.commons.io, org.apache.ws.security, org.apache.santuario.xmlsec,org.sed</Dependencies>
+                            <Dependencies>org.apache.cxf,org.apache.cxf.impl,org.apache.commons.io, org.apache.ws.security, org.apache.santuario.xmlsec,si.laurentius</Dependencies>
                         </manifestEntries>
                     </archive>                                 
                 </configuration>                 

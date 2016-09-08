@@ -51,7 +51,7 @@
                         </manifest>
                         <manifestEntries>                            
                             <Dependencies>org.apache.cxf,org.apache.cxf.impl,org.apache.commons.io, org.apache.ws.security, 
-                                org.apache.santuario.xmlsec, org.sed</Dependencies>
+                                org.apache.santuario.xmlsec,  si.laurentius</Dependencies>
                         </manifestEntries>
                     </archive>
                     <defaultLibBundleDir>lib</defaultLibBundleDir>
@@ -64,7 +64,7 @@
                         <webModule>
                             <groupId>${project.groupId}</groupId>
                             <artifactId>Laurentius-msh-ws</artifactId>
-                            <contextRoot>/Laurentius</contextRoot>
+                            <contextRoot>/laurentius</contextRoot>
                         </webModule>
                     </modules>                    
                 </configuration>

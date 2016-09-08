@@ -24,7 +24,7 @@ Copyright 2015, Supreme Court Republic of Slovenia
  See the Licence for the specific language governing permissions and  
  limitations under the Licence.
 -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://si.laurentius." targetNamespace="http://si.laurentius." elementFormDefault="qualified" attributeFormDefault="unqualified">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://si.laurentius" targetNamespace="http://si.laurentius" elementFormDefault="qualified" attributeFormDefault="unqualified">
     <xs:element name="SEDException" type="tns:SEDException"/>
     <xs:complexType name="SEDException">
         <xs:sequence>

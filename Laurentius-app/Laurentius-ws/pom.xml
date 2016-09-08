@@ -42,7 +42,7 @@
     </developers>
 
     <properties>
-        <war.final.name>Laurentius-ws</war.final.name>
+        <war.final.name>laurentius-ws</war.final.name>
     </properties>
 
     <dependencies>
@@ -179,7 +179,7 @@
                 <configuration> 
                     <archive>    
                         <manifestEntries>                            
-                            <Dependencies>org.apache.cxf,org.apache.cxf.impl,org.apache.commons.io, org.apache.ws.security,org.sed</Dependencies >
+                            <Dependencies>org.apache.cxf,org.apache.cxf.impl,org.apache.commons.io, org.apache.ws.security,si.laurentius</Dependencies >
                         </manifestEntries>
                     </archive>
                     <!-- for missing WEB-INF/web.xml-->

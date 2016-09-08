@@ -40,5 +40,5 @@
         <property column="KEY_PASSWORD" name="KeyPassword" type="java.lang.String" length="64" />         
     </class>
 
-    <query si.laurentius.cert.SEDCertStore.getAll" ><![CDATA[SELECT p FROM SEDCertStore p]]></query>
+    <query name="si.laurentius.cert.SEDCertStore.getAll" ><![CDATA[SELECT p FROM SEDCertStore p]]></query>
 </hibernate-mapping>

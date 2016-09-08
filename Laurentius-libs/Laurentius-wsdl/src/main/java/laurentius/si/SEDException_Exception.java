@@ -10,7 +10,7 @@ import javax.xml.ws.WebFault;
  * Generated source version: 2.2
  * 
  */
-@WebFault(name = "SEDException", targetNamespace = "http://si.laurentius.")
+@WebFault(name = "SEDException", targetNamespace = "http://si.laurentius")
 public class SEDException_Exception
     extends Exception
 {

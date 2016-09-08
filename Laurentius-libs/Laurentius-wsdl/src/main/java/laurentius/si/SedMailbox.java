@@ -17,20 +17,20 @@ import javax.xml.ws.WebServiceFeature;
  * Generated source version: 2.2
  * 
  */
-@WebServiceClient(name = "sed-mailbox", targetNamespace = "http://si.laurentius.", wsdlLocation = "file:/sluzba/code/SVEV2.0/Laurentius/Laurentius-libs/Laurentius-wsdl/src/main/resources/wsdl/sed-mailbox.wsdl")
+@WebServiceClient(name = "mailbox", targetNamespace = "http://si.laurentius", wsdlLocation = "file:/sluzba/code/SVEV2.0/Laurentius/Laurentius-libs/Laurentius-wsdl/src/main/resources/wsdl/mailbox.wsdl")
 public class SedMailbox
     extends Service
 {
 
     private final static URL SEDMAILBOX_WSDL_LOCATION;
     private final static WebServiceException SEDMAILBOX_EXCEPTION;
-    private final static QName SEDMAILBOX_QNAME = new QName("http://si.laurentius.", "sed-mailbox");
+    private final static QName SEDMAILBOX_QNAME = new QName("http://si.laurentius", "mailbox");
 
     static {
         URL url = null;
         WebServiceException e = null;
         try {
-            url = new URL("file:/sluzba/code/SVEV2.0/Laurentius/Laurentius-libs/Laurentius-wsdl/src/main/resources/wsdl/sed-mailbox.wsdl");
+            url = new URL("file:/sluzba/code/SVEV2.0/Laurentius/Laurentius-libs/Laurentius-wsdl/src/main/resources/wsdl/mailbox.wsdl");
         } catch (MalformedURLException ex) {
             e = new WebServiceException(ex);
         }
@@ -69,7 +69,7 @@ public class SedMailbox
      */
     @WebEndpoint(name = "SEDMailBoxWSPort")
     public SEDMailBoxWS getSEDMailBoxWSPort() {
-        return super.getPort(new QName("http://si.laurentius.", "SEDMailBoxWSPort"), SEDMailBoxWS.class);
+        return super.getPort(new QName("http://si.laurentius", "SEDMailBoxWSPort"), SEDMailBoxWS.class);
     }
 
     /**
@@ -81,7 +81,7 @@ public class SedMailbox
      */
     @WebEndpoint(name = "SEDMailBoxWSPort")
     public SEDMailBoxWS getSEDMailBoxWSPort(WebServiceFeature... features) {
-        return super.getPort(new QName("http://si.laurentius.", "SEDMailBoxWSPort"), SEDMailBoxWS.class, features);
+        return super.getPort(new QName("http://si.laurentius", "SEDMailBoxWSPort"), SEDMailBoxWS.class, features);
     }
 
     private static URL __getWsdlLocation() {

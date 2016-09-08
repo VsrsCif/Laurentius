@@ -12,7 +12,7 @@
  * or implied. See the Licence for the specific language governing permissions and limitations under
  * the Licence.
  */
-package org.sed.msh.jms;
+package si.laurentius.msh.jms;
 
 import java.math.BigInteger;
 import javax.ejb.ActivationConfigProperty;
@@ -56,7 +56,7 @@ import si.laurentius.commons.utils.Utils;
           propertyValue = "javax.jms.Queue"),
       @ActivationConfigProperty(propertyName = "destination", propertyValue = "queue/MSHQueue"),
       @ActivationConfigProperty(propertyName = "maxSession",
-          propertyValue = "${org.sed.msh.sender.workers.count}")})
+          propertyValue = "${si.laurentius.msh.sender.workers.count}")})
 @TransactionManagement(TransactionManagementType.BEAN)
 public class MSHQueueBean implements MessageListener {
 

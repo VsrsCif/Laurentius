@@ -15,5 +15,5 @@
  *     
  * 
  */
-@javax.xml.bind.annotation.XmlSchema(namespace = "http://si.laurentius.")
+@javax.xml.bind.annotation.XmlSchema(namespace = "http://si.laurentius")
 package si.laurentius;

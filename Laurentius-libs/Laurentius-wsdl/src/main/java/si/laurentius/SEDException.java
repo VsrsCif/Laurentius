@@ -41,11 +41,11 @@ public class SEDException
     implements Serializable
 {
 
-    @XmlElement(namespace = "http://si.laurentius.")
+    @XmlElement(namespace = "http://si.laurentius")
     protected SEDExceptionCode errorCode;
-    @XmlElement(namespace = "http://si.laurentius.")
+    @XmlElement(namespace = "http://si.laurentius")
     protected String message;
-    @XmlElement(namespace = "http://si.laurentius.")
+    @XmlElement(namespace = "http://si.laurentius")
     protected String errorDump;
 
     /**

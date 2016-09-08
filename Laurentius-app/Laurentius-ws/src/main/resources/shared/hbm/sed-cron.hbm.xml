@@ -42,8 +42,8 @@
         <property column="VALUE" name="Value" type="java.lang.String" length="512" />         
     </class>
     
-    <query si.laurentius.cron.SEDCronJob.getById" ><![CDATA[SELECT p FROM SEDCronJob p WHERE p.Id = :id]]></query>     
-    <query si.laurentius.cron.SEDCronJob.getAll" ><![CDATA[SELECT p FROM SEDCronJob p order by id asc]]></query>
+    <query name="si.laurentius.cron.SEDCronJob.getById" ><![CDATA[SELECT p FROM SEDCronJob p WHERE p.Id = :id]]></query>     
+    <query name="si.laurentius.cron.SEDCronJob.getAll" ><![CDATA[SELECT p FROM SEDCronJob p order by id asc]]></query>
     
 
 </hibernate-mapping>

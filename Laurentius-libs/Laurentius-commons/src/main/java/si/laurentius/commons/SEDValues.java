@@ -65,12 +65,12 @@ public class SEDValues {
   /**
      *
      */
-  public static final String EXEC_COMMAND = "sed_exec_command";
+  public static final String EXEC_COMMAND = "lau_exec_command";
 
   /**
      *
      */
-  public static final String EXEC_PARAMS = "sed_exec_params";
+  public static final String EXEC_PARAMS = "lau_exec_params";
 
   /**
      *
