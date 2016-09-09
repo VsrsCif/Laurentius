@@ -409,9 +409,10 @@
                     <single-sign-on/>
                 </host>
             </server>
-            <server name="laurentius-msh-server">
+            <server name="laurentius-msh-server" default-host="laurentius-msh-host" >
                 <http-listener name="laurentius-msh" socket-binding="laurentius-msh-http"/>
                 <host name="laurentius-msh-host" alias="localhost">
+		    <access-log pattern="%h %l %u [%t] &quot;%r&quot; %s %b &quot;%{i,Referer}&quot; &quot;%{i,User-Agent}&quot;"/>
                     <location name="/" handler="welcome-content"/>
                     <filter-ref name="server-header"/>
                     <filter-ref name="x-powered-by-header"/>
@@ -449,9 +450,6 @@
         <interface name="public">
             <inet-address value="${jboss.bind.address:127.0.0.1}"/>
         </interface>
-        <interface name="laurentius-msh">
-            <inet-address value="${jboss.bind.address.msh:127.0.0.1}"/>
-        </interface>
     </interfaces>
 
     <socket-binding-group name="standard-sockets" default-interface="public" port-offset="${jboss.socket.binding.port-offset:0}">
@@ -460,7 +458,7 @@
         <socket-binding name="ajp" port="${jboss.ajp.port:8009}"/>
         <socket-binding name="http" port="${jboss.http.port:8080}"/>
         <socket-binding name="https" port="${jboss.https.port:8443}"/>
-        <socket-binding name="laurentius-msh-http" interface="laurentius-msh" port="${jboss.msh.http.port:8081}"/>
+        <socket-binding name="laurentius-msh-http" port="${jboss.msh.http.port:8081}"/>
         <socket-binding name="txn-recovery-environment" port="4712"/>
         <socket-binding name="txn-status-manager" port="4713"/>
         <outbound-socket-binding name="mail-smtp">
