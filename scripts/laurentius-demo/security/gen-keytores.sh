@@ -2,57 +2,46 @@
 
 mkdir keystore
 # generate key 
-echo "generate key"
-$JAVA_HOME/bin/keytool -genkey -alias msh.e-box-a.si -keypass key1234 -keystore keystore/msh.e-box-a-keystore.jks -storepass test1234 -dname "cn=msh.e-box-a.si,ou=test,ou=msh,ou=jrc,ou=si" -keyalg RSA
-$JAVA_HOME/bin/keytool -genkey -alias msh.e-box-b.si -keypass key1234 -keystore keystore/msh.e-box-b-keystore.jks -storepass test1234 -dname "cn=msh.e-box-b.si,ou=test,ou=msh,ou=jrc,ou=si" -keyalg RSA
-$JAVA_HOME/bin/keytool -genkey -alias client-user    -keypass key1234 -keystore keystore/client-user.jks -storepass test1234 -dname "cn=Johan Pohan, ou=ebox,ou=jrc,ou=si" -keyalg RSA
+echo "generate key\n"
+echo "    key/cert for test party for TLS" 
+$JAVA_HOME/bin/keytool -genkey -alias test-tls -keypass key1234 -keystore keystore/test-tls-keystore.jks -storepass test1234 -dname "cn=test-tls,ou=laurentius,ou=cif,ou=vsrs,ou=si" -keyalg RSA -validity 1095
+echo "    test/cert for test party for AS4-message signature"
+$JAVA_HOME/bin/keytool -genkey -alias test-laurentius -keypass key1234 -keystore keystore/test-laurentius-keystore.jks -storepass test1234 -dname "cn=test-laurentius,ou=laurentius,ou=cif,ou=vsrs,ou=si" -keyalg RSA -validity 1095
+echo "    test/cert for test party for signature of deliveryAdvice" 
+$JAVA_HOME/bin/keytool -genkey -alias test-zpp-sign -keypass key1234 -keystore keystore/test-laurentius-keystore.jks -storepass test1234 -dname "cn=test-zpp-sign,ou=laurentius,ou=cif,ou=vsrs,ou=si" -keyalg RSA -validity 1095
+
+echo "    test key for court AS4-message signature"
+$JAVA_HOME/bin/keytool -genkey -alias court-laurentius -keypass key1234 -keystore keystore/court-laurentius-keystore.jks -storepass test1234 -dname "cn=court-laurentius,ou=laurentius,ou=cif,ou=vsrs,ou=si" -keyalg RSA -validity 1095
+echo "    test key for court - tls client"
+$JAVA_HOME/bin/keytool -genkey -alias court-tls -keypass key1234 -keystore keystore/court-laurentius-keystore.jks -storepass test1234 -dname "cn=court-tls,ou=laurentius,ou=cif,ou=vsrs,ou=si" -keyalg RSA -validity 1095
+
+
 
 
 # extract certs
 echo "extract certs"
-$JAVA_HOME/bin/keytool -exportcert  -keystore keystore/msh.e-box-a-keystore.jks -storepass test1234 -alias msh.e-box-a.si  -file keystore/msh.e-box-a.csr
-$JAVA_HOME/bin/keytool -exportcert  -keystore keystore/msh.e-box-b-keystore.jks -storepass test1234 -alias msh.e-box-b.si  -file keystore/msh.e-box-b.csr
+$JAVA_HOME/bin/keytool -exportcert  -keystore keystore/test-laurentius-keystore.jks -storepass test1234 -alias test-laurentius  -file keystore/test-laurentius.crt
+$JAVA_HOME/bin/keytool -exportcert  -keystore keystore/test-laurentius-keystore.jks -storepass test1234 -alias test-zpp-sign  -file keystore/test-zpp-sign.crt
+$JAVA_HOME/bin/keytool -exportcert  -keystore keystore/court-laurentius-keystore.jks -storepass test1234 -alias court-laurentius  -file keystore/court-laurentius.crt
+$JAVA_HOME/bin/keytool -exportcert  -keystore keystore/test-tls-keystore.jks -storepass test1234 -alias test-tls  -file keystore/test-tls-laurentius.crt
+$JAVA_HOME/bin/keytool -exportcert  -keystore keystore/court-laurentius-keystore.jks -storepass test1234 -alias court-tls  -file keystore/court-tls-client.crt
 
 # import certs to trustores 
 echo "import certs to trustores"
-$JAVA_HOME/bin/keytool -importcert -trustcacerts -noprompt -alias msh.e-box-a.si -keystore keystore/msh.e-box-a-truststore.jks -storepass test1234 -file keystore/msh.e-box-a.csr
-$JAVA_HOME/bin/keytool -importcert -trustcacerts -noprompt -alias msh.e-box-b.si -keystore keystore/msh.e-box-a-truststore.jks -storepass test1234 -file keystore/msh.e-box-b.csr
+$JAVA_HOME/bin/keytool -importcert -trustcacerts -noprompt -alias test-laurentius -keystore keystore/test-laurentius-truststore.jks -storepass test1234 -file keystore/test-laurentius.crt
+$JAVA_HOME/bin/keytool -importcert -trustcacerts -noprompt -alias court-laurentius -keystore keystore/test-laurentius-truststore.jks -storepass test1234 -file keystore/court-laurentius.crt
+$JAVA_HOME/bin/keytool -importcert -trustcacerts -noprompt -alias b2g-test.sodisce.si -keystore keystore/test-laurentius-truststore.jks -storepass test1234 -file b2g-test.sodisce.si.crt
+$JAVA_HOME/bin/keytool -importcert -trustcacerts -noprompt -alias court-tls-client -keystore keystore/test-laurentius-truststore.jks -storepass test1234 -file keystore/court-tls-client.crt
 
-$JAVA_HOME/bin/keytool -importcert -trustcacerts -noprompt -alias msh.e-box-a.si -keystore keystore/msh.e-box-b-truststore.jks -storepass test1234 -file keystore/msh.e-box-a.csr 
-$JAVA_HOME/bin/keytool -importcert -trustcacerts -noprompt -alias msh.e-box-b.si -keystore keystore/msh.e-box-b-truststore.jks -storepass test1234 -file keystore/msh.e-box-b.csr
-
-# delete  certs
-echo "cleanup"
-rm  keystore/msh.e-box-a.csr
-rm  keystore/msh.e-box-b.csr
+# import ssl truststore
+$JAVA_HOME/bin/keytool -importcert -trustcacerts -noprompt -alias test-laurentius -keystore keystore/court-laurentius-truststore.jks -storepass test1234 -file keystore/test-laurentius.crt
+$JAVA_HOME/bin/keytool -importcert -trustcacerts -noprompt -alias court-laurentius -keystore keystore/court-laurentius-truststore.jks -storepass test1234 -file keystore/court-laurentius.crt
+$JAVA_HOME/bin/keytool -importcert -trustcacerts -noprompt -alias test-zpp-sign -keystore keystore/court-laurentius-truststore.jks -storepass test1234 -file keystore/test-zpp-sign.crt
+$JAVA_HOME/bin/keytool -importcert -trustcacerts -noprompt -alias test-tls -keystore keystore/court-laurentius-truststore.jks -storepass test1234 -file keystore/test-tls-laurentius.crt
 
 
-echo "generate property files"
-# generate server e-box-a sign properties
-echo "org.apache.ws.security.crypto.provider=org.apache.wss4j.common.crypto.Merlin" 		 > msh_e-box-a_sign.properties
-echo "org.apache.ws.security.crypto.merlin.keystore.type=jks" 			    		>> msh_e-box-a_sign.properties
-echo "org.apache.ws.security.crypto.merlin.keystore.password=test1234" 	    			>> msh_e-box-a_sign.properties
-echo "org.apache.ws.security.crypto.merlin.keystore.alias=msh.e-box-a.si"             		>> msh_e-box-a_sign.properties
-echo "org.apache.ws.security.crypto.merlin.keystore.file=keystore/msh.e-box-a-keystore.jks" 	>> msh_e-box-a_sign.properties
-# generate server e-box-b sign properties
-echo "org.apache.ws.security.crypto.provider=org.apache.wss4j.common.crypto.Merlin" 		 > msh_e-box-b_sign.properties
-echo "org.apache.ws.security.crypto.merlin.keystore.type=jks" 			    		>> msh_e-box-b_sign.properties
-echo "org.apache.ws.security.crypto.merlin.keystore.password=test1234" 	    			>> msh_e-box-b_sign.properties
-echo "org.apache.ws.security.crypto.merlin.keystore.alias=msh.e-box-b.si"             		>> msh_e-box-b_sign.properties
-echo "org.apache.ws.security.crypto.merlin.keystore.file=keystore/msh.e-box-b-keystore.jks" 	>> msh_e-box-b_sign.properties
-# generate server e-box-a trustotre properties
-echo "org.apache.ws.security.crypto.provider=org.apache.wss4j.common.crypto.Merlin" 		 > msh_e-box-a_signVer.properties
-echo "org.apache.ws.security.crypto.merlin.keystore.type=jks" 			    		>> msh_e-box-a_signVer.properties
-echo "org.apache.ws.security.crypto.merlin.keystore.password=test1234" 	    			>> msh_e-box-a_signVer.properties
-echo "org.apache.ws.security.crypto.merlin.keystore.alias=msh.e-box-b.si"             		>> msh_e-box-a_signVer.properties
-echo "org.apache.ws.security.crypto.merlin.keystore.file=keystore/msh.e-box-a-truststore.jks" 	>> msh_e-box-a_signVer.properties
-# generate server e-box-b trustotre properties
-echo "org.apache.ws.security.crypto.provider=org.apache.wss4j.common.crypto.Merlin" 		 > msh_e-box-b_signVer.properties
-echo "org.apache.ws.security.crypto.merlin.keystore.type=jks" 			    		>> msh_e-box-b_signVer.properties
-echo "org.apache.ws.security.crypto.merlin.keystore.password=test1234" 	    			>> msh_e-box-b_signVer.properties
-echo "org.apache.ws.security.crypto.merlin.keystore.alias=msh.e-box-a.si"             		>> msh_e-box-b_signVer.properties
-echo "org.apache.ws.security.crypto.merlin.keystore.file=keystore/msh.e-box-b-truststore.jks" 	>> msh_e-box-b_signVer.properties
-# generate keypasswords
-echo "msh.e-box-a.si=key1234"  > msh_key-passwords.properties
-echo "msh.e-box-b.si=key1234" >> msh_key-passwords.properties
+
+
+
+
 

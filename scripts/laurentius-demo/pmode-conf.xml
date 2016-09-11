@@ -41,66 +41,33 @@
 				</tns:PayloadProfiles>
 			</tns:Action>
 		</tns:Service>
-		<tns:Service id="PrintAndEnvelope-LegalZPP" serviceName="PrintAndEnvelope-LegalZPP">
-			<tns:Initiator role="Sender"/>
-			<tns:Executor role="Executor"/>
-			<tns:Action sendingRole="Sender" name="AddMail">
-				<tns:PayloadProfiles maxSize="10000">
-					<tns:PayloadProfile name="PrintDocument" maxSize="10000" minOccurs="1" maxOccurs="999" MIME="application/pdf"/>
-				</tns:PayloadProfiles>
-			</tns:Action>
-			<tns:Action sendingRole="Sender" name="RemoveMail" after="AddMail">
-				<tns:PayloadProfiles maxSize="10000">
-					<tns:PayloadProfile name="RemoveMailRequest" maxSize="10000" minOccurs="1" maxOccurs="999" MIME="application/xml"/>
-				</tns:PayloadProfiles>
-			</tns:Action>
-			<tns:Action sendingRole="Executor" name="MailProcessed" after="AddMail">
-				<tns:PayloadProfiles maxSize="10000">
-					<tns:PayloadProfile name="MailReport" minOccurs="1" maxOccurs="1" MIME="application/xml"/>
-				</tns:PayloadProfiles>
-			</tns:Action>
-		</tns:Service>
+		
 	</tns:Services>
 	<tns:Parties>
-		<tns:PartyIdentitySet id="test-laurentius" domain="test-laurentius.org" isLocalIdentity="true">
+		<tns:PartyIdentitySet id="test-laurentius" isLocalIdentity="true">
 			<tns:PartyId type="urn:oasis:names:tc:ebcore:partyid-type:unregistered:si-svev:name" valueSource="name"/>
 			<tns:PartyId type="urn:oasis:names:tc:ebcore:partyid-type:unregistered:si-svev:sed-box" valueSource="address"/>
 			<tns:TransportProtocol id="defalut" isTwoWayProtocol="true">
-				<tns:Address connectionTimeout="120000" receiveTimeout="180000" chunked="false">http://localhost:8081/laurentius/msh</tns:Address>
+				<tns:Address connectionTimeout="120000" receiveTimeout="180000" chunked="false">https://localhost:8443/laurentius/msh</tns:Address>
+				<tns:TLS trustStoreName="def-truststore"/>
 				<tns:SOAPVersion>1.2</tns:SOAPVersion>
 			</tns:TransportProtocol>
-			<tns:LocalPartySecurity signatureKeyAlias="msh.e-box-a.si" decryptionKeyAlias="msh.e-box-a.si" keystoreName="def-keystore"/>
-			<tns:ExchangePartySecurity encryptionCertAlias="msh.e-box-a.si" signatureCertAlias="msh.e-box-a.si" trustoreName="def-keystore"/>
+			<tns:LocalPartySecurity signatureKeyAlias="test-laurentius" decryptionKeyAlias="test-laurentius" keystoreName="def-keystore"/>
+			<tns:ExchangePartySecurity signatureCertAlias="test-laurentius" encryptionCertAlias="test-laurentius" trustoreName="def-keystore"/>
 		</tns:PartyIdentitySet>
 		<tns:PartyIdentitySet id="court-laurentius" domain="court-laurentius.si" isLocalIdentity="false">
 			<tns:PartyId type="urn:oasis:names:tc:ebcore:partyid-type:unregistered:si-svev:name" valueSource="name"/>
 			<tns:PartyId type="urn:oasis:names:tc:ebcore:partyid-type:unregistered:si-svev:sed-box" valueSource="address"/>
 			<tns:TransportProtocol id="court-https" isTwoWayProtocol="true">
 				<tns:Address connectionTimeout="120000" receiveTimeout="180000" chunked="false">https://b2g-test.sodisce.si/laurentius/msh</tns:Address>
-				<tns:TLS keyAlias="msh.e-box-a.si" keyStoreName="def-keystore" trustStoreName="def-ssltruststore"/>
+				<tns:TLS keyAlias="test-tls" keyStoreName="test-tls-keystore.jks" trustStoreName="def-truststore"/>
 				<tns:SOAPVersion>1.2</tns:SOAPVersion>
 			</tns:TransportProtocol>
-			<tns:ExchangePartySecurity signatureCertAlias="msh.e-box-a.si" trustoreName="def-truststore"/>
+			<tns:ExchangePartySecurity signatureCertAlias="court-laurentius" trustoreName="def-truststore"/>
 		</tns:PartyIdentitySet>
 	</tns:Parties>
 	<tns:SecurityPolicies>
-		<tns:Security WSSVersion="1.1" id="enc_att_and_sign_v1">
-			<tns:X509>
-				<tns:Signature hashFunction="http://www.w3.org/2001/04/xmlenc#sha256" algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256">
-					<tns:Reference allAttachments="true">
-						<tns:Elements>
-							<tns:XPath xpath="env:Header/eb3:Messaging">
-								<tns:Namespace prefix="eb3" namespace="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/"/>
-								<tns:Namespace prefix="env" namespace="http://www.w3.org/2003/05/soap-envelope"/>
-							</tns:XPath>
-						</tns:Elements>
-					</tns:Reference>
-				</tns:Signature>
-				<tns:Encryption algorithm="http://www.w3.org/2009/xmlenc11#aes128-gcm" minimumStrength="128">
-					<tns:Reference allAttachments="true"/>
-				</tns:Encryption>
-			</tns:X509>
-		</tns:Security>
+		
 		<tns:Security WSSVersion="1.1" id="sign_sha256">
 			<tns:X509>
 				<tns:Signature hashFunction="http://www.w3.org/2001/04/xmlenc#sha256" algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256">
@@ -120,11 +87,7 @@
 		<tns:ReceptionAwareness id="AS4ReceiptResponse" replyPattern="response" receiptType="AS4Receipt">
 			<tns:Retry period="5678" maxRetries="3" multiplyPeriod="3"/>
 			<tns:DuplicateDetection windowPeriode="P1Y"/>
-		</tns:ReceptionAwareness>
-		<tns:ReceptionAwareness id="AS4ReceiptResponse-one" replyPattern="response" receiptType="AS4Receipt">
-			<tns:Retry period="5678" maxRetries="0" multiplyPeriod="-1"/>
-			<tns:DuplicateDetection windowPeriode="P1Y"/>
-		</tns:ReceptionAwareness>
+		</tns:ReceptionAwareness>		
 	</tns:ReceptionAwarenessPatterns>
 	<tns:PMode id="DeliveryWithReceipt">
 		<tns:ServiceIdRef>DeliveryWithReceipt</tns:ServiceIdRef>

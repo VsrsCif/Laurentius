@@ -124,6 +124,8 @@ if [ "$INIT" = "TRUE" ]; then
 	cp "$LAU_BUNDLE/widlfly-10.1/config/laurentius-roles.properties" "$WILDFLY_HOME/standalone/configuration/"
 	cp "$LAU_BUNDLE/widlfly-10.1/config/laurentius-users.properties" "$WILDFLY_HOME/standalone/configuration/"
 	cp "$LAU_BUNDLE/widlfly-10.1/config/standalone-laurentius.xml" "$WILDFLY_HOME/standalone/configuration/"
+	cp "$LAU_BUNDLE/widlfly-10.1/config/test-tls-keystore.jks" "$WILDFLY_HOME/standalone/configuration/"
+
 
 fi
 

@@ -1185,7 +1185,7 @@ public class SEDMailBox implements SEDMailBoxWS {
     // check for missing data
     SEDRequestUtils.checkOutMailForMissingData(mail);
 
-    SEDBox sb = mdbLookups.getSEDBoxByName(mail.getSenderEBox(), false);
+    SEDBox sb = mdbLookups.getSEDBoxByAddressName(mail.getSenderEBox());
     if (sb == null) {
       String msg =
           "Sender box [SubmitMailRequest/Data/OutMail/@senderEBox]:  " + mail.getSenderEBox() +

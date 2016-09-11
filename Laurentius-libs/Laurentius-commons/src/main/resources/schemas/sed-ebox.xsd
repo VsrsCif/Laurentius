@@ -37,7 +37,7 @@ Copyright 2016, Supreme Court Republic of Slovenia
 			<xs:element name="Export" type="ns1:Export" minOccurs="0"/>
 			<xs:element name="Execute" type="ns1:Execute" minOccurs="0"/>
 		</xs:sequence>
-		<xs:attribute name="boxName" type="xs:string" use="required">
+		<xs:attribute name="localBoxName" type="xs:string" use="required">
 			<xs:annotation>
 				<xs:documentation xml:lang="sl">Naslov e-predala</xs:documentation>
 			</xs:annotation>

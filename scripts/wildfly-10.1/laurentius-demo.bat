@@ -4,6 +4,7 @@ set "WILDFLY_HOME="
 set "RESOLVED_WILDFLY_HOME="
 set "LAU_HOME="
 set "INIT=false"
+set "LAU_DOMAIN="
 set "LAU_OPTS=-c standalone-laurentius.xml"
 
 :loop
@@ -12,17 +13,19 @@ set "LAU_OPTS=-c standalone-laurentius.xml"
         goto endParamReading
       )
 	  
-	  if ["%~1"]==["--init"] (
+      if ["%~1"]==["--init"] (
         set "INIT=true"
+	set "LAU_DOMAIN=%~2"
+	echo DOMAIN = "%LAU_DOMAIN%".
       )
 	  
-	  if ["%~1"]==["-w"] (
+      if ["%~1"]==["-w"] (
 	    
 		set "WILDFLY_HOME=%~2"
 		echo WILDFLY_HOME = "%WILDFLY_HOME%".
       )
 	    
-	  if ["%~1"]==["-l"] (
+      if ["%~1"]==["-l"] (
 	    shift
 		set "LAU_HOME=%~2"
 		echo LAU_HOME = "%LAU_HOME%".
@@ -52,7 +55,7 @@ set "LAU_OPTS=%LAU_OPTS% -Dlaurentius.home=%LAU_HOME%"
 
 if "%INIT%" == "true" (
 	
-	set "LAU_OPTS=%LAU_OPTS% -Dsi.laurentius.msh.hibernate.hbm2ddl.auto=create -Dsi.laurentius.msh.hibernate.dialect=org.hibernate.dialect.H2Dialect -Dsi.laurentius.init.lookups=%LAU_HOME%\init-data.xml"
+	set "LAU_OPTS=%LAU_OPTS% -Dsi.laurentius.msh.hibernate.hbm2ddl.auto=create -Dsi.laurentius.msh.hibernate.dialect=org.hibernate.dialect.H2Dialect -Dsi.laurentius.init.lookups=%LAU_HOME%\init-data.xml -Dsi.laurentius.domain=%LAU_DOMAIN%"
 )
 
 
@@ -60,6 +63,7 @@ echo ***************************************************************************
 echo * WILDFLY_HOME =  "%WILDFLY_HOME%"
 echo * LAU_HOME     =  "%LAU_HOME%"
 echo * INIT         =  "%INIT%"
+echo * DOMAIN       =  "%LAU_DOMAIN%"
 echo * LAU_OPTS     =  "%LAU_OPTS%"
 echo *********************************************************************************************************************************
 

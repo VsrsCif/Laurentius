@@ -8,7 +8,11 @@ fi
 
 
 ZIP_FILENAME="Laurentius-$(date +%Y%m%d_%H%M)"
+ZIP_TEST="Laurentius-test"
+
 rm -rf $ZIP_FILENAME
+rm -rf $ZIP_TEST
+
 
 mkdir $ZIP_FILENAME
 mkdir "$ZIP_FILENAME/modules"
@@ -42,7 +46,10 @@ cp -r "$LAU_PROJECT/scripts/laurentius-demo" "$ZIP_FILENAME/laurentius-home"
 
 zip -r "$ZIP_FILENAME.zip" $ZIP_FILENAME
 
-rm -rf $ZIP_FILENAME
+mv $ZIP_FILENAME $ZIP_TEST
+zip -r "$ZIP_TEST.zip" $ZIP_TEST
+
+rm -rf $ZIP_TEST
 
 
 

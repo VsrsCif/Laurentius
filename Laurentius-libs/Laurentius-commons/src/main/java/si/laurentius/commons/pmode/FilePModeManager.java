@@ -41,6 +41,7 @@ import si.laurentius.msh.pmode.ReceptionAwareness;
 import si.laurentius.msh.pmode.Security;
 import si.laurentius.msh.pmode.Service;
 import si.laurentius.commons.PModeConstants;
+import si.laurentius.commons.SEDSystemProperties;
 import static si.laurentius.commons.SEDSystemProperties.SYS_PROP_HOME_DIR;
 import static si.laurentius.commons.SEDSystemProperties.SYS_PROP_PMODE;
 import static si.laurentius.commons.SEDSystemProperties.SYS_PROP_PMODE_DEF;
@@ -166,7 +167,7 @@ public class FilePModeManager implements PModeInterface {
               String.format(
                   "PMode: '%s' does not have defined transport for exchange party '%s'. Action %s in MEP is pushed!  ",
                   pMode.getId(), rPID.getId(), act.getName()));
-          
+
         }
       } else {
         for (PartyIdentitySetType.TransportProtocol tp : rPID.getTransportProtocols()) {
@@ -470,7 +471,9 @@ public class FilePModeManager implements PModeInterface {
             partyIdValue.contains("@")) {
           String domain = partyIdValue.substring(partyIdValue.indexOf("@") + 1);
 
-          if (Objects.equals(pis.getDomain(), domain)) {
+          if (pis.getIsLocalIdentity() ?
+              Objects.equals(domain, getLocalDomain()) :
+              Objects.equals(domain, pis.getDomain())) {
             candidates.add(pis);
           }
         }
@@ -498,11 +501,19 @@ public class FilePModeManager implements PModeInterface {
     String localPart = addrTb[0];
     String domainPart = addrTb[1];
 
+    String localDomain = getLocalDomain();
+
+    if (Utils.isEmptyString(localDomain)) {
+      throw new RuntimeException("Bad aplication configuratin. Missing domain parameter");
+    }
+
     int iDomainCount = 0;
     List<PartyIdentitySet> candidates = new ArrayList<>();
     for (PartyIdentitySet pis : mmpPartyIdentites.values()) {
       // check domain
-      if (Objects.equals(domainPart, pis.getDomain())) {
+      if (pis.getIsLocalIdentity() ?
+          Objects.equals(domainPart, localDomain) :
+          Objects.equals(domainPart, pis.getDomain())) {
         iDomainCount++;
         boolean bContaisIdetifierId = false;
         for (PartyIdentitySetType.PartyId pi : pis.getPartyIds()) {
@@ -731,4 +742,7 @@ public class FilePModeManager implements PModeInterface {
     LOG.logEnd(l);
   }
 
+  public String getLocalDomain() {
+    return System.getProperty(SEDSystemProperties.S_PROP_LAU_DOMAIN);
+  }
 }

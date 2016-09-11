@@ -257,6 +257,22 @@ public class SEDLookups implements SEDLookupsInterface {
     }
     return t;
   }
+  
+   @Override
+  public SEDBox getSEDBoxByLocalName(String strname) {
+    if (strname != null && !strname.trim().isEmpty()) {
+      String localName = strname.trim();
+     
+      
+      List<SEDBox> lst = getSEDBoxes();
+      for (SEDBox sb : lst) {
+        if (localName.equalsIgnoreCase(sb.getLocalBoxName())) {
+          return sb;
+        }
+      }
+    }
+    return null;
+  }
 
   /**
    *
@@ -264,13 +280,24 @@ public class SEDLookups implements SEDLookupsInterface {
    * @return
    */
   @Override
-  public SEDBox getSEDBoxByName(String strname, boolean ignoreDomain) {
+  public SEDBox getSEDBoxByAddressName(String strname) {
     if (strname != null && !strname.trim().isEmpty()) {
       String sedBox = strname.trim();
+      String domain = mdbSettings.getDomain();
+      if (Utils.isEmptyString(domain)) {
+        String msg =
+            "Missing domain parameter in configuration. Did you init application with domain parameter?";
+        LOG.logError(msg, null);
+        throw new RuntimeException(msg);
+      }
+      domain = "@" + domain;
+      if (!sedBox.toLowerCase().endsWith(domain.toLowerCase())) {
+        LOG.formatedWarning("Local sedbox %s has wrong domain. Local domain is %s", sedBox, domain);
+        return null;
+      }
       List<SEDBox> lst = getSEDBoxes();
       for (SEDBox sb : lst) {
-        if (ignoreDomain && sb.getBoxName().startsWith(sedBox + "@") ||
-            sb.getBoxName().equalsIgnoreCase(sedBox)) {
+        if (strname.equalsIgnoreCase(sb.getLocalBoxName() + domain)) {
           return sb;
         }
       }
@@ -338,15 +365,14 @@ public class SEDLookups implements SEDLookupsInterface {
     return null;
   }
 
-
   @Override
   public SEDCertificate getSEDCertificatForAlias(String alias,
       SEDCertStore cs, boolean isKey) {
 
-    if (cs == null){
+    if (cs == null) {
       throw new IllegalArgumentException(String.format("Null 'SEDCertStore'!"));
     }
-    
+
     if (alias == null) {
       throw new IllegalArgumentException(String.format("Null 'alias'!"));
     }
@@ -499,8 +525,10 @@ public class SEDLookups implements SEDLookupsInterface {
         SedLookups cls = (SedLookups) XMLUtils.deserialize(f, SedLookups.class);
         if (cls.getSEDBoxes() != null && !cls.getSEDBoxes().getSEDBoxes().isEmpty()) {
           cls.getSEDBoxes().getSEDBoxes().stream().forEach((cb) -> {
-            if (getSEDBoxByName(cb.getBoxName(), false) == null) {
+            if (getSEDBoxByLocalName(cb.getLocalBoxName()) == null) {
               addSEDBox(cb);
+            } else {
+              LOG.formatedWarning("Sedbox %s already exist in lookup", cb.getLocalBoxName());
             }
           });
         }
@@ -557,6 +585,12 @@ public class SEDLookups implements SEDLookupsInterface {
 
         if (cls.getSEDProperties() != null && !cls.getSEDProperties().getSEDProperties().isEmpty()) {
           mdbSettings.setSEDProperties(cls.getSEDProperties().getSEDProperties());
+
+        }
+
+        if (System.getProperties().containsKey(SEDSystemProperties.S_PROP_LAU_DOMAIN)) {
+          mdbSettings.setSEDProperty(SEDSystemProperties.S_PROP_LAU_DOMAIN, System.getProperty(
+              SEDSystemProperties.S_PROP_LAU_DOMAIN), "SYSTEM");
         }
 
       } catch (JAXBException ex) {

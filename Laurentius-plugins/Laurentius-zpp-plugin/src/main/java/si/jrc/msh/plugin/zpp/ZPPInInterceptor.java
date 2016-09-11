@@ -423,7 +423,7 @@ public class ZPPInInterceptor implements SoapInterceptorInterface {
       for (MSHInMail mi : lst) {
 
         if (sb == null) {
-          sb = msedLookup.getSEDBoxByName(mi.getReceiverEBox(), false);
+          sb = msedLookup.getSEDBoxByAddressName(mi.getReceiverEBox());
         }
 
         String exporFileName = null;

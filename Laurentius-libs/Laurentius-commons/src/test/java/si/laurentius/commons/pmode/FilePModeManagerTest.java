@@ -74,15 +74,14 @@ public class FilePModeManagerTest {
     getRootLogger().addAppender(fa);
   }
 
-  @BeforeClass
-  public static void setUpClass()
-      throws Exception {
-  }
+
 
   @Before
   public void setUp()
       throws Exception {
 
+    System.getProperties().put(SEDSystemProperties.S_PROP_LAU_DOMAIN, "test-sed.si");
+    
     System.getProperties().put(SEDSystemProperties.SYS_PROP_HOME_DIR, "src/test/resources/pmode/");
     System.getProperties().put(SEDSystemProperties.SYS_PROP_PMODE, TEST_PMODE_FILE);
   }

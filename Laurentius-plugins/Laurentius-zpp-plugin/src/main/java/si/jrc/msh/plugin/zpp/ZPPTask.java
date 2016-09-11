@@ -120,7 +120,7 @@ public class ZPPTask implements TaskExecutionInterface {
 
     MSHInMail mi = new MSHInMail();
     mi.setStatus(SEDInboxMailStatus.PLUGINLOCKED.getValue());
-    mi.setReceiverEBox(sedBox);
+    mi.setReceiverEBox(sedBox + "@" + SEDSystemProperties.getLocalDomain());
 
     List<MSHInMail> lst = mDB.getDataList(MSHInMail.class, -1, -1, "Id", "ASC", mi);
     sw.append("got " + lst.size() + " mails for sedbox: '" + sedBox + "'!");

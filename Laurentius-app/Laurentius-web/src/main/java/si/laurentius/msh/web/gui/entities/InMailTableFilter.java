@@ -198,4 +198,12 @@ public class InMailTableFilter {
     this.subject = subject;
   }
 
+  @Override
+  public String toString() {
+    return "InMailTableFilter{" + "action=" + action + ", conversationId=" + conversationId +
+        ", receivedDateFrom=" + receivedDateFrom + ", receivedDateTo=" + receivedDateTo +
+        ", receiverEBoxList=" + receiverEBoxList + ", senderEBox=" + senderEBox + ", service=" +
+        service + ", status=" + status + ", subject=" + subject + '}';
+  }
+
 }

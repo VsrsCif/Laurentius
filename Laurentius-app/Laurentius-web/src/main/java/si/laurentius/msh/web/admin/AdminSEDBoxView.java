@@ -49,8 +49,8 @@ public class AdminSEDBoxView extends AbstractAdminJSFView<SEDBox> {
    * @param sedBox
    * @return
    */
-  public SEDBox getSEDBoxByName(String sedBox) {
-    return mdbLookups.getSEDBoxByName(sedBox, false);
+  public SEDBox getSEDBoxByLocalName(String sedBox) {
+    return mdbLookups.getSEDBoxByAddressName(sedBox);
   }
 
   /**
@@ -63,11 +63,11 @@ public class AdminSEDBoxView extends AbstractAdminJSFView<SEDBox> {
     String domain = mdbSettings.getDomain();
     String sbname = "name.%03d@%s";
     int i = 1;
-    while (getSEDBoxByName(String.format(sbname, i, domain)) != null) {
+    while (getSEDBoxByLocalName(String.format(sbname, i, domain)) != null) {
       i++;
     }
     SEDBox sbx = new SEDBox();
-    sbx.setBoxName(String.format(sbname, i, domain));
+    sbx.setLocalBoxName(String.format(sbname, i, domain));
     sbx.setActiveFromDate(Calendar.getInstance().getTime());
     sbx.setExport(new Export());
     sbx.setExecute(new Execute());

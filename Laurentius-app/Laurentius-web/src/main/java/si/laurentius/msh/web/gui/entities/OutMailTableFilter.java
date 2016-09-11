@@ -195,4 +195,12 @@ public class OutMailTableFilter {
     this.submittedDateTo = submittedDateTo;
   }
 
+  @Override
+  public String toString() {
+    return "OutMailTableFilter{" + "action=" + action + ", conversationId=" + conversationId +
+        ", receiverEBox=" + receiverEBox + ", senderEBoxList=" + senderEBoxList + ", service=" +
+        service + ", status=" + status + ", subject=" + subject + ", submittedDateFrom=" +
+        submittedDateFrom + ", submittedDateTo=" + submittedDateTo + '}';
+  }
+
 }

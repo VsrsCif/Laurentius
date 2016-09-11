@@ -26,6 +26,7 @@ import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.interfaces.SEDLookupsInterface;
 import si.laurentius.commons.utils.Utils;
 import si.laurentius.commons.utils.xml.XMLUtils;
+import si.laurentius.property.SEDProperty;
 
 /**
  *
@@ -35,6 +36,7 @@ public class SEDTestLookup implements SEDLookupsInterface {
 
   public static final String INIT_LOOKUPS_RESOURCE_PATH = "/sed-lookups.xml";
   private final HashMap<Class, List<?>> mlstCacheLookup = new HashMap<>();
+  String domain = null;
 
   public SEDTestLookup(InputStream is)
       throws IOException, JAXBException {
@@ -44,6 +46,15 @@ public class SEDTestLookup implements SEDLookupsInterface {
   private void init(InputStream is)
       throws IOException, JAXBException {
     SedLookups cls = (SedLookups) XMLUtils.deserialize(is, SedLookups.class);
+
+    for (SEDProperty sp : cls.getSEDProperties().getSEDProperties()) {
+      System.setProperty(sp.getKey(), sp.getValue());
+
+      if (sp.getKey().equals(SEDSystemProperties.S_PROP_LAU_DOMAIN)) {
+        domain = sp.getValue();
+
+      }
+    }
 
     mlstCacheLookup.put(SEDBox.class, cls.getSEDBoxes().getSEDBoxes());
     mlstCacheLookup.put(SEDCertStore.class, cls.getSEDCertStores().getSEDCertStores());
@@ -106,13 +117,40 @@ public class SEDTestLookup implements SEDLookupsInterface {
   }
 
   @Override
-  public SEDBox getSEDBoxByName(String strname, boolean ignoreDomain) {
+  public SEDBox getSEDBoxByLocalName(String strname) {
     if (strname != null && !strname.trim().isEmpty()) {
-      String sedBox = strname.trim();
+      String localName = strname.trim();
+
       List<SEDBox> lst = getSEDBoxes();
       for (SEDBox sb : lst) {
-        if (ignoreDomain && sb.getBoxName().startsWith(sedBox + "@") ||
-            sb.getBoxName().equalsIgnoreCase(sedBox)) {
+        if (localName.equalsIgnoreCase(sb.getLocalBoxName())) {
+          return sb;
+        }
+      }
+    }
+    return null;
+  }
+
+  @Override
+  public SEDBox getSEDBoxByAddressName(String strname) {
+    if (strname != null && !strname.trim().isEmpty()) {
+      String sedBox = strname.trim();
+
+      if (Utils.isEmptyString(domain)) {
+        String msg =
+            "Missing domain parameter in configuration. Did you init application with domain parameter?";
+
+        throw new RuntimeException(msg);
+      }
+      String lcdomain = "@" + domain.toLowerCase();
+      if (!sedBox.toLowerCase().endsWith(lcdomain.toLowerCase())) {
+        System.out.println("**************************** - domain not match");
+        System.out.println("domain: " + lcdomain + " sedbox:  " + sedBox);
+        return null;
+      }
+      List<SEDBox> lst = getSEDBoxes();
+      for (SEDBox sb : lst) {
+        if (strname.equalsIgnoreCase(sb.getLocalBoxName() + lcdomain)) {
           return sb;
         }
       }

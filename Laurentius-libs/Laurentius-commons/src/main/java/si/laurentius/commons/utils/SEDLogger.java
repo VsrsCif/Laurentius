@@ -140,6 +140,12 @@ public class SEDLogger {
         "." : ", first cause '" + getFirstCauseMessage(ex) + "')") + "( "
         + (getTime() - lTime) + " ms )", ex);
   }
+  
+  public void logError(String strMessage, Throwable ex) {
+
+    mlgLogger.error(getCurrentMethodName() + ": - ERROR MSG: '" + strMessage + "'" + (ex == null ?
+        "." : ", first cause '" + getFirstCauseMessage(ex) + "')") , ex);
+  }
 
   /**
    *

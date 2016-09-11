@@ -18,7 +18,7 @@
         </ns2:SEDCronJob>
         <ns2:SEDCronJob id="20" name="test3" active="false" second="0" minute="0" hour="8,9,10,11,12,13,14,15" dayOfMonth="*" month="*" dayOfWeek="1-6">
             <ns2:SEDTask taskType="zpp-plugin">
-                <ns2:SEDTaskProperty id="21" key="zpp.sedbox">izvrsba@test-sed.si</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="21" key="zpp.sedbox">izvrsba</ns2:SEDTaskProperty>
                 <ns2:SEDTaskProperty id="22" key="zpp.sign.key.alias">msh.e-box-a.si</ns2:SEDTaskProperty>
             </ns2:SEDTask>
         </ns2:SEDCronJob>
@@ -58,37 +58,37 @@
         </ns2:SEDTaskType>
     </SEDTaskTypes>
     <SEDBoxes>
-        <ns3:SEDBox boxName="eINS-vpisnik@test-sed.si" activeFromDate="2016-04-20+02:00">
+        <ns3:SEDBox localBoxName="eINS-vpisnik" activeFromDate="2016-04-20+02:00">
             <ns3:Export active="true" folder="${laurentius.home}/export-eins" fileMask="${Service}_${Id}"/>
         </ns3:SEDBox>
-        <ns3:SEDBox boxName="izvrsba@test-sed.si" activeFromDate="2016-04-20+02:00">
+        <ns3:SEDBox localBoxName="izvrsba" activeFromDate="2016-04-20+02:00">
             <ns3:Export active="true" exportMetaData="true" folder="${laurentius.home}/export-izvrsba" fileMask="${Id}_${SenderEBox}_${Service}"/>
         </ns3:SEDBox>
-        <ns3:SEDBox boxName="ceftestparty2gw@test-sed.si" activeFromDate="2016-04-20+02:00"/>
+        <ns3:SEDBox localBoxName="ceftestparty2gw" activeFromDate="2016-04-20+02:00"/>
     </SEDBoxes>
     <SEDPlugins>
         <ns4:SEDPlugin webContext="/zpp-plugin" type="LegalZPP" name="ZPP plugin" description="ZPP - e-delivery: SVEV 2.0 service implementation" jndiInInterceptor="java:global/plugin-zpp/ZPPOutInterceptor!si.laurentius.commons.interfaces.SoapInterceptorInterface" jndiOutInterceptor="java:global/plugin-zpp/ZPPOutInterceptor!si.laurentius.commons.interfaces.SoapInterceptorInterface" tasksJNDIs="java:global/plugin-zpp/ZPPTask!si.laurentius.commons.interfaces.TaskExecutionInterface" jndi="java:global/plugin-zpp/ZPPPluginDescription!si.laurentius.commons.interfaces.PluginDescriptionInterface"/>
     </SEDPlugins>
     <SEDProperties>
-        <ns5:SEDProperty key="sed.domain" value="sed-domain.org" group="SED"/>
+        <ns5:SEDProperty key="si.laurentius.domain" value="test-sed.si" group="SYSTEM"/>
         <ns5:SEDProperty key="si.laurentius.pmode" value="pmode-conf.xml" group="SYSTEM"/>
     </SEDProperties>
     <SEDUsers>
         <ns6:SEDUser userId="sed" activeFromDate="2016-04-20+02:00">
-            <ns3:SEDBox boxName="izvrsba@test-sed.si" activeFromDate="2016-04-20+02:00">
+            <ns3:SEDBox localBoxName="izvrsba" activeFromDate="2016-04-20+02:00">
                 <ns3:Export active="true" exportMetaData="true" folder="${laurentius.home}/export-izvrsba" fileMask="${Id}_${SenderEBox}_${Service}"/>
             </ns3:SEDBox>
-            <ns3:SEDBox boxName="k-vpisnik@test-sed.si" activeFromDate="2016-04-20+02:00"/>
-            <ns3:SEDBox boxName="eINS-vpisnik@test-sed.si" activeFromDate="2016-04-20+02:00">
+            <ns3:SEDBox localBoxName="k-vpisnik" activeFromDate="2016-04-20+02:00"/>
+            <ns3:SEDBox localBoxName="eINS-vpisnik" activeFromDate="2016-04-20+02:00">
                 <ns3:Export active="true" folder="${laurentius.home}/export-eins" fileMask="${Service}_${Id}"/>
             </ns3:SEDBox>
         </ns6:SEDUser>
         <ns6:SEDUser userId="admin" activeFromDate="2016-04-20+02:00">
-            <ns3:SEDBox boxName="izvrsba@test-sed.si" activeFromDate="2016-04-20+02:00">
+            <ns3:SEDBox localBoxName="izvrsba" activeFromDate="2016-04-20+02:00">
                 <ns3:Export active="true" exportMetaData="true" folder="${laurentius.home}/export-izvrsba" fileMask="${Id}_${SenderEBox}_${Service}"/>
             </ns3:SEDBox>
-            <ns3:SEDBox boxName="k-vpisnik@test-sed.si" activeFromDate="2016-04-20+02:00"/>
-            <ns3:SEDBox boxName="eINS-vpisnik@test-sed.si" activeFromDate="2016-04-20+02:00">
+            <ns3:SEDBox localBoxName="k-vpisnik" activeFromDate="2016-04-20+02:00"/>
+            <ns3:SEDBox localBoxName="eINS-vpisnik" activeFromDate="2016-04-20+02:00">
                 <ns3:Export active="true" folder="${laurentius.home}/export-eins" fileMask="${Service}_${Id}"/>
             </ns3:SEDBox>
         </ns6:SEDUser>

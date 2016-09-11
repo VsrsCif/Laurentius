@@ -85,12 +85,16 @@ public interface SEDLookupsInterface {
   /**
    *
    * @param strname
-   * @param ignoreDomain
    * @return
    */
-  SEDBox getSEDBoxByName(String strname, boolean ignoreDomain);
+  SEDBox getSEDBoxByAddressName(String strname);
 
- 
+   /**
+   *
+   * @param strname
+   * @return
+   */
+  SEDBox getSEDBoxByLocalName(String strname);
   /**
    *
    * @param id

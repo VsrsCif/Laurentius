@@ -374,7 +374,7 @@
 				<xs:documentation>Unique id for party identifier referenced by PMode configuration</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
-		<xs:attribute name="domain" type="xs:anyURI" use="required">
+		<xs:attribute name="domain" type="xs:anyURI">
 			<xs:annotation>
 				<xs:documentation>domain of party address identifiers. Domain must be unique for party and is part of "sedbox" address</xs:documentation>
 			</xs:annotation>

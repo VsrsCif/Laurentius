@@ -33,6 +33,7 @@ import si.jrc.msh.exception.EBMSErrorCode;
 import si.laurentius.commons.MimeValues;
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.SEDOutboxMailStatus;
+import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.SEDValues;
 import si.laurentius.commons.exception.PModeException;
 import si.laurentius.commons.exception.StorageException;
@@ -134,7 +135,7 @@ public class MSHQueueBean implements MessageListener {
 
     // create ebms-message id
     if (Utils.isEmptyString(mail.getMessageId())) {
-      mail.setMessageId(Utils.getUUIDWithDomain(sd.getSenderPartyIdentitySet().getDomain()));
+      mail.setMessageId(Utils.getUUIDWithDomain(SEDSystemProperties.getLocalDomain()));
     }
 
     if (!sd.isPushTransfrer()) {

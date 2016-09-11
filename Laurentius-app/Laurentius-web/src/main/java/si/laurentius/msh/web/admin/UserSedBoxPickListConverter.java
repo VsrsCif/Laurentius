@@ -34,7 +34,7 @@ public class UserSedBoxPickListConverter implements Converter {
       DualListModel dl = (DualListModel) pl.getValue();
 
       for (Object o : dl.getSource()) {
-        String id = ((SEDBox) o).getBoxName();
+        String id = ((SEDBox) o).getLocalBoxName();
         if (arg2.equals(id)) {
           ret = o;
           break;
@@ -42,7 +42,7 @@ public class UserSedBoxPickListConverter implements Converter {
       }
       if (ret == null) {
         for (Object o : dl.getTarget()) {
-          String id = "" + ((SEDBox) o).getBoxName();
+          String id = "" + ((SEDBox) o).getLocalBoxName();
           if (arg2.equals(id)) {
             ret = o;
             break;
@@ -64,7 +64,7 @@ public class UserSedBoxPickListConverter implements Converter {
   public String getAsString(FacesContext arg0, UIComponent arg1, Object arg2) {
     String str = "";
     if (arg2 instanceof SEDBox) {
-      str = "" + ((SEDBox) arg2).getBoxName();
+      str = "" + ((SEDBox) arg2).getLocalBoxName();
     }
     return str;
   }

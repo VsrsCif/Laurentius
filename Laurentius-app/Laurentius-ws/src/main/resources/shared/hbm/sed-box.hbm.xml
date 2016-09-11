@@ -3,8 +3,8 @@
 <hibernate-mapping>    
     <class name="si.laurentius.ebox.SEDBox"
            table="LAU_BOX">
-        <id name="BoxName" type="java.lang.String" >
-            <column name="lau_box" length="512" />            
+        <id name="LocalBoxName" type="java.lang.String" >
+            <column name="LOCAL_BOX_NAME" length="512" />            
         </id>        
         <property column="Active_Date_From" name="ActiveFromDate"  length="1024" type="java.util.Date" />       
         <property column="Active_Date_To" name="ActiveToDate"  length="32" type="java.util.Date" />    
@@ -30,7 +30,8 @@
             </many-to-many>
         </bag -->  
     </class>    
-    <query name="si.laurentius.ebox.SEDBox.getAll" ><![CDATA[SELECT p FROM SEDBox p order by p.BoxName asc]]></query>
-    <query name="si.laurentius.ebox.SEDBox.getByName" ><![CDATA[SELECT p FROM SEDBox p where p.BoxName=:BoxName]]></query>
+    <query name="si.laurentius.ebox.SEDBox.getAll" ><![CDATA[SELECT p FROM SEDBox p order by p.LocalBoxName asc]]></query>
+    <query name="si.laurentius.ebox.SEDBox.getByName" ><![CDATA[SELECT p FROM SEDBox p where p.LocalBoxName=:BoxName]]></query>
+    
 
 </hibernate-mapping>

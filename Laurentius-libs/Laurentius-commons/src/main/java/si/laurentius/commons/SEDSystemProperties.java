@@ -58,7 +58,8 @@ public class SEDSystemProperties {
    * messages.
    * </p>
    */
-  public static final String SYS_PROP_EXECUTION_WORKERS = "si.laurentius.msh.execution.workers.count";
+  public static final String SYS_PROP_EXECUTION_WORKERS =
+      "si.laurentius.msh.execution.workers.count";
   /**
    * Default value for plugin folder name.
    *
@@ -147,7 +148,15 @@ public class SEDSystemProperties {
    * messages.
    * </p>
    */
-  public static final String SYS_PROP_QUEUE_SENDER_WORKERS = "si.laurentius.msh.sender.workers.count";
+  public static final String S_PROP_LAU_DOMAIN = "si.laurentius.domain";
+
+  /**
+   *
+   */
+  public static final String S_PROP_LAU_DOMAIN_DEF = "test-laurentius.org";
+
+  public static final String SYS_PROP_QUEUE_SENDER_WORKERS =
+      "si.laurentius.msh.sender.workers.count";
 
   static {
     if (getProperty(SYS_PROP_QUEUE_SENDER_WORKERS) == null) {
@@ -157,6 +166,10 @@ public class SEDSystemProperties {
       setProperty(SYS_PROP_EXECUTION_WORKERS, "5");
     }
 
+  }
+  
+   public  static String getLocalDomain() {
+    return System.getProperty(SEDSystemProperties.S_PROP_LAU_DOMAIN);
   }
 
 }

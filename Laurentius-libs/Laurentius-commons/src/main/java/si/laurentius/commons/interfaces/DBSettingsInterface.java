@@ -56,6 +56,14 @@ public interface DBSettingsInterface {
   @Lock(value = LockType.READ)
   void setSEDProperties(List<SEDProperty> prps);
 
+    /**
+   *
+   * @param key
+   * @param value
+   * @param group
+   */
+  @Lock(value = LockType.READ)
+  void setSEDProperty(String key, String value, String group);
   /**
    *
    * @return

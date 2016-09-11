@@ -114,7 +114,7 @@ public class SEDSecurityException extends Exception {
     /**
          *
          */
-    NoSuchAlgorithm("SEC:0001", "NoSuchAlgorithm", "No such algorithm: %s ", 1),
+    NoSuchAlgorithm("SEC:0001", "NoSuchAlgorithm", "No such algorithm: %s, msg: %s", 2),
 
     /**
          *

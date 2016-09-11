@@ -72,7 +72,7 @@ public class DBSettings implements DBSettingsInterface {
   /**
      *
      */
-  protected SEDLogger mlog = new SEDLogger(DBSettings.class);
+  protected static final SEDLogger LOG = new SEDLogger(DBSettings.class);
 
   /**
      *
@@ -137,12 +137,7 @@ public class DBSettings implements DBSettingsInterface {
   /**
      *
      */
-  protected static final String S_PROP_LAU_DOMAIN = "sed.domain";
-
-  /**
-     *
-     */
-  protected static final String S_PROP_LAU_DOMAIN_DEF = "sed-domain.org";
+ 
 
   /**
      *
@@ -168,7 +163,7 @@ public class DBSettings implements DBSettingsInterface {
      *
      */
   final protected void refreshData() {
-    long l = mlog.logStart();
+    long l = LOG.logStart();
     // ----------------------------------
     // SEDProperty
 
@@ -180,17 +175,17 @@ public class DBSettings implements DBSettingsInterface {
         String val = sd.getValue();
         String part = sd.getGroup();
         if (val == null) {
-          mlog.log("PROPERTY: '" + key + "' is null;");
+          LOG.log("PROPERTY: '" + key + "' is null;");
           continue;
         }
-        mlog.log("PROPERTY: '" + key + "' => '" + val + "'");
+        LOG.log("PROPERTY: '" + key + "' => '" + val + "'");
         mprpProperties.put(key, val);
         if (SYSTEM_SETTINGS.equals(part)) {
           System.setProperty(key, val);
         }
       }
     }
-    mlog.logEnd(l);
+    LOG.logEnd(l);
   }
 
   /**
@@ -202,9 +197,9 @@ public class DBSettings implements DBSettingsInterface {
     // System.setProperty(SEDSystemProperties.SYS_PROP_JNDI_PREFIX, JNDI_PREFIX);
     // System.setProperty(SEDSystemProperties.SYS_PROP_JNDI_JMS_PREFIX, JNDI_PREFIX);
 
-    if (!mprpProperties.containsKey(S_PROP_LAU_DOMAIN)) {
+    if (!mprpProperties.containsKey(SEDSystemProperties.S_PROP_LAU_DOMAIN)) {
       synchronized (mprpProperties) {
-        setData(S_PROP_LAU_DOMAIN, S_PROP_LAU_DOMAIN_DEF, LAU_SETTINGS);
+        setData(SEDSystemProperties.S_PROP_LAU_DOMAIN, SEDSystemProperties.S_PROP_LAU_DOMAIN_DEF, LAU_SETTINGS);
       }
     }
 
@@ -234,7 +229,7 @@ public class DBSettings implements DBSettingsInterface {
   @Lock(LockType.READ)
   @Override
   public String getDomain() {
-    return getData(S_PROP_LAU_DOMAIN);
+    return getData(SEDSystemProperties.S_PROP_LAU_DOMAIN);
   }
 
   /**
@@ -280,8 +275,8 @@ public class DBSettings implements DBSettingsInterface {
 
     if (mprpProperties.containsKey(key)) {
       if (strValue == null) {
-        mprpProperties.remove(strValue);
-        removeProperty(strValue);
+        mprpProperties.remove(key);
+        removeProperty(key);
       } else if (mprpProperties.get(strKey) != null && !mprpProperties.get(strKey).equals(strValue)) {
         mprpProperties.setProperty(strKey, strValue);
         replaceProperty(strKey, strValue, group);
@@ -297,30 +292,31 @@ public class DBSettings implements DBSettingsInterface {
    * @param key
    */
   protected void removeProperty(String key) {
-    long l = mlog.logStart(key);
+    long l = LOG.logStart(key);
     try {
 
+      mutUTransaction.begin();
       TypedQuery<SEDProperty> tq =
-          getEntityManager().createNamedQuery("SEDProperty.getByKey", SEDProperty.class);
+          memEManager.createNamedQuery("SEDProperty.getByKey", SEDProperty.class);
       tq.setParameter("key", key);
-      getUserTransaction().begin();
+      
       SEDProperty sp = tq.getSingleResult();
-      getEntityManager().remove(sp);
-      getUserTransaction().commit();
+      memEManager.remove(sp);
+      mutUTransaction.commit();
 
     } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException
         | HeuristicRollbackException | SecurityException | IllegalStateException ex) {
       String msg = "Error removing property: '" + key + "'";
-      mlog.logError(l, msg, ex);
+      LOG.logError(l, msg, ex);
       try {
-        if (getUserTransaction().getStatus() == Status.STATUS_ACTIVE) {
-          getUserTransaction().rollback();
+        if (mutUTransaction.getStatus() == Status.STATUS_ACTIVE) {
+          mutUTransaction.rollback();
         }
       } catch (SystemException ex1) {
-        mlog.logWarn(l, "Error rollback transaction", ex1);
+        LOG.logWarn(l, "Error rollback transaction", ex1);
       }
     }
-    mlog.logEnd(l, key);
+    LOG.logEnd(l, key);
   }
 
   /**
@@ -330,34 +326,34 @@ public class DBSettings implements DBSettingsInterface {
    * @param group
    */
   protected void replaceProperty(String key, String value, String group) {
-    long l = mlog.logStart(key);
+    long l = LOG.logStart(key);
     try {
 
       TypedQuery<SEDProperty> tq =
-          getEntityManager().createNamedQuery("SEDProperty.getByKey", SEDProperty.class);
+          memEManager.createNamedQuery("SEDProperty.getByKey", SEDProperty.class);
       tq.setParameter("key", key);
-      getUserTransaction().begin();
+      mutUTransaction.begin();
       SEDProperty sp = tq.getSingleResult();
       sp.setValue(value);
       if (group != null) {
         sp.setGroup(group);
       }
-      getEntityManager().merge(sp);
-      getUserTransaction().commit();
+      memEManager.merge(sp);
+      mutUTransaction.commit();
 
     } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException
         | HeuristicRollbackException | SecurityException | IllegalStateException ex) {
       String msg = "Error replacing property: '" + key + "' with value: " + value;
-      mlog.logError(l, msg, ex);
+      LOG.logError(l, msg, ex);
       try {
-        if (getUserTransaction().getStatus() == Status.STATUS_ACTIVE) {
-          getUserTransaction().rollback();
+        if (mutUTransaction.getStatus() == Status.STATUS_ACTIVE) {
+          mutUTransaction.rollback();
         }
       } catch (SystemException ex1) {
-        mlog.logWarn(l, "Error rollback transaction", ex1);
+        LOG.logWarn(l, "Error rollback transaction", ex1);
       }
     }
-    mlog.logEnd(l, key);
+    LOG.logEnd(l, key);
   }
 
   /**
@@ -367,63 +363,34 @@ public class DBSettings implements DBSettingsInterface {
    * @param group
    */
   protected void storeProperty(String key, String value, String group) {
-    long l = mlog.logStart(key);
+    long l = LOG.logStart(key);
     try {
       SEDProperty sp = new SEDProperty();
       sp.setKey(key);
       sp.setValue(value);
       sp.setGroup(group);
 
-      getUserTransaction().begin();
-      getEntityManager().persist(sp);
-      getUserTransaction().commit();
+      mutUTransaction.begin();
+      memEManager.persist(sp);
+      mutUTransaction.commit();
 
     } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException
         | HeuristicRollbackException | SecurityException | IllegalStateException ex) {
       String msg =
           "Error storing property: '" + key + "', Value: '" + value + "', group: '" + group + "' ";
-      mlog.logError(l, msg, ex);
+      LOG.logError(l, msg, ex);
       try {
-        if (getUserTransaction().getStatus() == Status.STATUS_ACTIVE) {
-          getUserTransaction().rollback();
+        if (mutUTransaction.getStatus() == Status.STATUS_ACTIVE) {
+          mutUTransaction.rollback();
         }
       } catch (SystemException ex1) {
-        mlog.logWarn(l, "Error rollback transaction", ex1);
+        LOG.logWarn(l, "Error rollback transaction", ex1);
       }
     }
-    mlog.logEnd(l, key);
+    LOG.logEnd(l, key);
   }
 
-  private EntityManager getEntityManager() {
-    // for jetty
-    if (memEManager == null) {
-      try {
-        InitialContext ic = new InitialContext();
-        memEManager = (EntityManager) ic.lookup(getJNDIPrefix() + "ebMS_PU");
-
-      } catch (NamingException ex) {
-        mlog.logError(mlog.getTime(), "Error retrieving EntityManager", ex);
-      }
-
-    }
-    return memEManager;
-  }
-
-  private UserTransaction getUserTransaction() {
-    // for jetty
-    if (mutUTransaction == null) {
-      try {
-        InitialContext ic = new InitialContext();
-
-        mutUTransaction = (UserTransaction) ic.lookup("UserTransaction");
-
-      } catch (NamingException ex) {
-        mlog.logError(mlog.getTime(), "Error retrieving EntityManager", ex);
-      }
-
-    }
-    return mutUTransaction;
-  }
+ 
 
   private String getJNDIPrefix() {
     return System.getProperty(SEDSystemProperties.SYS_PROP_JNDI_PREFIX, "java:/jboss/");
@@ -445,7 +412,7 @@ public class DBSettings implements DBSettingsInterface {
   @Override
   public List<SEDProperty> getSEDProperties() {
     TypedQuery<SEDProperty> q =
-        getEntityManager().createNamedQuery("SEDProperty.getAll", SEDProperty.class);
+        memEManager.createNamedQuery("SEDProperty.getAll", SEDProperty.class);
     return q.getResultList();
   }
 
@@ -460,6 +427,17 @@ public class DBSettings implements DBSettingsInterface {
         setData(sp.getKey(), sp.getValue(), sp.getGroup());
       });
     }
+  }
+  
+  /**
+   *
+   * @param key
+   * @param value
+   * @param group
+   */
+  @Override
+  public void setSEDProperty(String key, String value, String group) {    
+        setData(key, value, group);    
   }
 
 }

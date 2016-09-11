@@ -29,6 +29,7 @@ import org.primefaces.event.TransferEvent;
 import org.primefaces.event.UnselectEvent;
 import si.laurentius.user.SEDUser;
 import si.laurentius.commons.SEDGUIConstants;
+import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.msh.web.abst.AbstractJSFView;
 
@@ -91,7 +92,7 @@ public class UserSessionData extends AbstractJSFView {
     SEDUser usr = getUser();
     if (usr != null) {
       getUser().getSEDBoxes().stream().forEach((sb) -> {
-        lst.add(sb.getBoxName());
+        lst.add(sb.getLocalBoxName());
       });
     }
     return lst;

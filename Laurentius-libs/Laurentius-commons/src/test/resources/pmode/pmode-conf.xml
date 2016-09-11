@@ -63,7 +63,7 @@
 	</tns:Services>
 	<tns:Parties>
 	
-	<tns:PartyIdentitySet id="test-sed-svev" domain="test-sed.si" isLocalIdentity="true">
+	<tns:PartyIdentitySet id="test-sed-svev"  isLocalIdentity="true">
 			<tns:PartyId  type="urn:oasis:names:tc:ebcore:partyid-type:unregistered:si-svev:name" valueSource="name"/>
 			<tns:PartyId  type="urn:oasis:names:tc:ebcore:partyid-type:unregistered:si-svev:address" valueSource="address"/>
 			<tns:TransportProtocol id="TP-CEF" isTwoWayProtocol="true">
@@ -74,7 +74,7 @@
 			<tns:ExchangePartySecurity encryptionCertAlias="msh.e-box-a.si" signatureCertAlias="msh.e-box-a.si" trustoreName="def-keystore"/>
 		</tns:PartyIdentitySet>	
 		
-		<tns:PartyIdentitySet id="test-sed-cef" domain="test-sed.si" isLocalIdentity="true">
+		<tns:PartyIdentitySet id="test-sed-cef"  isLocalIdentity="true">
 			<tns:PartyId  type="urn:oasis:names:tc:ebcore:partyid-type:unregistered" valueSource="identifier">
 				<tns:Identifier>ceftestparty2gw</tns:Identifier>
 			</tns:PartyId>

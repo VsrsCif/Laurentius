@@ -52,13 +52,13 @@ public class AdminSEDUserView extends AbstractAdminJSFView<SEDUser> {
     List<String> sbIDs = new ArrayList<>();
     if (getEditable() != null) {
       getEditable().getSEDBoxes().stream().forEach((sb) -> {
-        sbIDs.add(sb.getBoxName());
+        sbIDs.add(sb.getLocalBoxName());
       });
     }
     List<SEDBox> src = new ArrayList<>();
     List<SEDBox> trg = new ArrayList<>();
     mdbLookups.getSEDBoxes().stream().forEach((se) -> {
-      if (sbIDs.contains(se.getBoxName())) {
+      if (sbIDs.contains(se.getLocalBoxName())) {
         trg.add(se);
       } else {
         src.add(se);

@@ -46,6 +46,8 @@ import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StringFormater;
 import si.laurentius.commons.utils.sec.tls.X509KeyManagerForAlias;
 import static java.security.KeyStore.getInstance;
+import java.util.Objects;
+import si.laurentius.commons.utils.Utils;
 
 /**
  *
@@ -148,9 +150,11 @@ public class KeystoreUtils {
 
     TrustManagerFactory fac;
     try {
-      fac = TrustManagerFactory.getInstance(sc.getType());
+      fac = TrustManagerFactory.getInstance(TrustManagerFactory
+				.getDefaultAlgorithm());
     } catch (NoSuchAlgorithmException ex) {
-      throw new SEDSecurityException(NoSuchAlgorithm, ex, sc.getType());
+      
+      throw new SEDSecurityException(NoSuchAlgorithm, ex, sc.getType(), ex.getMessage());
     }
 
     try {
@@ -173,23 +177,38 @@ public class KeystoreUtils {
    * @return
    * @throws SEDSecurityException
    */
-  public KeyManager[] getKeyManagers(SEDCertStore sc)
+  public KeyManager[] getKeyManagers(SEDCertStore sc, String alias)
       throws SEDSecurityException {
 
+    SEDCertificate cert = null;
+    for (SEDCertificate c: sc.getSEDCertificates()){
+      if (Objects.equals(c.getAlias(), alias)){
+        cert = c;
+        break;
+      }
+    }
+    if (cert == null){
+      throw new SEDSecurityException(SEDSecurityException.SEDSecurityExceptionCode.KeyForAliasNotExists, alias );
+    }
+    
+    
     KeyStore keyStore = getKeystore(sc);
     String keyStorePassword = sc.getPassword();
+    
+    
 
-    char[] keyPass = keyStorePassword != null ? keyStorePassword.toCharArray() : null;
+    char[] keyStorePass = cert.getKeyPassword() != null ? cert.getKeyPassword().toCharArray() : null;
 
     KeyManagerFactory fac;
     try {
-      fac = KeyManagerFactory.getInstance(sc.getType());
+      fac = KeyManagerFactory.getInstance(KeyManagerFactory
+				.getDefaultAlgorithm());
     } catch (NoSuchAlgorithmException ex) {
       throw new SEDSecurityException(NoSuchAlgorithm, ex, sc.getType());
     }
 
     try {
-      fac.init(keyStore, keyPass);
+      fac.init(keyStore, "key1234".toCharArray());
     } catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException ex) {
       throw new SEDSecurityException(KeyStoreException, ex,
           "Error init KeyManagerFactory for keystore: " + sc.getFilePath() + " Error: " +
@@ -209,7 +228,7 @@ public class KeystoreUtils {
       throws SEDSecurityException {
 
     KeyManager[] kmsres = null;
-    KeyManager[] kms = getKeyManagers(sc);
+    KeyManager[] kms = getKeyManagers(sc, alias);
     if(kms!=null){
       List<KeyManager> kmarr  = new ArrayList<>();
       for (KeyManager km: kms){

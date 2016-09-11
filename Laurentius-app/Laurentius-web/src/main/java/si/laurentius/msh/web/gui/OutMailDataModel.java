@@ -15,6 +15,7 @@
 package si.laurentius.msh.web.gui;
 
 import java.math.BigInteger;
+import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.msh.outbox.mail.MSHOutMail;
 import si.laurentius.commons.interfaces.SEDDaoInterface;
 import si.laurentius.msh.web.abst.AbstractMailDataModel;
@@ -75,13 +76,15 @@ public class OutMailDataModel extends AbstractMailDataModel<MSHOutMail> {
     if (outFilter == null) {
       outFilter = new OutMailTableFilter();
     }
+    String domain =  "@" +  SEDSystemProperties.getLocalDomain();
     String strSedBox = getUserSessionData().getCurrentSEDBox();
     outFilter.getSenderEBoxList().clear();
     if (strSedBox == null || strSedBox.equalsIgnoreCase("ALL")) {
-      outFilter.getSenderEBoxList().addAll(getUserSessionData().getUserEBoxes());
-
+      getUserSessionData().getUserEBoxes().forEach(localPart -> {
+        outFilter.getSenderEBoxList().add(localPart + domain);      
+      });
     } else {
-      outFilter.getSenderEBoxList().add(strSedBox);
+      outFilter.getSenderEBoxList().add(strSedBox+ domain);
     }
 
     return outFilter;
@@ -103,4 +106,5 @@ public class OutMailDataModel extends AbstractMailDataModel<MSHOutMail> {
     this.outFilter = imtFilter;
   }
 
+  
 }

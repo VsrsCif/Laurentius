@@ -25,7 +25,6 @@ import java.util.Set;
 import javax.activation.DataHandler;
 import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPMessage;
-import org.apache.cxf.binding.soap.SOAPBindingUtil;
 import org.apache.cxf.binding.soap.SoapFault;
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.binding.soap.SoapVersion;
@@ -36,7 +35,6 @@ import org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor;
 import si.laurentius.msh.inbox.mail.MSHInMail;
 import si.laurentius.msh.inbox.payload.MSHInPart;
 import si.laurentius.msh.pmode.PartyIdentitySet;
-import si.laurentius.msh.pmode.Security;
 import org.oasis_open.docs.ebxml_msg.ebms.v3_0.ns.core._200704.Messaging;
 import org.oasis_open.docs.ebxml_msg.ebms.v3_0.ns.core._200704.SignalMessage;
 import org.oasis_open.docs.ebxml_msg.ebms.v3_0.ns.core._200704.UserMessage;
@@ -51,6 +49,7 @@ import si.laurentius.commons.cxf.EBMSConstants;
 import si.jrc.msh.utils.EBMSParser;
 import si.laurentius.commons.MimeValues;
 import si.laurentius.commons.SEDInboxMailStatus;
+import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.cxf.SoapUtils;
 import si.laurentius.commons.exception.HashException;
 import si.laurentius.commons.exception.PModeException;
@@ -82,7 +81,6 @@ public class EBMSInInterceptor extends AbstractEBMSInterceptor {
   final GZIPUtil mGZIPUtils = new GZIPUtil();
   final EBMSParser mebmsParser = new EBMSParser();
   final CryptoCoverageChecker checker = new CryptoCoverageChecker();
-
 
   /**
    *
@@ -146,9 +144,8 @@ public class EBMSInInterceptor extends AbstractEBMSInterceptor {
     // validate signals
     for (SignalMessage sm : msgHeader.getSignalMessages()) {
       mebmsValidation.vaildateSignalMessage(msg, sm, SoapFault.FAULT_CODE_CLIENT);
-      
-    }
 
+    }
 
     // if backchannel out EBMSMessageContext must be  registred
     if (isBackChannel) {
@@ -254,9 +251,10 @@ public class EBMSInInterceptor extends AbstractEBMSInterceptor {
       }
       SoapUtils.setEBMSMessageOutContext(outmctx, msg);
     }
-    
-    if (SoapUtils.isSoapFault(request) && !SoapUtils.hasSecurity(request)){
-      LOG.formatedWarning("Message is soap fault with no Security. Message: '%s', pmode '%s'!'", messageId,
+
+    if (SoapUtils.isSoapFault(request) && !SoapUtils.hasSecurity(request)) {
+      LOG.formatedWarning("Message is soap fault with no Security. Message: '%s', pmode '%s'!'",
+          messageId,
           inmctx.getPMode().getId());
     } else if (inmctx.getSecurity() != null) {
       handleMessageSecurity(msg, inmctx, messageId);
@@ -279,7 +277,7 @@ public class EBMSInInterceptor extends AbstractEBMSInterceptor {
 
   public void processUserMessageUnit(SoapMessage msg, UserMessage um, EBMSMessageContext ectx) {
     long l = LOG.logStart();
-    
+
     SOAPMessage request = msg.getContent(SOAPMessage.class);
 
     MSHInMail mMail = mebmsParser.parseUserMessage(um, ectx, SoapFault.FAULT_CODE_CLIENT);
@@ -293,14 +291,14 @@ public class EBMSInInterceptor extends AbstractEBMSInterceptor {
     }
 
     SEDBox inSb = getSedBoxByName(receiverBox);
-    if (inSb == null){
+    if (inSb == null) {
       String errmsg = String.format("Receiver '%s' is not defined in this MSH!", receiverBox);
       LOG.logError(l, errmsg, null);
       throw new EBMSError(EBMSErrorCode.ValueNotRecognized, mMail.getMessageId(), errmsg,
           SoapFault.FAULT_CODE_CLIENT);
-    
+
     }
-    mMail.setReceiverEBox(inSb.getBoxName());
+    mMail.setReceiverEBox(inSb.getLocalBoxName() + "@" + SEDSystemProperties.getLocalDomain());
     if (inSb.getActiveToDate() != null && inSb.getActiveToDate().before(
         Calendar.getInstance().getTime())) {
       String errmsg =
@@ -316,10 +314,10 @@ public class EBMSInInterceptor extends AbstractEBMSInterceptor {
     if (mMail.getMSHInPayload() != null && !mMail.getMSHInPayload().getMSHInParts().isEmpty()) {
       for (MSHInPart p : mMail.getMSHInPayload().getMSHInParts()) {
         boolean isCmpr = false;
-        for (MSHInPart.Property prp: p.getProperties()){
-          if (prp.getName()!= null && prp.getValue()!= null 
-              && prp.getName().equalsIgnoreCase(EBMSConstants.EBMS_PAYLOAD_COMPRESSION_TYPE) 
-              && prp.getValue().equalsIgnoreCase(MimeValues.MIME_GZIP.getMimeType()) ) {
+        for (MSHInPart.Property prp : p.getProperties()) {
+          if (prp.getName() != null && prp.getValue() != null &&
+               prp.getName().equalsIgnoreCase(EBMSConstants.EBMS_PAYLOAD_COMPRESSION_TYPE) &&
+               prp.getValue().equalsIgnoreCase(MimeValues.MIME_GZIP.getMimeType())) {
             // found property EBMS_PAYLOAD_COMPRESSION_TYPE 
             isCmpr = true;
             // remove property because is no longer needed
@@ -327,8 +325,7 @@ public class EBMSInInterceptor extends AbstractEBMSInterceptor {
             break;
           }
         }
-        
-        
+
         try {
           serializeAttachments(p, msg.getAttachments(),
               isCmpr);
@@ -360,7 +357,6 @@ public class EBMSInInterceptor extends AbstractEBMSInterceptor {
 
     msg.getExchange().put(MSHInMail.class, mMail);
 
-    
     LOG.log("Generate AS4Receipt");
     SignalMessage as4Receipt =
         EBMSBuilder.generateAS4ReceiptSignal(mMail.getMessageId(),
@@ -371,10 +367,11 @@ public class EBMSInInterceptor extends AbstractEBMSInterceptor {
   }
 
   private SEDBox getSedBoxByName(String sbox) {
-    return getLookups().getSEDBoxByName(sbox, true);
+    String localName = sbox.contains("@") ? sbox.substring(0, sbox.indexOf("@")) : sbox;
+    return getLookups().getSEDBoxByLocalName(localName);
 
   }
-  
+
   private void handleMessageSecurity(SoapMessage msg, EBMSMessageContext ectx, String messageId) {
     PartyIdentitySet rPID = ectx.getReceiverPartyIdentitySet();
     PartyIdentitySet sPID = ectx.getSenderPartyIdentitySet();
@@ -409,8 +406,6 @@ public class EBMSInInterceptor extends AbstractEBMSInterceptor {
     LOG.logEnd(l);
   }
 
-  
-
   /**
    *
    * @param message
@@ -418,7 +413,7 @@ public class EBMSInInterceptor extends AbstractEBMSInterceptor {
   @Override
   public void handleFault(SoapMessage message) {
     super.handleFault(message);
-    
+
   }
 
   private void serializeAttachments(MSHInPart p, Collection<Attachment> lstAttch, boolean compressed)

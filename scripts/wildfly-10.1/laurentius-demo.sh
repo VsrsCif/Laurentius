@@ -3,9 +3,10 @@
 
 quit () {
 	echo "\nUsage:\n"
-	echo "laurentius-demo.sh --init -l [LAU_HOME]\n"
-	echo "  --init  initialize laurentius.home and wildfly properties. "
-	echo "  -l LAU_HOME  - path tom application home folder  (laurentius.home) if is not given and --init is setted than '[WILDFLY_HOME]\standalone\data\' is setted."
+	echo "laurentius-demo.sh --init [DOMAIN] -l [LAU_HOME]\n"
+	echo "  --init  initialize laurentius (database and demo data are loaded to database)"
+	echo "  -d DOMAIN  -  if --init is setted than domain must be given (ex.: company.org, test-bank.org, etc.)"
+	echo "  -l LAU_HOME  - path tom application home folder  (laurentius.home) if is not given and --init is setted than '[WILDFLY_HOME]\standalone\data\' is setted."	
         exit
 }
 
@@ -24,10 +25,16 @@ key="$1"
       shift # past argument
     ;;
     --init)
-      INIT="TRUE"
+      INIT="TRUE"      
     ;;
+   -d|--domain)
+      LAU_DOMAIN="$2"
+      shift # past argument
+    ;;
+
     *)
       # unknown option
+  echo "unknown option: $key or bad list of arguments"
     ;;
   esac
   shift # past argument or value
@@ -55,6 +62,7 @@ fi
 
 
 if [ "x$WILDFLY_HOME" = "x" ]; then
+	echo "WILDFLY_HOME folder not defined! Check parameters!"
 	quit;
 fi
 
@@ -70,7 +78,12 @@ fi
 LAU_OPTS=" -c standalone-laurentius.xml -Dlaurentius.home=$LAU_HOME/";
 
 if [ "$INIT" = "TRUE" ]; then
-	LAU_OPTS="$LAU_OPTS -Dsi.laurentius.msh.hibernate.hbm2ddl.auto=create -Dsi.laurentius.msh.hibernate.dialect=org.hibernate.dialect.H2Dialect -Dsi.laurentius.init.lookups=$LAU_HOME/init-data.xml";
+	if [ "x$LAU_DOMAIN" = "x" ]; then
+		echo "Missing domain for initialization! Put domain after --init parameter. Ex.: laurentios-demo.sh --init -d test-company.org"
+		quit;
+	fi
+
+	LAU_OPTS="$LAU_OPTS -Dsi.laurentius.msh.hibernate.hbm2ddl.auto=create -Dsi.laurentius.msh.hibernate.dialect=org.hibernate.dialect.H2Dialect -Dsi.laurentius.init.lookups=$LAU_HOME/init-data.xml -Dsi.laurentius.domain=$LAU_DOMAIN";
 fi
 
 echo "*********************************************************************************************************************************"
