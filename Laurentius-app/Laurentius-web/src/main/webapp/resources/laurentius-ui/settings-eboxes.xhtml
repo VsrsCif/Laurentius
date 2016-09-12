@@ -23,7 +23,7 @@
                      value="#{adminSEDBoxView.list}"
                      selectionMode="single"
                      selection="#{adminSEDBoxView.selected}"
-                     rowKey="#{sp.boxName}"
+                     rowKey="#{sp.localBoxName}"
 
                      style="padding: 0px; margin: 0px"
                      scrollable="true" 
@@ -50,7 +50,7 @@
 
 
             <p:column headerText="#{msg['SED-Box']}" width="200">
-                <h:outputText value="#{sp.boxName}" />
+                <h:outputText value="#{sp.localBoxName}" />
             </p:column>
             <p:column headerText="#{msg['ActiveFromDate']}" width="80">
                 <h:outputText value="#{sp.activeFromDate}"  ><f:convertDateTime pattern="dd.MM.yyyy"  timeZone="CET" /></h:outputText>                

@@ -154,8 +154,20 @@ public class EBMSParser {
           }
         }
       } else {
+        String val = pi.getValue();
+        if (Utils.isEmptyString(mshmail.getSenderEBox())) {
+              if (val.endsWith("@" + ectx.getSenderPartyIdentitySet().getDomain())) {
+                mshmail.setSenderEBox(val);
+              } else {
+                mshmail.setSenderEBox(val + "@" + ectx.getSenderPartyIdentitySet().getDomain());
+              }
+            }
+            if (Utils.isEmptyString(mshmail.getSenderName())) {
+              mshmail.setSenderName(val);
+            }
+            
         String msgwrn =
-            "Missing type for From/PartyId: with value:'" + pi.getValue() + "'. Value is ignored!";
+            "Missing type for From/PartyId: with value:'" + pi.getValue() + "'. Value is setted as sender address!!";
         LOG.logWarn(l, msgwrn, null);
       }
     }
@@ -170,16 +182,32 @@ public class EBMSParser {
             mshmail.setReceiverName(pi.getValue());
             break;
           default:
-            mshmail.setReceiverEBox(pi.getValue());
-            String msgwrn =
-                "Unknown type '" + pi.getType() + "' for To/PartyId: with value:'" + pi.getValue() +
-                "'. Value is setted as receiver address!";
+            String msgwrn;
+            if (Utils.isEmptyString(mshmail.getReceiverEBox())) {
+              mshmail.setReceiverEBox(pi.getValue());
+              msgwrn =
+                  "Unknown type '" + pi.getType() + "' for To/PartyId: with value:'" + pi.getValue() +
+                  "'. Value is setted as receiver address!";
+            } else {
+              msgwrn =
+                  "Unknown type '" + pi.getType() + "'  for To/PartyId: with value:'" +
+                  pi.getValue() + "'. Value is ignored!";
+            }
             LOG.logWarn(l, msgwrn, null);
+
             break;
         }
       } else {
-        String msgwrn =
-            "Missing type for To/PartyId: with value:'" + pi.getValue() + "'. Value is ignored!";
+        String msgwrn;
+        if (Utils.isEmptyString(mshmail.getReceiverEBox())) {
+          mshmail.setReceiverEBox(pi.getValue());
+          msgwrn =
+              "Missing type for To/PartyId: with value:'" + pi.getValue() +
+              "'. Value is setted as receiver address!";
+        } else {
+          msgwrn =
+              "Missing type for To/PartyId: with value:'" + pi.getValue() + "'. Value is ignored!";
+        }
         LOG.logWarn(l, msgwrn, null);
 
       }

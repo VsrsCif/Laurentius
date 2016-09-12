@@ -14,10 +14,7 @@
     <packaging>war</packaging>
 
     <name>Laurentius-cef-plugin</name>
-    <description>Automatic testing for: eDelivery Conformance testing (
-https://ec.europa.eu/cefdigital/wiki/display/CEFDIGITAL/eDelivery+Conformance+testing)
-Plugin received message from "Producer" submits to receivers MSH with parameteres defined in "producer message property".
- </description>
+    <description>CEF digital delivery plugin</description>
     <organization>
         <name>Supreme Court Republic of Slovenia</name>
         <url>http://www.sodisce.si/</url>
@@ -52,7 +49,7 @@ Plugin received message from "Producer" submits to receivers MSH with parametere
     </scm>
 
     <properties>
-        <war.final.name>plugin-meps</war.final.name>
+        <war.final.name>plugin-cef</war.final.name>
     </properties>
 
     <dependencies>
@@ -71,7 +68,13 @@ Plugin received message from "Producer" submits to receivers MSH with parametere
             <scope>provided</scope>	
         </dependency>
     
-
+      
+        <dependency>
+            <groupId>org.apache.santuario</groupId>
+            <artifactId>xmlsec</artifactId>
+            <scope>provided</scope>	
+        </dependency>
+      
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>		
@@ -94,7 +97,19 @@ Plugin received message from "Producer" submits to receivers MSH with parametere
             <artifactId>javaee-api</artifactId>            
             <scope>provided</scope>
         </dependency>
-       
+        <dependency>
+            <groupId>org.apache.xmlgraphics</groupId>
+            <artifactId>fop</artifactId>
+            
+            <exclusions>
+                <exclusion>
+                    <artifactId>xalan</artifactId>
+                    <groupId>xalan</groupId>
+                </exclusion>
+            </exclusions>
+            <!-- scope>provided</scope --> 
+        </dependency>
+      
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -105,7 +120,8 @@ Plugin received message from "Producer" submits to receivers MSH with parametere
 
     <build>
         <finalName>${war.final.name}</finalName>
-        <plugins>            
+        <plugins>
+            
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
             </plugin>           
@@ -119,7 +135,8 @@ Plugin received message from "Producer" submits to receivers MSH with parametere
                         <manifestEntries>                            
                             <implementation-version>${project.version}</implementation-version>             
                             <Implementation-Build>${buildNumber}</Implementation-Build>                            
-                            <Dependencies>org.apache.cxf,org.apache.cxf.impl,org.apache.commons.io, org.apache.ws.security, org.apache.santuario.xmlsec,si.laurentius</Dependencies>
+                            <Dependencies>org.apache.cxf,org.apache.cxf.impl,org.apache.commons.io, org.apache.ws.security, 
+                                org.apache.santuario.xmlsec,si.laurentius</Dependencies>
                         </manifestEntries>
                     </archive>                                 
                 </configuration>                 

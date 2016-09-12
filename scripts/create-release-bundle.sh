@@ -9,15 +9,17 @@ fi
 
 ZIP_FILENAME="Laurentius-$(date +%Y%m%d_%H%M)"
 ZIP_TEST="Laurentius-test"
+FOLDER_DEPLOY="test-deploy"
 
 rm -rf $ZIP_FILENAME
-rm -rf $ZIP_TEST
+rm -rf $FOLDER_DEPLOY
 
 
 mkdir $ZIP_FILENAME
 mkdir "$ZIP_FILENAME/modules"
 mkdir "$ZIP_FILENAME/deployments"
 mkdir "$ZIP_FILENAME/widlfly-10.1"
+mkdir $FOLDER_DEPLOY
 
 cp "$LAU_PROJECT/Laurentius-libs/Laurentius-msh-xsd/target/Laurentius-msh-xsd-1.0.jar" "$ZIP_FILENAME/modules/" 	
 cp "$LAU_PROJECT/Laurentius-libs/Laurentius-wsdl/target/Laurentius-wsdl-1.0.jar" "$ZIP_FILENAME/modules/"
@@ -45,11 +47,8 @@ cp "$LAU_PROJECT/scripts/wildfly-10.1/laurentius-demo.bat" "$ZIP_FILENAME/widlfl
 cp -r "$LAU_PROJECT/scripts/laurentius-demo" "$ZIP_FILENAME/laurentius-home"
 
 zip -r "$ZIP_FILENAME.zip" $ZIP_FILENAME
-
-mv $ZIP_FILENAME $ZIP_TEST
-zip -r "$ZIP_TEST.zip" $ZIP_TEST
-
-rm -rf $ZIP_TEST
+# move "boudle folder to test folder fo test deploy"
+mv $ZIP_FILENAME $FOLDER_DEPLOY/$ZIP_TEST
 
 
 

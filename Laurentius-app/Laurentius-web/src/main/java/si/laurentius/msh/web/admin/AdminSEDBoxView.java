@@ -60,14 +60,14 @@ public class AdminSEDBoxView extends AbstractAdminJSFView<SEDBox> {
   public void createEditable() {
     long l = LOG.logStart();
 
-    String domain = mdbSettings.getDomain();
-    String sbname = "name.%03d@%s";
+    
+    String sbname = "name.%03d";
     int i = 1;
-    while (getSEDBoxByLocalName(String.format(sbname, i, domain)) != null) {
+    while (getSEDBoxByLocalName(String.format(sbname, i)) != null) {
       i++;
     }
     SEDBox sbx = new SEDBox();
-    sbx.setLocalBoxName(String.format(sbname, i, domain));
+    sbx.setLocalBoxName(String.format(sbname, i));
     sbx.setActiveFromDate(Calendar.getInstance().getTime());
     sbx.setExport(new Export());
     sbx.setExecute(new Execute());

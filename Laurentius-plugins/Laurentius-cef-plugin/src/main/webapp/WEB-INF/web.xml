@@ -1,0 +1,69 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<web-app xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+         xmlns='http://java.sun.com/xml/ns/javaee' xmlns:web='http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd'
+         xsi:schemaLocation='http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd'
+         id='sedgui' version='3.0'>
+    <display-name>cef GUI</display-name>
+    <welcome-file-list>
+        <welcome-file>cef/cefxhtml</welcome-file>
+    </welcome-file-list>
+    <servlet>
+        <servlet-name>Faces Servlet</servlet-name>
+        <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Faces Servlet</servlet-name>
+        <url-pattern>/faces/*</url-pattern>
+        <url-pattern>*.jsf</url-pattern>
+        <url-pattern>*.xhtml</url-pattern>
+    </servlet-mapping>
+    <!-- Protected area definition -->
+    <!-- security-constraint>
+    web-resource-collection>
+            <web-resource-name>Restricted Area - ADMIN Only</web-resource-name>
+            <url-pattern>/pages/protected/admin/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>ADMIN</role-name>
+        </auth-constraint>
+    </security-constraint -->
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Restricted Area - USER and ADMIN</web-resource-name>
+            <url-pattern>/zpp/*</url-pattern>
+            <url-pattern>/resources/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>USER</role-name>
+            <role-name>ADMIN</role-name>
+        </auth-constraint>
+    </security-constraint>
+
+    <!-- Login page -->
+    <login-config>
+        <auth-method>FORM</auth-method>
+        <form-login-config>
+            <form-login-page>/public/login.xhtml</form-login-page>
+            <form-error-page>/public/loginError.xhtml</form-error-page>
+        </form-login-config>
+    </login-config>
+    
+    
+    <!-- error-page>
+        <error-code>403</error-code>
+        <location>/WEB-INF/error-pages/forbidden.xhtml</location>
+    </error-page>
+    <error-page>
+        <error-code>404</error-code>
+        <location>/WEB-INF/error-pages/notFound.xhtml</location>
+    </error-page -->
+
+    <!-- System roles -->
+    <security-role>
+        <role-name>ADMIN</role-name>
+    </security-role>
+    <security-role>
+        <role-name>USER</role-name>
+    </security-role>
+</web-app>

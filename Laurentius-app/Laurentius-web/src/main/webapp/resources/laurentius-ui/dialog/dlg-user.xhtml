@@ -37,7 +37,7 @@
                                         value="#{adminSEDUserView.currentPickupDualSEDBoxList}" 
                                         var="sbox"                                                 
                                         itemValue="#{sbox}" 
-                                        itemLabel="#{sbox.boxName}" 
+                                        itemLabel="#{sbox.localBoxName}" 
                                         showSourceControls="false"
                                         showTargetControls="false" showCheckbox="false" responsive="true"
                                         showSourceFilter="false" showTargetFilter="false" 
@@ -46,7 +46,7 @@
                                 <f:facet name="sourceCaption">#{msg['Available']}</f:facet>
                                 <f:facet name="targetCaption">#{msg['User sed-boxes']}</f:facet>
                                 <p:column >
-                                    <h:outputText value="#{sbox.boxName}" />
+                                    <h:outputText value="#{sbox.localBoxName}" />
                                 </p:column>
                             </p:pickList>
                         </center>

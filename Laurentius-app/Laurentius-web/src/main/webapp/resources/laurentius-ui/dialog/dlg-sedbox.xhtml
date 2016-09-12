@@ -45,9 +45,9 @@
                     <p:layoutUnit position="center" rendered="#{not empty adminSEDBoxView.editable}"  >
                         <p:panelGrid  columns="4" columnClasses="label,value" style="width: 100%">
                             <f:facet name="header" class="panelHeader"  >
-                                <h:outputText value="Box:" />
-                                <h:outputText value="#{adminSEDBoxView.editable.boxName}" rendered="#{empty adminSEDBoxView.new}" style="width: 100%" />
-                                <p:inputText value="#{adminSEDBoxView.editable.boxName}" rendered="#{not empty adminSEDBoxView.new}" style="width: 100%" /> 
+                                <h:outputText value="Local box name:" />
+                                <h:outputText value="#{adminSEDBoxView.editable.localBoxName}" rendered="#{empty adminSEDBoxView.new}" style="width: 100%" />
+                                <p:inputText value="#{adminSEDBoxView.editable.localBoxName}" rendered="#{not empty adminSEDBoxView.new}" style="width: 100%" /> 
                             </f:facet>
 
                             <h:outputText value="#{msg['ActiveFromDate']}:" />                                                        

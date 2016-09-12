@@ -44,6 +44,6 @@
     <modules>
         <module>Laurentius-zpp-plugin</module>
         <module>Laurentius-meps-plugin</module>
-        <module>Laurentius-esens-plugin</module>
+        <module>Laurentius-cef-plugin</module>
     </modules>
 </project>
