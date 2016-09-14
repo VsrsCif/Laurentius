@@ -32,9 +32,11 @@
                     nvg = currentHash.split(":");
                     page = nvg[0];
                 }
-
-
+                
                 $(document).ready(function () {
+                    $('#entryPage').load(page + '.html');
+
+                /*$(document).ready(function () {
                     $('#entryPage').load(page + '.html', function () {
 
                         // do other stuff load is completed
@@ -42,7 +44,7 @@
                             hljs.highlightBlock(block);
                         });
                     });
-                });
+                });*/
 
                 if (currentHash.indexOf(":") > 0) {
                     window.window.location.hash = '#/' + currentHash;
