@@ -1,24 +1,27 @@
 <div class ="sidebar" >    
     <h2>Kazalo:</h2>
     <ul>
-        <li><a href="#install:quickwildfly">Hitra namestitev na aplikacijski strežnik wildfly</a><br  /></li>
-        <li><a href="#install/build:start">Izgradnja aplikacije Laurentius</a><br  /></li>
-        <li><a href="#install/wildfly:start">Namestitev na aplikacijski strežnik wildfly</a><br  /></li>
+        <li><a href="#install:quickwildfly">Hitra namestitev na aplikacijski strežnik wildfly</a></li>
+        <li><a href="#install/build:start">Izgradnja aplikacije Laurentius</a></li>
+        <li><a href="#install/wildfly:start">Namestitev na aplikacijski strežnik wildfly</a></li>
+        <li><a href="#pmode/pmode" >Nastavitve PMODE</a></li> 
     </ul>
 </div>
 <div class="main">
     <article class='content'>
 
         <h1 id="install:start">Opis aplikacije Laurentius</h1>
-        Aplikacija  <b>Laurentius</b>, je JEE aplikacije, ki za svoje delovanje potrebuje:
+        Aplikacija  <b>Laurentius</b> je 'JEE' aplikacija, ki za svoje delovanje potrebuje:
         <ul>
         <li><b>minimalne zahteve strojne opreme: Pomnilnik (RAM) 2G in diskovna enota, ki je velika vsaj 10 GB</b>.
             Namestitev aplikacije: cca. 300MB.</li>
         <li><b>izbira OS je omejena na delovanje "javanskega tolmača JRE 1.8+"</b> Aplikacija je testirana v OS Windows 8+in OS Linux.</li>
         <li><b>"javanski tolmač" JRE 1.8+</b>.</li>
         <li><b>aplikacijski strežnik:</b> Namestitev je prilagojena za namestitev na aplikacijski strežnik: <b><i>wildfly-10.1.0.Final</i></b>.</li>
-        <li><b>podatkovna baza:</b>. Za dostop do baznih objektov aplikacija uporablja knjižnico: <a href="http://hibernate.org/">hibernate (5.x)</a>. Izbira baze je tako omejena 
-        na seznam baz, ki jih podpira hibernate. Aplikacija je bila testirana na bazah: h2, postgresql in oracle 11.</li>
+        <li><b>podatkovna baza:</b>. Za dostop do baznih objektov aplikacija uporablja knjižnico: <a href="http://hibernate.org/">hibernate (5.x)</a>.
+        Izbira baze je tako omejena na seznam baz, ki jih podpira hibernate. Aplikacija je testirana na bazah: h2, postgresql in oracle 11. 
+        Pri uporabi drugih implementacij SQL sistemov za upravljanje s podatkovnimi zbirkam (SQL - DMBS) 
+        priporočamo previdnost oz. predhodno testiranje.</li>
     </ul>
 
 
@@ -54,29 +57,32 @@
         Linux:<br /> <pre><code>/opt/Server/</code></pre>
 
         Nato poženite skripto za namestitev:<br />        
-        <pre><code>Laurentius-[yyyy-mm-dd]/widlfly-10/deploy-sed.(bat|sh) --init -w [WILDFLY_HOME]</code></pre>
-        Vsi parametri skripte deploy-sed.(bat|sh) so opisani <a href="#install:deploy-script">na koncu poglavja.</a><br />
+        <pre><code>Laurentius-[yyyy-mm-dd]/widlfly-*/deploy-laurentius.(bat|sh) --init -w [WILDFLY_HOME]</code></pre>
+        Vsi parametri skripte deploy-laurentius.(bat|sh) so opisani <a href="#install:deploy-script">na koncu poglavja.</a><br />
         Skripta namesti:
         <ul>
-            <li><b>Laurentius knjižnice</b> v mapo: WILDFLY_HOME/modules/org/sed/main</li>
+            <li><b>Laurentius knjižnice</b> v mapo: WILDFLY_HOME/modules/si/laurentius/main</li>
             <li><b>Laurentius module</b> v mapo: WILDFLY_HOME/standalone/deployments</li>
-            <li><b>nastavitve aplikacijskega strenika</b> v primeru parametra --init se namestijo nastavitve 
-                <code>standalone-ebms.xml, sed-users.properties, sed-roles.properties </code> v mapo: WILDFLY_HOME/standalone/config</li>
-            <li><b>Laurentius zagonske skripte</b>  v primeru parametra --init se namestijo zagonske skripte v v mapo: WILDFLY_HOME/bin</li>
-             <li><b>nastavitve Laurentius</b> v primeru parametra --init se namestijo demo nastavitve v mapo [SED_HOME]. </li>
+            <li><b>nastavitve aplikacijskega strežnika</b> v primeru parametra --init se namestijo nastavitve 
+                <code>standalone-laurentius.xml, laurentius-users.properties, laurentius-roles.properties </code> v mapo: WILDFLY_HOME/standalone/config</li>
+            <li><b>Laurentius zagonske skripte</b>  v primeru parametra --init se namesti zagonska skripta v v mapo: WILDFLY_HOME/bin</li>
+             <li><b>nastavitve Laurentius</b> v primeru parametra --init se namestijo demo nastavitve v mapo [LAURENTIUS_HOME]. </li>
         </ul>
        
 
         za prvi zagon poženite skripto
         <br />
-        Windows OS:<pre><code>[WILDFLY_HOME]\bin\demo-start.bat --init</code></pre>
-        Linux:<br /> <pre><code>[WILDFLY_HOME]/bin/demo-start.sh --init</code></pre>
-        <b>Ob zagonu skripte "demo-start.(bat|sh) --init" se generirajo bazni objekti ter se napolnijo z demo podatki.</b><br /><br />
-        Ob naslednjih zagonih aplikacijskega strežnika parameter --init ni več potreben.<br />
-        Vsi parametri skripte demo-start.(bat|sh) so opisani <a href="#install:start-script">na koncu poglavja.</a><br />
+        Windows OS:<pre><code>[WILDFLY_HOME]\bin\laurentius-demo.bat --init -d moja.domena.si</code></pre>
+        Linux:<br /> <pre><code>[WILDFLY_HOME]/bin/laurentius-demo.sh --init -d moja.domena.si </code></pre>
+        <b>Ob zagonu skripte "laurentius-demo.(bat|sh) --init" se generirajo bazni objekti ter se napolnijo z demo podatki.</b> 
+            Aplikacija registrira predale na domeno, ki je podana v parametru -d. Demo namestitev izdela predala 
+        a.department@moja.domena.si in b.department@moja.domena.si</b><br /><br />
+        Ob naslednjem zagonu aplikacijskega strežnika parameter --init in -d nista več obvezna. V primeru, 
+        da se zagonska parametra (-init in -d) ponovno uporabita, se ponastavijo vsi podatki v aplikaciji na inicialne vrednosti.<br />
+        Vsi parametri skripte laurentius-demo.(bat|sh) so opisani <a href="#install:start-script">na koncu poglavja.</a><br />
 
         Dostop do spletnih storitev za povezovanje s drugimi ebMS 3.0 MSH sistemi je na naslovu:<br />
-        <a href="http://localhost:8081/laurentius/msh?wsdl">http://localhost:8081/laurentius/msh?wsdl</a><br />
+         <a href="https://localhost:8443/laurentius/msh?wsdl">https://localhost:8443/laurentius/msh?wsdl</a><br />
 
         
         Dostop do spletnih storitev za izdelavo integracije z zalednimi sistemi je:<br />
@@ -86,33 +92,34 @@
         Dostop do spletnega klienta za nadzor in nastavitve  Laurentius aplikacije je na naslovu:
         <a href="http://localhost:8080/laurentius-web/">http://localhost:8080/laurentius-web/</a><br /><br />
 
+        <b>V primeru, da do aplikacije ne dostopamo iz naslova, kjer je nameščena aplikacija 
+            je potrebno primerno popraviti naslov "localhost" </b>
+        
         V demo aplikaciji sta nastavljena dva uporabnika:
         <br /><br />
         <table class="styled-table">
             <tr><th>Uporabniško ime</th><th>geslo</th><th>vloge</th></tr>
-            <tr><td>sed</td><td>sed1234</td><td>USER</td></tr>
+            <tr><td>user</td><td>user1234</td><td>USER</td></tr>
             <tr><td>admin</td><td>admin1234</td><td>USER,ADMIN</td></tr>
         </table>
         
         
-         <h2  id="install:deploy-script">Parametri skripte deploy-sed.(bat|sh)</h2>
-        <pre><code>deploy-sed.(bat|sh) --init -b [SED_BUNDLE] -w [WILDFLY_HOME] -s [SED_HOME]</code></pre>
-        <ul><li>--init: parameter "inicializira" mapo [SED_HOME] in nastavitve wildfly strežnika.</li>
-            <li>-w   WILDFLY_HOME - pot do wildfly aplikacijskega strežnika. Npr.: c:\temp\wildfly-10.0.0.Final</li>
+         <h2  id="install:deploy-script">Parametri skripte deploy-laurentius.(bat|sh)</h2>
+        <pre><code>deploy-laurentius.(bat|sh) --init -b [SED_BUNDLE] -w [WILDFLY_HOME] -l [LAURENTIUS_HOME]</code></pre>
+        <ul><li>--init: parameter "inicializira" mapo [LAURENTIUS_HOME] in nastavitve wildfly strežnika.</li>
+            <li>-w   WILDFLY_HOME - pot do wildfly aplikacijskega strežnika. Npr.: c:\temp\wildfly-10.1.0.Final</li>
             <li>-b   SED_BUNDLE   - pot do "razširjenega" Laurentius paketa. če parameter ni podan je privzeta mapa: "..\".</li>
-            <li>-s   SED_HOME     - pot do [SED_HOME] mape. Če ni podana je privzeta mapa '[WILDFLY_HOME]\standalone\data\sed-home'.</li>
+            <li>-l   LAURENTIUS_HOME     - pot do [LAURENTIUS_HOME] mape. Če ni podana je privzeta mapa '[WILDFLY_HOME]\standalone\data\laurentius-home'.</li>
         </ul>
         
-         <h2  id="install:start-script">Parametri skripte demo-start.(bat|sh)</h2>
-        <pre><code>demo-start.(bat|sh) --init -b [SED_BUNDLE] -w [WILDFLY_HOME] -s [SED_HOME]</code></pre>
+         <h2  id="install:start-script">Parametri skripte laurentius-demo.(bat|sh)</h2>
+        <pre><code>laurentius-demo.(bat|sh) --init -d [MOJA_DOMENA] -w [WILDFLY_HOME] -l [LAURENTIUS_HOME]</code></pre>
         <ul>
             <li>--init parameter "inicializira" bazne objekte. V primeru, da so že izdelani se bazni objakti najprej izbrišejo. 
-                Po izdelavi baznih objektov se tabele napolnijo z demo podatki določenimi v datoteki: <code>[SED_HOME]\sed-settings.xml</code></li>
-            <li>-w   WILDFLY_HOME -  pot do wildfly aplikacijskega strežnika. V primeru da parametere ni podan je privzeta mapa "..\" .</li>   
-            <li>-s   SED_HOME     - pot do [SED_HOME] mape. Če parameter ni podan je privzeta mapa '[WILDFLY_HOME]\standalone\data\sed-home'.</li>
+                Po izdelavi baznih objektov se tabele napolnijo z demo podatki določenimi v datoteki: <code>[LAURENTIUS_HOME]\init-data.xml</code></li>
+            <li>-d DOMENA - domena predalov, ki jih uporablja ta instanca Laurentius. Parametere se uporablja samo ob uporabi --init parametra. </li>   
+            <li>-w WILDFLY_HOME -  pot do wildfly aplikacijskega strežnika. V primeru da parametere ni podan je privzeta mapa "..\" .</li>   
+            <li>-l LAURENTIUS_HOME     - pot do [LAURENTIUS_HOME] mape. Če parameter ni podan je privzeta mapa '[WILDFLY_HOME]\standalone\data\laurentius-home'.</li>
         </ul>
-        
-        
-        
     </article>  
 </div>

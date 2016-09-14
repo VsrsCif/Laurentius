@@ -26,7 +26,6 @@
 
             function loadPage(currentHash) {
 
-
                 var page = currentHash;
                 if (currentHash.indexOf(":") > 0) {
                     nvg = currentHash.split(":");
@@ -34,6 +33,7 @@
                 }
                 $('#entryPage').load(page + '.html', function () {
 
+ 
                     // do other stuff load is completed
                     $('pre code').each(function (i, block) {
                         hljs.highlightBlock(block);
@@ -50,6 +50,7 @@
             } // for onload
 
             window.addEventListener("hashchange", function () {
+                
                 // When the step is entered hash in the location is updated
                 // (just few lines above from here), so the hash change is 
                 // triggered and we would call `load` again on the same element.
@@ -64,8 +65,10 @@
 
 
                 }
+                
 
                 if (lastPage === "" || page !== lastPage) {
+                   
                     loadPage(page);
                     lastPage = page;
                     if (currentHash.indexOf(":") > 0) {

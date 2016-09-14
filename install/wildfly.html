@@ -10,23 +10,21 @@
     <article class='content'>
 
         <h1 id="install/wildfly:start">Namestitev na aplikacijski strežnik wildfly</h1>
-        Nadaljna navodila vsebujejo razlago demo nastavitev na aplikacijski strežnik wildfly-10.1.0.Final. 
-        Navodila tako vsebujejo opis vseh spremembe v standardni nastavivi aplikacijskega strežnika wildfly za namestitev
-        aplikacije Laurentius.<br /><br />
-        
-        Namen navodil je pomoč pri razumevanju nastavitev aplikacijskega strežnika <b>Wildfly</b>.
+        Navodila vsebujejo opis sprememb "default" nastavitev aplikacijskega strežnika
+        <b>wildfly-10.1.0.Final</b> za demo nastavitev Laurentius. 
+        Namen opisa sprememb je olajšati delo sistemskim administratorjev za pripravo produkcijskih 
+        nastavitev, ki so  prilagojene konkretnemu produkcijskemu okolju.<br /> Opis je lahko tudi 
+        v pomoč pri razumevanju delovanja aplikacijskega strežnika <b>Wildfly</b>.
         Podrobnejša navodila namestitve aplikacijskega strežnika so opisana  
         na naslovu <a href="http://wildfly.org/">wildfly</a>.<br /><br />
-        
-      
 
-        
+        <h3>Namestitev aplikacijskega strežnika</h3>
         Na povezavi <a href="http://wildfly.org/downloads/">wildfly downloads</a>  prenesi aplikacijski 
-        strežnik <b>Java EE7 Full & Web Distribution</b> 10.1.0.Final. Arhiv odpakiraj v namestitveno mapo(npr.:
+        strežnik <b>Java EE7 Full & Web Distribution</b> 10.1.0.Final. Arhiv odpakiraj v namestitveno mapo (npr.:
         c:\temp\wildfly-10.1.0.Final v nadaljevanju: [WILDFLY_HOME]):
 
         <h3>1. Popravek modula: org.apache.ws.security</h3>
-        Aplikacija trenutno uporablja apache-cxf knjižnice, ki so nameščeni v wildfly aplikacijskem strežniku. 
+        Aplikacija Laurentius uporablja apache-cxf knjižnice, ki so nameščeni v wildfly aplikacijskem strežniku. 
         Za uporabo je potreben manjši popravek v namestitveni datoteki:
         <pre><code>wildfly-10.1.0.Final/modules/system/layers/base/org/apache/ws/security/main/module.xml</code></pre>
 
@@ -50,11 +48,23 @@
   &lt;module name="org.slf4j" />
 &lt;/dependencies></code></pre>
         <br />
-        <h3>Nastavitve standalone-ebms.xml</h3>
+        <h3>2. Nastavitve standalone-laurentius.xml</h3>
         V mapi:  wildfly-10.1.0.Final/standalone/configuration
         naredi kopijo: standalone.xml
-        <pre><code>copy standalone.xml standalone-ebms.xml</code></pre>
-        Za urejanje odpri datoteko <code>standalone-ebms.xml</code>. V razdelek:
+        <pre><code>copy standalone.xml standalone-laurentius.xml</code></pre>
+        Odpri datoteko <code>standalone-laurentius.xml</code> za urejanje. <br />
+        Aplikacija Laurentius zaradi zagotavljanja stabilnosti delovanja pri 
+        večjih obremenitvah, uporablja tehnologijo JMS (java messaging service) za:
+        <ul>
+            <li><b>MSHQueue</b> - pošiljanje izhodnih pošiljk;</li>
+            <li><b>SEDExecutionQueue</b> - izvajanje "bash/cmd" procesov ob dohodni pošti. </li>        
+        </ul>
+        Uporaba vrst (JMS) omogoča kontrolirano uporabo virov (povezave na bazo, delovni spomin, CPU) 
+        pri večjih obremenitvah ter omejuje obremenitve na ostale povezane sisteme.
+        
+ <br />
+        V naslednjih korakih bomo vključili JMS (Java messaging Service). 
+        V razdelek:
         <pre><code>&lt;server xmlns="urn:jboss:domain:3.0">
   &lt;extensions> ….</code></pre>
         Dodaj vrstico: 
@@ -82,7 +92,6 @@
                 &lt;jms-queue name="DLQ" entries="java:/jms/queue/DLQ"/>
 		&lt;jms-queue name="MSHQueue" entries="java:/jms/queue/MSHQueue"/>
                 &lt;jms-queue name="SEDExecutionQueue" entries="java:/jms/queue/SEDExecutionQueue"/>
-                &lt;jms-queue name="SEDScheduleQueue" entries="java:/jms/queue/SEDScheduleQueue"/>
                 &lt;connection-factory name="InVmConnectionFactory" connectors="in-vm" entries="java:jboss/ConnectionFactory"/>
                 &lt;connection-factory name="RemoteConnectionFactory" connectors="http-connector" entries="java:jboss/exported/jms/RemoteConnectionFactory"/>
                 &lt;pooled-connection-factory name="activemq-ra" transaction="xa" connectors="in-vm" entries="java:/JmsXA java:jboss/DefaultJMSConnectionFactory"/>
@@ -96,14 +105,22 @@
 &lt;/mdb></code></pre>
 
         <h3 id="install:wf-users">Določanje uporabnikov</h3>
+        Aplikacijski strežnik wildfly omogoča uporabo različnih tehnologij ( 
+        kot so: OpenLDAP, eDirectory, bazne tabele, datoteke) za avtentikacijo in avtorizacijo. Uporaba modula:
+        "urn:jboss:domain:security" omogoča enostavno menjavo mehanizmov avtentikacije brez spreminjanja aplikacije.
+        Tako lahko v produkcijskih nastavitvah uporabimo eDirectory ali bazne tabele, med tem 
+        ko so avtorizacijski podatki v testnem okolju v "property" datotekah. Demo nastavitev Laurentius uporablja
+        predpripravljene "property" datoteke laurentius-users.properties in laurentius-roles.properties.
+        <br /> <br />
+        
         V razdelek <code>&lt;subsystem xmlns="urn:jboss:domain:security:1.2"></code> dodaj
-        <b>sed-realm</b> varnostno domeno. 
+        <b>laurentius-realm</b> varnostno domeno. 
         <pre><code>
-&lt;security-domain name="sed-realm" cache-type="default">
+&lt;security-domain name="laurentius-realm" cache-type="default">
     &lt;authentication>
         &lt;login-module code="org.jboss.security.auth.spi.UsersRolesLoginModule" flag="required">
-            &lt;module-option name="usersProperties" value="${jboss.server.config.dir}/sed-users.properties"/>
-            &lt;module-option name="rolesProperties" value="${jboss.server.config.dir}/sed-roles.properties"/>
+            &lt;module-option name="usersProperties" value="${jboss.server.config.dir}/laurentius-users.properties"/>
+            &lt;module-option name="rolesProperties" value="${jboss.server.config.dir}/laurentius-roles.properties"/>
         &lt;/login-module>
     &lt;/authentication>
 &lt;/security-domain>
@@ -111,18 +128,25 @@
         ter v mapo <code> wildfly-10.1.0.Final/standalone/configuration</code>
         naredi tekstovni datoteki:<br /> 
 
-        sed-users.properties
+        laurentius-users.properties
         <pre><code>
 #uporabnisko ime=geslo
 sed=sed1234
 admin=admin1234</code></pre>
-        sed-roles.properties
+        laurentius-roles.properties
         <pre><code>
 #uporabnisko ime=role1,rola1
 sed=USER
 admin=ADMIN,USER</code></pre>
 
-
+        
+        <h3>Nastavitev dostopa do SQL sistema za upravljanje s podatkovnimi zbirkam (SQL - DMBS)</h3>        
+        Za dostop do podatkovnih zbirk aplikacija uporablja knjižnico: <a href="http://hibernate.org/">hibernate (5.x)</a>.
+        Izbira baze je tako omejena na seznam baz, ki jih podpira hibernate. 
+        (Aplikacija je testirana na bazah: h2, postgresql in oracle 11.) Izbira podatkovne zbirke se tako izvede v nastavitvah 
+        aplikacijskega strežnika.
+        
+        
 
         <h3>Dodajanje jdbc knjižnice  in bazne povezave za postgres</h3>
         Na spletni strani „https://jdbc.postgresql.org/download.html“ pridobi primereno jdbc knjižnico za nameščeno postgresql bazo. <br />
@@ -133,7 +157,7 @@ admin=ADMIN,USER</code></pre>
 
 
         Nato poženi aplikacijski strežnik:<br />
-        <code>./standalone.(sh|bat) -c standalone-ebms.xml</code>
+        <code>./standalone.(sh|bat) -c standalone-laurentius.xml</code>
 
         Po končanem štartu strežnika zaženi CLI konzolo:  
         <code>./jboss-cli.sh  oz. ./jboss-cli.bat</code>
@@ -163,7 +187,7 @@ copy "[buildFolder]\Laurentius\Laurentius-module\Laurentius-web\target\Laurentiu
         <pre><code>copy  [buildFolder]\Laurentius\Laurentius-standalone\home_dir_template c:\temp\sed-homer</code></pre>
 
         Nato ponovno poženi strežnik z naslednjimi nastavitvami:
-        <pre><code>./standalone.sh -c standalone-ebms.xml -Dorg.sed.msh.hibernate.hbm2ddl.auto=create -Dsed.home=c:\temp\sed-home</code></pre>
+        <pre><code>./standalone.sh -c standalone-laurentius.xml -Dorg.sed.msh.hibernate.hbm2ddl.auto=create -Dsed.home=c:\temp\sed-home</code></pre>
 
         <b>OPOZORILO</b><br />
         aplikacijo s parametrom <b>org.sed.msh.hibernate.hbm2ddl.auto=create</b> poženi samo prvič. Parameter omogoči izdelavo baznih tabel. 
