@@ -49,12 +49,12 @@ import si.laurentius.msh.outbox.property.MSHOutProperty;
 @Stateless
 @Local(SoapInterceptorInterface.class)
 @TransactionManagement(TransactionManagementType.BEAN)
-public class CEFInInterceptor implements SoapInterceptorInterface {
+public class CEFInInterceptorDelivery implements SoapInterceptorInterface {
 
   /**
    *
    */
-  protected final SEDLogger LOG = new SEDLogger(CEFInInterceptor.class);
+  protected final SEDLogger LOG = new SEDLogger(CEFInInterceptorDelivery.class);
 
   @EJB(mappedName = SEDJNDI.JNDI_SEDDAO)
   SEDDaoInterface mDB;
@@ -82,36 +82,42 @@ public class CEFInInterceptor implements SoapInterceptorInterface {
     SEDBox sb = SoapUtils.getMSHInMailReceiverBox(msg);
 
     MSHInMail mInMail = SoapUtils.getMSHInMail(msg);
-
-    Properties p = new Properties();
-    mInMail.getMSHInProperties().getMSHInProperties().forEach(sp -> {
-      p.put(sp.getName(), sp.getValue());
-    });
+    
+    // sender
+    // receiver
+    
 
     MSHOutMail mout = new MSHOutMail();
-    mout.setMessageId(Utils.getInstance().getGuidString());
-
-    setValue(CEFConstants.S_SERVICE_PROP, p, mout);
-    setValue(CEFConstants.S_ACTION_PROP, p, mout);
-    setValue(CEFConstants.S_CONV_ID, p, mout);
-    setValue(CEFConstants.S_TO_PARTY_ID_PROP, p, mout);
-    setValue(CEFConstants.S_FROM_PARTY_ID_PROP, p, mout);
-    setValue(CEFConstants.S_TO_PARTY_ROLE_PROP, p, mout);
-    setValue(CEFConstants.S_FROM_PARTY_ROLE_PROP, p, mout);
-
     mout.setMSHOutProperties(new MSHOutProperties());
-
-    for (String key : p.stringPropertyNames()) {
-      MSHOutProperty mop = new MSHOutProperty();
-      mop.setName(key);
-      mop.setValue(p.getProperty(key));
-      mout.getMSHOutProperties().getMSHOutProperties().add(mop);
-
-    }
-    mout.setMSHOutPayload(new MSHOutPayload());
+    mout.setMessageId(Utils.getInstance().getGuidString());
     
-    for (MSHInPart mip: mInMail.getMSHInPayload().getMSHInParts()){
-      MSHOutPart  mop = new MSHOutPart();
+    mout.setService(mInMail.getService());
+    mout.setAction("Deliver");
+    mout.setConversationId(mInMail.getConversationId());
+    mout.setSenderEBox("laurentius-c3@mb-laurentius.si");
+    mout.setSenderName("laurentius-c3");
+    mout.setSenderEBox("minder@cef-minder.eu");
+    mout.setReceiverName("minder");
+    
+    
+    mout.getMSHOutProperties().getMSHOutProperties().add(createMSHOutProperty(
+        CEFConstants.S_SERVICE_PROP, mInMail.getService()));
+    
+    mout.getMSHOutProperties().getMSHOutProperties().add(createMSHOutProperty(
+        CEFConstants.S_ACTION_PROP, mInMail.getAction()));
+    mout.getMSHOutProperties().getMSHOutProperties().add(createMSHOutProperty(
+        CEFConstants.S_CONV_ID, mInMail.getConversationId()));
+    mout.getMSHOutProperties().getMSHOutProperties().add(createMSHOutProperty(
+        CEFConstants.S_FROM_PARTY_ID_PROP, mInMail.getSenderName()));
+    mout.getMSHOutProperties().getMSHOutProperties().add(createMSHOutProperty(
+        CEFConstants.S_TO_PARTY_ROLE_PROP, mInMail.getReceiverName()));
+    
+
+    // add payload
+    mout.setMSHOutPayload(new MSHOutPayload());
+
+    for (MSHInPart mip : mInMail.getMSHInPayload().getMSHInParts()) {
+      MSHOutPart mop = new MSHOutPart();
       mop.setType(mip.getType());
       mop.setDescription(mip.getDescription());
       mop.setEncoding(mip.getEncoding());
@@ -120,56 +126,25 @@ public class CEFInInterceptor implements SoapInterceptorInterface {
       mop.setMimeType(mip.getMimeType());
       mop.setName(mip.getName());
       mop.setMd5(mip.getMd5());
-      
+
       mout.getMSHOutPayload().getMSHOutParts().add(mop);
-    
+
     }
-    
+
     try {
       mDB.serializeOutMail(mout, "", "CEFInInterceptor", "");
     } catch (StorageException ex) {
       LOG.logError(l, ex);
     }
-    
-    
-    
-    
+
     LOG.logEnd(l);
   }
 
-  private void setValue(String prpName, Properties p, MSHOutMail mo) {
-    if (p.containsKey(prpName)) {
-      String val = p.getProperty(prpName);
-      p.remove(prpName);
-      switch (prpName) {
-        case CEFConstants.S_SERVICE_PROP:
-          mo.setService(val);
-          break;
-        case CEFConstants.S_ACTION_PROP:
-          mo.setAction(val);
-          break;
-        case CEFConstants.S_CONV_ID:
-          mo.setConversationId(val);
-          break;
-        case CEFConstants.S_TO_PARTY_ID_PROP:
-          mo.setReceiverName(val);
-          mo.setReceiverEBox(val + "@mb-laurentius.si");
-          break;
-        case CEFConstants.S_FROM_PARTY_ID_PROP:
-          mo.setSenderName(val);
-          mo.setSenderEBox(val + "@" + SEDSystemProperties.getLocalDomain());
-          break;
-        case CEFConstants.S_FROM_PARTY_ROLE_PROP:
-          break;
-        case CEFConstants.S_TO_PARTY_ROLE_PROP:
-          break;
-
-      }
-
-    } else {
-      LOG.formatedWarning("In propertey %s not exists", prpName);
-    }
-
+  private MSHOutProperty createMSHOutProperty(String prpName, String val) {
+    MSHOutProperty mop = new MSHOutProperty();
+    mop.setName(prpName);
+    mop.setName(val);
+    return mop;
   }
 
   /**

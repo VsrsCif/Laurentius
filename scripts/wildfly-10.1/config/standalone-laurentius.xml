@@ -308,7 +308,7 @@
         <subsystem xmlns="urn:jboss:domain:jsf:1.0"/>
         <subsystem xmlns="urn:jboss:domain:mail:2.0">
             <mail-session name="default" jndi-name="java:jboss/mail/Default">
-                <smtp-server outbound-socket-binding-ref="mail-smtp" ssl="true" username="joze_rihtarsic@t-2.net" password="K1rt3gr1f5"/>
+                <smtp-server outbound-socket-binding-ref="mail-smtp" ssl="true" username="test.mail@teset.net" password="test1234"/>
             </mail-session>
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:messaging-activemq:1.0">
@@ -470,7 +470,7 @@
         <socket-binding name="txn-recovery-environment" port="4712"/>
         <socket-binding name="txn-status-manager" port="4713"/>
         <outbound-socket-binding name="mail-smtp">
-            <remote-destination host="smtp.t-2.si" port="465"/>
+            <remote-destination host="localhost" port="25"/>
         </outbound-socket-binding>
     </socket-binding-group>
 </server>

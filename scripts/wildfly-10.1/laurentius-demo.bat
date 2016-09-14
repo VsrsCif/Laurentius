@@ -15,8 +15,6 @@ set "LAU_OPTS=-c standalone-laurentius.xml"
 	  
       if ["%~1"]==["--init"] (
         set "INIT=true"
-	set "LAU_DOMAIN=%~2"
-	echo DOMAIN = "%LAU_DOMAIN%".
       )
 	  
       if ["%~1"]==["-w"] (
@@ -29,6 +27,11 @@ set "LAU_OPTS=-c standalone-laurentius.xml"
 	    shift
 		set "LAU_HOME=%~2"
 		echo LAU_HOME = "%LAU_HOME%".
+      )	  
+	   if ["%~1"]==["-d"] (
+	    shift
+		set "LAU_DOMAIN=%~2"
+		echo LAU_DOMAIN = "%LAU_DOMAIN%".
       )	  
       ::--------------------------
       shift
@@ -67,5 +70,5 @@ echo * DOMAIN       =  "%LAU_DOMAIN%"
 echo * LAU_OPTS     =  "%LAU_OPTS%"
 echo *********************************************************************************************************************************
 
-%WILDFLY_HOME%\bin\standalone.bat %LAU_OPTS%
+%WILDFLY_HOME%\bin\standalone.bat %LAU_OPTS% -b 0.0.0.0
 

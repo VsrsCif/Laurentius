@@ -249,11 +249,12 @@ public class OutMailDataView extends AbstractMailView<MSHOutMail, MSHOutEvent> i
   public void composeNewMail() {
     long l = LOG.logStart();
     MSHOutMail m = new MSHOutMail();
+    List<String> lstUB =  getUserSessionData().getUserEBoxes();
     
-    List<SEDBox> sblst =  mLookup.getSEDBoxes();
-    if(!sblst.isEmpty()){    
-      m.setSenderEBox(sblst.get(0).getLocalBoxName());
-      m.setReceiverEBox(sblst.get(sblst.size()-1).getLocalBoxName()+ "@" + mdbSettings.getDomain());
+    
+    if(!lstUB.isEmpty()){    
+      m.setSenderEBox(lstUB.get(0));
+      m.setReceiverEBox(lstUB.get(lstUB.size()-1)+ "@" + mdbSettings.getDomain());
     } else {
       m.setSenderEBox("");
       m.setReceiverEBox("");

@@ -94,7 +94,7 @@ echo "* LAU_OPTS     =  $LAU_OPTS"
 echo "*********************************************************************************************************************************"
 
 #org.hibernate.dialect.H2Dialect
-$WILDFLY_HOME/bin/standalone.sh $LAU_OPTS
+$WILDFLY_HOME/bin/standalone.sh $LAU_OPTS -b 0.0.0.0
 
 
 

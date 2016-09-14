@@ -98,6 +98,7 @@ if "%INIT%" == "true" (
 	copy "%LAU_BUNDLE%\widlfly-10.1\config\laurentius-roles.properties" "%WILDFLY_HOME%\standalone\configuration\"
 	copy "%LAU_BUNDLE%\widlfly-10.1\config\laurentius-users.properties" "%WILDFLY_HOME%\standalone\configuration\"
 	copy "%LAU_BUNDLE%\widlfly-10.1\config\standalone-laurentius.xml" "%WILDFLY_HOME%\standalone\configuration\"
+	copy "%LAU_BUNDLE%\widlfly-10.1\config\test-tls-keystore.jks" "%WILDFLY_HOME%\standalone\configuration\"
 
 	rem  copy start scripts
 	echo copy start scripts "%WILDFLY_HOME%\bin\

@@ -598,6 +598,10 @@ public class SEDLookups implements SEDLookupsInterface {
       }
 
     }
+    
+     if (!System.getProperties().containsKey(SEDSystemProperties.S_PROP_LAU_DOMAIN)) {
+          System.setProperty(SEDSystemProperties.S_PROP_LAU_DOMAIN, mdbSettings.getDomain());
+        }
 
     LOG.logEnd(l);
   }

@@ -60,7 +60,7 @@
 			<tns:PartyId type="urn:oasis:names:tc:ebcore:partyid-type:unregistered:si-svev:sed-box" valueSource="address"/>
 			<tns:TransportProtocol id="court-https" isTwoWayProtocol="true">
 				<tns:Address connectionTimeout="120000" receiveTimeout="180000" chunked="false">https://b2g-test.sodisce.si/laurentius/msh</tns:Address>
-				<tns:TLS keyAlias="test-tls" keyStoreName="test-tls-keystore.jks" trustStoreName="def-truststore"/>
+				<tns:TLS keyAlias="test-tls" keyStoreName="tls-store" trustStoreName="def-truststore"/>
 				<tns:SOAPVersion>1.2</tns:SOAPVersion>
 			</tns:TransportProtocol>
 			<tns:ExchangePartySecurity signatureCertAlias="court-laurentius" trustoreName="def-truststore"/>
