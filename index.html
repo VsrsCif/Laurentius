@@ -7,11 +7,12 @@
         <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
         <link type="text/css"  rel="stylesheet" href="css/style.css" media="screen" />        
 
-        <script type="text/javascript" src="js/jquery-2.2.0.min.js"></script>  
+        <script type="text/javascript" src="js/jquery-3.1.0.min.js"></script>  
         <script type="text/javascript" src="codehighlight/highlight.pack.js"></script>  
         <link rel="stylesheet" href="codehighlight/agate.css">
 
         <script type="text/javascript">
+
             var lastPage = "";
             function init() {
                 var currentHash = window.location.hash.replace(/^#\/?/, "");
@@ -31,18 +32,23 @@
                     nvg = currentHash.split(":");
                     page = nvg[0];
                 }
-                $('#entryPage').load(page + '.html', function () {
 
- 
-                    // do other stuff load is completed
-                    $('pre code').each(function (i, block) {
-                        hljs.highlightBlock(block);
+
+                $(document).ready(function () {
+                    $('#entryPage').load(page + '.html', function () {
+
+                        // do other stuff load is completed
+                        $('pre code').each(function (i, block) {
+                            hljs.highlightBlock(block);
+                        });
                     });
                 });
-                
+
                 if (currentHash.indexOf(":") > 0) {
                     window.window.location.hash = '#/' + currentHash;
                 }
+
+
 
 
 
@@ -50,7 +56,7 @@
             } // for onload
 
             window.addEventListener("hashchange", function () {
-                
+
                 // When the step is entered hash in the location is updated
                 // (just few lines above from here), so the hash change is 
                 // triggered and we would call `load` again on the same element.
@@ -65,10 +71,10 @@
 
 
                 }
-                
+
 
                 if (lastPage === "" || page !== lastPage) {
-                   
+
                     loadPage(page);
                     lastPage = page;
                     if (currentHash.indexOf(":") > 0) {
@@ -127,7 +133,10 @@
         <!-- END  header, logo,  top menu -->
         <!-- end header -->
 
+
+
         <main id="content" class="group" role="main">
+
 
             <div  id="entryPage" >
 
