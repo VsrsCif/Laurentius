@@ -6,7 +6,7 @@ package si.laurentius.commons;
 
 /**
  *
- * @author sluzba
+ * @author Jože Rihtaršič
  */
 public class SEDGUIConstants {
 

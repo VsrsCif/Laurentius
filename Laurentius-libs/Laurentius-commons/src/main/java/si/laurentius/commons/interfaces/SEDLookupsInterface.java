@@ -28,7 +28,7 @@ import si.laurentius.user.SEDUser;
 
 /**
  *
- * @author sluzba
+ * @author Jože Rihtaršič
  */
 @Local
 public interface SEDLookupsInterface {

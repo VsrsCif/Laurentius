@@ -74,8 +74,8 @@ public class AdminSEDPluginView extends AbstractAdminJSFView<SEDPlugin> {
       getEditable().setDescription(pdi.getDesc());
       getEditable().setName(pdi.getName());
       getEditable().setType(pdi.getType());
-      getEditable().setJndiInInterceptor(pdi.getJNDIInInterceptor());
-      getEditable().setJndiOutInterceptor(pdi.getJNDIOutInterceptor());
+      getEditable().setJndiInInterceptor(String.join(",", pdi.getJNDIInInterceptors()));
+      getEditable().setJndiOutInterceptor(String.join(",",pdi.getJNDIOutInterceptors() ));
       getEditable().setWebContext(pdi.getSettingUrlContext());
       getEditable().setTasksJNDIs(String.join(",", pdi.getTaskJNDIs()));
 

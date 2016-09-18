@@ -170,7 +170,7 @@
 				</xs:complexType>
 			</xs:element>
 		</xs:sequence>
-		<xs:attribute name="id" type="xs:NCName" use="required">
+		<xs:attribute name="id" type="xs:string" use="required">
 			<xs:annotation>
 				<xs:documentation>unique id of service for msh. </xs:documentation>
 			</xs:annotation>
@@ -407,25 +407,53 @@
 	</xs:complexType>
 	<xs:complexType name="PMode">
 		<xs:sequence>
-			<xs:element name="ServiceIdRef">
+			<xs:element name="ServiceIdRef" type="xs:string"/>
+			<xs:element name="Plugins" minOccurs="0">
 				<xs:complexType>
-					<xs:simpleContent>
-						<xs:extension base="xs:NCName"/>
-					</xs:simpleContent>
-				</xs:complexType>
-			</xs:element>
-			<xs:element name="InPlugins" minOccurs="0">
-				<xs:complexType>
-					<xs:sequence>
-						<xs:element name="Plugin" type="tns:PluginType" minOccurs="0" maxOccurs="unbounded"/>
-					</xs:sequence>
-				</xs:complexType>
-			</xs:element>
-			<xs:element name="OutPlugins" minOccurs="0">
-				<xs:complexType>
-					<xs:sequence>
-						<xs:element name="Plugin" type="tns:PluginType" minOccurs="0" maxOccurs="unbounded"/>
-					</xs:sequence>
+					<xs:all>
+						<xs:element name="InMailEventPlugins" minOccurs="0">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="Plugin" type="tns:PluginType" minOccurs="0" maxOccurs="unbounded"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="InPlugins" minOccurs="0">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="Plugin" type="tns:PluginType" minOccurs="0" maxOccurs="unbounded"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="InFaultPlugins" minOccurs="0">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="Plugin" type="tns:PluginType" minOccurs="0" maxOccurs="unbounded"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="OutMailEventPlugins" minOccurs="0">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="Plugin" type="tns:PluginType" minOccurs="0" maxOccurs="unbounded"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="OutPlugins" minOccurs="0">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="Plugin" type="tns:PluginType" minOccurs="0" maxOccurs="unbounded"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="OutFaultPlugins" minOccurs="0">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="Plugin" type="tns:PluginType" minOccurs="0" maxOccurs="unbounded"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:all>
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="LocalPartyInfo" type="tns:PModePartyInfo">

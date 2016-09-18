@@ -25,9 +25,9 @@ Copyright 2015, Supreme Court Republic of Slovenia
  See the Licence for the specific language governing permissions and  
  limitations under the Licence.
 -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://si.laurentius" xmlns:con="http://si.laurentius.RControl" xmlns:ns1="http://si.laurentius.inbox/mail"  targetNamespace="http://si.laurentius">
-    <xs:import namespace="http://si.laurentius.RControl" schemaLocation="./RControl.xsd"/>
-    <xs:import namespace="http://si.laurentius.inbox/mail" schemaLocation="../entities/inbox-mail.xsd"/>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://laurentius.si" xmlns:con="http://rcontrol.laurentius.si" xmlns:ns1="http://inbox.laurentius.si/mail"  targetNamespace="http://laurentius.si">
+    <xs:import namespace="http://rcontrol.laurentius.si" schemaLocation="./RControl.xsd"/>
+    <xs:import namespace="http://inbox.laurentius.si/mail" schemaLocation="../entities/inbox-mail.xsd"/>
     <xs:element name="GetInMailResponse">
         <xs:complexType>
             <xs:annotation>

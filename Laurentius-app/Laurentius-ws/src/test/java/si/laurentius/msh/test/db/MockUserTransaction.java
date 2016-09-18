@@ -15,7 +15,7 @@ import javax.transaction.UserTransaction;
 
 /**
  *
- * @author sluzba
+ * @author Jože Rihtaršič
  */
 public class MockUserTransaction implements UserTransaction {
 

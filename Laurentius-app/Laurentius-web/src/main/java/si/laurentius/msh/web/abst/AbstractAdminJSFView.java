@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  *
- * @author sluzba
+ * @author Jože Rihtaršič
  * @param <T>
  */
 abstract public class AbstractAdminJSFView<T> extends AbstractJSFView {

@@ -24,7 +24,7 @@ import si.laurentius.cert.SEDCertificate;
 
 /**
  *
- * @author sluzba
+ * @author Jože Rihtaršič
  */
 public class KeystoreUtilsTest {
 

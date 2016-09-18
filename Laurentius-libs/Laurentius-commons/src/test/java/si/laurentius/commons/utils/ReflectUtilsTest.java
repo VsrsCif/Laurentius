@@ -12,7 +12,7 @@ import si.laurentius.commons.utils.entity.TestReflectClass;
 
 /**
  *
- * @author sluzba
+ * @author Jože Rihtaršič
  */
 public class ReflectUtilsTest {
   

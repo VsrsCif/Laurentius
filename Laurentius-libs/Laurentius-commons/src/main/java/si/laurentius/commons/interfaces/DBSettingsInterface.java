@@ -23,7 +23,7 @@ import si.laurentius.property.SEDProperty;
 
 /**
  *
- * @author sluzba
+ * @author Jože Rihtaršič
  */
 @Local
 public interface DBSettingsInterface {

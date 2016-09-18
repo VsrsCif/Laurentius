@@ -33,7 +33,7 @@ import si.laurentius.commons.utils.SEDLogger;
 
 /**
  *
- * @author sluzba
+ * @author Jože Rihtaršič
  */
 @ViewScoped
 @ManagedBean(name = "loginManager")

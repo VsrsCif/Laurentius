@@ -21,7 +21,7 @@ import si.laurentius.commons.interfaces.exception.TaskException;
 
 /**
  *
- * @author sluzba
+ * @author Jože Rihtaršič
  */
 @Local
 public interface TaskExecutionInterface {

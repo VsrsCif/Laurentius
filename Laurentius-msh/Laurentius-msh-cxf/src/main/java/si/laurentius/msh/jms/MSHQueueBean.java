@@ -25,6 +25,7 @@ import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.naming.NamingException;
 import javax.persistence.NoResultException;
+import si.jrc.msh.client.MSHPluginOutEventHandler;
 import si.laurentius.msh.outbox.mail.MSHOutMail;
 import si.laurentius.msh.pmode.ReceptionAwareness;
 import si.jrc.msh.client.MshClient;
@@ -44,6 +45,7 @@ import si.laurentius.commons.pmode.EBMSMessageContext;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StorageUtils;
 import si.laurentius.commons.utils.Utils;
+import si.laurentius.commons.interfaces.OutMailEventLisneterInterface;
 
 /**
  *
@@ -78,6 +80,8 @@ public class MSHQueueBean implements MessageListener {
   @EJB(mappedName = SEDJNDI.JNDI_PMODE)
   PModeInterface mpModeManager;
   StorageUtils msStorageUtils = new StorageUtils();
+  MSHPluginOutEventHandler mPluginOutEventHandler = new MSHPluginOutEventHandler();
+
   /**
    * implementation of onMessage methods for submiting MSH out user message.
    *
@@ -129,7 +133,9 @@ public class MSHQueueBean implements MessageListener {
           "Error retrieving EBMSMessageContext for message id: '%d'. Error: %s",
           jmsMessageId, ex.getMessage());
       LOG.logError(t, errDesc, ex);
-      setStatusToOutMail(mail, SEDOutboxMailStatus.ERROR, errDesc, ex);
+      setStatusToOutMail(mail, SEDOutboxMailStatus.FAILED, errDesc, ex);
+      mPluginOutEventHandler.outEvent(mail, null,
+              OutMailEventLisneterInterface.PluginOutEvent.FAILED);
       return;
     }
 
@@ -146,20 +152,36 @@ public class MSHQueueBean implements MessageListener {
       setStatusToOutMail(mail, SEDOutboxMailStatus.PUSHING, "Start pushing to receiver MSH");
       // transport protocol
 
+      // set reciept
+      sd.setReceptionAwarenessRetry(jmsRetryCount);
       Result sm = mmshClient.pushMessage(mail, sd);
+
       if (sm.getError() != null) {
+
+        mPluginOutEventHandler.outEvent(mail, sd, OutMailEventLisneterInterface.PluginOutEvent.ERROR);
+
         setStatusToOutMail(mail, SEDOutboxMailStatus.ERROR, sm.getError().getSubMessage(),
             sm.getResultFile(), sm.getMimeType());
-        
-        if (sm.getError().getEbmsErrorCode().equals(EBMSErrorCode.ConnectionFailure) ||
+
+        if ((sm.getError().getEbmsErrorCode().equals(EBMSErrorCode.ConnectionFailure) ||
             sm.getError().getEbmsErrorCode().equals(EBMSErrorCode.DeliveryFailure) ||
-            sm.getError().getEbmsErrorCode().equals(EBMSErrorCode.Other)) {
-          resendMail(mail, sd, jmsRetryCount, jmsRetryDelay);
+            sm.getError().getEbmsErrorCode().equals(EBMSErrorCode.Other)) &&
+             resendMail(mail, sd, jmsRetryCount, jmsRetryDelay)) {
+
+          mPluginOutEventHandler.outEvent(mail, sd,
+              OutMailEventLisneterInterface.PluginOutEvent.RESEND);
+
+        } else {
+          mPluginOutEventHandler.outEvent(mail, sd,
+              OutMailEventLisneterInterface.PluginOutEvent.FAILED);
         }
+
       } else {
 
         setStatusToOutMail(mail, SEDOutboxMailStatus.SENT, "Message sent to receiver MSH",
             sm.getResultFile(), sm.getMimeType());
+
+        mPluginOutEventHandler.outEvent(mail, sd, OutMailEventLisneterInterface.PluginOutEvent.SEND);
       }
 
     }
@@ -173,12 +195,12 @@ public class MSHQueueBean implements MessageListener {
    * @param sd
    * @param jmsRetryCount
    * @param jmsRetryDelay
+   * @return
    */
-  public void resendMail(MSHOutMail mail, EBMSMessageContext sd, int jmsRetryCount,
+  public boolean resendMail(MSHOutMail mail, EBMSMessageContext sd, int jmsRetryCount,
       long jmsRetryDelay) {
     long t = LOG.logStart();
-    LOG.formatedlog("Resend mail: %d retry %d delay %d", mail.getId(), jmsRetryCount, jmsRetryDelay);
-    ReceptionAwareness.Retry rt = null;
+    boolean bResend = false;
     if (sd.getReceptionAwareness() != null && sd.getReceptionAwareness().getRetry() != null) {
       ReceptionAwareness.Retry rty = sd.getReceptionAwareness().getRetry();
 
@@ -190,20 +212,23 @@ public class MSHQueueBean implements MessageListener {
           jmsRetryDelay *= rty.getMultiplyPeriod();
         }
         try {
+          LOG.formatedWarning("Resend mail: %d retry %d delay %d", mail.getId(), jmsRetryCount,
+              jmsRetryDelay);
           setStatusToOutMail(mail, SEDOutboxMailStatus.SCHEDULE, "Resend message in '" +
               jmsRetryDelay + "'ms");
 
           mJMS.sendMessage(mail.getId().longValue(), jmsRetryCount, jmsRetryDelay, false);
+          bResend = true;
         } catch (NamingException | JMSException ex1) {
-          String errDesc = "Error occured while resending message with id: '" + mail.getId() +
-              "'!";
+          String errDesc = String.format("Mail %d  maximum retry reached %d.", mail.getId(),
+              jmsRetryCount);
+
           LOG.logError(t, errDesc, ex1);
           setStatusToOutMail(mail, SEDOutboxMailStatus.ERROR, errDesc + " " + ex1.getMessage());
         }
       }
-
     }
-
+    return bResend;
   }
 
   /**

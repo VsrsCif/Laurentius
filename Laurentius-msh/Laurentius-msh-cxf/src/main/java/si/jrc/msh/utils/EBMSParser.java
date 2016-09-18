@@ -250,7 +250,7 @@ public class EBMSParser {
                 case EBMSConstants.EBMS_PAYLOAD_PROPERTY_ENCODING:
                   part.setEncoding(p.getValue());
                   break;
-                case EBMSConstants.EBMS_PAYLOAD_COMPRESSION_TYPE:
+                case EBMSConstants.EBMS_PAYLOAD_PROPERTY_TYPE:
                   part.setType(p.getValue());
                   break;
                 case EBMSConstants.EBMS_PAYLOAD_PROPERTY_IS_ENCRYPTED:

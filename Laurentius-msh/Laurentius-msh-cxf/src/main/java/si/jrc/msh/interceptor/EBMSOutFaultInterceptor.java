@@ -159,7 +159,7 @@ public class EBMSOutFaultInterceptor extends AbstractEBMSInterceptor {
         msgHeader = EBMSBuilder.createMessaging(sv);
 
         SignalMessage sm =
-            EBMSBuilder.createErrorSignal(sf, getSettings().getDomain(), Calendar.getInstance()
+            EBMSBuilder.createErrorSignal(sf,  Calendar.getInstance()
                 .getTime());
 
         msgHeader.getSignalMessages().add(sm);

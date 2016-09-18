@@ -5,20 +5,24 @@ set "BOUNDLE_TEST=Laurentius-test"
 set "FOLDER_DEPLOY=test-deploy"
 set "BOUNDLE_NAME=Laurentius-test"
 
+echo Clear wildfly folder.
+RMDIR "%FOLDER_DEPLOY%\%WILDFLY_HOME%" /S /Q
+echo Unzip wildfly.
+"C:\Program Files\7-Zip\7z.exe" x  "%WILDFLY_HOME%.zip"  -o%FOLDER_DEPLOY% > nul
 
 
-"C:\Program Files\7-Zip\7z.exe" x  "%LAU_BUNDLE%.zip"  -o%FOLDER_DEPLOY%
 
-
-
-
+echo Change dir to %FOLDER_DEPLOY%\%BOUNDLE_NAME%/widlfly-*
 cd "%FOLDER_DEPLOY%\%BOUNDLE_NAME%/widlfly-10.1"
 
-deploy-laurentius.bat --init -w "..\..\%WILDFLY_HOME%"
+echo Run deployment script deploy-laurentius.bat
+call deploy-laurentius.bat --init -w ..\..\%WILDFLY_HOME%
 
-cd "..\..\%WILDFLY_HOME%\bin"
+echo Change dir to "%WILDFLY_HOME%\bin."
+cd "%WILDFLY_HOME%\bin"
 
-laurentius-demo.bat --init -d test-laurentius.org
+echo "Run laurentius."
+call laurentius-demo.bat --init -d test-laurentius.org
 
 
 

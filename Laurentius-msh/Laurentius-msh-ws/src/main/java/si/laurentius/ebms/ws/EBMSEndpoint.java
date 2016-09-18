@@ -40,21 +40,27 @@ import si.laurentius.commons.utils.xml.XMLUtils;
 
 /**
  *
- * @author sluzba
+ * @author Jože Rihtaršič
  */
 @WebServiceProvider(serviceName = "msh")
 @ServiceMode(value = Service.Mode.MESSAGE)
 @BindingType(SOAPBinding.SOAP12HTTP_BINDING)
 @org.apache.cxf.interceptor.InInterceptors(interceptors = {
-    "si.jrc.msh.interceptor.EBMSLogInInterceptor", "si.jrc.msh.interceptor.EBMSInInterceptor",
+    "si.jrc.msh.interceptor.EBMSLogInInterceptor", 
+    "si.jrc.msh.interceptor.EBMSInInterceptor",
     "si.jrc.msh.interceptor.MSHPluginInInterceptor"})
 @org.apache.cxf.interceptor.OutInterceptors(interceptors = {
-    "si.jrc.msh.interceptor.EBMSLogOutInterceptor", "si.jrc.msh.interceptor.EBMSOutInterceptor",
+    "si.jrc.msh.interceptor.EBMSLogOutInterceptor",
+    "si.jrc.msh.interceptor.EBMSOutInterceptor",
     "si.jrc.msh.interceptor.MSHPluginOutInterceptor"})
 @org.apache.cxf.interceptor.OutFaultInterceptors(interceptors = {
-    "si.jrc.msh.interceptor.EBMSOutFaultInterceptor"})
+    "si.jrc.msh.interceptor.EBMSLogOutInterceptor",
+    "si.jrc.msh.interceptor.EBMSOutFaultInterceptor",
+    "si.jrc.msh.interceptor.MSHPluginOutFaultInterceptor"})
 @org.apache.cxf.interceptor.InFaultInterceptors(interceptors = {
-    "si.jrc.msh.interceptor.EBMSInFaultInterceptor"})
+    "si.jrc.msh.interceptor.EBMSLogInInterceptor",
+    "si.jrc.msh.interceptor.EBMSInFaultInterceptor",
+    "si.jrc.msh.interceptor.MSHPluginInFaultInterceptor"})
 
 public class EBMSEndpoint implements Provider<SOAPMessage> {
 

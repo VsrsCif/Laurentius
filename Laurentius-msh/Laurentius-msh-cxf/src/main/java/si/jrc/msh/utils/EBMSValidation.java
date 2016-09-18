@@ -14,9 +14,13 @@
  */
 package si.jrc.msh.utils;
 
+import java.nio.charset.Charset;
+import java.nio.charset.IllegalCharsetNameException;
+import java.nio.charset.UnsupportedCharsetException;
 import si.laurentius.commons.cxf.EBMSConstants;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import javax.xml.bind.JAXBException;
 import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPException;
@@ -26,7 +30,9 @@ import org.oasis_open.docs.ebxml_msg.ebms.v3_0.ns.core._200704.AgreementRef;
 import org.oasis_open.docs.ebxml_msg.ebms.v3_0.ns.core._200704.CollaborationInfo;
 import org.oasis_open.docs.ebxml_msg.ebms.v3_0.ns.core._200704.Messaging;
 import org.oasis_open.docs.ebxml_msg.ebms.v3_0.ns.core._200704.PartInfo;
+import org.oasis_open.docs.ebxml_msg.ebms.v3_0.ns.core._200704.PartProperties;
 import org.oasis_open.docs.ebxml_msg.ebms.v3_0.ns.core._200704.PayloadInfo;
+import org.oasis_open.docs.ebxml_msg.ebms.v3_0.ns.core._200704.Property;
 import org.oasis_open.docs.ebxml_msg.ebms.v3_0.ns.core._200704.SignalMessage;
 import org.oasis_open.docs.ebxml_msg.ebms.v3_0.ns.core._200704.UserMessage;
 import org.w3c.dom.Element;
@@ -35,8 +41,10 @@ import si.jrc.msh.exception.EBMSError;
 import si.jrc.msh.exception.EBMSErrorCode;
 import si.jrc.msh.exception.EBMSErrorMessage;
 import si.jrc.msh.interceptor.EBMSInInterceptor;
+import si.laurentius.commons.MimeValues;
 import si.laurentius.commons.cxf.SoapUtils;
 import si.laurentius.commons.utils.SEDLogger;
+import si.laurentius.commons.utils.Utils;
 import si.laurentius.commons.utils.xml.XMLUtils;
 
 /**
@@ -227,11 +235,16 @@ public class EBMSValidation {
       if (soap.getAttachments() != null) {
         soap.getAttachments().stream().forEach((at) -> {
           attIDS.add(at.getId());
+
         });
       }
 
       for (PartInfo part : pi.getPartInfos()) {
+
         String href = part.getHref();
+        // validate properties
+        validateProperties(part.getPartProperties(), msgId, href, sv);
+
         if (href != null) {
           if (href.toLowerCase().startsWith(EBMSConstants.ATT_CID_PREFIX) &&
               !attIDS.contains(href.substring(4))) {
@@ -243,11 +256,85 @@ public class EBMSValidation {
             throw new EBMSError(EBMSErrorCode.FeatureNotSupportedFailure, msgId,
                 "eb:Messaging/eb:UserMessage/eb:PayloadInfo/eb:PartInfo/@href for # not supported",
                 sv);
+          } else if (!href.toLowerCase().startsWith(EBMSConstants.ATT_CID_PREFIX)) { // validate # after encryption                      
+            throw new EBMSError(EBMSErrorCode.ExternalPayloadError, msgId,
+                String.format("Attachment href %s  has invalid protocol! Only 'cid:' is allowed", href),
+                sv);
           }
         }
       }
     }
     LOG.logEnd(l, msgId);
+  }
+  
+  public boolean isTestUserMessage(UserMessage um){
+     CollaborationInfo ci = um.getCollaborationInfo();
+   return Objects.equals(ci.getAction(), EBMSConstants.TEST_ACTION) 
+       &&  Objects.equals(ci.getService(), EBMSConstants.TEST_SERVICE) ;
+   
+  
+  }
+
+  public void validateProperties(PartProperties pp, String msgId, String partId, QName sv) {
+    boolean isCompressed = false;
+    boolean hasMime = false;
+    if (pp == null) {
+      return;
+    }
+    
+    String encoding = null;
+    String mimetype = null;
+    for (Property p : pp.getProperties()) {
+      if (Objects.equals(p.getName(), EBMSConstants.EBMS_PAYLOAD_PROPERTY_MIME) &&
+          !Utils.isEmptyString(p.getValue())) {
+        mimetype = p.getValue();
+        hasMime = true;
+      }
+
+      if (Objects.equals(p.getName(), EBMSConstants.EBMS_PAYLOAD_COMPRESSION_TYPE) &&
+          !Utils.isEmptyString(p.getValue())) {
+        isCompressed = true;
+      }
+
+      if (Objects.equals(p.getName(), EBMSConstants.EBMS_PAYLOAD_PROPERTY_ENCODING) &&
+          !Utils.isEmptyString(p.getValue())) {
+        encoding = p.getValue();
+      }
+
+    }
+
+    if (isCompressed) {
+
+      if (!hasMime) {
+        throw new EBMSError(EBMSErrorCode.DecompressionFailure, msgId,
+            String.format("Missing MimeType for compressed payload '%s' (AS4).", partId), sv);
+      }
+
+      if (!Utils.isEmptyString(mimetype) &&
+          (MimeValues.MIME_XML.getMimeType().equalsIgnoreCase(mimetype.trim()) ||
+          MimeValues.MIME_XML1.getMimeType().equalsIgnoreCase(mimetype.trim()))) {
+        /* For XML payloads, an PartInfo/PartProperties/Property/@name="CharacterSet" value is
+          recommended to identify the character set of the payload before
+          compression was applied. The value of this property MUST conform
+          to the values defined in section 4.3.3 of [https://www.w3.org/TR/REC-xml/#sec-TextDecl]."
+         */
+
+        if (!Utils.isEmptyString(encoding)) {
+
+          try {
+            Charset.forName(encoding);
+          } catch (IllegalCharsetNameException | UnsupportedCharsetException ex) {
+            throw new EBMSError(EBMSErrorCode.DecompressionFailure, msgId,
+                String.format(
+                    "Bad/unsupported charset ('%s') for compressed xml payload '%s' (AS4) (%s).",
+                    encoding, partId, ex.getMessage()), sv);
+          }
+        }
+
+      }
+    }
+    
+
   }
 
   /**
@@ -266,13 +353,12 @@ public class EBMSValidation {
         throw new EBMSError(EBMSErrorCode.FeatureNotSupportedFailure, msgId,
             "Signal type " + el.getTagName() + " not suppored!", sv);
 
-      }else {
+      } else {
         // add anies to exchange
-        soap.getExchange().put("SIGNAL_ELEMENTS", sm.getAnies()); // TODO
+        SoapUtils.setInSignals(sm.getAnies(), soap);
+
       }
     }
-    
-
 
     if (sm.getPullRequest() != null) {
       throw new EBMSError(EBMSErrorCode.FeatureNotSupportedFailure, msgId,

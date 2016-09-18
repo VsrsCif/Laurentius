@@ -14,7 +14,7 @@ import si.laurentius.msh.web.gui.entities.BTAction;
 
 /**
  *
- * @author sluzba
+ * @author Jože Rihtaršič
  */
 @ManagedBean(name = "businessTransaction")
 @SessionScoped

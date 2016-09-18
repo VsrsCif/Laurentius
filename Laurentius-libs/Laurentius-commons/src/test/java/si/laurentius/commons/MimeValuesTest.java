@@ -10,7 +10,7 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author sluzba
+ * @author Jože Rihtaršič
  */
 public class MimeValuesTest {
 

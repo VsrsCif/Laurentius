@@ -24,7 +24,7 @@ Copyright 2015, Supreme Court Republic of Slovenia
  See the Licence for the specific language governing permissions and  
  limitations under the Licence.
 -->
-<xs:schema xmlns:scr="http://si.laurentius.RControl" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://si.laurentius.RControl">
+<xs:schema xmlns:scr="http://rcontrol.laurentius.si" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://rcontrol.laurentius.si">
     <xs:complexType name="RControl">
         <xs:attribute name="resultSize" type="xs:integer" use="optional">
             <xs:annotation>

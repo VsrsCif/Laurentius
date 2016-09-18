@@ -6,7 +6,7 @@ package si.laurentius.msh.web.gui.entities;
 
 /**
  *
- * @author sluzba
+ * @author Jože Rihtaršič
  */
 public class BTAction {
 

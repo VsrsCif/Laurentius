@@ -22,7 +22,7 @@ import si.laurentius.task.filter.InMailFilter;
 
 /**
  *
- * @author sluzba
+ * @author Jože Rihtaršič
  */
 @Stateless
 @Local(TaskExecutionInterface.class)

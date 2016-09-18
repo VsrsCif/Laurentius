@@ -21,7 +21,7 @@ import si.laurentius.commons.utils.StringFormater;
 
 /**
  *
- * @author sluzba
+ * @author Jože Rihtaršič
  */
 @Stateless
 @Local(TaskExecutionInterface.class)

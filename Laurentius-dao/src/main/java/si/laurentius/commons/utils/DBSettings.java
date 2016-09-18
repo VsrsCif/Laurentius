@@ -48,7 +48,7 @@ import static si.laurentius.commons.utils.abst.ASettings.newProperties;
 
 /**
  *
- * @author sluzba
+ * @author Jože Rihtaršič
  */
 @Startup
 @Singleton

@@ -33,7 +33,7 @@ import si.laurentius.commons.MimeValues;
 
 /**
  *
- * @author sluzba
+ * @author Jože Rihtaršič
  */
 public class ResourceFiles {
 
@@ -49,6 +49,8 @@ public class ResourceFiles {
   public static final String S_REQUEST_MESSAGING_EMPTY = "messaging_empty.xml";
   public static final String S_REQUEST_VALID_SIMPLE = "valid_simple_message.xml";
   public static final String S_REQUEST_VALID_PAYLOAD = "valid_payload_message.xml";
+  public static final String S_REQUEST_INVALID_PAYLOAD_MISSING_MIME = "invalid_payload_missing_mime.xml";
+  
   public static final String S_REQUEST_INVALID_RECEIVER = "invalid_receiver.xml";
   public static final String S_REQUEST_INVALID_AGR_REF_URI = "invalid_AgreementRef_URI.xml";
 

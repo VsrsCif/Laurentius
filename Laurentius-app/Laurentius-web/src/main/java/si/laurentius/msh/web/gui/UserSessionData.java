@@ -35,7 +35,7 @@ import si.laurentius.msh.web.abst.AbstractJSFView;
 
 /**
  *
- * @author sluzba
+ * @author Jože Rihtaršič
  */
 @SessionScoped
 @ManagedBean(name = "userSessionData")

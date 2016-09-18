@@ -25,13 +25,13 @@ Copyright 2015, Supreme Court Republic of Slovenia
  limitations under the Licence.
 -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
-           xmlns:ns1="http://si.laurentius.inbox/mail" 
-           xmlns:ns2="http://si.laurentius.inbox/payload" 
-           xmlns:ns3="http://si.laurentius.inbox/property"
-           targetNamespace="http://si.laurentius.inbox/mail"
+           xmlns:ns1="http://inbox.laurentius.si/mail" 
+           xmlns:ns2="http://inbox.laurentius.si/payload" 
+           xmlns:ns3="http://inbox.laurentius.si/property"
+           targetNamespace="http://inbox.laurentius.si/mail"
            elementFormDefault="qualified" attributeFormDefault="unqualified">
-    <xs:import namespace="http://si.laurentius.inbox/property" schemaLocation="./inbox-property.xsd"/>
-    <xs:import namespace="http://si.laurentius.inbox/payload" schemaLocation="./inbox-payload.xsd"/>	
+    <xs:import namespace="http://inbox.laurentius.si/property" schemaLocation="./inbox-property.xsd"/>
+    <xs:import namespace="http://inbox.laurentius.si/payload" schemaLocation="./inbox-payload.xsd"/>	
     <xs:element name="InMail" type="ns1:InMailType" />
     <xs:complexType name="InMailType">
         <xs:annotation>
@@ -57,6 +57,18 @@ Copyright 2015, Supreme Court Republic of Slovenia
                 <xs:documentation xml:lang="sl">Enolična oznaka pošiljke MSH. Pri izhodni pošti se oznaka določi ob dodajanju pošiljke v pošiljanje. Vrednost atributa je enaka
                     Messaging/MessageInfo/MessageId v ebMS headerju izhodnega sporočila. Pri dohodni pošti se določi mshid določi ob uspešnem prejemu pošiljke.
                                     
+                </xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:maxLength value="64"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+         <xs:attribute name="refToMessageId" use="optional">
+            <xs:annotation>
+                <xs:documentation xml:lang="sl">Referenca na messageId dohodne pošiljke. Vrednost atributa je enaka
+                    Messaging/MessageInfo/RefToMessageId v ebMS headerju izhodnega sporočila. 
                 </xs:documentation>
             </xs:annotation>
             <xs:simpleType>

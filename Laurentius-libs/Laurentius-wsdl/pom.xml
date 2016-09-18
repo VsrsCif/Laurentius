@@ -53,6 +53,7 @@
                             <directory>${basedir}/src/main/java/</directory>
                             <includes>
                                 <include>org/**</include>
+                                <include>si/**</include>
                             </includes>
                             <followSymlinks>false</followSymlinks>
                         </fileset>

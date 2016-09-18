@@ -25,7 +25,7 @@ Copyright 2015, Supreme Court Republic of Slovenia
  See the Licence for the specific language governing permissions and  
  limitations under the Licence.
 -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://si.laurentius.envelope" targetNamespace="http://si.laurentius.envelope" elementFormDefault="qualified" attributeFormDefault="unqualified">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://laurentius.si.envelope" targetNamespace="http://laurentius.si.envelope" elementFormDefault="qualified" attributeFormDefault="unqualified">
     <xs:element name="EnvelopeData" type="ns1:EnvelopeData"/>
     <xs:complexType name="PhysicalAddressType">
         <xs:sequence>

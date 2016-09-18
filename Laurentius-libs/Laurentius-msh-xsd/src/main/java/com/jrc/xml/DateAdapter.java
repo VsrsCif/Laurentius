@@ -11,7 +11,7 @@ import javax.xml.bind.DatatypeConverter;
 
 /**
  *
- * @author sluzba
+ * @author Jože Rihtaršič
  */
 public class DateAdapter {
 

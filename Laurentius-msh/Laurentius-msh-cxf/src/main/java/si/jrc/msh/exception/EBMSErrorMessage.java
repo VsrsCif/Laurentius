@@ -6,11 +6,11 @@ package si.jrc.msh.exception;
 
 /**
  *
- * @author sluzba
+ * @author Jože Rihtaršič
  */
 public class EBMSErrorMessage {
   public static final String INVALID_SOAP_VERSION = "EBMS AS4 supports only soap 1.2 protocol!";  
-  public static final String  INVALID_HEADER_DATA="Invalid header data. ";
+  public static final String INVALID_HEADER_DATA="Invalid header data. ";
   public static final String INVALID_HEADER_MISSING_MESSAGING = "Missing SOAP header or Messaging header";
   public static final String INVALID_HEADER_ERROR_PARSING_MESSAGING = "Error reading EMBS header: ";
   public static final String INVALID_HEADER_MESSAGING = "Header is not valid by schema: ";

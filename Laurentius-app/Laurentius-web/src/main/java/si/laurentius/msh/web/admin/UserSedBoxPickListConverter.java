@@ -14,7 +14,7 @@ import si.laurentius.ebox.SEDBox;
 
 /**
  *
- * @author sluzba
+ * @author Jože Rihtaršič
  */
 @FacesConverter(value = "userSedBoxPickListConverter")
 public class UserSedBoxPickListConverter implements Converter {

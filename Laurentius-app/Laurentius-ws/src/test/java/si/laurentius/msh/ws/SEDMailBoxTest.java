@@ -71,7 +71,7 @@ import si.laurentius.msh.test.db.SEDTestLookup;
 
 /**
  *
- * @author sluzba
+ * @author Jože Rihtaršič
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class SEDMailBoxTest extends TestUtils {
@@ -1130,7 +1130,7 @@ public class SEDMailBoxTest extends TestUtils {
         SEDOutboxMailStatus.CANCELED, null);
     assertModifyOutMail(createOutMail(), SEDOutboxMailStatus.ERROR, ModifOutActionCode.ABORT,
         SEDOutboxMailStatus.CANCELED, null);
-    assertModifyOutMail(createOutMail(), SEDOutboxMailStatus.EBMSERROR, ModifOutActionCode.ABORT,
+    assertModifyOutMail(createOutMail(), SEDOutboxMailStatus.FAILED, ModifOutActionCode.ABORT,
         SEDOutboxMailStatus.CANCELED, null);
     assertModifyOutMail(createOutMail(), SEDOutboxMailStatus.SCHEDULE, ModifOutActionCode.ABORT,
         SEDOutboxMailStatus.CANCELED, null);
@@ -1149,7 +1149,7 @@ public class SEDMailBoxTest extends TestUtils {
         SEDOutboxMailStatus.DELETED, null);
     assertModifyOutMail(createOutMail(), SEDOutboxMailStatus.ERROR, ModifOutActionCode.DELETE,
         SEDOutboxMailStatus.DELETED, null);
-    assertModifyOutMail(createOutMail(), SEDOutboxMailStatus.EBMSERROR, ModifOutActionCode.DELETE,
+    assertModifyOutMail(createOutMail(), SEDOutboxMailStatus.FAILED, ModifOutActionCode.DELETE,
         SEDOutboxMailStatus.DELETED, null);
     assertModifyOutMail(createOutMail(), SEDOutboxMailStatus.SCHEDULE, ModifOutActionCode.DELETE,
         SEDOutboxMailStatus.DELETED, null);

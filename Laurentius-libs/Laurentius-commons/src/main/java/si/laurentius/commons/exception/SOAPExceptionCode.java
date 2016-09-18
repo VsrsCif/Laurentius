@@ -8,50 +8,50 @@ import javax.xml.namespace.QName;
 
 /**
  *
- * @author sluzba
+ * @author Jože Rihtaršič
  */
 public enum SOAPExceptionCode {
 
   /**
      *
      */
-  SoapVersionMismatch("SoapVersionMismatch", new QName("http://si.laurentius", "0001"),
+  SoapVersionMismatch("SoapVersionMismatch", new QName("http://laurentius.si", "0001"),
       "Soap version does not match init soap version.", 0),
 
   /**
      *
      */
-  InvalidSoapVersion("InvalidSoapVersion", new QName("http://si.laurentius", "0002"),
+  InvalidSoapVersion("InvalidSoapVersion", new QName("http://laurentius.si", "0002"),
       "Invalid soap message: %s", 1),
 
   /**
      *
      */
-  SoapParseFailure("SoapParseFailure", new QName("http://si.laurentius", "0003"),
+  SoapParseFailure("SoapParseFailure", new QName("http://laurentius.si", "0003"),
       "Invalid Soap message: %s", 1),
 
   /**
      *
      */
-  ConfigurationFailure("ConfigurationFailure", new QName("http://si.laurentius.svev-msh", "0100"),
+  ConfigurationFailure("ConfigurationFailure", new QName("http://laurentius.si.svev-msh", "0100"),
       "Configuration failure: %s", 1),
 
   /**
      *
      */
-  InternalFailure("InternalFailure", new QName("http://si.laurentius.svev-msh", "0101"),
+  InternalFailure("InternalFailure", new QName("http://laurentius.si.svev-msh", "0101"),
       "Internal failure: %s", 1),
 
   /**
      *
      */
-  StoreInboundMailFailure("StoreMailFailure", new QName("http://si.laurentius.svev-msh", "0102"),
+  StoreInboundMailFailure("StoreMailFailure", new QName("http://laurentius.si.svev-msh", "0102"),
       "Internal error: %s", 1),
 
   /**
      *
      */
-  PluginFailure("PluginFailure", new QName("http://si.laurentius.svev-msh", "0202"),
+  PluginFailure("PluginFailure", new QName("http://laurentius.si.svev-msh", "0202"),
       "Plugin: %s Failure: %s", 1);
 
   String name;

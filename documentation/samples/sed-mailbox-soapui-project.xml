@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <con:soapui-project id="d55e8025-6873-40bf-9490-778240e87fd0" activeEnvironment="Default" name="SEDMailBoxWS" resourceRoot="" soapui-version="5.2.1" abortOnError="false" runType="SEQUENTIAL" xmlns:con="http://eviware.com/soapui/config">
     <con:settings/>
-    <con:interface xsi:type="con:WsdlInterface" id="07b351d6-95c8-4773-ab6b-0db9c9b6f966" wsaVersion="NONE" name="SEDMailBoxPortBinding" type="wsdl" bindingName="{http://si.laurentius.}SEDMailBoxPortBinding" soapVersion="1_1" anonymous="optional" definition="http://localhost:8080/Laurentius-ws/mailbox?wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <con:interface xsi:type="con:WsdlInterface" id="07b351d6-95c8-4773-ab6b-0db9c9b6f966" wsaVersion="NONE" name="SEDMailBoxPortBinding" type="wsdl" bindingName="{http://laurentius.si.}SEDMailBoxPortBinding" soapVersion="1_1" anonymous="optional" definition="http://localhost:8080/Laurentius-ws/mailbox?wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <con:settings/>
         <con:definitionCache type="TEXT" rootPart="http://localhost:8080/Laurentius-ws/mailbox?wsdl">
             <con:part>
                 <con:url>http://localhost:8080/Laurentius-ws/mailbox?wsdl</con:url>
-                <con:content><![CDATA[<definitions name="SEDMailBoxWS" targetNamespace="http://si.laurentius" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://si.laurentius" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns="http://schemas.xmlsoap.org/soap/encoding/" xmlns="http://schemas.xmlsoap.org/wsdl/">
+                <con:content><![CDATA[<definitions name="SEDMailBoxWS" targetNamespace="http://laurentius.si" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://laurentius.si" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns="http://schemas.xmlsoap.org/soap/encoding/" xmlns="http://schemas.xmlsoap.org/wsdl/">
   <documentation>WSDL določa servise za integracijo s SVEV-MSH modulom
         * za odpremo pošiljke preko MSH modula
         * prevzemanje statusov izhodnih pošiljk
@@ -21,21 +21,21 @@
         - Izdelava wsdl vmesnika</documentation>
   <types>
     <xsd:schema>
-      <xsd:import namespace="http://si.laurentius" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=exception/sedexception.xsd"/>
-      <xsd:import namespace="http://si.laurentius" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/SubmitMailRequest.xsd"/>
-      <xsd:import namespace="http://si.laurentius" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/SubmitMailResponse.xsd"/>
-      <xsd:import namespace="http://si.laurentius" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/OutMailListRequest.xsd"/>
-      <xsd:import namespace="http://si.laurentius" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/OutMailListResponse.xsd"/>
-      <xsd:import namespace="http://si.laurentius" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/OutMailEventListRequest.xsd"/>
-      <xsd:import namespace="http://si.laurentius" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/OutMailEventListResponse.xsd"/>
-      <xsd:import namespace="http://si.laurentius" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/InMailListRequest.xsd"/>
-      <xsd:import namespace="http://si.laurentius" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/InMailListResponse.xsd"/>
-      <xsd:import namespace="http://si.laurentius" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/ModifyInMailRequest.xsd"/>
-      <xsd:import namespace="http://si.laurentius" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/ModifyInMailResponse.xsd"/>
-      <xsd:import namespace="http://si.laurentius" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/InMailEventListRequest.xsd"/>
-      <xsd:import namespace="http://si.laurentius" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/InMailEventListResponse.xsd"/>
-      <xsd:import namespace="http://si.laurentius" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/GetInMailRequest.xsd"/>
-      <xsd:import namespace="http://si.laurentius" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/GetInMailResponse.xsd"/>
+      <xsd:import namespace="http://laurentius.si" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=exception/sedexception.xsd"/>
+      <xsd:import namespace="http://laurentius.si" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/SubmitMailRequest.xsd"/>
+      <xsd:import namespace="http://laurentius.si" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/SubmitMailResponse.xsd"/>
+      <xsd:import namespace="http://laurentius.si" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/OutMailListRequest.xsd"/>
+      <xsd:import namespace="http://laurentius.si" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/OutMailListResponse.xsd"/>
+      <xsd:import namespace="http://laurentius.si" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/OutMailEventListRequest.xsd"/>
+      <xsd:import namespace="http://laurentius.si" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/OutMailEventListResponse.xsd"/>
+      <xsd:import namespace="http://laurentius.si" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/InMailListRequest.xsd"/>
+      <xsd:import namespace="http://laurentius.si" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/InMailListResponse.xsd"/>
+      <xsd:import namespace="http://laurentius.si" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/ModifyInMailRequest.xsd"/>
+      <xsd:import namespace="http://laurentius.si" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/ModifyInMailResponse.xsd"/>
+      <xsd:import namespace="http://laurentius.si" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/InMailEventListRequest.xsd"/>
+      <xsd:import namespace="http://laurentius.si" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/InMailEventListResponse.xsd"/>
+      <xsd:import namespace="http://laurentius.si" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/GetInMailRequest.xsd"/>
+      <xsd:import namespace="http://laurentius.si" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/GetInMailResponse.xsd"/>
     </xsd:schema>
   </types>
   <message name="InMailEventListResponse">
@@ -130,7 +130,7 @@
   <binding name="SEDMailBoxPortBinding" type="tns:SEDMailBoxWS">
     <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
     <operation name="submitMail">
-      <soap:operation soapAction="http://si.laurentius.submitMail"/>
+      <soap:operation soapAction="http://laurentius.si.submitMail"/>
       <input>
         <soap:body use="literal"/>
       </input>
@@ -142,7 +142,7 @@
       </fault>
     </operation>
     <operation name="getOutMailList">
-      <soap:operation soapAction="http://si.laurentius.getOutMailList"/>
+      <soap:operation soapAction="http://laurentius.si.getOutMailList"/>
       <input>
         <soap:body use="literal"/>
       </input>
@@ -154,7 +154,7 @@
       </fault>
     </operation>
     <operation name="getInMailList">
-      <soap:operation soapAction="http://si.laurentius.getInMailList"/>
+      <soap:operation soapAction="http://laurentius.si.getInMailList"/>
       <input>
         <soap:body use="literal"/>
       </input>
@@ -166,7 +166,7 @@
       </fault>
     </operation>
     <operation name="getInMailEventList">
-      <soap:operation soapAction="http://si.laurentius.getInMailList"/>
+      <soap:operation soapAction="http://laurentius.si.getInMailList"/>
       <input>
         <soap:body use="literal"/>
       </input>
@@ -178,7 +178,7 @@
       </fault>
     </operation>
     <operation name="getOutMailEventList">
-      <soap:operation soapAction="http://si.laurentius.getInMailList"/>
+      <soap:operation soapAction="http://laurentius.si.getInMailList"/>
       <input>
         <soap:body use="literal"/>
       </input>
@@ -190,7 +190,7 @@
       </fault>
     </operation>
     <operation name="modifyInMail">
-      <soap:operation soapAction="http://si.laurentius.getInMailList"/>
+      <soap:operation soapAction="http://laurentius.si.getInMailList"/>
       <input>
         <soap:body use="literal"/>
       </input>
@@ -202,7 +202,7 @@
       </fault>
     </operation>
     <operation name="getInMail">
-      <soap:operation soapAction="http://si.laurentius.getInMailList"/>
+      <soap:operation soapAction="http://laurentius.si.getInMailList"/>
       <input>
         <soap:body use="literal"/>
       </input>
@@ -246,7 +246,7 @@ Author: Joze Rihtarsic-->
  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the Licence for the specific language governing permissions and  
  limitations under the Licence.-->
-<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://si.laurentius" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://si.laurentius">
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://laurentius.si" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://laurentius.si">
   <xs:element name="SEDException" type="tns:SEDException"/>
   <xs:complexType name="SEDException">
     <xs:sequence>
@@ -297,9 +297,9 @@ Author: Joze Rihtarsic-->
  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the Licence for the specific language governing permissions and  
  limitations under the Licence.-->
-<xs:schema targetNamespace="http://si.laurentius" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://si.laurentius.outbox/mail" xmlns:con="http://si.laurentius.Control" xmlns="http://si.laurentius">
-  <xs:import namespace="http://si.laurentius.Control" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/Control.xsd"/>
-  <xs:import namespace="http://si.laurentius.outbox/mail" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=entities/outbox-mail.xsd"/>
+<xs:schema targetNamespace="http://laurentius.si" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://outbox.laurentius.si/mail" xmlns:con="http://control.laurentius.si" xmlns="http://laurentius.si">
+  <xs:import namespace="http://control.laurentius.si" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/Control.xsd"/>
+  <xs:import namespace="http://outbox.laurentius.si/mail" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=entities/outbox-mail.xsd"/>
   <xs:element name="SubmitMailRequest">
     <xs:complexType>
       <xs:sequence>
@@ -341,7 +341,7 @@ Author: Joze Rihtarsic-->
  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the Licence for the specific language governing permissions and  
  limitations under the Licence.-->
-<xs:schema targetNamespace="http://si.laurentius.Control" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:scc="http://si.laurentius.Control">
+<xs:schema targetNamespace="http://control.laurentius.si" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:scc="http://control.laurentius.si">
   <xs:complexType name="Control">
     <xs:attribute name="userId" use="required">
       <xs:annotation>
@@ -412,9 +412,9 @@ Author: Joze Rihtarsic-->
  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the Licence for the specific language governing permissions and  
  limitations under the Licence.-->
-<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://si.laurentius.outbox/mail" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns3="http://si.laurentius.outbox/property" xmlns:ns2="http://si.laurentius.outbox/payload" xmlns:ns1="http://si.laurentius.outbox/mail">
-  <xs:import namespace="http://si.laurentius.outbox/property" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=entities/outbox-property.xsd"/>
-  <xs:import namespace="http://si.laurentius.outbox/payload" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=entities/outbox-payload.xsd"/>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://outbox.laurentius.si/mail" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns3="http://outbox.laurentius.si/property" xmlns:ns2="http://outbox.laurentius.si/payload" xmlns:ns1="http://outbox.laurentius.si/mail">
+  <xs:import namespace="http://outbox.laurentius.si/property" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=entities/outbox-property.xsd"/>
+  <xs:import namespace="http://outbox.laurentius.si/payload" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=entities/outbox-payload.xsd"/>
   <xs:element name="OutMail" type="ns1:OutMailType"/>
   <xs:complexType name="OutMailType">
     <xs:annotation>
@@ -594,7 +594,7 @@ Author: Joze Rihtarsic-->
  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the Licence for the specific language governing permissions and  
  limitations under the Licence.-->
-<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://si.laurentius.outbox/property" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://si.laurentius.outbox/property">
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://outbox.laurentius.si/property" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://outbox.laurentius.si/property">
   <xs:element name="OutProperties">
     <xs:annotation>
       <xs:documentation>MSH parametri, ki so določeni v pmode konfiguraciji</xs:documentation>
@@ -662,7 +662,7 @@ Author: Joze Rihtarsic-->
  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the Licence for the specific language governing permissions and  
  limitations under the Licence.-->
-<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://si.laurentius.outbox/payload" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://si.laurentius.outbox/payload">
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://outbox.laurentius.si/payload" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://outbox.laurentius.si/payload">
   <xs:element name="OutPayload">
     <xs:annotation>
       <xs:documentation>MSH vsebine</xs:documentation>
@@ -792,8 +792,8 @@ Author: Joze Rihtarsic-->
  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the Licence for the specific language governing permissions and  
  limitations under the Licence.-->
-<xs:schema targetNamespace="http://si.laurentius" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:con="http://si.laurentius.RControl" xmlns="http://si.laurentius">
-  <xs:import namespace="http://si.laurentius.RControl" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/RControl.xsd"/>
+<xs:schema targetNamespace="http://laurentius.si" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:con="http://rcontrol.laurentius.si" xmlns="http://laurentius.si">
+  <xs:import namespace="http://rcontrol.laurentius.si" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/RControl.xsd"/>
   <xs:element name="SubmitMailResponse">
     <xs:complexType>
       <xs:sequence>
@@ -853,7 +853,7 @@ Author: Joze Rihtarsic-->
  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the Licence for the specific language governing permissions and  
  limitations under the Licence.-->
-<xs:schema targetNamespace="http://si.laurentius.RControl" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:scr="http://si.laurentius.RControl">
+<xs:schema targetNamespace="http://rcontrol.laurentius.si" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:scr="http://rcontrol.laurentius.si">
   <xs:complexType name="RControl">
     <xs:attribute name="resultSize" type="xs:integer" use="optional">
       <xs:annotation>
@@ -929,8 +929,8 @@ Author: Joze Rihtarsic-->
  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the Licence for the specific language governing permissions and  
  limitations under the Licence.-->
-<xs:schema targetNamespace="http://si.laurentius" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:con="http://si.laurentius.Control" xmlns="http://si.laurentius">
-  <xs:import namespace="http://si.laurentius.Control" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/Control.xsd"/>
+<xs:schema targetNamespace="http://laurentius.si" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:con="http://control.laurentius.si" xmlns="http://laurentius.si">
+  <xs:import namespace="http://control.laurentius.si" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/Control.xsd"/>
   <xs:element name="OutMailListRequest">
     <xs:complexType>
       <xs:annotation>
@@ -1047,9 +1047,9 @@ Author: Joze Rihtarsic-->
  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the Licence for the specific language governing permissions and  
  limitations under the Licence.-->
-<xs:schema targetNamespace="http://si.laurentius" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://si.laurentius.outbox/mail" xmlns:con="http://si.laurentius.RControl" xmlns="http://si.laurentius">
-  <xs:import namespace="http://si.laurentius.RControl" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/RControl.xsd"/>
-  <xs:import namespace="http://si.laurentius.outbox/mail" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=entities/outbox-mail.xsd"/>
+<xs:schema targetNamespace="http://laurentius.si" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://outbox.laurentius.si/mail" xmlns:con="http://rcontrol.laurentius.si" xmlns="http://laurentius.si">
+  <xs:import namespace="http://rcontrol.laurentius.si" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/RControl.xsd"/>
+  <xs:import namespace="http://outbox.laurentius.si/mail" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=entities/outbox-mail.xsd"/>
   <xs:element name="OutMailListResponse">
     <xs:complexType>
       <xs:annotation>
@@ -1095,8 +1095,8 @@ Author: Joze Rihtarsic-->
  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the Licence for the specific language governing permissions and  
  limitations under the Licence.-->
-<xs:schema targetNamespace="http://si.laurentius" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:con="http://si.laurentius.Control" xmlns="http://si.laurentius">
-  <xs:import namespace="http://si.laurentius.Control" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/Control.xsd"/>
+<xs:schema targetNamespace="http://laurentius.si" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:con="http://control.laurentius.si" xmlns="http://laurentius.si">
+  <xs:import namespace="http://control.laurentius.si" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/Control.xsd"/>
   <xs:element name="OutMailEventListRequest">
     <xs:complexType>
       <xs:annotation>
@@ -1165,9 +1165,9 @@ Author: Joze Rihtarsic-->
  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the Licence for the specific language governing permissions and  
  limitations under the Licence.-->
-<xs:schema targetNamespace="http://si.laurentius" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://si.laurentius.outbox/event" xmlns:con="http://si.laurentius.RControl" xmlns="http://si.laurentius">
-  <xs:import namespace="http://si.laurentius.RControl" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/RControl.xsd"/>
-  <xs:import namespace="http://si.laurentius.outbox/event" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=entities/outbox-event.xsd"/>
+<xs:schema targetNamespace="http://laurentius.si" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://outbox.laurentius.si/event" xmlns:con="http://rcontrol.laurentius.si" xmlns="http://laurentius.si">
+  <xs:import namespace="http://rcontrol.laurentius.si" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/RControl.xsd"/>
+  <xs:import namespace="http://outbox.laurentius.si/event" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=entities/outbox-event.xsd"/>
   <xs:element name="OutMailEventListResponse">
     <xs:complexType>
       <xs:annotation>
@@ -1212,7 +1212,7 @@ Author: Joze Rihtarsic-->
  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the Licence for the specific language governing permissions and  
  limitations under the Licence.-->
-<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://si.laurentius.outbox/event" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://si.laurentius.outbox/event">
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://outbox.laurentius.si/event" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://outbox.laurentius.si/event">
   <xs:element name="OutEvent" type="ns1:OutEvent"/>
   <xs:complexType name="OutEvent">
     <xs:annotation>
@@ -1314,8 +1314,8 @@ Author: Joze Rihtarsic-->
  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the Licence for the specific language governing permissions and  
  limitations under the Licence.-->
-<xs:schema targetNamespace="http://si.laurentius" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:con="http://si.laurentius.Control" xmlns="http://si.laurentius">
-  <xs:import namespace="http://si.laurentius.Control" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/Control.xsd"/>
+<xs:schema targetNamespace="http://laurentius.si" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:con="http://control.laurentius.si" xmlns="http://laurentius.si">
+  <xs:import namespace="http://control.laurentius.si" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/Control.xsd"/>
   <xs:element name="InMailListRequest">
     <xs:complexType>
       <xs:annotation>
@@ -1432,9 +1432,9 @@ Author: Joze Rihtarsic-->
  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the Licence for the specific language governing permissions and  
  limitations under the Licence.-->
-<xs:schema targetNamespace="http://si.laurentius" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://si.laurentius.inbox/mail" xmlns:con="http://si.laurentius.RControl" xmlns="http://si.laurentius">
-  <xs:import namespace="http://si.laurentius.RControl" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/RControl.xsd"/>
-  <xs:import namespace="http://si.laurentius.inbox/mail" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=entities/inbox-mail.xsd"/>
+<xs:schema targetNamespace="http://laurentius.si" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://inbox.laurentius.si/mail" xmlns:con="http://rcontrol.laurentius.si" xmlns="http://laurentius.si">
+  <xs:import namespace="http://rcontrol.laurentius.si" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/RControl.xsd"/>
+  <xs:import namespace="http://inbox.laurentius.si/mail" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=entities/inbox-mail.xsd"/>
   <xs:element name="InMailListResponse">
     <xs:complexType>
       <xs:annotation>
@@ -1479,9 +1479,9 @@ Author: Joze Rihtarsic-->
  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the Licence for the specific language governing permissions and  
  limitations under the Licence.-->
-<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://si.laurentius.inbox/mail" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns3="http://si.laurentius.inbox/property" xmlns:ns2="http://si.laurentius.inbox/payload" xmlns:ns1="http://si.laurentius.inbox/mail">
-  <xs:import namespace="http://si.laurentius.inbox/property" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=entities/inbox-property.xsd"/>
-  <xs:import namespace="http://si.laurentius.inbox/payload" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=entities/inbox-payload.xsd"/>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://inbox.laurentius.si/mail" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns3="http://inbox.laurentius.si/property" xmlns:ns2="http://inbox.laurentius.si/payload" xmlns:ns1="http://inbox.laurentius.si/mail">
+  <xs:import namespace="http://inbox.laurentius.si/property" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=entities/inbox-property.xsd"/>
+  <xs:import namespace="http://inbox.laurentius.si/payload" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=entities/inbox-payload.xsd"/>
   <xs:element name="InMail" type="ns1:InMailType"/>
   <xs:complexType name="InMailType">
     <xs:annotation>
@@ -1661,7 +1661,7 @@ Author: Joze Rihtarsic-->
  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the Licence for the specific language governing permissions and  
  limitations under the Licence.-->
-<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://si.laurentius.inbox/property" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://si.laurentius.inbox/property">
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://inbox.laurentius.si/property" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://inbox.laurentius.si/property">
   <xs:element name="InProperties">
     <xs:annotation>
       <xs:documentation>MSH parametri, ki so določeni v pmode konfiguraciji</xs:documentation>
@@ -1729,7 +1729,7 @@ Author: Joze Rihtarsic-->
  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the Licence for the specific language governing permissions and  
  limitations under the Licence.-->
-<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://si.laurentius.inbox/payload" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://si.laurentius.inbox/payload">
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://inbox.laurentius.si/payload" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://inbox.laurentius.si/payload">
   <xs:element name="InPayload">
     <xs:annotation>
       <xs:documentation>MSH vsebine</xs:documentation>
@@ -1859,8 +1859,8 @@ Author: Joze Rihtarsic-->
  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the Licence for the specific language governing permissions and  
  limitations under the Licence.-->
-<xs:schema targetNamespace="http://si.laurentius" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:con="http://si.laurentius.Control" xmlns="http://si.laurentius">
-  <xs:import namespace="http://si.laurentius.Control" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/Control.xsd"/>
+<xs:schema targetNamespace="http://laurentius.si" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:con="http://control.laurentius.si" xmlns="http://laurentius.si">
+  <xs:import namespace="http://control.laurentius.si" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/Control.xsd"/>
   <xs:element name="ModifyInMailRequest">
     <xs:complexType>
       <xs:annotation>
@@ -1933,9 +1933,9 @@ Author: Joze Rihtarsic-->
  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the Licence for the specific language governing permissions and  
  limitations under the Licence.-->
-<xs:schema targetNamespace="http://si.laurentius" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://si.laurentius.inbox/event" xmlns:con="http://si.laurentius.RControl" xmlns="http://si.laurentius">
-  <xs:import namespace="http://si.laurentius.RControl" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/RControl.xsd"/>
-  <xs:import namespace="http://si.laurentius.inbox/event" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=entities/inbox-event.xsd"/>
+<xs:schema targetNamespace="http://laurentius.si" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://inbox.laurentius.si/event" xmlns:con="http://rcontrol.laurentius.si" xmlns="http://laurentius.si">
+  <xs:import namespace="http://rcontrol.laurentius.si" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/RControl.xsd"/>
+  <xs:import namespace="http://inbox.laurentius.si/event" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=entities/inbox-event.xsd"/>
   <xs:element name="ModifyInMailResponse">
     <xs:complexType>
       <xs:annotation>
@@ -1983,7 +1983,7 @@ Author: Joze Rihtarsic-->
  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the Licence for the specific language governing permissions and  
  limitations under the Licence.-->
-<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://si.laurentius.inbox/event" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://si.laurentius.inbox/event">
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://inbox.laurentius.si/event" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://inbox.laurentius.si/event">
   <xs:element name="InEvent" type="ns1:InEvent"/>
   <xs:complexType name="InEvent">
     <xs:annotation>
@@ -2075,8 +2075,8 @@ Author: Joze Rihtarsic-->
  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the Licence for the specific language governing permissions and  
  limitations under the Licence.-->
-<xs:schema targetNamespace="http://si.laurentius" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:con="http://si.laurentius.Control" xmlns="http://si.laurentius">
-  <xs:import namespace="http://si.laurentius.Control" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/Control.xsd"/>
+<xs:schema targetNamespace="http://laurentius.si" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:con="http://control.laurentius.si" xmlns="http://laurentius.si">
+  <xs:import namespace="http://control.laurentius.si" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/Control.xsd"/>
   <xs:element name="InMailEventListRequest">
     <xs:complexType>
       <xs:annotation>
@@ -2135,9 +2135,9 @@ Author: Joze Rihtarsic-->
  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the Licence for the specific language governing permissions and  
  limitations under the Licence.-->
-<xs:schema targetNamespace="http://si.laurentius" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://si.laurentius.inbox/event" xmlns:con="http://si.laurentius.RControl" xmlns="http://si.laurentius">
-  <xs:import namespace="http://si.laurentius.RControl" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/RControl.xsd"/>
-  <xs:import namespace="http://si.laurentius.inbox/event" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=entities/inbox-event.xsd"/>
+<xs:schema targetNamespace="http://laurentius.si" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://inbox.laurentius.si/event" xmlns:con="http://rcontrol.laurentius.si" xmlns="http://laurentius.si">
+  <xs:import namespace="http://rcontrol.laurentius.si" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/RControl.xsd"/>
+  <xs:import namespace="http://inbox.laurentius.si/event" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=entities/inbox-event.xsd"/>
   <xs:element name="InMailEventListResponse">
     <xs:complexType>
       <xs:annotation>
@@ -2183,9 +2183,9 @@ Author: Joze Rihtarsic-->
  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the Licence for the specific language governing permissions and  
  limitations under the Licence.-->
-<xs:schema targetNamespace="http://si.laurentius" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://si.laurentius.mshmail" xmlns:con="http://si.laurentius.Control" xmlns="http://si.laurentius">
-  <xs:import namespace="http://si.laurentius.Control" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/Control.xsd"/>
-  <xs:import namespace="http://si.laurentius.inbox/mail" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=entities/inbox-mail.xsd"/>
+<xs:schema targetNamespace="http://laurentius.si" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://laurentius.si.mshmail" xmlns:con="http://control.laurentius.si" xmlns="http://laurentius.si">
+  <xs:import namespace="http://control.laurentius.si" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/Control.xsd"/>
+  <xs:import namespace="http://inbox.laurentius.si/mail" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=entities/inbox-mail.xsd"/>
   <xs:element name="GetInMailRequest">
     <xs:complexType>
       <xs:annotation>
@@ -2244,9 +2244,9 @@ Author: Joze Rihtarsic-->
  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the Licence for the specific language governing permissions and  
  limitations under the Licence.-->
-<xs:schema targetNamespace="http://si.laurentius" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://si.laurentius.inbox/mail" xmlns:con="http://si.laurentius.RControl" xmlns="http://si.laurentius">
-  <xs:import namespace="http://si.laurentius.RControl" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/RControl.xsd"/>
-  <xs:import namespace="http://si.laurentius.inbox/mail" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=entities/inbox-mail.xsd"/>
+<xs:schema targetNamespace="http://laurentius.si" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://inbox.laurentius.si/mail" xmlns:con="http://rcontrol.laurentius.si" xmlns="http://laurentius.si">
+  <xs:import namespace="http://rcontrol.laurentius.si" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=messages/RControl.xsd"/>
+  <xs:import namespace="http://inbox.laurentius.si/mail" schemaLocation="http://localhost:8080/Laurentius-ws/mailbox?xsd=entities/inbox-mail.xsd"/>
   <xs:element name="GetInMailResponse">
     <xs:complexType>
       <xs:annotation>
@@ -2271,7 +2271,7 @@ Author: Joze Rihtarsic-->
         <con:endpoints>
             <con:endpoint>http://localhost:8080/Laurentius-ws/mailbox</con:endpoint>
         </con:endpoints>
-        <con:operation id="c663fa59-7d11-4dbb-a4f2-78e74d0a92cb" isOneWay="false" action="http://si.laurentius.submitMail" name="submitMail" bindingOperationName="submitMail" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional">
+        <con:operation id="c663fa59-7d11-4dbb-a4f2-78e74d0a92cb" isOneWay="false" action="http://laurentius.si.submitMail" name="submitMail" bindingOperationName="submitMail" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional">
             <con:settings/>
             <con:call id="a7762ad3-2009-417c-8d7d-a4a9254a9658" name="simple-request">
                 <con:settings>
@@ -2280,10 +2280,10 @@ Author: Joze Rihtarsic-->
                 <con:encoding>UTF-8</con:encoding>
                 <con:endpoint>http://localhost:8080/Laurentius-ws/mailbox</con:endpoint>
                 <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" 
-xmlns:ebms="http://si.laurentius" 
-xmlns:mail="http://si.laurentius.outbox/mail" 
-xmlns:prop="http://si.laurentius.outbox/property"
-xmlns:pay="http://si.laurentius.outbox/payload">
+xmlns:ebms="http://laurentius.si" 
+xmlns:mail="http://outbox.laurentius.si/mail" 
+xmlns:prop="http://outbox.laurentius.si/property"
+xmlns:pay="http://outbox.laurentius.si/payload">
    <soapenv:Header/>
    <soapenv:Body>
       <ebms:SubmitMailRequest>
@@ -2619,7 +2619,7 @@ NEE5QTg5MDlCNTEwRkNDQjJCPl0+Pg0Kc3RhcnR4cmVmDQoxMTYNCiUlRU9GDQo=</pay:OutPart>
                 <con:wsrmConfig version="1.2"/>
             </con:call>
         </con:operation>
-        <con:operation id="41903b1f-49f2-4428-99b2-f0a681887787" isOneWay="false" action="http://si.laurentius.getOutMailList" name="getOutMailList" bindingOperationName="getOutMailList" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional">
+        <con:operation id="41903b1f-49f2-4428-99b2-f0a681887787" isOneWay="false" action="http://laurentius.si.getOutMailList" name="getOutMailList" bindingOperationName="getOutMailList" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional">
             <con:settings/>
             <con:call id="d0f4d274-8c14-4387-bb47-530059dd71f7" name="simple-request">
                 <con:settings>
@@ -2627,7 +2627,7 @@ NEE5QTg5MDlCNTEwRkNDQjJCPl0+Pg0Kc3RhcnR4cmVmDQoxMTYNCiUlRU9GDQo=</pay:OutPart>
                 </con:settings>
                 <con:encoding>UTF-8</con:encoding>
                 <con:endpoint>http://localhost:8080/Laurentius-ws/mailbox</con:endpoint>
-                <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ebms="http://si.laurentius">
+                <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ebms="http://laurentius.si">
    <soapenv:Header/>
    <soapenv:Body>
       <ebms:OutMailListRequest>
@@ -2641,11 +2641,11 @@ NEE5QTg5MDlCNTEwRkNDQjJCPl0+Pg0Kc3RhcnR4cmVmDQoxMTYNCiUlRU9GDQo=</pay:OutPart>
                 </con:credentials>
                 <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
                 <con:jmsPropertyConfig/>
-                <con:wsaConfig mustUnderstand="NONE" version="200508" action="http://si.laurentius.getOutMailList"/>
+                <con:wsaConfig mustUnderstand="NONE" version="200508" action="http://laurentius.si.getOutMailList"/>
                 <con:wsrmConfig version="1.2"/>
             </con:call>
         </con:operation>
-        <con:operation id="88c38561-7994-467b-bf27-7812e4f2239c" isOneWay="false" action="http://si.laurentius.getInMailList" name="getInMailList" bindingOperationName="getInMailList" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional">
+        <con:operation id="88c38561-7994-467b-bf27-7812e4f2239c" isOneWay="false" action="http://laurentius.si.getInMailList" name="getInMailList" bindingOperationName="getInMailList" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional">
             <con:settings/>
             <con:call id="4cc2a689-1929-4b6d-bbcb-affd7b8c93f5" name="simple-request">
                 <con:settings>
@@ -2653,7 +2653,7 @@ NEE5QTg5MDlCNTEwRkNDQjJCPl0+Pg0Kc3RhcnR4cmVmDQoxMTYNCiUlRU9GDQo=</pay:OutPart>
                 </con:settings>
                 <con:encoding>UTF-8</con:encoding>
                 <con:endpoint>http://localhost:8080/Laurentius-ws/mailbox</con:endpoint>
-                <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ebms="http://si.laurentius">
+                <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ebms="http://laurentius.si">
    <soapenv:Header/>
    <soapenv:Body>
       <ebms:InMailListRequest>
@@ -2667,11 +2667,11 @@ NEE5QTg5MDlCNTEwRkNDQjJCPl0+Pg0Kc3RhcnR4cmVmDQoxMTYNCiUlRU9GDQo=</pay:OutPart>
                 </con:credentials>
                 <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
                 <con:jmsPropertyConfig/>
-                <con:wsaConfig mustUnderstand="NONE" version="200508" action="http://si.laurentius.getInMailList"/>
+                <con:wsaConfig mustUnderstand="NONE" version="200508" action="http://laurentius.si.getInMailList"/>
                 <con:wsrmConfig version="1.2"/>
             </con:call>
         </con:operation>
-        <con:operation id="705e3676-3573-4ed4-9e67-634f00af4de1" isOneWay="false" action="http://si.laurentius.getInMailList" name="getInMailEventList" bindingOperationName="getInMailEventList" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional">
+        <con:operation id="705e3676-3573-4ed4-9e67-634f00af4de1" isOneWay="false" action="http://laurentius.si.getInMailList" name="getInMailEventList" bindingOperationName="getInMailEventList" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional">
             <con:settings/>
             <con:call id="c0f7d699-9dc8-4fe8-b10d-82933bbcb5b0" name="simple-request">
                 <con:settings>
@@ -2679,7 +2679,7 @@ NEE5QTg5MDlCNTEwRkNDQjJCPl0+Pg0Kc3RhcnR4cmVmDQoxMTYNCiUlRU9GDQo=</pay:OutPart>
                 </con:settings>
                 <con:encoding>UTF-8</con:encoding>
                 <con:endpoint>http://localhost:8080/Laurentius-ws/mailbox</con:endpoint>
-                <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ebms="http://si.laurentius">
+                <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ebms="http://laurentius.si">
    <soapenv:Header/>
    <soapenv:Body>
       <ebms:InMailEventListRequest>
@@ -2694,11 +2694,11 @@ NEE5QTg5MDlCNTEwRkNDQjJCPl0+Pg0Kc3RhcnR4cmVmDQoxMTYNCiUlRU9GDQo=</pay:OutPart>
                 </con:credentials>
                 <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
                 <con:jmsPropertyConfig/>
-                <con:wsaConfig mustUnderstand="NONE" version="200508" action="http://si.laurentius.getInMailList"/>
+                <con:wsaConfig mustUnderstand="NONE" version="200508" action="http://laurentius.si.getInMailList"/>
                 <con:wsrmConfig version="1.2"/>
             </con:call>
         </con:operation>
-        <con:operation id="abfa76bc-7af4-4805-b49a-f0d864f2e064" isOneWay="false" action="http://si.laurentius.getInMailList" name="getOutMailEventList" bindingOperationName="getOutMailEventList" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional">
+        <con:operation id="abfa76bc-7af4-4805-b49a-f0d864f2e064" isOneWay="false" action="http://laurentius.si.getInMailList" name="getOutMailEventList" bindingOperationName="getOutMailEventList" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional">
             <con:settings/>
             <con:call id="3d000350-b97c-405f-af18-025701a3c8f6" name="simple-request">
                 <con:settings>
@@ -2706,7 +2706,7 @@ NEE5QTg5MDlCNTEwRkNDQjJCPl0+Pg0Kc3RhcnR4cmVmDQoxMTYNCiUlRU9GDQo=</pay:OutPart>
                 </con:settings>
                 <con:encoding>UTF-8</con:encoding>
                 <con:endpoint>http://localhost:8080/Laurentius-ws/mailbox</con:endpoint>
-                <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ebms="http://si.laurentius">
+                <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ebms="http://laurentius.si">
    <soapenv:Header/>
    <soapenv:Body>
       <ebms:OutMailEventListRequest>
@@ -2720,11 +2720,11 @@ NEE5QTg5MDlCNTEwRkNDQjJCPl0+Pg0Kc3RhcnR4cmVmDQoxMTYNCiUlRU9GDQo=</pay:OutPart>
                 </con:credentials>
                 <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
                 <con:jmsPropertyConfig/>
-                <con:wsaConfig mustUnderstand="NONE" version="200508" action="http://si.laurentius.getInMailList"/>
+                <con:wsaConfig mustUnderstand="NONE" version="200508" action="http://laurentius.si.getInMailList"/>
                 <con:wsrmConfig version="1.2"/>
             </con:call>
         </con:operation>
-        <con:operation id="375b1aaf-461b-4048-84fe-fb5e7b456ae0" isOneWay="false" action="http://si.laurentius.getInMailList" name="modifyInMail" bindingOperationName="modifyInMail" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional">
+        <con:operation id="375b1aaf-461b-4048-84fe-fb5e7b456ae0" isOneWay="false" action="http://laurentius.si.getInMailList" name="modifyInMail" bindingOperationName="modifyInMail" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional">
             <con:settings/>
             <con:call id="35021448-907e-4b0f-880c-21e7215a6c52" name="simple-request">
                 <con:settings>
@@ -2732,7 +2732,7 @@ NEE5QTg5MDlCNTEwRkNDQjJCPl0+Pg0Kc3RhcnR4cmVmDQoxMTYNCiUlRU9GDQo=</pay:OutPart>
                 </con:settings>
                 <con:encoding>UTF-8</con:encoding>
                 <con:endpoint>http://localhost:8080/Laurentius-ws/mailbox</con:endpoint>
-                <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ebms="http://si.laurentius">
+                <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ebms="http://laurentius.si">
    <soapenv:Header/>
    <soapenv:Body>
       <ebms:ModifyInMailRequest>
@@ -2746,11 +2746,11 @@ NEE5QTg5MDlCNTEwRkNDQjJCPl0+Pg0Kc3RhcnR4cmVmDQoxMTYNCiUlRU9GDQo=</pay:OutPart>
                 </con:credentials>
                 <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
                 <con:jmsPropertyConfig/>
-                <con:wsaConfig mustUnderstand="NONE" version="200508" action="http://si.laurentius.getInMailList"/>
+                <con:wsaConfig mustUnderstand="NONE" version="200508" action="http://laurentius.si.getInMailList"/>
                 <con:wsrmConfig version="1.2"/>
             </con:call>
         </con:operation>
-        <con:operation id="37ff081a-fc3f-49c8-9e7b-25c24e8463cc" isOneWay="false" action="http://si.laurentius.getInMailList" name="getInMail" bindingOperationName="getInMail" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional">
+        <con:operation id="37ff081a-fc3f-49c8-9e7b-25c24e8463cc" isOneWay="false" action="http://laurentius.si.getInMailList" name="getInMail" bindingOperationName="getInMail" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional">
             <con:settings/>
             <con:call id="9ec3efb1-f772-4af8-9da3-dea032c4d3c2" name="simple-request">
                 <con:settings>
@@ -2758,7 +2758,7 @@ NEE5QTg5MDlCNTEwRkNDQjJCPl0+Pg0Kc3RhcnR4cmVmDQoxMTYNCiUlRU9GDQo=</pay:OutPart>
                 </con:settings>
                 <con:encoding>UTF-8</con:encoding>
                 <con:endpoint>http://localhost:8080/Laurentius-ws/mailbox</con:endpoint>
-                <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ebms="http://si.laurentius">
+                <con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ebms="http://laurentius.si">
    <soapenv:Header/>
    <soapenv:Body>
       <ebms:GetInMailRequest>
@@ -2772,7 +2772,7 @@ NEE5QTg5MDlCNTEwRkNDQjJCPl0+Pg0Kc3RhcnR4cmVmDQoxMTYNCiUlRU9GDQo=</pay:OutPart>
                 </con:credentials>
                 <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
                 <con:jmsPropertyConfig/>
-                <con:wsaConfig mustUnderstand="NONE" version="200508" action="http://si.laurentius.getInMailList"/>
+                <con:wsaConfig mustUnderstand="NONE" version="200508" action="http://laurentius.si.getInMailList"/>
                 <con:wsrmConfig version="1.2"/>
             </con:call>
         </con:operation>

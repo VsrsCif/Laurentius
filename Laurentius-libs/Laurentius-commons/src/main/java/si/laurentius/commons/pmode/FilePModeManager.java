@@ -51,6 +51,18 @@ import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.Utils;
 import static si.laurentius.commons.utils.xml.XMLUtils.deserialize;
 import static si.laurentius.commons.utils.xml.XMLUtils.serialize;
+import static java.lang.String.format;
+import static java.lang.System.getProperty;
+import static si.laurentius.commons.utils.xml.XMLUtils.deserialize;
+import static si.laurentius.commons.utils.xml.XMLUtils.serialize;
+import static java.lang.String.format;
+import static java.lang.System.getProperty;
+import static si.laurentius.commons.utils.xml.XMLUtils.deserialize;
+import static si.laurentius.commons.utils.xml.XMLUtils.serialize;
+import static java.lang.String.format;
+import static java.lang.System.getProperty;
+import static si.laurentius.commons.utils.xml.XMLUtils.deserialize;
+import static si.laurentius.commons.utils.xml.XMLUtils.serialize;
 
 /**
  *
@@ -272,7 +284,7 @@ public class FilePModeManager implements PModeInterface {
     for (PMode pm : getPModeList()) {
       // check if service match
       if (pm.getServiceIdRef() == null ||
-          !Objects.equals(pm.getServiceIdRef().getValue(), serviceId)) {
+          !Objects.equals(pm.getServiceIdRef(), serviceId)) {
         continue;
       }
       // check if local party match as receiver
@@ -334,7 +346,7 @@ public class FilePModeManager implements PModeInterface {
     for (PMode pm : getPModeList()) {
       // check if service match
       if (pm.getServiceIdRef() == null ||
-          !Objects.equals(pm.getServiceIdRef().getValue(), serviceId)) {
+          !Objects.equals(pm.getServiceIdRef(), serviceId)) {
         continue;
       }
       // check if local party match

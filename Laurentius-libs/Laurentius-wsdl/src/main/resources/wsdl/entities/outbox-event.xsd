@@ -25,8 +25,8 @@ Copyright 2015, Supreme Court Republic of Slovenia
  limitations under the Licence.
 -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           xmlns:ns1="http://si.laurentius.outbox/event" 
-           targetNamespace="http://si.laurentius.outbox/event" 
+           xmlns:ns1="http://outbox.laurentius.si/event" 
+           targetNamespace="http://outbox.laurentius.si/event" 
            elementFormDefault="qualified" attributeFormDefault="unqualified">
     <xs:element name="OutEvent" type="ns1:OutEvent"/>
     <xs:complexType name="OutEvent">

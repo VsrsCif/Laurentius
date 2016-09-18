@@ -23,7 +23,7 @@ import si.laurentius.msh.web.gui.UserSessionData;
 
 /**
  *
- * @author sluzba
+ * @author Jože Rihtaršič
  * @param <T>
  */
 public abstract class AbstractMailDataModel<T> extends LazyDataModel<T> {

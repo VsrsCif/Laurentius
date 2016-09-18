@@ -20,8 +20,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
+import java.util.zip.ZipException;
 
 /**
  *
@@ -31,11 +34,13 @@ public class GZIPUtil {
 
   /**
    * Compress source file to target file with GZIP
-   * @param srcFn - source file 
+   *
+   * @param srcFn - source file
    * @param trgFn - target zipped file
    * @throws IOException - error reading source file or writing target file
    */
-  public void compressGZIP(final File srcFn, final File trgFn) throws IOException {
+  public void compressGZIP(final File srcFn, final File trgFn)
+      throws IOException {
 
     try (FileInputStream fis = new FileInputStream(srcFn);
         GZIPOutputStream gos = new GZIPOutputStream(new FileOutputStream(trgFn))) {
@@ -44,29 +49,33 @@ public class GZIPUtil {
 
   }
 
-   /**
+  /**
    * Compress input source to target gzip stream. Streams are not closed!
-   * @param src - source file 
+   *
+   * @param src - source file
    * @param trg - target gzip stream
    * @throws IOException - error reading source file or writing target file
    */
-  public void compressGZIP(final InputStream src, final GZIPOutputStream trg) throws IOException {
-    
+  public void compressGZIP(final InputStream src, final GZIPOutputStream trg)
+      throws IOException {
+
     final byte[] buffer = new byte[1024];
     int i;
     while ((i = src.read(buffer)) > 0) {
       trg.write(buffer, 0, i);
     }
-    trg.finish();    
+    trg.finish();
   }
 
   /**
    * Decompress source gzip file to target file. Streams are not closed.
-   * @param srcFn - zipped file 
-   * @param trgFn - target unziped  file
+   *
+   * @param srcFn - zipped file
+   * @param trgFn - target unziped file
    * @throws IOException - error reading source file or writing target file
    */
-  public void decompressGZIP(final File srcFn, final File trgFn) throws IOException {
+  public void decompressGZIP(final File srcFn, final File trgFn)
+      throws IOException {
 
     try (GZIPInputStream gis = new GZIPInputStream(new FileInputStream(srcFn));
         FileOutputStream fos = new FileOutputStream(trgFn)) {
@@ -74,13 +83,16 @@ public class GZIPUtil {
     }
 
   }
+
   /**
-   * Decompress source gzip file to target file. Streams are not closed. 
-   * @param is - compresset inputstream 
-   * @param trgFn - target unziped  file
+   * Decompress source gzip file to target file. Streams are not closed.
+   *
+   * @param is - compresset inputstream
+   * @param trgFn - target unziped file
    * @throws IOException - error reading source file or writing target file
    */
-  public void decompressGZIP(final InputStream is, final File trgFn) throws IOException {
+  public void decompressGZIP(final InputStream is, final File trgFn)
+      throws IOException {
 
     try (GZIPInputStream gis = new GZIPInputStream(is);
         FileOutputStream fos = new FileOutputStream(trgFn)) {
@@ -89,14 +101,35 @@ public class GZIPUtil {
 
   }
 
-  private void decompressGZIP(final GZIPInputStream gis, final OutputStream os) throws IOException {
+  private void decompressGZIP(final GZIPInputStream gis, final OutputStream os)
+      throws IOException {
 
     final byte[] buffer = new byte[1024];
-    int i;
+    int i  = 0;
+
+    // decompress to buffer other bytes
     while ((i = gis.read(buffer)) > 0) {
       os.write(buffer, 0, i);
     }
     os.flush();
+    gis.close();
+    os.close();
   }
+  
+  public static void main(String ... args){
+    //File srcFn = new File("/sluzba/data/laurentius-home/storage/2016/09/16/001/out445897291175043066..txt6282629919746861098.gzip");
+    File srcFn = new File("/sluzba/data/laurentius-home/storage/2016/09/16/001/IN_4579432441949220668.txt");
+    
+    File trgFn = new File("unzip2.txt");
+    GZIPUtil gzip = new GZIPUtil();
+    try {
+      gzip.decompressGZIP(srcFn, trgFn);
+    } catch (IOException ex) {
+      ex.printStackTrace();
+    }
+        
+  }
+
+  
 
 }

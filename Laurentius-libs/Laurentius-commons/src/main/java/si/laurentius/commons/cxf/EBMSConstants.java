@@ -6,7 +6,7 @@ package si.laurentius.commons.cxf;
 
 /**
  *
- * @author sluzba
+ * @author Jože Rihtaršič
  */
 public class EBMSConstants {
 
@@ -46,6 +46,12 @@ public class EBMSConstants {
    *
    */
   public static final String EBMS_CP_IN_LOG_SOAP_MESSAGE_FILE = "sed.ebms.cp.incoming.soap.message.file";
+  
+  
+  /**
+   *
+   */
+  public static final String EBMS_SIGNAL_ELEMENTS = "SIGNAL_ELEMENTS";
 
   /**
    *

@@ -37,7 +37,7 @@ import si.laurentius.commons.utils.xml.SchemaErrorHandler;
 
 /**
  *
- * @author sluzba
+ * @author Jože Rihtaršič
  */
 public class XMLSignatureUtilsTest {
 

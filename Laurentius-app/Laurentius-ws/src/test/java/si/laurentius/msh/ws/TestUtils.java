@@ -22,7 +22,7 @@ import si.laurentius.commons.SEDValues;
 
 /**
  *
- * @author sluzba
+ * @author Jože Rihtaršič
  */
 public class TestUtils {
 

@@ -353,6 +353,9 @@ public abstract class AbstractEBMSInterceptor extends AbstractSoapInterceptor {
     }
 
     if (outProps != null) {
+      for (String key : outProps.keySet()) {
+        LOG.formatedlog("Security KEY: %s, val: %s", key, outProps.get(key));
+      };
 
       sec = new WSS4JInInterceptor(outProps);
     } else {

@@ -46,7 +46,7 @@ import si.laurentius.commons.utils.xml.XMLUtils;
 
 /**
  *
- * @author sluzba
+ * @author Jože Rihtaršič
  */
 @Stateless
 @Local(TaskExecutionInterface.class)

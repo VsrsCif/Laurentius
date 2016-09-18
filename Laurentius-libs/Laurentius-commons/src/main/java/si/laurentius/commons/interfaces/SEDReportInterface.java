@@ -19,7 +19,7 @@ import si.laurentius.report.SEDReportBoxStatus;
 
 /**
  *
- * @author sluzba
+ * @author Jože Rihtaršič
  */
 @Local
 public interface SEDReportInterface {

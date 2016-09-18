@@ -19,7 +19,7 @@ import javax.ejb.Local;
 
 /**
  *
- * @author sluzba
+ * @author Jože Rihtaršič
  */
 @Local
 public interface PluginDescriptionInterface {
@@ -40,13 +40,39 @@ public interface PluginDescriptionInterface {
    *
    * @return
    */
-  String getJNDIOutInterceptor();
+  List<String> getJNDIOutInterceptors();
 
   /**
    *
    * @return
    */
-  String getJNDIInInterceptor();
+  List<String> getJNDIInInterceptors();
+  
+  
+  /**
+   *
+   * @return
+   */
+  List<String> getJNDIOutFaultInterceptors();
+
+  /**
+   *
+   * @return
+   */
+  List<String> getJNDIInFaultInterceptors();
+  
+    
+  /**
+   *
+   * @return
+   */
+  List<String> getJNDIOutEventInterceptors();
+
+  /**
+   *
+   * @return
+   */
+  List<String> getJNDIInEventInterceptors();
 
   /**
    *

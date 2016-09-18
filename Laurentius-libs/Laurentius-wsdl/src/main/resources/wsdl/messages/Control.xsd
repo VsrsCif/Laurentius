@@ -24,7 +24,7 @@ Copyright 2015, Supreme Court Republic of Slovenia
  See the Licence for the specific language governing permissions and  
  limitations under the Licence.
 -->
-<xs:schema xmlns:scc="http://si.laurentius.Control" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://si.laurentius.Control">
+<xs:schema xmlns:scc="http://control.laurentius.si" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://control.laurentius.si">
     <xs:complexType name="Control">
 	
         <xs:attribute name="userId" use="required">

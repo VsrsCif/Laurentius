@@ -32,7 +32,7 @@ import si.laurentius.commons.interfaces.JMSManagerInterface;
 
 /**
  *
- * @author sluzba
+ * @author Jože Rihtaršič
  */
 @Stateless
 @Local(JMSManagerInterface.class)

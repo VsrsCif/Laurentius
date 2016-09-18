@@ -10,7 +10,7 @@ import java.util.List;
 
 /**
  *
- * @author sluzba
+ * @author Jože Rihtaršič
  */
 public class OutMailTableFilter {
 

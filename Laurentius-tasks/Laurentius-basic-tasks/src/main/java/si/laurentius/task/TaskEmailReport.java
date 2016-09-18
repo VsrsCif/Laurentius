@@ -24,7 +24,7 @@ import si.laurentius.commons.utils.SEDLogger;
 
 /**
  *
- * @author sluzba
+ * @author Jože Rihtaršič
  */
 public abstract class TaskEmailReport implements TaskExecutionInterface {
 

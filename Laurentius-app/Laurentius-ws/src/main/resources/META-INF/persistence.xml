@@ -14,12 +14,12 @@
     <persistence-unit name="ebMS_MSH_PU">
         <provider>org.hibernate.ejb.HibernatePersistence</provider>
         <jta-data-source>java:/dsEBMS_SED</jta-data-source>
-        <mapping-file>shared/hbm/msh-in-event.hbm.xml</mapping-file>
+        <!-- mapping-file>shared/hbm/msh-in-event.hbm.xml</mapping-file>
         <mapping-file>shared/hbm/msh-in-mail.hbm.xml</mapping-file>
         <mapping-file>shared/hbm/msh-in-payload.hbm.xml</mapping-file>
         <mapping-file>shared/hbm/msh-out-event.hbm.xml</mapping-file>
         <mapping-file>shared/hbm/msh-out-mail.hbm.xml</mapping-file>
-        <mapping-file>shared/hbm/msh-out-payload.hbm.xml</mapping-file>
+        <mapping-file>shared/hbm/msh-out-payload.hbm.xml</mapping-file -->
         <mapping-file>shared/hbm/sed-property.hbm.xml</mapping-file>
         <mapping-file>shared/hbm/sed-cert-store.hbm.xml</mapping-file>
         <mapping-file>shared/hbm/sed-box.hbm.xml</mapping-file>

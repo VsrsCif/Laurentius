@@ -25,7 +25,7 @@ import static org.junit.Assert.assertTrue;
 
 /**
  *
- * @author sluzba
+ * @author Jože Rihtaršič
  */
 public class XAdESignatureBuilderTest {
   TestUtils mtuUtils = new TestUtils();

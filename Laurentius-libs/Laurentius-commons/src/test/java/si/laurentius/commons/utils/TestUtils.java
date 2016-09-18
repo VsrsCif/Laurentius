@@ -9,6 +9,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.security.Key;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -21,7 +23,7 @@ import si.laurentius.commons.utils.sec.KeystoreUtils;
 
 /**
  *
- * @author sluzba
+ * @author Jože Rihtaršič
  */
 public class TestUtils {
 
@@ -37,17 +39,25 @@ public class TestUtils {
 
   protected File createFile(String data)
       throws IOException {
+
+    return createFile(data.getBytes("UTF-8"));
+  }
+
+  protected File createFile(byte[] data)
+      throws IOException {
     File f = File.createTempFile("hu-test", ".bin");
 
     try (final FileOutputStream fos = new FileOutputStream(f)) {
-      if (data != null) {
-        fos.write(data.getBytes("UTF-8"));
-      } else {
-        fos.write("Test data".getBytes("UTF-8"));
-      }
+      fos.write(data);
     }
 
     return f;
+  }
+
+  static public String readFileToString(File f, String charset)
+      throws IOException {
+    byte[] encoded = Files.readAllBytes(f.toPath());
+    return new String(encoded, charset);
   }
 
   protected File createFile(File parent, String content)
@@ -86,14 +96,16 @@ public class TestUtils {
     // sign key cert
     return cu.getTrustedCertForAlias(ks, SIGN_KEY_ALIAS);
   }
+
   public KeyStore.PrivateKeyEntry getTestPrivateKey()
-            
-      throws SEDSecurityException, KeyStoreException, NoSuchAlgorithmException, UnrecoverableKeyException {
+
+      throws SEDSecurityException, KeyStoreException, NoSuchAlgorithmException,
+      UnrecoverableKeyException {
     KeystoreUtils cu = new KeystoreUtils();
     KeyStore ks =
         cu.getKeystore(TestUtils.class.getResourceAsStream(KEYSTORE), KEYSTORE_TYPE,
             KEYSTORE_PASSWORD.toCharArray());
-     return  cu.getPrivateKeyEntryForAlias(ks, SIGN_KEY_ALIAS, KEY_PASSWORD);
+    return cu.getPrivateKeyEntryForAlias(ks, SIGN_KEY_ALIAS, KEY_PASSWORD);
 
   }
 

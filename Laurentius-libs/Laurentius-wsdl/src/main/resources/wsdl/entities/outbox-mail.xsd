@@ -25,13 +25,13 @@ Copyright 2015, Supreme Court Republic of Slovenia
  limitations under the Licence.
 -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
-           xmlns:ns1="http://si.laurentius.outbox/mail" 
-           xmlns:ns2="http://si.laurentius.outbox/payload" 
-           xmlns:ns3="http://si.laurentius.outbox/property"
-           targetNamespace="http://si.laurentius.outbox/mail"
+           xmlns:ns1="http://outbox.laurentius.si/mail" 
+           xmlns:ns2="http://outbox.laurentius.si/payload" 
+           xmlns:ns3="http://outbox.laurentius.si/property"
+           targetNamespace="http://outbox.laurentius.si/mail"
            elementFormDefault="qualified" attributeFormDefault="unqualified">
-    <xs:import namespace="http://si.laurentius.outbox/property" schemaLocation="./outbox-property.xsd"/>
-    <xs:import namespace="http://si.laurentius.outbox/payload" schemaLocation="./outbox-payload.xsd"/>	
+    <xs:import namespace="http://outbox.laurentius.si/property" schemaLocation="./outbox-property.xsd"/>
+    <xs:import namespace="http://outbox.laurentius.si/payload" schemaLocation="./outbox-payload.xsd"/>	
     <xs:element name="OutMail" type="ns1:OutMailType" />
 		
     <xs:complexType name="OutMailType">
@@ -52,6 +52,18 @@ Copyright 2015, Supreme Court Republic of Slovenia
             <xs:annotation>
                 <xs:documentation xml:lang="sl">Enolična oznaka pošiljke SED. Številko določa bazna sekvenca ob zapisu v bazo</xs:documentation>
             </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="refToMessageId" use="optional">
+            <xs:annotation>
+                <xs:documentation xml:lang="sl">Referenca na messageId dohodne pošiljke. Vrednost atributa je enaka
+                    Messaging/MessageInfo/RefToMessageId v ebMS headerju izhodnega sporočila. 
+                </xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:maxLength value="64"/>
+                </xs:restriction>
+            </xs:simpleType>
         </xs:attribute>
         <xs:attribute name="messageId" use="optional">
             <xs:annotation>

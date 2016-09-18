@@ -12,7 +12,7 @@ import si.laurentius.commons.interfaces.PluginDescriptionInterface;
 
 /**
  *
- * @author sluzba
+ * @author Jože Rihtaršič
  */
 @Stateless
 @Local(PluginDescriptionInterface.class)
@@ -27,23 +27,39 @@ public class ZPPPluginDescription implements PluginDescriptionInterface {
     return "ZPP - e-delivery: SVEV 2.0 service implementation";
   }
 
-  /**
-   *
-   * @return
-   */
-  @Override
-  public String getJNDIInInterceptor() {
-    return "java:global/plugin-zpp/ZPPOutInterceptor!si.laurentius.commons.interfaces.SoapInterceptorInterface";
-  }
+    @Override
+    public List<String> getJNDIInEventInterceptors() {
+      throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
-  /**
-   *
-   * @return
-   */
-  @Override
-  public String getJNDIOutInterceptor() {
-    return "java:global/plugin-zpp/ZPPOutInterceptor!si.laurentius.commons.interfaces.SoapInterceptorInterface";
-  }
+    @Override
+    public List<String> getJNDIInFaultInterceptors() {
+      return Collections.emptyList();
+    }
+
+
+
+    @Override
+    public List<String> getJNDIInInterceptors() {
+      return Collections.singletonList("java:global/plugin-zpp/ZPPOutInterceptor!si.laurentius.commons.interfaces.SoapInterceptorInterface");
+    }
+
+    @Override
+    public List<String> getJNDIOutEventInterceptors() {
+      return Collections.emptyList();
+    }
+
+    @Override
+    public List<String> getJNDIOutFaultInterceptors() {
+      return Collections.emptyList();
+    }
+
+
+
+    @Override
+    public List<String> getJNDIOutInterceptors() {
+      return Collections.singletonList("java:global/plugin-zpp/ZPPOutInterceptor!si.laurentius.commons.interfaces.SoapInterceptorInterface");
+    }
 
   /**
    *

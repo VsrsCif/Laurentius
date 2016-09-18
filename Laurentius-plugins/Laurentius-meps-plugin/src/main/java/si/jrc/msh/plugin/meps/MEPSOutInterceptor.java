@@ -13,7 +13,7 @@ import si.laurentius.commons.interfaces.SoapInterceptorInterface;
 
 /**
  *
- * @author sluzba
+ * @author Jože Rihtaršič
  */
 @Stateless
 @Local(SoapInterceptorInterface.class)

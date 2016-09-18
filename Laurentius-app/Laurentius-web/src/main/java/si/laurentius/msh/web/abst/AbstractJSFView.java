@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  *
- * @author sluzba
+ * @author Jože Rihtaršič
  */
 public class AbstractJSFView {
 

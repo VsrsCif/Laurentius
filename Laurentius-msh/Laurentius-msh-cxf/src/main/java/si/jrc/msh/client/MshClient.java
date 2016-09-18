@@ -54,7 +54,9 @@ import si.jrc.msh.interceptor.EBMSLogInInterceptor;
 import si.jrc.msh.interceptor.EBMSLogOutInterceptor;
 import si.jrc.msh.interceptor.EBMSOutFaultInterceptor;
 import si.jrc.msh.interceptor.EBMSOutInterceptor;
+import si.jrc.msh.interceptor.MSHPluginInFaultInterceptor;
 import si.jrc.msh.interceptor.MSHPluginInInterceptor;
+import si.jrc.msh.interceptor.MSHPluginOutFaultInterceptor;
 import si.jrc.msh.interceptor.MSHPluginOutInterceptor;
 import si.laurentius.commons.MimeValues;
 import si.laurentius.commons.SEDJNDI;
@@ -146,8 +148,12 @@ public class MshClient {
     cxfClient.getOutInterceptors().add(new EBMSOutInterceptor());
     cxfClient.getOutInterceptors().add(new EBMSLogOutInterceptor());
     
+    cxfClient.getInFaultInterceptors().add(new EBMSLogInInterceptor());
     cxfClient.getInFaultInterceptors().add(new EBMSInFaultInterceptor());
+    cxfClient.getInFaultInterceptors().add(new MSHPluginInFaultInterceptor());
+    cxfClient.getOutFaultInterceptors().add(new EBMSLogOutInterceptor());
     cxfClient.getOutFaultInterceptors().add(new EBMSOutFaultInterceptor());
+    cxfClient.getOutFaultInterceptors().add(new MSHPluginOutFaultInterceptor());
 
     HTTPConduit http = (HTTPConduit) cxfClient.getConduit();
     // --------------------------------------------------------------------

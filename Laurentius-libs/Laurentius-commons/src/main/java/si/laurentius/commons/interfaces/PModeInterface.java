@@ -28,7 +28,7 @@ import si.laurentius.commons.pmode.EBMSMessageContext;
 
 /**
  *
- * @author sluzba
+ * @author Jože Rihtaršič
  */
 @Local
 public interface PModeInterface {

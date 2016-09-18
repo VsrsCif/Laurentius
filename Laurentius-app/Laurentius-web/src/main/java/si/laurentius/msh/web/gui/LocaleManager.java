@@ -12,7 +12,7 @@ import javax.faces.context.FacesContext;
 
 /**
  *
- * @author sluzba
+ * @author Jože Rihtaršič
  */
 @ManagedBean
 @SessionScoped

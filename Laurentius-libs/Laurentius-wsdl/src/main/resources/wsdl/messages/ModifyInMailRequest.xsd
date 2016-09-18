@@ -26,10 +26,10 @@ Copyright 2015, Supreme Court Republic of Slovenia
  limitations under the Licence.
 -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           xmlns="http://si.laurentius" 
-           xmlns:con="http://si.laurentius.Control" 
-           targetNamespace="http://si.laurentius">
-    <xs:import namespace="http://si.laurentius.Control" schemaLocation="./Control.xsd"/>
+           xmlns="http://laurentius.si" 
+           xmlns:con="http://control.laurentius.si" 
+           targetNamespace="http://laurentius.si">
+    <xs:import namespace="http://control.laurentius.si" schemaLocation="./Control.xsd"/>
     <xs:element name="ModifyInMailRequest">
         <xs:complexType>
             <xs:annotation>

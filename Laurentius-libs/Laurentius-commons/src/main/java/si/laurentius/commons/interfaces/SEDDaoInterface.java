@@ -26,7 +26,7 @@ import si.laurentius.commons.exception.StorageException;
 
 /**
  *
- * @author sluzba
+ * @author Jože Rihtaršič
  */
 @Local
 public interface SEDDaoInterface {
@@ -71,6 +71,16 @@ public interface SEDDaoInterface {
    * @return
    */
   <T> T getMailById(Class<T> type, BigInteger mailId);
+  
+  
+    /**
+   *
+   * @param <T>
+   * @param type
+   * @param mailId
+   * @return
+   */
+  <T> T getMailByMessageId(Class<T> type, String mailId);
 
   /**
    *

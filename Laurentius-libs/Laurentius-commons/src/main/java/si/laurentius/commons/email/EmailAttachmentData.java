@@ -8,7 +8,7 @@ import java.io.File;
 
 /**
  *
- * @author sluzba
+ * @author Jože Rihtaršič
  */
 public class EmailAttachmentData {
 

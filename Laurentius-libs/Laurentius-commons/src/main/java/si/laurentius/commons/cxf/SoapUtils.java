@@ -16,9 +16,11 @@ package si.laurentius.commons.cxf;
 
 import java.io.File;
 import java.net.URI;
+import java.util.List;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 import org.apache.cxf.message.Message;
+import org.w3c.dom.Element;
 import si.laurentius.msh.inbox.mail.MSHInMail;
 import si.laurentius.msh.outbox.mail.MSHOutMail;
 import si.laurentius.ebox.SEDBox;
@@ -75,10 +77,20 @@ public class SoapUtils {
   public static void setMSHInMailReceiverBox(SEDBox imail, Message message) {
     message.getExchange().put(EBMSConstants.EBMS_CP_INMAIL_RECEIVER, imail);
   }
-
-  public static EBMSMessageContext getEBMSMessageOutContext(Message message) {
+  
+   public static void setInSignals(List<Element> lst, Message message) {
+    message.getExchange().put(EBMSConstants.EBMS_SIGNAL_ELEMENTS, lst);
+  }
+  
+  
+  public static List<Element> getInSignals(Message message) {
+    return (List<Element> ) message.getExchange().get(EBMSConstants.EBMS_SIGNAL_ELEMENTS);
+  }
+  
+ public static EBMSMessageContext getEBMSMessageOutContext(Message message) {
     return (EBMSMessageContext) message.getExchange().get(EBMSConstants.EBMS_CP_OUT_CONTEXT);
   }
+  
   
   public static EBMSMessageContext getEBMSMessageInContext(Message message) {
     return (EBMSMessageContext) message.getExchange().get(EBMSConstants.EBMS_CP_IN_CONTEXT);

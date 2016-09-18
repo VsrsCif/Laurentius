@@ -65,6 +65,7 @@ import si.jrc.msh.exception.EBMSError;
 import si.jrc.msh.exception.EBMSErrorCode;
 import si.laurentius.commons.MimeValues;
 import si.laurentius.commons.PModeConstants;
+import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.pmode.EBMSMessageContext;
 
 import si.laurentius.commons.utils.SEDLogger;
@@ -91,11 +92,11 @@ public class EBMSBuilder {
    * @param timestamp
    * @return
    */
-  public static SignalMessage createErrorSignal(EBMSError ebError, String senderDomain,
+  public static SignalMessage createErrorSignal(EBMSError ebError, 
       Date timestamp) {
     SignalMessage sigMsg = new SignalMessage();
     // generate MessageInfo
-    sigMsg.setMessageInfo(createMessageInfo(senderDomain, ebError.getRefToMessage(), timestamp));
+    sigMsg.setMessageInfo(createMessageInfo(SEDSystemProperties.getLocalDomain(), ebError.getRefToMessage(), timestamp));
 
     
     Error er = new Error();
@@ -229,7 +230,9 @@ public class EBMSBuilder {
     // --------------------------------------
     // generate MessageInfo
     MessageInfo mi =
-        createMessageInfo(mo.getMessageId(), pisSender.getDomain(), mo.getRefToMessageId(),
+        createMessageInfo(mo.getMessageId(), 
+            SEDSystemProperties.getLocalDomain(), 
+            mo.getRefToMessageId(),
             timestamp);
     usgMsg.setMessageInfo(mi);
 
@@ -307,6 +310,7 @@ public class EBMSBuilder {
     if (mo.getMSHOutPayload() != null && mo.getMSHOutPayload().getMSHOutParts() != null) {
       for (MSHOutPart mp : mo.getMSHOutPayload().getMSHOutParts()) {
         String attachentId = mp.getEbmsId();
+        
         if (Utils.isEmptyString(attachentId)) {
           LOG.formatedWarning("NULL ID for attachment for out message %s", mo.getMessageId());
         }

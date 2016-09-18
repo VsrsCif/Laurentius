@@ -8,7 +8,7 @@ import java.util.Date;
 
 /**
  *
- * @author sluzba
+ * @author Jože Rihtaršič
  */
 public class SearchParameters {
 

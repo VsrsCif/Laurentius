@@ -112,7 +112,7 @@ import si.laurentius.msh.ws.utils.SEDRequestUtils;
  */
 @Interceptors(JEELogInterceptor.class)
 @WebService(serviceName = "mailbox", portName = "SEDMailBoxWSPort",
-    endpointInterface = "si.laurentius.SEDMailBoxWS", targetNamespace = "http://si.laurentius",
+    endpointInterface = "si.laurentius.SEDMailBoxWS", targetNamespace = "http://laurentius.si",
     wsdlLocation = "WEB-INF/wsdl/mailbox.wsdl")
 public class SEDMailBox implements SEDMailBoxWS {
 
@@ -779,7 +779,7 @@ public class SEDMailBox implements SEDMailBoxWS {
       switch (dt.getAction()) {
         case ABORT:
           if (omail.getStatus().equalsIgnoreCase(SEDOutboxMailStatus.SUBMITTED.getValue()) ||
-              omail.getStatus().equalsIgnoreCase(SEDOutboxMailStatus.EBMSERROR.getValue()) ||
+              omail.getStatus().equalsIgnoreCase(SEDOutboxMailStatus.FAILED.getValue()) ||
               omail.getStatus().equalsIgnoreCase(SEDOutboxMailStatus.ERROR.getValue()) ||
               omail.getStatus().equalsIgnoreCase(SEDOutboxMailStatus.SCHEDULE.getValue())) {
 
@@ -812,8 +812,8 @@ public class SEDMailBox implements SEDMailBoxWS {
           break;
         case DELETE:
           if (omail.getStatus().equalsIgnoreCase(SEDOutboxMailStatus.SUBMITTED.getValue()) ||
-              omail.getStatus().equalsIgnoreCase(SEDOutboxMailStatus.EBMSERROR.getValue()) ||
               omail.getStatus().equalsIgnoreCase(SEDOutboxMailStatus.ERROR.getValue()) ||
+              omail.getStatus().equalsIgnoreCase(SEDOutboxMailStatus.FAILED.getValue()) ||
               omail.getStatus().equalsIgnoreCase(SEDOutboxMailStatus.SCHEDULE.getValue()) ||
               omail.getStatus().equalsIgnoreCase(SEDOutboxMailStatus.CANCELED.getValue())) {
             omail.setStatus(SEDOutboxMailStatus.DELETED.getValue());
@@ -842,7 +842,7 @@ public class SEDMailBox implements SEDMailBoxWS {
           break;
         case RESEND:
           if (omail.getStatus().equalsIgnoreCase(SEDOutboxMailStatus.ERROR.getValue()) ||
-              omail.getStatus().equalsIgnoreCase(SEDOutboxMailStatus.EBMSERROR.getValue()) ||
+              omail.getStatus().equalsIgnoreCase(SEDOutboxMailStatus.FAILED.getValue()) ||
               omail.getStatus().equalsIgnoreCase(SEDOutboxMailStatus.DELETED.getValue()) ||
               omail.getStatus().equalsIgnoreCase(SEDOutboxMailStatus.CANCELED.getValue())) {
 

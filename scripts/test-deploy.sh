@@ -6,7 +6,7 @@ BOUNDLE_TEST="Laurentius-test"
 FOLDER_DEPLOY="test-deploy"
 BOUNDLE_NAME="Laurentius-test"
 
-rm -rf "$BOUNDLE_NAME/$WILDFLY_HOME"
+rm -rf "$FOLDER_DEPLOY/$WILDFLY_HOME"
 unzip -q "$WILDFLY_HOME.zip" -d $FOLDER_DEPLOY
 
 

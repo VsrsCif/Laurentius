@@ -24,8 +24,8 @@ Copyright 2015, Supreme Court Republic of Slovenia
  See the Licence for the specific language governing permissions and  
  limitations under the Licence.
 -->
-<definitions name="mailbox" targetNamespace="http://si.laurentius" 
-             xmlns:tns="http://si.laurentius" 
+<definitions name="mailbox" targetNamespace="http://laurentius.si" 
+             xmlns:tns="http://laurentius.si" 
              xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
              xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
              xmlns="http://schemas.xmlsoap.org/wsdl/" 
@@ -46,23 +46,23 @@ Copyright 2015, Supreme Court Republic of Slovenia
     </documentation>
     <types>
         <xsd:schema>
-            <xsd:import namespace="http://si.laurentius" schemaLocation="exception/sedexception.xsd"/>
-            <xsd:import namespace="http://si.laurentius" schemaLocation="messages/SubmitMailRequest.xsd"/>
-            <xsd:import namespace="http://si.laurentius" schemaLocation="messages/SubmitMailResponse.xsd"/>
-            <xsd:import namespace="http://si.laurentius" schemaLocation="messages/OutMailListRequest.xsd"/>
-            <xsd:import namespace="http://si.laurentius" schemaLocation="messages/OutMailListResponse.xsd"/>
-            <xsd:import namespace="http://si.laurentius" schemaLocation="messages/OutMailEventListRequest.xsd"/>
-            <xsd:import namespace="http://si.laurentius" schemaLocation="messages/OutMailEventListResponse.xsd"/>
-            <xsd:import namespace="http://si.laurentius" schemaLocation="messages/InMailListRequest.xsd"/>
-            <xsd:import namespace="http://si.laurentius" schemaLocation="messages/InMailListResponse.xsd"/>
-            <xsd:import namespace="http://si.laurentius" schemaLocation="messages/ModifyInMailRequest.xsd"/>
-            <xsd:import namespace="http://si.laurentius" schemaLocation="messages/ModifyInMailResponse.xsd"/>
-            <xsd:import namespace="http://si.laurentius" schemaLocation="messages/ModifyOutMailRequest.xsd"/>
-            <xsd:import namespace="http://si.laurentius" schemaLocation="messages/ModifyOutMailResponse.xsd"/>
-            <xsd:import namespace="http://si.laurentius" schemaLocation="messages/InMailEventListRequest.xsd"/>
-            <xsd:import namespace="http://si.laurentius" schemaLocation="messages/InMailEventListResponse.xsd"/>
-            <xsd:import namespace="http://si.laurentius" schemaLocation="messages/GetInMailRequest.xsd"/>
-            <xsd:import namespace="http://si.laurentius" schemaLocation="messages/GetInMailResponse.xsd"/>
+            <xsd:import namespace="http://laurentius.si" schemaLocation="exception/sedexception.xsd"/>
+            <xsd:import namespace="http://laurentius.si" schemaLocation="messages/SubmitMailRequest.xsd"/>
+            <xsd:import namespace="http://laurentius.si" schemaLocation="messages/SubmitMailResponse.xsd"/>
+            <xsd:import namespace="http://laurentius.si" schemaLocation="messages/OutMailListRequest.xsd"/>
+            <xsd:import namespace="http://laurentius.si" schemaLocation="messages/OutMailListResponse.xsd"/>
+            <xsd:import namespace="http://laurentius.si" schemaLocation="messages/OutMailEventListRequest.xsd"/>
+            <xsd:import namespace="http://laurentius.si" schemaLocation="messages/OutMailEventListResponse.xsd"/>
+            <xsd:import namespace="http://laurentius.si" schemaLocation="messages/InMailListRequest.xsd"/>
+            <xsd:import namespace="http://laurentius.si" schemaLocation="messages/InMailListResponse.xsd"/>
+            <xsd:import namespace="http://laurentius.si" schemaLocation="messages/ModifyInMailRequest.xsd"/>
+            <xsd:import namespace="http://laurentius.si" schemaLocation="messages/ModifyInMailResponse.xsd"/>
+            <xsd:import namespace="http://laurentius.si" schemaLocation="messages/ModifyOutMailRequest.xsd"/>
+            <xsd:import namespace="http://laurentius.si" schemaLocation="messages/ModifyOutMailResponse.xsd"/>
+            <xsd:import namespace="http://laurentius.si" schemaLocation="messages/InMailEventListRequest.xsd"/>
+            <xsd:import namespace="http://laurentius.si" schemaLocation="messages/InMailEventListResponse.xsd"/>
+            <xsd:import namespace="http://laurentius.si" schemaLocation="messages/GetInMailRequest.xsd"/>
+            <xsd:import namespace="http://laurentius.si" schemaLocation="messages/GetInMailResponse.xsd"/>
 
         </xsd:schema>
     </types>
@@ -188,7 +188,7 @@ Copyright 2015, Supreme Court Republic of Slovenia
     <binding name="SEDMailBoxPortBinding" type="tns:SEDMailBoxWS">
         <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
         <operation name="submitMail">
-            <soap:operation soapAction="http://si.laurentius.submitMail"/>
+            <soap:operation soapAction="http://laurentius.si.submitMail"/>
             <input>
                 <soap:body use="literal"/>
             </input>
@@ -200,7 +200,7 @@ Copyright 2015, Supreme Court Republic of Slovenia
             </fault>
         </operation>
         <operation name="getOutMailList">
-            <soap:operation soapAction="http://si.laurentius.getOutMailList"/>
+            <soap:operation soapAction="http://laurentius.si.getOutMailList"/>
             <input>
                 <soap:body use="literal"/>
             </input>
@@ -212,7 +212,7 @@ Copyright 2015, Supreme Court Republic of Slovenia
             </fault>
         </operation>
         <operation name="getInMailList">
-            <soap:operation soapAction="http://si.laurentius.getInMailList"/>
+            <soap:operation soapAction="http://laurentius.si.getInMailList"/>
             <input>
                 <soap:body use="literal"/>
             </input>
@@ -224,7 +224,7 @@ Copyright 2015, Supreme Court Republic of Slovenia
             </fault>
         </operation>
         <operation name="getInMailEventList">
-            <soap:operation soapAction="http://si.laurentius.getInMailEventList"/>
+            <soap:operation soapAction="http://laurentius.si.getInMailEventList"/>
             <input>
                 <soap:body use="literal"/>
             </input>
@@ -236,7 +236,7 @@ Copyright 2015, Supreme Court Republic of Slovenia
             </fault>
         </operation>
         <operation name="getOutMailEventList">
-            <soap:operation soapAction="http://si.laurentius.getOutMailEventList"/>
+            <soap:operation soapAction="http://laurentius.si.getOutMailEventList"/>
             <input>
                 <soap:body use="literal"/>
             </input>
@@ -248,7 +248,7 @@ Copyright 2015, Supreme Court Republic of Slovenia
             </fault>
         </operation>
         <operation name="modifyInMail">
-            <soap:operation soapAction="http://si.laurentius.modifyInMail"/>
+            <soap:operation soapAction="http://laurentius.si.modifyInMail"/>
             <input>
                 <soap:body use="literal"/>
             </input>
@@ -260,7 +260,7 @@ Copyright 2015, Supreme Court Republic of Slovenia
             </fault>
         </operation>
         <operation name="modifyOutMail">
-            <soap:operation soapAction="http://si.laurentius.modifyOutMail"/>
+            <soap:operation soapAction="http://laurentius.si.modifyOutMail"/>
             <input>
                 <soap:body use="literal"/>
             </input>
@@ -272,7 +272,7 @@ Copyright 2015, Supreme Court Republic of Slovenia
             </fault>
         </operation>
         <operation name="getInMail">
-            <soap:operation soapAction="http://si.laurentius.getInMail"/>
+            <soap:operation soapAction="http://laurentius.si.getInMail"/>
             <input>
                 <soap:body use="literal"/>
             </input>

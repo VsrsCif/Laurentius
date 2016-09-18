@@ -43,7 +43,7 @@ import javax.xml.crypto.dsig.DigestMethod;
 
 /**
  *
- * @author sluzba
+ * @author Jože Rihtaršič
  */
 public class SiTsaTimeStamp implements XMLTimeStamp {
 

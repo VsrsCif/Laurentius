@@ -19,7 +19,7 @@ import org.apache.log4j.Logger;
 
 /**
  *
- * @author sluzba
+ * @author Jože Rihtaršič
  */
 public class JEELogInterceptor {
 

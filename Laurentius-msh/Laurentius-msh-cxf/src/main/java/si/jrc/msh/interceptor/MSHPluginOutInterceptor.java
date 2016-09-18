@@ -7,10 +7,14 @@ package si.jrc.msh.interceptor;
 import java.util.List;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import org.apache.cxf.binding.soap.SoapFault;
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.binding.soap.interceptor.AbstractSoapInterceptor;
 import org.apache.cxf.interceptor.Fault;
 import org.apache.cxf.phase.Phase;
+import si.jrc.msh.exception.EBMSError;
+import si.jrc.msh.exception.EBMSErrorCode;
+import static si.jrc.msh.interceptor.MSHPluginInInterceptor.LOG;
 import si.laurentius.msh.outbox.mail.MSHOutMail;
 import si.laurentius.msh.pmode.PluginType;
 import si.laurentius.commons.cxf.SoapUtils;
@@ -22,18 +26,18 @@ import si.laurentius.commons.utils.Utils;
 
 /**
  *
- * @author sluzba
+ * @author Jože Rihtaršič
  */
 public class MSHPluginOutInterceptor extends AbstractSoapInterceptor {
 
   /**
-     *
-     */
+   *
+   */
   protected final static SEDLogger LOG = new SEDLogger(MSHPluginOutInterceptor.class);
 
   /**
-     *
-     */
+   *
+   */
   public MSHPluginOutInterceptor() {
     super(Phase.USER_LOGICAL);
   }
@@ -43,30 +47,36 @@ public class MSHPluginOutInterceptor extends AbstractSoapInterceptor {
    * @param msg
    */
   @Override
-  public void handleMessage(SoapMessage msg) throws Fault {
+  public void handleMessage(SoapMessage msg)
+      throws Fault {
     long l = LOG.logStart();
-     EBMSMessageContext ectx = SoapUtils.getEBMSMessageOutContext(msg);
+    EBMSMessageContext ectx = SoapUtils.getEBMSMessageOutContext(msg);
     MSHOutMail outMail = SoapUtils.getMSHOutMail(msg);
-    if (outMail == null){
-      LOG.logWarn("No MSHOutMail object  found to process!", null);
-    } else if (ectx == null){
-      LOG.formatedlog("No EBMSMessageContext context for out mail: '%d'." ,outMail.getId() );
-    } else if (ectx.getPMode().getOutPlugins() != null) {
-      List<PluginType> lst = ectx.getPMode().getOutPlugins().getPlugins();
-      for (PluginType pt : lst) {
-        // todo
-        String str = pt.getValue();
-        if (!Utils.isEmptyString(str)) {
-          try {
-            SoapInterceptorInterface example = InitialContext.doLookup(str);
-            example.handleMessage(msg);
-          } catch (NamingException ex) {
-            LOG.logError(l, ex);
-          }
+
+   if (ectx == null) {
+      LOG.formatedlog("No EBMSMessageContext context for out mail: '%d'.",outMail!=null? outMail.getId(): -1);
+    } else if (ectx.getPMode() != null &&
+         ectx.getPMode().getPlugins() != null &&
+         ectx.getPMode().getPlugins().getOutPlugins() != null &&
+         !ectx.getPMode().getPlugins().getOutPlugins().getPlugins().isEmpty()) {
+
+      List<PluginType> lst = ectx.getPMode().getPlugins().getOutPlugins().getPlugins();
+      lst.stream().map((pt) -> pt.getValue()).filter((str) ->
+          (!Utils.isEmptyString(str))).forEach((str) -> {
+        try {
+          SoapInterceptorInterface example = InitialContext.doLookup(str);
+          example.handleMessage(msg);
+        } catch (NamingException ex) {
+          LOG.logError(l, String.format("SoapInterceptorInterface '%s' not found!", str), ex);
+        } catch (Throwable ex) {
+          String errmsg = String.format(
+              "SoapInterceptorInterface '%s' throws an error with message: %s!", str,
+              ex.getMessage());
+          LOG.logError(l, errmsg, ex);
+          throw new EBMSError(EBMSErrorCode.Other,outMail!=null? outMail.getMessageId(): null,
+              errmsg, ex, SoapFault.FAULT_CODE_CLIENT);
         }
-      }
-    } else {
-      LOG.formatedlog("No plugin interceptor found for mail: '%d' pmode '%s'." ,outMail.getId(), ectx.getPMode().getId() );
+      });
     }
     LOG.logEnd(l);
   }

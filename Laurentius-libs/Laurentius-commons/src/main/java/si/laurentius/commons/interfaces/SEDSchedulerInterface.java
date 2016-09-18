@@ -21,7 +21,7 @@ import javax.ejb.TimerService;
 
 /**
  *
- * @author sluzba
+ * @author Jože Rihtaršič
  */
 @Local
 public interface SEDSchedulerInterface {

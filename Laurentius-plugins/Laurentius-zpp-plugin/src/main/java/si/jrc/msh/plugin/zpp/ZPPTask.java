@@ -52,7 +52,7 @@ import si.laurentius.commons.utils.sec.KeystoreUtils;
 
 /**
  *
- * @author sluzba
+ * @author Jože Rihtaršič
  */
 @Stateless
 @Local(TaskExecutionInterface.class)

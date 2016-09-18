@@ -26,13 +26,13 @@ Copyright 2015, Supreme Court Republic of Slovenia
  limitations under the Licence.
 -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
-           xmlns="http://si.laurentius"
-           xmlns:con="http://si.laurentius.RControl"
-           xmlns:ns1="http://si.laurentius.outbox/mail" 
-           targetNamespace="http://si.laurentius"
+           xmlns="http://laurentius.si"
+           xmlns:con="http://rcontrol.laurentius.si"
+           xmlns:ns1="http://outbox.laurentius.si/mail" 
+           targetNamespace="http://laurentius.si"
 >	
-    <xs:import namespace="http://si.laurentius.RControl" schemaLocation="./RControl.xsd"/>
-    <xs:import namespace="http://si.laurentius.outbox/mail" schemaLocation="../entities/outbox-mail.xsd"/>
+    <xs:import namespace="http://rcontrol.laurentius.si" schemaLocation="./RControl.xsd"/>
+    <xs:import namespace="http://outbox.laurentius.si/mail" schemaLocation="../entities/outbox-mail.xsd"/>
     <xs:element name="OutMailListResponse">
         <xs:complexType>
             <xs:annotation>

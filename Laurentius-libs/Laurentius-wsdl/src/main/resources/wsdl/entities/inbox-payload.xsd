@@ -25,7 +25,7 @@ Copyright 2015, Supreme Court Republic of Slovenia
  See the Licence for the specific language governing permissions and  
  limitations under the Licence.
 -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://si.laurentius.inbox/payload" targetNamespace="http://si.laurentius.inbox/payload" elementFormDefault="qualified" attributeFormDefault="unqualified">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://inbox.laurentius.si/payload" targetNamespace="http://inbox.laurentius.si/payload" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xs:element name="InPayload">
 		<xs:annotation>
 			<xs:documentation>MSH vsebine</xs:documentation>

@@ -329,6 +329,24 @@ public class SEDDaoBean implements SEDDaoInterface {
     LOG.logEnd(l);
     return result;
   }
+  
+   /**
+   *
+   * @param <T>
+   * @param type
+   * @param mailMessageId - ebms nessage id
+   * @return
+   */
+  @Override
+  public <T> T getMailByMessageId(Class<T> type, String mailMessageId) {
+    long l = LOG.logStart(type, mailMessageId);
+    TypedQuery<T> tq = memEManager.createNamedQuery(type.getName() + ".getByMessageId", type);
+    tq.setParameter("messageId", mailMessageId);
+    T result = tq.getSingleResult();
+    LOG.logEnd(l);
+    return result;
+  }
+  
 
   /**
    *
@@ -703,7 +721,8 @@ public class SEDDaoBean implements SEDDaoInterface {
       // persist mail event
       MSHOutEvent me = new MSHOutEvent();
       me.setMailId(mail.getId());
-      me.setDescription(desc == null ? status.getDesc() : desc);
+      me.setDescription(desc == null ? status.getDesc() : 
+          (desc.length()>512?desc.substring(0,508)+"...":desc));
       me.setStatus(mail.getStatus());
       me.setDate(mail.getStatusDate());
       me.setSenderMessageId(mail.getSenderMessageId());

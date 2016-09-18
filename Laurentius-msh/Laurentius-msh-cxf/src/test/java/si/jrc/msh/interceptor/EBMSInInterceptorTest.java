@@ -27,15 +27,13 @@ import si.jrc.msh.test.ResourceFiles;
 import static si.jrc.msh.lmbd.EbmsErrorAssertion.assertFault;
 import si.jrc.msh.test.SEDTestDao;
 import si.jrc.msh.test.SEDTestLookup;
-import si.laurentius.commons.SEDSystemProperties;
 import static si.laurentius.commons.SEDSystemProperties.SYS_PROP_HOME_DIR;
-import si.laurentius.commons.SEDValues;
 import si.laurentius.commons.exception.PModeException;
 import si.laurentius.commons.pmode.FilePModeManager;
 
 /**
  *
- * @author sluzba
+ * @author Jože Rihtaršič
  */
 public class EBMSInInterceptorTest {
 
@@ -224,6 +222,19 @@ logStart();
         .assertEBMSCode(EBMSErrorCode.InvalidHeader)
         .assertSubMessageContainsString(EBMSErrorMessage.INVALID_HEADER_USER_MESSAGE_COUNT);
   }
+  
+    @Test
+  public void testHandleMessage_InvalidPayload_MissingMime() {
+    logStart();
+    // create soap message
+    SoapMessage msg = ResourceFiles.getSoap12Message(ResourceFiles.S_REQUEST_INVALID_PAYLOAD_MISSING_MIME);
+    assertNotNull(msg);
+    //test   
+    assertFault(() -> (mTestInstance).handleMessage(msg))
+        .assertEBMSCode(EBMSErrorCode.DecompressionFailure)
+        .assertSubMessageContainsString("Missing MimeType for compressed payload");
+  }
+  
 
   /**
    * Test exception agreement for null type and bad URI agreement ref

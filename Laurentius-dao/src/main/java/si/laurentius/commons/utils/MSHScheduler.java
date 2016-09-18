@@ -49,7 +49,7 @@ import si.laurentius.commons.interfaces.exception.TaskException;
 
 /**
  *
- * @author sluzba
+ * @author Jože Rihtaršič
  */
 @Singleton
 @Local(SEDSchedulerInterface.class)

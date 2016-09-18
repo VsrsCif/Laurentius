@@ -47,6 +47,7 @@ public class EBMSMessageContext {
   MEPType mpMEPType;
   MEPLegType mMEPLegType;
   Security security;
+  int miReceptionAwarenessRetry;
 
   public MEPLegType getMEPLegType() {
     return mMEPLegType;
@@ -166,6 +167,14 @@ public class EBMSMessageContext {
 
   public void setSecurity(Security security) {
     this.security = security;
+  }
+
+  public int getReceptionAwarenessRetry() {
+    return miReceptionAwarenessRetry;
+  }
+
+  public void setReceptionAwarenessRetry(int miReceptionAwarenessRetry) {
+    this.miReceptionAwarenessRetry = miReceptionAwarenessRetry;
   }
 
 

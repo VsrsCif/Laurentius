@@ -41,14 +41,13 @@
 				</tns:PayloadProfiles>
 			</tns:Action>
 		</tns:Service>
-		
 	</tns:Services>
 	<tns:Parties>
 		<tns:PartyIdentitySet id="test-laurentius" isLocalIdentity="true">
 			<tns:PartyId type="urn:oasis:names:tc:ebcore:partyid-type:unregistered:si-svev:name" valueSource="name"/>
 			<tns:PartyId type="urn:oasis:names:tc:ebcore:partyid-type:unregistered:si-svev:sed-box" valueSource="address"/>
 			<tns:TransportProtocol id="defalut" isTwoWayProtocol="true">
-				<tns:Address connectionTimeout="120000" receiveTimeout="180000" chunked="false">https://localhost:8443/laurentius/msh</tns:Address>
+				<tns:Address connectionTimeout="120000" receiveTimeout="180000" chunked="false">https://127.0.0.1:8443/laurentius/msh</tns:Address>
 				<tns:TLS trustStoreName="def-truststore"/>
 				<tns:SOAPVersion>1.2</tns:SOAPVersion>
 			</tns:TransportProtocol>
@@ -67,7 +66,6 @@
 		</tns:PartyIdentitySet>
 	</tns:Parties>
 	<tns:SecurityPolicies>
-		
 		<tns:Security WSSVersion="1.1" id="sign_sha256">
 			<tns:X509>
 				<tns:Signature hashFunction="http://www.w3.org/2001/04/xmlenc#sha256" algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256">
@@ -87,7 +85,7 @@
 		<tns:ReceptionAwareness id="AS4ReceiptResponse" replyPattern="response" receiptType="AS4Receipt">
 			<tns:Retry period="5678" maxRetries="3" multiplyPeriod="3"/>
 			<tns:DuplicateDetection windowPeriode="P1Y"/>
-		</tns:ReceptionAwareness>		
+		</tns:ReceptionAwareness>
 	</tns:ReceptionAwarenessPatterns>
 	<tns:PMode id="DeliveryWithReceipt">
 		<tns:ServiceIdRef>DeliveryWithReceipt</tns:ServiceIdRef>
@@ -120,15 +118,16 @@
 			</tns:Leg>
 		</tns:MEP>
 	</tns:PMode>
-	
 	<tns:PMode id="ZPP-legal">
 		<tns:ServiceIdRef>LegalDelivery_ZPP</tns:ServiceIdRef>
-		<tns:InPlugins>
-			<tns:Plugin>java:global/plugin-zpp/ZPPInInterceptor!si.laurentius.commons.interfaces.SoapInterceptorInterface</tns:Plugin>
-		</tns:InPlugins>
-		<tns:OutPlugins>
-			<tns:Plugin>java:global/plugin-zpp/ZPPOutInterceptor!si.laurentius.commons.interfaces.SoapInterceptorInterface</tns:Plugin>
-		</tns:OutPlugins>
+		<tns:Plugins>
+			<tns:InPlugins>
+				<tns:Plugin>java:global/plugin-zpp/ZPPInInterceptor!si.laurentius.commons.interfaces.SoapInterceptorInterface</tns:Plugin>
+			</tns:InPlugins>
+			<tns:OutPlugins>
+				<tns:Plugin>java:global/plugin-zpp/ZPPOutInterceptor!si.laurentius.commons.interfaces.SoapInterceptorInterface</tns:Plugin>
+			</tns:OutPlugins>
+		</tns:Plugins>
 		<tns:LocalPartyInfo partyIdentitySetIdRef="test-laurentius" partyDefTransportIdRef="defalut">
 			<tns:Role>Sender</tns:Role>
 			<tns:Role>Receiver</tns:Role>
@@ -141,9 +140,7 @@
 			<tns:PartyInfo partyDefTransportIdRef="court-https" partyIdentitySetIdRef="court-laurentius">
 				<tns:Role>Sender</tns:Role>
 				<tns:Role>Receiver</tns:Role>
-			</tns:PartyInfo>		
-
-
+			</tns:PartyInfo>
 		</tns:ExchangeParties>
 		<tns:MEP>
 			<tns:MEPType>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/oneWay</tns:MEPType>
@@ -169,7 +166,7 @@
 					<tns:ForeChannel securityIdRef="sign_sha256" action="AdviceOfDelivery">
 						<tns:ReceptionAwareness raPatternIdRef="AS4ReceiptResponse"/>
 					</tns:ForeChannel>
-					<tns:BackChannel securityIdRef="sign_sha256" action="EncryptedKey" />
+					<tns:BackChannel securityIdRef="sign_sha256" action="EncryptedKey"/>
 				</tns:Transport>
 			</tns:Leg>
 		</tns:MEP>

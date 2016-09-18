@@ -31,7 +31,7 @@ import static org.apache.log4j.Logger.getLogger;
 
 /**
  *
- * @author sluzba
+ * @author Jože Rihtaršič
  */
 public class EmailUtils {
 

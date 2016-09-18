@@ -28,7 +28,7 @@ import jdk.nashorn.internal.ir.Symbol;
 
 /**
  *
- * @author sluzba
+ * @author Jože Rihtaršič
  */
 public class SMimeParser {
   

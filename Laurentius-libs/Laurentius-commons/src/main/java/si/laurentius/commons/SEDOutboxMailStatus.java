@@ -12,7 +12,6 @@
  * or implied. See the Licence for the specific language governing permissions and limitations under
  * the Licence.
  */
-
 package si.laurentius.commons;
 
 /**
@@ -22,56 +21,56 @@ package si.laurentius.commons;
 public enum SEDOutboxMailStatus {
 
   /**
-     *
-     *//**
-     *
-     */
+   *
+   */
+  /**
+   *
+   */
   SUBMITTED("SUBMITTED", "Message is sucessfuly added to SED for transmition.", "orange"),
 
   /**
-     *
-     */
+   *
+   */
   PUSHING("PUSHING", "Message is pushing to receiver MSH", "gray"),
-  
-  
+
   /**
-     *
-     */
+   *
+   */
   PULLREADY("PULLREADY", "Message is waiting for pull signal ", "gray"),
 
   /**
-     *
-     */
+   *
+   */
   SCHEDULE("SCHEDULE", "Shedule for resend", "green"),
 
   /**
-     *
-     */
+   *
+   */
   SENT("SENT", "Message is  sent to receiving MSH", "blue"),
 
   /**
-     *
-     */
+   *
+   */
   ERROR("ERROR", "Error occured pushing/pulling to receiving MSH", "red"),
+  
+   /**
+   *
+   */
+  FAILED("FAILED", "Mail failed to deliver to receiving MSH ", "darkred"),
 
   /**
-     *
-     */
-  EBMSERROR("EBMSERROR", "EBMS Error occured pushing/pulling to receiving MSH", "darkred"),
-
-  /**
-     *
-     */
+   *
+   */
   DELETED("DELETED", "Pošiljka je izbrisana", "black"),
 
   /**
-     *
-     */
+   *
+   */
   CANCELED("CANCELED", "Pošiljnje je preklicano", "yellow"),
 
   /**
-     *
-     */
+   *
+   */
   CANCELING("CANCELING", "Pošiljnje je v postopku preklica", "darkgray");
 
   String mstrVal;

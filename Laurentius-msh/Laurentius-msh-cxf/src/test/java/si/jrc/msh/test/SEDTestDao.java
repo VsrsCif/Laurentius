@@ -17,7 +17,7 @@ import si.laurentius.commons.interfaces.SEDDaoInterface;
 
 /**
  *
- * @author sluzba
+ * @author Jože Rihtaršič
  */
 public class SEDTestDao implements SEDDaoInterface{
 
@@ -52,6 +52,11 @@ public class SEDTestDao implements SEDDaoInterface{
   @Override
   public <T> T getMailById(Class<T> type, BigInteger mailId) {
     throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+  }
+
+  @Override
+  public <T> T getMailByMessageId(Class<T> type, String mailId) {
+    return null;
   }
 
   @Override

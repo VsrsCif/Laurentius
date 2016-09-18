@@ -30,7 +30,7 @@ import si.laurentius.commons.interfaces.SEDReportInterface;
 
 /**
  *
- * @author sluzba
+ * @author Jože Rihtaršič
  */
 @Stateless
 @Local(SEDReportInterface.class)

@@ -16,7 +16,7 @@ package si.laurentius.commons.utils;
 
 /**
  *
- * @author sluzba
+ * @author Jože Rihtaršič
  */
 public class SEDNamedQueries {
 

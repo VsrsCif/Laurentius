@@ -10,7 +10,7 @@ import java.security.Key;
 
 /**
  *
- * @author sluzba
+ * @author Jože Rihtaršič
  */
 public class SEDKey implements Key, Serializable {
 

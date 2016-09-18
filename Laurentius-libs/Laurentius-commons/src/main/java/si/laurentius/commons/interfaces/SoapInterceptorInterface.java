@@ -20,7 +20,7 @@ import org.apache.cxf.interceptor.Fault;
 
 /**
  *
- * @author sluzba
+ * @author Jože Rihtaršič
  */
 @Local
 public interface SoapInterceptorInterface {

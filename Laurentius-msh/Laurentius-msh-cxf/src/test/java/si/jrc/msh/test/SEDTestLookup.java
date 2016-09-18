@@ -29,7 +29,7 @@ import si.laurentius.property.SEDProperty;
 
 /**
  *
- * @author sluzba
+ * @author Jože Rihtaršič
  */
 public class SEDTestLookup implements SEDLookupsInterface {
 

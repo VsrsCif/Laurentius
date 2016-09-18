@@ -10,7 +10,7 @@ import si.jrc.msh.exception.EBMSError;
 
 /**
  *
- * @author sluzba
+ * @author Jože Rihtaršič
  */
 public class Result {
   

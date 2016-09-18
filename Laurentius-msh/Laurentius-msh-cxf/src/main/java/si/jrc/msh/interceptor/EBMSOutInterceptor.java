@@ -18,8 +18,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.UUID;
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
@@ -38,23 +36,17 @@ import org.apache.cxf.message.Exchange;
 import org.apache.cxf.message.MessageUtils;
 import org.apache.cxf.phase.Phase;
 import org.apache.cxf.ws.security.wss4j.WSS4JOutInterceptor;
-import org.apache.wss4j.dom.handler.WSHandlerConstants;
 import si.laurentius.msh.outbox.mail.MSHOutMail;
 import si.laurentius.msh.outbox.payload.MSHOutPart;
 import si.laurentius.msh.pmode.PMode;
 import si.laurentius.msh.pmode.PartyIdentitySet;
-import si.laurentius.msh.pmode.PartyIdentitySetType;
-import si.laurentius.msh.pmode.Security;
-import si.laurentius.msh.pmode.X509;
 import org.oasis_open.docs.ebxml_msg.ebms.v3_0.ns.core._200704.Messaging;
 import org.oasis_open.docs.ebxml_msg.ebms.v3_0.ns.core._200704.SignalMessage;
 import org.oasis_open.docs.ebxml_msg.ebms.v3_0.ns.core._200704.UserMessage;
-import si.laurentius.cert.SEDCertStore;
-import si.laurentius.cert.SEDCertificate;
-import si.jrc.msh.client.sec.SecurityUtils;
 import si.jrc.msh.exception.EBMSError;
 import si.jrc.msh.exception.EBMSErrorCode;
 import si.jrc.msh.utils.EBMSBuilder;
+import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.cxf.SoapUtils;
 import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.utils.GZIPUtil;
@@ -62,6 +54,7 @@ import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StorageUtils;
 import si.laurentius.commons.utils.sec.KeystoreUtils;
 import si.laurentius.commons.pmode.EBMSMessageContext;
+import si.laurentius.commons.utils.Utils;
 
 /**
  * Sets up the outgoing chain to build a ebms 3.0 (AS4) form message. First it will create Messaging
@@ -108,7 +101,9 @@ public class EBMSOutInterceptor extends AbstractEBMSInterceptor {
     // is out mail request or response
     boolean isRequest = MessageUtils.isRequestor(msg);
     QName qnFault = (isRequest ? SoapFault.FAULT_CODE_CLIENT : SoapFault.FAULT_CODE_SERVER);
-
+    
+    
+    
     if (msg.getContent(SOAPMessage.class) == null) {
       String errmsg = "Internal error missing SOAPMessage!";
       LOG.logError(l, errmsg, null);
@@ -140,8 +135,7 @@ public class EBMSOutInterceptor extends AbstractEBMSInterceptor {
         try {
           // set attachment for wss signature!
           LOG.log("Set attachmetns for message: " + msgId);
-          setAttachments(msg, outMail, sPID.getDomain(),
-              ectx.getTransportProtocol().getGzipCompress());
+          setAttachments(msg, outMail, ectx.getTransportProtocol().getGzipCompress());
         } catch (StorageException ex) {
           String msgError = "Error adding attachments to soap" + ex.getMessage();
           LOG.logError(l, msgError, ex);
@@ -151,7 +145,7 @@ public class EBMSOutInterceptor extends AbstractEBMSInterceptor {
         }
         // create user message
         LOG.log("Create userMessage unit for  message: " + msgId);
-        um = EBMSBuilder.createUserMessage(ectx, outMail, outMail.getSentDate(), qnFault);
+        um = EBMSBuilder.createUserMessage(ectx, outMail,  outMail.getSentDate(), qnFault);
         msgHeader.getUserMessages().add(um);
       } catch (EBMSError ex) {
 
@@ -172,7 +166,7 @@ public class EBMSOutInterceptor extends AbstractEBMSInterceptor {
 
     if (err != null) {
       SignalMessage sm =
-          EBMSBuilder.createErrorSignal(err, getSettings().getDomain(), Calendar.getInstance()
+          EBMSBuilder.createErrorSignal(err,  Calendar.getInstance()
               .getTime());
 
       msgHeader.getSignalMessages().add(sm);
@@ -224,7 +218,7 @@ public class EBMSOutInterceptor extends AbstractEBMSInterceptor {
    * @param mail - MSH out mail
    * @throws StorageException
    */
-  private void setAttachments(SoapMessage msg, MSHOutMail mail, String domain, boolean compress)
+  private void setAttachments(SoapMessage msg, MSHOutMail mail, boolean compress)
       throws StorageException {
     long l = LOG.logStart();
     if (mail != null && mail.getMSHOutPayload() != null &&
@@ -232,11 +226,13 @@ public class EBMSOutInterceptor extends AbstractEBMSInterceptor {
 
       msg.setAttachments(new ArrayList<>(mail.getMSHOutPayload().getMSHOutParts().size()));
       for (MSHOutPart p : mail.getMSHOutPayload().getMSHOutParts()) {
-        String id = UUID.randomUUID().toString() + "@" + domain;
-        p.setEbmsId(id);
+        if (Utils.isEmptyString(p.getEbmsId())) {
+          String id = UUID.randomUUID().toString() + "@" + SEDSystemProperties.getLocalDomain();
+          p.setEbmsId(id);
+        }
 
         AttachmentImpl att = new AttachmentImpl(p.getEbmsId());
-        att.setHeader("id", id);
+        att.setHeader("id", p.getEbmsId());
         File fatt = StorageUtils.getFile(p.getFilepath());
         if (compress) {
           File fattCmp = StorageUtils.getNewStorageFile("gzip", fatt.getName());

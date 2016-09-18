@@ -20,7 +20,7 @@ import javax.naming.NamingException;
 
 /**
  *
- * @author sluzba
+ * @author Jože Rihtaršič
  */
 @Local
 public interface JMSManagerInterface {

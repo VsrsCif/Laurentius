@@ -136,7 +136,7 @@ public class ZPPInInterceptor implements SoapInterceptorInterface {
     MSHOutMail moutMail = SoapUtils.getMSHOutMail(msg);
     MSHInMail mInMail = SoapUtils.getMSHInMail(msg);
 
-    Object sigAnies = msg.getExchange().get("SIGNAL_ELEMENTS");
+    Object sigAnies = SoapUtils.getInSignals(msg);
 
     try {
       if (mInMail != null && ZPPConstants.S_ZPP_SERVICE.equals(mInMail.getService()) &&

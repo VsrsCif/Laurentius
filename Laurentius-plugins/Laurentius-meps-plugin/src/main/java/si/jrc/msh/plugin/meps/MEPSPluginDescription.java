@@ -12,74 +12,10 @@ import si.laurentius.commons.interfaces.PluginDescriptionInterface;
 
 /**
  *
- * @author sluzba
+ * @author Jože Rihtaršič
  */
 @Stateless
-@Local(PluginDescriptionInterface.class)
-public class MEPSPluginDescription implements PluginDescriptionInterface {
+public class MEPSPluginDescription implements OutMailEventLisneterInterface {
 
-  /**
-   *
-   * @return
-   */
-  @Override
-  public String getDesc() {
-    return "";
-  }
-
-  /**
-   *
-   * @return
-   */
-  @Override
-  public String getJNDIInInterceptor() {
-    return "java:global/plugin-meps/MEPSOutInterceptor!si.laurentius.commons.interfaces.SoapInterceptorInterface";
-  }
-
-  /**
-   *
-   * @return
-   */
-  @Override
-  public String getJNDIOutInterceptor() {
-    return "java:global/plugin-meps/MEPSOutInterceptor!si.laurentius.commons.interfaces.SoapInterceptorInterface";
-  }
-
-  /**
-   *
-   * @return
-   */
-  @Override
-  public String getName() {
-    return "MEPS-plugin";
-  }
-
-  /**
-   *
-   * @return
-   */
-  @Override
-  public String getSettingUrlContext() {
-    return "/meps";
-  }
-
-  /**
-   *
-   * @return
-   */
-  @Override
-  public List<String> getTaskJNDIs() {
-    return Collections
-        .singletonList("java:global/plugin-meps/MEPSTask!si.laurentius.commons.interfaces.TaskExecutionInterface");
-  }
-
-  /**
-   *
-   * @return
-   */
-  @Override
-  public String getType() {
-    return "MEPSPlugin";
-  }
 
 }

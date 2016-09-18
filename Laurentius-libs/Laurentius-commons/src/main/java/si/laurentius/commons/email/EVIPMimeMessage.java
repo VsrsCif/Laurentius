@@ -13,7 +13,7 @@ import javax.mail.internet.MimeMessage;
 
 /**
  *
- * @author sluzba
+ * @author Jože Rihtaršič
  */
 public class EVIPMimeMessage extends MimeMessage {
 
