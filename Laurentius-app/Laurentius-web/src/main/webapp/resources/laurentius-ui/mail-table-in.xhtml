@@ -19,8 +19,7 @@
                     <p:dataTable id="OutMailTable" 
                                  var="inMail"
                                  value="#{InMailDataView.mailList}" 
-                                 selectionMode="single" 
-                                 selection="#{InMailDataView.currentMail}" 
+                                 selection="#{InMailDataView.selected}" 
                                  rowKey="#{inMail.id}"
                                  currentPageReportTemplate="#{msg['Showing']} {startRecord}-{endRecord} #{msg['OutOf']} {totalRecords}"
                                  paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
@@ -35,7 +34,8 @@
 
                                  >
                         <p:ajax event="rowSelect" listener="#{InMailDataView.onRowSelect}" 
-                                update="forms:InMailPanel:InMailTab" />                        
+                                update="forms:InMailPanel:InMailTab" />   
+                        <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
                         <p:column width="60" headerText="#{msg['Nu']}">
                             <h:outputText value="#{InMailDataView.rowIndex(inMail) + 1}" />
                         </p:column>

@@ -16,6 +16,8 @@ package si.jrc.msh.client.sec;
 
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -199,7 +201,8 @@ public class SecurityUtils {
     prps = new HashMap<>();
     prps.put(cpropname, cp);
     // set wss properties
-    prps.put(WSHandlerConstants.ACTION, WSHandlerConstants.SIGNATURE);
+    
+    prps.put(WSHandlerConstants.ACTION, WSHandlerConstants.SIGNATURE  );
     prps.put(WSHandlerConstants.SIGNATURE_PARTS,
         SecurityUtils.createReferenceString(ref));
     prps.put(WSHandlerConstants.SIGNATURE_USER, key.getAlias());
@@ -303,5 +306,7 @@ public class SecurityUtils {
     return cc;
   }
   
+  
+
 
 }

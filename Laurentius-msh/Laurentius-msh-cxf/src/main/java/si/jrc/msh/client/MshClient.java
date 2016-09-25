@@ -234,12 +234,14 @@ public class MshClient {
     } catch (javax.xml.ws.WebServiceException ex) {
 
       String key = "org.apache.cxf.staxutils.W3CDOMStreamWriter";
-
+      Throwable initCause = Utils.getInitCause(ex);
+      
       if (client != null && client.getResponseContext().containsKey(key)) {
         r.setError(new EBMSError(EBMSErrorCode.ApplicationError, mail.getMessageId(),
             "Soap fault error: " + ex.getMessage(), ex, SoapFault.FAULT_CODE_CLIENT));
 
         W3CDOMStreamWriter wr = (W3CDOMStreamWriter) client.getResponseContext().get(key);
+        
         try {
           File file = StorageUtils.getNewStorageFile(MimeValues.MIME_XML.getSuffix(), "ERR_");
           try (FileWriter fileWriter = new FileWriter(file)) {
@@ -254,17 +256,18 @@ public class MshClient {
         } catch (StorageException ex1) {
           LOG.logError(l, "ERROR saving saop fault to file!", ex);
         }
+      } else if (initCause instanceof EBMSError) {
+        r.setError((EBMSError)initCause);
       } else {
         r.setError(new EBMSError(EBMSErrorCode.DeliveryFailure, mail.getMessageId(),
-            "HTTP error: " + ex.getMessage(), ex, SoapFault.FAULT_CODE_CLIENT));
+            "HTTP error: " +Utils.getInitCauseMessage( ex), ex, SoapFault.FAULT_CODE_CLIENT));
         try {
           String res = msStorageUtils.storeThrowableAndGetRelativePath(ex);
           r.setMimeType(MimeValues.MIME_TXT.getMimeType());
           r.setResultFile(res);
         } catch (StorageException ex1) {
-          LOG.logError(l, "ERROR saving saop fault to file!", ex);
-        }
-        
+          LOG.logError(l, "ERROR saving saop fault to file!", ex1);
+        }        
       }
     } catch (SOAPException ex) {
       try {

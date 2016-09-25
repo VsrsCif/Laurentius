@@ -105,12 +105,12 @@ cp "$LAU_BUNDLE/deployments/Laurentius-msh.ear"  "$WILDFLY_HOME/standalone/deplo
 cp "$LAU_BUNDLE/deployments/laurentius-ws.war"  "$WILDFLY_HOME/standalone/deployments/"
 cp "$LAU_BUNDLE/deployments/laurentius-web.war"  "$WILDFLY_HOME/standalone/deployments/"
 cp "$LAU_BUNDLE/deployments/plugin-zpp.war"  "$WILDFLY_HOME/standalone/deployments/"
+cp "$LAU_BUNDLE/deployments/plugin-testcase.war"  "$WILDFLY_HOME/standalone/deployments/"
 
 if [ "$INIT" = "TRUE" ]; then
 
 	# set fix for module org.apache.ws.security
 	cp "$LAU_BUNDLE/modules/org.apache.ws.securitymodule.xml" "$WILDFLY_HOME/modules/system/layers/base/org/apache/ws/security/main/module.xml"
-
 
 	# copy start scripts
 	cp "$LAU_BUNDLE/widlfly-10.1/laurentius-demo.sh" "$WILDFLY_HOME/bin/"
@@ -125,6 +125,14 @@ if [ "$INIT" = "TRUE" ]; then
 	cp "$LAU_BUNDLE/widlfly-10.1/config/laurentius-users.properties" "$WILDFLY_HOME/standalone/configuration/"
 	cp "$LAU_BUNDLE/widlfly-10.1/config/standalone-laurentius.xml" "$WILDFLY_HOME/standalone/configuration/"
 	cp "$LAU_BUNDLE/widlfly-10.1/config/test-tls-keystore.jks" "$WILDFLY_HOME/standalone/configuration/"
+	mv "$WILDFLY_HOME/bin/standalone.conf" "$WILDFLY_HOME/bin/standalone.conf.bck"
+	cp "$LAU_BUNDLE/widlfly-10.1/config/standalone.conf" "$WILDFLY_HOME/bin/"
+	
+
+
+
+
+
 
 
 fi

@@ -75,7 +75,8 @@
         </ns3:SEDBox>
     </SEDBoxes>
     <SEDPlugins>
-        <ns4:SEDPlugin webContext="/zpp-plugin" type="LegalZPP" name="ZPP plugin" description="ZPP - e-delivery: SVEV 2.0 service implementation" jndiInInterceptor="java:global/plugin-zpp/ZPPOutInterceptor!si.laurentius.commons.interfaces.SoapInterceptorInterface" jndiOutInterceptor="java:global/plugin-zpp/ZPPOutInterceptor!si.laurentius.commons.interfaces.SoapInterceptorInterface" tasksJNDIs="java:global/plugin-zpp/ZPPTask!si.laurentius.commons.interfaces.TaskExecutionInterface" jndi="java:global/plugin-zpp/ZPPPluginDescription!si.laurentius.commons.interfaces.PluginDescriptionInterface"/>
+        <ns4:SEDPlugin webContext="/laurentius-web/zpp-plugin" type="LegalZPP" name="ZPP plugin" description="ZPP - e-delivery: SVEV 2.0 service implementation" jndiInInterceptor="java:global/plugin-zpp/ZPPOutInterceptor!si.laurentius.commons.interfaces.SoapInterceptorInterface" jndiOutInterceptor="java:global/plugin-zpp/ZPPOutInterceptor!si.laurentius.commons.interfaces.SoapInterceptorInterface" tasksJNDIs="java:global/plugin-zpp/ZPPTask!si.laurentius.commons.interfaces.TaskExecutionInterface" jndi="java:global/plugin-zpp/ZPPPluginDescription!si.laurentius.commons.interfaces.PluginDescriptionInterface"/>
+<ns4:SEDPlugin webContext="/laurentius-web/testcase-plugin" type="TestCasePlugin" name="Test case plugin" description="Test case " jndiInInterceptor="" jndiOutInterceptor="java:global/plugin-zpp/ZPPOutInterceptor!si.laurentius.commons.interfaces.SoapInterceptorInterface" tasksJNDIs="java:global/plugin-zpp/ZPPTask!si.laurentius.commons.interfaces.TaskExecutionInterface" jndi="java:global/plugin-testcase/TestCasePluginDescription!si.laurentius.commons.interfaces.PluginDescriptionInterface"/>
     </SEDPlugins>
     <SEDProperties>
         <ns5:SEDProperty key="si.laurentius.pmode" value="pmode-conf.xml" group="SYSTEM"/>

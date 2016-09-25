@@ -21,14 +21,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
-import static java.lang.String.format;
-import static java.lang.System.getProperty;
 import static java.nio.file.Files.move;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import javax.xml.bind.JAXBException;
 import si.laurentius.msh.outbox.mail.MSHOutMail;
@@ -49,18 +45,10 @@ import si.laurentius.commons.exception.PModeException;
 import si.laurentius.commons.interfaces.PModeInterface;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.Utils;
-import static si.laurentius.commons.utils.xml.XMLUtils.deserialize;
-import static si.laurentius.commons.utils.xml.XMLUtils.serialize;
+import java.util.Collections;
 import static java.lang.String.format;
 import static java.lang.System.getProperty;
-import static si.laurentius.commons.utils.xml.XMLUtils.deserialize;
-import static si.laurentius.commons.utils.xml.XMLUtils.serialize;
-import static java.lang.String.format;
-import static java.lang.System.getProperty;
-import static si.laurentius.commons.utils.xml.XMLUtils.deserialize;
-import static si.laurentius.commons.utils.xml.XMLUtils.serialize;
-import static java.lang.String.format;
-import static java.lang.System.getProperty;
+import static si.laurentius.commons.pmode.FilePModeManager.LOG;
 import static si.laurentius.commons.utils.xml.XMLUtils.deserialize;
 import static si.laurentius.commons.utils.xml.XMLUtils.serialize;
 
@@ -75,30 +63,20 @@ public class FilePModeManager implements PModeInterface {
    */
   public static final SEDLogger LOG = new SEDLogger(FilePModeManager.class);
 
-  List<PMode> mlstPModes = new ArrayList<>();
+  /* List<PMode> mlstPModes = new ArrayList<>();
   Map<String, PartyIdentitySet> mmpPartyIdentites = new HashMap<>();
   Map<String, ReceptionAwareness> mmpReceptionAwareness = new HashMap<>();
   Map<String, Security> mmpSecurity = new HashMap<>();
-  Map<String, Service> mmpServiceDef = new HashMap<>();
-
+  Map<String, Service> mmpServiceDef = new HashMap<>();*/
   MSHSetings mshSettings = null;
+  private long mFileLastModifiedDate = 0;
 
   public FilePModeManager() {
   }
 
   public FilePModeManager(InputStream is)
       throws PModeException {
-    reloadPModes(is);
-  }
-
-  /**
-   *
-   * @param pmrNew
-   * @return
-   */
-  public boolean add(PMode pmrNew) {
-    return mshSettings.getPModes().add(pmrNew);
-
+    reload(is);
   }
 
   /**
@@ -106,16 +84,74 @@ public class FilePModeManager implements PModeInterface {
    * @param i
    * @param pmrNew
    */
-  public void add(int i, PMode pmrNew) {
+  public void addPMode(int i, PMode pmrNew) {
     mshSettings.getPModes().add(i, pmrNew);
   }
 
+  @Override
+  public void addPMode(PMode val) {
+    
+    if (getPModeById(val.getId())!=null){
+      throw new PModeException(String.format("PMode with Id '%s' already exists!",val.getId() ));
+    }
+    mshSettings.getPModes().add(val);
+    
+    
+  }
+
+  @Override
+  public void addPartyIdentitySet(PartyIdentitySet val) {
+    if (getPartyIdentitySetById(val.getId())!=null){
+      throw new PModeException(String.format("PartyIdentitySet with Id '%s' already exists!",val.getId() ));
+    }
+    
+    if (mshSettings.getParties() == null) {
+      mshSettings.setParties(new MSHSetings.Parties());
+    }
+    mshSettings.getParties().getPartyIdentitySets().add(val);
+    saveMSHSettings();
+
+  }
+
+  @Override
+  public void addReceptionAwareness(ReceptionAwareness val) {
+    if (getReceptionAwarenessById(val.getId())!=null){
+      throw new PModeException(String.format("ReceptionAwareness with Id '%s' already exists!",val.getId() ));
+    }
+    if (mshSettings.getReceptionAwarenessPatterns() == null) {
+      mshSettings.setReceptionAwarenessPatterns(new MSHSetings.ReceptionAwarenessPatterns());
+    }
+    mshSettings.getReceptionAwarenessPatterns().getReceptionAwarenesses().add(val);
+    saveMSHSettings();
+  }
+
+  @Override
+  public void addSecurity(Security val) {
+    if (getSecurityById(val.getId())!=null){
+      throw new PModeException(String.format("Security with Id '%s' already exists!",val.getId() ));
+    }
+    
+    if (mshSettings.getSecurityPolicies() == null) {
+      mshSettings.setSecurityPolicies(new MSHSetings.SecurityPolicies());
+    }
+    mshSettings.getSecurityPolicies().getSecurities().add(val);
+    saveMSHSettings();
+  }
+
+  @Override
+  public void addService(Service val) {
+    if (getServiceById(val.getId())!=null){
+      throw new PModeException(String.format("Service with Id '%s' already exists!",val.getId() ));
+    }
+    if (mshSettings.getServices() == null) {
+      mshSettings.setServices(new MSHSetings.Services());
+    }
+    mshSettings.getServices().getServices().add(val);
+    saveMSHSettings();
+  }
+
   public void clear() {
-    mlstPModes.clear();
-    mmpServiceDef.clear();
-    mmpPartyIdentites.clear();
-    mmpReceptionAwareness.clear();
-    mmpSecurity.clear();
+
   }
 
   @Override
@@ -247,7 +283,7 @@ public class FilePModeManager implements PModeInterface {
   public PMode getPModeById(String pModeId)
       throws PModeException {
 
-    for (PMode pm : mlstPModes) {
+    for (PMode pm : getPModes()) {
       if (Objects.equals(pm.getId(), pModeId)) {
         return pm;
       }
@@ -281,7 +317,7 @@ public class FilePModeManager implements PModeInterface {
       throws PModeException {
 
     List<PMode> lstResult = new ArrayList<>();
-    for (PMode pm : getPModeList()) {
+    for (PMode pm : getPModes()) {
       // check if service match
       if (pm.getServiceIdRef() == null ||
           !Objects.equals(pm.getServiceIdRef(), serviceId)) {
@@ -343,7 +379,7 @@ public class FilePModeManager implements PModeInterface {
       throws PModeException {
 
     List<PMode> lstResult = new ArrayList<>();
-    for (PMode pm : getPModeList()) {
+    for (PMode pm : getPModes()) {
       // check if service match
       if (pm.getServiceIdRef() == null ||
           !Objects.equals(pm.getServiceIdRef(), serviceId)) {
@@ -394,27 +430,26 @@ public class FilePModeManager implements PModeInterface {
    *
    * @return @throws PModeException
    */
-  public List<PMode> getPModeList()
+  public MSHSetings getMSHSettings()
       throws PModeException {
-    if (mshSettings == null) {
-      reloadPModes();
-    }
-    return mshSettings.getPModes();
-  }
-
-  /**
-   *
-   * @return @throws PModeException
-   */
-  public MSHSetings getPModes()
-      throws PModeException {
-    reloadPModes();
+    FilePModeManager.this.reload();
     return mshSettings;
   }
 
   @Override
+  public List<PMode> getPModes() {
+    FilePModeManager.this.reload();
+    return mshSettings.getPModes();
+  }
+
+  @Override
   public PartyIdentitySet getPartyIdentitySetById(String id) {
-    return mmpPartyIdentites.get(id);
+    for (PartyIdentitySet pm : getPartyIdentitySets()) {
+      if (Objects.equals(pm.getId(), id)) {
+        return pm;
+      }
+    }
+    throw new PModeException(String.format("No PartyIdentitySet for id: '%s'.", id));
   }
 
   /**
@@ -425,7 +460,8 @@ public class FilePModeManager implements PModeInterface {
    * @return first PartyIdentitySet or null if not found
    */
   public PartyIdentitySet getPartyIdentitySetForAuthorization(String username, String password) {
-    for (PartyIdentitySet pis : mmpPartyIdentites.values()) {
+
+    for (PartyIdentitySet pis : getPartyIdentitySets()) {
       if (pis.getAuthorization() != null && username != null && password != null &&
           Objects.equals(pis.getAuthorization().getUsername(), username) &&
           Objects.equals(pis.getAuthorization().getPassword(), password)) {
@@ -453,7 +489,7 @@ public class FilePModeManager implements PModeInterface {
       return null;
     }
     List<PartyIdentitySet> candidates = new ArrayList<>();
-    for (PartyIdentitySet pis : mmpPartyIdentites.values()) {
+    for (PartyIdentitySet pis : getPartyIdentitySets()) {
 
       for (PartyIdentitySet.PartyId pid : pis.getPartyIds()) {
 
@@ -521,7 +557,7 @@ public class FilePModeManager implements PModeInterface {
 
     int iDomainCount = 0;
     List<PartyIdentitySet> candidates = new ArrayList<>();
-    for (PartyIdentitySet pis : mmpPartyIdentites.values()) {
+    for (PartyIdentitySet pis : getPartyIdentitySets()) {
       // check domain
       if (pis.getIsLocalIdentity() ?
           Objects.equals(domainPart, localDomain) :
@@ -558,30 +594,67 @@ public class FilePModeManager implements PModeInterface {
   }
 
   @Override
+  public List<PartyIdentitySet> getPartyIdentitySets() {
+    if (mshSettings == null) {
+      reload();
+    }
+    return mshSettings != null && mshSettings.getParties() != null ?
+        mshSettings.getParties().getPartyIdentitySets() :
+        Collections.emptyList();
+  }
+
+  @Override
   public ReceptionAwareness getReceptionAwarenessById(String id) {
-    return mmpReceptionAwareness.get(id);
+    for (ReceptionAwareness pm : getReceptionAwarenesses()) {
+      if (Objects.equals(pm.getId(), id)) {
+        return pm;
+      }
+    }
+    throw new PModeException(String.format("No ReceptionAwareness for id: '%s'.", id));
+  }
+
+  @Override
+  public List<ReceptionAwareness> getReceptionAwarenesses() {
+    if (mshSettings == null) {
+      reload();
+    }
+    return mshSettings != null && mshSettings.getReceptionAwarenessPatterns() != null ?
+        mshSettings.getReceptionAwarenessPatterns().getReceptionAwarenesses() :
+        Collections.emptyList();
+  }
+
+  @Override
+  public List<Security> getSecurities() {
+    if (mshSettings == null) {
+      reload();
+    }
+    return mshSettings != null && mshSettings.getSecurityPolicies() != null ?
+        mshSettings.getSecurityPolicies().getSecurities() :
+        Collections.emptyList();
   }
 
   @Override
   public Security getSecurityById(String securityId)
       throws PModeException {
-    if (!mmpSecurity.containsKey(securityId)) {
-      throw new PModeException(String.format("Security for id: '%s' not exists.", securityId));
-    }
-    return mmpSecurity.get(securityId);
-  }
 
-  public Security getSecuritySetById(String id) {
-    return mmpSecurity.get(id);
+    for (Security pm : getSecurities()) {
+      if (Objects.equals(pm.getId(), securityId)) {
+        return pm;
+      }
+    }
+    throw new PModeException(String.format("No SecurityPolicy for id: '%s'.", securityId));
   }
 
   @Override
   public Service getServiceById(String serviceId)
       throws PModeException {
-    if (!mmpServiceDef.containsKey(serviceId)) {
-      throw new PModeException(String.format("Service for id: '%s' not exists.", serviceId));
+
+    for (Service pm : getServices()) {
+      if (Objects.equals(pm.getId(), serviceId)) {
+        return pm;
+      }
     }
-    return mmpServiceDef.get(serviceId);
+    throw new PModeException(String.format("No Service for id: '%s'.", serviceId));
   }
 
   @Override
@@ -589,7 +662,7 @@ public class FilePModeManager implements PModeInterface {
       String action)
       throws PModeException {
 
-    for (Service srv : mmpServiceDef.values()) {
+    for (Service srv : getServices()) {
       if (!Objects.equals(srv.getServiceName(), serviceName) ||
           !Objects.equals(srv.getServiceType(), serviceType)) {
         continue;
@@ -608,19 +681,31 @@ public class FilePModeManager implements PModeInterface {
 
   }
 
+  @Override
+  public List<Service> getServices() {
+    if (mshSettings == null) {
+      reload();
+    }
+    return mshSettings != null && mshSettings.getServices() != null ?
+        mshSettings.getServices().getServices() :
+        Collections.emptyList();
+  }
+
   /**
    *
    * @throws PModeException
    */
-  public void reloadPModes()
-      throws PModeException {
+  public void reload() {
     long l = LOG.logStart();
     File pModeFile = new File(getPModeFilePath());
-    try (FileInputStream fis = new FileInputStream(pModeFile)) {
-      reloadPModes(fis);
-    } catch (IOException ex) {
-      String msg = "Error init PModes from file '" + pModeFile.getAbsolutePath() + "'";
-      throw new PModeException(msg, ex);
+    if (pModeFile.lastModified() > mFileLastModifiedDate) {
+      try (FileInputStream fis = new FileInputStream(pModeFile)) {
+        reload(fis);
+        mFileLastModifiedDate = pModeFile.lastModified();
+      } catch (IOException ex) {
+        String msg = "Error init PModes from file '" + pModeFile.getAbsolutePath() + "'";
+        throw new PModeException(msg, ex);
+      }
     }
     LOG.logEnd(l);
   }
@@ -631,55 +716,18 @@ public class FilePModeManager implements PModeInterface {
    * @param is
    * @throws PModeException
    */
-  public final void reloadPModes(InputStream is)
+  public final void reload(InputStream is)
       throws PModeException {
     long l = LOG.logStart();
     clear();
+
     try {
-
       mshSettings = (MSHSetings) deserialize(is, MSHSetings.class);
-      if (mshSettings.getServices() != null) {
-        mshSettings.getServices().getServices().forEach((bt) -> {
-          mmpServiceDef.put(bt.getId(), bt);
-        });
-      }
-      if (mshSettings.getParties() != null) {
-        mshSettings.getParties().getPartyIdentitySets().forEach((party) -> {
-          mmpPartyIdentites.put(party.getId(), party);
-        });
-      }
-      if (mshSettings.getReceptionAwarenessPatterns() != null) {
-        mshSettings.getReceptionAwarenessPatterns().getReceptionAwarenesses().forEach((ra) -> {
-          mmpReceptionAwareness.put(ra.getId(), ra);
-        });
-      }
-
-      if (mshSettings.getSecurityPolicies() != null) {
-        mshSettings.getSecurityPolicies().getSecurities().forEach((sc) -> {
-          mmpSecurity.put(sc.getId(), sc);
-        });
-      }
-      mlstPModes.addAll(mshSettings.getPModes());
-
     } catch (JAXBException ex) {
       String msg = "Error init MSH Settings!";
       throw new PModeException(msg, ex);
     }
     LOG.logEnd(l);
-  }
-
-  /**
-   *
-   * @param pmr
-   * @return
-   */
-  public boolean removePMode(PMode pmr) {
-    boolean suc = false;
-    if (pmr == null) {
-      suc = mshSettings.getPModes().remove(pmr);
-    }
-    return suc;
-
   }
 
   /**
@@ -696,35 +744,67 @@ public class FilePModeManager implements PModeInterface {
         break;
       }
     }
+    saveMSHSettings();
     return removed;
+  }
+
+  @Override
+  public void removePMode(PMode val) {
+    mshSettings.getPModes().remove(val);
+    saveMSHSettings();
+  }
+
+  @Override
+  public void removePartyIdentitySet(PartyIdentitySet val) {
+    if (mshSettings.getParties() != null) {
+      mshSettings.getParties().getPartyIdentitySets().remove(val);
+      saveMSHSettings();
+    } else {
+      LOG.logWarn("No parties defined in msh settings", null);
+    }
+    saveMSHSettings();
+  }
+
+  @Override
+  public void removeReceptionAwareness(ReceptionAwareness val) {
+
+    if (mshSettings.getReceptionAwarenessPatterns() != null) {
+      mshSettings.getReceptionAwarenessPatterns().getReceptionAwarenesses().remove(val);
+      saveMSHSettings();
+    } else {
+      LOG.logWarn("No reception awareness defined in msh settings", null);
+    }
+    saveMSHSettings();
+  }
+
+  @Override
+  public void removeSecurity(Security val) {
+    if (mshSettings.getSecurityPolicies() != null) {
+      mshSettings.getSecurityPolicies().getSecurities().remove(val);
+      saveMSHSettings();
+    } else {
+      LOG.logWarn("No securityPolicies defined in msh settings", null);
+    }
+    saveMSHSettings();
 
   }
 
-  /**
-   *
-   * @param pmrNew
-   * @param pModeIdOld
-   * @return
-   */
-  public boolean replace(PMode pmrNew, String pModeIdOld) {
-    boolean suc = false;
-    for (PMode pm : mshSettings.getPModes()) {
-      if (pm.getId() != null && pm.getId().equals(pModeIdOld)) {
-        int i = mshSettings.getPModes().indexOf(pm);
-        mshSettings.getPModes().remove(pm);
-        mshSettings.getPModes().add(i, pmrNew);
-        suc = true;
-        break;
-      }
+  @Override
+  public void removeService(Service val) {
+    if (mshSettings.getServices() != null) {
+      mshSettings.getServices().getServices().remove(val);
+      saveMSHSettings();
+    } else {
+      LOG.logWarn("No services defined in msh settings", null);
     }
-    return suc;
+    saveMSHSettings();
   }
 
   /**
    *
    * @throws PModeException
    */
-  public void savePMode()
+  public void saveMSHSettings()
       throws PModeException {
     long l = LOG.logStart();
     try {
@@ -756,5 +836,137 @@ public class FilePModeManager implements PModeInterface {
 
   public String getLocalDomain() {
     return System.getProperty(SEDSystemProperties.S_PROP_LAU_DOMAIN);
+  }
+
+  @Override
+  public void updatePMode(PMode val) {
+    boolean suc = false;
+    for (int index = 0; index < mshSettings.getPModes().size(); index++) {
+      PMode pm = mshSettings.getPModes().get(index);
+      if (pm.getId() != null && Objects.equals(pm.getId(), val.getId())) {
+        mshSettings.getPModes().remove(pm);
+        mshSettings.getPModes().add(index, val);
+        suc = true;
+        break;
+      }
+    }
+    if (!suc) {
+      LOG.formatedWarning("No PMode with id  %s. PMode was added as new PMode", val.getId());
+      mshSettings.getPModes().add(val);
+    }
+    saveMSHSettings();
+  }
+
+  @Override
+  public void updatePartyIdentitySet(PartyIdentitySet val) {
+
+    if (mshSettings.getParties() == null) {
+      mshSettings.setParties(new MSHSetings.Parties());
+    }
+
+    boolean suc = false;
+    for (int index = 0; index < mshSettings.getParties().getPartyIdentitySets().size(); index++) {
+      PartyIdentitySet pm = mshSettings.getParties().getPartyIdentitySets().get(index);
+
+      if (pm.getId() != null && Objects.equals(pm.getId(), val.getId())) {
+        mshSettings.getParties().getPartyIdentitySets().remove(pm);
+        mshSettings.getParties().getPartyIdentitySets().add(index, val);
+        suc = true;
+        break;
+      }
+    }
+    if (!suc) {
+      mshSettings.getParties().getPartyIdentitySets().add(val);
+      LOG.formatedWarning(
+          "No PartyIdentitySet with id  %s. PartyIdentitySet was added as new PartyIdentitySet",
+          val.getId());
+    }
+    saveMSHSettings();
+  }
+
+  @Override
+  public void updateReceptionAwareness(ReceptionAwareness val) {
+
+    if (mshSettings.getReceptionAwarenessPatterns() == null) {
+      mshSettings.setReceptionAwarenessPatterns(new MSHSetings.ReceptionAwarenessPatterns());
+    }
+
+    boolean suc = false;
+    for (int index = 0; index <
+        mshSettings.getReceptionAwarenessPatterns().getReceptionAwarenesses().size(); index++) {
+      ReceptionAwareness pm =
+          mshSettings.getReceptionAwarenessPatterns().getReceptionAwarenesses().get(index);
+
+      if (pm.getId() != null && Objects.equals(pm.getId(), val.getId())) {
+        mshSettings.getReceptionAwarenessPatterns().getReceptionAwarenesses().remove(pm);
+        mshSettings.getReceptionAwarenessPatterns().getReceptionAwarenesses().add(index, val);
+        suc = true;
+        break;
+      }
+    }
+    if (!suc) {
+      mshSettings.getReceptionAwarenessPatterns().getReceptionAwarenesses().add(val);
+      LOG.formatedWarning(
+          "No ReceptionAwareness with id  %s. ReceptionAwareness was added as new ReceptionAwareness",
+          val.getId());
+    }
+    saveMSHSettings();
+  }
+
+  @Override
+  public void updateSecurity(Security val) {
+
+    if (mshSettings.getSecurityPolicies() == null) {
+      mshSettings.setSecurityPolicies(new MSHSetings.SecurityPolicies());
+    }
+
+    boolean suc = false;
+    for (int index = 0; index <
+        mshSettings.getSecurityPolicies().getSecurities().size(); index++) {
+      Security pm =
+          mshSettings.getSecurityPolicies().getSecurities().get(index);
+
+      if (pm.getId() != null && Objects.equals(pm.getId(), val.getId())) {
+        mshSettings.getSecurityPolicies().getSecurities().remove(pm);
+        mshSettings.getSecurityPolicies().getSecurities().add(index, val);
+        suc = true;
+        break;
+      }
+    }
+    if (!suc) {
+      mshSettings.getSecurityPolicies().getSecurities().add(val);
+      LOG.formatedWarning(
+          "No Security with id  %s. Security was added as new Security",
+          val.getId());
+    }
+    saveMSHSettings();
+  }
+
+  @Override
+  public void updateService(Service val) {
+    if (mshSettings.getServices() == null) {
+      mshSettings.setServices(new MSHSetings.Services());
+    }
+
+    boolean suc = false;
+    for (int index = 0; index <
+        mshSettings.getServices().getServices().size(); index++) {
+      Service pm =
+          mshSettings.getServices().getServices().get(index);
+
+      if (pm.getId() != null && Objects.equals(pm.getId(), val.getId())) {
+        mshSettings.getServices().getServices().remove(pm);
+        mshSettings.getServices().getServices().add(index, val);
+        suc = true;
+        break;
+      }
+    }
+    if (!suc) {
+      mshSettings.getServices().getServices().add(val);
+      LOG.formatedWarning(
+          "No Service with id  %s. Service was added as new Service",
+          val.getId());
+    }
+    saveMSHSettings();
   }
 }

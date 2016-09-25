@@ -98,7 +98,7 @@ public class FilePModeManagerTest {
     FilePModeManager pmd = new FilePModeManager();
     try {
       // resource from jar
-      pmd.reloadPModes(FilePModeManagerTest.class.getResourceAsStream("/pmode/" + TEST_PMODE_FILE));
+      pmd.reload(FilePModeManagerTest.class.getResourceAsStream("/pmode/" + TEST_PMODE_FILE));
     } catch (PModeException ex) {
       Assert.fail("fail to reload test pmode from resource file:" + TEST_PMODE_FILE);
     }
@@ -108,7 +108,7 @@ public class FilePModeManagerTest {
   public void testReloadPModesFromSystemParameters() {
     FilePModeManager pmd = new FilePModeManager();
     try {
-      pmd.reloadPModes();
+      pmd.reload();
     } catch (PModeException ex) {
       Assert.fail("fail to reload test pmode from resource file:" + TEST_PMODE_FILE +
           ".Message: " + ex.getMessage());
@@ -124,7 +124,7 @@ public class FilePModeManagerTest {
     String pModeId = "ZPP-legal";
     FilePModeManager instance = new FilePModeManager();
     try {
-      instance.reloadPModes();
+      instance.reload();
     } catch (PModeException ex) {
       Assert.fail("fail to reload test pmode from resource file:" + TEST_PMODE_FILE +
           ".Message: " + ex.getMessage());
@@ -151,7 +151,7 @@ public class FilePModeManagerTest {
 
     FilePModeManager instance = new FilePModeManager();
     try {
-      instance.reloadPModes();
+      instance.reload();
     } catch (PModeException ex) {
       Assert.fail("fail to reload test pmode from resource file:" + TEST_PMODE_FILE +
           ".Message: " + ex.getMessage());
@@ -200,7 +200,7 @@ public class FilePModeManagerTest {
 
     FilePModeManager instance = new FilePModeManager();
     try {
-      instance.reloadPModes();
+      instance.reload();
     } catch (PModeException ex) {
       Assert.fail("fail to reload test pmode from resource file:" + TEST_PMODE_FILE +
           ".Message: " + ex.getMessage());
@@ -267,7 +267,7 @@ public class FilePModeManagerTest {
 
     FilePModeManager instance = new FilePModeManager();
     try {
-      instance.reloadPModes();
+      instance.reload();
     } catch (PModeException ex) {
       Assert.fail("fail to reload test pmode from resource file:" + TEST_PMODE_FILE +
           ".Message: " + ex.getMessage());
@@ -371,7 +371,7 @@ public class FilePModeManagerTest {
 
     FilePModeManager instance = new FilePModeManager();
     try {
-      instance.reloadPModes();
+      instance.reload();
     } catch (PModeException ex) {
       Assert.fail("fail to reload test pmode from resource file:" + TEST_PMODE_FILE +
           ".Message: " + ex.getMessage());
@@ -469,7 +469,7 @@ public class FilePModeManagerTest {
   public void testCreateMessageContextForOutMail() {
     FilePModeManager instance = new FilePModeManager();
     try {
-      instance.reloadPModes();
+      instance.reload();
     } catch (PModeException ex) {
       Assert.fail("fail to reload test pmode from resource file:" + TEST_PMODE_FILE +
           ".Message: " + ex.getMessage());

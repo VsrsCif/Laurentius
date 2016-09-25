@@ -17,20 +17,30 @@ package si.jrc.msh.interceptor;
 import com.google.common.base.Objects;
 import java.io.File;
 import java.io.IOException;
+import java.io.StringWriter;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import javax.activation.DataHandler;
 import javax.xml.datatype.Duration;
 import javax.xml.namespace.QName;
+import javax.xml.soap.MessageFactory;
+import javax.xml.soap.SOAPConstants;
+import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 import org.apache.cxf.binding.soap.SoapFault;
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.binding.soap.SoapVersion;
+import org.apache.cxf.endpoint.Endpoint;
 import org.apache.cxf.interceptor.InterceptorChain;
+import org.apache.cxf.interceptor.OutgoingChainInterceptor;
 import org.apache.cxf.message.Attachment;
+import org.apache.cxf.message.Message;
+import org.apache.cxf.message.MessageImpl;
 import org.apache.cxf.phase.Phase;
 import org.apache.cxf.ws.security.wss4j.CryptoCoverageChecker;
 import org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor;
@@ -62,6 +72,7 @@ import si.laurentius.commons.utils.HashUtils;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StorageUtils;
 import si.laurentius.commons.utils.Utils;
+import si.laurentius.msh.pmode.ReceptionAwareness;
 
 /**
  *
@@ -140,48 +151,99 @@ public class EBMSInInterceptor extends AbstractEBMSInterceptor {
       // vaildateHeader_Messaging already checked if count is 1
       um = msgHeader.getUserMessages().get(0);
       mebmsValidation.vaildateUserMessage(msg, um, SoapFault.FAULT_CODE_CLIENT);
-      
-      
-      
+
       inmctx = EBMSParser.createEBMSContextFromUserMessage(msg, um, getPModeManager());
       messageId = um.getMessageInfo().getMessageId();
       // check if message already exists
 
-      if (inmctx.getReceptionAwareness() != null &&
-           inmctx.getReceptionAwareness().getDuplicateDetection() != null &&
-           inmctx.getReceptionAwareness().getDuplicateDetection().getWindowPeriode() != null) {
+      List<MSHInMail> dupllst = getDAO().getMailByMessageId(MSHInMail.class, messageId);
 
-        MSHInMail mi = mSedDao.getMailByMessageId(MSHInMail.class, messageId);
-        if (mi != null) {
-          Duration dTime = inmctx.getReceptionAwareness().getDuplicateDetection().getWindowPeriode();
-          Date dt = Calendar.getInstance().getTime();
-          dTime.negate().addTo(dt);
-          
-          if (mi.getReceivedDate().after(dt)){
-            throw new EBMSError(EBMSErrorCode.InvalidSoapRequest, messageId,
-          "Not a soap message", SoapFault.FAULT_CODE_CLIENT);
+      LOG.formatedlog("Got %d in messages with message id: %s", dupllst.size(), messageId);
+
+      if (!dupllst.isEmpty() &&
+          inmctx.getReceptionAwareness() != null &&
+          inmctx.getReceptionAwareness().getDuplicateDetection() != null &&
+          inmctx.getReceptionAwareness().getDuplicateDetection().getWindowPeriode() != null) {
+
+        ReceptionAwareness.DuplicateDetection dd =
+            inmctx.getReceptionAwareness().getDuplicateDetection();
+        Duration dTime = dd.getWindowPeriode();
+        Date dt = Calendar.getInstance().getTime();
+        dTime.negate().addTo(dt);
+
+        StringWriter sw = new StringWriter();
+        for (MSHInMail dmi : dupllst) {
+          Date recDate = dmi.getReceivedDate();
+          if (recDate.after(dt)) {
+            sw.append(String.format(
+                "Message with id %s (receiver id: %d) already received in conversation %s date:  %s",
+                messageId, dmi.getId(), dmi.getConversationId(),
+                SimpleDateFormat.getDateTimeInstance().format(recDate)));
           }
         }
+        String warn = sw.toString();
 
+        if (!warn.isEmpty()) {
+          LOG.logWarn(warn, null);
+          if (dd.getEliminate()) {
+            SignalMessage as4Receipt =
+                EBMSBuilder.generateAS4ReceiptSignal(messageId,
+                    SEDSystemProperties.getLocalDomain(), request.getSOAPPart()
+                    .getDocumentElement(), Calendar.getInstance().getTime());
+            EBMSError warning = new EBMSError(EBMSErrorCode.DuplicateDeteced, messageId,
+                warn + " Duplicate is eliminated.", SoapFault.FAULT_CODE_CLIENT);
+            as4Receipt.getErrors().add(EBMSBuilder.createError(warning));
+            msg.getExchange().put(SignalMessage.class, as4Receipt);
+            Endpoint e = msg.getExchange().get(Endpoint.class);
+            if (!msg.getExchange().isOneWay() && !isBackChannel) {
+              Message responseMsg = new MessageImpl();
+              responseMsg.setExchange(msg.getExchange());
+              responseMsg = e.getBinding().createMessage(responseMsg);
+              msg.getExchange().setOutMessage(responseMsg);
+
+              MessageFactory mf;
+              try {
+                mf = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
+                SOAPMessage soapMessage = mf.createMessage();
+
+                responseMsg.setContent(SOAPMessage.class, soapMessage);
+
+                InterceptorChain chainOut =
+                    OutgoingChainInterceptor.getOutInterceptorChain(msg
+                        .getExchange());
+
+                LOG.logWarn("got out interceptor:" + chainOut, null);
+                responseMsg.setInterceptorChain(chainOut);
+                SoapUtils.setEBMSMessageOutContext(createOutContextFromInContext(inmctx, messageId), responseMsg);
+                chainOut.doIntercept(responseMsg);
+
+              } catch (SOAPException ex) {
+                LOG.logError(l, ex);
+              }
+            }
+
+            LOG.formatedWarning("Duplicate %s eliminated", messageId);
+            msg.getInterceptorChain().abort();
+            return;
+          }
+        }
       }
-      
-      if (mebmsValidation.isTestUserMessage(um)){
-        LOG.formatedWarning("Received test user message %s. Abort processing message!",um.getMessageInfo().getMessageId());
+
+      if (mebmsValidation.isTestUserMessage(um)) {
+        LOG.formatedWarning("Received test user message %s. Abort processing message!",
+            um.getMessageInfo().getMessageId());
+
         SignalMessage as4Receipt =
-        EBMSBuilder.generateAS4ReceiptSignal(messageId,
-            SEDSystemProperties.getLocalDomain(), request.getSOAPPart()
-            .getDocumentElement(), Calendar.getInstance().getTime());
-    msg.getExchange().put(SignalMessage.class, as4Receipt);
+            EBMSBuilder.generateAS4ReceiptSignal(messageId,
+                SEDSystemProperties.getLocalDomain(), request.getSOAPPart()
+                .getDocumentElement(), Calendar.getInstance().getTime());
+        msg.getExchange().put(SignalMessage.class, as4Receipt);
         InterceptorChain chain = msg.getInterceptorChain();
         chain.abort();
+
         return;
-        
+
       }
-
-      /*MSHInMail mi = mSedDao.getMailByMessageId(MSHInMail.class, messageId);
-      if (mi != null) {
-
-      }*/
 
     }
     // validate signals
@@ -221,25 +283,16 @@ public class EBMSInInterceptor extends AbstractEBMSInterceptor {
         inmctx.setSenderPartyIdentitySet(outmctx.getReceiverPartyIdentitySet());
         inmctx.setPushTransfrer(inmctx.isPushTransfrer());
         if (outmctx.getMEPLegType().getTransport() != null) { // transport binding is BackChannel
-          LOG.log("************************ SEC 1 - set back channel ");
-          inmctx.setTransportChannelType(              
+          inmctx.setTransportChannelType(
               outmctx.getMEPLegType().getTransport().getBackChannel());
-          LOG.log("************************ SEC 1.1 - back channel sec  " + outmctx.getMEPLegType().getTransport().getBackChannel().getSecurityIdRef());
-          LOG.log("************************ SEC 1.2 - fore channel sec  " + outmctx.getMEPLegType().getTransport().getForeChannel().getSecurityIdRef());
-          
         } else {
-          LOG.log("************************ SEC 2");
           inmctx.setSecurity(outmctx.getSecurity());
         }
         if (inmctx.getTransportChannelType() != null) {
-          LOG.log("************************ SEC 3");
           if (!Utils.isEmptyString(inmctx.getTransportChannelType().getSecurityIdRef())) {
-            LOG.log("************************ SEC 4");
             String secId = inmctx.getTransportChannelType().getSecurityIdRef();
             try {
-              LOG.log("************************ SEC 5 set security %s", secId);
               inmctx.setSecurity(getPModeManager().getSecurityById(secId));
-              LOG.log("************************ SEC 5.1 setted security %s", inmctx.getSecurity().getId());
             } catch (PModeException ex) {
               String msgERr = String.format(
                   "Error occured while retrieving securitypatteren for '%s'!", secId);
@@ -248,7 +301,6 @@ public class EBMSInInterceptor extends AbstractEBMSInterceptor {
                   msgERr, SoapFault.FAULT_CODE_CLIENT);
             }
           } else {
-            LOG.log("************************ SEC 6");
             inmctx.setSecurity(outmctx.getSecurity());
           }
         }
@@ -266,43 +318,8 @@ public class EBMSInInterceptor extends AbstractEBMSInterceptor {
 
     SoapUtils.setEBMSMessageInContext(inmctx, msg);
 
-    if (!isBackChannel && SoapUtils.getEBMSMessageOutContext(msg) == null) {
-      EBMSMessageContext outmctx = new EBMSMessageContext();
-      outmctx.setPMode(inmctx.getPMode());
-      outmctx.setService(inmctx.getService());
-      outmctx.setMEPType(inmctx.getMEPType());
-      outmctx.setMEPLegType(inmctx.getMEPLegType());
-      outmctx.setSendingRole(inmctx.getReceivingRole());
-      outmctx.setReceivingRole(inmctx.getSendingRole());
-      outmctx.setReceiverPartyIdentitySet(inmctx.getSenderPartyIdentitySet());
-      outmctx.setSenderPartyIdentitySet(inmctx.getReceiverPartyIdentitySet());
-      outmctx.setPushTransfrer(inmctx.isPushTransfrer());
-      outmctx.setSecurity(inmctx.getSecurity());
-      if (inmctx.getMEPLegType().getTransport() != null &&
-          inmctx.getMEPLegType().getTransport().getBackChannel() != null) { // transport binding is BackChannel
-        outmctx.setTransportChannelType(
-            inmctx.getMEPLegType().getTransport().getBackChannel());
-      } else {
-        outmctx.setSecurity(outmctx.getSecurity());
-      }
-
-      if (outmctx.getTransportChannelType() != null) {
-        if (!Utils.isEmptyString(outmctx.getTransportChannelType().getSecurityIdRef())) {
-          String secId = outmctx.getTransportChannelType().getSecurityIdRef();
-          try {
-            outmctx.setSecurity(getPModeManager().getSecurityById(secId));
-          } catch (PModeException ex) {
-            String msgERr = String.format(
-                "Error occured while retrieving securitypatteren for '%s'!", secId);
-            LOG.logError(l, msgERr, null);
-            throw new EBMSError(EBMSErrorCode.ProcessingModeMismatch, messageId,
-                msgERr, SoapFault.FAULT_CODE_CLIENT);
-          }
-        } else {
-          outmctx.setSecurity(inmctx.getSecurity());
-        }
-      }
-      SoapUtils.setEBMSMessageOutContext(outmctx, msg);
+    if (!isBackChannel && SoapUtils.getEBMSMessageOutContext(msg) == null) {      
+      SoapUtils.setEBMSMessageOutContext(createOutContextFromInContext(inmctx, messageId), msg);
     }
 
     if (SoapUtils.isSoapFault(request) && !SoapUtils.hasSecurity(request)) {
@@ -310,7 +327,6 @@ public class EBMSInInterceptor extends AbstractEBMSInterceptor {
           messageId,
           inmctx.getPMode().getId());
     } else if (inmctx.getSecurity() != null) {
-      LOG.log("************************ HANDLE Security %s", inmctx.getSecurity().getId());
       handleMessageSecurity(msg, inmctx, messageId);
     } else {
       LOG.formatedWarning("No Security policy for message: '%s', pmode '%s'!'", messageId,
@@ -329,7 +345,50 @@ public class EBMSInInterceptor extends AbstractEBMSInterceptor {
     LOG.logEnd(l);
   }
 
-  public void processUserMessageUnit(SoapMessage msg, UserMessage um, EBMSMessageContext ectx, String msgId, QName sv) {
+  public EBMSMessageContext createOutContextFromInContext(EBMSMessageContext inmctx,
+      String messageId) {
+    long l = LOG.logStart(messageId);
+    EBMSMessageContext outmctx = new EBMSMessageContext();
+    outmctx.setPMode(inmctx.getPMode());
+    outmctx.setService(inmctx.getService());
+    outmctx.setMEPType(inmctx.getMEPType());
+    outmctx.setMEPLegType(inmctx.getMEPLegType());
+    outmctx.setSendingRole(inmctx.getReceivingRole());
+    outmctx.setReceivingRole(inmctx.getSendingRole());
+    outmctx.setReceiverPartyIdentitySet(inmctx.getSenderPartyIdentitySet());
+    outmctx.setSenderPartyIdentitySet(inmctx.getReceiverPartyIdentitySet());
+    outmctx.setPushTransfrer(inmctx.isPushTransfrer());
+    outmctx.setSecurity(inmctx.getSecurity());
+    if (inmctx.getMEPLegType().getTransport() != null &&
+        inmctx.getMEPLegType().getTransport().getBackChannel() != null) { // transport binding is BackChannel
+      outmctx.setTransportChannelType(
+          inmctx.getMEPLegType().getTransport().getBackChannel());
+    } else {
+      outmctx.setSecurity(outmctx.getSecurity());
+    }
+
+    if (outmctx.getTransportChannelType() != null) {
+      if (!Utils.isEmptyString(outmctx.getTransportChannelType().getSecurityIdRef())) {
+        String secId = outmctx.getTransportChannelType().getSecurityIdRef();
+        try {
+          outmctx.setSecurity(getPModeManager().getSecurityById(secId));
+        } catch (PModeException ex) {
+          String msgERr = String.format(
+              "Error occured while retrieving securitypatteren for '%s'!", secId);
+          LOG.logError(l, msgERr, ex);
+          throw new EBMSError(EBMSErrorCode.ProcessingModeMismatch, messageId,
+              msgERr, SoapFault.FAULT_CODE_CLIENT);
+        }
+      } else {
+        outmctx.setSecurity(inmctx.getSecurity());
+      }
+    }
+    LOG.logEnd(l);
+    return outmctx;
+  }
+
+  public void processUserMessageUnit(SoapMessage msg, UserMessage um, EBMSMessageContext ectx,
+      String msgId, QName sv) {
     long l = LOG.logStart();
 
     SOAPMessage request = msg.getContent(SOAPMessage.class);
@@ -370,10 +429,10 @@ public class EBMSInInterceptor extends AbstractEBMSInterceptor {
         // check if payload is compressed
         boolean isCmpr = false;
         for (MSHInPart.Property prp : p.getProperties()) {
-          if (!Utils.isEmptyString(prp.getName()) 
-              && !Utils.isEmptyString(prp.getValue()) 
-              && prp.getName().equalsIgnoreCase(EBMSConstants.EBMS_PAYLOAD_COMPRESSION_TYPE)
-              && prp.getValue().equalsIgnoreCase(MimeValues.MIME_GZIP.getMimeType())) {
+          if (!Utils.isEmptyString(prp.getName()) &&
+              !Utils.isEmptyString(prp.getValue()) &&
+              prp.getName().equalsIgnoreCase(EBMSConstants.EBMS_PAYLOAD_COMPRESSION_TYPE) &&
+              prp.getValue().equalsIgnoreCase(MimeValues.MIME_GZIP.getMimeType())) {
             // found property EBMS_PAYLOAD_COMPRESSION_TYPE 
             isCmpr = true;
             // remove property because is no longer needed
@@ -385,7 +444,7 @@ public class EBMSInInterceptor extends AbstractEBMSInterceptor {
         try {
           serializeAttachments(p, msg.getAttachments(),
               isCmpr, msgId, sv);
-        } catch (StorageException |  HashException ex) {
+        } catch (StorageException | HashException ex) {
           String errmsg = "Error reading attachments .";
           LOG.logError(l, errmsg, ex);
           throw new EBMSError(EBMSErrorCode.ExternalPayloadError, mMail.getMessageId(), errmsg,
@@ -440,11 +499,11 @@ public class EBMSInInterceptor extends AbstractEBMSInterceptor {
       sc.handleMessage(msg);
 
     } catch (Throwable tg) {
-      LOG.logError(l, "Error validatig security: '" +
+      LOG.logError(l, "Error validating security: '" +
           SoapUtils.getInLogFilePath(msg) + "'", tg);
       throw new EBMSError(EBMSErrorCode.ProcessingModeMismatch,
           messageId,
-          "Error occured validatig security: " + tg.getMessage(), tg, SoapFault.FAULT_CODE_CLIENT);
+          "Error occured validating security: " + tg.getMessage(), tg, SoapFault.FAULT_CODE_CLIENT);
     }
 
     try {
@@ -453,7 +512,7 @@ public class EBMSInInterceptor extends AbstractEBMSInterceptor {
       cc.handleMessage(msg);
 
     } catch (Throwable tg) {
-      LOG.logError(l, "Error validatig security: '" +
+      LOG.logError(l, "Error validating security: '" +
           SoapUtils.getInLogFilePath(msg) + "'", tg);
       throw new EBMSError(EBMSErrorCode.ProcessingModeMismatch,
           messageId,
@@ -472,8 +531,9 @@ public class EBMSInInterceptor extends AbstractEBMSInterceptor {
 
   }
 
-  private void serializeAttachments(MSHInPart p, Collection<Attachment> lstAttch, boolean compressed, String msgId, QName sv)
-      throws StorageException,  HashException {
+  private void serializeAttachments(MSHInPart p, Collection<Attachment> lstAttch, boolean compressed,
+      String msgId, QName sv)
+      throws StorageException, HashException {
     DataHandler dh = null;
     for (Attachment a : lstAttch) {
       if (a.getId().equals(p.getEbmsId())) {
@@ -486,21 +546,23 @@ public class EBMSInInterceptor extends AbstractEBMSInterceptor {
     if (dh != null) {
       if (compressed) {
         fout = msuStorageUtils.getCreateEmptyInFile(p.getMimeType());
-        try {          
+        try {
           mGZIPUtils.decompressGZIP(dh.getInputStream(), fout);
         } catch (IOException ex) {
-          String msg = String.format("Error decompressing attachment: %s. Error: %s", p.getEbmsId(), ex.getMessage());
+          String msg = String.format("Error decompressing attachment: %s. Error: %s", p.getEbmsId(),
+              ex.getMessage());
           LOG.logError(msg, ex);
           throw new EBMSError(EBMSErrorCode.DecompressionFailure, msgId,
-             msg , sv);
-          
+              msg, sv);
+
         }
       } else {
         try {
           // if not compressed
           fout = msuStorageUtils.storeInFile(p.getMimeType(), dh.getInputStream());
         } catch (IOException ex) {
-          throw new StorageException(String.format("Error storing attachment %s for message: %s.",p.getEbmsId(), msgId), ex);
+          throw new StorageException(String.format("Error storing attachment %s for message: %s.",
+              p.getEbmsId(), msgId), ex);
         }
       }
     }

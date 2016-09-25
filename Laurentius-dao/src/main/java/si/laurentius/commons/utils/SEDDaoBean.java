@@ -54,10 +54,13 @@ import si.laurentius.cron.SEDTaskExecution;
 import si.laurentius.commons.SEDInboxMailStatus;
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.SEDOutboxMailStatus;
+import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.SEDTaskStatus;
 import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.interfaces.JMSManagerInterface;
 import si.laurentius.commons.interfaces.SEDDaoInterface;
+import si.laurentius.msh.outbox.payload.MSHOutPart;
+import si.laurentius.msh.outbox.payload.MSHOutPayload;
 
 /**
  *
@@ -165,8 +168,8 @@ public class SEDDaoBean implements SEDDaoInterface {
         // only getters (public, starts with get, no arguments)
         String mName = m.getName();
         if (Modifier.isPublic(m.getModifiers()) && m.getParameterCount() == 0 &&
-             !m.getReturnType().equals(Void.TYPE) &&
-             (mName.startsWith("get") || mName.startsWith("is"))) {
+            !m.getReturnType().equals(Void.TYPE) &&
+            (mName.startsWith("get") || mName.startsWith("is"))) {
           String fieldName = mName.substring(mName.startsWith("get") ? 3 : 2);
           // get returm parameter
           Object searchValue;
@@ -182,7 +185,7 @@ public class SEDDaoBean implements SEDDaoInterface {
           }
 
           if (fieldName.endsWith("List") && searchValue instanceof List &&
-               !((List) searchValue).isEmpty()) {
+              !((List) searchValue).isEmpty()) {
             lstPredicate.add(om.get(fieldName.substring(0, fieldName.lastIndexOf("List"))).in(
                 ((List) searchValue).toArray()));
           } else {
@@ -329,8 +332,8 @@ public class SEDDaoBean implements SEDDaoInterface {
     LOG.logEnd(l);
     return result;
   }
-  
-   /**
+
+  /**
    *
    * @param <T>
    * @param type
@@ -338,15 +341,14 @@ public class SEDDaoBean implements SEDDaoInterface {
    * @return
    */
   @Override
-  public <T> T getMailByMessageId(Class<T> type, String mailMessageId) {
+  public <T> List<T> getMailByMessageId(Class<T> type, String mailMessageId) {
     long l = LOG.logStart(type, mailMessageId);
     TypedQuery<T> tq = memEManager.createNamedQuery(type.getName() + ".getByMessageId", type);
     tq.setParameter("messageId", mailMessageId);
-    T result = tq.getSingleResult();
+    List<T> result = tq.getResultList();
     LOG.logEnd(l);
     return result;
   }
-  
 
   /**
    *
@@ -436,7 +438,7 @@ public class SEDDaoBean implements SEDDaoInterface {
         }
         String msg =
             "Error occurred where removing mail type: '" + type + "', id: '" + bi + "'! Err:" +
-             ex.getMessage();
+            ex.getMessage();
         LOG.logError(l, msg, ex);
         throw new StorageException(msg, ex);
       }
@@ -508,6 +510,7 @@ public class SEDDaoBean implements SEDDaoInterface {
   public void serializeOutMail(MSHOutMail mail, String userID, String applicationId, String pmodeId)
       throws StorageException {
     long l = LOG.logStart();
+    String locadomain = SEDSystemProperties.getLocalDomain();
     try {
       mutUTransaction.begin();
       // persist mail
@@ -517,7 +520,23 @@ public class SEDDaoBean implements SEDDaoInterface {
       }
       if (mail.getStatus() == null) {
         mail.setStatus(SEDOutboxMailStatus.SUBMITTED.getValue());
+        mail.setSubmittedDate(Calendar.getInstance().getTime());
       }
+
+      // set message id
+      if (Utils.isEmptyString(mail.getMessageId())) {
+        mail.setMessageId(Utils.getUUIDWithDomain(locadomain));
+      }
+
+      if (mail.getMSHOutPayload() != null) {
+        for (MSHOutPart mp : mail.getMSHOutPayload().getMSHOutParts()) {
+          if (Utils.isEmptyString(mp.getEbmsId())) {
+            mp.setEbmsId(Utils.getUUIDWithDomain(locadomain));
+            
+          }
+        }
+      }
+
       memEManager.persist(mail);
       // persist mail event
       MSHOutEvent me = new MSHOutEvent();
@@ -566,7 +585,7 @@ public class SEDDaoBean implements SEDDaoInterface {
   @Override
   public void setStatusToInMail(MSHInMail mail, SEDInboxMailStatus status, String desc)
       throws StorageException {
-    setStatusToInMail(mail, status, desc, null, null,  null, null);
+    setStatusToInMail(mail, status, desc, null, null, null, null);
   }
 
   /**
@@ -577,7 +596,7 @@ public class SEDDaoBean implements SEDDaoInterface {
    * @param userID
    * @param applicationId
    * @throws StorageException
-   */  
+   */
   @Override
   public void setStatusToInMail(MSHInMail mail, SEDInboxMailStatus status, String desc,
       String userID,
@@ -586,7 +605,6 @@ public class SEDDaoBean implements SEDDaoInterface {
     setStatusToInMail(mail, status, desc, userID, applicationId, null, null);
 
   }
-
 
   /**
    *
@@ -634,7 +652,7 @@ public class SEDDaoBean implements SEDDaoInterface {
         }
         String msg =
             "Status not setted to MSHInMail:" + mail.getId() + " result: '" + iVal +
-             "'. Mail not exists or id duplicates?";
+            "'. Mail not exists or id duplicates?";
         LOG.logError(l, msg, null);
         throw new StorageException(msg, null);
       }
@@ -650,7 +668,7 @@ public class SEDDaoBean implements SEDDaoInterface {
         }
         String msg =
             "Error commiting status to incommingxmail: '" + mail.getId() + "'! Err:" +
-             ex.getMessage();
+            ex.getMessage();
         LOG.logError(l, msg, ex);
         throw new StorageException(msg, ex);
       }
@@ -721,8 +739,8 @@ public class SEDDaoBean implements SEDDaoInterface {
       // persist mail event
       MSHOutEvent me = new MSHOutEvent();
       me.setMailId(mail.getId());
-      me.setDescription(desc == null ? status.getDesc() : 
-          (desc.length()>512?desc.substring(0,508)+"...":desc));
+      me.setDescription(desc == null ? status.getDesc() :
+          (desc.length() > 512 ? desc.substring(0, 508) + "..." : desc));
       me.setStatus(mail.getStatus());
       me.setDate(mail.getStatusDate());
       me.setSenderMessageId(mail.getSenderMessageId());
@@ -742,7 +760,7 @@ public class SEDDaoBean implements SEDDaoInterface {
         }
         String msg =
             "Status not setted to MSHOutMail:" + mail.getId() + " result: '" + iVal +
-             "'. Mail not exists or id duplicates?";
+            "'. Mail not exists or id duplicates?";
         LOG.logError(l, msg, null);
         throw new StorageException(msg, null);
       }
@@ -820,9 +838,6 @@ public class SEDDaoBean implements SEDDaoInterface {
     try {
 
       mutUTransaction.begin();
-      // persist mail
-      memEManager.merge(mail);
-
       // persist mail event
       MSHInEvent me = new MSHInEvent();
       me.setMailId(mail.getId());
@@ -830,6 +845,8 @@ public class SEDDaoBean implements SEDDaoInterface {
       me.setDescription(statusDesc);
       me.setUserId(user);
       me.setDate(mail.getStatusDate());
+      // persist mail
+      memEManager.merge(mail);
       memEManager.persist(me);
       mutUTransaction.commit();
     } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException |

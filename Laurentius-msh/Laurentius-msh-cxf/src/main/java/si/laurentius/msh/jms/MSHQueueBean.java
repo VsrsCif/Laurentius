@@ -59,7 +59,7 @@ import si.laurentius.commons.interfaces.OutMailEventLisneterInterface;
           propertyValue = "javax.jms.Queue"),
       @ActivationConfigProperty(propertyName = "destination", propertyValue = "queue/MSHQueue"),
       @ActivationConfigProperty(propertyName = "maxSession",
-          propertyValue = "${si.laurentius.msh.sender.workers.count}")})
+          propertyValue = "5")})
 @TransactionManagement(TransactionManagementType.BEAN)
 public class MSHQueueBean implements MessageListener {
 
@@ -135,7 +135,7 @@ public class MSHQueueBean implements MessageListener {
       LOG.logError(t, errDesc, ex);
       setStatusToOutMail(mail, SEDOutboxMailStatus.FAILED, errDesc, ex);
       mPluginOutEventHandler.outEvent(mail, null,
-              OutMailEventLisneterInterface.PluginOutEvent.FAILED);
+          OutMailEventLisneterInterface.PluginOutEvent.FAILED);
       return;
     }
 
@@ -163,15 +163,26 @@ public class MSHQueueBean implements MessageListener {
         setStatusToOutMail(mail, SEDOutboxMailStatus.ERROR, sm.getError().getSubMessage(),
             sm.getResultFile(), sm.getMimeType());
 
-        if ((sm.getError().getEbmsErrorCode().equals(EBMSErrorCode.ConnectionFailure) ||
-            sm.getError().getEbmsErrorCode().equals(EBMSErrorCode.DeliveryFailure) ||
-            sm.getError().getEbmsErrorCode().equals(EBMSErrorCode.Other)) &&
-             resendMail(mail, sd, jmsRetryCount, jmsRetryDelay)) {
+        LOG.formatedWarning("********************* ERROR MESSAGE %s", sm.getError().getEbmsErrorCode().getCode());
+        if ((sm.getError().getEbmsErrorCode().equals(EBMSErrorCode.ConnectionFailure) 
+            || sm.getError().getEbmsErrorCode().equals(EBMSErrorCode.DeliveryFailure) 
+            || sm.getError().getEbmsErrorCode().equals(EBMSErrorCode.Other))) {
 
-          mPluginOutEventHandler.outEvent(mail, sd,
-              OutMailEventLisneterInterface.PluginOutEvent.RESEND);
+          if (resendMail(mail, sd, jmsRetryCount, jmsRetryDelay)) {
+            mPluginOutEventHandler.outEvent(mail, sd,
+                OutMailEventLisneterInterface.PluginOutEvent.RESEND);
+          } else {
+            setStatusToOutMail(mail, SEDOutboxMailStatus.FAILED,
+                "Max resend mail reached",
+                null, sm.getMimeType());
+
+          }
 
         } else {
+          setStatusToOutMail(mail, SEDOutboxMailStatus.FAILED,
+              "Configuration error: " + sm.getError().getSubMessage(),
+              null, sm.getMimeType());
+
           mPluginOutEventHandler.outEvent(mail, sd,
               OutMailEventLisneterInterface.PluginOutEvent.FAILED);
         }

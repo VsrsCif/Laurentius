@@ -14,9 +14,11 @@
         <p:layout   widgetVar="OutMailDataMain" style="min-width:400px;min-height:400px;height: 100%;width: 100%"  >
             <p:layoutUnit position="center" style="width:100%;height:100%;padding: 0px; margin: 0px" gutter="0" >
                 <p:scrollPanel mode="native" style="width:100%;height:100%"> 
-                    <p:dataTable id="OutMailTable" var="outMail" value="#{OutMailDataView.mailList}" 
-                                 selectionMode="single" 
-                                 selection="#{OutMailDataView.currentMail}" 
+                    <p:dataTable id="OutMailTable" 
+                                 var="outMail"
+                                 value="#{OutMailDataView.mailList}" 
+                                 
+                                 selection="#{OutMailDataView.selected}" 
                                  rowKey="#{outMail.id}"
                                  currentPageReportTemplate="#{msg['Showing']} {startRecord}-{endRecord} #{msg['OutOf']} {totalRecords}"
                                  paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
@@ -30,7 +32,9 @@
                                  >
                         <p:ajax event="rowSelect" listener="#{OutMailDataView.onRowSelect}" 
                                 update="forms:OutMailPanel:OutMailTab" />
-
+                        
+                        <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
+                        
                         <p:column width="60" headerText="#{msg['Nu']}">
                             <h:outputText value="#{OutMailDataView.rowIndex(outMail) + 1}" />
                         </p:column>

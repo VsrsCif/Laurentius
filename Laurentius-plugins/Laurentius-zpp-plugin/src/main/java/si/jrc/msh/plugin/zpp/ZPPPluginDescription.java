@@ -76,7 +76,7 @@ public class ZPPPluginDescription implements PluginDescriptionInterface {
    */
   @Override
   public String getSettingUrlContext() {
-    return "/zpp-plugin";
+    return "/laurentius-web/zpp-plugin";
   }
 
   /**

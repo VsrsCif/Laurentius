@@ -5,6 +5,9 @@
     xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
     http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd"
     version="2.0">
+    <factory>
+        <exception-handler-factory>si.laurentius.msh.web.jsf.ViewExpiredExceptionHandlerFactory</exception-handler-factory>
+    </factory>
     <application>
         <locale-config>
             <default-locale>en</default-locale>
@@ -13,5 +16,6 @@
             <base-name>si.laurentius.msh.msg.messages</base-name>
             <var>msg</var>
         </resource-bundle>
+        
     </application>
 </faces-config>

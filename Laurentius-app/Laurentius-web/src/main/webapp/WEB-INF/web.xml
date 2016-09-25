@@ -45,10 +45,12 @@
         <auth-method>FORM</auth-method>
         <form-login-config>
             <form-login-page>/public/login.xhtml</form-login-page>
-            <form-error-page>/public/loginError.xhtml</form-error-page>
+            <form-error-page>/public/login.xhtml</form-error-page>
         </form-login-config>
     </login-config>
+     
     
+
     
     <!-- error-page>
         <error-code>403</error-code>
@@ -66,4 +68,7 @@
     <security-role>
         <role-name>USER</role-name>
     </security-role>
+    <session-config>
+        <session-timeout>480</session-timeout>
+    </session-config>
 </web-app>

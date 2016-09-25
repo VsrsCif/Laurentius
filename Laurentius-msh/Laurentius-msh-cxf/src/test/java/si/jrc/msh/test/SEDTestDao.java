@@ -6,6 +6,7 @@
 package si.jrc.msh.test;
 
 import java.math.BigInteger;
+import java.util.Collections;
 import java.util.List;
 import si.laurentius.msh.inbox.mail.MSHInMail;
 import si.laurentius.msh.outbox.mail.MSHOutMail;
@@ -55,8 +56,8 @@ public class SEDTestDao implements SEDDaoInterface{
   }
 
   @Override
-  public <T> T getMailByMessageId(Class<T> type, String mailId) {
-    return null;
+  public <T> List<T> getMailByMessageId(Class<T> type, String mailId) {
+    return Collections.emptyList();
   }
 
   @Override

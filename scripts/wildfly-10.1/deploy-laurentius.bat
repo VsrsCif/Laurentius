@@ -88,6 +88,8 @@ copy "%LAU_BUNDLE%\deployments\Laurentius-msh.ear"  "%WILDFLY_HOME%\standalone\d
 copy "%LAU_BUNDLE%\deployments\laurentius-ws.war"  "%WILDFLY_HOME%\standalone\deployments\"
 copy "%LAU_BUNDLE%\deployments\laurentius-web.war"  "%WILDFLY_HOME%\standalone\deployments\"
 copy "%LAU_BUNDLE%\deployments\plugin-zpp.war"  "%WILDFLY_HOME%\standalone\deployments\"
+copy "%LAU_BUNDLE%\deployments\plugin-testcase.war"  "%WILDFLY_HOME%\standalone\deployments\"
+
 
 
 if "%INIT%" == "true" (
@@ -103,6 +105,8 @@ if "%INIT%" == "true" (
 	rem  copy start scripts
 	echo copy start scripts "%WILDFLY_HOME%\bin\
 	copy "%LAU_BUNDLE%\widlfly-10.1\laurentius-demo.bat" "%WILDFLY_HOME%\bin\"
+	move "%WILDFLY_HOME%\bin\standalone.conf.bat" "%WILDFLY_HOME%\bin\standalone.conf.bat.bck"
+	copy "%LAU_BUNDLE%\widlfly-10.1\config\standalone.conf.bat" "%WILDFLY_HOME%\bin\standalone.conf.bat"
 
 	echo "copy laurentius-home to %LAU_HOME%\laurentius-home".
 	rem  create home folder

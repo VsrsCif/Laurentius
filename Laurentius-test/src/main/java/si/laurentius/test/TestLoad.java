@@ -270,17 +270,12 @@ public class TestLoad {
     }
 
     public static void main(String... args) {
-
-        System.out.println("test: " + Integer.parseInt("IICSR", 32));
-
-        /*
-        
         TestLoad tl = new TestLoad();
         try {
             tl.testLoad_a(50);
         } catch (SEDException_Exception ex) {
             Logger.getLogger(TestLoad.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
+        }
     }
 
     public long getDeltaTime(long l) {
@@ -314,7 +309,7 @@ public class TestLoad {
                     format("VL %d/2016", i + 1)));
             // submit request
             SubmitMailResponse mr = getService().submitMail(smr);
-            LOG.log(i + ". submited in: '" + getDeltaTime(st) + "' whole: '" +
+            LOG.log(i + ". submited in: '" + getDeltaTime(st) + "'  all: '" +
                     getDeltaTime(startl) + "'");
 
         }
@@ -374,7 +369,7 @@ public class TestLoad {
                 OutPart op = new OutPart();
                 op.setFilename(f.getName());
                 op.setDescription(i++ == 0 ? "Sklep" : "Priloga");
-                op.setValue(Files.readAllBytes(f.toPath()));
+                op.setBin(Files.readAllBytes(f.toPath()));
                 op.setMimeType(MimeValues.MIME_PDF.getMimeType());
                 om.getOutPayload().getOutParts().add(op);
             } catch (IOException ex) {

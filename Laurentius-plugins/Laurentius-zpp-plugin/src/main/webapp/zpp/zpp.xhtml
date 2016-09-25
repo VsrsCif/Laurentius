@@ -22,34 +22,23 @@
 
                 <p:layoutUnit position="center"   >
 
-                    <p:panelGrid  columns="2" columnClasses="label,value" style="width: 580px">
+                    <p:panelGrid  columns="2" columnClasses="label,value" style="width: 800px">
                         <f:facet name="header">
 
-                            <h:outputText value="Plugin" />
+                            <h:outputText value="ZPP Plugin visualization transformatons" />
 
                         </f:facet>
-
-
-                        <h:outputText value="Sign cert alias" />
-                        <h:inputText value="" style="width: 100%"/>
-
-                        <h:outputText value="ZPP-home" />
-                        <h:inputText value="" style="width: 100%"/>
-
+                        <h:outputText value="DeliveryNotification" />
+                        <h:inputText value="LegalDelivery_ZPP-DeliveryNotification-fp" disabled="true" style="width: 100%"/>
+                    
                         <h:outputText value="Legal delivery FOP" />
-                        <h:inputText value="LegalDelivery_ZPP-AdviceOfDelivery.fo" style="width: 100%"/>
+                        <h:inputText value="LegalDelivery_ZPP-AdviceOfDelivery.fo" disabled="true" style="width: 100%"/>
 
                         <h:outputText value="AdviceOfDeliveryFiction" />
-                        <h:inputText value="LegalDelivery_ZPP-AdviceOfDeliveryFiction.fo" style="width: 100%"/>
+                        <h:inputText value="LegalDelivery_ZPP-AdviceOfDeliveryFiction.fo" disabled="true" style="width: 100%"/>
 
-                        <h:outputText value="DeliveryNotification" />
-                        <h:inputText value="LegalDelivery_ZPP-DeliveryNotification-fp" style="width: 100%"/>
-
-                        <h:outputText value="Legal delivery FOP" />
-                        <h:inputText value="LegalDelivery_ZPP-AdviceOfDelivery.fo" style="width: 100%"/>
-
-                        <h:outputText value="Fop.xconf" />
-                        <h:inputText value="" style="width: 100%"/>
+                        <h:outputText value="FOP settings" />
+                        <h:inputText value="fop.xconf" disabled="true" style="width: 100%"/>
                     </p:panelGrid>
                 </p:layoutUnit>                       
             </p:layout>

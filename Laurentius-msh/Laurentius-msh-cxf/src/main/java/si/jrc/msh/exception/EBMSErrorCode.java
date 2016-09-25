@@ -58,7 +58,7 @@ public enum EBMSErrorCode {
   /**
      *
      */
-  Other("EBMS:0004", "Other", "failure", "Content", "", "ebms"),
+  Other("EBMS:0004", "Other", "failure", "Content", "Other error", "ebms"),
 
   /**
      *
@@ -213,6 +213,14 @@ public enum EBMSErrorCode {
       "failure", 
       "Communication",
       "An error occurred during the decompression.",
+      "reliability"),
+  
+  
+      /*
+  */
+  DuplicateDeteced("EBMS:1000", "DuplicateDeteced", "warning",
+      "Processing", "Message was already received in receivers duplicate detection time window! " +
+          "According to receivers settings duplicate is eliminated!",
       "reliability"),
   
   

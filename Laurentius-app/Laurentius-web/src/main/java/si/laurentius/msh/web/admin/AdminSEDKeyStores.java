@@ -14,10 +14,14 @@
  */
 package si.laurentius.msh.web.admin;
 
+import java.io.StringWriter;
 import java.security.KeyStore;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import si.laurentius.cert.SEDCertStore;
@@ -45,9 +49,11 @@ public class AdminSEDKeyStores extends AbstractAdminJSFView<SEDCertStore> {
   @EJB(mappedName = SEDJNDI.JNDI_SEDLOOKUPS)
   private SEDLookupsInterface mdbLookups;
 
+  List<SEDCertStore> mCertStoreList = null;
+
   /**
-     *
-     */
+   *
+   */
   @Override
   public void createEditable() {
     SEDCertStore cs = new SEDCertStore();
@@ -57,8 +63,8 @@ public class AdminSEDKeyStores extends AbstractAdminJSFView<SEDCertStore> {
   }
 
   /**
-     *
-     */
+   *
+   */
   public void refreshCurrentKeystore() {
     long l = LOG.logStart();
 
@@ -104,10 +110,10 @@ public class AdminSEDKeyStores extends AbstractAdminJSFView<SEDCertStore> {
    */
   public SEDCertificate existsCertInList(List<SEDCertificate> lst, SEDCertificate sc) {
     for (SEDCertificate c : lst) {
-      if (stringEquals(c.getAlias(), c.getAlias())
-          && stringEquals(c.getIssuerDN(), sc.getIssuerDN())
-          && stringEquals(c.getSubjectDN(), sc.getSubjectDN())
-          && c.getSerialNumber().equals(sc.getSerialNumber())) {
+      if (stringEquals(c.getAlias(), c.getAlias()) &&
+          stringEquals(c.getIssuerDN(), sc.getIssuerDN()) &&
+          stringEquals(c.getSubjectDN(), sc.getSubjectDN()) &&
+          c.getSerialNumber().equals(sc.getSerialNumber())) {
         return c;
       }
     }
@@ -131,57 +137,90 @@ public class AdminSEDKeyStores extends AbstractAdminJSFView<SEDCertStore> {
   @Override
   public List<SEDCertStore> getList() {
     long l = LOG.logStart();
-    List<SEDCertStore> lst = mdbLookups.getSEDCertStore();
-    LOG.logEnd(l, lst != null ? lst.size() : "null");
-    return lst;
+    if (mCertStoreList == null) {
+      refreshCertStoreList();
+    }
+    LOG.logEnd(l, mCertStoreList);
+    return mCertStoreList;
+  }
+
+  public void refreshCertStoreList() {
+    mCertStoreList = mdbLookups.getSEDCertStore();
+    StringWriter sw = new StringWriter();
+    for (SEDCertStore cs : mCertStoreList) {
+      for (SEDCertificate c : cs.getSEDCertificates()) {
+        if (c.getValidTo().before(Calendar.getInstance().getTime())) {
+          sw.append(String.format("Certificate '%s' in keystore '%s' in invalid!\n", c.getAlias(),
+              cs.getName()));
+        }
+      }
+    }
+    String wrn = sw.toString();
+    if (wrn.isEmpty()) {
+      facesContext().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
+          "Invalid certificate", wrn));
+    }
+  }
+
+  public boolean isCertInvalid(SEDCertificate crt) {
+    Date currDate = Calendar.getInstance().getTime();
+    return crt.getValidTo() == null ||
+         crt.getValidFrom() == null ||
+         currDate.before(crt.getValidFrom()) ||
+         currDate.after(crt.getValidTo());
+  }
+
+  public boolean hasInvalidCerts(SEDCertStore keyStore) {
+    for (SEDCertificate crt : keyStore.getSEDCertificates()) {
+      if (isCertInvalid(crt)) {
+        return true;
+      }
+    }
+    return false;
+
   }
 
   /**
    *
    * @return
+   *
+   * public List<String> getTaskTypeList() { long l = LOG.logStart(); List<String> rstLst = new
+   * ArrayList<>(); List<SEDTaskType> lst = mdbLookups.getSEDTaskTypes(); lst.stream().forEach((tsk)
+   * -> { rstLst.add(tsk.getType()); }); LOG.logEnd(l, "Task size: " + lst.size()); return rstLst; }
    */
-  public List<String> getTaskTypeList() {
-    long l = LOG.logStart();
-    List<String> rstLst = new ArrayList<>();
-    List<SEDTaskType> lst = mdbLookups.getSEDTaskTypes();
-    lst.stream().forEach((tsk) -> {
-      rstLst.add(tsk.getType());
-    });
-    LOG.logEnd(l, "Task size: " + lst.size());
-    return rstLst;
-  }
-
   /**
-     *
-     */
+   *
+   */
   @Override
   public void persistEditable() {
     SEDCertStore ecj = getEditable();
     if (ecj != null) {
       mdbLookups.addSEDCertStore(ecj);
+      refreshCertStoreList();
     }
   }
 
   /**
-     *
-     */
+   *
+   */
   @Override
   public void removeSelected() {
     if (getSelected() != null) {
       mdbLookups.removeEDCertStore(getSelected());
       setSelected(null);
-
+      refreshCertStoreList();
     }
   }
 
   /**
-     *
-     */
+   *
+   */
   @Override
   public void updateEditable() {
     SEDCertStore ecj = getEditable();
     if (ecj != null) {
       mdbLookups.updateSEDCertStore(ecj);
+      refreshCertStoreList();
     }
   }
 

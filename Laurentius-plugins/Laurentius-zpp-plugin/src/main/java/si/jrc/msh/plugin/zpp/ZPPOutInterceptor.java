@@ -138,6 +138,7 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
       ptNew.setFilepath(StorageUtils.getRelativePath(fOut));
       ptNew.setDescription(ZPPConstants.MSG_DOC_PREFIX_DESC + pt.getDescription());
       ptNew.setMd5(mpHU.getMD5Hash(fOut));
+      ptNew.setName(pt.getName());
       ptNew.setFilename(fOut.getName());
       ptNew.setIsEncrypted(Boolean.TRUE);
       op.getMSHOutParts().add(ptNew);
@@ -264,10 +265,12 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
       MSHOutPart ptNew = new MSHOutPart();
       ptNew.setEncoding(SEDValues.ENCODING_UTF8);
       ptNew.setMimeType(MimeValues.MIME_PDF.getMimeType());
+      ptNew.setName(ZPPConstants.S_ZPP_ACTION_DELIVERY_NOTIFICATION);
       ptNew.setDescription(ZPPConstants.MSG_DELIVERY_NOTIFICATION_DESC);
       ptNew.setType(ZPPConstants.S_ZPP_ACTION_DELIVERY_NOTIFICATION);
       ptNew.setFilepath(fPDFVizualization);
       ptNew.setFilename(fDNViz.getName());
+      
       ptNew.setIsEncrypted(Boolean.FALSE);
       // encrypt payloads
       MSHOutPayload pl = getEncryptedPayloads(skey, outMail);

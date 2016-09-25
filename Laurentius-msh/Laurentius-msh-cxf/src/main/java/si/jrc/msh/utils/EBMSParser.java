@@ -51,6 +51,8 @@ import si.laurentius.commons.pmode.PModeUtils;
 
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.Utils;
+import si.laurentius.msh.pmode.ReceptionAwareness;
+import si.laurentius.msh.pmode.TransportChannelType;
 
 /**
  *
@@ -344,6 +346,21 @@ public class EBMSParser {
             "Action '%s' for mail '%s' has no security defined  in pmode (id: '%s') configuration.",
             ebmsAction, embsMessageId, pmd.getId()), null);
       }
+      
+      
+      ReceptionAwareness ra = null;
+      // retrieve security
+      if (ebctx.getTransportChannelType() != null 
+          && ebctx.getTransportChannelType().getReceptionAwareness() != null
+          && !Utils.isEmptyString(ebctx.getTransportChannelType().getReceptionAwareness().getRaPatternIdRef()) ) {
+        
+        ra = pmdManager.getReceptionAwarenessById(ebctx.getTransportChannelType().getReceptionAwareness().getRaPatternIdRef());
+
+      } else {
+        LOG.logWarn(String.format(
+            "Action '%s' for mail '%s' has no ReceptionAwareness defined  in pmode (id: '%s') configuration.",
+            ebmsAction, embsMessageId, pmd.getId()), null);
+      }
 
       ebctx.setSecurity(security);
       ebctx.setService(srv);
@@ -351,6 +368,7 @@ public class EBMSParser {
       ebctx.setReceiverPartyIdentitySet(pisTo);
       ebctx.setSenderPartyIdentitySet(pisFrom);
       ebctx.setSendingRole(ebmsFromParty.getRole());
+      ebctx.setReceptionAwareness(ra);
 
     } catch (PModeException ex) {
       String msg = EBMSErrorMessage.INVALID_HEADER_DATA + ex.getMessage();

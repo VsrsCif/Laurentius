@@ -84,6 +84,12 @@ public class AppConstant {
      *
      */
   public static final String S_PANEL_SETT_PMODE = "PANEL_SETT_PMODE";
+  
+  public static final String S_PANEL_SETT_PMODE_SERVICES = "PANEL_SETT_PMODE_SERVICES";
+  public static final String S_PANEL_SETT_PMODE_PARTIES = "PANEL_SETT_PMODE_PARTIES";
+  public static final String S_PANEL_SETT_PMODE_SECURITIES = "PANEL_SETT_PMODE_SECURITIES";
+  public static final String S_PANEL_SETT_PMODE_AS4_RA = "PANEL_SETT_PMODE_AS4_RA";
+
 
   /**
    *
@@ -179,6 +185,22 @@ public class AppConstant {
    */
   public String getS_PANEL_SETT_PMODE() {
     return S_PANEL_SETT_PMODE;
+  }
+
+  public String getS_PANEL_SETT_PMODE_SERVICES() {
+    return S_PANEL_SETT_PMODE_SERVICES;
+  }
+
+  public String getS_PANEL_SETT_PMODE_PARTIES() {
+    return S_PANEL_SETT_PMODE_PARTIES;
+  }
+
+  public String getS_PANEL_SETT_PMODE_SECURITIES() {
+    return S_PANEL_SETT_PMODE_SECURITIES;
+  }
+
+  public String getS_PANEL_SETT_PMODE_AS4_RA() {
+    return S_PANEL_SETT_PMODE_AS4_RA;
   }
 
 }

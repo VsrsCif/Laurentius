@@ -9,6 +9,8 @@
 
 }
 
+
+
 .ui-widget .ui-layout-unit, 
 .ui-widget .ui-layout-unit-content,
 .ui-tabs .ui-tabs-panel
@@ -104,7 +106,8 @@
 
 
 .ui-datatable-cell-red {
-    background-color: red;
+    background-color: indianred;
+    color: black;
 }
 
 .panelGridNoBorder .ui-panelgrid-even, .panelGridNoBorder .ui-panelgrid-odd, .panelGridNoBorder .ui-panelgrid-cell {
@@ -205,10 +208,8 @@
 }
 
 .ui-dialog .ui-widget-header {
-    text-align: left !important;
-    height: 28px !important;
+    text-align: left !important;   
     vertical-align: middle !important;
-
 }
 
 .ui-picklist.ui-picklist-responsive .ui-picklist-list-wrapper {

@@ -103,15 +103,19 @@ public class EBMSOutInterceptor extends AbstractEBMSInterceptor {
     QName qnFault = (isRequest ? SoapFault.FAULT_CODE_CLIENT : SoapFault.FAULT_CODE_SERVER);
     
     
-    
     if (msg.getContent(SOAPMessage.class) == null) {
       String errmsg = "Internal error missing SOAPMessage!";
       LOG.logError(l, errmsg, null);
-      throw new EBMSError(EBMSErrorCode.InvalidSoapRequest, null, errmsg, qnFault);
+      throw new EBMSError(EBMSErrorCode.ApplicationError, null, errmsg, qnFault);
     }
 
     // get context variables
     EBMSMessageContext ectx = SoapUtils.getEBMSMessageOutContext(msg);
+     if (ectx== null) {
+      String errmsg = "Internal error missing EBMSMessageContext!";
+      LOG.logError(l, errmsg, null);
+      throw new EBMSError(EBMSErrorCode.ApplicationError, null, errmsg, qnFault);
+    }
     MSHOutMail outMail = SoapUtils.getMSHOutMail(msg);
 
     String msgId = outMail != null ? outMail.getMessageId() : null;
@@ -155,30 +159,22 @@ public class EBMSOutInterceptor extends AbstractEBMSInterceptor {
       }
 
     }
-
     SignalMessage signal = msg.getExchange().get(SignalMessage.class);
     if (signal != null) {
+      LOG.log("Add signal message: " + msgId);
       msgHeader.getSignalMessages().add(signal);
     }
-
     // add error signal
     EBMSError err = msg.getExchange().get(EBMSError.class);
 
     if (err != null) {
+      LOG.log("Add error message: " + msgId);
       SignalMessage sm =
           EBMSBuilder.createErrorSignal(err,  Calendar.getInstance()
               .getTime());
 
       msgHeader.getSignalMessages().add(sm);
     }
-    // add svev signal
-    // add error
-    /*
-     * if (msgSvevKey != null) { SignalMessage sm = mEBMSUtil.generateSVEVKeySignal(msgSvevKey,
-     * mSettings.getDomain());
-     * sm.getMessageInfo().setRefToMessageId(mgsInboundMessage.getUserMessages
-     * ().get(0).getMessageInfo().getMessageId()); msgHeader.getSignalMessages().add(sm); }
-     */
     try {
       SOAPMessage request = msg.getContent(SOAPMessage.class);
       SOAPHeader sh = request.getSOAPHeader();
@@ -191,10 +187,9 @@ public class EBMSOutInterceptor extends AbstractEBMSInterceptor {
       throw new EBMSError(EBMSErrorCode.ApplicationError, msgId, errMsg, ex,
           SoapFault.FAULT_CODE_CLIENT);
     }
-
     // if out mail add security / f
     if (ectx.getSecurity() != null) {
-
+      LOG.log("Set security: " + msgId);
       WSS4JOutInterceptor sc =
           configureOutSecurityInterceptors(ectx.getSecurity(), sPID.getLocalPartySecurity(),
               rPID.getExchangePartySecurity(), msgId,

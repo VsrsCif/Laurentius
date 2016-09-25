@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      >
+    <composite:interface>
+    </composite:interface>
+
+    <composite:implementation >
+
+        <p:dialog  header="#{msg['PModePartyDialog']}" widgetVar="pModePartyDialog" 
+                   modal="true" hideEffect="fade" resizable="false" appendTo="@(body)" height="600" width="1000">
+
+            <h:form id="pModePartyDialogForm" >
+                <p:layout id="pModeParty" style="min-width:950px; height:590px; "  >
+                    <p:layoutUnit position="center"   >
+
+                        <pe:codeMirror id="codeMirror" mode="xml"  class="CodeMirrorXML"
+                                       theme="eclipse" value="#{pModePartyView.currentObjectAsString}" lineNumbers="true"/>  
+
+                    </p:layoutUnit>
+
+                    <p:layoutUnit position="south"  size="40" minSize="40" maxSize="40" >
+                        <p:toolbar 
+                            styleClass="dialogButtonBar" >
+                            <f:facet name="right"  >
+                                <p:commandButton value="#{msg['Ok']}"  styleClass="toolbar-Button" 
+                                                 icon="ui-icon-sed-ok" 
+                                                 action="#{pModePartyView.addOrUpdateEditable()}"
+                                                 oncomplete="PF('pModePartyDialog').hide()" 
+                                                 update=":forms:SettingsPModesParties:TblPModeParties"
+                                                 />
+                                <p:commandButton value="#{msg['Cancel']}" styleClass="toolbar-Button" 
+                                                 icon="ui-icon-sed-cancel"
+                                                 oncomplete="PF('pModePartyDialog').hide()" 
+                                                 />
+                            </f:facet>
+                        </p:toolbar>
+                    </p:layoutUnit>
+                </p:layout>
+            </h:form>
+        </p:dialog>
+
+
+    </composite:implementation>
+
+</html>

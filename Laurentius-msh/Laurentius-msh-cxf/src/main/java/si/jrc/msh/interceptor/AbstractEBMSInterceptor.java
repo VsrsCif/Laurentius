@@ -40,6 +40,7 @@ import si.laurentius.commons.interfaces.PModeInterface;
 import si.laurentius.commons.interfaces.SEDDaoInterface;
 import si.laurentius.commons.interfaces.SEDLookupsInterface;
 import si.laurentius.commons.utils.SEDLogger;
+import si.laurentius.commons.utils.sec.KeystoreUtils;
 
 /**
  * Abstract class extends from AbstractSoapInterceptor with access to apliation EJB resources as: -
@@ -196,6 +197,12 @@ public abstract class AbstractEBMSInterceptor extends AbstractSoapInterceptor {
           getLookups().getSEDCertificatForAlias(lps.getSignatureKeyAlias(), cs, true);
       if (aliasCrt == null) {
         String msg = "Key for alias '" + lps.getSignatureKeyAlias() + "' do not exists!";
+        LOG.logError(l, msg, null);
+        throw new EBMSError(EBMSErrorCode.PModeConfigurationError, msgId, msg, sv);
+      }
+
+      if (!KeystoreUtils.isCertValid(aliasCrt)) {
+        String msg = "Key for alias '" + lps.getSignatureKeyAlias() + " is not valid!";
         LOG.logError(l, msg, null);
         throw new EBMSError(EBMSErrorCode.PModeConfigurationError, msgId, msg, sv);
       }

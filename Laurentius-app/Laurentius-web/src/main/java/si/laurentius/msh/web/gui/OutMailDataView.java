@@ -29,6 +29,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
@@ -42,7 +43,6 @@ import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.model.UploadedFile;
-import si.laurentius.ebox.SEDBox;
 import si.laurentius.commons.MimeValues;
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.SEDOutboxMailStatus;
@@ -57,7 +57,6 @@ import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StorageUtils;
 import si.laurentius.commons.utils.Utils;
 import si.laurentius.msh.web.abst.AbstractMailView;
-import si.laurentius.msh.web.admin.AdminSEDUserView;
 
 /**
  *
@@ -78,15 +77,14 @@ public class OutMailDataView extends AbstractMailView<MSHOutMail, MSHOutEvent> i
 
   private static final long serialVersionUID = 1L;
 
-  
   @EJB(mappedName = SEDJNDI.JNDI_SEDDAO)
   SEDDaoInterface mDB;
-  
+
   @EJB(mappedName = SEDJNDI.JNDI_SEDLOOKUPS)
   SEDLookupsInterface mLookup;
-  
-   @EJB(mappedName = SEDJNDI.JNDI_DBSETTINGS)
-   DBSettingsInterface mdbSettings;
+
+  @EJB(mappedName = SEDJNDI.JNDI_DBSETTINGS)
+  DBSettingsInterface mdbSettings;
 
   @EJB(mappedName = SEDJNDI.JNDI_JMSMANAGER)
   JMSManagerInterface mJMS;
@@ -166,7 +164,7 @@ public class OutMailDataView extends AbstractMailView<MSHOutMail, MSHOutEvent> i
     long l = LOG.logStart();
     MSHOutPart part = null;
     if (mMail == null || mMail.getMSHOutPayload() == null ||
-         mMail.getMSHOutPayload().getMSHOutParts().isEmpty()) {
+        mMail.getMSHOutPayload().getMSHOutParts().isEmpty()) {
       return null;
     }
 
@@ -199,14 +197,14 @@ public class OutMailDataView extends AbstractMailView<MSHOutMail, MSHOutEvent> i
     File f = StorageUtils.getFile(filePath);
     if (f.exists()) {
       try {
-      return new DefaultStreamedContent(new FileInputStream(f), MimeValues.getMimeTypeByFileName(
-          f.getName()),
-          f.getName());
-       } catch (FileNotFoundException ex) {
+        return new DefaultStreamedContent(new FileInputStream(f), MimeValues.getMimeTypeByFileName(
+            f.getName()),
+            f.getName());
+      } catch (FileNotFoundException ex) {
         LOG.logError(l, ex);
       }
     }
-    LOG.formatedWarning("Event file '%s' not found ",filePath);
+    LOG.formatedWarning("Event file '%s' not found ", filePath);
     return null;
   }
 
@@ -216,31 +214,63 @@ public class OutMailDataView extends AbstractMailView<MSHOutMail, MSHOutEvent> i
    */
   public void resendSelectedMail()
       throws IOException {
+    long l = LOG.logStart();
+    if (getSelected() != null && !getSelected().isEmpty()) {
+      List<MSHOutMail> molst = getSelected();
+      for (MSHOutMail mo : molst) {
+        try {
+          
+          mDB.setStatusToOutMail(mo, SEDOutboxMailStatus.SCHEDULE, "Add message to submit queue");
+          mJMS.sendMessage(mo.getId().longValue(), 0, 0, false);
+          
+        } catch (StorageException| NamingException | JMSException ex) {
+          String mail = String.format("id: %d, sender: %s, receiver %s, service %s, action %s",
+              mo.getId(), mo.getSenderEBox(), mo.getReceiverEBox(), mo.getService(), mo.getAction());
+          facesContext().addMessage(null, new FacesMessage("'Napaka pri ponovnem pošiljanju pošiljke ",
+              mail));
+          LOG.logError(l, ex);
+          break;
+        } 
+      }
+
+    }
+    
+    
     if (this.mMail != null) {
       try {
         // get pmode
 
         mJMS.sendMessage(this.mMail.getId().longValue(), 0, 0, false);
       } catch (NamingException | JMSException ex) {
-        Logger.getLogger(OutMailDataView.class.getName()).log(Level.SEVERE, null, ex);
+        LOG.logError(l, ex);
       }
     }
+    LOG.logEnd(l);
   }
 
   /**
    *
    */
   public void deleteSelectedMail() {
-    if (this.mMail != null) {
-
-      try {
-        mDB.setStatusToOutMail(this.mMail, SEDOutboxMailStatus.DELETED, "Manual deleted by " +
-             getUserSessionData().getUser().getUserId());
-      } catch (StorageException ex) {
-        Logger.getLogger(OutMailDataView.class.getName()).log(Level.SEVERE, null, ex);
+    long l = LOG.logStart();
+    if (getSelected() != null && !getSelected().isEmpty()) {
+      List<MSHOutMail> molst = getSelected();
+      for (MSHOutMail mo : molst) {
+        try {
+          mDB.setStatusToOutMail(mo, SEDOutboxMailStatus.DELETED, "Manually deleted by " +
+              getUserSessionData().getUser().getUserId());
+        } catch (StorageException ex) {
+          String mail = String.format("id: %d, sender: %s, receiver %s, service %s, action %s",
+              mo.getId(), mo.getSenderEBox(), mo.getReceiverEBox(), mo.getService(), mo.getAction());
+          facesContext().addMessage(null, new FacesMessage("'Napaka pri brisanju pošiljke",
+              mail));
+          LOG.logError(l, ex);
+          break;
+        }
       }
 
     }
+    LOG.logEnd(l);
   }
 
   /**
@@ -249,12 +279,11 @@ public class OutMailDataView extends AbstractMailView<MSHOutMail, MSHOutEvent> i
   public void composeNewMail() {
     long l = LOG.logStart();
     MSHOutMail m = new MSHOutMail();
-    List<String> lstUB =  getUserSessionData().getUserEBoxes();
-    
-    
-    if(!lstUB.isEmpty()){    
+    List<String> lstUB = getUserSessionData().getUserEBoxes();
+
+    if (!lstUB.isEmpty()) {
       m.setSenderEBox(lstUB.get(0));
-      m.setReceiverEBox(lstUB.get(lstUB.size()-1)+ "@" + mdbSettings.getDomain());
+      m.setReceiverEBox(lstUB.get(lstUB.size() - 1) + "@" + mdbSettings.getDomain());
     } else {
       m.setSenderEBox("");
       m.setReceiverEBox("");
@@ -293,7 +322,7 @@ public class OutMailDataView extends AbstractMailView<MSHOutMail, MSHOutEvent> i
   public List<MSHOutPart> getNewOutMailAttachmentList() {
     List<MSHOutPart> lst = new ArrayList<>();
     if (getNewOutMail() != null && getNewOutMail().getMSHOutPayload() != null &&
-         !getNewOutMail().getMSHOutPayload().getMSHOutParts().isEmpty()) {
+        !getNewOutMail().getMSHOutPayload().getMSHOutParts().isEmpty()) {
       lst = getNewOutMail().getMSHOutPayload().getMSHOutParts();
     }
     return lst;
@@ -321,7 +350,7 @@ public class OutMailDataView extends AbstractMailView<MSHOutMail, MSHOutEvent> i
   public void removeselectedNewOutMailAttachment() {
 
     if (selectedNewOutMailAttachment != null && getNewOutMail() != null &&
-         getNewOutMail().getMSHOutPayload() != null) {
+        getNewOutMail().getMSHOutPayload() != null) {
       boolean bVal =
           getNewOutMail().getMSHOutPayload().getMSHOutParts().remove(selectedNewOutMailAttachment);
       LOG.log("MSHOutPart removed staus: " + bVal);
@@ -349,7 +378,8 @@ public class OutMailDataView extends AbstractMailView<MSHOutMail, MSHOutEvent> i
     }
     try {
       File f =
-          su.storeFile("att", fileName.substring(fileName.lastIndexOf('.')), uf.getInputstream());
+          su.storeFile("tst_att", fileName.substring(fileName.lastIndexOf('.')+1), uf.getInputstream());
+     
       String name = fileName.substring(0, fileName.lastIndexOf('.'));
 
       MSHOutPart mp = new MSHOutPart();
@@ -381,16 +411,16 @@ public class OutMailDataView extends AbstractMailView<MSHOutMail, MSHOutEvent> i
         String pmodeId = Utils.getPModeIdFromOutMail(newOutMail);
         newOutMail.setReceiverName(newOutMail.getReceiverEBox());
         newOutMail.setSenderName(newOutMail.getSenderEBox());
-        newOutMail.setSenderEBox(newOutMail.getSenderEBox()+ "@" + mdbSettings.getDomain() );
+        newOutMail.setSenderEBox(newOutMail.getSenderEBox() + "@" + mdbSettings.getDomain());
 
         MSHOutPart p = new MSHOutPart();
         p.setEncoding("UTF-8");
         p.setDescription("Mail body");
-        p.setMimeType("plain/text");
+        p.setMimeType(MimeValues.MIME_TXT.getMimeType());
 
         // mp.setValue();
         StorageUtils su = new StorageUtils();
-        File fout = su.storeFile("out", ".txt", getComposedMailBody().getBytes("UTF-8"));
+        File fout = su.storeFile("tst_", "txt", getComposedMailBody().getBytes("UTF-8"));
         String strMD5 = mpHU.getMD5Hash(fout);
         String relPath = StorageUtils.getRelativePath(fout);
         p.setFilepath(relPath);

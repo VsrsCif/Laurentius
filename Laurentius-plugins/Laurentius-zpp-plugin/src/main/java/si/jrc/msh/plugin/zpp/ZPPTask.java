@@ -12,8 +12,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
@@ -29,6 +27,7 @@ import si.jrc.msh.plugin.zpp.doc.DocumentSodBuilder;
 import si.jrc.msh.plugin.zpp.exception.ZPPException;
 import si.jrc.msh.plugin.zpp.utils.FOPUtils;
 import si.jrc.msh.sec.SEDCrypto;
+import si.laurentius.cert.SEDCertificate;
 import si.laurentius.commons.MimeValues;
 import si.laurentius.commons.SEDInboxMailStatus;
 import si.laurentius.commons.SEDJNDI;
@@ -232,6 +231,20 @@ public class ZPPTask implements TaskExecutionInterface {
       mout.getMSHOutPayload().getMSHOutParts().add(mp);
 
       SEDCertStore cs = msedLookup.getSEDCertStoreByName(keystore);
+      
+       SEDCertificate aliasCrt =
+          msedLookup.getSEDCertificatForAlias(signAlias, cs, true);
+      if (aliasCrt == null) {
+        String msg = String.format("Key for alias '%s' do not exists store '%s'!", signAlias, keystore);
+        LOG.logError(l, msg, null);
+        throw new ZPPException(msg);
+      }
+      
+       if (!KeystoreUtils.isCertValid(aliasCrt)) {
+        String msg = "Key for alias '" + signAlias + " is not valid!";
+        LOG.logError(l, msg, null);
+        throw new ZPPException(msg);
+      }
 
       // create signed delivery advice
       dsbSodBuilder.createMail(mout, fos, mkeyUtils.getPrivateKeyEntryForAlias(signAlias, cs));
@@ -240,7 +253,7 @@ public class ZPPTask implements TaskExecutionInterface {
       mp.setFilepath(StorageUtils.getRelativePath(fDA));
       mp.setMd5(mpHU.getMD5Hash(fDA));
       mp.setFilename(fDA.getName());
-      mp.setName(mp.getFilename().substring(mp.getFilename().lastIndexOf(".")));
+      mp.setName(mp.getFilename().substring(0, mp.getFilename().lastIndexOf(".")));
 
       mDB.serializeOutMail(mout, "", "ZPPDeliveryPlugin", "");
 

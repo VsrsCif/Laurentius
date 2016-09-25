@@ -327,7 +327,7 @@ logStart();
     assertFault(() -> (mTestInstance).handleMessage(msg))
         .assertEBMSCode(EBMSErrorCode.ProcessingModeMismatch)
         .assertSubMessageContainsString(
-            "Error occured validatig security");
+            "Error occured validating security");
 
   }
 

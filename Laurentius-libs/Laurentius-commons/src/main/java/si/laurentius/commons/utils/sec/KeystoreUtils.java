@@ -46,8 +46,9 @@ import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StringFormater;
 import si.laurentius.commons.utils.sec.tls.X509KeyManagerForAlias;
 import static java.security.KeyStore.getInstance;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Objects;
-import si.laurentius.commons.utils.Utils;
 
 /**
  *
@@ -582,6 +583,15 @@ public class KeystoreUtils {
       throw new SEDSecurityException(KeyStoreException, ex, ex.getMessage());
     }
     return rsaKey;
+  }
+  
+  
+    static public boolean isCertValid(SEDCertificate crt) {
+    Date currDate = Calendar.getInstance().getTime();
+    return crt.getValidTo() != null &&
+         crt.getValidFrom() != null &
+         currDate.after(crt.getValidFrom()) &&
+         currDate.before(crt.getValidTo());
   }
 
 }

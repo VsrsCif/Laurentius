@@ -14,6 +14,7 @@
  */
 package si.laurentius.commons.interfaces;
 
+import java.util.List;
 import javax.ejb.Local;
 import javax.ejb.Lock;
 import javax.ejb.LockType;
@@ -165,4 +166,31 @@ public interface PModeInterface {
   public Security getSecurityById(String securityId)
       throws PModeException;
 
+  
+  public List<PMode> getPModes() throws PModeException;
+  public List<Service> getServices() throws PModeException;
+  public List<PartyIdentitySet> getPartyIdentitySets() throws PModeException;
+  public List<Security> getSecurities() throws PModeException;
+  public List<ReceptionAwareness> getReceptionAwarenesses() throws PModeException;
+  
+  
+  public void addPMode(PMode val);
+  public void addService(Service val);
+  public void addPartyIdentitySet(PartyIdentitySet val);
+  public void addSecurity(Security val);
+  public void addReceptionAwareness(ReceptionAwareness val);
+  
+  public void removePMode(PMode val);
+  public void removeService(Service val);
+  public void removePartyIdentitySet(PartyIdentitySet val);
+  public void removeSecurity(Security val);
+  public void removeReceptionAwareness(ReceptionAwareness val);
+  
+  public void updatePMode(PMode val);
+  public void updateService(Service val);
+  public void updatePartyIdentitySet(PartyIdentitySet val);
+  public void updateSecurity(Security val);
+  public void updateReceptionAwareness(ReceptionAwareness val);
+  
 }
+  

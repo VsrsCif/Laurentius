@@ -87,17 +87,10 @@ public class EBMSBuilder {
 
   /**
    *
-   * @param ebError
-   * @param senderDomain
-   * @param timestamp
+   * @param ebError   
    * @return
    */
-  public static SignalMessage createErrorSignal(EBMSError ebError, 
-      Date timestamp) {
-    SignalMessage sigMsg = new SignalMessage();
-    // generate MessageInfo
-    sigMsg.setMessageInfo(createMessageInfo(SEDSystemProperties.getLocalDomain(), ebError.getRefToMessage(), timestamp));
-
+  public static Error createError(EBMSError ebError) {
     
     Error er = new Error();
     er.setCategory(ebError.getEbmsErrorCode().getCategory());
@@ -110,7 +103,15 @@ public class EBMSBuilder {
     er.setRefToMessageInError(ebError.getRefToMessage());
     er.setSeverity(ebError.getEbmsErrorCode().getSeverity());
     er.setShortDescription(ebError.getEbmsErrorCode().getName());
-    sigMsg.getErrors().add(er);
+    return er;
+  }
+  
+  public static SignalMessage createErrorSignal(EBMSError ebError, 
+      Date timestamp) {
+    SignalMessage sigMsg = new SignalMessage();
+    // generate MessageInfo
+    sigMsg.setMessageInfo(createMessageInfo(SEDSystemProperties.getLocalDomain(), ebError.getRefToMessage(), timestamp));
+    sigMsg.getErrors().add(createError(ebError));
     return sigMsg;
   }
 

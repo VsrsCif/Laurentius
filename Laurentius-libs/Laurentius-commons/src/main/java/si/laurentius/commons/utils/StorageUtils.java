@@ -34,6 +34,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import si.laurentius.commons.MimeValues;
@@ -53,6 +54,9 @@ import si.laurentius.commons.exception.StorageException;
  * @author Joze Rihtarsic <joze.rihtarsic@sodisce.si>
  */
 public class StorageUtils {
+  
+  static AtomicInteger CURRENT_SUB_FOLDER_NUMBER  = new AtomicInteger();
+  static AtomicInteger CURRENT_FILE_COUNT_IN_FOLDER= new AtomicInteger();
 
   private static Path CURRENT_PATH;
   public static final int MAX_FILES_IN_FOLDER = 1024;
@@ -69,6 +73,8 @@ public class StorageUtils {
    */
   public static synchronized File currentStorageFolder()
       throws StorageException {
+    
+    
     LocalDate cld = LocalDate.now();
     // current date
     Path pcDir = dateStorageFolder(cld);
@@ -80,22 +86,38 @@ public class StorageUtils {
     if (CURRENT_PATH == null) {
       int i = getMaxSubFolderNumber(pcDir);
       CURRENT_PATH = pcDir.resolve(format("%03d", i)).toAbsolutePath();
+      if (CURRENT_PATH.toFile().exists()) {
+      
+      try {
+        CURRENT_FILE_COUNT_IN_FOLDER.set((int)Files.list(CURRENT_PATH).count());
+      } catch (IOException ex) {
+        throw new StorageException(
+          format("Error occurred while counting files if storage folder: '%s'",
+              CURRENT_PATH.toFile()), ex);
+      }
+      } else {
+      CURRENT_FILE_COUNT_IN_FOLDER.set(0);
+      }
     }
 
-    try {
+    //try { JRC 20.09.2016
       // check max number
       if (Files.exists(CURRENT_PATH, LinkOption.NOFOLLOW_LINKS) &&
-          Files.list(CURRENT_PATH).count() > MAX_FILES_IN_FOLDER) {
+          CURRENT_FILE_COUNT_IN_FOLDER.get()>= MAX_FILES_IN_FOLDER
+          //Files.list(CURRENT_PATH).count() > MAX_FILES_IN_FOLDER
+          
+          ) {
 
         int i = getMaxSubFolderNumber(pcDir) + 1;
         CURRENT_PATH = pcDir.resolve(format("%03d", i)).normalize().toAbsolutePath();
+        CURRENT_FILE_COUNT_IN_FOLDER.set(0);
 
       }
-    } catch (IOException ex) {
+    /*} catch (IOException ex) {
       throw new StorageException(
           format("Error occurred while creating current storage folder: '%s'",
               CURRENT_PATH.toFile()), ex);
-    }
+    }*/
     File f = CURRENT_PATH.toFile();
     if (!f.exists() && !f.mkdirs()) {
       throw new StorageException(
@@ -176,6 +198,7 @@ public class StorageUtils {
     File fStore;
     try {
       fStore = createTempFile(prefix, "." + suffix, currentStorageFolder());
+      CURRENT_FILE_COUNT_IN_FOLDER.incrementAndGet();
     } catch (IOException ex) {
       throw new StorageException("Error occurred while creating storage file", ex);
     }

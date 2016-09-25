@@ -107,5 +107,23 @@ public class Utils {
   public static String getUUIDWithDomain(String domain) {
     return UUID.randomUUID().toString() + "@" + domain ;
   }
+  
+  public static String getInitCauseMessage(Throwable tw){
+    String msg = tw.getMessage();
+    Throwable tst = tw;
+    while ( (tst = tst.getCause())!= null){
+      msg = tst.getMessage();
+    }
+    return msg;
+  }
+  
+  public static Throwable getInitCause(Throwable tw){
+    String msg = tw.getMessage();
+    Throwable tst = tw;
+    while ( tst.getCause()!= null){
+      tst = tst.getCause();
+    }
+    return tst;
+  }
 
 }

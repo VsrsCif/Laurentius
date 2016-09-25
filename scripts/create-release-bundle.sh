@@ -35,6 +35,8 @@ cp "$LAU_PROJECT/Laurentius-msh/Laurentius-msh-ear/target/Laurentius-msh.ear" "$
 cp "$LAU_PROJECT/Laurentius-app/Laurentius-ws/target/laurentius-ws.war"  "$ZIP_FILENAME/deployments/"
 cp "$LAU_PROJECT/Laurentius-app/Laurentius-web/target/laurentius-web.war"  "$ZIP_FILENAME/deployments/"
 cp "$LAU_PROJECT/Laurentius-plugins/Laurentius-zpp-plugin/target/plugin-zpp.war"  "$ZIP_FILENAME/deployments/"
+cp "$LAU_PROJECT/Laurentius-plugins/Laurentius-test-case-plugin/target/plugin-testcase.war"  "$ZIP_FILENAME/deployments/"
+
 # configuration file
 cp -r "$LAU_PROJECT/scripts/wildfly-10.1/config"  "$ZIP_FILENAME/widlfly-10.1"
 # deploy script

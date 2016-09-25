@@ -15,6 +15,7 @@
 package si.laurentius.commons.utils;
 
 import java.util.Calendar;
+import java.util.List;
 import javax.ejb.AccessTimeout;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
@@ -43,6 +44,31 @@ public class PModeManagerBean implements PModeInterface {
   protected long m_iRefreshInterval = 1800 * 1000; // 30 min
 
   FilePModeManager mPModeManager = new FilePModeManager();
+
+  @Override
+  public void addPMode(PMode val) {
+    getPModeManager().addPMode(val);
+  }
+
+  @Override
+  public void addPartyIdentitySet(PartyIdentitySet val) {
+    getPModeManager().addPartyIdentitySet(val);
+  }
+
+  @Override
+  public void addReceptionAwareness(ReceptionAwareness val) {
+    getPModeManager().addReceptionAwareness(val);
+  }
+
+  @Override
+  public void addSecurity(Security val) {
+    getPModeManager().addSecurity(val);
+  }
+
+  @Override
+  public void addService(Service val) {
+    getPModeManager().addService(val);
+  }
 
   @Override
   public PMode getPModeForLocalPartyAsSender(String senderRefId, String actionSendingRole,
@@ -75,6 +101,12 @@ public class PModeManagerBean implements PModeInterface {
   }
 
   @Override
+  public List<PMode> getPModes()
+      throws PModeException {
+    return getPModeManager().getPModes();
+  }
+
+  @Override
   public PartyIdentitySet getPartyIdentitySetForSEDAddress(String address)
       throws PModeException {
     return getPModeManager().getPartyIdentitySetForSEDAddress(address);
@@ -90,6 +122,24 @@ public class PModeManagerBean implements PModeInterface {
   public PartyIdentitySet getPartyIdentitySetForPartyId(String partyType, String partyIdValue)
       throws PModeException {
     return getPModeManager().getPartyIdentitySetForPartyId(partyType, partyIdValue);
+  }
+
+  @Override
+  public List<PartyIdentitySet> getPartyIdentitySets()
+      throws PModeException {
+    return getPModeManager().getPartyIdentitySets();
+  }
+
+  @Override
+  public List<ReceptionAwareness> getReceptionAwarenesses()
+      throws PModeException {
+    return getPModeManager().getReceptionAwarenesses();
+  }
+
+  @Override
+  public List<Security> getSecurities()
+      throws PModeException {
+    return getPModeManager().getSecurities();
   }
 
   @Override
@@ -124,7 +174,7 @@ public class PModeManagerBean implements PModeInterface {
       long l = LOG.logStart();
       try {
 
-        mPModeManager.reloadPModes();
+        mPModeManager.reload();
       } catch (PModeException ex) {
         LOG.logError(l, ex);
       }
@@ -138,5 +188,61 @@ public class PModeManagerBean implements PModeInterface {
   public EBMSMessageContext createMessageContextForOutMail(MSHOutMail mail)
       throws PModeException {
     return getPModeManager().createMessageContextForOutMail(mail);
+  }
+
+  @Override
+  public List<Service> getServices()
+      throws PModeException {
+    return getPModeManager().getServices();
+  }
+
+  @Override
+  public void removePMode(PMode val) {
+    getPModeManager().removePMode(val);
+  }
+
+  @Override
+  public void removePartyIdentitySet(PartyIdentitySet val) {
+    getPModeManager().removePartyIdentitySet(val);
+  }
+
+  @Override
+  public void removeReceptionAwareness(ReceptionAwareness val) {
+    getPModeManager().removeReceptionAwareness(val);
+  }
+
+  @Override
+  public void removeSecurity(Security val) {
+    getPModeManager().removeSecurity(val);
+  }
+
+  @Override
+  public void removeService(Service val) {
+    getPModeManager().removeService(val);
+  }
+
+  @Override
+  public void updatePMode(PMode val) {
+    getPModeManager().updatePMode(val);
+  }
+
+  @Override
+  public void updatePartyIdentitySet(PartyIdentitySet val) {
+    getPModeManager().updatePartyIdentitySet(val);
+  }
+
+  @Override
+  public void updateReceptionAwareness(ReceptionAwareness val) {
+    getPModeManager().updateReceptionAwareness(val);
+  }
+
+  @Override
+  public void updateSecurity(Security val) {
+    getPModeManager().updateSecurity(val);
+  }
+
+  @Override
+  public void updateService(Service val) {
+    getPModeManager().updateService(val);
   }
 }

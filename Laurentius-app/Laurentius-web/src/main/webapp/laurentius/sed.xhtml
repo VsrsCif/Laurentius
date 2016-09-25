@@ -6,7 +6,8 @@
       xmlns:sui="http://java.sun.com/jsf/composite/laurentius-ui"
       xmlns:dlg="http://java.sun.com/jsf/composite/laurentius-ui/dialog"     
       lang="#{localeManager.language}"
-      >
+
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
     <h:head>
         <title>Laurentius User GUI</title>
@@ -18,6 +19,9 @@
         <h:body>
 
             <h:form id="forms" >
+                <p:ajaxExceptionHandler type="javax.faces.application.ViewExpiredException"
+                                        update="exceptionDialog"
+                                        onexception="PF('exceptionDialog').show();" />
 
                 <p:growl id="messages" showDetail="true" />
                 <!-- main window -->    
@@ -67,13 +71,13 @@
                                                  update=":dlgCompose:mailComposeForm"
                                                  oncomplete="PF('mailComposeDialog').show()"/>
 
-                                <p:commandButton value="#{msg['Resend']}" styleClass="toolbar-Button" 
+                                <p:commandButton value="#{msg['Resend selected']}" styleClass="toolbar-Button" 
                                                  rendered="#{MainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_OUTBOX)}"
                                                  actionListener="#{OutMailDataView.resendSelectedMail()}" 
                                                  icon="ui-icon-sed-resend"
                                                  update=":forms:MainPanel"
                                                  ajax="true"/>
-                                <p:commandButton value="#{msg['Delete']}" styleClass="toolbar-Button"  
+                                <p:commandButton value="#{msg['Delete selected']}" styleClass="toolbar-Button"  
                                                  icon="ui-icon-sed-remove"
                                                  rendered="#{MainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_OUTBOX)}" 
                                                  actionListener="#{OutMailDataView.deleteSelectedMail()}" 
@@ -119,8 +123,13 @@
                             <sui:mail-table-out id="OutMailPanel" rendered="#{MainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_OUTBOX)}"  />
                             <sui:settings-keystore id="SettingsCertPanel" rendered="#{MainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_SETT_CERTS)}"  />
                             <sui:settings-custom id="SettingsCustomPanel" rendered="#{MainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_SETT_CUSTOM)}"  />
-                            <!--sui:settings-pmode id="SettingsPModes" rendered="#{MainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_SETT_PMODE)}"  / -->                        
+                            
+                            <sui:settings-pmode-services id="SettingsPModesServices" rendered="#{MainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_SETT_PMODE_SERVICES)}"  />
+                            <sui:settings-pmode-parties id="SettingsPModesParties" rendered="#{MainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_SETT_PMODE_PARTIES)}"  />
+                            <sui:settings-pmode-securities id="SettingsPModesSecurities" rendered="#{MainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_SETT_PMODE_SECURITIES)}"  />
+                            <sui:settings-pmode-ra id="SettingsPModeReceptionAwarenesses" rendered="#{MainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_SETT_PMODE_AS4_RA)}"  />
                             <sui:settings-pmode id="SettingsPModes" rendered="#{MainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_SETT_PMODE)}"  />
+                            
                             <sui:settings-users id="SettingsUsers" rendered="#{MainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_ADMIN_USERS)}"  />
                             <sui:settings-eboxes id="SettingsSEDBoxes" rendered="#{MainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_ADMIN_EBOXES)}"  />
                             <sui:settings-cron id="SettingsCron" rendered="#{MainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_ADMIN_CRON)}"  />
@@ -225,13 +234,33 @@
                                 </p:panelGrid>
                             </p:tab>
 
-                            <!-- p:tab id="PANEL_SETT_PMODE" rendered="#{userSessionData.user.adminRole}">
+                            <p:tab id="PANEL_SETT_PMODE_SERVICES" rendered="#{userSessionData.user.adminRole}">
                                 <f:facet name="title">
                                     <h:graphicImage value="resources/images/settings32.png" width="22" height="22" />
                                     <h:outputText value="#{msg['SettingsPMode']}" />                                 
                                 </f:facet>
                                 <p:menu class="ui-accordion-button">
-                                    <p:menuitem value="#{msg['SettingsPMode']}" 
+                                    <p:menuitem value="#{msg['Services']}" 
+                                                actionListener="#{MainWindow.onToolbarButtonAction}" 
+                                                update="forms:MainPanel">
+                                        <f:attribute name="panel" value="PANEL_SETT_PMODE_SERVICES" />
+                                    </p:menuitem>
+                                    <p:menuitem value="#{msg['Parties']}" 
+                                                actionListener="#{MainWindow.onToolbarButtonAction}" 
+                                                update="forms:MainPanel">
+                                        <f:attribute name="panel" value="PANEL_SETT_PMODE_PARTIES" />
+                                    </p:menuitem>
+                                    <p:menuitem value="#{msg['SecurityPolicies']}" 
+                                                actionListener="#{MainWindow.onToolbarButtonAction}" 
+                                                update="forms:MainPanel">
+                                        <f:attribute name="panel" value="PANEL_SETT_PMODE_SECURITIES" />
+                                    </p:menuitem>
+                                    <p:menuitem value="#{msg['ReceptionAwarenessPatterns']}" 
+                                                actionListener="#{MainWindow.onToolbarButtonAction}" 
+                                                update="forms:MainPanel">
+                                        <f:attribute name="panel" value="PANEL_SETT_PMODE_AS4_RA" />
+                                    </p:menuitem>
+                                    <p:menuitem value="#{msg['PModes']}" 
                                                 actionListener="#{MainWindow.onToolbarButtonAction}" 
                                                 update="forms:MainPanel">
                                         <f:attribute name="panel" value="PANEL_SETT_PMODE" />
@@ -239,14 +268,15 @@
 
                                 </p:menu>
                             </p:tab>
-
-                            <p:tab id="PANEL_PLUGIN" rendered="#{userSessionData.user.adminRole}">
+                            
+                            <p:tab id="PANEL_PLUGIN" >
                                 <f:facet name="title">
                                     <h:graphicImage value="resources/images/settings32.png" width="22" height="22" />
                                     <h:outputText value="#{msg['Plugins']}" />                                 
                                 </f:facet>
                                 <p:menu class="ui-accordion-button" id="pluginmenu">
                                     <c:forEach items="#{adminSEDPluginView.list}" var="plg">
+
                                         <p:menuitem value="#{plg.name}" 
                                                     actionListener="#{adminSEDPluginView.onSelectedViewPluginAction}"                                                     
                                                     update="forms:MainPanel" >
@@ -255,7 +285,7 @@
                                         </p:menuitem>
                                     </c:forEach>   
                                 </p:menu>
-                            </p:tab -->
+                            </p:tab>
 
 
 
@@ -307,6 +337,10 @@
             <dlg:dlg-export-outdata id="dlgExportOutData" />
             <dlg:dlg-export-indata id="dlgExportInData" />
             <dlg:dlg-pmode id="dlgPMode" />
+            <dlg:dlg-pmode-service id="dlgPModeService" />
+            <dlg:dlg-pmode-party id="dlgPModeParty" />
+            <dlg:dlg-pmode-security id="dlgPModeSecurity" />
+            <dlg:dlg-pmode-as4-ra id="dlgPModeReceptionAwareness" />
 
 
         </h:body>

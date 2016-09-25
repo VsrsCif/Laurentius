@@ -18,7 +18,7 @@ package si.laurentius.commons.exception;
  *
  * @author Joze Rihtarsic <joze.rihtarsic@sodisce.si>
  */
-public class PModeException extends Exception {
+public class PModeException extends java.lang.RuntimeException {
 
   /**
    *

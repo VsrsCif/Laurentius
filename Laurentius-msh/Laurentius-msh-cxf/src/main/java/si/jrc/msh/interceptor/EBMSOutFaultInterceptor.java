@@ -31,7 +31,6 @@ import org.apache.cxf.binding.soap.SoapFault;
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.binding.soap.SoapVersion;
 import org.apache.cxf.interceptor.Fault;
-import org.apache.cxf.message.Exchange;
 import org.apache.cxf.phase.Phase;
 import org.apache.cxf.transport.http.AbstractHTTPDestination;
 import org.apache.cxf.ws.security.wss4j.WSS4JOutInterceptor;
@@ -77,16 +76,7 @@ public class EBMSOutFaultInterceptor extends AbstractEBMSInterceptor {
   public void handleMessage(SoapMessage message)
       throws Fault {
     
-    LOG.log("SoapMessage: ********************************************************");
-    message.entrySet().stream().forEach((entry) -> {
-      LOG.formatedlog("Key: %s, val: %s", entry.getKey(), entry.getValue());
-    });
-    LOG.log("Exchange: ********************************************************");
-    Exchange map = message.getExchange();
-    map.entrySet().stream().forEach((entry) -> {
-      LOG.formatedlog("Key: %s, val: %s", entry.getKey(), entry.getValue());
-    });
-    
+
     
     SoapVersion sv = message.getVersion();
     handleMessageCalled = true;

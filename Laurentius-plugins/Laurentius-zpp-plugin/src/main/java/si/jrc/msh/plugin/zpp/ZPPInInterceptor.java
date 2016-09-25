@@ -47,7 +47,6 @@ import org.apache.xml.security.keys.keyresolver.KeyResolverException;
 import si.laurentius.msh.inbox.mail.MSHInMail;
 import si.laurentius.msh.inbox.payload.MSHInPart;
 import si.laurentius.msh.outbox.mail.MSHOutMail;
-import si.laurentius.msh.pmode.PMode;
 import org.oasis_open.docs.ebxml_msg.ebms.v3_0.ns.core._200704.SignalMessage;
 import si.laurentius.ebox.Execute;
 import si.laurentius.ebox.Export;
@@ -71,7 +70,6 @@ import si.laurentius.commons.interfaces.JMSManagerInterface;
 import si.laurentius.commons.interfaces.SEDDaoInterface;
 import si.laurentius.commons.interfaces.SEDLookupsInterface;
 import si.laurentius.commons.interfaces.SoapInterceptorInterface;
-import si.laurentius.commons.pmode.EBMSMessageContext;
 import si.laurentius.commons.utils.HashUtils;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StorageUtils;
@@ -354,7 +352,8 @@ public class ZPPInInterceptor implements SoapInterceptorInterface {
     mInMail.setStatus(SEDInboxMailStatus.PLUGINLOCKED.getValue());
     mInMail.setStatusDate(Calendar.getInstance().getTime());
     try {
-      mDB.updateInMail(mInMail, "ZPP mail received. ", null);
+      mDB.setStatusToInMail(mInMail, SEDInboxMailStatus.PLUGINLOCKED, "ZPP mail received.");
+      // add ZPPReceipt
       // notify in delivery
     } catch (StorageException ex) {
       LOG.logError(l, "Error setting status ERROR to MSHInMail :'" + mInMail.getId() + "'!", ex);
@@ -452,8 +451,11 @@ public class ZPPInInterceptor implements SoapInterceptorInterface {
             File fNew;
             try (FileInputStream fis = new FileInputStream(StorageUtils.getFile(mip.getFilepath()));
                 FileOutputStream bos =
-                new FileOutputStream(fNew = StorageUtils.getFile(newFileName))) {
+                new FileOutputStream(fNew = StorageUtils.getNewStorageFile(MimeValues.getSuffixBYMimeType(mip.getMimeType()), "zpp-dec"))) {
+              
               LOG.log("Decrypt file: " + newFileName);
+              
+              
               mSedCrypto.decryptStream(fis, bos, key);
 
               MSHInPart miDec = new MSHInPart();

@@ -25,6 +25,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import org.primefaces.component.tabview.TabView;
 import org.primefaces.event.SelectEvent;
@@ -56,6 +58,7 @@ public abstract class AbstractMailView<T, S> {
    *
    */
   protected T mMail;
+  private List<T> selected;
 
   /**
    *
@@ -124,6 +127,14 @@ public abstract class AbstractMailView<T, S> {
   public T getCurrentMail() {
     return mMail;
   }
+  
+  public List<T> getSelected() {
+        return selected;
+    }
+ 
+    public void setSelected(List<T> selected) {
+        this.selected = selected;
+    }
 
   /**
    *
@@ -275,5 +286,21 @@ public abstract class AbstractMailView<T, S> {
      *
      */
   abstract public void updateEventList();
+  
+   /**
+   *
+   * @return
+   */
+  protected ExternalContext externalContext() {
+    return facesContext().getExternalContext();
+  }
+
+  /**
+   *
+   * @return
+   */
+  protected FacesContext facesContext() {
+    return FacesContext.getCurrentInstance();
+  }
 
 }

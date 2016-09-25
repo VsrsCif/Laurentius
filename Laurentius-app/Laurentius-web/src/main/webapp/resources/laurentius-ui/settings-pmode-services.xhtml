@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      xmlns:sui="http://java.sun.com/jsf/composite/laurentius-ui">
+
+    <composite:interface>
+    </composite:interface>
+
+    <composite:implementation >
+
+        <h1>#{msg['Services']}</h1>
+        <p:panel id="TaskDesc" toggleTitle="#{msg['INFO']}" header="#{msg['PModeServiceDefinitions']}" 
+                 toggleable="true"  collapsed="true">
+            <h:outputText value="#{msg['PModeServiceDefDesc']}"></h:outputText>
+        </p:panel>
+        <p:dataTable id="TblPModeServices" 
+                     var="sp" 
+                     value="#{pModeServiceView.list}"
+                     selectionMode="single"
+                     selection="#{pModeServiceView.selected}"
+                     rowKey="#{sp.id}"
+
+                     style="padding: 0px; margin: 0px"
+                     scrollable="true" 
+                     scrollHeight="100%"    
+
+                     >
+            <p:ajax event="rowDblselect" listener="#{pModeServiceView.startEditSelected()}" 
+                    update=":dlgPModeService:pModeServiceDialogForm:pModeService"
+                    oncomplete="PF('pModeServiceDialog').show()"/>
+
+            <f:facet name="header">
+                <p:commandButton value="#{msg['Add']}"  styleClass="toolbar-Button" icon="ui-icon-sed-add" 
+                                 actionListener="#{pModeServiceView.createEditable()}"
+                                 oncomplete="PF('pModeServiceDialog').show()" 
+                                 update=":dlgPModeService:pModeServiceDialogForm:pModeService"
+                                 />
+                <p:commandButton value="#{msg['Edit']}"  styleClass="toolbar-Button" icon="ui-icon-sed-edit" 
+                                 oncomplete="PF('pModeServiceDialog').show()"                                                                   
+                                 actionListener="#{pModeServiceView.startEditSelected()}"
+                                 update=":dlgPModeService:pModeServiceDialogForm:pModeService"
+                                 />
+                <p:commandButton value="#{msg['Delete']}" styleClass="toolbar-Button" icon="ui-icon-sed-remove" 
+                                 actionListener="#{pModeServiceView.removeSelected()}" 
+                                 update=":forms:SettingsPModesServices:TblPModeServices" />
+
+            </f:facet>
+            <p:column  headerText="#{msg['Id']}" width="200">
+                <h:outputText value="#{sp.id}" />
+            </p:column>
+            <p:column  headerText="#{msg['Service']}" >
+                <h:outputText value="#{sp.serviceName}"></h:outputText>                
+            </p:column>
+            <p:column width="160" headerText="#{msg['ServiceType']}">
+                <h:outputText value="#{sp.serviceType}"></h:outputText>                
+            </p:column>
+            <p:column  width="80"  headerText="#{msg['sedProperties']}">
+                <h:outputText value="#{sp.useSEDProperties}"></h:outputText>                
+            </p:column>
+
+        </p:dataTable>
+
+
+    </composite:implementation>
+
+</html>

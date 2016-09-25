@@ -80,7 +80,7 @@ public interface SEDDaoInterface {
    * @param mailId
    * @return
    */
-  <T> T getMailByMessageId(Class<T> type, String mailId);
+  <T> List<T> getMailByMessageId(Class<T> type, String mailId);
 
   /**
    *
@@ -182,6 +182,8 @@ public interface SEDDaoInterface {
    */
   void serializeOutMail(MSHOutMail mail, String userID, String applicationId, String pmodeId)
       throws StorageException;
+  
+  
 
   /**
    *

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      xmlns:sui="http://java.sun.com/jsf/composite/laurentius-ui">
+
+    <composite:interface>
+    </composite:interface>
+
+    <composite:implementation >
+
+        <h1>#{msg['SecurityPolicies']}</h1>
+        <p:panel id="TaskDesc" toggleTitle="#{msg['INFO']}" header="#{msg['PModeSecurityDefinitions']}" 
+                 toggleable="true"  collapsed="true">
+            <h:outputText value="#{msg['PModeSecurityDefDesc']}"></h:outputText>
+        </p:panel>
+        <p:dataTable id="TblPModeSecurity" 
+                     var="sp" 
+                     value="#{pModeSecurityView.list}"
+                     selectionMode="single"
+                     selection="#{pModeSecurityView.selected}"
+                     rowKey="#{sp.id}"
+
+                     style="padding: 0px; margin: 0px"
+                     scrollable="true" 
+                     scrollHeight="200"    
+
+                     >
+            <p:ajax event="rowDblselect" listener="#{pModeSecurityView.startEditSelected()}" 
+                    update=":dlgPModeSecurity:pModeSecurityDialogForm:pModeSecurity"
+                    oncomplete="PF('pModeSecurityDialog').show()"/>
+
+            <f:facet name="header">
+                <p:commandButton value="#{msg['Add']}"  styleClass="toolbar-Button" icon="ui-icon-sed-add" 
+                                 actionListener="#{pModeSecurityView.createEditable()}"
+                                 oncomplete="PF('pModeSecurityDialog').show()" 
+                                 update=":dlgPModeSecurity:pModeSecurityDialogForm:pModeSecurity"
+
+                                 />
+                <p:commandButton value="#{msg['Edit']}"  styleClass="toolbar-Button" icon="ui-icon-sed-edit" 
+                                 oncomplete="PF('pModeSecurityDialog').show()"                                                                   
+                                 actionListener="#{pModeSecurityView.startEditSelected()}"
+                                 update=":dlgPModeSecurity:pModeSecurityDialogForm:pModeSecurity"
+                                 />
+                <p:commandButton value="#{msg['Delete']}" styleClass="toolbar-Button" icon="ui-icon-sed-remove" 
+                                 actionListener="#{pModeSecurityView.removeSelected()}" 
+                                 update=":forms:SettingsPModesSecurities:TblPModeSecurity" />
+
+            </f:facet>
+            <p:column headerText="#{msg['Id']}">
+                <h:outputText value="#{sp.id}" />
+            </p:column>
+           
+
+
+        </p:dataTable>
+
+
+    </composite:implementation>
+
+</html>

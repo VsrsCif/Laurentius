@@ -53,20 +53,10 @@
             </f:facet>
             <p:column headerText="#{msg['Id']}" width="200">
                 <h:outputText value="#{sp.id}" />
-            </p:column>
-            <p:column headerText="#{msg['Pogodba']}" width="200">
-                <h:outputText value="#{sp.agreement}"></h:outputText>                
-            </p:column>
+            </p:column>            
             <p:column headerText="#{msg['Service']}">
-                <h:outputText value="#{sp.MEPbinding}"></h:outputText>                
+                <h:outputText value="#{sp.serviceIdRef}"></h:outputText>                
             </p:column>
-            <p:column headerText="#{msg['MEP binding']}">
-                <h:outputText value="#{sp.MEPbinding}"></h:outputText>                
-            </p:column>
-            <p:column headerText="#{msg['MEP']}">
-                <h:outputText value="#{sp.MEP}"></h:outputText>                
-            </p:column>
-
 
         </p:dataTable>
 

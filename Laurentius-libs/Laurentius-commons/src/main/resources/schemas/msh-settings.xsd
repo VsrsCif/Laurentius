@@ -35,10 +35,11 @@
 						</xs:sequence>
 					</xs:complexType>
 				</xs:element>
-				<xs:element name="PMode" type="tns:PMode" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="tns:PMode" minOccurs="0" maxOccurs="unbounded"/>
 			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
+	<xs:element name="PMode" type="tns:PModeType"/>
 	<xs:element name="PartyIdentitySet">
 		<xs:complexType>
 			<xs:complexContent>
@@ -405,7 +406,7 @@
 			</xs:extension>
 		</xs:simpleContent>
 	</xs:complexType>
-	<xs:complexType name="PMode">
+	<xs:complexType name="PModeType">
 		<xs:sequence>
 			<xs:element name="ServiceIdRef" type="xs:string"/>
 			<xs:element name="Plugins" minOccurs="0">
@@ -681,6 +682,7 @@
 				</xs:annotation>
 				<xs:complexType>
 					<xs:attribute name="windowPeriode" type="xs:duration" default="P1Y"/>
+					<xs:attribute name="eliminate" type="xs:boolean" default="true"/>
 				</xs:complexType>
 			</xs:element>
 		</xs:sequence>
