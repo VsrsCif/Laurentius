@@ -209,6 +209,9 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
         && ZPPConstants.S_ZPP_ACTION_DELIVERY_NOTIFICATION.equals(ectx.getAction().getName())) {
       try {
         prepareToZPPDelivery(outMail, sv);
+         // set conversation id
+        
+        
       } catch (HashException | SEDSecurityException | StorageException | FOPException
           | ZPPException ex) {
         LOG.logError(l, ex.getMessage(), ex);
@@ -284,9 +287,7 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
       mDB.setStatusToOutMail(outMail, SEDOutboxMailStatus.SCHEDULE, str, null,
           ZPPConstants.S_ZPP_PLUGIN_TYPE);
     }
-    // set conversation id
-    outMail.setConversationId(outMail.getId().toString() + "@"
-        + Utils.getDomainFromAddress(outMail.getSenderEBox())); // conversation id is id of first
+   
                                                                 // mail
 
     LOG.logEnd(l, "Out mail: '" + skey.getId() + "' ready to send by LegalZPP!");

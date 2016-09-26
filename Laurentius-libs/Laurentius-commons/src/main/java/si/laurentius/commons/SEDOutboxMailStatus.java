@@ -46,7 +46,12 @@ public enum SEDOutboxMailStatus {
   /**
    *
    */
-  SENT("SENT", "Message is  sent to receiving MSH", "blue"),
+  SENT("SENT", "Message is  sent to receiving MSH", "lightblue"),
+  
+   /**
+   *
+   */
+  DELIVERED("DELIVERED", "Message is delivered to consumer", "darkblue"),
 
   /**
    *

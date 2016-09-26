@@ -44,4 +44,10 @@ public class SEDNamedQueries {
      *
      */
   public static String UPDATE_OUTMAIL = "si.laurentius.msh.outbox.mail.MSHOutMail.updateStatus";
+  
+  public static String UPDATE_OUTMAIL_SENT_DATE = "si.laurentius.msh.outbox.mail.MSHOutMail.updateSentDate";
+  public static String UPDATE_OUTMAIL_RECEIVED_DATE = "si.laurentius.msh.outbox.mail.MSHOutMail.updateReceivedDate";
+  public static String UPDATE_OUTMAIL_DELIVERED_DATE = "si.laurentius.msh.outbox.mail.MSHOutMail.updateDeliveredDate";
+  
+  
 }

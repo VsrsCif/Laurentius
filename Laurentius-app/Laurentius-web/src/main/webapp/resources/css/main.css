@@ -112,6 +112,10 @@
 
 .panelGridNoBorder .ui-panelgrid-even, .panelGridNoBorder .ui-panelgrid-odd, .panelGridNoBorder .ui-panelgrid-cell {
     border-style: none;
+    padding: 1px;
+}
+.ui-panelgrid .ui-panelgrid-cell {
+    padding: 1px;
 }
 
 .LoginTitle {

@@ -10,6 +10,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -50,10 +52,15 @@ public class TCStressTest implements Serializable {
   String payloadSizeTest = "100";
   String payloadSizeTestService = DWR_SERVICE;
 
-  private int stressTestProgress = 0;
+  private int stressTestProgress = -1;
   private String stressTestMessage = "";
-  private int payloadSizeTestProgress = 0;
+  private boolean stopStressTest = true;
+  ExecutorService mSTExecutor = null;
+
+  private int payloadSizeTestProgress = -1;
   private String payloadSizeTestMessage = "";
+  private boolean stopPayloadSizeTest = true;
+  ExecutorService mPSExecutor = null;
 
   public Integer getStressTestProgress() {
 
@@ -66,7 +73,7 @@ public class TCStressTest implements Serializable {
 
   public void executeStressTest() {
     stressTestMessage = "";
-    payloadSizeTestProgress = 2;
+    stressTestProgress = 0;
     LOG.formatedWarning("executeStressTest");
     if (Utils.isEmptyString(getTestSenderEBox())) {
       stressTestMessage = "Izberite naslov pošiljatelja!";
@@ -89,6 +96,11 @@ public class TCStressTest implements Serializable {
     }
     String rcName = rcvBox.substring(0, rcvBox.indexOf("@"));
 
+    if (mSTExecutor != null) {
+      mSTExecutor.shutdown();
+      mSTExecutor = null;
+    }
+
     String service;
     String action;
     if (Objects.equals(stressTestService, ZPP_SERVICE)) {
@@ -98,33 +110,45 @@ public class TCStressTest implements Serializable {
       service = DWR_SERVICE;
       action = DWR_ACTION;
     }
+    stopStressTest = false;
 
-    try {
+    mSTExecutor = Executors.newSingleThreadExecutor();
+    mSTExecutor.submit(() -> {
+      try {
 
-      for (int i = 0; i < icnt; i++) {
+        for (int i = 0; i < icnt; i++) {
+          if (stopStressTest) {
+            break;
+          }
+          MSHOutMail mout = mTestUtils.createOutMail(i, sndBox, rcName, rcvBox, service,
+              action);
+          mDB.serializeOutMail(mout, "test", "test-plugin", "");
+          stressTestProgress = i * 98 / icnt + 2;
 
-        MSHOutMail mout = mTestUtils.createOutMail(i, sndBox, rcName, rcvBox, service,
-            action);
-        mDB.serializeOutMail(mout, "test", "test-plugin", "");
-        stressTestProgress = i * 98 / icnt + 2;
-
+        }
+        stressTestProgress = 100;
+        stressTestMessage = String.format("V pošiljanje  po storitvi %s poslanih %s pošiljk.",
+            stressTestService, stressTestCnt);
+      } catch (StorageException ex) {
+        LOG.logError(ex.getMessage(), ex);
       }
-      stressTestProgress = 100;
-      stressTestMessage = String.format("V pošiljanje  po storitvi %s poslanih %s pošiljk.",
-          stressTestService, stressTestCnt);
-    } catch (StorageException ex) {
-      LOG.logError(ex.getMessage(), ex);
+    });
+
+  }
+
+  public void cancelStressTest() {
+    stressTestProgress = -1;
+    stressTestMessage = "";
+    stopStressTest = true;
+    if (mSTExecutor != null) {
+      mSTExecutor.shutdown();
+      mSTExecutor = null;
     }
   }
 
   public void onStressTestComplete() {
     facesContext().addMessage(null, new FacesMessage("Obremenitveni test: ", stressTestMessage));
-    stressTestProgress = 0;
-  }
-
-  public void cancelStressTest() {
-    stressTestProgress = 0;
-    stressTestMessage = "";
+    stressTestProgress = -1;
   }
 
   public String getStressTestCnt() {
@@ -146,7 +170,7 @@ public class TCStressTest implements Serializable {
 
   public void executePayloadSizeTest() {
     LOG.formatedWarning("executePayloadSizeTest");
-    payloadSizeTestProgress = 2;
+    payloadSizeTestProgress = 0;
     if (Utils.isEmptyString(getTestSenderEBox())) {
       payloadSizeTestMessage = "Izberite naslov pošiljatelja!";
       payloadSizeTestProgress = 100;
@@ -165,6 +189,12 @@ public class TCStressTest implements Serializable {
       payloadSizeTestProgress = 100;
       return;
     }
+
+    if (mPSExecutor != null) {
+      mPSExecutor.shutdown();
+      mSTExecutor = null;
+    }
+
     String rcName = rcvBox.substring(0, rcvBox.indexOf("@"));
 
     String service;
@@ -178,53 +208,72 @@ public class TCStressTest implements Serializable {
     }
 
     int lpsz = Integer.parseInt(payloadSizeTest) * 1000;
-    File f;
-    try {
 
-      f = File.createTempFile("payloadSize", ".txt");
-      byte[] testString = "TEST_".getBytes();
-      try (FileOutputStream fos = new FileOutputStream(f)) {
-        int isz = 0;
-        while (isz < lpsz) {
-          fos.write(testString);
-          isz += testString.length;
+    stopPayloadSizeTest = false;
 
-          payloadSizeTestProgress = 48 * isz / lpsz + 2;
+    mSTExecutor = Executors.newSingleThreadExecutor();
+    mSTExecutor.submit(() -> {
+      File f;
+      try {
+
+        f = File.createTempFile("payloadSize", ".txt");
+        byte[] testString = "TEST_".getBytes();
+        try (FileOutputStream fos = new FileOutputStream(f)) {
+          int isz = 0;
+          while (isz < lpsz) {
+            if (stopPayloadSizeTest) {
+              break;
+            }
+
+            fos.write(testString);
+            isz += testString.length;
+
+            payloadSizeTestProgress = 48 * isz / lpsz + 2;
+
+          }
 
         }
 
+      } catch (IOException ex) {
+        LOG.logError(service, ex);
+        return;
+      }
+      if (stopPayloadSizeTest) {
+        return;
       }
 
-    } catch (IOException ex) {
-      LOG.logError(service, ex);
-      return;
-    }
+      try {
+        payloadSizeTestProgress = 50;
 
-    try {
-      payloadSizeTestProgress = 50;
+        MSHOutMail mout = mTestUtils.createOutMail(sndBox, rcName, rcvBox, service,
+            action, f);
 
-      MSHOutMail mout = mTestUtils.createOutMail(sndBox, rcName, rcvBox, service,
-          action, f);
+        mDB.serializeOutMail(mout, "test", "test-plugin", "");
+        payloadSizeTestProgress = 100;
+        payloadSizeTestMessage = String.format(
+            "V pošiljanje  po storitvi %s poslana pošiljka velikosti %s KB.", payloadSizeTestService,
+            payloadSizeTest);
 
-      mDB.serializeOutMail(mout, "test", "test-plugin", "");
-      payloadSizeTestProgress = 100;
-      payloadSizeTestMessage = String.format(
-          "V pošiljanje  po storitvi %s poslana pošiljka velikosti %s KB.", payloadSizeTestService,
-          payloadSizeTest);
-
-    } catch (StorageException ex) {
-      LOG.logError(ex.getMessage(), ex);
-    }
+      } catch (StorageException ex) {
+        LOG.logError(ex.getMessage(), ex);
+      }
+    });
   }
 
   public void onPayloadSizeTestComplete() {
     facesContext().addMessage(null, new FacesMessage("Test končan", payloadSizeTestMessage));
-    payloadSizeTestProgress = 0;
+    payloadSizeTestProgress = -1;
 
   }
 
   public void cancelPayloadSizeTest() {
-    payloadSizeTestProgress = 0;
+    payloadSizeTestProgress = -1;
+    stopPayloadSizeTest = true;
+    if (mPSExecutor != null) {
+      mPSExecutor.shutdown();
+      mPSExecutor = null;
+    }
+
   }
 
   public String getPayloadSize() {

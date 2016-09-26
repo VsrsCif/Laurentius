@@ -114,7 +114,6 @@ public class TestUtils {
     MSHOutMail om = new MSHOutMail();
 
     om.setSenderMessageId("SM_ID-" + UUID.randomUUID().toString());
-    om.setConversationId(UUID.randomUUID().toString());
     om.setSubmittedDate(Calendar.getInstance().getTime());
     om.setAction(action);
     om.setService(service);

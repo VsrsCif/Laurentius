@@ -111,7 +111,7 @@
 				<tns:MPC>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/defaultMPC</tns:MPC>
 				<tns:Transport>
 					<tns:ForeChannel securityIdRef="sign_sha256" action="Delivery">
-						<tns:ReceptionAwareness raPatternIdRef="AS4ReceiptResponse-one"/>
+						<tns:ReceptionAwareness raPatternIdRef="AS4ReceiptResponse"/>
 					</tns:ForeChannel>
 					<tns:BackChannel securityIdRef="sign_sha256"/>
 				</tns:Transport>

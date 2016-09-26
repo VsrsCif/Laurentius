@@ -46,6 +46,7 @@ import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StorageUtils;
 import si.laurentius.commons.utils.Utils;
 import si.laurentius.commons.interfaces.OutMailEventLisneterInterface;
+import si.laurentius.commons.interfaces.SEDLookupsInterface;
 
 /**
  *
@@ -74,8 +75,10 @@ public class MSHQueueBean implements MessageListener {
   @EJB(mappedName = SEDJNDI.JNDI_JMSMANAGER)
   JMSManagerInterface mJMS;
 
-  @EJB
-  MshClient mmshClient;
+  @EJB(mappedName = SEDJNDI.JNDI_SEDLOOKUPS)
+  private SEDLookupsInterface mSedLookups;
+  
+  MshClient mmshClient = new MshClient();
 
   @EJB(mappedName = SEDJNDI.JNDI_PMODE)
   PModeInterface mpModeManager;
@@ -154,7 +157,7 @@ public class MSHQueueBean implements MessageListener {
 
       // set reciept
       sd.setReceptionAwarenessRetry(jmsRetryCount);
-      Result sm = mmshClient.pushMessage(mail, sd);
+      Result sm = mmshClient.pushMessage(mail, sd, mSedLookups);
 
       if (sm.getError() != null) {
 
@@ -188,7 +191,6 @@ public class MSHQueueBean implements MessageListener {
         }
 
       } else {
-
         setStatusToOutMail(mail, SEDOutboxMailStatus.SENT, "Message sent to receiver MSH",
             sm.getResultFile(), sm.getMimeType());
 

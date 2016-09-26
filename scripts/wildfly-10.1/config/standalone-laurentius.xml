@@ -154,6 +154,12 @@
                 <datasource jndi-name="java:/dsEBMS_SED" pool-name="ebMSSEDPool" enabled="true" statistics-enabled="true">
                     <connection-url>jdbc:h2:file:${jboss.home.dir}/standalone/data/laurentius-db;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=TRUE</connection-url>
                     <driver>h2</driver>
+		<pool>
+		   <min-pool-size>1</min-pool-size>
+		   <max-pool-size>1</max-pool-size>
+		   <prefill>true</prefill>
+		  </pool>
+
                     <security>
                         <user-name>laurentius</user-name>
                         <password>laurentius</password>

@@ -78,7 +78,7 @@
         <org.apache.santuario.xmlsec.version>2.0.6</org.apache.santuario.xmlsec.version>
         <maven.war.plugin.version>2.6</maven.war.plugin.version>       
         <!-- GUI -->
-        <org.primefaces.version>5.3</org.primefaces.version>
+        <org.primefaces.version>6.0</org.primefaces.version>
         <org.primefaces.extensions.version>6.0.0</org.primefaces.extensions.version>        
         <!-- unit testing-->
         <org.apache.derby.version>10.10.2.0</org.apache.derby.version>

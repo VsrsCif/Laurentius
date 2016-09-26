@@ -75,7 +75,7 @@ import si.laurentius.commons.utils.sec.KeystoreUtils;
  *
  * @author Jože Rihtaršič
  */
-@Stateless
+
 public class MshClient {
 
   /**
@@ -86,8 +86,8 @@ public class MshClient {
   /**
    * Common Lookups from database
    */
-  @EJB(mappedName = SEDJNDI.JNDI_SEDLOOKUPS)
-  private SEDLookupsInterface mSedLookups;
+//  @EJB(mappedName = SEDJNDI.JNDI_SEDLOOKUPS)
+  //private SEDLookupsInterface mSedLookups;
 
   /**
    * Keystore tools
@@ -104,7 +104,7 @@ public class MshClient {
    * @throws si.jrc.msh.exception.EBMSError (Error creating client)
    */
   public Dispatch<SOAPMessage> createClient(final String messageId,
-      final PartyIdentitySet.TransportProtocol protocol)
+      final PartyIdentitySet.TransportProtocol protocol, SEDLookupsInterface mSedLookups)
       throws EBMSError {
     
     if (protocol== null) {
@@ -159,7 +159,7 @@ public class MshClient {
     // --------------------------------------------------------------------
     // set TLS
     if (protocol.getTLS() != null) {
-      setupTLS(messageId, http, protocol.getTLS());
+      setupTLS(messageId, http, protocol.getTLS(), mSedLookups);
     }
     // --------------------------------------------------------------------
     // set http client policy
@@ -190,7 +190,7 @@ public class MshClient {
    * @param ebms
    * @return
    */
-  public Result pushMessage(MSHOutMail mail, EBMSMessageContext ebms) {
+  public Result pushMessage(MSHOutMail mail, EBMSMessageContext ebms,  SEDLookupsInterface mSedLookups) {
 
     long l = LOG.logStart(mail);
     Result r = new Result();
@@ -198,7 +198,7 @@ public class MshClient {
     Dispatch<SOAPMessage> client = null;
     try {
 
-      client = createClient(mail.getMessageId(), ebms.getTransportProtocol());
+      client = createClient(mail.getMessageId(), ebms.getTransportProtocol(), mSedLookups);
 
       // set context parameters!
       SoapUtils.setEBMSMessageOutContext(ebms, client);
@@ -313,7 +313,7 @@ public class MshClient {
    * @throws IOException
    * @throws SEDSecurityException
    */
-  private void setupTLS(String messageId, HTTPConduit httpConduit, Protocol.TLS tls) {
+  private void setupTLS(String messageId, HTTPConduit httpConduit, Protocol.TLS tls, SEDLookupsInterface mSedLookups) {
     TLSClientParameters tlsCP = null;
 
     // set client's key cert for mutual identification

@@ -12,9 +12,14 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
+import javax.faces.application.FacesMessage;
+import javax.jms.JMSException;
+import javax.naming.NamingException;
 import org.apache.xmlgraphics.util.MimeConstants;
 import si.laurentius.msh.inbox.mail.MSHInMail;
 import si.laurentius.msh.outbox.mail.MSHOutMail;
@@ -121,8 +126,21 @@ public class ZPPTask implements TaskExecutionInterface {
     mi.setStatus(SEDInboxMailStatus.PLUGINLOCKED.getValue());
     mi.setReceiverEBox(sedBox + "@" + SEDSystemProperties.getLocalDomain());
 
-    List<MSHInMail> lst = mDB.getDataList(MSHInMail.class, -1, -1, "Id", "ASC", mi);
+    List<MSHInMail> lst = mDB.getDataList(MSHInMail.class, -1, 100, "Id", "ASC", mi);
     sw.append("got " + lst.size() + " mails for sedbox: '" + sedBox + "'!");
+
+    // set status to proccess
+    lst.stream().forEach((m) -> {
+      try {
+        mDB.setStatusToInMail(m, SEDInboxMailStatus.PROCESS, "Add message to zpp deliver proccess");
+      } catch (StorageException ex) {
+        String msg = String.format("Error occurred processing mail: '%s'. Err: %s.", m.getId(),
+            ex.getMessage());
+        LOG.logError(l, msg, ex);
+        sw.append(msg);
+      }
+    });
+
     for (MSHInMail m : lst) {
       try {
         processInZPPDelivery(m, signKeyAlias, keystore);
@@ -231,16 +249,17 @@ public class ZPPTask implements TaskExecutionInterface {
       mout.getMSHOutPayload().getMSHOutParts().add(mp);
 
       SEDCertStore cs = msedLookup.getSEDCertStoreByName(keystore);
-      
-       SEDCertificate aliasCrt =
+
+      SEDCertificate aliasCrt =
           msedLookup.getSEDCertificatForAlias(signAlias, cs, true);
       if (aliasCrt == null) {
-        String msg = String.format("Key for alias '%s' do not exists store '%s'!", signAlias, keystore);
+        String msg = String.format("Key for alias '%s' do not exists store '%s'!", signAlias,
+            keystore);
         LOG.logError(l, msg, null);
         throw new ZPPException(msg);
       }
-      
-       if (!KeystoreUtils.isCertValid(aliasCrt)) {
+
+      if (!KeystoreUtils.isCertValid(aliasCrt)) {
         String msg = "Key for alias '" + signAlias + " is not valid!";
         LOG.logError(l, msg, null);
         throw new ZPPException(msg);
@@ -256,11 +275,6 @@ public class ZPPTask implements TaskExecutionInterface {
       mp.setName(mp.getFilename().substring(0, mp.getFilename().lastIndexOf(".")));
 
       mDB.serializeOutMail(mout, "", "ZPPDeliveryPlugin", "");
-
-      mInMail.setStatus(SEDInboxMailStatus.PROCESS.getValue());
-      mInMail.setStatusDate(Calendar.getInstance().getTime());
-      //
-      mDB.updateInMail(mInMail, "DeliveryAdviceGenerated and submited to sender", null);
 
     } catch (IOException | SEDSecurityException | StorageException ex) {
       String msg = "Error occured while creating delivery advice file!";

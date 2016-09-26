@@ -123,13 +123,13 @@
                             <sui:mail-table-out id="OutMailPanel" rendered="#{MainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_OUTBOX)}"  />
                             <sui:settings-keystore id="SettingsCertPanel" rendered="#{MainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_SETT_CERTS)}"  />
                             <sui:settings-custom id="SettingsCustomPanel" rendered="#{MainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_SETT_CUSTOM)}"  />
-                            
+
                             <sui:settings-pmode-services id="SettingsPModesServices" rendered="#{MainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_SETT_PMODE_SERVICES)}"  />
                             <sui:settings-pmode-parties id="SettingsPModesParties" rendered="#{MainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_SETT_PMODE_PARTIES)}"  />
                             <sui:settings-pmode-securities id="SettingsPModesSecurities" rendered="#{MainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_SETT_PMODE_SECURITIES)}"  />
                             <sui:settings-pmode-ra id="SettingsPModeReceptionAwarenesses" rendered="#{MainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_SETT_PMODE_AS4_RA)}"  />
                             <sui:settings-pmode id="SettingsPModes" rendered="#{MainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_SETT_PMODE)}"  />
-                            
+
                             <sui:settings-users id="SettingsUsers" rendered="#{MainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_ADMIN_USERS)}"  />
                             <sui:settings-eboxes id="SettingsSEDBoxes" rendered="#{MainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_ADMIN_EBOXES)}"  />
                             <sui:settings-cron id="SettingsCron" rendered="#{MainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_ADMIN_CRON)}"  />
@@ -183,6 +183,21 @@
                                     <h:outputText value="#{msg['Action']}:" />
                                     <h:inputText value="#{InMailDataView.inMailModel.filter.action}" />
 
+                                    <h:outputText value="#{msg['Transaction']}:" />
+                                    <h:inputText value="#{InMailDataView.inMailModel.filter.conversationId}" />
+
+                                    <h:outputText value="#{msg['Id']}:" />
+                                    <p:inputNumber value="#{InMailDataView.inMailModel.filter.id}" decimalPlaces="0"/>
+
+                                    <h:outputText value="#{msg['MessageId']}:" />
+                                    <h:inputText value="#{InMailDataView.inMailModel.filter.messageId}" />
+                                   
+                                    <h:outputText value="#{msg['RefMessageId']}:" />
+                                    <h:inputText value="#{InMailDataView.inMailModel.filter.refToMessageId}" />
+                                    
+                                    <h:outputText value="#{msg['SenderMessageId']}:" />
+                                    <h:inputText value="#{InMailDataView.inMailModel.filter.senderMessageId}" />
+
                                     <h:outputText value="" />
                                     <p:commandButton value="#{msg['Search']}" 
                                                      icon="ui-icon-sed-search"                                             
@@ -219,12 +234,27 @@
                                         <f:selectItem itemValue="" noSelectionOption="true" />
                                         <f:selectItems value="#{OutMailDataView.outStatuses}"   />
                                     </p:selectOneMenu>
-
+                                    
                                     <h:outputText value="#{msg['Service']}" />
                                     <h:inputText value="#{OutMailDataView.outMailModel.filter.service}" />
 
                                     <h:outputText value="#{msg['Action']}" />
                                     <h:inputText value="#{OutMailDataView.outMailModel.filter.action}" />
+                                     
+                                    <h:outputText value="#{msg['Transaction']}:" />
+                                    <h:inputText value="#{OutMailDataView.outMailModel.filter.conversationId}" />
+
+                                    <h:outputText value="#{msg['Id']}:" />
+                                    <p:inputNumber value="#{OutMailDataView.outMailModel.filter.id}" decimalPlaces="0"/>
+
+                                    <h:outputText value="#{msg['MessageId']}:" />
+                                    <h:inputText value="#{OutMailDataView.outMailModel.filter.messageId}" />
+                                    
+                                    <h:outputText value="#{msg['RefMessageId']}:" />
+                                    <h:inputText value="#{OutMailDataView.outMailModel.filter.refToMessageId}" />
+                                    
+                                    <h:outputText value="#{msg['SenderMessageId']}:" />
+                                    <h:inputText value="#{OutMailDataView.outMailModel.filter.senderMessageId}" />
 
                                     <h:outputText value="" />
                                     <p:commandButton value="#{msg['Search']}" 
@@ -268,7 +298,7 @@
 
                                 </p:menu>
                             </p:tab>
-                            
+
                             <p:tab id="PANEL_PLUGIN" >
                                 <f:facet name="title">
                                     <h:graphicImage value="resources/images/settings32.png" width="22" height="22" />

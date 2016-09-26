@@ -291,7 +291,6 @@ public class OutMailDataView extends AbstractMailView<MSHOutMail, MSHOutEvent> i
     m.setService("LegalDelivery_ZPP");
     m.setAction("DeliveryNotification");
     m.setSenderMessageId(Utils.getInstance().getGuidString());
-    m.setConversationId(Utils.getInstance().getGuidString());
     m.setSubject("VL 1/2016 Predložitveno poročilo, spis I 291/2014");
 
     newMailBody = "Pozdravljeni!<br />to je testno besedilo<br /> Lep pozdrav";

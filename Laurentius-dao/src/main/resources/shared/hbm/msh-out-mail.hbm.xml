@@ -67,5 +67,17 @@
     <query name="si.laurentius.msh.outbox.mail.MSHOutMail.updateStatus" >
         <![CDATA[UPDATE MSHOutMail p set p.Status = :status, p.StatusDate=:statusDate where p.Id = :id]]>
     </query>
+    
+    <query name="si.laurentius.msh.outbox.mail.MSHOutMail.updateSentDate" >
+        <![CDATA[UPDATE MSHOutMail p set p.SentDate = :sentDate, p.ReceivedDate = :receivedDate  where p.Id = :id]]>
+    </query>
+    
+    <query name="si.laurentius.msh.outbox.mail.MSHOutMail.updateReceivedDate" >
+        <![CDATA[UPDATE MSHOutMail p set p.ReceivedDate = :receivedDate where p.Id = :id]]>
+    </query>
+    
+    <query name="si.laurentius.msh.outbox.mail.MSHOutMail.updateDeliveredDate" >
+        <![CDATA[UPDATE MSHOutMail p set p.DeliveredDate = :deliveredDate where p.Id = :id]]>
+    </query>
 
 </hibernate-mapping>

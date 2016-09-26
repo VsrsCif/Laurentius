@@ -206,6 +206,8 @@ public class SEDDaoBean implements SEDDaoInterface {
                   (Comparable) searchValue));
             } else if (searchValue instanceof String && !((String) searchValue).isEmpty()) {
               lstPredicate.add(cb.equal(om.get(fieldName), searchValue));
+            } else if (searchValue instanceof BigInteger ) {
+              lstPredicate.add(cb.equal(om.get(fieldName), searchValue));
             }
 
           }
@@ -527,7 +529,9 @@ public class SEDDaoBean implements SEDDaoInterface {
       if (Utils.isEmptyString(mail.getMessageId())) {
         mail.setMessageId(Utils.getUUIDWithDomain(locadomain));
       }
-
+      
+      
+      
       if (mail.getMSHOutPayload() != null) {
         for (MSHOutPart mp : mail.getMSHOutPayload().getMSHOutParts()) {
           if (Utils.isEmptyString(mp.getEbmsId())) {
@@ -538,6 +542,12 @@ public class SEDDaoBean implements SEDDaoInterface {
       }
 
       memEManager.persist(mail);
+      
+      if (Utils.isEmptyString(mail.getConversationId())) {
+        mail.setConversationId(mail.getId().toString() + "@" +locadomain);
+        memEManager.merge(mail);
+      }
+      
       // persist mail event
       MSHOutEvent me = new MSHOutEvent();
       me.setDescription("Mail composed in Laurentius-gui.");
@@ -727,14 +737,25 @@ public class SEDDaoBean implements SEDDaoInterface {
 
     try {
       Date dt = Calendar.getInstance().getTime();
-
-      mail.setStatusDate(Calendar.getInstance().getTime());
+      mail.setStatusDate(dt);
       mail.setStatus(status.getValue());
 
       Query updq = memEManager.createNamedQuery(SEDNamedQueries.UPDATE_OUTMAIL);
       updq.setParameter("id", mail.getId());
       updq.setParameter("statusDate", mail.getStatusDate());
       updq.setParameter("status", mail.getStatus());
+      
+      Query updqSD = null;
+      if (SEDOutboxMailStatus.SENT.getValue().equals(status.getValue()) && mail.getSentDate()!= null){
+        updqSD = memEManager.createNamedQuery(SEDNamedQueries.UPDATE_OUTMAIL_SENT_DATE);
+        updqSD.setParameter("id", mail.getId());
+        updqSD.setParameter("sentDate", mail.getSentDate()==null?"":mail.getSentDate());
+        updqSD.setParameter("receivedDate", mail.getReceivedDate()==null?"":mail.getReceivedDate());
+      } else if (SEDOutboxMailStatus.DELIVERED.getValue().equals(status.getValue()) && mail.getSentDate()!= null){
+        updqSD = memEManager.createNamedQuery(SEDNamedQueries.UPDATE_OUTMAIL_DELIVERED_DATE);
+        updqSD.setParameter("id", mail.getId());
+        updqSD.setParameter("deliveredDate", mail.getDeliveredDate());
+      }
 
       // persist mail event
       MSHOutEvent me = new MSHOutEvent();
@@ -752,6 +773,7 @@ public class SEDDaoBean implements SEDDaoInterface {
       mutUTransaction.begin();
 
       int iVal = updq.executeUpdate();
+      
       if (iVal != 1) {
         try {
           mutUTransaction.rollback();
@@ -763,6 +785,9 @@ public class SEDDaoBean implements SEDDaoInterface {
             "'. Mail not exists or id duplicates?";
         LOG.logError(l, msg, null);
         throw new StorageException(msg, null);
+      }
+      if (updqSD!= null) {
+        updqSD.executeUpdate();
       }
       memEManager.persist(me);
       mutUTransaction.commit();

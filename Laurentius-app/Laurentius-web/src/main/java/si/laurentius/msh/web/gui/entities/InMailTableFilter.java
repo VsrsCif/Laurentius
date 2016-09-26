@@ -4,6 +4,7 @@
  */
 package si.laurentius.msh.web.gui.entities;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -15,48 +16,59 @@ import java.util.List;
 public class InMailTableFilter {
 
   /**
-     *
-     */
+   *
+   */
   protected String action;
 
   /**
-     *
-     */
+   *
+   */
   protected String conversationId;
+  
+  /**
+   *
+   */
+  protected BigInteger id;
+  /**
+   *
+   */
+  protected String messageId;
 
   /**
-     *
-     */
+   *
+   */
   protected Date receivedDateFrom;
 
   /**
-     *
-     */
+   *
+   */
   protected Date receivedDateTo;
 
   /**
-     *
-     */
+   *
+   */
   protected List<String> receiverEBoxList = new ArrayList<>();
+  protected String refToMessageId;
 
   /**
-     *
-     */
+   *
+   */
   protected String senderEBox;
+  protected String senderMessageId;
 
   /**
-     *
-     */
+   *
+   */
   protected String service;
 
   /**
-     *
-     */
+   *
+   */
   protected String status;
 
   /**
-     *
-     */
+   *
+   */
   protected String subject;
 
   /**
@@ -73,6 +85,12 @@ public class InMailTableFilter {
    */
   public String getConversationId() {
     return conversationId;
+  }
+  public BigInteger getId() {
+    return id;
+  }
+  public String getMessageId() {
+    return messageId;
   }
 
   /**
@@ -98,6 +116,9 @@ public class InMailTableFilter {
   public List<String> getReceiverEBoxList() {
     return receiverEBoxList;
   }
+  public String getRefToMessageId() {
+    return refToMessageId;
+  }
 
   /*
    * public void setReceiverEBox(String receiverEBox) { this.receiverEBox = receiverEBox; }
@@ -108,6 +129,9 @@ public class InMailTableFilter {
    */
   public String getSenderEBox() {
     return senderEBox;
+  }
+  public String getSenderMessageId() {
+    return senderMessageId;
   }
 
   /**
@@ -149,6 +173,12 @@ public class InMailTableFilter {
   public void setConversationId(String conversationId) {
     this.conversationId = conversationId;
   }
+  public void setId(BigInteger id) {
+    this.id = id;
+  }
+  public void setMessageId(String messageId) {
+    this.messageId = messageId;
+  }
 
   /**
    *
@@ -165,6 +195,9 @@ public class InMailTableFilter {
   public void setReceivedDateTo(Date receivedDateTo) {
     this.receivedDateTo = receivedDateTo;
   }
+  public void setRefToMessageId(String refToMessageId) {
+    this.refToMessageId = refToMessageId;
+  }
 
   /**
    *
@@ -172,6 +205,9 @@ public class InMailTableFilter {
    */
   public void setSenderEBox(String senderEBox) {
     this.senderEBox = senderEBox;
+  }
+  public void setSenderMessageId(String senderMessageId) {
+    this.senderMessageId = senderMessageId;
   }
 
   /**
@@ -200,10 +236,13 @@ public class InMailTableFilter {
 
   @Override
   public String toString() {
-    return "InMailTableFilter{" + "action=" + action + ", conversationId=" + conversationId +
-        ", receivedDateFrom=" + receivedDateFrom + ", receivedDateTo=" + receivedDateTo +
-        ", receiverEBoxList=" + receiverEBoxList + ", senderEBox=" + senderEBox + ", service=" +
-        service + ", status=" + status + ", subject=" + subject + '}';
+    return "InMailTableFilter{" + "action=" + action + ", conversationId=" + conversationId + ", id=" +
+        id + ", messageId=" + messageId + ", receivedDateFrom=" + receivedDateFrom +
+        ", receivedDateTo=" + receivedDateTo + ", receiverEBoxList=" + receiverEBoxList +
+        ", refToMessageId=" + refToMessageId + ", senderEBox=" + senderEBox + ", senderMessageId=" +
+        senderMessageId + ", service=" + service + ", status=" + status + ", subject=" + subject +
+        '}';
   }
+
 
 }

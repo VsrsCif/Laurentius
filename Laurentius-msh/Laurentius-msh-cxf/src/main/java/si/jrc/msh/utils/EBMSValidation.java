@@ -46,6 +46,7 @@ import si.laurentius.commons.cxf.SoapUtils;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.Utils;
 import si.laurentius.commons.utils.xml.XMLUtils;
+import si.laurentius.msh.outbox.mail.MSHOutMail;
 
 /**
  *
@@ -363,6 +364,13 @@ public class EBMSValidation {
     if (sm.getPullRequest() != null) {
       throw new EBMSError(EBMSErrorCode.FeatureNotSupportedFailure, msgId,
           "Signal PullRequest not suppored!", sv);
+    }
+    
+    else if (sm.getReceipt() != null) {
+      MSHOutMail om =  SoapUtils.getMSHOutMail(soap);
+      if (om!= null) {      
+          om.setReceivedDate(sm.getMessageInfo().getTimestamp());          
+        }
     }
 
     LOG.logEnd(l, msgId);

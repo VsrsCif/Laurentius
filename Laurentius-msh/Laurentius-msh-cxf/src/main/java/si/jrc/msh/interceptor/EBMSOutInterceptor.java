@@ -132,6 +132,7 @@ public class EBMSOutInterceptor extends AbstractEBMSInterceptor {
     if (outMail != null) {
       // add user message
       outMail.setSentDate(Calendar.getInstance().getTime()); // reset sent  to new value 
+      
       UserMessage um;
       try {
 

@@ -404,6 +404,7 @@ public class EBMSBuilder {
       if (m != null && m.getSignalMessages().size() == 1) {
         sigMsg = m.getSignalMessages().get(0);
         sigMsg.getMessageInfo().setMessageId(UUID.randomUUID().toString() + "@" + senderDomain);
+        sigMsg.getMessageInfo().setTimestamp(timestamp);
       }
 
     } catch (JAXBException | TransformerException |

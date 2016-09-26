@@ -4,6 +4,7 @@
  */
 package si.laurentius.msh.web.gui.entities;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -15,50 +16,53 @@ import java.util.List;
 public class OutMailTableFilter {
 
   /**
-     *
-     */
+   *
+   */
   protected String action;
 
   /**
-     *
-     */
+   *
+   */
   protected String conversationId;
+  protected BigInteger id;
+  protected String messageId;
 
   /**
-     *
-     */
+   *
+   */
   protected String receiverEBox;
+  protected String refToMessageId;
 
   /**
-     *
-     */
+   *
+   */
   protected List<String> senderEBoxList = new ArrayList<>();
+  protected String senderMessageId;
 
   /**
-     *
-     */
+   *
+   */
   protected String service;
 
   /**
-     *
-     */
+   *
+   */
   protected String status;
 
   /**
-     *
-     */
+   *
+   */
   protected String subject;
 
   /**
-     *
-     */
+   *
+   */
   protected Date submittedDateFrom;
 
   /**
-     *
-     */
+   *
+   */
   protected Date submittedDateTo;
-
   /**
    *
    * @return
@@ -66,7 +70,6 @@ public class OutMailTableFilter {
   public String getAction() {
     return action;
   }
-
   /**
    *
    * @return
@@ -75,6 +78,14 @@ public class OutMailTableFilter {
     return conversationId;
   }
 
+  public BigInteger getId() {
+    return id;
+  }
+
+
+  public String getMessageId() {
+    return messageId;
+  }
   /**
    *
    * @return
@@ -83,6 +94,9 @@ public class OutMailTableFilter {
     return receiverEBox;
   }
 
+  public String getRefToMessageId() {
+    return refToMessageId;
+  }
   /**
    *
    * @return
@@ -90,6 +104,11 @@ public class OutMailTableFilter {
   public List<String> getSenderEBoxList() {
     return senderEBoxList;
   }
+
+  public String getSenderMessageId() {
+    return senderMessageId;
+  }
+
 
   /**
    *
@@ -146,6 +165,12 @@ public class OutMailTableFilter {
   public void setConversationId(String conversationId) {
     this.conversationId = conversationId;
   }
+  public void setId(BigInteger id) {
+    this.id = id;
+  }
+  public void setMessageId(String messageId) {
+    this.messageId = messageId;
+  }
 
   /**
    *
@@ -153,6 +178,12 @@ public class OutMailTableFilter {
    */
   public void setReceiverEBox(String receiverEBox) {
     this.receiverEBox = receiverEBox;
+  }
+  public void setRefToMessageId(String refToMessageId) {
+    this.refToMessageId = refToMessageId;
+  }
+  public void setSenderMessageId(String senderMessageId) {
+    this.senderMessageId = senderMessageId;
   }
 
   /**
@@ -198,9 +229,12 @@ public class OutMailTableFilter {
   @Override
   public String toString() {
     return "OutMailTableFilter{" + "action=" + action + ", conversationId=" + conversationId +
-        ", receiverEBox=" + receiverEBox + ", senderEBoxList=" + senderEBoxList + ", service=" +
-        service + ", status=" + status + ", subject=" + subject + ", submittedDateFrom=" +
-        submittedDateFrom + ", submittedDateTo=" + submittedDateTo + '}';
+        ", id=" + id + ", messageId=" + messageId + ", receiverEBox=" + receiverEBox +
+        ", refToMessageId=" + refToMessageId + ", senderEBoxList=" + senderEBoxList +
+        ", senderMessageId=" + senderMessageId + ", service=" + service + ", status=" + status +
+        ", subject=" + subject + ", submittedDateFrom=" + submittedDateFrom + ", submittedDateTo=" +
+        submittedDateTo + '}';
   }
+
 
 }
