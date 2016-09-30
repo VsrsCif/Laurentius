@@ -6,8 +6,10 @@ package si.laurentius.msh.web.gui.entities;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import si.laurentius.commons.SEDInboxMailStatus;
 
 /**
  *
@@ -64,13 +66,23 @@ public class InMailTableFilter {
   /**
    *
    */
-  protected String status;
+  protected List<String> statusList = new ArrayList<>();
 
   /**
    *
    */
   protected String subject;
 
+  public InMailTableFilter() {
+     for (SEDInboxMailStatus st: SEDInboxMailStatus.values()){
+       statusList.add(st.getValue());
+     }
+  }
+
+  
+  
+  
+  
   /**
    *
    * @return
@@ -146,8 +158,8 @@ public class InMailTableFilter {
    *
    * @return
    */
-  public String getStatus() {
-    return status;
+  public List<String> getStatusList() {
+    return statusList;
   }
 
   /**
@@ -222,8 +234,8 @@ public class InMailTableFilter {
    *
    * @param status
    */
-  public void setStatus(String status) {
-    this.status = status;
+  public void setStatusList(List<String> status) {
+    this.statusList = status;
   }
 
   /**
@@ -240,7 +252,7 @@ public class InMailTableFilter {
         id + ", messageId=" + messageId + ", receivedDateFrom=" + receivedDateFrom +
         ", receivedDateTo=" + receivedDateTo + ", receiverEBoxList=" + receiverEBoxList +
         ", refToMessageId=" + refToMessageId + ", senderEBox=" + senderEBox + ", senderMessageId=" +
-        senderMessageId + ", service=" + service + ", status=" + status + ", subject=" + subject +
+        senderMessageId + ", service=" + service + ", status=" + String.join(";", statusList) + ", subject=" + subject +
         '}';
   }
 

@@ -13,10 +13,11 @@ import si.laurentius.msh.web.abst.AbstractAdminJSFView;
 /**
  *
  * @author sluzba
+ * @param <T>
  */
 public abstract class AbstractPModeJSFView<T> extends AbstractAdminJSFView<T> {
   
-  public static SEDLogger LOG = new SEDLogger(AbstractPModeJSFView.class);
+  public static final SEDLogger A_LOG_JSF = new SEDLogger(AbstractPModeJSFView.class);
   String curre = null;
 
   /**
@@ -24,14 +25,14 @@ public abstract class AbstractPModeJSFView<T> extends AbstractAdminJSFView<T> {
    * @return
    */
   public String getCurrentObjectAsString() {
-    long l = LOG.logStart();
+    long l = A_LOG_JSF.logStart();
     String pmrs = "";
     Object val = getEditable();
     if (val != null) {
       try {
         pmrs = XMLUtils.serializeToString(val);
       } catch (JAXBException ex) {
-        LOG.logError(l, null, ex);
+        A_LOG_JSF.logError(l, null, ex);
       }
     }
     return pmrs;
@@ -42,7 +43,7 @@ public abstract class AbstractPModeJSFView<T> extends AbstractAdminJSFView<T> {
    * @param strPMode
    */
   public void setCurrentObjectAsString(String strPMode) {
-    long l = LOG.logStart();
+    long l = A_LOG_JSF.logStart();
     Object pmed = getEditable();
     if (pmed != null) {
       try {
@@ -54,7 +55,7 @@ public abstract class AbstractPModeJSFView<T> extends AbstractAdminJSFView<T> {
           //          pm.replace(pmdNew, pmed.getId());
         }
       } catch (JAXBException ex) {
-        LOG.logError(l, null, ex);
+        A_LOG_JSF.logError(l, null, ex);
       }
     }
   }

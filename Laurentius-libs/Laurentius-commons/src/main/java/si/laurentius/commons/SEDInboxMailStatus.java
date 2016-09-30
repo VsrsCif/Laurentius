@@ -23,8 +23,10 @@ public enum SEDInboxMailStatus {
 
   /**
    *
+   *//**
+   *
    */
-  RECEIVE("RECEIVE", "Receive message in process.", "orange"),
+  //RECEIVE("RECEIVE", "Receive message in process.", "orange"),
 
   /**
    *
@@ -34,22 +36,22 @@ public enum SEDInboxMailStatus {
   /**
    *
    */
-  PROCESS("PROCESS", "Message is locked by plugin", "gray"),
+  PROCESS("PROCESS", "Message is locked by plugin", "darkgray"),
 
   /**
    *
    */
-  LOCKED("LOCKED", "Message is locked by consumer", "lightgray"),
+  LOCKED("LOCKED", "Message is locked by consumer", "lightblue"),
 
   /**
    *
    */
-  PLUGINLOCKED("PLGLOCKED", "Message is locked by plugin", "lightgray"),
+  PLOCKED("PLOCKED", "Message is locked by plugin", "lightgray"),
 
   /**
    *
    */
-  DELIVERED("DELIVERED", "Message is consumed", "Blue"),
+  DELIVERED("DELIVERED", "Message is consumed", "darkblue"),
 
   /**
    *

@@ -78,6 +78,13 @@ public class SEDTestDao implements SEDDaoInterface{
   }
 
   @Override
+  public void sendOutMessage(MSHOutMail mail, int retry, long delay, String userId,
+      String applicationId)
+      throws StorageException {
+    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+  }
+
+  @Override
   public void serializeInMail(MSHInMail mail, String applicationId)
       throws StorageException {
     

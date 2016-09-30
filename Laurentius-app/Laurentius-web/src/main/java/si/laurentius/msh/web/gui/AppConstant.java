@@ -89,6 +89,11 @@ public class AppConstant {
   public static final String S_PANEL_SETT_PMODE_PARTIES = "PANEL_SETT_PMODE_PARTIES";
   public static final String S_PANEL_SETT_PMODE_SECURITIES = "PANEL_SETT_PMODE_SECURITIES";
   public static final String S_PANEL_SETT_PMODE_AS4_RA = "PANEL_SETT_PMODE_AS4_RA";
+  
+  
+  public static final String S_APPLICATION_CODE = "laurentius-web";
+  
+  
 
 
   /**

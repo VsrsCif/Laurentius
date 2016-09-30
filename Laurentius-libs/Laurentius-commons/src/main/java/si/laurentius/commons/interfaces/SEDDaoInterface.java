@@ -17,6 +17,8 @@ package si.laurentius.commons.interfaces;
 import java.math.BigInteger;
 import java.util.List;
 import javax.ejb.Local;
+import javax.jms.JMSException;
+import javax.naming.NamingException;
 import si.laurentius.msh.inbox.mail.MSHInMail;
 import si.laurentius.msh.outbox.mail.MSHOutMail;
 import si.laurentius.cron.SEDTaskExecution;
@@ -183,7 +185,20 @@ public interface SEDDaoInterface {
   void serializeOutMail(MSHOutMail mail, String userID, String applicationId, String pmodeId)
       throws StorageException;
   
-  
+  /**
+   *
+   * @param biPosiljkaId
+   * @param strPmodeId
+   * @param retry
+   * @param delay
+   * @param applicationId
+   * @throws si.laurentius.commons.exception.StorageException
+
+
+   * @throws NamingException
+   */
+  void sendOutMessage(MSHOutMail mail, int retry, long delay, String userId,
+      String applicationId) throws StorageException;
 
   /**
    *

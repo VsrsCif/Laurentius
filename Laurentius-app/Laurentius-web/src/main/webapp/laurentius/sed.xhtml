@@ -75,7 +75,7 @@
                                                  rendered="#{MainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_OUTBOX)}"
                                                  actionListener="#{OutMailDataView.resendSelectedMail()}" 
                                                  icon="ui-icon-sed-resend"
-                                                 update=":forms:MainPanel"
+                                                 update=":forms:MainPanel :forms:messages"
                                                  ajax="true"/>
                                 <p:commandButton value="#{msg['Delete selected']}" styleClass="toolbar-Button"  
                                                  icon="ui-icon-sed-remove"
@@ -95,6 +95,28 @@
                                                  actionListener="#{pModeView.formatPMode()}" 
                                                  update=":forms:MainPanel :forms:messages"
                                                  ajax="true"/>
+
+                                <p:menuButton value="#{msg['ChangeStatus']}" 
+                                              
+                                              rendered="#{MainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_INBOX)}" 
+                                              >
+                                    <p:menuitem value="PLOCKED" 
+                                                actionListener="#{InMailDataView.setPluginLockedSelectedMail()}"
+                                                icon="ui-icon-sed-flag-gray"
+                                                update=":forms:MainPanel :forms:messages"
+                                                 ajax="true"/>
+                                    <p:menuitem value="RECEIVED" 
+                                                icon="ui-icon-sed-flag-green"
+                                                actionListener="#{InMailDataView.setReceivedSelectedMail}" 
+                                                update=":forms:MainPanel :forms:messages"
+                                                 ajax="true"
+                                                />
+                                    <p:separator />
+                                    <p:menuitem value="DELETED" 
+                                                actionListener="#{InMailDataView.deleteSelectedMail()}"
+                                                update=":forms:MainPanel :forms:messages"
+                                                 ajax="true" />                                    
+                                </p:menuButton >
 
 
                             </f:facet>
@@ -172,10 +194,9 @@
                                     <h:inputText value="#{InMailDataView.inMailModel.filter.senderEBox}" />
 
                                     <h:outputText value="#{msg['Status']}:" />
-                                    <p:selectOneMenu id="inSts" value="#{InMailDataView.inMailModel.filter.status}" style="width:150px" >                                               
-                                        <f:selectItem itemValue="" noSelectionOption="true" />
+                                    <p:selectCheckboxMenu id="inSts" filter="false"  label="Statusi" value="#{InMailDataView.inMailModel.filter.statusList}" style="width:150px" >                                               
                                         <f:selectItems value="#{InMailDataView.inStatuses}"   />
-                                    </p:selectOneMenu>
+                                    </p:selectCheckboxMenu>
 
                                     <h:outputText value="#{msg['Service']}:" />
                                     <h:inputText value="#{InMailDataView.inMailModel.filter.service}" />
@@ -191,10 +212,10 @@
 
                                     <h:outputText value="#{msg['MessageId']}:" />
                                     <h:inputText value="#{InMailDataView.inMailModel.filter.messageId}" />
-                                   
+
                                     <h:outputText value="#{msg['RefMessageId']}:" />
                                     <h:inputText value="#{InMailDataView.inMailModel.filter.refToMessageId}" />
-                                    
+
                                     <h:outputText value="#{msg['SenderMessageId']}:" />
                                     <h:inputText value="#{InMailDataView.inMailModel.filter.senderMessageId}" />
 
@@ -229,18 +250,17 @@
                                     <h:inputText value="#{OutMailDataView.outMailModel.filter.receiverEBox}" />
 
                                     <h:outputText value="#{msg['Status']}:" />
-                                    <p:selectOneMenu id="outSt" value="#{OutMailDataView.outMailModel.filter.status}" style="width:150px" 
-                                                     rendered="#{not empty OutMailDataView.outMailModel}">                                               
-                                        <f:selectItem itemValue="" noSelectionOption="true" />
+
+                                    <p:selectCheckboxMenu id="outSts" filter="false"  label="Statusi" value="#{OutMailDataView.outMailModel.filter.statusList}" style="width:150px" >                                               
                                         <f:selectItems value="#{OutMailDataView.outStatuses}"   />
-                                    </p:selectOneMenu>
-                                    
+                                    </p:selectCheckboxMenu>
+
                                     <h:outputText value="#{msg['Service']}" />
                                     <h:inputText value="#{OutMailDataView.outMailModel.filter.service}" />
 
                                     <h:outputText value="#{msg['Action']}" />
                                     <h:inputText value="#{OutMailDataView.outMailModel.filter.action}" />
-                                     
+
                                     <h:outputText value="#{msg['Transaction']}:" />
                                     <h:inputText value="#{OutMailDataView.outMailModel.filter.conversationId}" />
 
@@ -249,10 +269,10 @@
 
                                     <h:outputText value="#{msg['MessageId']}:" />
                                     <h:inputText value="#{OutMailDataView.outMailModel.filter.messageId}" />
-                                    
+
                                     <h:outputText value="#{msg['RefMessageId']}:" />
                                     <h:inputText value="#{OutMailDataView.outMailModel.filter.refToMessageId}" />
-                                    
+
                                     <h:outputText value="#{msg['SenderMessageId']}:" />
                                     <h:inputText value="#{OutMailDataView.outMailModel.filter.senderMessageId}" />
 

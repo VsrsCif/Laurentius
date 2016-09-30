@@ -1,3 +1,7 @@
+input {
+    box-sizing: border-box;    
+}
+
 .ui-datatable-scrollable-body, 
 .ui-accordion-content {
     background: #cdcfcf;
@@ -23,7 +27,9 @@
 
 .ui-widget {
     font-family: Arial, sans-serif;
-    font-size: 14px;
+    font-size: 13px;
+    box-sizing: border-box;   
+    
 }
 
 .ui-picklist-list-wrapper {
@@ -85,9 +91,9 @@
 .ui-datatable .ui-datatable-footer, 
 .ui-datatable tbody td {
     text-align:left;
-    padding: 1px 2px;    
+    padding: 1px 1px;    
     margin: 0;
-    font-size: 100% !important;
+    font-size: 90% !important;
 }
 
 
@@ -106,6 +112,10 @@
 
 
 .ui-datatable-cell-red {
+    background-color: indianred;
+    color: black;
+}
+.ui-selectonemenu-label-red {
     background-color: indianred;
     color: black;
 }
@@ -200,8 +210,8 @@
 }
 .dialogButtonBar {
     background-color: gray; 
-    height: 30px !important; 
-    padding: 3px !important; 
+    height: 32px !important; 
+    padding: 1px !important; 
     border-style: solid !important; 
     border-width: 2px!important; 
     border-color: black !important;    
@@ -214,6 +224,7 @@
 .ui-dialog .ui-widget-header {
     text-align: left !important;   
     vertical-align: middle !important;
+   box-sizing: border-box;   
 }
 
 .ui-picklist.ui-picklist-responsive .ui-picklist-list-wrapper {
@@ -236,3 +247,4 @@
     overflow: auto;
     position: relative;
 }
+

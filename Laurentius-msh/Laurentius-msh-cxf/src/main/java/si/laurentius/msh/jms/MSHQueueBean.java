@@ -23,7 +23,6 @@ import javax.ejb.TransactionManagementType;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
-import javax.naming.NamingException;
 import javax.persistence.NoResultException;
 import si.jrc.msh.client.MSHPluginOutEventHandler;
 import si.laurentius.msh.outbox.mail.MSHOutMail;
@@ -72,9 +71,6 @@ public class MSHQueueBean implements MessageListener {
   @EJB(mappedName = SEDJNDI.JNDI_SEDDAO)
   SEDDaoInterface mDB;
 
-  @EJB(mappedName = SEDJNDI.JNDI_JMSMANAGER)
-  JMSManagerInterface mJMS;
-
   @EJB(mappedName = SEDJNDI.JNDI_SEDLOOKUPS)
   private SEDLookupsInterface mSedLookups;
   
@@ -97,6 +93,7 @@ public class MSHQueueBean implements MessageListener {
     long jmsMessageId; // 
     int jmsRetryCount = 0;
     long jmsRetryDelay = -1;
+    
     // Read property Mail ID
     try {
       jmsMessageId = msg.getLongProperty(SEDValues.EBMS_QUEUE_PARAM_MAIL_ID);
@@ -118,6 +115,7 @@ public class MSHQueueBean implements MessageListener {
       LOG.logError(t, String.format("JMS message for queue: 'MSHQueue' with no property: '%s'",
           SEDValues.EBMS_QUEUE_PARAM_DELAY), ex);
     }
+    LOG.formatedWarning("******************************************** submit mail: %s ",jmsMessageId);
 
     MSHOutMail mail;
     try {
@@ -227,15 +225,12 @@ public class MSHQueueBean implements MessageListener {
         try {
           LOG.formatedWarning("Resend mail: %d retry %d delay %d", mail.getId(), jmsRetryCount,
               jmsRetryDelay);
-          setStatusToOutMail(mail, SEDOutboxMailStatus.SCHEDULE, "Resend message in '" +
-              jmsRetryDelay + "'ms");
-
-          mJMS.sendMessage(mail.getId().longValue(), jmsRetryCount, jmsRetryDelay, false);
+          mDB.sendOutMessage(mail, jmsRetryCount, jmsRetryDelay, null, null);
+          
           bResend = true;
-        } catch (NamingException | JMSException ex1) {
-          String errDesc = String.format("Mail %d  maximum retry reached %d.", mail.getId(),
-              jmsRetryCount);
-
+        } catch (StorageException ex1) {
+          String errDesc = String.format("Mail resend %d  error occured. Err: %s", mail.getId(),
+              ex1.getMessage());
           LOG.logError(t, errDesc, ex1);
           setStatusToOutMail(mail, SEDOutboxMailStatus.ERROR, errDesc + " " + ex1.getMessage());
         }

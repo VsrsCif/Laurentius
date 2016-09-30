@@ -51,21 +51,6 @@ public class AdminSEDCronJobView extends AbstractAdminJSFView<SEDCronJob> {
   private SEDSchedulerInterface mshScheduler;
 
 
-  /*
-   * public SEDTaskProperty getEditableProperty(String name) { if (getEditable() != null &&
-   * getEditable().getSEDTask() != null) { for (SEDTaskProperty mp :
-   * getEditable().getSEDTask().getSEDTaskProperties()) { if (mp.getKey().equalsIgnoreCase(name)) {
-   * return mp; } } } return null; }
-   * 
-   * public void setEditableProperty(String name, String val) { SEDTaskProperty pp = null; if
-   * (getEditable() != null) { return; } if (getEditable().getSEDTask() != null) { for
-   * (SEDTaskProperty mp : getEditable().getSEDTask().getSEDTaskProperties()) { if
-   * (mp.getKey().equalsIgnoreCase(name)) { pp = mp; break; } } } else {
-   * getEditable().setSEDTask(new SEDTask()); } if (pp == null) { pp = new SEDTaskProperty();
-   * pp.setKey(val); getEditable().getSEDTask().getSEDTaskProperties().add(pp); } pp.setValue(val);
-   * 
-   * }
-   */
   /**
    *
    * @param id
@@ -82,8 +67,8 @@ public class AdminSEDCronJobView extends AbstractAdminJSFView<SEDCronJob> {
   public void createEditable() {
     SEDCronJob ecj = new SEDCronJob();
     ecj.setActive(true);
-    ecj.setSecond("*/20");
-    ecj.setMinute("*");
+    ecj.setSecond("0");
+    ecj.setMinute("*/5");
     ecj.setHour("*");
     ecj.setDayOfMonth("*");
     ecj.setMonth("*");

@@ -164,18 +164,21 @@ public class MshClient {
     // --------------------------------------------------------------------
     // set http client policy
     HTTPClientPolicy httpClientPolicy = new HTTPClientPolicy();
-    if (protocol.getProxy() != null) {
+    if (protocol.getProxy() != null && !Utils.isEmptyString(protocol.getProxy().getHost())) {
       httpClientPolicy.setProxyServer(protocol.getProxy().getHost());
-      httpClientPolicy.setProxyServerPort(protocol.getProxy().getPort());
+      if (protocol.getProxy().getPort()!= null) {
+        httpClientPolicy.setProxyServerPort(protocol.getProxy().getPort());
+      }
       httpClientPolicy.setProxyServerType(Utils.isEmptyString(protocol.getProxy().getType()) ?
           ProxyServerType.HTTP :
           protocol.getProxy().getType().equalsIgnoreCase("SOCKS") ?
           ProxyServerType.SOCKS : ProxyServerType.HTTP);
     }
 
-    httpClientPolicy.setConnectionTimeout(protocol.getAddress().getConnectionTimeout());
-    httpClientPolicy.setReceiveTimeout(protocol.getAddress().getReceiveTimeout());
-    httpClientPolicy.setAllowChunking(protocol.getAddress().getChunked());
+    
+    httpClientPolicy.setConnectionTimeout(protocol.getAddress().getConnectionTimeout()!=null?protocol.getAddress().getConnectionTimeout():120000);
+    httpClientPolicy.setReceiveTimeout(protocol.getAddress().getReceiveTimeout()!=null?protocol.getAddress().getReceiveTimeout():120000);
+    httpClientPolicy.setAllowChunking(protocol.getAddress().getChunked()!=null?protocol.getAddress().getChunked():false);
 
     // set http Policy
     http.setClient(httpClientPolicy);
@@ -319,7 +322,7 @@ public class MshClient {
     // set client's key cert for mutual identification
     if (!Utils.isEmptyString(tls.getKeyAlias())) {
 
-      if (tls.getKeyStoreName() == null) {
+      if (Utils.isEmptyString(tls.getKeyStoreName())) {
         throw new EBMSError(EBMSErrorCode.PModeConfigurationError, messageId,
             String.format("(Message %s) Missing keystore for Key:  %s!",
                 messageId, tls.getKeyAlias()), SoapFault.FAULT_CODE_CLIENT);

@@ -29,6 +29,7 @@ public class OutMailDataModel extends AbstractMailDataModel<MSHOutMail> {
 
   OutMailTableFilter outFilter = new OutMailTableFilter();
 
+  
   /**
    *
    * @param type

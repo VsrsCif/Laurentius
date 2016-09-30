@@ -18,9 +18,12 @@ import javax.xml.ws.ServiceMode;
 import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.WebServiceProvider;
 import javax.xml.ws.soap.SOAPBinding;
+import org.apache.cxf.binding.soap.SoapFault;
 import org.apache.cxf.jaxws.context.WrappedMessageContext;
 import org.apache.cxf.message.Attachment;
 import org.apache.cxf.message.Message;
+import si.jrc.msh.exception.EBMSError;
+import si.jrc.msh.exception.EBMSErrorCode;
 import si.laurentius.msh.inbox.mail.MSHInMail;
 import si.laurentius.msh.inbox.payload.MSHInPart;
 import si.laurentius.ebox.Export;
@@ -36,6 +39,7 @@ import si.laurentius.commons.utils.HashUtils;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StorageUtils;
 import si.laurentius.commons.utils.StringFormater;
+import si.laurentius.commons.utils.Utils;
 import si.laurentius.commons.utils.xml.XMLUtils;
 
 /**
@@ -111,7 +115,7 @@ public class EBMSEndpoint implements Provider<SOAPMessage> {
       if (sb == null) {
         LOG.formatedWarning("Inbox message %s but no inbox found  for message: %s", inmail.getId(), inmail.getReceiverEBox());
         // return error
-      } else if (inmail.getStatus().equals(SEDInboxMailStatus.RECEIVE.getValue())) {
+      } else if (Utils.isEmptyString(inmail.getStatus()) ) {
         serializeMail(inmail, msg.getAttachments(), sb);
       }
 
@@ -131,6 +135,15 @@ public class EBMSEndpoint implements Provider<SOAPMessage> {
     mail.setStatusDate(dt);
     mail.setReceivedDate(dt);
 
+    try {
+      mDB.serializeInMail(mail, "Laurentius-msh-ws");
+    } catch (StorageException ex) {
+      String errmsg = "Internal error occured while serializing incomming mail.";
+      LOG.logError(l, errmsg, ex);
+      throw new EBMSError(EBMSErrorCode.ExternalPayloadError, mail.getMessageId(), errmsg,
+          SoapFault.FAULT_CODE_CLIENT);
+    }
+    
     try {
       // --------------------
       // serialize data to db

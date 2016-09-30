@@ -309,11 +309,6 @@
 							</xs:restriction>
 						</xs:simpleType>
 					</xs:attribute>
-					<xs:attribute name="isSEDAddress" type="xs:boolean" default="false">
-						<xs:annotation>
-							<xs:documentation>in exchanged user message domain is part of identifier</xs:documentation>
-						</xs:annotation>
-					</xs:attribute>
 					<xs:attribute name="fixValue">
 						<xs:annotation>
 							<xs:documentation>If values is given than this value is used ignoring valueSource</xs:documentation>
@@ -588,9 +583,9 @@
 				<xs:complexType>
 					<xs:simpleContent>
 						<xs:extension base="xs:anyURI">
-							<xs:attribute name="connectionTimeout" type="xs:int" default="120000"/>
-							<xs:attribute name="receiveTimeout" type="xs:int" default="120000"/>
-							<xs:attribute name="chunked" type="xs:boolean" default="true"/>
+							<xs:attribute name="connectionTimeout" type="xs:int"/>
+							<xs:attribute name="receiveTimeout" type="xs:int"/>
+							<xs:attribute name="chunked" type="xs:boolean"/>
 						</xs:extension>
 					</xs:simpleContent>
 				</xs:complexType>

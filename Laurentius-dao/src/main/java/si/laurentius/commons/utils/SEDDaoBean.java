@@ -14,6 +14,7 @@
  */
 package si.laurentius.commons.utils;
 
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -22,14 +23,22 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
+import javax.jms.Connection;
+import javax.jms.ConnectionFactory;
 import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.MessageProducer;
 import javax.jms.Queue;
+import javax.jms.Session;
+import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -55,7 +64,11 @@ import si.laurentius.commons.SEDInboxMailStatus;
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.SEDOutboxMailStatus;
 import si.laurentius.commons.SEDSystemProperties;
+import static si.laurentius.commons.SEDSystemProperties.SYS_PROP_JNDI_JMS_PREFIX;
+import static si.laurentius.commons.SEDSystemProperties.SYS_PROP_JNDI_PREFIX;
 import si.laurentius.commons.SEDTaskStatus;
+import si.laurentius.commons.SEDValues;
+import si.laurentius.commons.exception.HashException;
 import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.interfaces.JMSManagerInterface;
 import si.laurentius.commons.interfaces.SEDDaoInterface;
@@ -206,7 +219,7 @@ public class SEDDaoBean implements SEDDaoInterface {
                   (Comparable) searchValue));
             } else if (searchValue instanceof String && !((String) searchValue).isEmpty()) {
               lstPredicate.add(cb.equal(om.get(fieldName), searchValue));
-            } else if (searchValue instanceof BigInteger ) {
+            } else if (searchValue instanceof BigInteger) {
               lstPredicate.add(cb.equal(om.get(fieldName), searchValue));
             }
 
@@ -529,25 +542,23 @@ public class SEDDaoBean implements SEDDaoInterface {
       if (Utils.isEmptyString(mail.getMessageId())) {
         mail.setMessageId(Utils.getUUIDWithDomain(locadomain));
       }
-      
-      
-      
+
       if (mail.getMSHOutPayload() != null) {
         for (MSHOutPart mp : mail.getMSHOutPayload().getMSHOutParts()) {
           if (Utils.isEmptyString(mp.getEbmsId())) {
             mp.setEbmsId(Utils.getUUIDWithDomain(locadomain));
-            
+
           }
         }
       }
 
       memEManager.persist(mail);
-      
+
       if (Utils.isEmptyString(mail.getConversationId())) {
-        mail.setConversationId(mail.getId().toString() + "@" +locadomain);
+        mail.setConversationId(mail.getId().toString() + "@" + locadomain);
         memEManager.merge(mail);
       }
-      
+
       // persist mail event
       MSHOutEvent me = new MSHOutEvent();
       me.setDescription("Mail composed in Laurentius-gui.");
@@ -744,14 +755,17 @@ public class SEDDaoBean implements SEDDaoInterface {
       updq.setParameter("id", mail.getId());
       updq.setParameter("statusDate", mail.getStatusDate());
       updq.setParameter("status", mail.getStatus());
-      
+
       Query updqSD = null;
-      if (SEDOutboxMailStatus.SENT.getValue().equals(status.getValue()) && mail.getSentDate()!= null){
+      if (SEDOutboxMailStatus.SENT.getValue().equals(status.getValue()) && mail.getSentDate() !=
+          null) {
         updqSD = memEManager.createNamedQuery(SEDNamedQueries.UPDATE_OUTMAIL_SENT_DATE);
         updqSD.setParameter("id", mail.getId());
-        updqSD.setParameter("sentDate", mail.getSentDate()==null?"":mail.getSentDate());
-        updqSD.setParameter("receivedDate", mail.getReceivedDate()==null?"":mail.getReceivedDate());
-      } else if (SEDOutboxMailStatus.DELIVERED.getValue().equals(status.getValue()) && mail.getSentDate()!= null){
+        updqSD.setParameter("sentDate", mail.getSentDate() == null ? "" : mail.getSentDate());
+        updqSD.setParameter("receivedDate", mail.getReceivedDate() == null ? "" :
+            mail.getReceivedDate());
+      } else if (SEDOutboxMailStatus.DELIVERED.getValue().equals(status.getValue()) &&
+          mail.getSentDate() != null) {
         updqSD = memEManager.createNamedQuery(SEDNamedQueries.UPDATE_OUTMAIL_DELIVERED_DATE);
         updqSD.setParameter("id", mail.getId());
         updqSD.setParameter("deliveredDate", mail.getDeliveredDate());
@@ -769,11 +783,10 @@ public class SEDDaoBean implements SEDDaoInterface {
       me.setApplicationId(applicationId);
       me.setEvidenceFilepath(filePath);
       me.setEvidenceMimeType(mime);
-
       mutUTransaction.begin();
 
       int iVal = updq.executeUpdate();
-      
+
       if (iVal != 1) {
         try {
           mutUTransaction.rollback();
@@ -786,7 +799,7 @@ public class SEDDaoBean implements SEDDaoInterface {
         LOG.logError(l, msg, null);
         throw new StorageException(msg, null);
       }
-      if (updqSD!= null) {
+      if (updqSD != null) {
         updqSD.executeUpdate();
       }
       memEManager.persist(me);
@@ -889,6 +902,127 @@ public class SEDDaoBean implements SEDDaoInterface {
       }
     }
     LOG.logEnd(l);
+  }
+
+  public void sendOutMessage(MSHOutMail mail, int retry, long delay, String userId,
+      String applicationId)
+      throws StorageException {
+    long l = LOG.logStart();
+
+    // prepare mail to persist
+    Date dt = Calendar.getInstance().getTime();
+    // set current status
+    mail.setStatus(SEDOutboxMailStatus.SCHEDULE.getValue());
+    mail.setStatusDate(dt);
+
+    // --------------------
+    // serialize data and submit message
+    String msgFactoryJndiName = getJNDIPrefix() + SEDValues.EBMS_JMS_CONNECTION_FACTORY_JNDI;
+    String msgQueueJndiName = getJNDI_JMSPrefix() + SEDValues.JNDI_QUEUE_EBMS;
+    Connection connection = null;
+    Session session = null;
+    String msgDesc = String.format("Add mail to submit queue. Retry %d, delay %d ms", retry, delay);
+    try {
+      // create JMS session
+
+      ConnectionFactory cf = (ConnectionFactory) InitialContext.doLookup(msgFactoryJndiName);
+      if (mqMSHQueue == null) {
+        mqMSHQueue = (Queue) InitialContext.doLookup(msgQueueJndiName);
+      }
+      connection = cf.createConnection();
+      session = connection.createSession(true, Session.SESSION_TRANSACTED);
+
+      Query updq = memEManager.createNamedQuery(SEDNamedQueries.UPDATE_OUTMAIL);
+      updq.setParameter("id", mail.getId());
+      updq.setParameter("statusDate", mail.getStatusDate());
+      updq.setParameter("status", mail.getStatus());
+
+      MSHOutEvent me = new MSHOutEvent();
+      me.setMailId(mail.getId());
+      me.setDescription(msgDesc);
+      me.setStatus(mail.getStatus());
+      me.setDate(mail.getStatusDate());
+
+      me.setUserId(userId);
+      me.setApplicationId(applicationId);
+      // create message
+      MessageProducer sender = session.createProducer(mqMSHQueue);
+      Message message = session.createMessage();
+      message.setLongProperty(SEDValues.EBMS_QUEUE_PARAM_MAIL_ID, mail.getId().longValue());
+      message.setIntProperty(SEDValues.EBMS_QUEUE_PARAM_RETRY, retry);
+      message.setLongProperty(SEDValues.EBMS_QUEUE_PARAM_DELAY, delay);
+      message.setLongProperty(SEDValues.EBMS_QUEUE_DELAY_AMQ, delay);
+      message.setLongProperty(SEDValues.EBMS_QUEUE_DELAY_Artemis, delay + System.currentTimeMillis());
+
+      mutUTransaction.begin();
+      int iVal = updq.executeUpdate();
+      if (iVal != 1) {
+        try {
+          mutUTransaction.rollback();
+        } catch (IllegalStateException | SecurityException | SystemException ex1) {
+          LOG.logWarn(l, ex1.getMessage(), ex1);
+        }
+        String msg =
+            "Status not setted to MSHOutMail:" + mail.getId() + " result: '" + iVal +
+            "'. Mail not exists or id duplicates?";
+        LOG.logError(l, msg, null);
+        throw new StorageException(msg, null);
+      }
+
+      memEManager.persist(me);
+      
+      sender.send(message);
+
+      mutUTransaction.commit();
+      session.commit();
+      
+      LOG.formatedlog("Message %d added to send queue with params: retry %d, delay %d",
+          mail.getId().longValue(), retry, delay);
+
+    } catch (JMSException | NamingException | NotSupportedException | SystemException | RollbackException | HeuristicMixedException |
+        HeuristicRollbackException | SecurityException | IllegalStateException ex) {
+
+      try {
+        mutUTransaction.rollback();
+
+      } catch (IllegalStateException | SecurityException | SystemException ex1) {
+        LOG.logWarn(l, "Error rollback transaction", ex1);
+      }
+
+      try {
+        if (session != null) {
+          session.rollback();
+        }
+      } catch (JMSException ex1) {
+        LOG.logWarn(l, "Error rollback JSM session", ex1);
+      }
+      
+       String msg =
+            "Error sending mail : '" + mail.getId() + "'! Err:" + ex.getMessage();
+        LOG.logError(l, msg, ex);
+        throw new StorageException(msg, ex);
+      
+    }  finally {
+
+      try {
+        if (connection != null) {
+          connection.close();
+        }
+      } catch (JMSException jmse) {
+        LOG.logWarn(l, "Error closing connection JSM session", jmse);
+
+      }
+    }
+
+  }
+  
+   private String getJNDIPrefix() {
+
+    return System.getProperty(SYS_PROP_JNDI_PREFIX, "java:/jboss/");
+  }
+
+  private String getJNDI_JMSPrefix() {
+    return System.getProperty(SYS_PROP_JNDI_JMS_PREFIX, "java:/jms/");
   }
 
 }

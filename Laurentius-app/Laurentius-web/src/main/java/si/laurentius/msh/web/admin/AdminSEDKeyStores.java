@@ -16,7 +16,6 @@ package si.laurentius.msh.web.admin;
 
 import java.io.StringWriter;
 import java.security.KeyStore;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -26,7 +25,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import si.laurentius.cert.SEDCertStore;
 import si.laurentius.cert.SEDCertificate;
-import si.laurentius.cron.SEDTaskType;
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.exception.SEDSecurityException;
 import si.laurentius.commons.interfaces.SEDLookupsInterface;
@@ -137,11 +135,9 @@ public class AdminSEDKeyStores extends AbstractAdminJSFView<SEDCertStore> {
   @Override
   public List<SEDCertStore> getList() {
     long l = LOG.logStart();
-    if (mCertStoreList == null) {
-      refreshCertStoreList();
-    }
-    LOG.logEnd(l, mCertStoreList);
-    return mCertStoreList;
+    List<SEDCertStore> lst  = mdbLookups.getSEDCertStore();
+    LOG.logEnd(l, lst);
+    return lst;
   }
 
   public void refreshCertStoreList() {
@@ -163,17 +159,20 @@ public class AdminSEDKeyStores extends AbstractAdminJSFView<SEDCertStore> {
   }
 
   public boolean isCertInvalid(SEDCertificate crt) {
+    
     Date currDate = Calendar.getInstance().getTime();
-    return crt.getValidTo() == null ||
-         crt.getValidFrom() == null ||
-         currDate.before(crt.getValidFrom()) ||
-         currDate.after(crt.getValidTo());
+    return crt!= null && (crt.getValidTo() == null ||
+        crt.getValidFrom() == null ||
+        currDate.before(crt.getValidFrom()) ||
+        currDate.after(crt.getValidTo()));
   }
 
   public boolean hasInvalidCerts(SEDCertStore keyStore) {
-    for (SEDCertificate crt : keyStore.getSEDCertificates()) {
-      if (isCertInvalid(crt)) {
-        return true;
+    if (keyStore != null) {
+      for (SEDCertificate crt : keyStore.getSEDCertificates()) {
+        if (isCertInvalid(crt)) {
+          return true;
+        }
       }
     }
     return false;

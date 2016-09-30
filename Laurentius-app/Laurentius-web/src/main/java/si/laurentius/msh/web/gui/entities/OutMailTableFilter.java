@@ -8,6 +8,8 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import si.laurentius.commons.SEDInboxMailStatus;
+import si.laurentius.commons.SEDOutboxMailStatus;
 
 /**
  *
@@ -47,7 +49,7 @@ public class OutMailTableFilter {
   /**
    *
    */
-  protected String status;
+  protected List<String> statusList = new ArrayList<>() ;
 
   /**
    *
@@ -63,6 +65,13 @@ public class OutMailTableFilter {
    *
    */
   protected Date submittedDateTo;
+  
+  
+  public OutMailTableFilter() {
+     for (SEDOutboxMailStatus st: SEDOutboxMailStatus.values()){
+       statusList.add(st.getValue());
+     }
+  }
   /**
    *
    * @return
@@ -122,8 +131,8 @@ public class OutMailTableFilter {
    *
    * @return
    */
-  public String getStatus() {
-    return status;
+  public List<String> getStatusList() {
+    return statusList;
   }
 
   /**
@@ -198,8 +207,8 @@ public class OutMailTableFilter {
    *
    * @param st
    */
-  public void setStatus(String st) {
-    this.status = st;
+  public void setStatusList(List<String> st) {
+    this.statusList = st;
   }
 
   /**
@@ -231,7 +240,8 @@ public class OutMailTableFilter {
     return "OutMailTableFilter{" + "action=" + action + ", conversationId=" + conversationId +
         ", id=" + id + ", messageId=" + messageId + ", receiverEBox=" + receiverEBox +
         ", refToMessageId=" + refToMessageId + ", senderEBoxList=" + senderEBoxList +
-        ", senderMessageId=" + senderMessageId + ", service=" + service + ", status=" + status +
+        ", senderMessageId=" + senderMessageId + ", service=" + service + ", status=" +String.join(
+            ";", statusList) +
         ", subject=" + subject + ", submittedDateFrom=" + submittedDateFrom + ", submittedDateTo=" +
         submittedDateTo + '}';
   }

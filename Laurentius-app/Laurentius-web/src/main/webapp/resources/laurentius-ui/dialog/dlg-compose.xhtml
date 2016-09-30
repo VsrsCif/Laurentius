@@ -16,14 +16,14 @@
                    appendTo="@(body)"
                    width="1050" >
             <h:form id="mailComposeForm" >
-                <p:layout id="sedboxDetails" style="min-width:600px;min-height:600px;">
+                <p:layout id="mailComposeDetails" style="min-width:600px;min-height:600px;">
                     <p:layoutUnit position="north"   >
 
                         <p:panelGrid style="width: 100%">
                             <p:row>
                                 <p:column>
                                     <h:outputText value="#{msg['SenderBox']}" />
-                                    
+
                                 </p:column>
                                 <p:column>
                                     <p:selectOneMenu id="ebox" value="#{OutMailDataView.newOutMail.senderEBox}" style="width:150px" >
@@ -37,9 +37,20 @@
                                 <p:column><h:inputText value="#{OutMailDataView.newOutMail.receiverEBox}" style="width: 100%"/></p:column>
                             </p:row><p:row>
                                 <p:column><h:outputText value="#{msg['Service']}" /></p:column>
-                                <p:column><h:inputText value="#{OutMailDataView.newOutMail.service}" style="width: 100%"/></p:column>                     
+                                 <p:column>
+                                     <p:selectOneMenu id="cmpService" value="#{OutMailDataView.newOutMail.service}" style="width:250px" >
+                                         <p:ajax update="dlgCompose:mailComposeForm:cmpAction"/>
+                                        <f:selectItem noSelectionOption="false"  />
+                                        <f:selectItems value="#{pModeServiceView.list}" var="srv" itemLabel="#{srv.id}" itemValue="#{srv.id}"/>
+                                    </p:selectOneMenu></p:column>
                                 <p:column><h:outputText value="#{msg['Action']}" /></p:column>
-                                <p:column><h:inputText value="#{OutMailDataView.newOutMail.action}" style="width: 100%"/></p:column>
+                                <p:column>
+                                     <p:selectOneMenu id="cmpAction" value="#{OutMailDataView.newOutMail.action}" style="width:250px" >
+                                        <f:selectItem noSelectionOption="false"  />
+                                        <f:selectItems value="#{OutMailDataView.currentServiceActionList}" var="act" 
+                                                       itemLabel="#{act.name}" itemValue="#{act.name}"/>
+                                    </p:selectOneMenu>
+                                </p:column>
                             </p:row><p:row>
                                 <p:column><h:outputText value="#{msg['Subject']}" /></p:column>
                                 <p:column colspan="3"><h:inputText value="#{OutMailDataView.newOutMail.subject}" style="width: 100%"/></p:column>

@@ -14,15 +14,30 @@
  */
 package si.laurentius.msh.web.pmode;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.component.html.HtmlInputText;
+import javax.faces.event.ValueChangeEvent;
+import org.primefaces.component.datatable.DataTable;
+import org.primefaces.event.CellEditEvent;
+import org.primefaces.event.RowEditEvent;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.event.UnselectEvent;
+import si.laurentius.cert.SEDCertStore;
+import si.laurentius.cert.SEDCertificate;
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.interfaces.PModeInterface;
+import si.laurentius.commons.interfaces.SEDLookupsInterface;
 import si.laurentius.commons.utils.SEDLogger;
+import si.laurentius.commons.utils.Utils;
 import si.laurentius.msh.pmode.PartyIdentitySet;
+import si.laurentius.msh.pmode.PartyIdentitySetType;
+import si.laurentius.msh.pmode.Protocol;
 
 /**
  *
@@ -40,6 +55,10 @@ public class PModePartyView extends AbstractPModeJSFView<PartyIdentitySet> {
   @EJB(mappedName = SEDJNDI.JNDI_PMODE)
   PModeInterface mPModeInteface;
 
+  @EJB(mappedName = SEDJNDI.JNDI_SEDLOOKUPS)
+  SEDLookupsInterface mLookUp;
+
+  PartyIdentitySetType.PartyId selectedPartyId;
 
   /**
    *
@@ -55,8 +74,20 @@ public class PModePartyView extends AbstractPModeJSFView<PartyIdentitySet> {
   @Override
   public void createEditable() {
     PartyIdentitySet pmodePartyIdentitySet = new PartyIdentitySet();
+
     setNew(pmodePartyIdentitySet);
 
+  }
+
+  @Override
+  public void startEditSelected() {
+    if (getSelected() != null && getSelected().getLocalPartySecurity() == null) {
+      getSelected().setLocalPartySecurity(new PartyIdentitySetType.LocalPartySecurity());
+    }
+    if (getSelected() != null && getSelected().getExchangePartySecurity() == null) {
+      getSelected().setExchangePartySecurity(new PartyIdentitySetType.ExchangePartySecurity());
+    }
+    super.startEditSelected(); // To change body of generated methods, choose Tools | Templates.
   }
 
   /**
@@ -64,8 +95,6 @@ public class PModePartyView extends AbstractPModeJSFView<PartyIdentitySet> {
    */
   @Override
   public void removeSelected() {
-
-    long l = LOG.logStart();
 
     PartyIdentitySet srv = getSelected();
     if (srv != null) {
@@ -81,7 +110,7 @@ public class PModePartyView extends AbstractPModeJSFView<PartyIdentitySet> {
   public void persistEditable() {
     long l = LOG.logStart();
     PartyIdentitySet sv = getEditable();
-    if (sv != null) {      
+    if (sv != null) {
       mPModeInteface.addPartyIdentitySet(sv);
       setEditable(null);
     }
@@ -94,7 +123,7 @@ public class PModePartyView extends AbstractPModeJSFView<PartyIdentitySet> {
   public void updateEditable() {
     long l = LOG.logStart();
     PartyIdentitySet sv = getEditable();
-    if (sv != null) {      
+    if (sv != null) {
       mPModeInteface.updatePartyIdentitySet(sv);
       setEditable(null);
     }
@@ -113,5 +142,99 @@ public class PModePartyView extends AbstractPModeJSFView<PartyIdentitySet> {
 
   }
 
+  public void setEditableLocalIdentity(boolean bVal) {
+    if (getEditable() != null) {
+      getEditable().setIsLocalIdentity(bVal);
+    }
+  }
+
+  public boolean getEditableLocalIdentity() {
+    return getEditable() != null ? getEditable().getIsLocalIdentity() : false;
+  }
+
+  public List<SEDCertificate> getCurrentLocalKeystoreCerts() {
+    if (getEditable() != null && getEditable().getLocalPartySecurity() != null &&
+        !Utils.isEmptyString(getEditable().getLocalPartySecurity().getKeystoreName())) {
+      String keystoreName = getEditable().getLocalPartySecurity().getKeystoreName();
+      SEDCertStore cs = mLookUp.getSEDCertStoreByName(keystoreName);
+      if (cs != null) {
+        return cs.getSEDCertificates();
+      }
+    }
+    return Collections.emptyList();
+  }
+
+  public List<SEDCertificate> getCurrentTLSKeyCerts() {
+    if (getCurrrentTransportTLS() != null && 
+        !Utils.isEmptyString(getCurrrentTransportTLS().getKeyStoreName())) {
+      String keystoreName = getCurrrentTransportTLS().getKeyStoreName();
+      SEDCertStore cs = mLookUp.getSEDCertStoreByName(keystoreName);
+      if (cs != null) {
+        return cs.getSEDCertificates();
+      }
+    }
+    return Collections.emptyList();
+  }
+  
+   public List<SEDCertificate> getCurrentExchangeTruststoreCerts() {
+    if (getEditable() != null && getEditable().getExchangePartySecurity() != null &&
+        !Utils.isEmptyString(getEditable().getExchangePartySecurity().getTrustoreName())) {
+      String keystoreName = getEditable().getExchangePartySecurity().getTrustoreName();
+      SEDCertStore cs = mLookUp.getSEDCertStoreByName(keystoreName);
+      if (cs != null) {
+        return cs.getSEDCertificates();
+      }
+    }
+    return Collections.emptyList();
+  }
+  
+  
+  public String getListAsString(List<String> lst) {
+    return lst != null ? String.join(",", lst) : "";
+  }
+
+  public PartyIdentitySetType.TransportProtocol getCurrentTransportProtocol() {
+    if (getEditable() != null) {
+      if (getEditable().getTransportProtocols().isEmpty()) {
+        getEditable().getTransportProtocols().add(new PartyIdentitySetType.TransportProtocol());
+      }
+      return getEditable().getTransportProtocols().get(0);
+    }
+    return null;
+  }
+
+  public Protocol.TLS getCurrrentTransportTLS() {
+    PartyIdentitySetType.TransportProtocol tc = getCurrentTransportProtocol();
+    if (tc != null) {
+      if (tc.getTLS() == null) {
+        tc.setTLS(new Protocol.TLS());
+      }
+      return tc.getTLS();
+    }
+    return null;
+  }
+  
+ 
+  public Protocol.Proxy getCurrrentProxy() {
+    PartyIdentitySetType.TransportProtocol tc = getCurrentTransportProtocol();
+    if (tc != null) {
+      if (tc.getProxy() == null) {
+        tc.setProxy(new Protocol.Proxy());
+      }
+      return tc.getProxy();
+    }
+    return null;
+  }
+  
+   public Protocol.Address getCurrrentAddress() {
+    PartyIdentitySetType.TransportProtocol tc = getCurrentTransportProtocol();
+    if (tc != null) {
+      if (tc.getAddress() == null) {
+        tc.setAddress(new Protocol.Address());
+      }
+      return tc.getAddress();
+    }
+    return null;
+  }
 
 }

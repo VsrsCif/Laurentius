@@ -40,7 +40,6 @@ public class ViewExpiredExceptionHandler extends ExceptionHandlerWrapper {
   @Override
   public void handle()
       throws FacesException {
-    long l = LOG.logStart();
 
 /*    FacesContext context = facesContext();
     
@@ -60,7 +59,7 @@ public class ViewExpiredExceptionHandler extends ExceptionHandlerWrapper {
 
 
     getWrapped().handle();
-    LOG.logEnd(l);
+
   }
 
   @Override

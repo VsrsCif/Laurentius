@@ -35,7 +35,7 @@ public class PModeServiceView extends AbstractPModeJSFView<Service> {
   /**
    *
    */
-  public static SEDLogger LOG = new SEDLogger(PModeServiceView.class);
+  public static final SEDLogger LOG = new SEDLogger(PModeServiceView.class);
 
   @EJB(mappedName = SEDJNDI.JNDI_PMODE)
   PModeInterface mPModeInteface;

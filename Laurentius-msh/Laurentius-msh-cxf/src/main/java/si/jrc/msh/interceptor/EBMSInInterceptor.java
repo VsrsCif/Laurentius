@@ -458,10 +458,10 @@ public class EBMSInInterceptor extends AbstractEBMSInterceptor {
     // prepare mail to persist
     Date dt = Calendar.getInstance().getTime();
     // set current status
-    mMail.setStatus(SEDInboxMailStatus.RECEIVE.getValue());
-    mMail.setStatusDate(dt);
+    mMail.setStatus(null);
+    //mMail.setStatusDate(dt);
     mMail.setReceivedDate(dt);
-    try {
+    /*try {
       getDAO().serializeInMail(mMail, "Laurentius-msh-ws");
     } catch (StorageException ex) {
       String errmsg = "Internal error occured while serializing incomming mail.";
@@ -469,6 +469,7 @@ public class EBMSInInterceptor extends AbstractEBMSInterceptor {
       throw new EBMSError(EBMSErrorCode.ExternalPayloadError, mMail.getMessageId(), errmsg,
           SoapFault.FAULT_CODE_CLIENT);
     }
+    */
 
     msg.getExchange().put(MSHInMail.class, mMail);
 

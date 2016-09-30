@@ -14,8 +14,10 @@
  */
 package si.laurentius.commons.utils;
 
+import javax.ejb.AccessTimeout;
 import javax.ejb.Local;
-import javax.ejb.Stateless;
+import javax.ejb.Singleton;
+import javax.ejb.Startup;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.JMSException;
@@ -34,8 +36,11 @@ import si.laurentius.commons.interfaces.JMSManagerInterface;
  *
  * @author Jože Rihtaršič
  */
-@Stateless
+
+@Startup
+@Singleton
 @Local(JMSManagerInterface.class)
+@AccessTimeout(value = 10000)
 public class JMSManager implements JMSManagerInterface {
 
   private static final SEDLogger LOG = new SEDLogger(JMSManager.class);
@@ -125,6 +130,9 @@ public class JMSManager implements JMSManagerInterface {
   @Override
   public boolean sendMessage(long biPosiljkaId, int retry, long delay,
       boolean transacted) throws NamingException, JMSException {
+    
+    LOG.formatedWarning("******************************************** start submit mail: %d ",biPosiljkaId);
+    
     boolean suc = false;
     InitialContext ic = null;
     Connection connection = null;
@@ -146,6 +154,7 @@ public class JMSManager implements JMSManagerInterface {
       message.setLongProperty(SEDValues.EBMS_QUEUE_DELAY_Artemis, System.currentTimeMillis()
           + delay);
 
+      LOG.formatedWarning("******************************************** submit mail: %d ",biPosiljkaId);
       sender.send(message);
       suc = true;
     } finally {

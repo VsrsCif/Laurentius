@@ -1,7 +1,7 @@
 <jboss-deployment-structure>
     <deployment>
         <dependencies>
-            <module name="si.laurentius" />         
+            <module name="si.laurentius" /> 
         </dependencies>
     </deployment>
 </jboss-deployment-structure>

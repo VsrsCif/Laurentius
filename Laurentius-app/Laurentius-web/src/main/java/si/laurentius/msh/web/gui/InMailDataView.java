@@ -25,6 +25,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
@@ -36,9 +37,12 @@ import org.primefaces.model.StreamedContent;
 import si.laurentius.commons.MimeValues;
 import si.laurentius.commons.SEDInboxMailStatus;
 import si.laurentius.commons.SEDJNDI;
+import si.laurentius.commons.SEDOutboxMailStatus;
+import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.interfaces.SEDDaoInterface;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StorageUtils;
+import si.laurentius.msh.outbox.mail.MSHOutMail;
 import si.laurentius.msh.web.abst.AbstractMailView;
 
 /**
@@ -170,6 +174,39 @@ public class InMailDataView extends AbstractMailView<MSHInMail, MSHInEvent> impl
    */
   public List<SEDInboxMailStatus> getInStatuses() {
     return Arrays.asList(SEDInboxMailStatus.values());
+  }
+  
+  
+  public void deleteSelectedMail() {
+    setStatusSelectedMail(SEDInboxMailStatus.DELETED);
+  }
+  public void setPluginLockedSelectedMail() {
+    setStatusSelectedMail(SEDInboxMailStatus.PLOCKED);
+  }
+  public void setReceivedSelectedMail() {
+    setStatusSelectedMail(SEDInboxMailStatus.RECEIVED);
+  }
+  
+  public void setStatusSelectedMail(SEDInboxMailStatus status) {
+    long l = LOG.logStart();
+    if (getSelected() != null && !getSelected().isEmpty()) {
+      List<MSHInMail> milst = getSelected();
+      for (MSHInMail mi : milst) {
+        try {
+          mDB.setStatusToInMail(mi, status, "Status changed to '"+status.getValue()+"' deleted by " +
+              getUserSessionData().getUser().getUserId(),getUserSessionData().getUser().getUserId(), "laurentius-web" );
+        } catch (StorageException ex) {
+          String mail = String.format("id: %d, sender: %s, receiver %s, service %s, action %s",
+              mi.getId(), mi.getSenderEBox(), mi.getReceiverEBox(), mi.getService(), mi.getAction());
+          facesContext().addMessage(null, new FacesMessage("'Napaka pri spreminjanju statusa pošiljke",
+              mail));
+          LOG.logError(l, ex);
+          break;
+        }
+      }
+
+    }
+    LOG.logEnd(l);
   }
 
 }

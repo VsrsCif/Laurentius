@@ -58,6 +58,11 @@ public enum SEDOutboxMailStatus {
    */
   ERROR("ERROR", "Error occured pushing/pulling to receiving MSH", "red"),
   
+  /**
+   *
+   */
+  PROCESS("PROCESS", "Message is locked for sending ", "darkgray"),
+  
    /**
    *
    */

@@ -248,7 +248,7 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
       String msg =
           "Resending out mail: " + outMail.getId()
               + ". Key and delivery nofitication already generated.";
-      mDB.setStatusToOutMail(outMail, SEDOutboxMailStatus.SCHEDULE, msg, null,
+      mDB.setStatusToOutMail(outMail, SEDOutboxMailStatus.PROCESS, msg, null,
           ZPPConstants.S_ZPP_PLUGIN_TYPE);
       LOG.log(msg);
     } else {
@@ -284,7 +284,7 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
       String str =
           "Added DeliveryNotification and encrypted parts: "
               + outMail.getMSHOutPayload().getMSHOutParts().size();
-      mDB.setStatusToOutMail(outMail, SEDOutboxMailStatus.SCHEDULE, str, null,
+      mDB.setStatusToOutMail(outMail, SEDOutboxMailStatus.PROCESS, str, null,
           ZPPConstants.S_ZPP_PLUGIN_TYPE);
     }
    

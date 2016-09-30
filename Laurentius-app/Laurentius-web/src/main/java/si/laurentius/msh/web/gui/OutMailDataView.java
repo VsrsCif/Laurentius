@@ -19,11 +19,13 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
+import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,29 +35,30 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
-import javax.jms.JMSException;
-import javax.naming.NamingException;
-import si.laurentius.msh.outbox.event.MSHOutEvent;
-import si.laurentius.msh.outbox.mail.MSHOutMail;
-import si.laurentius.msh.outbox.payload.MSHOutPart;
-import si.laurentius.msh.outbox.payload.MSHOutPayload;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.model.UploadedFile;
+import si.laurentius.cert.SEDCertStore;
+import si.laurentius.cert.SEDCertificate;
 import si.laurentius.commons.MimeValues;
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.SEDOutboxMailStatus;
 import si.laurentius.commons.exception.HashException;
 import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.interfaces.DBSettingsInterface;
-import si.laurentius.commons.interfaces.JMSManagerInterface;
+import si.laurentius.commons.interfaces.PModeInterface;
 import si.laurentius.commons.interfaces.SEDDaoInterface;
 import si.laurentius.commons.interfaces.SEDLookupsInterface;
 import si.laurentius.commons.utils.HashUtils;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StorageUtils;
 import si.laurentius.commons.utils.Utils;
+import si.laurentius.msh.outbox.event.MSHOutEvent;
+import si.laurentius.msh.outbox.mail.MSHOutMail;
+import si.laurentius.msh.outbox.payload.MSHOutPart;
+import si.laurentius.msh.outbox.payload.MSHOutPayload;
+import si.laurentius.msh.pmode.Service;
 import si.laurentius.msh.web.abst.AbstractMailView;
 
 /**
@@ -68,12 +71,6 @@ public class OutMailDataView extends AbstractMailView<MSHOutMail, MSHOutEvent> i
     Serializable {
 
   private static final SEDLogger LOG = new SEDLogger(OutMailDataView.class);
-  HashUtils mpHU = new HashUtils();
-  StorageUtils msuStorageUtils = new StorageUtils();
-  MSHOutPart selectedNewOutMailAttachment;
-
-  MSHOutMail newOutMail;
-  String newMailBody;
 
   private static final long serialVersionUID = 1L;
 
@@ -82,76 +79,99 @@ public class OutMailDataView extends AbstractMailView<MSHOutMail, MSHOutEvent> i
 
   @EJB(mappedName = SEDJNDI.JNDI_SEDLOOKUPS)
   SEDLookupsInterface mLookup;
+  @EJB(mappedName = SEDJNDI.JNDI_PMODE)
+  PModeInterface mPMode;
 
   @EJB(mappedName = SEDJNDI.JNDI_DBSETTINGS)
   DBSettingsInterface mdbSettings;
-
-  @EJB(mappedName = SEDJNDI.JNDI_JMSMANAGER)
-  JMSManagerInterface mJMS;
+  HashUtils mpHU = new HashUtils();
+  StorageUtils msuStorageUtils = new StorageUtils();
+  String newMailBody;
+  MSHOutMail newOutMail;
+  MSHOutPart selectedNewOutMailAttachment;
 
   @ManagedProperty(value = "#{userSessionData}")
   private UserSessionData userSessionData;
 
-  @PostConstruct
-  private void init() {
-    mMailModel = new OutMailDataModel(MSHOutMail.class, getUserSessionData(), mDB);
-  }
-
-  /**
-   *
-   * @param messageBean
-   */
-  public void setUserSessionData(UserSessionData messageBean) {
-    this.userSessionData = messageBean;
-  }
-
-  /**
-   *
-   * @return
-   */
-  public UserSessionData getUserSessionData() {
-    return this.userSessionData;
-  }
-
-  /**
-   *
-   * @return
-   */
-  public OutMailDataModel getOutMailModel() {
-    if (mMailModel == null) {
-      mMailModel = new OutMailDataModel(MSHOutMail.class, getUserSessionData(), mDB);
-    }
-    return (OutMailDataModel) mMailModel;
-  }
-
-  /**
-   *
-   * @param status
-   * @return
-   */
-  @Override
-  public String getStatusColor(String status) {
-    return SEDOutboxMailStatus.getColor(status);
-  }
-
-  /**
-   *
-   * @return
-   */
-  public List<SEDOutboxMailStatus> getOutStatuses() {
-    return Arrays.asList(SEDOutboxMailStatus.values());
-  }
-
   /**
    *
    */
-  @Override
-  public void updateEventList() {
-    if (this.mMail != null) {
-      mlstMailEvents = mDB.getMailEventList(MSHOutEvent.class, mMail.getId());
+  public void composeNewMail() {
+    long l = LOG.logStart();
+    MSHOutMail m = new MSHOutMail();
+    List<String> lstUB = getUserSessionData().getUserEBoxes();
+
+    if (!lstUB.isEmpty()) {
+      m.setSenderEBox(lstUB.get(0));
+      m.setReceiverEBox(lstUB.get(lstUB.size() - 1) + "@" + mdbSettings.getDomain());
     } else {
-      this.mlstMailEvents = null;
+      m.setSenderEBox("");
+      m.setReceiverEBox("");
     }
+
+    m.setService("LegalDelivery_ZPP");
+    m.setAction("DeliveryNotification");
+    m.setSenderMessageId(Utils.getInstance().getGuidString());
+    m.setSubject("VL 1/2016 Predložitveno poročilo, spis I 291/2014");
+
+    newMailBody = "Pozdravljeni!<br />to je testno besedilo<br /> Lep pozdrav";
+    setNewOutMail(m);
+    LOG.logEnd(l);
+  }
+
+  /**
+   *
+   */
+  public void deleteSelectedMail() {
+    long l = LOG.logStart();
+    if (getSelected() != null && !getSelected().isEmpty()) {
+      List<MSHOutMail> molst = getSelected();
+      for (MSHOutMail mo : molst) {
+        try {
+          mDB.setStatusToOutMail(mo, SEDOutboxMailStatus.DELETED, "Manually deleted by " +
+              getUserSessionData().getUser().getUserId());
+        } catch (StorageException ex) {
+          String mail = String.format("id: %d, sender: %s, receiver %s, service %s, action %s",
+              mo.getId(), mo.getSenderEBox(), mo.getReceiverEBox(), mo.getService(), mo.getAction());
+          facesContext().addMessage(null, new FacesMessage("'Napaka pri brisanju pošiljke",
+              mail));
+          LOG.logError(l, ex);
+          break;
+        }
+      }
+
+    }
+    LOG.logEnd(l);
+  }
+
+  /**
+   *
+   * @return
+   */
+  public String getComposedMailBody() {
+    return newMailBody;
+  }
+
+  /**
+   *
+   * @param filePath
+   * @return
+   */
+  @Override
+  public StreamedContent getEventEvidenceFile(String filePath) {
+    long l = LOG.logStart();
+    File f = StorageUtils.getFile(filePath);
+    if (f.exists()) {
+      try {
+        return new DefaultStreamedContent(new FileInputStream(f), MimeValues.getMimeTypeByFileName(
+            f.getName()),
+            f.getName());
+      } catch (FileNotFoundException ex) {
+        LOG.logError(l, ex);
+      }
+    }
+    LOG.formatedWarning("Event file '%s' not found ", filePath);
+    return null;
   }
 
   /**
@@ -188,130 +208,10 @@ public class OutMailDataView extends AbstractMailView<MSHOutMail, MSHOutEvent> i
 
   /**
    *
-   * @param filePath
-   * @return
-   */
-  @Override
-  public StreamedContent getEventEvidenceFile(String filePath) {
-    long l = LOG.logStart();
-    File f = StorageUtils.getFile(filePath);
-    if (f.exists()) {
-      try {
-        return new DefaultStreamedContent(new FileInputStream(f), MimeValues.getMimeTypeByFileName(
-            f.getName()),
-            f.getName());
-      } catch (FileNotFoundException ex) {
-        LOG.logError(l, ex);
-      }
-    }
-    LOG.formatedWarning("Event file '%s' not found ", filePath);
-    return null;
-  }
-
-  /**
-   *
-   * @throws IOException
-   */
-  public void resendSelectedMail()
-      throws IOException {
-    long l = LOG.logStart();
-    if (getSelected() != null && !getSelected().isEmpty()) {
-      List<MSHOutMail> molst = getSelected();
-      for (MSHOutMail mo : molst) {
-        try {
-          
-          mDB.setStatusToOutMail(mo, SEDOutboxMailStatus.SCHEDULE, "Add message to submit queue");
-          mJMS.sendMessage(mo.getId().longValue(), 0, 0, false);
-          
-        } catch (StorageException| NamingException | JMSException ex) {
-          String mail = String.format("id: %d, sender: %s, receiver %s, service %s, action %s",
-              mo.getId(), mo.getSenderEBox(), mo.getReceiverEBox(), mo.getService(), mo.getAction());
-          facesContext().addMessage(null, new FacesMessage("'Napaka pri ponovnem pošiljanju pošiljke ",
-              mail));
-          LOG.logError(l, ex);
-          break;
-        } 
-      }
-
-    }
-    
-    
-    if (this.mMail != null) {
-      try {
-        // get pmode
-
-        mJMS.sendMessage(this.mMail.getId().longValue(), 0, 0, false);
-      } catch (NamingException | JMSException ex) {
-        LOG.logError(l, ex);
-      }
-    }
-    LOG.logEnd(l);
-  }
-
-  /**
-   *
-   */
-  public void deleteSelectedMail() {
-    long l = LOG.logStart();
-    if (getSelected() != null && !getSelected().isEmpty()) {
-      List<MSHOutMail> molst = getSelected();
-      for (MSHOutMail mo : molst) {
-        try {
-          mDB.setStatusToOutMail(mo, SEDOutboxMailStatus.DELETED, "Manually deleted by " +
-              getUserSessionData().getUser().getUserId());
-        } catch (StorageException ex) {
-          String mail = String.format("id: %d, sender: %s, receiver %s, service %s, action %s",
-              mo.getId(), mo.getSenderEBox(), mo.getReceiverEBox(), mo.getService(), mo.getAction());
-          facesContext().addMessage(null, new FacesMessage("'Napaka pri brisanju pošiljke",
-              mail));
-          LOG.logError(l, ex);
-          break;
-        }
-      }
-
-    }
-    LOG.logEnd(l);
-  }
-
-  /**
-   *
-   */
-  public void composeNewMail() {
-    long l = LOG.logStart();
-    MSHOutMail m = new MSHOutMail();
-    List<String> lstUB = getUserSessionData().getUserEBoxes();
-
-    if (!lstUB.isEmpty()) {
-      m.setSenderEBox(lstUB.get(0));
-      m.setReceiverEBox(lstUB.get(lstUB.size() - 1) + "@" + mdbSettings.getDomain());
-    } else {
-      m.setSenderEBox("");
-      m.setReceiverEBox("");
-    }
-    m.setService("LegalDelivery_ZPP");
-    m.setAction("DeliveryNotification");
-    m.setSenderMessageId(Utils.getInstance().getGuidString());
-    m.setSubject("VL 1/2016 Predložitveno poročilo, spis I 291/2014");
-
-    newMailBody = "Pozdravljeni!<br />to je testno besedilo<br /> Lep pozdrav";
-    setNewOutMail(m);
-    LOG.logEnd(l);
-  }
-
-  /**
-   *
    * @return
    */
   public MSHOutMail getNewOutMail() {
     return newOutMail;
-  }
-
-  /**
-   *
-   * @param newOutMail
-   */
-  public void setNewOutMail(MSHOutMail newOutMail) {
-    this.newOutMail = newOutMail;
   }
 
   /**
@@ -331,31 +231,45 @@ public class OutMailDataView extends AbstractMailView<MSHOutMail, MSHOutEvent> i
    *
    * @return
    */
+  public OutMailDataModel getOutMailModel() {
+    if (mMailModel == null) {
+      mMailModel = new OutMailDataModel(MSHOutMail.class, getUserSessionData(), mDB);
+    }
+    return (OutMailDataModel) mMailModel;
+  }
+
+  /**
+   *
+   * @return
+   */
+  public List<SEDOutboxMailStatus> getOutStatuses() {
+    return Arrays.asList(SEDOutboxMailStatus.values());
+  }
+
+  /**
+   *
+   * @return
+   */
   public MSHOutPart getSelectedNewOutMailAttachment() {
     return selectedNewOutMailAttachment;
   }
 
   /**
    *
-   * @param selectedNewOutMailAttachment
+   * @param status
+   * @return
    */
-  public void setSelectedNewOutMailAttachment(MSHOutPart selectedNewOutMailAttachment) {
-    this.selectedNewOutMailAttachment = selectedNewOutMailAttachment;
+  @Override
+  public String getStatusColor(String status) {
+    return SEDOutboxMailStatus.getColor(status);
   }
 
   /**
    *
+   * @return
    */
-  public void removeselectedNewOutMailAttachment() {
-
-    if (selectedNewOutMailAttachment != null && getNewOutMail() != null &&
-        getNewOutMail().getMSHOutPayload() != null) {
-      boolean bVal =
-          getNewOutMail().getMSHOutPayload().getMSHOutParts().remove(selectedNewOutMailAttachment);
-      LOG.log("MSHOutPart removed staus: " + bVal);
-
-    }
-
+  public UserSessionData getUserSessionData() {
+    return this.userSessionData;
   }
 
   /**
@@ -377,8 +291,9 @@ public class OutMailDataView extends AbstractMailView<MSHOutMail, MSHOutEvent> i
     }
     try {
       File f =
-          su.storeFile("tst_att", fileName.substring(fileName.lastIndexOf('.')+1), uf.getInputstream());
-     
+          su.storeFile("tst_att", fileName.substring(fileName.lastIndexOf('.') + 1),
+              uf.getInputstream());
+
       String name = fileName.substring(0, fileName.lastIndexOf('.'));
 
       MSHOutPart mp = new MSHOutPart();
@@ -398,6 +313,78 @@ public class OutMailDataView extends AbstractMailView<MSHOutMail, MSHOutEvent> i
     } catch (StorageException | IOException | HashException ex) {
       Logger.getLogger(OutMailDataView.class.getName()).log(Level.SEVERE, null, ex);
     }
+  }
+
+  @PostConstruct
+  private void init() {
+    mMailModel = new OutMailDataModel(MSHOutMail.class, getUserSessionData(), mDB);
+  }
+
+  /**
+   *
+   */
+  public void removeselectedNewOutMailAttachment() {
+
+    if (selectedNewOutMailAttachment != null && getNewOutMail() != null &&
+        getNewOutMail().getMSHOutPayload() != null) {
+      boolean bVal =
+          getNewOutMail().getMSHOutPayload().getMSHOutParts().remove(selectedNewOutMailAttachment);
+      LOG.log("MSHOutPart removed staus: " + bVal);
+
+    }
+
+  }
+
+  /**
+   *
+   * @throws IOException
+   */
+  public void resendSelectedMail()
+      throws IOException {
+    long l = LOG.logStart();
+    if (getSelected() != null && !getSelected().isEmpty()) {
+      List<MSHOutMail> molst = getSelected();
+      LOG.formatedWarning("get mail count %d to submit", molst.size());
+      int iResend = 0, iNotResend = 0, iError = 0;
+      StringWriter err = new StringWriter();
+      for (MSHOutMail mo : molst) {
+        if (SEDOutboxMailStatus.DELIVERED.getValue().equals(mo.getStatus())) {
+          iNotResend++;
+        } else {
+          try {
+            mDB.sendOutMessage(mo, 0, 0, AppConstant.S_APPLICATION_CODE,
+                userSessionData.getUser().getUserId());
+            iResend++;
+          } catch (StorageException ex) {
+            String mail = String.format("id: %d, sender: %s, receiver %s, service %s, action %s\n",
+                mo.getId(), mo.getSenderEBox(), mo.getReceiverEBox(), mo.getService(),
+                mo.getAction());
+            err.append(mail);
+            LOG.logError(l, ex);
+            iError++;
+          }
+        }
+      }
+      String strVal = err.toString();
+      if (strVal.length() > 500) {
+        strVal = strVal.substring(0, 500);
+      }
+
+      String msg = String.format("Resend %d, not resend %s (wrong status), error %s\n", iResend,
+          iNotResend, iError);
+      facesContext().addMessage(null, new FacesMessage(iError > 0 ? FacesMessage.SEVERITY_ERROR :
+          FacesMessage.SEVERITY_INFO,
+          "'Resending mail action",
+          msg + strVal));
+
+    }else {
+       facesContext().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
+          "'Resending mail action",
+          "No mail selected"));
+
+    }
+    
+    LOG.logEnd(l);
   }
 
   /**
@@ -450,18 +437,59 @@ public class OutMailDataView extends AbstractMailView<MSHOutMail, MSHOutEvent> i
 
   /**
    *
-   * @return
-   */
-  public String getComposedMailBody() {
-    return newMailBody;
-  }
-
-  /**
-   *
    * @param body
    */
   public void setComposedMailBody(String body) {
     newMailBody = body;
+  }
+
+  /**
+   *
+   * @param newOutMail
+   */
+  public void setNewOutMail(MSHOutMail newOutMail) {
+    this.newOutMail = newOutMail;
+  }
+
+  /**
+   *
+   * @param selectedNewOutMailAttachment
+   */
+  public void setSelectedNewOutMailAttachment(MSHOutPart selectedNewOutMailAttachment) {
+    this.selectedNewOutMailAttachment = selectedNewOutMailAttachment;
+  }
+
+  /**
+   *
+   * @param messageBean
+   */
+  public void setUserSessionData(UserSessionData messageBean) {
+    this.userSessionData = messageBean;
+  }
+
+  /**
+   *
+   */
+  @Override
+  public void updateEventList() {
+    if (this.mMail != null) {
+      mlstMailEvents = mDB.getMailEventList(MSHOutEvent.class, mMail.getId());
+    } else {
+      this.mlstMailEvents = null;
+    }
+  }
+  
+  
+   public List<Service.Action> getCurrentServiceActionList() {
+    if (getNewOutMail()!= null 
+        && !Utils.isEmptyString(getNewOutMail().getService())) {
+      String srvId = getNewOutMail().getService();
+      Service srv = mPMode.getServiceById(srvId);
+      if (srv != null) {
+        return srv.getActions();
+      }
+    }
+    return Collections.emptyList();
   }
 
 }

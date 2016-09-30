@@ -360,10 +360,11 @@ public class ZPPInInterceptor implements SoapInterceptorInterface {
   public void processInZPPDelivery(MSHInMail mInMail)
       throws FOPException, HashException {
     long l = LOG.logStart();
-    mInMail.setStatus(SEDInboxMailStatus.PLUGINLOCKED.getValue());
+    mInMail.setStatus(SEDInboxMailStatus.PLOCKED.getValue());
     mInMail.setStatusDate(Calendar.getInstance().getTime());
     try {
-      mDB.setStatusToInMail(mInMail, SEDInboxMailStatus.PLUGINLOCKED, "ZPP mail received.");
+      mDB.serializeInMail(mInMail, "ZPP plugin");
+      //mDB.setStatusToInMail(mInMail, SEDInboxMailStatus.PLOCKED, "ZPP mail received.");
       // add ZPPReceipt
       // notify in delivery
     } catch (StorageException ex) {

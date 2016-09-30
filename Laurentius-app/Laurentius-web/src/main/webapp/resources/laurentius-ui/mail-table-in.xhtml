@@ -36,16 +36,17 @@
                         <p:ajax event="rowSelect" listener="#{InMailDataView.onRowSelect}" 
                                 update="forms:InMailPanel:InMailTab" />   
                         <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
-                        <p:column width="60" headerText="#{msg['Nu']}">
-                            <h:outputText value="#{InMailDataView.rowIndex(inMail) + 1}" />
-                        </p:column>
-                        <p:column width="120" headerText="#{msg['Transaction']}" >
-                            <h:outputText value="#{inMail.conversationId}" />
-                        </p:column>
+                        <!-- p:column width="60" headerText="# { msg['Nu']}">
+                            <h:outputText value=" # { InMailDataView.rowIndex(inMail) + 1}" />
+                        </p:column -->
+                        
 
-                        <p:column width="15" style="background-color:#{InMailDataView.getStatusColor(inMail.status)}"
-                                  headerText="#{msg['St']}">
-                            <h:outputText value=" " />
+                        <p:column width="70" style="background-color:#{InMailDataView.getStatusColor(inMail.status)}"
+                                  headerText="#{msg['Status']}">
+                            <h:outputText value="#{inMail.status}" />
+                        </p:column>
+                        <p:column width="180" headerText="#{msg['Transaction']}" >
+                            <h:outputText value="#{inMail.conversationId}" />
                         </p:column>
                         <p:column width="120" headerText="#{msg['RecDate']}">
                             <h:outputText value="#{inMail.receivedDate}"  ><f:convertDateTime pattern="dd.MM.yyyy hh:mm" timeZone="CET" /></h:outputText>
@@ -83,38 +84,51 @@
                                 <tr>
                                     <td align="right" width="100px ">#{msg['Id']}:</td> 
                                     <td align="left"><h:inputText value="#{InMailDataView.currentMail.id}"  style="width:100%;"  readonly='true' /></td>
-                                    <td align="right" width="100px">#{msg['Receiver']}:</td> 
-                                    <td align="left"><h:inputText value="#{InMailDataView.currentMail.receiverName}"  style="width:100%;"  readonly='true' /></td>
-                                    <td align="right" width="100px">#{msg['Receiver-Box']}:</td> 
-                                    <td align="left"><h:inputText value="#{InMailDataView.currentMail.receiverEBox}"  style="width:100%;"  readonly='true' /></td>
+                                    <td align="right" width="100px" rowspan="2">#{msg['Sender']}:</td> 
+                                    <td align="left" rowspan="2"><h:inputTextarea cols="2" value="#{InMailDataView.currentMail.senderName}"  style="width:100%;"  readonly='true' /></td>
+                                    <td align="right" width="100px" rowspan="2" >#{msg['Receiver']}:</td> 
+                                    <td align="left" rowspan="2"><h:inputTextarea cols="2" value="#{InMailDataView.currentMail.receiverName}"  style="width:100%;"  readonly='true' /></td>
+
                                     <td align="right" width="100px">#{msg['SubmitDate']}:</td> 
                                     <td align="left"><h:inputText value="#{InMailDataView.currentMail.submittedDate}"  style="width:100%;"  readonly='true' /></td>
                                 </tr>
                                 <tr>
                                     <td align="right" width="100px">#{msg['SenderMailId']}:</td> 
                                     <td align="left"><h:inputText value="#{InMailDataView.currentMail.senderMessageId}"  style="width:100%;"  readonly='true' /></td>
-                                    <td align="right" width="100px">#{msg['Sender']}:</td> 
-                                    <td align="left"><h:inputText value="#{InMailDataView.currentMail.senderName}"  style="width:100%;"  readonly='true' /></td>
-                                    <td align="right" width="100px">#{msg['Sender-Box']}:</td> 
-                                    <td align="left"><h:inputText value="#{InMailDataView.currentMail.senderEBox}"  style="width:100%;"  readonly='true' /></td>
                                     <td align="right" width="100px">#{msg['SentDate']}:</td> 
                                     <td align="left"><h:inputText value="#{InMailDataView.currentMail.sentDate}"  style="width:100%;"  readonly='true' /></td>
                                 </tr>
+
                                 <tr>
-                                    <td align="right" width="100px">#{msg['Service']}:</td> 
-                                    <td align="left" ><h:inputText value="#{InMailDataView.currentMail.service}" style="width:100%;"  readonly='true' /></td>
-                                    <td align="right" width="100px">#{msg['Action']}:</td> 
-                                    <td align="left"><h:inputText value="#{InMailDataView.currentMail.action}"  style="width:100%;"  readonly='true' /></td>
-                                    <td align="right" width="100px">#{msg['Transaction']}:</td> 
-                                    <td align="left"><h:inputText value="#{InMailDataView.currentMail.conversationId}"  style="width:100%;"  readonly='true' /></td>
+
+                                    <td align="right" width="100px">#{msg['MessageId']}:</td> 
+                                    <td align="left"><h:inputText value="#{InMailDataView.currentMail.messageId}"  style="width:100%;"  readonly='true' /></td>
+
+                                    <td align="right" width="100px">#{msg['Sender-Box']}:</td> 
+                                    <td align="left"><h:inputText value="#{InMailDataView.currentMail.senderEBox}"  style="width:100%;"  readonly='true' /></td>
+
+                                    <td align="right" width="100px">#{msg['Receiver-Box']}:</td> 
+                                    <td align="left"><h:inputText value="#{InMailDataView.currentMail.receiverEBox}"  style="width:100%;"  readonly='true' /></td>
                                     <td align="right" width="100px">#{msg['ReceivedDate']}:</td> 
                                     <td align="left"><h:inputText value="#{InMailDataView.currentMail.receivedDate}"  style="width:100%;"  readonly='true' /></td>
                                 </tr>
+
                                 <tr>
+                                    <td align="right" width="100px">#{msg['RefMessageId']}:</td> 
+                                    <td align="left"><h:inputText value="#{InMailDataView.currentMail.refToMessageId}" style="width:100%;"  readonly='true' /></td>
+                                    
+                                    <td align="right" width="100px">#{msg['Service']}:</td> 
+                                    <td align="left" ><h:inputText value="#{InMailDataView.currentMail.service}" style="width:100%;"  readonly='true' /></td>
+                                    <td align="right" width="100px">#{msg['Action']}:</td> 
+                                    <td align="left"><h:inputText value="#{InMailDataView.currentMail.action}"  style="width:100%;"  readonly='true' /></td>                                    
+                                    <td align="right" width="100px">#{msg['DeliveredDate']}:</td> 
+                                    <td align="left"><h:inputText value="#{InMailDataView.currentMail.deliveredDate}"  style="width:100%;"  readonly='true' /></td>
+                                </tr>
+                                <tr>
+                                    <td align="right" width="100px">#{msg['Transaction']}:</td> 
+                                    <td align="left"><h:inputText value="#{InMailDataView.currentMail.conversationId}"  style="width:100%;"  readonly='true' /></td>
                                     <td align="right" width="100px">#{msg['Subject']}:</td> 
                                     <td align="left" colspan="5"><h:inputText value="#{InMailDataView.currentMail.subject}"  style="width:100%;"  readonly='true' /></td>                                    
-                                    <td align="right" width="100px">#{msg['DeliveredDate']}:</td> 
-                                    <td align="left"><h:inputText value="#{InMailDataView.currentMail.deliveredDate}" style="width:100%;"  readonly='true' /></td>
                                 </tr>
                             </table>
                         </p:outputPanel>
@@ -173,8 +187,9 @@
                                 <p:column width="60" headerText="#{msg['Id']}">
                                     <h:outputText value="#{mailEvents.id}" />
                                 </p:column>
-                                <p:column headerText="#{msg['Status']}" width="15" style="background-color:#{InMailDataView.getStatusColor(mailEvents.status)}" >
-                                    <h:outputText value=" " />
+                                <p:column headerText="#{msg['Status']}" width="70" 
+                                          style="background-color:#{InMailDataView.getStatusColor(mailEvents.status)}" >
+                                    <h:outputText value="#{mailEvents.status}" />
                                 </p:column>
                                 <p:column width="140" headerText="#{msg['Date']}">
                                     <h:outputText value="#{mailEvents.date}"  ><f:convertDateTime pattern="dd.MM.yyyy hh:mm:ss" timeZone="CET" /></h:outputText>
@@ -187,7 +202,7 @@
                                     <h:outputText value="#{mailEvents.userId}" />
                                 </p:column>
                                 <p:column width="60" headerText="#{msg['Download']}">
-                                    
+
                                     <p:commandButton ajax="false" value="#{msg['Download']}" rendered="#{mailEvents.evidenceFilepath}" 
                                                      onclick="PrimeFaces.monitorDownload(start, stop);" icon="ui-icon-arrowthick-1-s">
                                         <p:fileDownload value="#{InMailDataView.getEventEvidenceFile(mailEvents.evidenceFilepath)}" />
