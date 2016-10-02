@@ -13,57 +13,75 @@
 
     <composite:implementation >
 
-        <h1>#{msg['Parties']}</h1>
-        <p:panel id="TaskDesc" toggleTitle="#{msg['INFO']}" header="#{msg['PModePartyDefinitions']}" 
-                 toggleable="true"  collapsed="true">
-            <h:outputText value="#{msg['PModePartyDefDesc']}"></h:outputText>
-        </p:panel>
-        <p:dataTable id="TblPModeParties" 
-                     var="sp" 
-                     value="#{pModePartyView.list}"
-                     selectionMode="single"
-                     selection="#{pModePartyView.selected}"
-                     rowKey="#{sp.id}"
+        <p:layout   widgetVar="PModePartyMainLayout" style="min-width:400px;min-height:400px;height: 100%;width: 100%"  >
+            <p:layoutUnit  position="north" resizable="true" closable="true" collapsible="true"
+                           size="38" minSize="38" maxSize="400" style="width:100%;height:100%;padding: 0px; margin: 0px"
+                           gutter="0">
+                <h1><h:outputLink id="growPanelDesc" value="#">
+                        <span class="ui-icon-panel-Header ui-icon ui-icon-svg-party"  />#{msg['Parties']}
+                    </h:outputLink>
+                </h1>
+                <p:tooltip id="toolTipGrow" for="growPanelDesc" position="bottom">
+                    <h:outputText value="#{msg['PModePartyDefDesc']}"></h:outputText>
+                </p:tooltip>                
+            </p:layoutUnit>
 
-                     style="padding: 0px; margin: 0px"
-                     scrollable="true" 
-                     scrollHeight="200"    
+            <p:layoutUnit position="center" style="width:100%;height:100%;padding: 0px; margin: 0px" gutter="0" >
+                <p:scrollPanel mode="native" style="width:100%;height:100%"> <!-- p:dataTable scrollable does not resize when toogled suth panel -->                
+                    <p:dataTable id="TblPModeParties" 
+                                 var="sp" 
+                                 value="#{pModePartyView.list}"
+                                 selectionMode="single"
+                                 selection="#{pModePartyView.selected}"
+                                 rowKey="#{sp.id}"
+                                  currentPageReportTemplate="#{msg['Showing']} {startRecord}-{endRecord} #{msg['OutOf']} {totalRecords}"
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="25,50,100,200" 
+                                 paginator="true" 
+                                 style="padding: 0px; margin: 0px"
+                                 scrollable="true" 
+                                 scrollHeight="100%"
+                                 rows="100" >
+                        <p:ajax event="rowDblselect" listener="#{pModePartyView.startEditSelected()}" 
+                                update=":dlgPModeParty:pModePartyDialogForm:pModeParty"
+                                oncomplete="PF('pModePartyDialog').show()"/>
 
-                     >
-            <p:ajax event="rowDblselect" listener="#{pModePartyView.startEditSelected()}" 
-                    update=":dlgPModeParty:pModePartyDialogForm:pModeParty"
-                    oncomplete="PF('pModePartyDialog').show()"/>
+                        <f:facet name="header">
+                            <p:commandButton value="#{msg['Add']}"  
+                                             styleClass="toolbar-Button" 
+                                             icon="ui-icon-svg-add ui-icon-size-22"  
+                                             actionListener="#{pModePartyView.createEditable()}"
+                                             oncomplete="PF('pModePartyDialog').show()" 
+                                             update=":dlgPModeParty:pModePartyDialogForm:pModeParty"
 
-            <f:facet name="header">
-                <p:commandButton value="#{msg['Add']}"  styleClass="toolbar-Button" icon="ui-icon-sed-add" 
-                                 actionListener="#{pModePartyView.createEditable()}"
-                                 oncomplete="PF('pModePartyDialog').show()" 
-                                 update=":dlgPModeParty:pModePartyDialogForm:pModeParty"
+                                             />
+                            <p:commandButton value="#{msg['Edit']}"  styleClass="toolbar-Button" 
+                                             icon="ui-icon-svg-edit ui-icon-size-22"  
+                                             oncomplete="PF('pModePartyDialog').show()"                                                                   
+                                             actionListener="#{pModePartyView.startEditSelected()}"
+                                             update=":dlgPModeParty:pModePartyDialogForm:pModeParty"
+                                             />
+                            <p:commandButton value="#{msg['Delete']}" styleClass="toolbar-Button" 
+                                             icon="ui-icon-svg-remove ui-icon-size-22"  
+                                             actionListener="#{pModePartyView.removeSelected()}" 
+                                             update=":forms:SettingsPModesParties:TblPModeParties" />
 
-                                 />
-                <p:commandButton value="#{msg['Edit']}"  styleClass="toolbar-Button" icon="ui-icon-sed-edit" 
-                                 oncomplete="PF('pModePartyDialog').show()"                                                                   
-                                 actionListener="#{pModePartyView.startEditSelected()}"
-                                 update=":dlgPModeParty:pModePartyDialogForm:pModeParty"
-                                 />
-                <p:commandButton value="#{msg['Delete']}" styleClass="toolbar-Button" icon="ui-icon-sed-remove" 
-                                 actionListener="#{pModePartyView.removeSelected()}" 
-                                 update=":forms:SettingsPModesParties:TblPModeParties" />
-
-            </f:facet>
-            <p:column headerText="#{msg['Id']}" width="200">
-                <h:outputText value="#{sp.id}" />
-            </p:column>
-            <p:column headerText="#{msg['Domain']}" width="200">
-                <h:outputText value="#{sp.domain}"></h:outputText>                
-            </p:column>
-            <p:column headerText="#{msg['LocalIdentity']}">
-                <h:outputText value="#{sp.isLocalIdentity}"></h:outputText>                
-            </p:column>
+                        </f:facet>
+                        <p:column headerText="#{msg['Id']}" width="200">
+                            <h:outputText value="#{sp.id}" />
+                        </p:column>
+                        <p:column headerText="#{msg['Domain']}" width="200">
+                            <h:outputText value="#{sp.domain}"></h:outputText>                
+                        </p:column>
+                        <p:column headerText="#{msg['LocalIdentity']}">
+                            <h:outputText value="#{sp.isLocalIdentity}"></h:outputText>                
+                        </p:column>
 
 
-        </p:dataTable>
-
+                    </p:dataTable>
+                </p:scrollPanel>
+            </p:layoutUnit>                        
+        </p:layout>
 
     </composite:implementation>
 

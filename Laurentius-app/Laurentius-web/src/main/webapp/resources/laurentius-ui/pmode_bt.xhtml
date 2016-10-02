@@ -32,15 +32,15 @@
                              >
 
                     <f:facet name="header">
-                        <p:commandButton value="#{msg['Add']}" styleClass="toolbar-Button" icon="ui-icon-sed-add" 
+                        <p:commandButton value="#{msg['Add']}" styleClass="toolbar-Button" icon="ui-icon-svg-add ui-icon-size-22"  
                                          update=":forms:SettingsPModesBT:BusinessTransaction" 
                                          actionListener="#{businessTransaction.addAction()}"
                                          oncomplete="PF('sedboxDialog').show()"  />
-                        <p:commandButton value="#{msg['Edit']}" styleClass="toolbar-Button" icon="ui-icon-sed-edit" 
+                        <p:commandButton value="#{msg['Edit']}" styleClass="toolbar-Button" icon="ui-icon-svg-edit ui-icon-size-22"  
                                          update=":dialogs:sedboxDialogForm:sedboxDetails" 
                                          actionListener="#{adminSEDBoxView.startEditSelected()}"
                                          oncomplete="PF('sedboxDialog').show()" />
-                        <p:commandButton value="#{msg['Delete']}" styleClass="toolbar-Button" icon="ui-icon-sed-remove" 
+                        <p:commandButton value="#{msg['Delete']}" styleClass="toolbar-Button" icon="ui-icon-svg-remove ui-icon-size-22"  
                                          actionListener="#{adminSEDBoxView.removeSelected()}"
                                          update=":forms:SettingsSEDBoxes:TblSedBox" />
 

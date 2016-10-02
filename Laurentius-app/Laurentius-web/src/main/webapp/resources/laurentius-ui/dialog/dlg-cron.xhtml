@@ -96,12 +96,12 @@
                             styleClass="dialogButtonBar" >
                             <f:facet name="right"  >
                                 <p:commandButton value="#{msg['Ok']}"  styleClass="toolbar-Button" 
-                                                 icon="ui-icon-sed-ok" 
+                                                 icon="ui-icon-svg-ok ui-icon-size-22" 
                                                  action="#{adminSEDCronJobView.addOrUpdateEditable()}"
                                                  oncomplete="PF('cronDialog').hide()" 
                                                  update=":forms:SettingsCron:TblCron"
                                                  />
-                                <p:commandButton value="#{msg['Cancel']}" styleClass="toolbar-Button" icon="ui-icon-sed-cancel" oncomplete="PF('cronDialog').hide()" />
+                                <p:commandButton value="#{msg['Cancel']}" styleClass="toolbar-Button" icon="ui-icon-svg-cancel ui-icon-size-22" oncomplete="PF('cronDialog').hide()" />
                             </f:facet>
                         </p:toolbar>
                     </p:layoutUnit>

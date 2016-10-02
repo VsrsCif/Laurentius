@@ -75,7 +75,7 @@
                     <p:ajax event="tabChange" listener="#{OutMailDataView.onTabChange}"/> 
                     <p:tab   id="OutMailDataTab"  title="#{msg['MailData']}">
                         <f:facet name="title">
-                            <h:graphicImage value="resources/images/mail32.png" width="22" height="22" />
+                            <h:graphicImage value="#{resource['images:/envelope.svg']}" width="22" height="22" />
                             <h:outputText value="#{msg['MailData']}" />
 
                         </f:facet>
@@ -135,7 +135,7 @@
                     </p:tab>
                     <p:tab >
                         <f:facet name="title">
-                            <h:graphicImage value="resources/images/document22.png" width="22" height="22" />
+                            <h:graphicImage value="#{resource['images:/payload.svg']}" width="22" height="22" />
                             <h:outputText value="#{msg['Payloads']}" />
                         </f:facet>
                         <p:outputPanel id="OutMailDocuments" style="text-align:center;">
@@ -169,7 +169,7 @@
                     </p:tab>
                     <p:tab >
                         <f:facet name="title">
-                            <h:graphicImage value="resources/images/events22.png" width="22" height="22" />
+                            <h:graphicImage value="#{resource['images:/event.svg']}" width="22" height="22" />
                             <h:outputText value="#{msg['Events']}" />                                 
                         </f:facet>
                         <p:outputPanel id="OutMailEvents" style="text-align:center;">

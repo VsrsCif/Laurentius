@@ -11,61 +11,76 @@
     </composite:interface>
 
     <composite:implementation >
-        <h1>#{msg['Users']}</h1>
-        <p:panel id="horizontal" toggleTitle="#{msg['INFO']}" header="#{msg['Users']}" 
-                 toggleable="true"  collapsed="true">
-            <h:outputText value="#{msg['SEDUserDefDesc']}"></h:outputText>
-        </p:panel>
+        <p:layout   widgetVar="adminUsersView" style="min-width:400px;min-height:400px;height: 100%;width: 100%"  >
+            <p:layoutUnit  position="north" resizable="true" closable="true" collapsible="true"
+                           size="38" minSize="38" maxSize="400" style="width:100%;height:100%;padding: 0px; margin: 0px"
+                           gutter="0">
+                <h1><h:outputLink id="growPanelDesc" value="#">
+                        <span class="ui-icon-panel-Header ui-icon ui-icon-svg-users"  />#{msg['Users']}
+                    </h:outputLink>
+                </h1>
+                <p:tooltip id="toolTipGrow" for="growPanelDesc" position="bottom">
+                    <h:outputText value="#{msg['SEDUserDefDesc']}"></h:outputText>
+                </p:tooltip>                
+            </p:layoutUnit>
 
-        <p:dataTable id="TblSedUser" 
-                     var="sp" 
-                     value="#{adminSEDUserView.list}"
-                     selectionMode="single"
-                     selection="#{adminSEDUserView.selected}"
-                     rowKey="#{sp.userId}"
+            <p:layoutUnit position="center" style="width:100%;height:100%;padding: 0px; margin: 0px" gutter="0" >
+                <p:scrollPanel mode="native" style="width:100%;height:100%"> <!-- p:dataTable scrollable does not resize when toogled suth panel -->                
+                    <p:dataTable id="TblSedUser" 
+                                 var="sp" 
+                                 value="#{adminSEDUserView.list}"
+                                 selectionMode="single"
+                                 selection="#{adminSEDUserView.selected}"
+                                 rowKey="#{sp.userId}"
+                                 currentPageReportTemplate="#{msg['Showing']} {startRecord}-{endRecord} #{msg['OutOf']} {totalRecords}"
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="25,50,100,200" 
+                                 paginator="true" 
+                                 style="padding: 0px; margin: 0px"
+                                 scrollable="true" 
+                                 scrollHeight="100%"
+                                 rows="100"  >
 
-                     style="padding: 0px; margin: 0px"
-                     scrollable="true" 
-                     scrollHeight="200px"                     
-                     >
+                        <p:ajax event="rowDblselect" listener="#{adminSEDUserView.startEditSelected()}" 
+                                update=":dlguser:userDialogForm:userDetails"
+                                oncomplete="PF('userDialog').show()"/>
 
-            <p:ajax event="rowDblselect" listener="#{adminSEDUserView.startEditSelected()}" 
-                    update=":dlguser:userDialogForm:userDetails"
-                    oncomplete="PF('userDialog').show()"/>
+                        <f:facet name="header">
+                            <p:commandButton value="#{msg['Add']}" styleClass="toolbar-Button" icon="ui-icon-svg-add ui-icon-size-22"  
+                                             update=":dlguser:userDialogForm:userDetails" 
+                                             actionListener="#{adminSEDUserView.createEditable()}"
+                                             oncomplete="PF('userDialog').show()" />
+                            <p:commandButton value="#{msg['Edit']}" styleClass="toolbar-Button" icon="ui-icon-svg-edit ui-icon-size-22"  
+                                             actionListener="#{adminSEDUserView.startEditSelected()}"
+                                             update=":dlguser:userDialogForm:userDetails" 
+                                             oncomplete="PF('userDialog').show()" />
+                            <p:commandButton value="#{msg['Delete']}" styleClass="toolbar-Button" icon="ui-icon-svg-remove ui-icon-size-22"  
+                                             actionListener="#{adminSEDUserView.removeSelected()}" update=":forms:SettingsUsers:TblSedUser" />
 
-            <f:facet name="header">
-                <p:commandButton value="#{msg['Add']}" styleClass="toolbar-Button" icon="ui-icon-sed-add" 
-                                 update=":dlguser:userDialogForm:userDetails" 
-                                 actionListener="#{adminSEDUserView.createEditable()}"
-                                 oncomplete="PF('userDialog').show()" />
-                <p:commandButton value="#{msg['Edit']}" styleClass="toolbar-Button" icon="ui-icon-sed-edit" 
-                                 actionListener="#{adminSEDUserView.startEditSelected()}"
-                                 update=":dlguser:userDialogForm:userDetails" 
-                                 oncomplete="PF('userDialog').show()" />
-                <p:commandButton value="#{msg['Delete']}" styleClass="toolbar-Button" icon="ui-icon-sed-remove" 
-                                 actionListener="#{adminSEDUserView.removeSelected()}" update=":forms:SettingsUsers:TblSedUser" />
+                        </f:facet>
 
-            </f:facet>
+                        <p:column style="width:16px">
+                            <p:rowToggler />
+                        </p:column>
+                        <p:column headerText="#{msg['Username']}" width="250">
+                            <h:outputText value="#{sp.userId}" />
+                        </p:column>              
+                        <p:column headerText="#{msg['ActiveFromDate']}" width="60">
+                            <h:outputText value="#{sp.activeFromDate}" ><f:convertDateTime pattern="dd.MM.yyyy"  timeZone="CET" /></h:outputText>                
+                        </p:column>
+                        <p:column headerText="#{msg['ActiveToDate']}" width="60">
+                            <h:outputText value="#{sp.activeToDate}" ><f:convertDateTime pattern="dd.MM.yyyy" timeZone="CET" /></h:outputText>                
+                        </p:column>
+                        <p:rowExpansion>
+                            <p:dataList value="#{sp.SEDBoxes}" var="ebox"  type="unordered" itemType="none">
+                                #{ebox.localBoxName}
+                            </p:dataList>
+                        </p:rowExpansion>
 
-            <p:column style="width:16px">
-                <p:rowToggler />
-            </p:column>
-            <p:column headerText="#{msg['Username']}" width="250">
-                <h:outputText value="#{sp.userId}" />
-            </p:column>              
-            <p:column headerText="#{msg['ActiveFromDate']}" width="60">
-                <h:outputText value="#{sp.activeFromDate}" ><f:convertDateTime pattern="dd.MM.yyyy"  timeZone="CET" /></h:outputText>                
-            </p:column>
-            <p:column headerText="#{msg['ActiveToDate']}" width="60">
-                <h:outputText value="#{sp.activeToDate}" ><f:convertDateTime pattern="dd.MM.yyyy" timeZone="CET" /></h:outputText>                
-            </p:column>
-            <p:rowExpansion>
-                <p:dataList value="#{sp.SEDBoxes}" var="ebox"  type="unordered" itemType="none">
-                    #{ebox.localBoxName}
-                </p:dataList>
-            </p:rowExpansion>
-
-        </p:dataTable>
+                    </p:dataTable>
+                </p:scrollPanel>
+            </p:layoutUnit>                        
+        </p:layout>
 
     </composite:implementation>
 

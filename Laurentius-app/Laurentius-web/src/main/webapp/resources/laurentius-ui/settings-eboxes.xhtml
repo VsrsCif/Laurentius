@@ -11,74 +11,86 @@
     </composite:interface>
 
     <composite:implementation >
-        <h1>#{msg['SED-Boxes']}</h1>
-        <p:panel id="horizontal" toggleTitle="#{msg['INFO']}" header="#{msg['SED-Boxes']}" 
-                 toggleable="true"  collapsed="true">
-            <h:outputText value="#{msg['SEDBoxDesc']}"></h:outputText>
-        </p:panel>
+        <p:layout   widgetVar="adminBoxView" style="min-width:400px;min-height:400px;height: 100%;width: 100%"  >
+            <p:layoutUnit  position="north" resizable="true" closable="true" collapsible="true"
+                           size="38" minSize="38" maxSize="400" style="width:100%;height:100%;padding: 0px; margin: 0px"
+                           gutter="0">
+                <h1><h:outputLink id="growPanelDesc" value="#">
+                        <span class="ui-icon-panel-Header ui-icon ui-icon-svg-box"  />#{msg['SED-Boxes']}
+                    </h:outputLink>
+                </h1>
+                <p:tooltip id="toolTipGrow" for="growPanelDesc" position="bottom">
+                    <h:outputText value="#{msg['SEDBoxDesc']}"></h:outputText>
+                </p:tooltip>                
+            </p:layoutUnit>
+
+            <p:layoutUnit position="center" style="width:100%;height:100%;padding: 0px; margin: 0px" gutter="0" >
+                <p:scrollPanel mode="native" style="width:100%;height:100%"> <!-- p:dataTable scrollable does not resize when toogled suth panel -->                
+
+                    <p:dataTable id="TblSedBox" 
+                                 var="sp" 
+                                 value="#{adminSEDBoxView.list}"
+                                 selectionMode="single"
+                                 selection="#{adminSEDBoxView.selected}"
+                                 rowKey="#{sp.localBoxName}"
+                                 currentPageReportTemplate="#{msg['Showing']} {startRecord}-{endRecord} #{msg['OutOf']} {totalRecords}"
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="25,50,100,200" 
+                                 paginator="true" 
+                                 style="padding: 0px; margin: 0px"
+                                 scrollable="true" 
+                                 scrollHeight="100%"
+                                 rows="100"  >
+                        <p:ajax event="rowDblselect" listener="#{adminSEDBoxView.startEditSelected()}" 
+                                update=":dlgsedbox:sedboxDialogForm:sedboxDetails"  
+                                oncomplete="PF('sedboxDialog').show()"/>
+
+                        <f:facet name="header">
+                            <p:commandButton value="#{msg['Add']}" styleClass="toolbar-Button" icon="ui-icon-svg-add ui-icon-size-22"  
+                                             update=":dlgsedbox:sedboxDialogForm:sedboxDetails" 
+                                             actionListener="#{adminSEDBoxView.createEditable()}"
+                                             oncomplete="PF('sedboxDialog').show()"  />
+                            <p:commandButton value="#{msg['Edit']}" styleClass="toolbar-Button" icon="ui-icon-svg-edit ui-icon-size-22"  
+                                             update=":dlgsedbox:sedboxDialogForm:sedboxDetails" 
+                                             actionListener="#{adminSEDBoxView.startEditSelected()}"
+                                             oncomplete="PF('sedboxDialog').show()" />
+                            <p:commandButton value="#{msg['Delete']}" styleClass="toolbar-Button" icon="ui-icon-svg-remove ui-icon-size-22"  
+                                             actionListener="#{adminSEDBoxView.removeSelected()}"
+                                             update=":forms:SettingsSEDBoxes:TblSedBox" />
+
+                        </f:facet>
 
 
-        <p:dataTable id="TblSedBox" 
-                     var="sp" 
-                     value="#{adminSEDBoxView.list}"
-                     selectionMode="single"
-                     selection="#{adminSEDBoxView.selected}"
-                     rowKey="#{sp.localBoxName}"
+                        <p:column headerText="#{msg['SED-Box']}" width="200">
+                            <h:outputText value="#{sp.localBoxName}" />
+                        </p:column>
+                        <p:column headerText="#{msg['ActiveFromDate']}" width="80">
+                            <h:outputText value="#{sp.activeFromDate}"  ><f:convertDateTime pattern="dd.MM.yyyy"  timeZone="CET" /></h:outputText>                
+                        </p:column>
+                        <p:column headerText="#{msg['ActiveToDate']}" width="80">
+                            <h:outputText value="#{sp.activeToDate}"  ><f:convertDateTime pattern="dd.MM.yyyy" timeZone="CET" /></h:outputText>                
+                        </p:column>
+                        <p:column headerText="#{msg['Export']}" width="60">
+                            <h:selectBooleanCheckbox value="#{sp.export.active}" disabled="true" />
+                        </p:column>
+                        <p:column headerText="#{msg['MetaData']}" width="60">
+                            <h:selectBooleanCheckbox value="#{sp.export.exportMetaData}" disabled="true" />
+                        </p:column>
 
-                     style="padding: 0px; margin: 0px"
-                     scrollable="true" 
-                     scrollHeight="200px"                         
-                     >
-            <p:ajax event="rowDblselect" listener="#{adminSEDBoxView.startEditSelected()}" 
-                    update=":dlgsedbox:sedboxDialogForm:sedboxDetails"  
-                    oncomplete="PF('sedboxDialog').show()"/>
+                        <p:column headerText="#{msg['Folder']}">
+                            <h:outputText value="#{sp.export.folder}" />
+                        </p:column>
+                        <p:column headerText="#{msg['Execution']}" width="60">
+                            <h:selectBooleanCheckbox value="#{sp.execute.active}" disabled="true" />
+                        </p:column>
+                        <p:column headerText="#{msg['Command']}" >
+                            <h:outputText value="#{sp.execute.command}" />               
+                        </p:column>
 
-            <f:facet name="header">
-                <p:commandButton value="#{msg['Add']}" styleClass="toolbar-Button" icon="ui-icon-sed-add" 
-                                 update=":dlgsedbox:sedboxDialogForm:sedboxDetails" 
-                                 actionListener="#{adminSEDBoxView.createEditable()}"
-                                 oncomplete="PF('sedboxDialog').show()"  />
-                <p:commandButton value="#{msg['Edit']}" styleClass="toolbar-Button" icon="ui-icon-sed-edit" 
-                                 update=":dlgsedbox:sedboxDialogForm:sedboxDetails" 
-                                 actionListener="#{adminSEDBoxView.startEditSelected()}"
-                                 oncomplete="PF('sedboxDialog').show()" />
-                <p:commandButton value="#{msg['Delete']}" styleClass="toolbar-Button" icon="ui-icon-sed-remove" 
-                                 actionListener="#{adminSEDBoxView.removeSelected()}"
-                                 update=":forms:SettingsSEDBoxes:TblSedBox" />
-
-            </f:facet>
-
-
-            <p:column headerText="#{msg['SED-Box']}" width="200">
-                <h:outputText value="#{sp.localBoxName}" />
-            </p:column>
-            <p:column headerText="#{msg['ActiveFromDate']}" width="80">
-                <h:outputText value="#{sp.activeFromDate}"  ><f:convertDateTime pattern="dd.MM.yyyy"  timeZone="CET" /></h:outputText>                
-            </p:column>
-            <p:column headerText="#{msg['ActiveToDate']}" width="80">
-                <h:outputText value="#{sp.activeToDate}"  ><f:convertDateTime pattern="dd.MM.yyyy" timeZone="CET" /></h:outputText>                
-            </p:column>
-            <p:column headerText="#{msg['Export']}" width="60">
-                <h:selectBooleanCheckbox value="#{sp.export.active}" disabled="true" />
-            </p:column>
-            <p:column headerText="#{msg['MetaData']}" width="60">
-                <h:selectBooleanCheckbox value="#{sp.export.exportMetaData}" disabled="true" />
-            </p:column>
-
-            <p:column headerText="#{msg['Folder']}">
-                <h:outputText value="#{sp.export.folder}" />
-            </p:column>
-            <p:column headerText="#{msg['Execution']}" width="60">
-                <h:selectBooleanCheckbox value="#{sp.execute.active}" disabled="true" />
-            </p:column>
-            <p:column headerText="#{msg['Command']}" >
-                <h:outputText value="#{sp.execute.command}" />               
-            </p:column>
-
-        </p:dataTable>
-
-
-
+                    </p:dataTable>
+                </p:scrollPanel>
+            </p:layoutUnit>                        
+        </p:layout>
     </composite:implementation>
 
 </html>

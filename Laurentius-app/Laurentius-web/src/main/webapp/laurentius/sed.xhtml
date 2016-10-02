@@ -11,9 +11,8 @@
 
     <h:head>
         <title>Laurentius User GUI</title>
-        <link href="resources/css/main.css" rel="stylesheet" />
-        <link href="resources/css/icons.css" rel="stylesheet" />
-
+        <h:outputStylesheet name="css/main.css" />
+        <h:outputStylesheet name="css/icons.css" />
     </h:head>
     <f:view locale="#{localeManager.locale}" >
         <h:body>
@@ -27,18 +26,18 @@
                 <!-- main window -->    
                 <p:layout style="min-width:400px;min-height:400px;"  fullPage="true"  >
                     <!-- toolbar -->    
-                    <p:layoutUnit position="north" resizable="false" gutter="0" style="padding: 0px; margin: 0px" >
+                    <p:layoutUnit position="north" resizable="false" gutter="0" style="padding: 0; margin: 0;height: 32px;" >
 
-                        <p:toolbar  id="toolbar" style="padding: 0px; margin: 0px; height: 28px; vertical-align: middle;">
+                        <p:toolbar  id="toolbar" style="padding: 0; margin: 0; height: 30px; vertical-align: middle;">
                             <f:facet name="left">
                                 <p:commandButton id="btnExit"  
                                                  value="#{msg['Exit']}" 
-                                                 icon="ui-icon-sed-exit"
+                                                 icon="ui-icon-size-22 ui-icon-svg-exit"
                                                  actionListener="#{loginManager.logout()}"
                                                  styleClass="toolbar-Button"/>
                                 <p:commandButton id="btnRefresh"  
                                                  value="#{msg['Refresh']}" 
-                                                 icon="ui-icon-sed-refresh"
+                                                 icon="ui-icon-size-22 ui-icon-svg-refresh"
                                                  styleClass="toolbar-Button"
                                                  update=":forms:MainPanel"
                                                  ajax="true" />
@@ -48,16 +47,16 @@
                                 <span class="ui-separator">
                                     <span class="ui-icon ui-icon-grip-dotted-vertical " />
                                 </span>
-                                <p:commandButton value="#{msg['Export']}" styleClass="toolbar-Button"  
+                                <p:commandButton value="#{msg['ExportCSV']}" styleClass="toolbar-Button"  
                                                  rendered="#{MainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_OUTBOX)}" 
-                                                 icon="ui-icon-sed-save"
+                                                 icon="ui-icon-size-22 ui-icon-svg-csv"
 
                                                  update=":dlgExportOutData:exportOutDataDialogForm"
                                                  oncomplete="PF('exportOutDataDialog').show()"/>
 
-                                <p:commandButton value="#{msg['Export']}" styleClass="toolbar-Button"  
+                                <p:commandButton value="#{msg['ExportCSV']}" styleClass="toolbar-Button"  
                                                  rendered="#{MainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_INBOX)}" 
-                                                 icon="ui-icon-sed-save"                                                 
+                                                 icon="ui-icon-size-22 ui-icon-svg-csv"
                                                  update=":dlgExportInData:exportInDataDialogForm"
                                                  oncomplete="PF('exportInDataDialog').show()"/>
 
@@ -66,7 +65,7 @@
                                 </span>
                                 <p:commandButton value="#{msg['New']}" styleClass="toolbar-Button"  
                                                  rendered="#{MainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_OUTBOX)}" 
-                                                 icon="ui-icon-sed-resend"
+                                                 icon="ui-icon-size-22 ui-icon-svg-mail-send"
                                                  actionListener="#{OutMailDataView.composeNewMail()}"
                                                  update=":dlgCompose:mailComposeForm"
                                                  oncomplete="PF('mailComposeDialog').show()"/>
@@ -74,18 +73,18 @@
                                 <p:commandButton value="#{msg['Resend selected']}" styleClass="toolbar-Button" 
                                                  rendered="#{MainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_OUTBOX)}"
                                                  actionListener="#{OutMailDataView.resendSelectedMail()}" 
-                                                 icon="ui-icon-sed-resend"
+                                                 icon="ui-icon-size-22 ui-icon-svg-mail-resend"
                                                  update=":forms:MainPanel :forms:messages"
                                                  ajax="true"/>
                                 <p:commandButton value="#{msg['Delete selected']}" styleClass="toolbar-Button"  
-                                                 icon="ui-icon-sed-remove"
+                                                 icon="ui-icon-svg-remove ui-icon-size-22" 
                                                  rendered="#{MainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_OUTBOX)}" 
                                                  actionListener="#{OutMailDataView.deleteSelectedMail()}" 
                                                  update=":forms:MainPanel"
                                                  ajax="true"/>
 
                                 <p:commandButton value="#{msg['Save']}" styleClass="toolbar-Button"  
-                                                 icon="ui-icon-sed-save"
+                                                 icon="ui-icon-size-22 ui-icon-svg-csv"
                                                  rendered="#{MainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_SETT_PMODE)}" 
                                                  actionListener="#{pModeView.savePMode()}" 
                                                  update=":forms:MainPanel :forms:messages"
@@ -100,13 +99,14 @@
                                               
                                               rendered="#{MainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_INBOX)}" 
                                               >
+                                    
                                     <p:menuitem value="PLOCKED" 
                                                 actionListener="#{InMailDataView.setPluginLockedSelectedMail()}"
-                                                icon="ui-icon-sed-flag-gray"
+                                                icon="ui-icon-size-16 ui-icon-svg-status-gray"
                                                 update=":forms:MainPanel :forms:messages"
                                                  ajax="true"/>
                                     <p:menuitem value="RECEIVED" 
-                                                icon="ui-icon-sed-flag-green"
+                                                icon="ui-icon-size-16 ui-icon-svg-status-green"
                                                 actionListener="#{InMailDataView.setReceivedSelectedMail}" 
                                                 update=":forms:MainPanel :forms:messages"
                                                  ajax="true"
@@ -114,9 +114,17 @@
                                     <p:separator />
                                     <p:menuitem value="DELETED" 
                                                 actionListener="#{InMailDataView.deleteSelectedMail()}"
+                                                icon="ui-icon-size-16 ui-icon-svg-status-UV"
                                                 update=":forms:MainPanel :forms:messages"
                                                  ajax="true" />                                    
                                 </p:menuButton >
+                                
+                                <p:commandButton value="#{msg['Export']}" styleClass="toolbar-Button"  
+                                                 rendered="#{MainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_INBOX)}" 
+                                                 actionListener="#{InMailDataView.exportSelectedMail()}"
+                                                icon="ui-icon-size-22 ui-icon-svg-export"
+                                                update=":forms:MainPanel :forms:messages"
+                                                 ajax="true"/>
 
 
                             </f:facet>
@@ -173,66 +181,69 @@
                             <p:ajax event="tabChange" listener="#{MainWindow.onToolbarTabChange}" update="forms:MainPanel forms:toolbar" />
                             <p:tab id="PANEL_INBOX"  >
                                 <f:facet name="title">
-                                    <h:graphicImage value="resources/images/inbox32.png" width="22" height="22" />
+                                    
+                                    <span class="ui-iconui-icon-size-32 ui-icon-svg-status-green"  />
+                                    <h:graphicImage value="#{resource['images:/inbox.svg']}" width="22" height="22" />
                                     <h:outputText value="#{msg['Inbox']}" />                                 
                                 </f:facet>
-                                <p:panelGrid columns="2"  style="width: 100%">
+                                <p:panelGrid class="filter-params" columns="2" columnClasses="label,value"  style="width: 100%">
                                     <f:facet name="header">
                                         <h:outputText value="#{msg['SearchParameters']}:" />
                                     </f:facet>
 
-                                    <h:outputText value="#{msg['ReceivedFromDate']}:" />
+                                    <h:outputText  value="#{msg['ReceivedFromDate']}:" />
                                     <p:calendar  value="#{InMailDataView.inMailModel.filter.receivedDateFrom}" pattern="dd.MM.yyyy" 
-                                                 mask="true" navigator="true" showOn="button"   styleClass="searchDate"/>
+                                                 mask="true" navigator="true" showOn="button"   styleClass="searchDate" />
 
 
                                     <h:outputText value="#{msg['ReceivedToDate']}:" />
                                     <p:calendar  value="#{InMailDataView.inMailModel.filter.receivedDateTo}" pattern="dd.MM.yyyy"
-                                                 mask="true" navigator="true" showOn="button" styleClass="searchDate"/>
+                                                 mask="true" navigator="true" showOn="button" styleClass="searchDate" />
 
                                     <h:outputText value="#{msg['SenderBox']}:" />
-                                    <h:inputText value="#{InMailDataView.inMailModel.filter.senderEBox}" />
+                                    <h:inputText value="#{InMailDataView.inMailModel.filter.senderEBox}" style="width: 100%" />
 
                                     <h:outputText value="#{msg['Status']}:" />
-                                    <p:selectCheckboxMenu id="inSts" filter="false"  label="Statusi" value="#{InMailDataView.inMailModel.filter.statusList}" style="width:150px" >                                               
+                                    <p:selectCheckboxMenu id="inSts" filter="false"  label="Statusi"  style="width: 100%"
+                                                          value="#{InMailDataView.inMailModel.filter.statusList}" >                                               
                                         <f:selectItems value="#{InMailDataView.inStatuses}"   />
                                     </p:selectCheckboxMenu>
 
                                     <h:outputText value="#{msg['Service']}:" />
-                                    <h:inputText value="#{InMailDataView.inMailModel.filter.service}" />
+                                    <h:inputText value="#{InMailDataView.inMailModel.filter.service}" style="width: 100%" />
 
                                     <h:outputText value="#{msg['Action']}:" />
-                                    <h:inputText value="#{InMailDataView.inMailModel.filter.action}" />
+                                    <h:inputText value="#{InMailDataView.inMailModel.filter.action}" style="width: 100%" />
 
                                     <h:outputText value="#{msg['Transaction']}:" />
-                                    <h:inputText value="#{InMailDataView.inMailModel.filter.conversationId}" />
+                                    <h:inputText value="#{InMailDataView.inMailModel.filter.conversationId}" style="width: 100%"/>
 
                                     <h:outputText value="#{msg['Id']}:" />
-                                    <p:inputNumber value="#{InMailDataView.inMailModel.filter.id}" decimalPlaces="0"/>
+                                    <p:inputNumber value="#{InMailDataView.inMailModel.filter.id}" decimalPlaces="0" style="width: 100%"/>
 
                                     <h:outputText value="#{msg['MessageId']}:" />
-                                    <h:inputText value="#{InMailDataView.inMailModel.filter.messageId}" />
+                                    <h:inputText value="#{InMailDataView.inMailModel.filter.messageId}" style="width: 100%"/>
 
                                     <h:outputText value="#{msg['RefMessageId']}:" />
-                                    <h:inputText value="#{InMailDataView.inMailModel.filter.refToMessageId}" />
+                                    <h:inputText value="#{InMailDataView.inMailModel.filter.refToMessageId}" style="width: 100%" />
 
                                     <h:outputText value="#{msg['SenderMessageId']}:" />
-                                    <h:inputText value="#{InMailDataView.inMailModel.filter.senderMessageId}" />
+                                    <h:inputText value="#{InMailDataView.inMailModel.filter.senderMessageId}" style="width: 100%" />
 
                                     <h:outputText value="" />
                                     <p:commandButton value="#{msg['Search']}" 
-                                                     icon="ui-icon-sed-search"                                             
-                                                     styleClass="toolbar-Button"
+                                                     icon="ui-icon-size-32 ui-icon-svg-search"                                             
+                                                     style="width: 100%; height: 36px"
                                                      update=":forms:MainPanel" ajax="true"/>
                                 </p:panelGrid>
 
                             </p:tab>
                             <p:tab id="PANEL_OUTBOX">
                                 <f:facet name="title">
-                                    <h:graphicImage value="resources/images/outbox32.png" width="22" height="22" />
+                                    <h:graphicImage value="#{resource['images:/outbox.svg']}" width="22" height="22" />
                                     <h:outputText value="#{msg['Outbox']}" />                                 
                                 </f:facet>
-                                <p:panelGrid columns="2"  style="width: 100%">
+                                <p:panelGrid columns="2" columnClasses="label,value"  style="width: 100%">
                                     <f:facet name="header">
                                         <h:outputText value="#{msg['SearchParameters']}:" />
                                     </f:facet>
@@ -247,70 +258,78 @@
                                                  mask="true" navigator="true" showOn="button" styleClass="searchDate"/>
 
                                     <h:outputText value="#{msg['ReceiverBox']}:" />
-                                    <h:inputText value="#{OutMailDataView.outMailModel.filter.receiverEBox}" />
+                                    <h:inputText value="#{OutMailDataView.outMailModel.filter.receiverEBox}" style="width: 100%" />
 
                                     <h:outputText value="#{msg['Status']}:" />
 
-                                    <p:selectCheckboxMenu id="outSts" filter="false"  label="Statusi" value="#{OutMailDataView.outMailModel.filter.statusList}" style="width:150px" >                                               
+                                    <p:selectCheckboxMenu id="outSts" filter="false"  label="Statusi" 
+                                                          value="#{OutMailDataView.outMailModel.filter.statusList}" 
+                                                          style="width: 100%" >
                                         <f:selectItems value="#{OutMailDataView.outStatuses}"   />
                                     </p:selectCheckboxMenu>
 
                                     <h:outputText value="#{msg['Service']}" />
-                                    <h:inputText value="#{OutMailDataView.outMailModel.filter.service}" />
+                                    <h:inputText value="#{OutMailDataView.outMailModel.filter.service}" style="width: 100%"/>
 
                                     <h:outputText value="#{msg['Action']}" />
-                                    <h:inputText value="#{OutMailDataView.outMailModel.filter.action}" />
+                                    <h:inputText value="#{OutMailDataView.outMailModel.filter.action}" style="width: 100%" />
 
                                     <h:outputText value="#{msg['Transaction']}:" />
-                                    <h:inputText value="#{OutMailDataView.outMailModel.filter.conversationId}" />
+                                    <h:inputText value="#{OutMailDataView.outMailModel.filter.conversationId}" style="width: 100%"/>
 
                                     <h:outputText value="#{msg['Id']}:" />
-                                    <p:inputNumber value="#{OutMailDataView.outMailModel.filter.id}" decimalPlaces="0"/>
+                                    <p:inputNumber value="#{OutMailDataView.outMailModel.filter.id}" decimalPlaces="0" style="width: 100%"/>
 
                                     <h:outputText value="#{msg['MessageId']}:" />
-                                    <h:inputText value="#{OutMailDataView.outMailModel.filter.messageId}" />
+                                    <h:inputText value="#{OutMailDataView.outMailModel.filter.messageId}" style="width: 100%"/>
 
                                     <h:outputText value="#{msg['RefMessageId']}:" />
-                                    <h:inputText value="#{OutMailDataView.outMailModel.filter.refToMessageId}" />
+                                    <h:inputText value="#{OutMailDataView.outMailModel.filter.refToMessageId}" style="width: 100%"/>
 
                                     <h:outputText value="#{msg['SenderMessageId']}:" />
-                                    <h:inputText value="#{OutMailDataView.outMailModel.filter.senderMessageId}" />
+                                    <h:inputText value="#{OutMailDataView.outMailModel.filter.senderMessageId}" style="width: 100%"/>
 
                                     <h:outputText value="" />
                                     <p:commandButton value="#{msg['Search']}" 
-                                                     icon="ui-icon-sed-search"                                             
-                                                     styleClass="toolbar-Button"
+                                                     icon="ui-icon-size-32 ui-icon-svg-search"                                             
+                                                     style="width: 100%; height: 36px"
                                                      update=":forms:MainPanel" ajax="true"/>
                                 </p:panelGrid>
                             </p:tab>
 
                             <p:tab id="PANEL_SETT_PMODE_SERVICES" rendered="#{userSessionData.user.adminRole}">
                                 <f:facet name="title">
-                                    <h:graphicImage value="resources/images/settings32.png" width="22" height="22" />
+                                    <h:graphicImage value="#{resource['images:/pmode.svg']}" width="22" height="22" />
                                     <h:outputText value="#{msg['SettingsPMode']}" />                                 
                                 </f:facet>
-                                <p:menu class="ui-accordion-button">
+                                <p:menu class="ui-accordion-button" style="width: 100%">
                                     <p:menuitem value="#{msg['Services']}" 
+                                                icon="ui-icon-svg-service ui-icon-size-22" 
                                                 actionListener="#{MainWindow.onToolbarButtonAction}" 
-                                                update="forms:MainPanel">
+                                                update="forms:MainPanel"
+                                                 >
                                         <f:attribute name="panel" value="PANEL_SETT_PMODE_SERVICES" />
                                     </p:menuitem>
                                     <p:menuitem value="#{msg['Parties']}" 
+                                                icon="ui-icon-svg-party ui-icon-size-22" 
                                                 actionListener="#{MainWindow.onToolbarButtonAction}" 
                                                 update="forms:MainPanel">
                                         <f:attribute name="panel" value="PANEL_SETT_PMODE_PARTIES" />
                                     </p:menuitem>
                                     <p:menuitem value="#{msg['SecurityPolicies']}" 
+                                                icon="ui-icon-svg-security ui-icon-size-22" 
                                                 actionListener="#{MainWindow.onToolbarButtonAction}" 
                                                 update="forms:MainPanel">
                                         <f:attribute name="panel" value="PANEL_SETT_PMODE_SECURITIES" />
                                     </p:menuitem>
                                     <p:menuitem value="#{msg['ReceptionAwarenessPatterns']}" 
+                                                icon="ui-icon-svg-reliability ui-icon-size-22" 
                                                 actionListener="#{MainWindow.onToolbarButtonAction}" 
                                                 update="forms:MainPanel">
                                         <f:attribute name="panel" value="PANEL_SETT_PMODE_AS4_RA" />
                                     </p:menuitem>
                                     <p:menuitem value="#{msg['PModes']}" 
+                                                icon="ui-icon-svg-pmode ui-icon-size-22" 
                                                 actionListener="#{MainWindow.onToolbarButtonAction}" 
                                                 update="forms:MainPanel">
                                         <f:attribute name="panel" value="PANEL_SETT_PMODE" />
@@ -321,14 +340,15 @@
 
                             <p:tab id="PANEL_PLUGIN" >
                                 <f:facet name="title">
-                                    <h:graphicImage value="resources/images/settings32.png" width="22" height="22" />
+                                    <h:graphicImage value="#{resource['images:/plugin.svg']}" width="22" height="22" />
                                     <h:outputText value="#{msg['Plugins']}" />                                 
                                 </f:facet>
-                                <p:menu class="ui-accordion-button" id="pluginmenu">
+                                <p:menu class="ui-accordion-button" id="pluginmenu" style="width: 100%">
                                     <c:forEach items="#{adminSEDPluginView.list}" var="plg">
 
                                         <p:menuitem value="#{plg.name}" 
-                                                    actionListener="#{adminSEDPluginView.onSelectedViewPluginAction}"                                                     
+                                                    actionListener="#{adminSEDPluginView.onSelectedViewPluginAction}" 
+                                                    icon="ui-icon-svg-plugin ui-icon-size-22"
                                                     update="forms:MainPanel" >
                                             <f:attribute name="panel" value="PANEL_PLUGIN" />
                                             <f:attribute name="pluginItem" value="#{plg}" />
@@ -342,29 +362,51 @@
                             <p:tab id="PANEL_SETT_CUSTOM" rendered="#{userSessionData.user.adminRole}">
 
                                 <f:facet name="title">
-                                    <h:graphicImage value="resources/images/settings32.png" width="22" height="22" />
+                                    <h:graphicImage value="#{resource['images:/settings.svg']}" width="22" height="22" />
                                     <h:outputText value="#{msg['SettingsCustom']}" />                                 
                                 </f:facet>
-                                <p:menu class="ui-accordion-button">
-                                    <p:menuitem value="#{msg['SED-Boxes']}"  actionListener="#{MainWindow.onToolbarButtonAction}"  update="forms:MainPanel">
+                                <p:menu class="ui-accordion-button" style="width: 100%">
+                                    <p:menuitem value="#{msg['SED-Boxes']}"
+                                                icon="ui-icon-svg-box ui-icon-size-22"
+                                                actionListener="#{MainWindow.onToolbarButtonAction}" 
+                                                update="forms:MainPanel">
                                         <f:attribute name="panel" value="PANEL_ADMIN_EBOXES" />
                                     </p:menuitem>
-                                    <p:menuitem value="#{msg['Users']}"  actionListener="#{MainWindow.onToolbarButtonAction}"  update="forms:MainPanel">
-                                        <f:attribute name="panel" value="PANEL_ADMIN_USERS" />
+                                    <p:menuitem icon="ui-icon-svg-users ui-icon-size-22" 
+                                                value="#{msg['Users']}"  
+                                                actionListener="#{MainWindow.onToolbarButtonAction}"  
+                                                update="forms:MainPanel">
+                                        <f:attribute name="panel" value="PANEL_ADMIN_USERS" />                                        
                                     </p:menuitem>
-                                    <p:menuitem value="#{msg['Certificates']}"  actionListener="#{MainWindow.onToolbarButtonAction}"  update="forms:MainPanel">
+                                    <p:menuitem value="#{msg['Certificates']}"  
+                                                icon="ui-icon-svg-certificate ui-icon-size-22" 
+                                                actionListener="#{MainWindow.onToolbarButtonAction}"  
+                                                update="forms:MainPanel">
                                         <f:attribute name="panel" value="PANEL_SETT_CERTS" />
                                     </p:menuitem>
-                                    <p:menuitem value="#{msg['Scheduler']}"  actionListener="#{MainWindow.onToolbarButtonAction}"  update="forms:MainPanel">
+                                    
+                                    <p:menuitem value="#{msg['Scheduler']}" 
+                                                icon="ui-icon-svg-scheduler ui-icon-size-22" 
+                                                actionListener="#{MainWindow.onToolbarButtonAction}"  
+                                                update="forms:MainPanel">
                                         <f:attribute name="panel" value="PANEL_ADMIN_CRON" />
                                     </p:menuitem>
-                                    <p:menuitem value="#{msg['CronExecutions']}"  actionListener="#{MainWindow.onToolbarButtonAction}"  update="forms:MainPanel">
+                                    <p:menuitem value="#{msg['CronExecutions']}" 
+                                                icon="ui-icon-svg-cron-exec ui-icon-size-22" 
+                                                actionListener="#{MainWindow.onToolbarButtonAction}"  
+                                                update="forms:MainPanel">
                                         <f:attribute name="panel" value="PANEL_CRON_EXEC" />
                                     </p:menuitem>
-                                    <p:menuitem value="#{msg['Plugins']}"  actionListener="#{MainWindow.onToolbarButtonAction}"  update="forms:MainPanel">
+                                    <p:menuitem value="#{msg['Plugins']}" 
+                                                icon="ui-icon-svg-plugin ui-icon-size-22" 
+                                                actionListener="#{MainWindow.onToolbarButtonAction}"  
+                                                update="forms:MainPanel">
                                         <f:attribute name="panel" value="PANEL_ADMIN_PLUGIN" />
                                     </p:menuitem>
-                                    <p:menuitem value="#{msg['Custom']}"  actionListener="#{MainWindow.onToolbarButtonAction}"  update="forms:MainPanel">
+                                    <p:menuitem value="#{msg['Custom']}" 
+                                                icon="ui-icon-svg-settings ui-icon-size-22" 
+                                                actionListener="#{MainWindow.onToolbarButtonAction}" 
+                                                update="forms:MainPanel">
                                         <f:attribute name="panel" value="PANEL_SETT_CUSTOM" />
                                     </p:menuitem>
 

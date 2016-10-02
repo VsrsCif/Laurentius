@@ -2,6 +2,14 @@ input {
     box-sizing: border-box;    
 }
 
+h1 {
+    padding: 0;
+    margin: 0;
+    background: gray; 
+    color: white; 
+}
+
+
 .ui-datatable-scrollable-body, 
 .ui-accordion-content {
     background: #cdcfcf;
@@ -90,9 +98,9 @@ input {
 .ui-datatable .ui-datatable-header,
 .ui-datatable .ui-datatable-footer, 
 .ui-datatable tbody td {
-    text-align:left;
-    padding: 1px 1px;    
-    margin: 0;
+    text-align: left !important;
+    padding: 1px 1px !important;    
+    margin: 0 !important;
     font-size: 90% !important;
 }
 
@@ -125,8 +133,16 @@ input {
     padding: 1px;
 }
 .ui-panelgrid .ui-panelgrid-cell {
-    padding: 1px;
+    padding: 2px !important; 
+    border-color: inherit !important;
+    border-style: none !important;
+    border-width: 0 !important;    
 }
+
+td.ui-panelgrid-cell.label {
+    text-align: right !important; 
+}
+
 
 .LoginTitle {
 
@@ -170,13 +186,13 @@ input {
 .ui-button-icon-only .ui-icon, .ui-button-text-icon-left .ui-icon, .ui-button-text-icon-right .ui-icon {
 
     top:0;
-    margin:  2px;
-    padding: 2px 2px 2px 4px;
+    margin:  1px;
+    padding: 1px 1px 1px 4px;
     left: 0;
 }
 
 .ui-button-text-icon-left .ui-button-text {
-    padding: 2px 4px 2px 28px;
+    padding: 1px 4px 1px 28px;
 }
 
 
@@ -248,3 +264,17 @@ input {
     position: relative;
 }
 
+.ui-toolbar-group-right {
+    display: table;
+    float: right;
+    vertical-align: middle;
+    
+}
+.ui-toolbar-group-right label,
+.ui-toolbar-group-right b,
+.ui-toolbar-group-right span,
+.ui-toolbar-group-right div {
+    display: table-cell;
+    vertical-align: middle;
+    
+}

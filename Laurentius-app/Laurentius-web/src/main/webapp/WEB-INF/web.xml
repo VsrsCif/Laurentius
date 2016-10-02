@@ -18,7 +18,7 @@
         <url-pattern>*.jsf</url-pattern>
         <url-pattern>*.xhtml</url-pattern>
     </servlet-mapping>
-    <!-- Protected area definition -->
+    <!-- Protected area definition -->  
     <!-- security-constraint>
     web-resource-collection>
             <web-resource-name>Restricted Area - ADMIN Only</web-resource-name>
@@ -71,4 +71,6 @@
     <session-config>
         <session-timeout>480</session-timeout>
     </session-config>
+
+ 
 </web-app>

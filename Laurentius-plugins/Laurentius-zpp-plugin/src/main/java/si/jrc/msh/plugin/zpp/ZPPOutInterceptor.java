@@ -76,19 +76,19 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
   SEDDaoInterface mDB;
 
   /**
-     *
-     */
+   *
+   */
   protected final SEDLogger LOG = new SEDLogger(ZPPOutInterceptor.class);
   DocumentSodBuilder dsbSodBuilder = new DocumentSodBuilder();
 
   /**
-     *
-     */
+   *
+   */
   protected final SEDCrypto.SymEncAlgorithms mAlgorithem = SEDCrypto.SymEncAlgorithms.AES128_CBC;
 
   /**
-     *
-     */
+   *
+   */
   @PersistenceContext(unitName = "ebMS_ZPP_PU", name = "ebMS_ZPP_PU")
   public EntityManager memEManager;
   FOPUtils mfpFop = null;
@@ -96,12 +96,13 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
   SEDCrypto mscCrypto = new SEDCrypto();
 
   /**
-     *
-     */
+   *
+   */
   @Resource
   public UserTransaction mutUTransaction;
 
-  private SEDKey createAndStoreNewKey(BigInteger bi) throws SEDSecurityException, ZPPException {
+  private SEDKey createAndStoreNewKey(BigInteger bi)
+      throws SEDSecurityException, ZPPException {
     long l = LOG.logStart(bi);
     SEDKey sk;
 
@@ -116,8 +117,8 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
     memEManager.persist(sk);
     try {
       mutUTransaction.commit();
-    } catch (RollbackException | HeuristicMixedException | HeuristicRollbackException
-        | SecurityException | IllegalStateException | SystemException ex) {
+    } catch (RollbackException | HeuristicMixedException | HeuristicRollbackException |
+        SecurityException | IllegalStateException | SystemException ex) {
       throw new ZPPException("Error committing  secret key to DB! ", ex);
     }
 
@@ -144,8 +145,8 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
       op.getMSHOutParts().add(ptNew);
     }
 
-    LOG.logEnd(l, "Encrypted parts: '" + mail.getMSHOutPayload().getMSHOutParts().size()
-        + "' for out mail" + skey.getId());
+    LOG.logEnd(l, "Encrypted parts: '" + mail.getMSHOutPayload().getMSHOutParts().size() +
+         "' for out mail" + skey.getId());
     return op;
   }
 
@@ -156,13 +157,13 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
   public FOPUtils getFOP() {
     if (mfpFop == null) {
       File fconf =
-          new File(System.getProperty(SEDSystemProperties.SYS_PROP_HOME_DIR) + File.separator
-              + ZPPConstants.SVEV_FOLDER + File.separator + ZPPConstants.FOP_CONFIG_FILENAME);
+          new File(System.getProperty(SEDSystemProperties.SYS_PROP_HOME_DIR) + File.separator +
+               ZPPConstants.SVEV_FOLDER + File.separator + ZPPConstants.FOP_CONFIG_FILENAME);
 
       mfpFop =
-          new FOPUtils(fconf, System.getProperty(SEDSystemProperties.SYS_PROP_HOME_DIR)
-              + File.separator + ZPPConstants.SVEV_FOLDER + File.separator
-              + ZPPConstants.XSLT_FOLDER);
+          new FOPUtils(fconf, System.getProperty(SEDSystemProperties.SYS_PROP_HOME_DIR) +
+               File.separator + ZPPConstants.SVEV_FOLDER + File.separator +
+               ZPPConstants.XSLT_FOLDER);
     }
     return mfpFop;
   }
@@ -202,26 +203,34 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
     boolean isRequest = MessageUtils.isRequestor(msg);
     QName sv = (isRequest ? SoapFault.FAULT_CODE_CLIENT : SoapFault.FAULT_CODE_SERVER);
 
-      EBMSMessageContext ectx = SoapUtils.getEBMSMessageOutContext(msg);
+    EBMSMessageContext ectx = SoapUtils.getEBMSMessageOutContext(msg);
     MSHOutMail outMail = SoapUtils.getMSHOutMail(msg);
     // if service ZPP delivery, action delivery
-    if (outMail != null && ZPPConstants.S_ZPP_SERVICE.equals(ectx.getService().getServiceName())
-        && ZPPConstants.S_ZPP_ACTION_DELIVERY_NOTIFICATION.equals(ectx.getAction().getName())) {
-      try {
-        prepareToZPPDelivery(outMail, sv);
-         // set conversation id
-        
-        
-      } catch (HashException | SEDSecurityException | StorageException | FOPException
-          | ZPPException ex) {
-        LOG.logError(l, ex.getMessage(), ex);
-        throw new SoapFault(ex.getMessage(), sv);          
+    if (outMail != null && ZPPConstants.S_ZPP_SERVICE.equals(ectx.getService().getServiceName())) {
+
+      if (ZPPConstants.S_ZPP_ACTION_DELIVERY_NOTIFICATION.equals(ectx.getAction().getName())) {
+        try {
+          prepareToZPPDelivery(outMail, sv);
+        } catch (HashException | SEDSecurityException | StorageException | FOPException |
+            ZPPException ex) {
+          LOG.logError(l, ex.getMessage(), ex);
+          throw new SoapFault(ex.getMessage(), sv);
+        }
+      } else if (ZPPConstants.S_ZPP_ACTION_FICTION_NOTIFICATION.equals(ectx.getAction().getName())) {
+        try {
+          prepareFictionNotification(outMail, sv);
+        } catch (HashException | SEDSecurityException | StorageException | FOPException |
+            ZPPException ex) {
+          LOG.logError(l, ex.getMessage(), ex);
+          throw new SoapFault(ex.getMessage(), sv);
+        }
       }
     }
     LOG.logEnd(l);
   }
 
-  private void prepareToZPPDelivery(MSHOutMail outMail, QName sv) throws SEDSecurityException,
+  private void prepareToZPPDelivery(MSHOutMail outMail, QName sv)
+      throws SEDSecurityException,
       StorageException, FOPException, HashException, ZPPException {
     long l = LOG.logStart(outMail);
 
@@ -232,10 +241,10 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
 
     SEDKey skey = getSecretKeyForId(outMail.getId());
     // check if mail is setted for ZPP delivery (case of resending
-    if (skey != null
-        && outMail.getMSHOutPayload().getMSHOutParts().get(0).getType() != null
-        && outMail.getMSHOutPayload().getMSHOutParts().get(0).getType()
-            .equals(ZPPConstants.S_ZPP_ACTION_DELIVERY_NOTIFICATION)) {
+    if (skey != null &&
+         outMail.getMSHOutPayload().getMSHOutParts().get(0).getType() != null &&
+         outMail.getMSHOutPayload().getMSHOutParts().get(0).getType()
+        .equals(ZPPConstants.S_ZPP_ACTION_DELIVERY_NOTIFICATION)) {
       // because "delivery notification" is added if mail is succesfully encrypted -assuming all
       // payloads is encrypted
       // remove non encrypted payloads
@@ -246,8 +255,8 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
         }
       }
       String msg =
-          "Resending out mail: " + outMail.getId()
-              + ". Key and delivery nofitication already generated.";
+          "Resending out mail: " + outMail.getId() +
+           ". Key and delivery nofitication already generated.";
       mDB.setStatusToOutMail(outMail, SEDOutboxMailStatus.PROCESS, msg, null,
           ZPPConstants.S_ZPP_PLUGIN_TYPE);
       LOG.log(msg);
@@ -273,7 +282,7 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
       ptNew.setType(ZPPConstants.S_ZPP_ACTION_DELIVERY_NOTIFICATION);
       ptNew.setFilepath(fPDFVizualization);
       ptNew.setFilename(fDNViz.getName());
-      
+
       ptNew.setIsEncrypted(Boolean.FALSE);
       // encrypt payloads
       MSHOutPayload pl = getEncryptedPayloads(skey, outMail);
@@ -282,16 +291,29 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
       // set encrypted payloads
       outMail.setMSHOutPayload(pl);
       String str =
-          "Added DeliveryNotification and encrypted parts: "
-              + outMail.getMSHOutPayload().getMSHOutParts().size();
+          "Added DeliveryNotification and encrypted parts: " +
+           outMail.getMSHOutPayload().getMSHOutParts().size();
       mDB.setStatusToOutMail(outMail, SEDOutboxMailStatus.PROCESS, str, null,
           ZPPConstants.S_ZPP_PLUGIN_TYPE);
     }
-   
-                                                                // mail
 
+    // mail
     LOG.logEnd(l, "Out mail: '" + skey.getId() + "' ready to send by LegalZPP!");
 
+  }
+  
+  
+  private void prepareFictionNotification(MSHOutMail outMail, QName sv)
+      throws SEDSecurityException,
+      StorageException, FOPException, HashException, ZPPException {
+    
+    // generate fiction notification for receiver
+    // generate encrypted key with receiver key
+    // generate out mail
+    
+    // generate fiction notification for sender
+    
+    // update ficition notification
   }
 
 }

@@ -97,11 +97,11 @@
                             <f:facet name="right"  >
                                 <p:commandButton value="#{msg['Ok']}" update=":forms:MainPanel" 
                                                  styleClass="toolbar-Button" 
-                                                 icon="ui-icon-sed-ok"                                          
+                                                 icon="ui-icon-svg-ok ui-icon-size-22"
                                                  actionListener="#{OutMailDataView.sendComposedMail()}" 
                                                  oncomplete="PF('mailComposeDialog').hide()"   />
-                                <p:commandButton value="#{msg['Cancel']}" styleClass="toolbar-Button" 
-                                                 icon="ui-icon-sed-cancel" 
+                                <p:commandButton value="#{msg['Cancel']}" styleClass="toolbar-Button"                                                  
+                                                 icon="ui-icon-svg-cancel ui-icon-size-22" 
                                                  oncomplete="PF('mailComposeDialog').hide()" />
                             </f:facet>
                         </p:toolbar>

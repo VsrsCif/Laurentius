@@ -41,12 +41,10 @@ public interface JMSManagerInterface {
   /**
    *
    * @param biInMailId
-   * @param command
-   * @param parameters
    * @return
    * @throws NamingException
    * @throws JMSException
    */
-  boolean executeProcessOnInMail(long biInMailId, String command, String parameters)
+  boolean exportInMail(long biInMailId)
       throws NamingException, JMSException;
 }

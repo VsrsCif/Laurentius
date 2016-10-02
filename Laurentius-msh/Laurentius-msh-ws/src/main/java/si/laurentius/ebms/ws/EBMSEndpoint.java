@@ -1,12 +1,11 @@
 package si.laurentius.ebms.ws;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.Collection;
 import java.util.Date;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
-import javax.xml.bind.JAXBException;
+import javax.jms.JMSException;
+import javax.naming.NamingException;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPException;
@@ -25,22 +24,19 @@ import org.apache.cxf.message.Message;
 import si.jrc.msh.exception.EBMSError;
 import si.jrc.msh.exception.EBMSErrorCode;
 import si.laurentius.msh.inbox.mail.MSHInMail;
-import si.laurentius.msh.inbox.payload.MSHInPart;
-import si.laurentius.ebox.Export;
 import si.laurentius.ebox.SEDBox;
-import si.laurentius.commons.MimeValues;
 import si.laurentius.commons.SEDInboxMailStatus;
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.cxf.SoapUtils;
 import si.laurentius.commons.exception.StorageException;
+import si.laurentius.commons.interfaces.JMSManagerInterface;
 import si.laurentius.commons.interfaces.SEDDaoInterface;
 import si.laurentius.commons.utils.HashUtils;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StorageUtils;
 import si.laurentius.commons.utils.StringFormater;
 import si.laurentius.commons.utils.Utils;
-import si.laurentius.commons.utils.xml.XMLUtils;
 
 /**
  *
@@ -50,22 +46,21 @@ import si.laurentius.commons.utils.xml.XMLUtils;
 @ServiceMode(value = Service.Mode.MESSAGE)
 @BindingType(SOAPBinding.SOAP12HTTP_BINDING)
 @org.apache.cxf.interceptor.InInterceptors(interceptors = {
-    "si.jrc.msh.interceptor.EBMSLogInInterceptor", 
-    "si.jrc.msh.interceptor.EBMSInInterceptor",
-    "si.jrc.msh.interceptor.MSHPluginInInterceptor"})
+  "si.jrc.msh.interceptor.EBMSLogInInterceptor",
+  "si.jrc.msh.interceptor.EBMSInInterceptor",
+  "si.jrc.msh.interceptor.MSHPluginInInterceptor"})
 @org.apache.cxf.interceptor.OutInterceptors(interceptors = {
-    "si.jrc.msh.interceptor.EBMSLogOutInterceptor",
-    "si.jrc.msh.interceptor.EBMSOutInterceptor",
-    "si.jrc.msh.interceptor.MSHPluginOutInterceptor"})
+  "si.jrc.msh.interceptor.EBMSLogOutInterceptor",
+  "si.jrc.msh.interceptor.EBMSOutInterceptor",
+  "si.jrc.msh.interceptor.MSHPluginOutInterceptor"})
 @org.apache.cxf.interceptor.OutFaultInterceptors(interceptors = {
-    "si.jrc.msh.interceptor.EBMSLogOutInterceptor",
-    "si.jrc.msh.interceptor.EBMSOutFaultInterceptor",
-    "si.jrc.msh.interceptor.MSHPluginOutFaultInterceptor"})
+  "si.jrc.msh.interceptor.EBMSLogOutInterceptor",
+  "si.jrc.msh.interceptor.EBMSOutFaultInterceptor",
+  "si.jrc.msh.interceptor.MSHPluginOutFaultInterceptor"})
 @org.apache.cxf.interceptor.InFaultInterceptors(interceptors = {
-    "si.jrc.msh.interceptor.EBMSLogInInterceptor",
-    "si.jrc.msh.interceptor.EBMSInFaultInterceptor",
-    "si.jrc.msh.interceptor.MSHPluginInFaultInterceptor"})
-
+  "si.jrc.msh.interceptor.EBMSLogInInterceptor",
+  "si.jrc.msh.interceptor.EBMSInFaultInterceptor",
+  "si.jrc.msh.interceptor.MSHPluginInFaultInterceptor"})
 public class EBMSEndpoint implements Provider<SOAPMessage> {
 
   private static final SEDLogger LOG = new SEDLogger(EBMSEndpoint.class);
@@ -78,9 +73,12 @@ public class EBMSEndpoint implements Provider<SOAPMessage> {
   @Resource
   WebServiceContext wsContext;
 
+  @EJB(mappedName = SEDJNDI.JNDI_JMSMANAGER)
+  JMSManagerInterface mJMS;
+
   /**
-     *
-     */
+   *
+   */
   public EBMSEndpoint() {
 
   }
@@ -101,21 +99,22 @@ public class EBMSEndpoint implements Provider<SOAPMessage> {
 
       // Using this cxf specific code you can access the CXF Message and Exchange objects
       WrappedMessageContext wmc = (WrappedMessageContext) wsContext.getMessageContext();
-      Message msg = wmc.getWrappedMessage();      
+      Message msg = wmc.getWrappedMessage();
       MSHInMail inmail = SoapUtils.getMSHInMail(msg);
-      if (inmail == null){
-        
+      if (inmail == null) {
+
         LOG.logWarn("No inbox message", null);
         // todo application error
         return null;
       }
-      
+
       SEDBox sb = SoapUtils.getMSHInMailReceiverBox(msg);
 
       if (sb == null) {
-        LOG.formatedWarning("Inbox message %s but no inbox found  for message: %s", inmail.getId(), inmail.getReceiverEBox());
+        LOG.formatedWarning("Inbox message %s but no inbox found  for message: %s", inmail.getId(),
+            inmail.getReceiverEBox());
         // return error
-      } else if (Utils.isEmptyString(inmail.getStatus()) ) {
+      } else if (Utils.isEmptyString(inmail.getStatus())) {
         serializeMail(inmail, msg.getAttachments(), sb);
       }
 
@@ -143,7 +142,7 @@ public class EBMSEndpoint implements Provider<SOAPMessage> {
       throw new EBMSError(EBMSErrorCode.ExternalPayloadError, mail.getMessageId(), errmsg,
           SoapFault.FAULT_CODE_CLIENT);
     }
-    
+
     try {
       // --------------------
       // serialize data to db
@@ -153,8 +152,16 @@ public class EBMSEndpoint implements Provider<SOAPMessage> {
       LOG.logError(l, "Error setting status ERROR to MSHInMail :'" + mail.getId() + "'!", ex);
     }
 
+    if (sb.getExport() != null && sb.getExport().getActive() != null && sb.getExport().getActive()) {
+      try {
+        mJMS.exportInMail(mail.getId().longValue());
+      } catch (NamingException | JMSException ex) {
+        LOG.logError(l, "Error occured while submitting mail to export queue:'" + mail.getId() + "'!",
+            ex);
+      }
+    }
 
-    // serialize to file
+    /* // serialize to file
     Export e = sb.getExport();
     if (e != null && e.getActive()) {
 
@@ -177,18 +184,14 @@ public class EBMSEndpoint implements Provider<SOAPMessage> {
             LOG.logError(l, "Export metadata ERROR. Export file:" + fileMetaData + ".", ex);
           }
         }
+        File outBinFolder = new File(filPrefix);
         for (MSHInPart mp : mail.getMSHInPayload().getMSHInParts()) {
-          msuStorageUtils
-              .copyFileToFolder(
-                  mp.getFilepath(),
-                  new File(filPrefix + "_" + i + "."
-                      + MimeValues.getSuffixBYMimeType(mp.getMimeType())));
+          msuStorageUtils.copyFileToFolder(mp.getFilepath(),outBinFolder);
         }
       } catch ( StorageException ex) {
         LOG.logError(l, "Export ERROR", ex);
       }
-    }
-
+    }*/
     LOG.logEnd(l);
   }
 

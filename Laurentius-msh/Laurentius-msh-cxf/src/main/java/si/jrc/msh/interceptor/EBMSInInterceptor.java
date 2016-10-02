@@ -560,7 +560,8 @@ public class EBMSInInterceptor extends AbstractEBMSInterceptor {
       } else {
         try {
           // if not compressed
-          fout = msuStorageUtils.storeInFile(p.getMimeType(), dh.getInputStream());
+          
+          fout = msuStorageUtils.storeInFile(p.getIsEncrypted()?MimeValues.MIME_ENC.getMimeType():p.getMimeType(), dh.getInputStream());
         } catch (IOException ex) {
           throw new StorageException(String.format("Error storing attachment %s for message: %s.",
               p.getEbmsId(), msgId), ex);

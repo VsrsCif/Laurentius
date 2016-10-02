@@ -151,65 +151,7 @@ public class ZPPInInterceptor implements SoapInterceptorInterface {
 
       if (sigAnies != null) {
         LOG.log("Proccess in signal elments");
-        processSignalMessages((List<Element>) sigAnies, moutMail, sb);
-        /* List<Element> lst = (List<Element>) sigAnies;
-        Key k = null;
-        for (Element e : lst) {
-          if (e.getLocalName().equals(ZPPConstants.ELM_SIGNAL_ENCRYPTED_KEY)) {
-
-            // get encrypte key
-            EncryptedKey ek = mSedCrypto.element2SimetricEncryptedKey(e);
-            // resolve certificate
-            X509Certificate xc;
-            try {
-              xc = ek.getKeyInfo().getX509Certificate();
-            } catch (KeyResolverException ex) {
-              LOG.logError(l, ex);
-              String errmsg =
-                  "Could not resolve Cert info from Encrypted key key DeliveryAdvice "
-                      + moutMail.getId() + "Err:" + ex.getMessage();
-              LOG.logError(l, errmsg, ex);
-              try {
-                mDB.setStatusToOutMail(moutMail, SEDOutboxMailStatus.ERROR, errmsg, null,
-                    ZPPConstants.S_ZPP_PLUGIN_TYPE);
-              } catch (StorageException ex1) {
-                LOG.logError(l, "Error setting status ERROR to MSHInMail :'" + moutMail.getId()
-                    + "'!", ex1);
-              }
-              return;
-            }
-            Key pk = mkeyUtils.getPrivateKeyForX509Cert(msedLookup.getSEDCertStore(), xc);
-            if (pk == null) {
-              String errmsg =
-                  "Could not get private key for cert: " + xc.getSubjectDN()
-                      + ". Private key is needed to decrypt Encrypted key for "
-                      + moutMail.getConversationId();
-              LOG.logError(l, errmsg, null);
-              try {
-                mDB.setStatusToOutMail(moutMail, SEDOutboxMailStatus.ERROR, errmsg, null,
-                    ZPPConstants.S_ZPP_PLUGIN_TYPE);
-              } catch (StorageException ex) {
-                LOG.logError(l, "Error setting status ERROR to MSHInMail :'" + moutMail.getId()
-                    + "'!", ex);
-              }
-
-              return;
-            }
-            // String singDAAlias = "";
-            // SEDCertStore sc = msedLookup.getSEDCertStoreByCertAlias(singDAAlias, true);
-
-            k = mSedCrypto.decryptEncryptedKey(e, pk, SEDCrypto.SymEncAlgorithms.AES128_CBC);
-            break;
-
-          }
-        
-        LOG.log("ZPPInInterceptor 3, key: " + k);
-        if (moutMail != null && k != null) {
-          LOG.log("ZPPInInterceptor 4, key: " + k);
-          decryptMail(k, moutMail.getConversationId(), sb);
-
-        }
-      }*/
+        processSignalMessages((List<Element>) sigAnies, moutMail, sb);      
       }
     } catch (FOPException | HashException | SEDSecurityException ex) {
       LOG.logError(l, ex);
@@ -283,17 +225,12 @@ public class ZPPInInterceptor implements SoapInterceptorInterface {
 
             return;
           }
-          // String singDAAlias = "";
-          // SEDCertStore sc = msedLookup.getSEDCertStoreByCertAlias(singDAAlias, true);
-
           k = mSedCrypto.decryptEncryptedKey(e, pk, SEDCrypto.SymEncAlgorithms.AES128_CBC);
           break;
 
         }
       }
-      LOG.log("ZPPInInterceptor 3, key: " + k);
-      if (moutMail != null && k != null) {
-        LOG.log("ZPPInInterceptor 4, key: " + k);
+      if (moutMail != null && k != null) {        
         decryptMail(k, moutMail.getConversationId(), sb);
 
       }
@@ -433,25 +370,10 @@ public class ZPPInInterceptor implements SoapInterceptorInterface {
           sb = msedLookup.getSEDBoxByAddressName(mi.getReceiverEBox());
         }
 
-        String exporFileName = null;
-        File exportFolder = null;
-        if (sb != null && sb.getExport() != null && sb.getExport().getActive() &&
-            sb.getExport().getFileMask() != null) {
-          Export e = sb.getExport();
-          exporFileName = msfFormat.format(e.getFileMask(), mi);
-          String folder = StringFormater.replaceProperties(e.getFolder());
-          exportFolder = new File(folder);
-          if (!exportFolder.exists()) {
-            exportFolder.mkdirs();
-          }
-        }
-
         List<MSHInPart> lstDec = new ArrayList<>();
-        int i = 0;
-        List<String> listFiles = new ArrayList<>();
+
         for (MSHInPart mip : mi.getMSHInPayload().getMSHInParts()) {
           String oldFileName = mip.getFilename();
-          i++;
           if (mip.getIsEncrypted()) {
 
             String newFileName =
@@ -483,25 +405,6 @@ public class ZPPInInterceptor implements SoapInterceptorInterface {
               miDec.setMd5(mpHU.getMD5Hash(fNew));
               miDec.setFilepath(StorageUtils.getRelativePath(fNew));
               lstDec.add(miDec);
-              if (sb != null && sb.getExport() != null && exportFolder != null &&
-                  exporFileName != null) {
-                String filPrefix = exportFolder.getAbsolutePath() + File.separator + exporFileName;
-                if (sb.getExport().getExportMetaData()) {
-                  String fn = filPrefix + "." + MimeValues.MIME_XML.getSuffix();
-                  try {
-
-                    listFiles.add(fn);
-                    XMLUtils.serialize(mi, fn);
-                  } catch (JAXBException | FileNotFoundException ex) {
-                    LOG.logError(l, "Export metadata ERROR. Export file:" + fn + ".", ex);
-                  }
-                }
-                String fn =
-                    filPrefix + "_" + i + "." + MimeValues.getSuffixBYMimeType(miDec.getMimeType());
-                listFiles.add(fn);
-                msuStorage.copyFile(fNew, new File(fn), true);
-              }
-
             } catch (IOException | StorageException | SEDSecurityException | HashException ex) {
               LOG.logError(l, "Error occured while decrypting  file: '" + oldFileName +
                   "' for inmail:" + mi.getId(), ex);
@@ -517,18 +420,13 @@ public class ZPPInInterceptor implements SoapInterceptorInterface {
         } catch (StorageException ex) {
           LOG.logError(l, "Error updating mail :'" + mi.getId() + "'!", ex);
         }
-
-        if (sb != null && sb.getExecute() != null && sb.getExecute().getActive() &&
-            sb.getExecute().getCommand() != null) {
-          Execute e = sb.getExecute();
-          String params = msfFormat.format(e.getParameters(), mi);
+        
+        if (sb.getExport()!= null && sb.getExport().getActive()!= null && sb.getExport().getActive()){
           try {
-            mJMS.executeProcessOnInMail(mi.getId().longValue(), sb.getExecute().getCommand(),
-                String.join(File.pathSeparator, listFiles) + " " + params);
+            mJMS.exportInMail(mi.getId().longValue());
           } catch (NamingException | JMSException ex) {
-            LOG.logError(l, "Error sumittig mail on execute queue :'" + mi.getId() + "'!", ex);
-          }
-
+            LOG.logError(l, "Error occured while submitting mail to export queue:'" + mi.getId() + "'!", ex);
+          }        
         }
 
       }

@@ -80,11 +80,8 @@ public class SEDValues {
   /**
      * queue name for executing 
      */
-  public static final String JNDI_QUEUE_EXECUTION = "queue/SEDExecutionQueue";
+  public static final String JNDI_QUEUE_EXPORT= "queue/MSHExportQueue";
 
-  /**
-     *
-     */
-  public static final String JNDI_QUEUE_SCHEDULE = "queue/SEDScheduleQueue";
+  
 
 }

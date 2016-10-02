@@ -12,54 +12,66 @@
     </composite:interface>
 
     <composite:implementation >
+        <p:layout   widgetVar="adminPModeView" style="min-width:400px;min-height:400px;height: 100%;width: 100%"  >
+            <p:layoutUnit  position="north" resizable="true" closable="true" collapsible="true"
+                           size="38" minSize="38" maxSize="400" style="width:100%;height:100%;padding: 0px; margin: 0px"
+                           gutter="0">
+                <h1><h:outputLink id="growPanelDesc" value="#">
+                        <span class="ui-icon-panel-Header ui-icon ui-icon-svg-pmode"  />#{msg['PModes']}
+                    </h:outputLink>
+                </h1>
+                <p:tooltip id="toolTipGrow" for="growPanelDesc" position="bottom">
+                    <h:outputText value="#{msg['PModeDefDesc']}"></h:outputText>
+                </p:tooltip>                
+            </p:layoutUnit>
 
-        <h1>#{msg['adminPModeView']}</h1>
-        <p:panel id="TaskDesc" toggleTitle="#{msg['INFO']}" header="#{msg['PModeDefinitions']}" 
-                 toggleable="true"  collapsed="true">
-            <h:outputText value="#{msg['PModeDefDesc']}"></h:outputText>
-        </p:panel>
-        <p:dataTable id="TblPMode" 
-                     var="sp" 
-                     value="#{pModeView.list}"
-                     selectionMode="single"
-                     selection="#{pModeView.selected}"
-                     rowKey="#{sp.id}"
+            <p:layoutUnit position="center" style="width:100%;height:100%;padding: 0px; margin: 0px" gutter="0" >
+                <p:scrollPanel mode="native" style="width:100%;height:100%"> <!-- p:dataTable scrollable does not resize when toogled suth panel -->                
+                    <p:dataTable id="TblPMode" 
+                                 var="sp" 
+                                 value="#{pModeView.list}"
+                                 selectionMode="single"
+                                 selection="#{pModeView.selected}"
+                                 rowKey="#{sp.id}"
+                                 currentPageReportTemplate="#{msg['Showing']} {startRecord}-{endRecord} #{msg['OutOf']} {totalRecords}"
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="25,50,100,200" 
+                                 paginator="true" 
+                                 style="padding: 0px; margin: 0px"
+                                 scrollable="true" 
+                                 scrollHeight="100%"
+                                 rows="100"  >
+                        <p:ajax event="rowDblselect" listener="#{pModeView.startEditSelected()}" 
+                                update=":dlgPMode:pModeDialogForm:pMode"
+                                oncomplete="PF('pModeDialog').show()"/>
 
-                     style="padding: 0px; margin: 0px"
-                     scrollable="true" 
-                     scrollHeight="200"    
+                        <f:facet name="header">
+                            <p:commandButton value="#{msg['Add']}"  styleClass="toolbar-Button" icon="ui-icon-svg-add ui-icon-size-22"  
+                                             actionListener="#{pModeView.createEditable()}"
+                                             oncomplete="PF('pModeDialog').show()" 
+                                             update=":dlgPMode:pModeDialogForm:pMode"
 
-                     >
-            <p:ajax event="rowDblselect" listener="#{pModeView.startEditSelected()}" 
-                    update=":dlgPMode:pModeDialogForm:pMode"
-                    oncomplete="PF('pModeDialog').show()"/>
+                                             />
+                            <p:commandButton value="#{msg['Edit']}"  styleClass="toolbar-Button" icon="ui-icon-svg-edit ui-icon-size-22"  
+                                             oncomplete="PF('pModeDialog').show()"                                                                   
+                                             actionListener="#{pModeView.startEditSelected()}"
+                                             update=":dlgPMode:pModeDialogForm:pMode"
+                                             />
+                            <p:commandButton value="#{msg['Delete']}" styleClass="toolbar-Button" icon="ui-icon-svg-remove ui-icon-size-22"  
+                                             actionListener="#{pModeView.removeSelected()}" 
+                                             update=":forms:SettingsPModes:TblPMode" />
 
-            <f:facet name="header">
-                <p:commandButton value="#{msg['Add']}"  styleClass="toolbar-Button" icon="ui-icon-sed-add" 
-                                 actionListener="#{pModeView.createEditable()}"
-                                 oncomplete="PF('pModeDialog').show()" 
-                                 update=":dlgPMode:pModeDialogForm:pMode"
-
-                                 />
-                <p:commandButton value="#{msg['Edit']}"  styleClass="toolbar-Button" icon="ui-icon-sed-edit" 
-                                 oncomplete="PF('pModeDialog').show()"                                                                   
-                                 actionListener="#{pModeView.startEditSelected()}"
-                                 update=":dlgPMode:pModeDialogForm:pMode"
-                                 />
-                <p:commandButton value="#{msg['Delete']}" styleClass="toolbar-Button" icon="ui-icon-sed-remove" 
-                                 actionListener="#{pModeView.removeSelected()}" 
-                                 update=":forms:SettingsPModes:TblPMode" />
-
-            </f:facet>
-            <p:column headerText="#{msg['Id']}" width="200">
-                <h:outputText value="#{sp.id}" />
-            </p:column>            
-            <p:column headerText="#{msg['Service']}">
-                <h:outputText value="#{sp.serviceIdRef}"></h:outputText>                
-            </p:column>
-
-        </p:dataTable>
-
+                        </f:facet>
+                        <p:column headerText="#{msg['Id']}" width="200">
+                            <h:outputText value="#{sp.id}" />
+                        </p:column>            
+                        <p:column headerText="#{msg['Service']}">
+                            <h:outputText value="#{sp.serviceIdRef}"></h:outputText>                
+                        </p:column>
+                    </p:dataTable>
+                </p:scrollPanel>
+            </p:layoutUnit>                        
+        </p:layout>
 
     </composite:implementation>
 

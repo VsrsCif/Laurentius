@@ -45,7 +45,7 @@
                             <f:facet name="right"  >
                                 <p:commandButton  ajax="false" 
                                                   value="#{msg['Ok']}" 
-                                                  styleClass="toolbar-Button" icon="ui-icon-sed-ok" 
+                                                  styleClass="toolbar-Button" icon="ui-icon-svg-ok ui-icon-size-22" 
                                                   onclick="PF('exportOutDataDialog').hide();PrimeFaces.monitorDownload(start, stop);"  
                                                   >
                                     <p:fileDownload value="#{OutMailDataView.exportTableData()}" />
@@ -54,7 +54,7 @@
 
 
 
-                                <p:commandButton value="#{msg['Cancel']}"  styleClass="toolbar-Button" icon="ui-icon-sed-cancel" oncomplete="PF('exportOutDataDialog').hide()" />
+                                <p:commandButton value="#{msg['Cancel']}"  styleClass="toolbar-Button" icon="ui-icon-svg-cancel ui-icon-size-22" oncomplete="PF('exportOutDataDialog').hide()" />
                             </f:facet>
                         </p:toolbar>
                     </p:layoutUnit>

@@ -62,20 +62,20 @@ public class JMSManager implements JMSManagerInterface {
   /**
    *
    * @param inId
-   * @param command
-   * @param parameters
+
    * @return
    * @throws NamingException
+   * @throws javax.jms.JMSException
    */
   @Override
-  public boolean executeProcessOnInMail(long inId, String command, String parameters)
+  public boolean exportInMail(long inId)
       throws NamingException, JMSException {
 
     boolean suc = false;
     InitialContext ic = null;
     Connection connection = null;
     String msgFactoryJndiName = getJNDIPrefix() + SEDValues.EBMS_JMS_CONNECTION_FACTORY_JNDI;
-    String msgQueueJndiName = getJNDI_JMSPrefix() + SEDValues.JNDI_QUEUE_EXECUTION;
+    String msgQueueJndiName = getJNDI_JMSPrefix() + SEDValues.JNDI_QUEUE_EXPORT;
     try {
       ic = new InitialContext();
       ConnectionFactory cf = (ConnectionFactory) ic.lookup(msgFactoryJndiName);
@@ -86,8 +86,6 @@ public class JMSManager implements JMSManagerInterface {
       Message message = session.createMessage();
 
       message.setLongProperty(SEDValues.EBMS_QUEUE_PARAM_MAIL_ID, inId);
-      message.setStringProperty(SEDValues.EXEC_COMMAND, command);
-      message.setStringProperty(SEDValues.EXEC_PARAMS, parameters);
       sender.send(message);
       suc = true;
     } finally {
@@ -118,8 +116,7 @@ public class JMSManager implements JMSManagerInterface {
 
   /**
    *
-   * @param biPosiljkaId
-   * @param strPmodeId
+   * @param biPosiljkaId   
    * @param retry
    * @param delay
    * @param transacted
@@ -130,8 +127,6 @@ public class JMSManager implements JMSManagerInterface {
   @Override
   public boolean sendMessage(long biPosiljkaId, int retry, long delay,
       boolean transacted) throws NamingException, JMSException {
-    
-    LOG.formatedWarning("******************************************** start submit mail: %d ",biPosiljkaId);
     
     boolean suc = false;
     InitialContext ic = null;

@@ -55,11 +55,11 @@
                         <p:toolbar 
                             styleClass="dialogButtonBar" >
                             <f:facet name="right"  >
-                                <p:commandButton value="#{msg['Ok']}" update=":forms:SettingsUsers:TblSedUser" styleClass="toolbar-Button" icon="ui-icon-sed-ok" 
+                                <p:commandButton value="#{msg['Ok']}" update=":forms:SettingsUsers:TblSedUser" styleClass="toolbar-Button" icon="ui-icon-svg-ok ui-icon-size-22" 
                                                  action="#{adminSEDUserView.addOrUpdateEditable()}"                                         
                                                  oncomplete="PF('userDialog').hide()"   />
 
-                                <p:commandButton value="#{msg['Cancel']}"  styleClass="toolbar-Button" icon="ui-icon-sed-cancel" oncomplete="PF('userDialog').hide()" />
+                                <p:commandButton value="#{msg['Cancel']}"  styleClass="toolbar-Button" icon="ui-icon-svg-cancel ui-icon-size-22" oncomplete="PF('userDialog').hide()" />
                             </f:facet>
                         </p:toolbar>
                     </p:layoutUnit>

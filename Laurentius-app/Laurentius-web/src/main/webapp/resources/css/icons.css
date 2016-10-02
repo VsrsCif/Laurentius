@@ -1,110 +1,162 @@
 
-.ui-icon-sed-add {    
+.ui-button-icon-only .ui-icon, .ui-button-text-icon-left .ui-icon, .ui-button-text-icon-right .ui-icon {
+    margin-top: 3px !important;
+    position: absolute;
+    top: 0 !important;
+}
+
+
+.ui-icon-size-16 {
+    width:  16px !important;
+    height:  16px !important;
+    background-size: 16px 16px !important;
+}
+.ui-icon-size-22 {
     width:  22px !important;
     height:  22px !important;
-    background-image: url('../images/add.png') !important;
-
+    background-size: 22px 22px !important;
+}
+.ui-icon-size-32 {
+       
+    width:  32px !important;
+    height:  32px !important;
+    background-size: 32px 32px !important;
 }
 
-.ui-icon-sed-compose {    
-    width:  22px !important;
-    height:  22px !important;
-    background-image: url('../images/edit.png') !important;
+.ui-icon-panel-Header {
+    border-radius: 0;
+    width:  32px !important;
+    height:  32px !important;
+    background-size: 32px 32px !important;
+    float: left;
+}
 
+.ui-icon-svg-users {
+    background-image: url("#{resource['images:/users.svg']}") !important;    
+}
+
+.ui-icon-svg-exit {
+    background-image: url("#{resource['images:/exit.svg']}") !important;    
+}
+
+.ui-icon-svg-refresh {
+    background-image: url("#{resource['images:/refresh.svg']}") !important;    
+}
+
+.ui-icon-svg-email {
+    background-image: url("#{resource['images:/email.svg']}") !important;    
+}
+.ui-icon-svg-envelope {
+    background-image: url("#{resource['images:/envelope.svg']}") !important;    
 }
 
 
-.ui-icon-sed-resend {    
-    width:  22px !important;
-    height:  22px !important;
-    background-image: url('../images/resend.png') !important;
-
-}
-.ui-icon-sed-remove {    
-    width:  22px !important;
-    height:  22px !important;
-    background-image: url('../images/remove.png') !important;
-
-}
-.ui-icon-sed-edit {    
-    width:  22px !important;
-    height:  22px !important;
-    background-image: url('../images/edit.png') !important;
-
+.ui-icon-svg-save {
+    background-image: url("#{resource['images:/save.svg']}") !important;    
 }
 
-.ui-icon-sed-exit {    
-    width:  22px !important;
-    height:  22px !important;
-    background-image: url('../images/exit22.png') !important;
-
+.ui-icon-svg-export {
+    background-image: url("#{resource['images:/export.svg']}") !important;    
+}
+.ui-icon-svg-csv {
+    background-image: url("#{resource['images:/csv.svg']}") !important;    
+}
+.ui-icon-svg-event {
+    background-image: url("#{resource['images:/save.svg']}") !important;    
 }
 
-.ui-icon-sed-showHidePanel {
-    width:  22px !important;
-    height:  22px !important;
-    background-image: url('../images/dataPanelShow.png') !important;
+
+
+.ui-icon-svg-mail-send {
+    background-image: url("#{resource['images:/mail-send.svg']}") !important;    
 }
 
-/** FLAGS **/
-.ui-icon-sed-flag-red {
-    width:  22px !important;
-    height:  22px !important;
-    background-image: url('../images/flag-red.png') !important;
+
+.ui-icon-svg-status-blue {
+    background-image: url("#{resource['images:/status_blue.svg']}") !important;    
+}
+.ui-icon-svg-status-gray {
+    background-image: url("#{resource['images:/status_gray.svg']}") !important;    
+}
+.ui-icon-svg-status-green {
+    background-image: url("#{resource['images:/status_green.svg']}") !important;    
+}
+.ui-icon-svg-status-UV {
+    background-image: url("#{resource['images:/status_UV.svg']}") !important;    
 }
 
-.ui-icon-sed-flag-gray {
-    width:  22px !important;
-    height:  22px !important;
-    background-image: url('../images/flag-gray.png') !important;
+.ui-icon-svg-inbox {
+    background-image: url("#{resource['images:/inbox.svg']}") !important;    
 }
 
-.ui-icon-sed-flag-green {
-    width:  22px !important;
-    height:  22px !important;
-    background-image: url('../images/flag-green.png') !important;
+.ui-icon-svg-outbox {
+    background-image: url("#{resource['images:/outbox.svg']}") !important;    
 }
 
-.ui-icon-sed-flag-blue {
-    width:  22px !important;
-    height:  22px !important;
-    background-image: url('../images/flag-blue.png') !important;
+.ui-icon-svg-resend {
+    background-image: url("#{resource['images:/resend.svg']}") !important;    
 }
 
-.ui-icon-sed-flag-all {
-    width:  22px !important;
-    height:  22px !important;
-    background-image: url('../images/flag-all.png') !important;
-}
-.ui-icon-sed-flag-yellow {
-    background-image: url('../images/flag-yellow.png') !important;
+.ui-icon-svg-search {
+    background-image: url("#{resource['images:/search.svg']}") !important;    
 }
 
-.ui-icon-sed-ok {
-    width:  22px !important;
-    height:  22px !important;
-    background-image: url('../images/ok.png') !important;
-}
-.ui-icon-sed-cancel {
-    width:  22px !important;
-    height:  22px !important;
 
-    background-image: url('../images/cancel.png') !important;
+.ui-icon-svg-plugin {
+    background-image: url("#{resource['images:/plugin.svg']}") !important;    
 }
-.ui-icon-sed-refresh{
-    width:  22px !important;
-    height:  22px !important;
-    background-image: url('../images/refresh.png') !important;
+.ui-icon-svg-settings {
+    background-image: url("#{resource['images:/settings.svg']}") !important;    
+}
+.ui-icon-svg-pmode {
+    background-image: url("#{resource['images:/pmode.svg']}") !important;    
 }
 
-.ui-icon-sed-search{
-    width:  22px !important;
-    height:  22px !important;
-    background-image: url('../images/search.png') !important;
+.ui-icon-svg-reliability {
+    background-image: url("#{resource['images:/reliability.svg']}") !important;    
 }
-.ui-icon-sed-save{
-    width:  22px !important;
-    height:  22px !important;
-    background-image: url('../images/save.png') !important;
+
+.ui-icon-svg-service {
+    background-image: url("#{resource['images:/service.svg']}") !important;    
 }
+.ui-icon-svg-party {
+    background-image: url("#{resource['images:/party.svg']}") !important;    
+}
+.ui-icon-svg-security {
+    background-image: url("#{resource['images:/security.svg']}") !important;    
+}
+.ui-icon-svg-box {
+    background-image: url("#{resource['images:/box.svg']}") !important;    
+}
+
+.ui-icon-svg-certificate {
+    background-image: url("#{resource['images:/certificate.svg']}") !important;    
+}
+.ui-icon-svg-scheduler {
+    background-image: url("#{resource['images:/scheduler.svg']}") !important;    
+}
+.ui-icon-svg-cron-exec {
+    background-image: url("#{resource['images:/cron-exec.svg']}") !important;    
+}
+
+.ui-icon-svg-add {
+    background-image: url("#{resource['images:/add.svg']}") !important;    
+}
+.ui-icon-svg-remove {
+    background-image: url("#{resource['images:/remove.svg']}") !important;    
+}
+.ui-icon-svg-edit {
+    background-image: url("#{resource['images:/edit.svg']}") !important;    
+}
+
+.ui-icon-svg-ok {
+    background-image: url("#{resource['images:/ok.svg']}") !important;    
+}
+.ui-icon-svg-cancel {
+    background-image: url("#{resource['images:/cancel.svg']}") !important;    
+}
+.ui-icon-svg-payload {
+    background-image: url("#{resource['images:/payload.svg']}") !important;    
+}
+
 

@@ -337,8 +337,7 @@
                 <jms-queue name="ExpiryQueue" entries="java:/jms/queue/ExpiryQueue"/>
                 <jms-queue name="DLQ" entries="java:/jms/queue/DLQ"/>
                 <jms-queue name="MSHQueue" entries="java:/jms/queue/MSHQueue"/>
-                <jms-queue name="SEDExecutionQueue" entries="java:/jms/queue/SEDExecutionQueue"/>
-                <jms-queue name="SEDScheduleQueue" entries="java:/jms/queue/SEDScheduleQueue"/>
+                <jms-queue name="MSHExportQueue" entries="java:/jms/queue/MSHExportQueue"/>
                 <connection-factory name="InVmConnectionFactory" entries="java:jboss/ConnectionFactory" connectors="in-vm"/>
                 <connection-factory name="RemoteConnectionFactory" entries="java:jboss/exported/jms/RemoteConnectionFactory" connectors="http-connector"/>
                 <pooled-connection-factory name="activemq-ra" entries="java:/JmsXA java:jboss/DefaultJMSConnectionFactory" connectors="in-vm" transaction="xa"/>

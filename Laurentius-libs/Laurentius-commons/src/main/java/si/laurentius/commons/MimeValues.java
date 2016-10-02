@@ -2695,7 +2695,12 @@ public enum MimeValues {
   /**
    *
    */
-  MIME_ZMT("zmt", "chemical/x-mopac-input");
+  MIME_ZMT("zmt", "chemical/x-mopac-input"),
+  
+  /**
+   * this mime is not official!!!
+   */
+  MIME_ENC("enc", "application/encrypted");
 
   private final String mstrMimeType;
   private final String mstrSuffix;
