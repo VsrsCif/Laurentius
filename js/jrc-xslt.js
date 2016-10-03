@@ -55,11 +55,11 @@ var jrcxslt = {
 // code for Chrome, Firefox, Opera, etc.
         else if (document.implementation && document.implementation.createDocument)
         {
-        
+            
             var xsltProcessor = new XSLTProcessor();
             xsltProcessor.importStylesheet(xsl);
             var resultDocument = xsltProcessor.transformToFragment(xml, document);
-            div.innerHTML = resultDocument;
+            div.appendChild(resultDocument);
         }
     }
 };
