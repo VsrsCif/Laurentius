@@ -6,7 +6,7 @@
 		<xsl:element name="tbody">
 		<xsl:element name="tr">
 					<xsl:element name="th">Lastnost</xsl:element>
-					<xsl:element name="tr">opis</xsl:element>
+					<xsl:element name="th">opis</xsl:element>
 				</xsl:element>
 			<xsl:variable name="uppercase" select="'ABCDEFGHIJKLMNOPQRSTUVWXYZ'"/>
 			<xsl:variable name="lowercase" select="'abcdefghijklmnopqrstuvwxyz'"/>
