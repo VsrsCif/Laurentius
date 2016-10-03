@@ -1,44 +1,4 @@
-<script>
-    function loadXMLDoc(filename)
-    {
 
-        if (window.ActiveXObject)
-        {
-            xhttp = new ActiveXObject("Msxml2.XMLHTTP");
-        } else
-        {
-            xhttp = new XMLHttpRequest();
-        }
-        xhttp.open("GET", filename, false);
-        try {
-            xhttp.responseType = "msxml-document"
-        } catch (err) {
-        } // Helping IE11
-        xhttp.send("");
-        return xhttp.responseXML;
-    }
-
-    function displayResult()
-    {
-        xml = loadXMLDoc("xslt/schemas/msh-in-mail.xsd");
-        xsl = loadXMLDoc("xslt/mshinmail2table.xslt");
-// code for IE
-        if (window.ActiveXObject || xhttp.responseType == "msxml-document")
-        {
-            ex = xml.transformNode(xsl);
-            $('#mshinmailtable').innerHTML = ex;
-        }
-// code for Chrome, Firefox, Opera, etc.
-        else if (document.implementation && document.implementation.createDocument)
-        {
-            alert(xml);
-            xsltProcessor = new XSLTProcessor();
-            xsltProcessor.importStylesheet(xsl);
-            resultDocument = xsltProcessor.transformToFragment(xml, document);
-            $('#mshinmailtable').innerHTML = resultDocument;
-        }
-    }
-</script>
 
 <div class ="sidebar" >    
     <h2>Kazalo:</h2>
@@ -130,8 +90,8 @@
             <li><b>Mapa izvoza(Folder):</b>  določa izvozno mapo npr: <code>c:\sed-export</code> ali <code>${sed-home}\sed-export</code></li>
         </ul>
         
-        <button onclick="displayResult()" >Podatki dohodne pošte</button>
-        <div id="mshinmailtable"></div>
+
+        <div class="jrcxslt" data-xml="xslt/schemas/msh-in-mail.xsd" data-xslt="xslt/mshinmail2table.xslt"></div>
         
         
         <h2 id="gui/admin-sed-box:execute">Izvajanje procesov</h2>
