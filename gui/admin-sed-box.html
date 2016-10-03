@@ -85,8 +85,8 @@
         <ul>
             <li><b>Izvozi metapodatke(Export metadata):</b> ob izvozu se shranjujo tudi metapodatki dohodne pošte. 
                 Metapodatki so v xml obliki in so narejeni po shemi <a href="https://raw.githubusercontent.com/VsrsCif/Laurentius/master/Laurentius-libs/Laurentius-commons/src/main/resources/schemas/msh-in-mail.xsd">msh-out-mail.xsd</a></li>
-            <li><b>Maska datoteke(FileMask):</b> določa obliko imena datoteke npr: <code >${Id}_${SenderEBox}_${Service}</code>.
-                V maski so lahko uporabljeni parametri dohodne pošiljke, ki so v shemi: <b>msh-out-mail.xsd</b>.</li>
+            <li><b>Maska izhodne mape:</b> določa obliko mape datoteke npr: <code >${Id}_${SenderEBox}_${Service}</code>.
+                V maski so lahko uporabljeni parametri dohodne pošiljke, ki so v shemi <b>msh-out-mail.xsd</b>  - <a href="#gui/admin-sed-box:inmailproperties" >Opis parametrov izhodne pošte</a> .
             <li><b>Mapa izvoza(Folder):</b>  določa izvozno mapo npr: <code>c:\sed-export</code> ali <code>${sed-home}\sed-export</code></li>
         </ul>
         
@@ -103,8 +103,8 @@
                 <code>${sed.home}\scripts\export-appl.exe</code>. </li>
             <li><b>Parametri: (parameters)</b> kot prvi parameter je vedno sezmam datotek v dohodni pošti 
                 (Poti so ločeni znakom za ločevanje poti kot ga določa OS: windows: ';', Linux: ':'), nato sledijo
-                parametri določeni v tej lastnosti. Parametri so lahko fiksni oz. parametri dohodne pošte, npr:
-                <code >${Id} ${SenderEBox} ${Service}</code> </li>           
+                parametri določeni v tej lastnosti. Parametri so lahko fiksni oz. <a href="#gui/admin-sed-box:inmailproperties" >parametri dohodne pošte</a> , npr:
+                <code >${Id} ${SenderEBox} ${Service}</code>
         </ul>
         Primer zagona skripte: za <br />
 
