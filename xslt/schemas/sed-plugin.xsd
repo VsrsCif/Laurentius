@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 (http://www.altova.com) by XMLSpy 2007 Professional Ed., Installed for 5 users (with SMP from 2007-02-06 to 2008-02-07) (CIF VSRS) -->
+<!--Metadata: 
+Owner: Supreme Court Republic of Slovenia 
+Product: Laurentius
+Product Version: 1.0.0
+Artifact Type: Schema
+Descriptive Name: plugin
+Date: 20160309 (09 March 2016)
+Author: Joze Rihtarsic
+-->
+<!-- 
+Copyright 2016, Supreme Court Republic of Slovenia 
+
+ Licensed under the EUPL, Version 1.1 or – as soon they will be approved by 
+ the European Commission - subsequent versions of the EUPL (the "Licence");
+ You may not use this work except in compliance with the Licence.
+ You may obtain a copy of the Licence at:
+
+ https://joinup.ec.europa.eu/software/page/eupl
+
+ Unless required by applicable law or agreed to in writing, software 
+ distributed under the Licence is distributed on an "AS IS" basis, WITHOUT 
+ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the Licence for the specific language governing permissions and  
+ limitations under the Licence.
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://laurentius.si/plugin"
+           targetNamespace="http://laurentius.si/plugin" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	
+    <xs:element name="SEDPlugin" type="ns1:SEDPlugin"/>
+    <xs:complexType name="SEDPlugin">
+        <xs:annotation>
+            <xs:documentation xml:lang="sl">Plugin data</xs:documentation>
+        </xs:annotation>		
+               
+        <xs:attribute name="webContext" type="xs:string" use="required">
+            <xs:annotation>
+                <xs:documentation xml:lang="sl">Url address</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="active"  type="xs:boolean"  />
+        <xs:attribute name="type" type="xs:string" use="required"/>
+        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="description" type="xs:string" use="required"/>                
+        <xs:attribute name="jndiInInterceptor" type="xs:string" use="required"/>
+        <xs:attribute name="jndiOutInterceptor" type="xs:string" use="required"/>
+        <xs:attribute name="tasksJNDIs" type="xs:string" />
+        <xs:attribute name="jndi" type="xs:string" use="required"/>
+    </xs:complexType>
+	
+</xs:schema>

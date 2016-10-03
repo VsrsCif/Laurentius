@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 (http://www.altova.com) by XMLSpy 2007 Professional Ed., Installed for 5 users (with SMP from 2007-02-06 to 2008-02-07) (CIF VSRS) -->
+<!--Metadata: 
+Owner: Supreme Court Republic of Slovenia 
+Product: Laurentius
+Product Version: 1.0.0
+Artifact Type: Schema
+Descriptive Name: cetrtificate
+Date: 20160309 (09 March 2016)
+Author: Joze Rihtarsic
+-->
+<!-- 
+Copyright 2016, Supreme Court Republic of Slovenia 
+
+ Licensed under the EUPL, Version 1.1 or – as soon they will be approved by 
+ the European Commission - subsequent versions of the EUPL (the "Licence");
+ You may not use this work except in compliance with the Licence.
+ You may obtain a copy of the Licence at:
+
+ https://joinup.ec.europa.eu/software/page/eupl
+
+ Unless required by applicable law or agreed to in writing, software 
+ distributed under the Licence is distributed on an "AS IS" basis, WITHOUT 
+ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the Licence for the specific language governing permissions and  
+ limitations under the Licence.
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://laurentius.si/cert" targetNamespace="http://laurentius.si/cert" elementFormDefault="qualified" attributeFormDefault="unqualified">
+    <xs:element name="SEDCertStore" type="ns1:SEDCertStore"/>
+    <xs:complexType name="SEDCertStore">
+        <xs:annotation>
+            <xs:documentation xml:lang="sl">x509 Certificate data</xs:documentation>
+        </xs:annotation>
+        <xs:sequence minOccurs="0">
+            <xs:element name="SEDCertificate" type="ns1:SEDCertificate" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:integer" use="required">
+            <xs:annotation>
+                <xs:documentation>Store  id</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="name" type="xs:token" use="required">
+            <xs:annotation>
+                <xs:documentation>Unique store code/name</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="filePath" type="xs:string" use="required">
+            <xs:annotation>
+                <xs:documentation xml:lang="sl">Pod do shrame</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="type" use="required"/>
+        <xs:attribute name="password" use="required"/>
+        <xs:attribute name="status" use="optional"/>
+    </xs:complexType>
+    <xs:complexType name="SEDCertificate">
+        <xs:annotation>
+            <xs:documentation xml:lang="sl">x509 Certificate data</xs:documentation>
+        </xs:annotation>
+        <xs:attribute name="id" type="xs:integer" use="required">
+            <xs:annotation>
+                <xs:documentation>Certificate id</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="storeId"/>
+                
+        <xs:attribute name="alias" type="xs:string" use="required"/>
+        <xs:attribute name="issuerDN" type="xs:string" />
+        <xs:attribute name="subjectDN" type="xs:string"/>
+        <xs:attribute name="validFrom" type="xs:dateTime" />
+        <xs:attribute name="validTo" type="xs:dateTime" />                
+        <xs:attribute name="serialNumber" type="xs:string" />  
+        <xs:attribute name="type" type="xs:string" use="required"/>
+        <xs:attribute name="keyEntry" type="xs:boolean" use="required"/>
+        <xs:attribute name="keyPassword"/>
+        <xs:attribute name="status" use="optional"/>
+    </xs:complexType>
+</xs:schema>

@@ -1,0 +1,922 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 (http://www.altova.com) by XMLSpy 2007 Professional Ed., Installed for 5 users (with SMP from 2007-02-06 to 2008-02-07) (CIF VSRS) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://msh.laurentius.si/pmode" targetNamespace="http://msh.laurentius.si/pmode" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:annotation>
+		<xs:documentation/>
+	</xs:annotation>
+	<xs:element name="MSHSetings">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Services">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="tns:Service" minOccurs="0" maxOccurs="unbounded"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="Parties">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="tns:PartyIdentitySet" minOccurs="0" maxOccurs="unbounded"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="SecurityPolicies">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="tns:Security" minOccurs="0" maxOccurs="unbounded"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="ReceptionAwarenessPatterns">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="tns:ReceptionAwareness" minOccurs="0" maxOccurs="unbounded"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element ref="tns:PMode" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="PMode" type="tns:PModeType"/>
+	<xs:element name="PartyIdentitySet">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="tns:PartyIdentitySetType"/>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ReceptionAwareness" type="tns:ReceptionAwarenessType"/>
+	<xs:element name="Security" type="tns:SecurityType"/>
+	<xs:element name="Service" type="tns:ServiceType"/>
+	<xs:complexType name="BusinessInfo">
+		<xs:annotation>
+			<xs:documentation>This set of parameters only applies to user messages.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="MPC" type="xs:anyURI" default="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/defaultMPC" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>The value of this parameter is the identifier of the MPC (Message
+                        Partition Channel) to which the message is assigned. It maps to the attribute
+                        eb:Messaging/eb:UserMessage/@mpc.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="BusinessTransactionBinding" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:complexContent>
+						<xs:extension base="tns:BusinessTransactionBinding">
+							<xs:attribute name="action" use="required"/>
+						</xs:extension>
+					</xs:complexContent>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ServiceType">
+		<xs:annotation>
+			<xs:documentation>Business transaction defines user message data exchange patteren in service  (user message flow). Action of bussiness transaction is atomic unit of business transaction.  Its content should map to the element
+                eb:Messaging/eb:UserMessage/eb:CollaborationInfo/. Actual transfer of "business action data" is binded to MEP (message exchange patteren ) in conrete p-mode.    </xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Initiator">
+				<xs:complexType>
+					<xs:attribute name="role" use="required"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="Executor">
+				<xs:complexType>
+					<xs:attribute name="role" use="required"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="Action" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Name of the action the User message is intended to invoke. Its
+                                    content should map to the element
+                                    eb:Messaging/eb:UserMessage/eb:CollaborationInfo/eb:Action</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Properties" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>The value of this parameter is a list of properties. A
+                                                property is a data structure that consists of four values: the property name, which can be used as
+                                                an identifier of the property (e.g. a required property named "messagetype" can be noted as:
+                                                Properties[messagetype].required="true"); the property description; the property data type; and a
+                                                Boolean value, indicating whether the property is expected or optional, within the User message.
+                                                This parameter controls the contents of the element
+                                                eb:Messaging/eb:UserMessage/eb:MessageProperties.</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="Property" minOccurs="0" maxOccurs="unbounded">
+										<xs:complexType>
+											<xs:complexContent>
+												<xs:extension base="tns:Property"/>
+											</xs:complexContent>
+										</xs:complexType>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="PayloadProfiles" minOccurs="0" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="PayloadProfile" minOccurs="0" maxOccurs="unbounded">
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element name="Schema" type="tns:Schema" minOccurs="0"/>
+											</xs:sequence>
+											<xs:attribute name="name" type="xs:string" use="required">
+												<xs:annotation>
+													<xs:documentation>(or Content-ID) that is the part identifier, and can be used
+                                                                    as an index in the notation PayloadProfile[]</xs:documentation>
+												</xs:annotation>
+											</xs:attribute>
+											<xs:attribute name="MIME" type="xs:string">
+												<xs:annotation>
+													<xs:documentation>data type (text/xml, application/pdf, etc.);</xs:documentation>
+												</xs:annotation>
+											</xs:attribute>
+											<xs:attribute name="maxSize" type="xs:integer">
+												<xs:annotation>
+													<xs:documentation>maximum size in
+                                                                    kilobytes</xs:documentation>
+												</xs:annotation>
+											</xs:attribute>
+											<xs:attribute name="maxOccurs" type="xs:int" default="1"/>
+											<xs:attribute name="minOccurs" type="xs:int" default="0"/>
+										</xs:complexType>
+									</xs:element>
+								</xs:sequence>
+								<xs:attribute name="maxSize" type="xs:integer">
+									<xs:annotation>
+										<xs:documentation>This parameter allows for specifying a
+                                                        maximum size in kilobytes for the entire payload, i.e. for the total of all payload parts.</xs:documentation>
+									</xs:annotation>
+								</xs:attribute>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+					<xs:attribute name="name" use="required"/>
+					<xs:attribute name="after" type="xs:string"/>
+					<xs:attribute name="sendingRole" use="required">
+						<xs:annotation>
+							<xs:documentation>Service party role who can send message. </xs:documentation>
+						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="xs:token"/>
+						</xs:simpleType>
+					</xs:attribute>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:string" use="required">
+			<xs:annotation>
+				<xs:documentation>unique id of service for msh. </xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="serviceName" type="xs:string" use="required">
+			<xs:annotation>
+				<xs:documentation>Name of the service to which the User message is intended to be delivered. Its content should map to the element                        eb:Messaging/eb:UserMessage/eb:CollaborationInfo/eb:Service</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="serviceType">
+			<xs:annotation>
+				<xs:documentation> If the type attribute is not present, the content of the name MUST be a URI (see [RFC2396]). </xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="useSEDProperties" type="xs:boolean" default="true">
+			<xs:annotation>
+				<xs:documentation>add special sed prioperties  as subject, submit date, filenames, filetype etc</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="BusinessTransactionBinding"/>
+	<xs:complexType name="MEPLegType">
+		<xs:sequence>
+			<xs:element name="MPC"/>
+			<xs:element name="Transport" type="tns:MEPTransportType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="MEPTransportType">
+		<xs:sequence>
+			<xs:element name="PartyTransportIdRef" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>change defalut transport for partyIdentty</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:attribute name="partyIdentitySetIdRef" type="xs:string" use="required"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="ForeChannel" type="tns:TransportChannelType"/>
+			<xs:element name="BackChannel" type="tns:TransportChannelType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>In case of two-way transport </xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="MEPType">
+		<xs:sequence>
+			<xs:element name="MEPType">
+				<xs:annotation>
+					<xs:documentation>MEP defines choreography of ebMS User Messages which are all related through the use of the referencing feature (RefToMessageId). Each message of an MEP instance refers to a previous message of the same instance, unless it is the first one to occur. The MEP definitions are primarily concerned with the transfer of ebMS User Message Units. Instances of such MEPs may involve or cause the transfer of additional messages or the piggy-backing of additional elements (e.g. ebMS signal messages or units such as errors, receipts, pull requests, and low-level Acknowledgments when using reliability), but these are not taken into account in the MEP definition. I</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/oneWay"/>
+						<xs:enumeration value="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/twoWay"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="MEPChannelBinding">
+				<xs:annotation>
+					<xs:documentation>defines how the MEP maps to the channels allowed by the underlying transport protocol, while making an abstraction of this underlying transport. In case of a two-way transport, the transport channel binding defines whether each message of the MEP maps to the fore-channel (or first leg) or back-channel (second leg). It also tells if an ebMS Signal is needed to initiate the transfer - e.g. by pulling - and which one.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/push"/>
+						<xs:enumeration value="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/pull"/>
+						<xs:enumeration value="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/sync"/>
+						<xs:enumeration value="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/pushAndPush"/>
+						<xs:enumeration value="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/pushAndPull"/>
+						<xs:enumeration value="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/pullAndPush"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="MEPInitiatorRole" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>This element includes the information of  "bussines transaction role on the initiator of the MEP", i.e. the partner that sends the first message. Note that this is not always the sender of the user message because in the pull scenario the first message (the PullRequest) is sent by the partner that will receive the user message. See website and/or chapter 2 of the ebMS V3 Core Specification for more info.                        
+                        
+
+                    </xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Leg" type="tns:MEPLegType" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TransportChannelType">
+		<xs:annotation>
+			<xs:documentation>Each user message label in an ebMS MEP is associated with a P-Mode leg. Each P-Mode leg has a full set of parameters of the six categories above (except for General Parameters), even though in many cases parameters will have same value across the MEP legs</xs:documentation>
+		</xs:annotation>
+		<xs:sequence minOccurs="0">
+			<xs:element name="ReceptionAwareness" minOccurs="0">
+				<xs:complexType>
+					<xs:attribute name="raPatternIdRef" type="xs:NCName" use="required"/>
+					<xs:attribute name="callbackTransportIdRef">
+						<xs:annotation>
+							<xs:documentation>If patteren has  "callback", value target to   party transport  transport for callbak Receipt. Is values is empty default transport is used.</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="action" type="xs:string">
+			<xs:annotation>
+				<xs:documentation>action from bussines procees </xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="securityIdRef" type="xs:NCName"/>
+		<xs:attribute name="errorHandlingIdRef" type="xs:NCName"/>
+	</xs:complexType>
+	<xs:complexType name="PartyIdentitySetType">
+		<xs:sequence>
+			<xs:element name="PartyId" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Identifier" type="xs:string" minOccurs="0" maxOccurs="unbounded">
+							<xs:annotation>
+								<xs:documentation>List of expected identifiers. If party domain is not part of address list is needed for incomming messages</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+					<xs:attribute name="type" type="xs:string">
+						<xs:annotation>
+							<xs:documentation>The type attribute indicates the domain of names to which the string in the content of the PartyId element belongs</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
+					<xs:attribute name="valueSource" use="required">
+						<xs:annotation>
+							<xs:documentation>source of value for party ID. Address is filled from MSHMail address field, Name is filled from MSHMail mail  name attribute, If identifier - valie must be one from identifier list. If ignore - partyID is not intend for sending over ebms.  PartyID intendet to target identitySet </xs:documentation>
+						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="xs:token">
+								<xs:enumeration value="name"/>
+								<xs:enumeration value="address"/>
+								<xs:enumeration value="identifier"/>
+								<xs:enumeration value="ignore"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+					<xs:attribute name="fixValue">
+						<xs:annotation>
+							<xs:documentation>If values is given than this value is used ignoring valueSource</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="Authorization" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Describe authorization information for messages
+                        sent by Responder. These parameters need to be matched by a wsse:UsernameToken element in a message (in a security header only intended for authorization) for this message to be
+                        processed successfully on receiver side – here by Initiator MSH.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:attribute name="username"/>
+					<xs:attribute name="password"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="TransportProtocol" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation> Protocol for reaching parties</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:complexContent>
+						<xs:extension base="tns:Protocol">
+							<xs:attribute name="id" type="xs:NCName" use="required"/>
+						</xs:extension>
+					</xs:complexContent>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="LocalPartySecurity" minOccurs="0">
+				<xs:complexType>
+					<xs:attribute name="signatureKeyAlias" type="xs:string"/>
+					<xs:attribute name="decryptionKeyAlias" type="xs:string"/>
+					<xs:attribute name="keystoreName" type="xs:string"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="ExchangePartySecurity" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>When receiving message cert alias are u</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:attribute name="signatureCertAlias" type="xs:string">
+						<xs:annotation>
+							<xs:documentation>For exchange partner the value of this parameter identifies the public certificate to use when veryfy signature</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
+					<xs:attribute name="encryptionCertAlias" type="xs:string">
+						<xs:annotation>
+							<xs:documentation>certificate for encryption messages fkey when sending data to Party</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
+					<xs:attribute name="trustoreName" type="xs:string"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:NCName" use="required">
+			<xs:annotation>
+				<xs:documentation>Unique id for party identifier referenced by PMode configuration</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="domain" type="xs:anyURI">
+			<xs:annotation>
+				<xs:documentation>domain of party address identifiers. Domain must be unique for party and is part of "sedbox" address</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="isLocalIdentity" type="xs:boolean" default="false">
+			<xs:annotation>
+				<xs:documentation>Receiver for incoming messages  ans sender for outgoing messages can be only identity with this value true</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="PluginType">
+		<xs:annotation>
+			<xs:documentation>JNDI name of plugin</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="xs:string"/>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="AgreementRef">
+		<xs:annotation>
+			<xs:documentation>
+                        The reference to the agreement governing this message exchange (maps to eb:AgreementRef in message header)</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute name="type"/>
+				<xs:attribute name="pmode"/>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="PModeType">
+		<xs:sequence>
+			<xs:element name="ServiceIdRef" type="xs:string"/>
+			<xs:element name="Plugins" minOccurs="0">
+				<xs:complexType>
+					<xs:all>
+						<xs:element name="InMailEventPlugins" minOccurs="0">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="Plugin" type="tns:PluginType" minOccurs="0" maxOccurs="unbounded"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="InPlugins" minOccurs="0">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="Plugin" type="tns:PluginType" minOccurs="0" maxOccurs="unbounded"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="InFaultPlugins" minOccurs="0">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="Plugin" type="tns:PluginType" minOccurs="0" maxOccurs="unbounded"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="OutMailEventPlugins" minOccurs="0">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="Plugin" type="tns:PluginType" minOccurs="0" maxOccurs="unbounded"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="OutPlugins" minOccurs="0">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="Plugin" type="tns:PluginType" minOccurs="0" maxOccurs="unbounded"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="OutFaultPlugins" minOccurs="0">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="Plugin" type="tns:PluginType" minOccurs="0" maxOccurs="unbounded"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:all>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="LocalPartyInfo" type="tns:PModePartyInfo">
+				<xs:annotation>
+					<xs:documentation>Local party info</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ExchangeParties">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="PartyInfo" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:complexContent>
+									<xs:extension base="tns:PModePartyInfo">
+										<xs:sequence>
+											<xs:element name="AgreementRef" type="tns:AgreementRef" minOccurs="0">
+												<xs:annotation>
+													<xs:documentation>
+                        The reference to the agreement governing this message exchange (maps to eb:AgreementRef in message header)</xs:documentation>
+												</xs:annotation>
+											</xs:element>
+										</xs:sequence>
+									</xs:extension>
+								</xs:complexContent>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="ErrorHandling" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>This P-Mode group concerns errors generated by the reception of the message (for
+                        either a User message or a Signal message, unless indicated otherwise) sent over leg 1
+                        of the MEP.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Report">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="ReceiverErrorsTo" type="xs:string" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>This parameter indicates the address, or
+                                                comma-separated list of addresses, to which to send ebMS errors generated by the MSH that
+                                                receives the message in error; e.g. this may be the address of the MSH sending the message in
+                                                error</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="AsResponse" type="xs:boolean" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>This Boolean parameter indicates whether (if
+                                                "true") errors generated from receiving a message in error are sent over the back-channel of the
+                                                underlying protocol associated with the message in error, or not.</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="ProcessErrorNotifyProducer" type="xs:boolean" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>This Boolean parameter
+                                                indicates whether (if "true") the Consumer (application/party) of a User Message matching this P-
+                                                Mode should be notified when an error occurs in the Receiving MSH, during processing of the
+                                                received User message</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="DeliveryFailuresNotifyProducer" type="xs:boolean" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>This Boolean parameter
+                                                indicates whether (if "true") the Producer (application/party) of a User Message matching this P-
+                                                Mode must always be notified when the delivery to Consumer failed, or whether (if "false"), in
+                                                some cases, it is sufficient to notify the Consumer only
+                                                (Report.ProcessErrorNotifyConsumer="true"). This assumes that
+                                                Reliability.AtLeastOnce.Contract is "true". This also assumes that the Sending MSH
+                                                implementation has the ability to determine or to be made aware of all cases of non-delivery that
+                                                occur after the message has been received by the Receiving MSH.</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="MEP" type="tns:MEPType" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="id" use="required">
+			<xs:annotation>
+				<xs:documentation>The identifier for the P-Mode, e.g. the name of the business transaction:
+                    PurchaseOrderFromACME. This identifier is user-defined and optional, for the convenience of P-
+                    Mode management. It must uniquely identify the P-Mode among all P-Modes deployed on the
+                    same MSH, and may be absent if the P-Mode is identified by other means, e.g. embedded in a
+                    larger structure that is itself identified, or has parameter values distinct from other P-Modes used
+                    on the same MSH. If the ID is specified, the AgreementRef/@pmode attribute value is also
+                    expected to be set in associated messages.</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:NCName">
+					<xs:minLength value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="PModePartyInfo">
+		<xs:sequence>
+			<xs:element name="Role" type="xs:string" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Name of the role assumed by the party receiving the first message of
+                        this MEP. Either the message element
+                        eb:Messaging/eb:UserMessage/eb:PartyInfo/eb:From/eb:Role or the element
+                        eb:Messaging/eb:UserMessage/eb:PartyInfo/eb:To/eb:Role of each message in
+                        this MEP must have this value, depending on the direction of message transfer</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="partyIdentitySetIdRef" type="xs:NCName" use="required"/>
+		<xs:attribute name="partyDefTransportIdRef" type="xs:NCName"/>
+	</xs:complexType>
+	<xs:complexType name="Property">
+		<xs:attribute name="name" type="xs:string" use="required"/>
+		<xs:attribute name="type" type="xs:string"/>
+		<xs:attribute name="required" type="xs:boolean" default="false"/>
+	</xs:complexType>
+	<xs:complexType name="Protocol">
+		<xs:sequence>
+			<xs:element name="Address" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>The value of this parameter represents the address (endpoint
+                        URL) of the Receiver MSH (or Receiver Party) to which Messages under this P-Mode leg are to
+                        be sent. Note that a URL generally determines the transport protocol (for example, if the
+                        endpoint is an email address, then the transport protocol must be SMTP; if the address scheme
+                        is "http", then the transport protocol must be HTTP).</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:anyURI">
+							<xs:attribute name="connectionTimeout" type="xs:int"/>
+							<xs:attribute name="receiveTimeout" type="xs:int"/>
+							<xs:attribute name="chunked" type="xs:boolean"/>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="TLS" minOccurs="0">
+				<xs:complexType>
+					<xs:attribute name="keyStoreName" type="xs:string" use="optional">
+						<xs:annotation>
+							<xs:documentation>Client keystore id</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
+					<xs:attribute name="keyAlias" use="optional">
+						<xs:annotation>
+							<xs:documentation>"Local" client key  alias in keystore</xs:documentation>
+						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:minLength value="1"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+					<xs:attribute name="trustStoreName" type="xs:string"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="Proxy" minOccurs="0">
+				<xs:complexType>
+					<xs:attribute name="host" type="xs:anyURI" use="required"/>
+					<xs:attribute name="port" type="xs:int" use="required"/>
+					<xs:attribute name="type" default="HTTP">
+						<xs:simpleType>
+							<xs:restriction base="xs:token">
+								<xs:enumeration value="HTTP"/>
+								<xs:enumeration value="SOCKS"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="SOAPVersion" default="1.2" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>this parameter indicates the SOAP version to be used (1.1
+                        or 1.2). In some implementations, this parameter may be constrained by the implementation, and
+                        not set by users.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:float">
+						<xs:enumeration value="1.1"/>
+						<xs:enumeration value="1.2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="isTwoWayProtocol" type="xs:boolean">
+			<xs:annotation>
+				<xs:documentation> An underlying transport protocol qualifies as "two-way" if (a) it guarantees a transport channel for transferring the response of every message (request) initiated by an MSH, back to this MSH without need for explicit addressing information in SOAP headers, and regardless of connectivity restrictions such as inability to accept incoming new connections; and (b) it provides to the MSH initiator of the exchange, some means for correlating the response with the request, without relying on the SOAP header. For example, HTTP qualifies as two-way, but SMTP and FTP do not (although FTP has a notion of session, it does not inherently support the coupling of (b)). The channel offered in (a) is also called "back-channel" in this specification.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="gzipCompress" type="xs:boolean" default="false">
+			<xs:annotation>
+				<xs:documentation>if true attachmets are gzip compressed“</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="ReceptionAwarenessType">
+		<xs:sequence>
+			<xs:element name="Retry" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>(contains a composite string
+                        specifying: (a) maximum number of retries or some timeout, (b) frequency of retries
+                        or some retry rule). The string contains a sequence of parameters of the form:
+                        name=value, separated by either comas or ‘;’. Example:
+                        “maxretries=10,period=3000”, in case the retry period is 3000 ms.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:attribute name="maxRetries" type="xs:int" default="3"/>
+					<xs:attribute name="multiplyPeriod" type="xs:int" default="3"/>
+					<xs:attribute name="period" type="xs:int" default="5678"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="DuplicateDetection" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>(contains an im-
+                        plementation specific composite string. As an example this string may specify either
+                        (a) maximum size of message log over which duplicate detection is supported, (b)
+                        maximum time window over which duplicate detection is supported). The string con-
+                        tains a sequence of parameters of the form: name=value, separated by either comas
+                        or ‘;’. Example: “maxsize=10Mb,checkwindow=7D”, in case the duplicate check win-
+                        dow is guaranteed of 7 days minimum.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:attribute name="windowPeriode" type="xs:duration" default="P1Y"/>
+					<xs:attribute name="eliminate" type="xs:boolean" default="true"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:NCName" use="required">
+			<xs:annotation>
+				<xs:documentation>id of reception awarness patteren</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="replyPattern" use="required">
+			<xs:annotation>
+				<xs:documentation>This parameter indicates whether the Receipt
+                                signal is to be sent as a callback (value "callback"), or synchronously in the back-channel
+                                response (value "response"). If not present, any pattern may be used</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="callback"/>
+					<xs:enumeration value="response"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="receiptType" default="AS4Receipt">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="AS4Receipt"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="ReceiptType">
+		<xs:sequence>
+			<xs:element name="ReplyPattern">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="RESPONSE"/>
+						<xs:enumeration value="CALLBACK"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="To" type="xs:string" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="References">
+		<xs:sequence>
+			<xs:element name="Elements" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="XPath" maxOccurs="unbounded">
+							<xs:annotation>
+								<xs:documentation>Relative reference from Envelope:
+                                    env:Header/eb3:Messaging
+                                    namespaces:
+                                    env  -> http://www.w3.org/2003/05/soap-envelope
+                                    eb3->  http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/
+									
+                                </xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="Namespace" maxOccurs="unbounded">
+										<xs:complexType>
+											<xs:attribute name="prefix" use="required"/>
+											<xs:attribute name="namespace" use="required"/>
+										</xs:complexType>
+									</xs:element>
+								</xs:sequence>
+								<xs:attribute name="xpath"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="allAttachments" type="xs:boolean" default="true"/>
+	</xs:complexType>
+	<xs:complexType name="Schema">
+		<xs:attribute name="location" type="xs:anyURI" use="required"/>
+		<xs:attribute name="version" type="xs:string" use="optional"/>
+		<xs:attribute name="namespace" type="xs:string" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="SecurityType">
+		<xs:sequence>
+			<xs:element name="X509" type="tns:X509" minOccurs="0"/>
+			<xs:element name="UsernameToken" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>The value of this parameter is the username to include in a WSS Username Token. Username token in created from  PartyIdentitySet/Avtorization!</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:attribute name="created">
+						<xs:annotation>
+							<xs:documentation>he Boolean value of this parameter indicates
+                                whether the WSS UsernameToken element should have a Created timestamp element.</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
+					<xs:attribute name="digest">
+						<xs:annotation>
+							<xs:documentation>The Boolean value of this parameter indicates
+                                whether a password digest should be included in the WSS UsernameToken element</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="PModeAuthorize" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>The Boolean value of this parameter indicates whether
+                        messages on this MEP leg must be authorized for processing under this P-Mode. If the
+                        parameter is "true" this implies that either
+                        PMode.Responder.Authorization.{username/password}, if the message is sent by Responder, or
+                        PMode.Initiator.Authorization if the message is sent by Initiator, must be used for this purpose,
+                        as specified in Section 7.10. For example, when set to "true" for a PullRequest message sent by
+                        the Initiator, the pulling will only be authorized over the MPC indicated by this Pull signal if (a)
+                        the MPC is the same as specified in the P-Mode leg for the pulled message, and (b) the signal
+                        contains the right credentials (e.g. username/password).</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:NCName" use="required"/>
+		<xs:attribute name="WSSVersion" default="1.1">
+			<xs:annotation>
+				<xs:documentation>value of this parameter represents the version of WS-Security to be used</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="1.1"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="X509">
+		<xs:sequence>
+			<xs:element name="Signature" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Reference" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>The value of this parameter is a list of the names of XML
+                                    elements (inside the SOAP envelope) that should be signed, as well as whether or not
+                                    attachments should also be signed. The list is represented in two sublists that extend this
+                                    parameter: Sign.Element[] and Sign.Attachment[]. An element within the Element[] list could
+                                    be specified either by its XML name or by its qualified name (its XML name and the namespace
+                                    to which it belongs). An element within the Attachment[] list is identified by the Content-Id.</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:complexContent>
+									<xs:extension base="tns:References"/>
+								</xs:complexContent>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+					<xs:attribute name="hashFunction" type="xs:string" default="http://www.w3.org/2001/04/xmlenc#sha512">
+						<xs:annotation>
+							<xs:documentation>The value of this parameter identifies the
+                                algorithm that is used to compute the digest of the message being signed. The definitions for
+                                these values are in the [XMLDSIG] specification.</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
+					<xs:attribute name="algorithm" type="xs:string" default="http://www.w3.org/2001/04/xmldsig-more#rsa-sha512">
+						<xs:annotation>
+							<xs:documentation>The value of this parameter identifies the
+                                algorithm that is used to compute the value of the digital signature. The definitions for these
+                                values are found in the [XMLDSIG] or [XMLENC] specifications</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
+					<xs:attribute name="keyIdentifierType" default="IssuerSerial">
+						<xs:annotation>
+							<xs:documentation>Key identifier type defines how (encryption
+                    or signature) key is referenced. 
+                    Values from: https://ws.apache.org/wss4j/config.html  </xs:documentation>
+						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="xs:token">
+								<xs:enumeration value="DirectReference"/>
+								<xs:enumeration value="IssuerSerial"/>
+								<xs:enumeration value="X509KeyIdentifier"/>
+								<xs:enumeration value="SKIKeyIdentifier"/>
+								<xs:enumeration value="EmbeddedKeyName"/>
+								<xs:enumeration value="Thumbprint"/>
+								<xs:enumeration value="EncryptedKeySHA1"/>
+								<xs:enumeration value="KeyValue"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="Encryption" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>The value of this parameter lists the names of
+                        XML elements(inside the SOAP envelope) that should be encrypted, as well as whether or not
+                        attachments should also be encrypted. The list is represented in two sublists that extend this
+                        parameter: Encrypt.Element[] and Encrypt.Attachment[]. An element within these lists is
+                        identified as in Security.X509.Sign lists.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Reference" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>The value of this parameter is a list of the names of XML
+                                    elements (inside the SOAP envelope) that should be signed, as well as whether or not
+                                    attachments should also be signed. The list is represented in two sublists that extend this
+                                    parameter: Sign.Element[] and Sign.Attachment[]. An element within the Element[] list could
+                                    be specified either by its XML name or by its qualified name (its XML name and the namespace
+                                    to which it belongs). An element within the Attachment[] list is identified by the Content-Id.</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:complexContent>
+									<xs:extension base="tns:References"/>
+								</xs:complexContent>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+					<xs:attribute name="algorithm" use="required">
+						<xs:annotation>
+							<xs:documentation>The value of this parameter identifies the
+                                encryption algorithm to be used. The definitions for these values are found in the [XMLENC]
+                                specification.</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
+					<xs:attribute name="minimumStrength" use="required"/>
+					<xs:attribute name="keyIdentifierType" default="IssuerSerial">
+						<xs:annotation>
+							<xs:documentation>Key identifier type defines how (encryption
+                    or signature) key is referenced. 
+                    Values from: https://ws.apache.org/wss4j/config.html  </xs:documentation>
+						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="xs:token">
+								<xs:enumeration value="DirectReference"/>
+								<xs:enumeration value="IssuerSerial"/>
+								<xs:enumeration value="X509KeyIdentifier"/>
+								<xs:enumeration value="SKIKeyIdentifier"/>
+								<xs:enumeration value="EmbeddedKeyName"/>
+								<xs:enumeration value="Thumbprint"/>
+								<xs:enumeration value="EncryptedKeySHA1"/>
+								<xs:enumeration value="KeyValue"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

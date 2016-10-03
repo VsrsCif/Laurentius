@@ -20,7 +20,7 @@
 
     function displayResult()
     {
-        xml = loadXMLDoc("https://raw.githubusercontent.com/VsrsCif/Laurentius/master/Laurentius-libs/Laurentius-commons/src/main/resources/schemas/msh-in-mail.xsd");
+        xml = loadXMLDoc("xslt/schemas/msh-in-mail.xsd");
         xsl = loadXMLDoc("xslt/mshinmail2table.xslt");
 // code for IE
         if (window.ActiveXObject || xhttp.responseType == "msxml-document")
