@@ -26,7 +26,7 @@
         if (window.ActiveXObject || xhttp.responseType == "msxml-document")
         {
             ex = xml.transformNode(xsl);
-            document.getElementById("mshinmailtable").innerHTML = ex;
+            $('#mshinmailtable').innerHTML = ex;
         }
 // code for Chrome, Firefox, Opera, etc.
         else if (document.implementation && document.implementation.createDocument)
@@ -35,7 +35,7 @@
             xsltProcessor = new XSLTProcessor();
             xsltProcessor.importStylesheet(xsl);
             resultDocument = xsltProcessor.transformToFragment(xml, document);
-            document.getElementById("mshinmailtable").appendChild(resultDocument);
+            $('#mshinmailtable').innerHTML = resultDocument;
         }
     }
 </script>
@@ -131,7 +131,7 @@
         </ul>
         
         <button onclick="displayResult()" >Podatki dohodne pošte</button>
-        <div id="mshinmailtable">21</div>
+        <div id="mshinmailtable"></div>
         
         
         <h2 id="gui/admin-sed-box:execute">Izvajanje procesov</h2>
