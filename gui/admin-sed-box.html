@@ -1,6 +1,7 @@
 <script>
     function loadXMLDoc(filename)
     {
+        alert("test")
         if (window.ActiveXObject)
         {
             xhttp = new ActiveXObject("Msxml2.XMLHTTP");
@@ -127,7 +128,7 @@
                 V maski so lahko uporabljeni parametri dohodne pošiljke, ki so v shemi: <b>msh-out-mail.xsd</b>.</li>
             <li><b>Mapa izvoza(Folder):</b>  določa izvozno mapo npr: <code>c:\sed-export</code> ali <code>${sed-home}\sed-export</code></li>
         </ul>
-        <div id="mshinmailtable" onload="displayResult()"></div>
+        
         
         <h2 id="gui/admin-sed-box:execute">Izvajanje procesov</h2>
         Ob prispetju dohodne pošte se lahko določi zaganjanje skript oz. aplikacij. Zaganjanje procesov se izvaja preko vrste 
@@ -154,5 +155,9 @@
             c:\export-script.bat c:\export\1_service_1.xml;c:\export\1_service_2.pdf 1 racunovodstvo@sed-domena.si service
         </code>
 
+        
+         <h2 id="gui/admin-sed-box:inmailproperties">Podatki dohodne pošte</h2>
+         <div id="mshinmailtable" onload="displayResult()"></div>
+        
     </article>  
 </div>
