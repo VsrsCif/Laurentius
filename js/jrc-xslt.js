@@ -42,10 +42,10 @@ var jrcxslt = {
         return xhttp.responseXML;
     },
 
-    displayResult: function (div, xslt, xml)
+    displayResult: function (div, xsltfile, xmlfile)
     {
-        xml = loadXMLDoc(xml);
-        xsl = loadXMLDoc(xslt);
+        var xml = this.loadXMLDoc(xmlfile);
+        var xsl = this.loadXMLDoc(xsltfile);
 // code for IE
         if (window.ActiveXObject || xhttp.responseType == "msxml-document")
         {
@@ -55,10 +55,10 @@ var jrcxslt = {
 // code for Chrome, Firefox, Opera, etc.
         else if (document.implementation && document.implementation.createDocument)
         {
-            alert(xml);
-            xsltProcessor = new XSLTProcessor();
+        
+            var xsltProcessor = new XSLTProcessor();
             xsltProcessor.importStylesheet(xsl);
-            resultDocument = xsltProcessor.transformToFragment(xml, document);
+            var resultDocument = xsltProcessor.transformToFragment(xml, document);
             div.innerHTML = resultDocument;
         }
     }
