@@ -3,6 +3,8 @@
 	<xsl:output method="html" version="4.0" encoding="UTF-8" indent="yes"/>
 	<xsl:template match="/">
 	<xsl:element name="table">
+	
+	<xsl:attribute name="class" >styled-table</xsl:attribute> 
 		<xsl:element name="tbody">
 		<xsl:element name="tr">
 					<xsl:element name="th">Lastnost</xsl:element>
