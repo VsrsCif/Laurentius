@@ -1,0 +1,145 @@
+<div class ="sidebar" >    
+    <h2>Kazalo:</h2>
+    <ul >
+        <li><a href="#/gui/Laurentius:application" >Aplikacija Laurentius</a>
+            <ul style="padding-left: 23px">
+                <li><a href="#gui/Laurentius:login"  >Prijavno okno</a></li> 
+                <li><a href="#gui/Laurentius:workspace" >Delavno okolje</a></li> 
+                <li><a href="#gui/Laurentius:tools" >Sklopi orodij</a></li> 
+            </ul></li>
+        <li><a href="#gui/admin-sed-box:admin" >Administracija: SED-predali</a>
+            <ul style="padding-left: 23px">            
+                <li><a href="#gui/admin-sed-box:add-edit" >Urejanje SED-predala</a></li> 
+                <li><a href="#gui/admin-sed-box:export" >Izvoz dohodne pošte</a></li> 
+                <li><a href="#gui/admin-sed-box:execute" >Izvajanje procesov</a></li> 
+
+            </ul>
+        <li><a href="#gui/admin-sed-user" >Administracija: Uporabniki</a>
+            <ul style="padding-left: 23px">            
+                <li><a href="#gui/admin-sed-user:user" >Seznam uporabnikov</a></li> 
+                <li><a href="#gui/admin-sed-user:add-edit" >Urejanje uporabnika</a></li> 
+            </ul>
+        </li>
+        <li><a href="#gui/admin-keystore" >Administracija: Certifikati</a>
+            <ul style="padding-left: 23px">            
+                <li><a href="#gui/admin-keystore:list" >Seznam shramb</a></li> 
+                <li><a href="#gui/admin-keystore:add-edit" >Urejanje shrambe</a></li> 
+            </ul>
+        </li>
+        <li><a href="#gui/admin-sed-tasks" >Administracija opravil</a>
+            <ul style="padding-left: 23px">            
+                <li><a href="#gui/admin-sed-tasks:list" >Seznam tipov opravil</a></li> 
+                <li><a href="#gui/admin-sed-tasks:add-edit" >Dodajanje, urejanje tipa opravila</a></li> 
+                <li><a href="#gui/admin-sed-tasks:cron-add-edit" >Dodajanje, urejanje urnika opravil</a></li> 
+                <li><a href="#gui/task-backup:backup" >Opravilo: varnostna kopija</a></li> 
+                <li><a href="#gui/task-archive:archive" >Opravilo: arhiv</a></li> 
+                <li><a href="#gui/task-report:report" >Opravilo: poročilo</a></li> 
+                <li><a href="#gui/task-zpp:zpp-plugin" >Opravilo: Vročanje ZPP</a></li> 
+                <li><a href="#gui/task-filesubmitter" >Opravilo: Pošiljanje datotek</a></li>  
+            </ul>
+        </li>
+        <li><a href="#gui/admin-plugin" >Administracija dodatkov</a>
+            <ul style="padding-left: 23px">            
+                <li><a href="#gui/admin-plugin:list" >Seznam dodatkov</a></li> 
+                <li><a href="#gui/admin-plugin:add-edit" >Dodajanje, urejanje tipa opravila</a></li> 
+
+            </ul>
+        </li>
+        <li><a href="#pmode/pmode" >Administracija: PMODE</a></li>
+    </ul>
+</div>
+<div class="main">
+    <article class='content'>
+
+        <h2 id="gui/task-filesubmitter">Opravilo: Pošiljanje datotek </h2>
+        Opravilo "Pošiljanje datotek" je namenjen pošiljanju sporočil iz  map. 
+        Poleg časa izvajanja je  opravilu potrebno določiti parametre:
+        <ul>
+            <li><b>Mapa varnostne kopije: (file.submit.folder)</b>. Mapa iz katere se pošilja sporočila določimo kot absolutno pot oz. z uporabo sistemskih spremenljivke: c:\archive\ ali ${sed.home}\archive </li>
+            <li><b>service</b>. Privzeta storitev pošiljanja pošiljk</li>
+            <li><b>action</b>. Privzeta akcija v kateri se pošiljko pošilja.</li>
+            <li><b>receiverBox</b>. Privzeti naslovnikov predal.</li>
+            <li><b>senderBox</b>. Privzeti pošiljateljev  predal.</li>
+        </ul>
+
+        <img src="img/gui/task-filesumitter-def.png" alt="Task filesumitter def" width="680"/> <br />
+        Privzete vrednosti: <b>service</b>,<b>action</b>,<b>receiverBox</b>,<b>senderBox</b> se upoštevajo v primeru, 
+        da se ne določijo v metapodatkih posamezne pošiljke.<br /><br />
+        Primer nastavitve:
+        <img src="task-filesumitter.png" alt="Task filesumitter" width="680"/> <br />
+        Vse pošiljke, ki se oddajo v mapo za pošiljanje:<code>${laurentius.home}/submit/dwr/</code>
+        imajo prizete nastavitve:
+        <ul>
+            <li>Storitev: DeliveryWithReceipt</li>
+            <li>Akcija: Delivery</li>
+            <li>Predal pošiljatelja: b.department <i>(Lokalne domene ni potrebno izpisati. V primeru, da je lokalna domena test-laurentius.si, lahko vnesemo b.department@test-laurentius.si)</i></li>
+        </ul>
+        <h2 id="gui/task-filesubmitter:mail">Priprava pošiljk </h2>
+        Pošiljke pripravimo tako, da v mapo za pošiljanje posnamemo priponke, ki jih želimo poslati in datoteko z metapodatki o pošiljki.
+        <br /><br />Ime datoteke z metapodatki se mora pričeti z <b>outmail</b> ter kočnati z <b>.txt</b>.<br />
+        Primeri datotek:<code>outmail-DWR-001.txt,outmail-DWR-002.txt, outmail-ZPP_12456.txt, , outmail-posebna-posiljka.txt,...</code>
+
+        Datoteka z metapodati ima po vrstica vsebovane podatke:
+        <ul>
+            <li><b>payload</b>. Seznam relativnih poti do priponk, ki se pošiljajo v pošiljki. Priponke so ločene z znakom: ';'. <b>Parameter je obvezen</b>  </li>
+            <li><b>senderMessageId</b>. Id pošiljke pošiljatelja. Namen parametra je preprečevanje podvojenega pošiljanja pošiljk. V primeru, da je bila pošiljka z to vrednostjo
+                e oddana v pošiljanje. pošiljka preide v staus napaka!</li>
+            <li><b>service</b>. Storitev pošiljanja pošiljk. V primeru, da podatek ni podan se prevzame privzeta vrednost. </li>
+            <li><b>action</b>. Akcija v kateri se pošiljko pošilja. V primeru, da podatek ni podan se prevzame privzeta vrednost.</li>
+            <li><b>receiverBox</b>. Naslovnikov predal.  V primeru, da podatek ni podan se prevzame privzeta vrednost.</li>
+            <li><b>senderBox</b>. Pošiljateljev predal.  V primeru, da podatek ni podan se prevzame privzeta vrednost.</li>
+        </ul>
+        <br /><br />
+        <h3>Primeri datotek:</h3>
+        Pošiljanje sporočila s priponkami: test-1.pdf;test-2.pdf za lokalnega naslovnika: a.department. Enolična oznaka pošiljke je 001.
+        Za storitev, akcija in pošiljateljev predal se uporabijo privzete vrednosti opravila.
+        <br />Datoteka: <code>outmail-DWR-001.txt</code><br />
+        <pre><code>
+senderMessageId=001
+receiverEBox=a.department
+payload=test-1.pdf;test-2.pdf
+        </code></pre><br />
+        Pošiljanje sporočila s priponko: test-1.pdf za naslovnika: izvrzba@court-laurentius.si s storitvijo "DeliveryWithReceipt" in akcijo: "Delivery".         
+        Enolična oznaka pošiljke je 002.
+        <br />Datoteka: <code>outmail-DWR-002.txt</code><br />
+        <pre><code>
+senderMessageId=002
+receiverEBox=izvrzba@court-laurentius.si
+senderEBox=a.department
+service=DeliveryWithReceipt
+action=Delivery
+payload=test-1.pdf
+        </code></pre><br />
+
+        Pošiljanje sporočila s priponkami: test-1.pdf;test-2.pdf;test-3.pdf brez kontrole pošiljanja pošiljke (senderMessageId). 
+        Za storitev, akcija, naslovnikov predal in pošiljateljev predal se uporabijo privzete vrednosti opravila.
+        <br />Datoteka: <code>outmail-DWR-003.txt</code><br />
+        <pre><code>
+payload=test-1.pdf;test-2.pdf;test-3.pdf
+        </code></pre><br />
+
+
+        <h2 id="gui/task-filesubmitter:process">Proces pošiljanja</h2>
+        Ob proženju opravila se v mapi preveri za datoteke, ki se pričnejo z <code>outmail*.txt</code>.
+        Za vsako datoteko se pred pričetkom pošiljanja pripravi <i>statusna datoteka</i>, ki je sestavljena:
+        <code>[ime datoteke].(process|error|submitted)</code>. V primeru, da pošiljka že ima statusno 
+        datoteko se pošiljka ignorira.<br /><br />
+        Statusi:   
+
+        <ul>
+            <li><b>process</b>.  Pošiljka je v fazi priprave za pošiljanje. Datoteka vsebuje čas pričetka obdelave</li>
+            <li><b>error</b>. Pri pripravi na pošijanje je prišlo do napake. V datoteki je izpisana napaka. Pošiljko se ponovno pošlje tako, da se statusna datoteka izbriše</li>
+            <li><b>submitted</b>. Pošiljka je uspešno oddana v odpravo. Datoteka vsebuje datum oddaje v odpremo. Nadaljne statuse se lahko spremlja preko aplikacije laurentius</li>
+        </ul>
+
+        Ponovno pošiljanje pošiljk se proži tako, da se statusna pošiljka izbriše.
+
+
+
+
+
+
+
+
+    </article>  
+</div>

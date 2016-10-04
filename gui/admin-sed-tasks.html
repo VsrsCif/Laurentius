@@ -31,10 +31,12 @@
                 <li><a href="#gui/admin-sed-tasks:list" >Seznam tipov opravil</a></li> 
                 <li><a href="#gui/admin-sed-tasks:add-edit" >Dodajanje, urejanje tipa opravila</a></li> 
                 <li><a href="#gui/admin-sed-tasks:cron-add-edit" >Dodajanje, urejanje urnika opravil</a></li> 
-                <li><a href="#gui/admin-sed-tasks:backup" >Opravilo: varnostna kopija</a></li> 
-                <li><a href="#gui/admin-sed-tasks:archive" >Opravilo: arhiv</a></li> 
-                <li><a href="#gui/admin-sed-tasks:report" >Opravilo: poročilo</a></li> 
-                <li><a href="#gui/admin-sed-tasks:zpp-plugin" >Opravilo: Vročanje ZPP</a></li> 
+                <li><a href="#gui/task-backup:backup" >Opravilo: varnostna kopija</a></li> 
+                <li><a href="#gui/task-archive:archive" >Opravilo: arhiv</a></li> 
+                <li><a href="#gui/task-report:report" >Opravilo: poročilo</a></li> 
+                <li><a href="#gui/task-zpp:zpp-plugin" >Opravilo: Vročanje ZPP</a></li> 
+                <li><a href="#gui/task-filesubmitter" >Opravilo: Pošiljanje datotek</a></li>  
+                
             </ul>
         </li>
         <li><a href="#gui/admin-plugin" >Administracija dodatkov</a>
@@ -104,200 +106,108 @@ public interface TaskExecutionInterface {
         Na levi strani dialoga za urejanje urnika opravila se določi čas izvajanja:
 
         Laurentius uporablja java Timer
-        Navodila so povzeta po strani <a href="http://docs.oracle.com/javaee/6/tutorial/doc/bnboy.html">Java Using the Timer Service</a>
+        Navodila so povzeta po strani:
+	 <a href="http://docs.oracle.com/javaee/6/tutorial/doc/bnboy.html">Java Using the Timer Service</a>
         <table WIDTH="680" CELLPADDING="3" CELLSPACING="0" class="styled-table">
             <tbody>
-                <tr><th><p>Attribute</p></th>
-                    <th><p>Description</p></th>
-                    <th><p>Default Value</p></th>
-                    <th><p>Allowable Values and Examples</p></th>
+                <tr><th><p>Lastnost</p></th>
+                    <th><p>Opis</p></th>
+                    <th><p>Privzeta vrednost</p></th>
+                    <th><p>Nabor vrednosti in primeri</p></th>
                 </tr>
-                <tr><td><p><i>second</i></p></td>
-                    <td><p>One
-                            or more seconds within a minute</p></td>
+                <tr><td><p><i>sekunda</i></p></td>
+                    <td><p>ena ali več sekund v minuti</p></td>
                     <td><p><i>0</i></p></td>
-                    <td><p><i>0</i> to <i>59</i>. For example: <i>second="30"</i>.</p></td>
+                    <td><p><i>0</i> do <i>59</i>. Primer:  <i>second="30"</i>.</p></td>
                 </tr>
-                <tr><td><p><i>minute</i></p></td>
-                    <td><p>One or
-                            more minutes within an hour</p></td>
+                <tr><td><p><i>minuta</i></p></td>
+                    <td><p>Ena ali več minut v uri</p></td>
                     <td><p><i>0</i></p></td>
-                    <td><p><i>0</i> to <i>59</i>. For example: <i>minute="15"</i>.</p></td>
+                    <td><p><i>0</i> do <i>59</i>. Primer:  <i>minute="15"</i>.</p></td>
                 </tr>
-                <tr><td><p><i>hour</i></p></td>
-                    <td><p>One or more
-                            hours within a day</p></td>
+                <tr><td><p><i>ura</i></p></td>
+                    <td><p>Ena ali več ur v dnevu</p></td>
                     <td><p><i>0</i></p></td>
-                    <td><p><i>0</i> to <i>23</i>. For example: <i>hour="13"</i>.</p></td>
+                    <td><p><i>0</i> do <i>23</i>. Primer:  <i>hour="13"</i>.</p></td>
                 </tr>
-                <tr><td><p><i>dayOfWeek</i></p></td>
-                    <td><p>One or more days
-                            within a week</p></td>
+                <tr><td><p><i>Dan v tednu</i></p></td>
+                    <td><p>En ali več dni v tednu. Številka ali angl. ime dneva.</p></td>
                     <td><p><i>*</i></p></td>
-                    <td><p><i>0</i> to <i>7</i> (both 0 and 7 refer to Sunday). For
-                            example: <i>dayOfWeek="3"</i>.</p><p><i>Sun</i>, <i>Mon</i>, <i>Tue</i>, <i>Wed</i>, <i>Thu</i>, <i>Fri</i>, <i>Sat</i>. For example: <i>dayOfWeek="Mon"</i>.</p></td>
+                    <td><p><i>0</i> do <i>7</i> (Vrednosti 0 in 7 sta nedelja. Primer: <i>dayOfWeek="3"</i>.</p><p><i>Sun</i>, <i>Mon</i>, <i>Tue</i>, <i>Wed</i>, <i>Thu</i>, <i>Fri</i>, <i>Sat</i>. Primer:  <i>dayOfWeek="Mon"</i>.</p></td>
                 </tr>
-                <tr><td><p><i>dayOfMonth</i></p></td>
-                    <td><p>One or more
-                            days within a month</p></td>
+                <tr><td><p><i>Dan v mesecu</i></p></td>
+                    <td><p>En ali več dni v mesecu</p></td>
                     <td><p><i>*</i></p></td>
-                    <td><p><i>1</i> to <i>31</i>. For example: <i>dayOfMonth="15"</i>.</p><p><i>–7</i> to <i>–1</i> (a
-                            negative number means the <i>n</i>th day or days before the end of the month).
-                            For example: <i>dayOfMonth="–3"</i>.</p><p><i>Last</i>. For example: <i>dayOfMonth="Last"</i>.</p><p>[<i>1st</i>, <i>2nd</i>, <i>3rd</i>, <i>4th</i>, <i>5th</i>, <i>Last</i>] [<i>Sun</i>,
-                            <i>Mon</i>, <i>Tue</i>, <i>Wed</i>, <i>Thu</i>, <i>Fri</i>, <i>Sat</i>]. For example: <i>dayOfMonth="2nd Fri"</i>.</p></td>
+                    <td><p><i>1</i> do <i>31</i>. Primer:  <i>dayOfMonth="15"</i>.</p><p><i>–7</i> do <i>–1</i> (Negativna vrednost 
+                            pomeni  <i>n</i>-ti dan pred koncem meseca).
+                            Primer:  <i>dayOfMonth="–3"</i>.</p><p><i>Last</i>. Primer:  <i>dayOfMonth="Last"</i>.</p><p>[<i>1st</i>, <i>2nd</i>, <i>3rd</i>, <i>4th</i>, <i>5th</i>, <i>Last</i>] [<i>Sun</i>,
+                            <i>Mon</i>, <i>Tue</i>, <i>Wed</i>, <i>Thu</i>, <i>Fri</i>, <i>Sat</i>]. Primer:  <i>dayOfMonth="2nd Fri"</i>.</p></td>
                 </tr>
-                <tr><td><p><i>month</i></p></td>
-                    <td><p>One or more months
-                            within a year</p></td>
+                <tr><td><p><i>Mesec</i></p></td>
+                    <td><p>En ali več mesecev v letu</p></td>
                     <td><p><i>*</i></p></td>
-                    <td><p><i>1</i> to <i>12</i>. For example: <i>month="7"</i>.</p>
+                    <td><p><i>1</i> do <i>12</i>. Primer:  <i>month="7"</i>.</p>
                         <p><i>Jan</i>, <i>Feb</i>, <i>Mar</i>, <i>Apr</i>, <i>May</i>,
-                            <i>Jun</i>, <i>Jul</i>, <i>Aug</i>, <i>Sep</i>, <i>Oct</i>, <i>Nov</i>, <i>Dec</i>. For example: <i>month="July"</i>.</p></td>
+                            <i>Jun</i>, <i>Jul</i>, <i>Aug</i>, <i>Sep</i>, <i>Oct</i>, <i>Nov</i>, <i>Dec</i>. Primer:  <i>month="July"</i>.</p></td>
                 </tr>
-                <tr><td><p><i>year</i></p></td>
-                    <td><p>A particular calendar
-                            year</p></td>
+                <tr><td><p><i>Leto</i></p></td>
+                    <td><p>Koledarsko leto</p></td>
                     <td><p><i>*</i></p></td>
-                    <td><p>A four–digit calendar year. For example: <i>year="2011"</i>.</p></td>
+                    <td><p>Štirimestno število. Primer:  <i>year="2011"</i>.</p></td>
                 </tr>
             </tbody>
         </table>
 
-        <h2>Specifying Multiple Values in Calendar Expressions</h2>
-        <p>You can specify multiple values in calendar expressions, as described in the following
-            sections.</p>
+        <h2>Koledarski izrazi in pravila</h2>
+   
 
-        <a name="giqju"></a><h5>Using Wildcards in Calendar Expressions</h5>
-        <p>Setting an attribute to an asterisk symbol (<i>*</i>) represents all allowable values for
-            the attribute.</p>
+        <a name="giqju"></a><h5>Uporaba izrazov</h5>
+        <p>Izraz 'zvedica' (<i>*</i>) pomeni vse možne vrednosti.</p>
 
-        <p>The following expression represents every minute:</p>
-
-        <pre>minute="*"</pre><p>The following expression represents every day of the week:</p>
+        <p>Izraz pomeni vsako minuto:</p>
+        <pre>minute="*"</pre><p>Izraz pomeni vsa dni v tednu:</p>
 
         <pre>dayOfWeek="*"</pre>
 
-        <a name="giqnd"></a><h5>Specifying a List of Values</h5>
-        <p>To specify two or more values for an attribute, use a comma
-            (<i>,</i>) to separate the values. A range of values is allowed as part
-            of a list. Wildcards and intervals, however, are not allowed.</p>
+        <a name="giqnd"></a><h5>Seznam vrednosti</h5>
+        <p>Za določanje seznama vrednosti se uporalja znak vejica (<i>,</i>).</p>
 
-        <p>Duplicates within a list are ignored.</p>
+        <p>Ponovitve vrednosti v seznamu se ingnorirajo.</p>
 
-        <p>The following expression sets the day of the week to Tuesday and
-            Thursday:</p>
+        <p>Primer seznama: Torek in Četrtek:</p>
 
-        <pre>dayOfWeek="Tue, Thu"</pre><p>The following expression represents 4:00 a.m., every hour from 9:00 a.m. to 5:00
-            p.m. using a range, and 10:00 p.m.:</p>
+        <pre>dayOfWeek="Tue, Thu"</pre><p>Primer izraza: ob 4h,  vsako uro od 9h-17h in ob 22h:</p>
 
         <pre>hour="4,9–17,22"</pre>
 
-        <a name="giqmu"></a><h5>Specifying a Range of Values</h5>
-        <p>Use a dash character (<i>–</i>) to specify an inclusive range of values for
-            an attribute. Members of a range cannot be wildcards, lists, or intervals. A
-            range of the form <i>x–x</i>, is equivalent to the single-valued expression <i>x</i>. A
-            range of the form <i>x–y</i> where <i>x</i> is greater than <i>y</i> is equivalent to
-            the expression <i>x–<i>maximum value</i>, <i>minimum value</i>–y</i>. That is, the expression begins at <i>x</i>, rolls over to
-            the beginning of the allowable values, and continues up to <i>y</i>.</p>
+        <a name="giqmu"></a><h5>Določanje intervala</h5>
+        <p>Uporabi znak 'minus' (<i>–</i>) za določanje intervala (mejne vrednosti so vključene v interval).</p>
 
-        <p>The following expression represents 9:00 a.m. to 5:00 p.m.:</p>
+        <p>Izraz za določitev intervala od 9h do 17h:</p>
 
-        <pre>hour="9–17"</pre><p>The following expression represents Friday through Monday:</p>
+        <pre>hour="9–17"</pre><p>Ostali primeru:</p>
 
-        <pre>dayOfWeek="5–1"</pre><p>The following expression represents the twenty-fifth day of the month to the end
-            of the month, and the beginning of the month to the fifth
-            day of the month:</p>
+        <pre>dayOfWeek="5–1"</pre>, 
 
-        <pre>dayOfMonth="25–5"</pre><p>It is equivalent to the following expression:</p>
+        <pre>dayOfMonth="25–5"</pre><p> je enak izrazu:</p>
 
         <pre>dayOfMonth="25–Last,1–5"</pre>
 
-        <a name="giqkv"></a><h5>Specifying Intervals</h5>
-        <p>The forward slash (<i>/</i>) constrains an attribute to a starting point and an
-            interval and is used to specify every <i>N</i> seconds, minutes, or hours within
-            the minute, hour, or day. For an expression of the form <i>x/y</i>, <i>x</i>
-            represents the starting point and <i>y</i> represents the interval. The wildcard character may be
-            used in the <i>x</i> position of an interval and is equivalent to setting
-            <i>x</i> to <i>0</i>.</p>
+        <a name="giqkv"></a><h5>Določanje dela vrednosti</h5>
+        <p>Znak deljeno (<i>/</i>) določa velikost intervala  <i>N</i> sekund, minut, ur. 
+            Naprimer izraz  <i>x/y</i>, <i>x</i>
+            pomeni pričetek <i>y</i> pomeni dolžino intervala. Namesto <i>x</i> se lahko uporabi * ali 
+             <i>0</i>.</p>
 
-        <p>Intervals may be set only for <i>second</i>, <i>minute</i>, and <i>hour</i> attributes.</p>
+        <p>Vrednost se lahko določa samo za  <i>sekunde</i>, <i>minute</i> in <i>ure</i>.</p>
 
-        <p>The following expression represents every 10 minutes within the hour:</p>
+        <p>Primer izraza za vsakih  10 minut vsako uro:</p>
 
-        <pre>minute="*/10"</pre><p>It is equivalent to:</p>
+        <pre>minute="*/10"</pre><p> je enako kot:</p>
 
-        <pre>minute="0,10,20,30,40,50"</pre><p>The following expression represents every 2 hours starting at noon:</p>
+        <pre>minute="0,10,20,30,40,50"</pre><p>Primer izraza , ker se prične izvajati ob 12h vsake dve uri:</p>
 
         <pre>hour="12/2"</pre>
 
-
-
-        <h2 id="gui/admin-sed-tasks:backup">Opravilo: varnostna kopija</h2>
-        Opravilo "Varnostna kopija" (backup) je namenjen dnevni izdelavi varnostnih kopij baze in podatkov. 
-        Poleg časa izvajanja je  opravilu potrebno določiti parametre:
-        <ul>
-            <li><b>Mapa varnostne kopije: (backup.folder)</b> . Mapa varnostne kopije določimo kot absolutno pot oz. z uporabo sistemskih spremenljivke: c:\backup\ ali ${sed.home}\backup </li>
-            <li><b>Maksimalno število zapisov v delu izvoza (backup.chunk.size)</b>.  Podatki se izvozijo v xml datoteke. Parameter določa število zapisov v posamezni datoteki</li>
-            <li><b>Izbriši predhodne varnostne kopije (backup.clear.first) </b> . Vrednost parametra sta (true/false). V primeru true se pred izdelavo varnostne mape vsebina (backup.folder) izbriše</li>
-        </ul>
-        <img src="img/gui/task-backup-cron.png" alt="Task backup cron" width="680"/> <br />
-
-        <h2 id="gui/admin-sed-tasks:archive">Opravilo: arhiv </h2>
-        Opravilo "Arhiviranje" (archive) je namenjen arhiviranju binarnih vsebin in podatkov. 
-        Poleg časa izvajanja je  opravilu potrebno določiti parametre:
-        <ul>
-            <li><b>Mapa varnostne kopije: (archive.folder)</b> . Mapa arhiva določimo kot absolutno pot oz. z uporabo sistemskih spremenljivke: c:\archive\ ali ${sed.home}\archive </li>
-            <li><b>Maksimalno število zapisov v delu izvoza (archive.chunk.size)</b>.  Podatki se izvozijo v xml datoteke. Parameter določa število zapisov v posamezni datoteki</li>
-            <li><b>Izbriši izvožene podatke (archive.delete.record) </b>. Vrednost parametra sta (true/false) Po uspešnem arhiviranju se arhivirani podatki izbrišejo iz baze</li>
-            <li><b>Datum arhiva do: (archive.day.offset) </b>. "Starost" pošiljke v dnevih, ki se naj arhivirajo. </li>
-        </ul>
-        <img src="img/gui/task-archive-def.png" alt="Task archivecron" width="680"/> <br />
-
-        <h2 id="gui/admin-sed-tasks:report">Opravilo: poročilo </h2>
-        Opravilo "Poročilo" (sedboxreport) je namenjen sporočanju o statusih pošiljk za posamezni predal na email naslov. Z nastavitvijo
-        tega opravila lahko izdelamo dnevna poročila o prejeti in izhodni pošti
-        <ul>
-            <li><b>SED predal: (sedbox)</b>. Naslov SED predala za izdelavo poročila  </li>
-            <li><b>Naslov email sporočila (email.subject)</b>.  Naslov e-pošte sporočila </li>
-            <li><b>Prejemnik sporočila (email.to) </b>. Elektronski naslov sporočila. V primeru, da je naslovnikov več se ločijo z vejico: ','.</li>
-            <li><b>Pošiljatelj sporočila (email.from)</b>. Naslov, ki je naveden kot pošiljatelj sporočila</li>
-            <li><b>Nastavitve SMTP (mail.config.jndi)</b>. Nastavitve SMTP strežnika na aplikacijskem strežniku. V primeru, da naslov 
-                vnesen je privzeta vrednost <code>mail.config.jndi</code></li>
-        </ul>
-        <img src="img/gui/task-sedbox-report-cron.png" alt="Task sedbox report" width="680"/> <br />
-        <b></b>
-        Za uspešno pošiljanje email pošiljk, je potrebno pravilno nastaviti aplikacijski strežnik. 
-        V primeru "wildfly 8+" so nastavitve za izhodno pošto v datoteki standalone-ebms.xml v razdelku <code>urn:jboss:domain:mail</code>
-        Spodnji primer je za uporabo gmail smtp strežnika. 
-        <pre><code>
-&lt;subsystem xmlns="urn:jboss:domain:mail:2.0">
-   &lt;mail-session name="default" jndi-name="java:jboss/mail/Default">       
-       &lt;smtp-server ssl="true" outbound-socket-binding-ref="mail-smtp" username="[USERNAME]" password="*****"/>
-   &lt;/mail-session>
-&lt;/subsystem>
-. . . .
-Razdelek socket-binding-group popravite na:
-
-    &lt;outbound-socket-binding name="mail-smtp">
-        &lt;remote-destination host="smtp.gmail.com" port="465"/>
-    &lt;/outbound-socket-binding>
-</code></pre>
-
-        
-        
-       
-         <h2 id="gui/admin-sed-tasks:zpp-plugin">Opravilo: Vročanje ZPP</h2>
-        Opravilo "Vročanje ZPP" (zpp-plugin) je avtomatskemu vročanju prispele pošte po ZPP. Opravilo je sestavni del dodatka ZPP-plugin
-        
-        <img src="img/gui/zpp-task.png" alt="ZPP task" width="680"/> <br />
-        Opravilo ne vsebuje parametrov.  
-        V dialogu za nastavlanje opravil se lahko poljubno nastavi urnike vročanja/prevzemanja dohodne pošte. Spodnji primer je za prevzemanje 
-        od ponedljka-petka od 8 do 16 ure. <br /><br />
-        
-        <img src="img/gui/zpp-task-cron.png" alt="ZPP task cron" width="680"/> <br />
-         
-       
-
-        
     </article>  
 </div>

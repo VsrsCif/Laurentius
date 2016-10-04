@@ -41,7 +41,7 @@
         <li><a href="#gui/admin-plugin" >Administracija dodatkov</a>
             <ul style="padding-left: 23px">            
                 <li><a href="#gui/admin-plugin:list" >Seznam dodatkov</a></li> 
-                <li><a href="#gui/admin-plugin:add-edit" >Dodajanje, urejanje dodatka</a></li> 
+                <li><a href="#gui/admin-plugin:add-edit" >Dodajanje, urejanje tipa opravila</a></li> 
 
             </ul>
         </li>
@@ -50,39 +50,19 @@
 </div>
 <div class="main">
     <article class='content'>
-       <h1 id="gui/admin-keystore:admin">Administracija certifikatov</h1>
-       Administracija <b>Certifikatov</b> (se nahaja v sklopu orodij <b>Nastavitve</b>
-       (Settings) orodje Certifikati (Certificates). Orodje omogoča urejanje in dodajanje
-       novih varnih shramb certifikatov.
-       <h2 id="gui/admin-keystore:list">Seznam shramb</h2>
-       Orodje <b>Certifikati</b> prikazuje seznam shramb, v katerih so certifikati zaupanja 
-       in ključi za elektronsko podpisovanje. Z klikom na razširitveni gumb na začetku vrstice se prikažejo 
-       certifikati, ki so v posamezni shrambi.<br />
-       V orodni vrstici seznama so gumbi za dodajanje spreminjanje in brisanje shramb.<br /><br />
-       <img src="img/gui/cert-list.png" alt="TrustStore admin" width="680"/> <br />
-       <br />
-       
-       Ob kliki na gumb <b>Dodaj</b>(add),  <b>Uredi</b>(Edit) ali dvojnem kliku na izbrano 
-       vstico se prikaže dialog za dodajanje/urejanje shramb ključev in certifikatov.<br /><br />
-       <center>
-        <img src="img/gui/cert-edit.png" alt="SEDBox admin" width="680"/> <br />
-       </center><br />
-       <h2 id="gui/admin-keystore:add-edit">Dodajanje, urejanje shramb</h2>      
-       <ul>
-           <li><b>Shramba (File path):</b>  absolutna pot do shrambe certifikatov.</li>
-           <li><b>Tip shrambe (Type):</b> JKS ali PKCS12 </li>
-           <li><b>Geslo (Password):</b> Geslo za dostop do shrambe</li>
-           <li><b>Osvežitev (Refresh list from KS):</b> S klikom na gumb se preveri dostop do shrambe.                
-               V primeru da dostop uspe, se osveži lista ključev in certifikatov. Če je v shrambi nov certifikat 
-               se doda vrstica s satusom "NEW". V primeru, da v shrambi certifikat 
-               ne obstaja več se pri certifikatu/ključu izpiše DEL, sicer se izpiše OK</li>
-       </ul>
-       V primeru, za zapis vsebuje privatni ključ in shrambe tipa se pojavi polje 
-       za vnos gesla za dostop do ključa za podpisovanje.  Konfiguracija PMode uporablja
-       dostop do ključev preko  oznake "alias". V primeru, da je v različnih shrambah certifikati
-       uporabljajo enake oznake, se pri pošiljanju in prejemu pošte uporabi prvi certifikat, 
-       ki ima oznako, kot je zapisana v nastavitvah PMode.
-       
-       
+      
+        <h2 id="gui/task-archive:archive">Opravilo: arhiv </h2>
+        Opravilo "Arhiviranje" (archive) je namenjen arhiviranju binarnih vsebin in podatkov. 
+        Poleg časa izvajanja je  opravilu potrebno določiti parametre:
+        <ul>
+            <li><b>Mapa varnostne kopije: (archive.folder)</b> . Mapa arhiva določimo kot absolutno pot oz. z uporabo sistemskih spremenljivke: c:\archive\ ali ${sed.home}\archive </li>
+            <li><b>Maksimalno število zapisov v delu izvoza (archive.chunk.size)</b>.  Podatki se izvozijo v xml datoteke. Parameter določa število zapisov v posamezni datoteki</li>
+            <li><b>Izbriši izvožene podatke (archive.delete.record) </b>. Vrednost parametra sta (true/false) Po uspešnem arhiviranju se arhivirani podatki izbrišejo iz baze</li>
+            <li><b>Datum arhiva do: (archive.day.offset) </b>. "Starost" pošiljke v dnevih, ki se naj arhivirajo. </li>
+        </ul>
+        <img src="img/gui/task-archive-def.png" alt="Task archivecron" width="680"/> <br />
+
+        
+        
     </article>  
 </div>

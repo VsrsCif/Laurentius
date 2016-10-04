@@ -41,7 +41,7 @@
         <li><a href="#gui/admin-plugin" >Administracija dodatkov</a>
             <ul style="padding-left: 23px">            
                 <li><a href="#gui/admin-plugin:list" >Seznam dodatkov</a></li> 
-                <li><a href="#gui/admin-plugin:add-edit" >Dodajanje, urejanje dodatka</a></li> 
+                <li><a href="#gui/admin-plugin:add-edit" >Dodajanje, urejanje tipa opravila</a></li> 
 
             </ul>
         </li>
@@ -50,39 +50,40 @@
 </div>
 <div class="main">
     <article class='content'>
-       <h1 id="gui/admin-keystore:admin">Administracija certifikatov</h1>
-       Administracija <b>Certifikatov</b> (se nahaja v sklopu orodij <b>Nastavitve</b>
-       (Settings) orodje Certifikati (Certificates). Orodje omogoča urejanje in dodajanje
-       novih varnih shramb certifikatov.
-       <h2 id="gui/admin-keystore:list">Seznam shramb</h2>
-       Orodje <b>Certifikati</b> prikazuje seznam shramb, v katerih so certifikati zaupanja 
-       in ključi za elektronsko podpisovanje. Z klikom na razširitveni gumb na začetku vrstice se prikažejo 
-       certifikati, ki so v posamezni shrambi.<br />
-       V orodni vrstici seznama so gumbi za dodajanje spreminjanje in brisanje shramb.<br /><br />
-       <img src="img/gui/cert-list.png" alt="TrustStore admin" width="680"/> <br />
-       <br />
        
-       Ob kliki na gumb <b>Dodaj</b>(add),  <b>Uredi</b>(Edit) ali dvojnem kliku na izbrano 
-       vstico se prikaže dialog za dodajanje/urejanje shramb ključev in certifikatov.<br /><br />
-       <center>
-        <img src="img/gui/cert-edit.png" alt="SEDBox admin" width="680"/> <br />
-       </center><br />
-       <h2 id="gui/admin-keystore:add-edit">Dodajanje, urejanje shramb</h2>      
-       <ul>
-           <li><b>Shramba (File path):</b>  absolutna pot do shrambe certifikatov.</li>
-           <li><b>Tip shrambe (Type):</b> JKS ali PKCS12 </li>
-           <li><b>Geslo (Password):</b> Geslo za dostop do shrambe</li>
-           <li><b>Osvežitev (Refresh list from KS):</b> S klikom na gumb se preveri dostop do shrambe.                
-               V primeru da dostop uspe, se osveži lista ključev in certifikatov. Če je v shrambi nov certifikat 
-               se doda vrstica s satusom "NEW". V primeru, da v shrambi certifikat 
-               ne obstaja več se pri certifikatu/ključu izpiše DEL, sicer se izpiše OK</li>
-       </ul>
-       V primeru, za zapis vsebuje privatni ključ in shrambe tipa se pojavi polje 
-       za vnos gesla za dostop do ključa za podpisovanje.  Konfiguracija PMode uporablja
-       dostop do ključev preko  oznake "alias". V primeru, da je v različnih shrambah certifikati
-       uporabljajo enake oznake, se pri pošiljanju in prejemu pošte uporabi prvi certifikat, 
-       ki ima oznako, kot je zapisana v nastavitvah PMode.
-       
-       
+        <h2 id="gui/task-report:report">Opravilo: poročilo </h2>
+        Opravilo "Poročilo" (sedboxreport) je namenjen sporočanju o statusih pošiljk za posamezni predal na email naslov. Z nastavitvijo
+        tega opravila lahko izdelamo dnevna poročila o prejeti in izhodni pošti
+        <ul>
+            <li><b>SED predal: (sedbox)</b>. Naslov SED predala za izdelavo poročila  </li>
+            <li><b>Naslov email sporočila (email.subject)</b>.  Naslov e-pošte sporočila </li>
+            <li><b>Prejemnik sporočila (email.to) </b>. Elektronski naslov sporočila. V primeru, da je naslovnikov več se ločijo z vejico: ','.</li>
+            <li><b>Pošiljatelj sporočila (email.from)</b>. Naslov, ki je naveden kot pošiljatelj sporočila</li>
+            <li><b>Nastavitve SMTP (mail.config.jndi)</b>. Nastavitve SMTP strežnika na aplikacijskem strežniku. V primeru, da naslov 
+                vnesen je privzeta vrednost <code>mail.config.jndi</code></li>
+        </ul>
+        <img src="img/gui/task-sedbox-report-cron.png" alt="Task sedbox report" width="680"/> <br />
+        <b></b>
+        Za uspešno pošiljanje email pošiljk, je potrebno pravilno nastaviti aplikacijski strežnik. 
+        V primeru "wildfly 8+" so nastavitve za izhodno pošto v datoteki standalone-ebms.xml v razdelku <code>urn:jboss:domain:mail</code>
+        Spodnji primer je za uporabo gmail smtp strežnika. 
+        <pre><code>
+&lt;subsystem xmlns="urn:jboss:domain:mail:2.0">
+   &lt;mail-session name="default" jndi-name="java:jboss/mail/Default">       
+       &lt;smtp-server ssl="true" outbound-socket-binding-ref="mail-smtp" username="[USERNAME]" password="*****"/>
+   &lt;/mail-session>
+&lt;/subsystem>
+. . . .
+Razdelek socket-binding-group popravite na:
+
+    &lt;outbound-socket-binding name="mail-smtp">
+        &lt;remote-destination host="smtp.gmail.com" port="465"/>
+    &lt;/outbound-socket-binding>
+</code></pre>
+
+        
+        
+
+        
     </article>  
 </div>
