@@ -127,7 +127,7 @@ public class ZPPInInterceptor implements SoapInterceptorInterface {
    * @param msg
    */
   @Override
-  public void handleMessage(SoapMessage msg) {
+  public boolean handleMessage(SoapMessage msg) {
     long l = LOG.logStart();
 
     SEDBox sb = SoapUtils.getMSHInMailReceiverBox(msg);
@@ -176,6 +176,7 @@ public class ZPPInInterceptor implements SoapInterceptorInterface {
 
     }
     LOG.logEnd(l);
+    return true;
   }
 
   public void processSignalMessages(List<Element> signalElements, MSHOutMail moutMail, SEDBox sb)

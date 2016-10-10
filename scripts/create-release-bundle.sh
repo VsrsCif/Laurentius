@@ -18,7 +18,7 @@ rm -rf $FOLDER_DEPLOY
 mkdir $ZIP_FILENAME
 mkdir "$ZIP_FILENAME/modules"
 mkdir "$ZIP_FILENAME/deployments"
-mkdir "$ZIP_FILENAME/widlfly-10.1"
+mkdir "$ZIP_FILENAME/wildfly-10.1"
 mkdir $FOLDER_DEPLOY
 
 cp "$LAU_PROJECT/Laurentius-libs/Laurentius-msh-xsd/target/Laurentius-msh-xsd-1.0.jar" "$ZIP_FILENAME/modules/" 	
@@ -38,12 +38,12 @@ cp "$LAU_PROJECT/Laurentius-plugins/Laurentius-zpp-plugin/target/plugin-zpp.war"
 cp "$LAU_PROJECT/Laurentius-plugins/Laurentius-test-case-plugin/target/plugin-testcase.war"  "$ZIP_FILENAME/deployments/"
 
 # configuration file
-cp -r "$LAU_PROJECT/scripts/wildfly-10.1/config"  "$ZIP_FILENAME/widlfly-10.1"
+cp -r "$LAU_PROJECT/scripts/wildfly-10.1/config"  "$ZIP_FILENAME/wildfly-10.1"
 # deploy script
-cp "$LAU_PROJECT/scripts/wildfly-10.1/deploy-laurentius.sh" "$ZIP_FILENAME/widlfly-10.1"
-cp "$LAU_PROJECT/scripts/wildfly-10.1/laurentius-demo.sh" "$ZIP_FILENAME/widlfly-10.1"
-cp "$LAU_PROJECT/scripts/wildfly-10.1/deploy-laurentius.bat" "$ZIP_FILENAME/widlfly-10.1"
-cp "$LAU_PROJECT/scripts/wildfly-10.1/laurentius-demo.bat" "$ZIP_FILENAME/widlfly-10.1"
+cp "$LAU_PROJECT/scripts/wildfly-10.1/deploy-laurentius.sh" "$ZIP_FILENAME/wildfly-10.1"
+cp "$LAU_PROJECT/scripts/wildfly-10.1/laurentius-demo.sh" "$ZIP_FILENAME/wildfly-10.1"
+cp "$LAU_PROJECT/scripts/wildfly-10.1/deploy-laurentius.bat" "$ZIP_FILENAME/wildfly-10.1"
+cp "$LAU_PROJECT/scripts/wildfly-10.1/laurentius-demo.bat" "$ZIP_FILENAME/wildfly-10.1"
 
 # init data:
 cp -r "$LAU_PROJECT/scripts/laurentius-demo" "$ZIP_FILENAME/laurentius-home"

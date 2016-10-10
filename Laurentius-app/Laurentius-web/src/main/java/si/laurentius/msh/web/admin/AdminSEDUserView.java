@@ -68,6 +68,11 @@ public class AdminSEDUserView extends AbstractAdminJSFView<SEDUser> {
     return msbCBDualList = new DualListModel<>(src, trg);
   }
 
+   @Override
+  public boolean validateData() {
+    
+    return true;
+  }
   /**
    *
    * @param dl
@@ -129,32 +134,39 @@ public class AdminSEDUserView extends AbstractAdminJSFView<SEDUser> {
      *
      */
   @Override
-  public void persistEditable() {
+  public boolean persistEditable() {
     SEDUser sb = getEditable();
+    boolean bsuc = false;
     if (sb != null) {
       sb.getSEDBoxes().clear();
       if (msbCBDualList.getTarget() != null && !msbCBDualList.getTarget().isEmpty()) {
         sb.getSEDBoxes().addAll(msbCBDualList.getTarget());
       }
       mdbLookups.addSEDUser(sb);
+      bsuc = true;
+          
       setEditable(null);
     }
+    return bsuc;
   }
 
   /**
      *
      */
   @Override
-  public void updateEditable() {
+  public boolean updateEditable() {
     SEDUser sb = getEditable();
+    boolean bsuc = false;
     if (sb != null) {
       sb.getSEDBoxes().clear();
       if (msbCBDualList.getTarget() != null && !msbCBDualList.getTarget().isEmpty()) {
         sb.getSEDBoxes().addAll(msbCBDualList.getTarget());
       }
+      bsuc = true;
       mdbLookups.updateSEDUser(sb);
       setEditable(null);
     }
+    return bsuc;
   }
 
   /**

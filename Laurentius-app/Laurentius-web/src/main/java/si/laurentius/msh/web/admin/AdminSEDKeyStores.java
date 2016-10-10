@@ -60,6 +60,11 @@ public class AdminSEDKeyStores extends AbstractAdminJSFView<SEDCertStore> {
 
   }
 
+   @Override
+  public boolean validateData() {
+    
+    return true;
+  }
   /**
    *
    */
@@ -191,12 +196,16 @@ public class AdminSEDKeyStores extends AbstractAdminJSFView<SEDCertStore> {
    *
    */
   @Override
-  public void persistEditable() {
+  public boolean persistEditable() {
+    boolean bsuc = false;
     SEDCertStore ecj = getEditable();
     if (ecj != null) {
       mdbLookups.addSEDCertStore(ecj);
+      bsuc = true;
       refreshCertStoreList();
+      
     }
+    return bsuc;
   }
 
   /**
@@ -215,12 +224,15 @@ public class AdminSEDKeyStores extends AbstractAdminJSFView<SEDCertStore> {
    *
    */
   @Override
-  public void updateEditable() {
+  public boolean updateEditable() {
     SEDCertStore ecj = getEditable();
+    boolean bsuc = false;
     if (ecj != null) {
       mdbLookups.updateSEDCertStore(ecj);
+      bsuc = true;
       refreshCertStoreList();
     }
+    return bsuc;
   }
 
 }

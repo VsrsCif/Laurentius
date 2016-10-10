@@ -12,8 +12,8 @@ echo Unzip wildfly.
 
 
 
-echo Change dir to %FOLDER_DEPLOY%\%BOUNDLE_NAME%/widlfly-*
-cd "%FOLDER_DEPLOY%\%BOUNDLE_NAME%/widlfly-10.1"
+echo Change dir to %FOLDER_DEPLOY%\%BOUNDLE_NAME%/wildfly-*
+cd "%FOLDER_DEPLOY%\%BOUNDLE_NAME%/wildfly-10.1"
 
 echo Run deployment script deploy-laurentius.bat
 call deploy-laurentius.bat --init -w ..\..\%WILDFLY_HOME%

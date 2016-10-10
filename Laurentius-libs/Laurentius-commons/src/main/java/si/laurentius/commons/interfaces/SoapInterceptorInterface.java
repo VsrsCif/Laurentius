@@ -29,7 +29,7 @@ public interface SoapInterceptorInterface {
    *
    * @param t
    */
-  public void handleMessage(SoapMessage t) throws Fault;
+  public boolean handleMessage(SoapMessage t) throws Fault;
 
   /**
    *

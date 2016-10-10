@@ -27,6 +27,11 @@ public enum SEDOutboxMailStatus {
    *
    */
   SUBMITTED("SUBMITTED", "Message is sucessfuly added to SED for transmition.", "orange"),
+  
+    /**
+   *
+   */
+  PENDING("PENDING", "Message is pending due to inactive receiver.", "purple"),
 
   /**
    *

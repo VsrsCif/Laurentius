@@ -33,7 +33,7 @@ public class MEPSInInterceptor implements SoapInterceptorInterface {
    */
   @Override
   public void handleFault(SoapMessage t) {
-
+    
   }
 
   /**
@@ -41,8 +41,8 @@ public class MEPSInInterceptor implements SoapInterceptorInterface {
    * @param msg
    */
   @Override
-  public void handleMessage(SoapMessage msg) {
-
-  }
+  public boolean handleMessage(SoapMessage msg) {
+    return true;
+  } 
 
 }

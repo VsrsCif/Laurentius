@@ -74,30 +74,41 @@ public class PModeServiceView extends AbstractPModeJSFView<Service> {
 
   }
 
+   @Override
+  public boolean validateData() {
+    
+    return true;
+  }
   /**
    *
    */
   @Override
-  public void persistEditable() {
+  public boolean persistEditable() {
     long l = LOG.logStart();
+    boolean bsuc = false;
     Service sv = getEditable();
     if (sv != null) {      
       mPModeInteface.addService(sv);
       setEditable(null);
+      bsuc = true;
     }
+    return bsuc;
   }
 
   /**
    *
    */
   @Override
-  public void updateEditable() {
+  public boolean updateEditable() {
     long l = LOG.logStart();
+    boolean bsuc = false;
     Service sv = getEditable();
     if (sv != null) {      
       mPModeInteface.updateService(sv);
       setEditable(null);
+      bsuc = true;
     }
+    return bsuc;
   }
 
   /**

@@ -60,7 +60,7 @@
     
     <query name="si.laurentius.msh.outbox.mail.MSHOutMail.getById" ><![CDATA[SELECT p FROM MSHOutMail p WHERE p.Id = :id]]></query>
     <query name="si.laurentius.msh.outbox.mail.MSHOutMail.getByMessageId" ><![CDATA[SELECT p FROM MSHOutMail p WHERE p.MessageId = :messageId]]></query>
-    
+    <query name="si.laurentius.msh.outbox.mail.MSHOutMail.getBySenderMessageId" ><![CDATA[SELECT p FROM MSHOutMail p WHERE p.SenderMessageId = :senderMessageId]]></query>
     <query name="si.laurentius.msh.outbox.mail.MSHOutMail.getByMessageIdAndSenderBox" ><![CDATA[SELECT p FROM MSHOutMail p WHERE p.SenderMessageId = :sndMsgId and SenderEBox = :senderBox]]></query>
     <query name="si.laurentius.msh.outbox.mail.MSHOutMail.getList" ><![CDATA[SELECT p FROM MSHOutMail p ]]></query>
     

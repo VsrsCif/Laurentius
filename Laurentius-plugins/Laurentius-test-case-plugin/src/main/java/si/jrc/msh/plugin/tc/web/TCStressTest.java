@@ -5,10 +5,13 @@
  */
 package si.jrc.msh.plugin.tc.web;
 
+import generated.SedLookups;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -18,14 +21,20 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
+import si.jrc.msh.plugin.tc.utils.DisableService;
+import si.jrc.msh.plugin.tc.utils.DisableServiceUtils;
 import si.jrc.msh.plugin.tc.utils.TestUtils;
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.exception.StorageException;
+import si.laurentius.commons.interfaces.PModeInterface;
 import si.laurentius.commons.interfaces.SEDDaoInterface;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.Utils;
 import si.laurentius.msh.outbox.mail.MSHOutMail;
+import si.laurentius.msh.pmode.PMode;
+import si.laurentius.msh.pmode.PluginType;
 
 @SessionScoped
 @ManagedBean(name = "TCStressTest")
@@ -39,6 +48,9 @@ public class TCStressTest implements Serializable {
 
   @EJB(mappedName = SEDJNDI.JNDI_SEDDAO)
   SEDDaoInterface mDB;
+
+  @EJB(mappedName = SEDJNDI.JNDI_PMODE)
+  PModeInterface mPMode;
 
   private static final SEDLogger LOG = new SEDLogger(TCStressTest.class);
   TestUtils mTestUtils = new TestUtils();
@@ -56,11 +68,14 @@ public class TCStressTest implements Serializable {
   private String stressTestMessage = "";
   private boolean stopStressTest = true;
   ExecutorService mSTExecutor = null;
+  DisableService mSelectedService=null;
 
   private int payloadSizeTestProgress = -1;
   private String payloadSizeTestMessage = "";
   private boolean stopPayloadSizeTest = true;
   ExecutorService mPSExecutor = null;
+
+  public String disableService;
 
   public Integer getStressTestProgress() {
 
@@ -251,7 +266,7 @@ public class TCStressTest implements Serializable {
         mDB.serializeOutMail(mout, "test", "test-plugin", "");
         payloadSizeTestProgress = 100;
         payloadSizeTestMessage = String.format(
-            "V pošiljanje  po storitvi %s poslana pošiljka velikosti %s KB.", payloadSizeTestService,
+            "V pošiljanje po storitvi %s poslana pošiljka velikosti %s KB.", payloadSizeTestService,
             payloadSizeTest);
 
       } catch (StorageException ex) {
@@ -339,5 +354,63 @@ public class TCStressTest implements Serializable {
   public String getLocalDomain() {
     return System.getProperty(SEDSystemProperties.S_PROP_LAU_DOMAIN);
   }
+
+  public List<String> getRegistredDisableServicePlugin() {
+    List<String> mlst = new ArrayList<>();
+    for (PMode pmd : mPMode.getPModes()) {
+      if (pmd.getPlugins() != null &&
+           pmd.getPlugins().getInPlugins() != null &&
+           !pmd.getPlugins().getInPlugins().getPlugins().isEmpty()) {
+        PMode.Plugins.InPlugins op = pmd.getPlugins().getInPlugins();
+        for (PluginType pt : op.getPlugins()) {
+          if (!Utils.isEmptyString(pt.getValue()) &&
+               pt.getValue().equals(
+                  "java:global/plugin-testcase/TestCaseInInterceptor!si.laurentius.commons.interfaces.SoapInterceptorInterface")) {
+            mlst.add(pmd.getServiceIdRef());
+            break;
+          }
+        }
+      }
+    }
+    return mlst;
+  }
+
+  public String getDisableService() {
+    return disableService;
+  }
+
+  public void setDisableService(String disableService) {
+    this.disableService = disableService;
+  }
+
+  public void addNewDisableService() {
+    
+    if (!Utils.isEmptyString(getDisableService()) &&
+         !Utils.isEmptyString(getTestSenderEBox()) &&
+         !Utils.isEmptyString(getTestReceiverEBox())) {
+      String  rb = getTestSenderEBox() + "@" + SEDSystemProperties.getLocalDomain();
+      DisableServiceUtils.addNewDisableService(getDisableService(), 
+          getTestReceiverEBox(), rb);
+    } else {
+      facesContext().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
+          "Manjkajoči podatki", "Vnesite posiljatelja, naslovnika in storitev!"));
+    }
+  }
+
+  public List<DisableService> getDisableServiceList() {
+    return DisableServiceUtils.STDisableList;
+  }
+
+  public void removeSelectedService(ActionEvent event) {
+    
+    DisableService sr =   (DisableService)event.getComponent().getAttributes().get("disabledService");
+    LOG.formatedlog("Remove selected list %s", sr);
+    if (sr!= null && DisableServiceUtils.STDisableList.contains(sr)){
+      DisableServiceUtils.STDisableList.remove(sr);
+    }
+
+  }
+  
+  
 
 }

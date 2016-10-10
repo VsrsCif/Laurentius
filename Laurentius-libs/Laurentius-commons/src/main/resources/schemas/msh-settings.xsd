@@ -380,6 +380,11 @@
 				<xs:documentation>Receiver for incoming messages  ans sender for outgoing messages can be only identity with this value true</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
+		<xs:attribute name="active" type="xs:boolean">
+			<xs:annotation>
+				<xs:documentation>for exchange party  - defines if is active. Default value is true. If exchange party is inactive  outbox mail are setted to status "PENDING"</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
 	</xs:complexType>
 	<xs:complexType name="PluginType">
 		<xs:annotation>

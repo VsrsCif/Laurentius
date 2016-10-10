@@ -85,6 +85,11 @@ public class AdminSEDPluginView extends AbstractAdminJSFView<SEDPlugin> {
 
   }
 
+   @Override
+  public boolean validateData() {
+    
+    return true;
+  }
   /**
      *
      */
@@ -101,8 +106,9 @@ public class AdminSEDPluginView extends AbstractAdminJSFView<SEDPlugin> {
      *
      */
   @Override
-  public void persistEditable() {
+  public boolean persistEditable() {
     SEDPlugin ecj = getEditable();
+    boolean bsuc = false;
     if (ecj != null) {
       String tjndis = ecj.getTasksJNDIs();
       if (tjndis != null && !tjndis.trim().isEmpty()) {
@@ -115,9 +121,11 @@ public class AdminSEDPluginView extends AbstractAdminJSFView<SEDPlugin> {
 
         }
       }
+      bsuc = true;
       mdbLookups.addSEDPlugin(ecj);
 
     }
+    return bsuc;
   }
 
   private SEDTaskType getSEDTaskType(String jndi) {
@@ -160,11 +168,14 @@ public class AdminSEDPluginView extends AbstractAdminJSFView<SEDPlugin> {
      *
      */
   @Override
-  public void updateEditable() {
+  public boolean updateEditable() {
     SEDPlugin ecj = getEditable();
+    boolean bsuc = false;
     if (ecj != null) {
       mdbLookups.updateSEDPlugin(ecj);
+      bsuc = true;
     }
+    return bsuc;
   }
 
   /**

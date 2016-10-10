@@ -61,22 +61,26 @@ public class MSHPluginOutInterceptor extends AbstractSoapInterceptor {
          !ectx.getPMode().getPlugins().getOutPlugins().getPlugins().isEmpty()) {
 
       List<PluginType> lst = ectx.getPMode().getPlugins().getOutPlugins().getPlugins();
-      lst.stream().map((pt) -> pt.getValue()).filter((str) ->
-          (!Utils.isEmptyString(str))).forEach((str) -> {
+      for (PluginType pt: lst) {
+        String jndiName = pt.getValue();
         try {
-          SoapInterceptorInterface example = InitialContext.doLookup(str);
-          example.handleMessage(msg);
+          SoapInterceptorInterface example = InitialContext.doLookup(jndiName);
+          if (!example.handleMessage(msg)){
+              LOG.formatedWarning("plugin: %s returned false - stop executing", jndiName);
+              break;
+          };
         } catch (NamingException ex) {
-          LOG.logError(l, String.format("SoapInterceptorInterface '%s' not found!", str), ex);
+          LOG.logError(l, String.format("SoapInterceptorInterface '%s' not found!", jndiName), ex);
         } catch (Throwable ex) {
           String errmsg = String.format(
-              "SoapInterceptorInterface '%s' throws an error with message: %s!", str,
+              "SoapInterceptorInterface '%s' throws an error with message: %s!", jndiName,
               ex.getMessage());
           LOG.logError(l, errmsg, ex);
           throw new EBMSError(EBMSErrorCode.Other,outMail!=null? outMail.getMessageId(): null,
               errmsg, ex, SoapFault.FAULT_CODE_CLIENT);
         }
-      });
+      }
+    
     }
     LOG.logEnd(l);
   }

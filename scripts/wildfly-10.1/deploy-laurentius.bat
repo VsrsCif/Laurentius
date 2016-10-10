@@ -97,16 +97,16 @@ if "%INIT%" == "true" (
 	copy "%LAU_BUNDLE%\modules\org.apache.ws.securitymodule.xml" "%WILDFLY_HOME%\modules\system\layers\base\org\apache\ws\security\main\module.xml"
 	echo copy configuration to "%WILDFLY_HOME%\standalone\configuration\".
 	rem  copy configuration
-	copy "%LAU_BUNDLE%\widlfly-10.1\config\laurentius-roles.properties" "%WILDFLY_HOME%\standalone\configuration\"
-	copy "%LAU_BUNDLE%\widlfly-10.1\config\laurentius-users.properties" "%WILDFLY_HOME%\standalone\configuration\"
-	copy "%LAU_BUNDLE%\widlfly-10.1\config\standalone-laurentius.xml" "%WILDFLY_HOME%\standalone\configuration\"
-	copy "%LAU_BUNDLE%\widlfly-10.1\config\test-tls-keystore.jks" "%WILDFLY_HOME%\standalone\configuration\"
+	copy "%LAU_BUNDLE%\wildfly-10.1\config\laurentius-roles.properties" "%WILDFLY_HOME%\standalone\configuration\"
+	copy "%LAU_BUNDLE%\wildfly-10.1\config\laurentius-users.properties" "%WILDFLY_HOME%\standalone\configuration\"
+	copy "%LAU_BUNDLE%\wildfly-10.1\config\standalone-laurentius.xml" "%WILDFLY_HOME%\standalone\configuration\"
+	copy "%LAU_BUNDLE%\wildfly-10.1\config\test-tls-keystore.jks" "%WILDFLY_HOME%\standalone\configuration\"
 
 	rem  copy start scripts
 	echo copy start scripts "%WILDFLY_HOME%\bin\
-	copy "%LAU_BUNDLE%\widlfly-10.1\laurentius-demo.bat" "%WILDFLY_HOME%\bin\"
+	copy "%LAU_BUNDLE%\wildfly-10.1\laurentius-demo.bat" "%WILDFLY_HOME%\bin\"
 	move "%WILDFLY_HOME%\bin\standalone.conf.bat" "%WILDFLY_HOME%\bin\standalone.conf.bat.bck"
-	copy "%LAU_BUNDLE%\widlfly-10.1\config\standalone.conf.bat" "%WILDFLY_HOME%\bin\standalone.conf.bat"
+	copy "%LAU_BUNDLE%\wildfly-10.1\config\standalone.conf.bat" "%WILDFLY_HOME%\bin\standalone.conf.bat"
 
 	echo "copy laurentius-home to %LAU_HOME%\laurentius-home".
 	rem  create home folder

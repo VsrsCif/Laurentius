@@ -1,117 +1,140 @@
 
-<SedLookups xmlns:ns2="http://laurentius.si/cron/" xmlns:ns3="http://laurentius.si/ebox" xmlns:ns4="http://laurentius.si/plugin" xmlns:ns5="http://laurentius.si/property" xmlns:ns6="http://laurentius.si/user" xmlns:ns7="http://laurentius.si/cert" exportDate="2016-09-09T22:01:58.412+02:00">
+<SedLookups xmlns:ns2="http://laurentius.si/cron/" xmlns:ns3="http://laurentius.si/ebox" xmlns:ns4="http://laurentius.si/plugin" xmlns:ns5="http://laurentius.si/property" xmlns:ns6="http://laurentius.si/user" xmlns:ns7="http://laurentius.si/cert" exportDate="2016-10-03T20:53:35.266+02:00">
     <SEDCronJobs>
-        <ns2:SEDCronJob id="9" name="test" active="false" second="*/20" minute="*" hour="*" dayOfMonth="*" month="*" dayOfWeek="*">
+        <ns2:SEDCronJob id="11" name="test" active="false" second="*/20" minute="*" hour="*" dayOfMonth="*" month="*" dayOfWeek="*">
             <ns2:SEDTask taskType="archive">
-                <ns2:SEDTaskProperty id="10" key="archive.folder">${laurentius.home}/backup/</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty id="11" key="archive.chunk.size">1000</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty id="12" key="archive.delete.records"></ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty id="13" key="archive.day.offset">5</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="12" key="archive.folder">${laurentius.home}/backup/</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="13" key="archive.chunk.size">1000</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="14" key="archive.delete.records"></ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="15" key="archive.day.offset">5</ns2:SEDTaskProperty>
             </ns2:SEDTask>
         </ns2:SEDCronJob>
-        <ns2:SEDCronJob id="14" name="test12" active="false" second="*/20" minute="*" hour="*" dayOfMonth="*" month="*" dayOfWeek="*">
+        <ns2:SEDCronJob id="16" name="test12" active="false" second="*/20" minute="*" hour="*" dayOfMonth="*" month="*" dayOfWeek="*">
             <ns2:SEDTask taskType="backup">
-                <ns2:SEDTaskProperty id="15" key="backup.folder">${laurentius.home}/backup/</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty id="16" key="backup.chunk.size">1000</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty id="17" key="backup.clear.first"></ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="17" key="backup.folder">${laurentius.home}/backup/</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="18" key="backup.chunk.size">1000</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="19" key="backup.clear.first"></ns2:SEDTaskProperty>
             </ns2:SEDTask>
         </ns2:SEDCronJob>
-        <ns2:SEDCronJob id="18" name="test3" active="true" second="0" minute="*/1" hour="5,6,7,8,9,10,11,12,13,14,15" dayOfMonth="*" month="*" dayOfWeek="1-6">
+        <ns2:SEDCronJob id="20" name="test3" active="true" second="0" minute="*/1" hour="5,6,7,8,9,10,11,12,13,14,15" dayOfMonth="*" month="*" dayOfWeek="1-6">
             <ns2:SEDTask taskType="zpp-plugin">
-                <ns2:SEDTaskProperty id="19" key="zpp.sedbox">a.department</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty id="20" key="zpp.sign.key.alias">test-zpp-sign</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty id="21" key="zpp.sign.keystore">def-keystore</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="21" key="zpp.sedbox">a.department</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="22" key="zpp.sign.key.alias">test-zpp-sign</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="23" key="zpp.sign.keystore">def-keystore</ns2:SEDTaskProperty>
             </ns2:SEDTask>
         </ns2:SEDCronJob>
-        <ns2:SEDCronJob id="22" name="test3" active="true" second="0" minute="*/1" hour="5,6,7,8,9,10,11,12,13,14,15" dayOfMonth="*" month="*" dayOfWeek="1-6">
+        <ns2:SEDCronJob id="24" name="test3" active="true" second="0" minute="*/1" hour="5,6,7,8,9,10,11,12,13,14,15" dayOfMonth="*" month="*" dayOfWeek="1-6">
             <ns2:SEDTask taskType="zpp-plugin">
-                <ns2:SEDTaskProperty id="23" key="zpp.sedbox">b.department</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty id="24" key="zpp.sign.key.alias">test-zpp-sign</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty id="25" key="zpp.sign.keystore">def-keystore</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="25" key="zpp.sedbox">b.department</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="26" key="zpp.sign.key.alias">test-zpp-sign</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="27" key="zpp.sign.keystore">def-keystore</ns2:SEDTaskProperty>
+            </ns2:SEDTask>
+        </ns2:SEDCronJob>
+        <ns2:SEDCronJob id="28" name="submit-dwr" active="true" second="0" minute="*/1" hour="*" dayOfMonth="*" month="*" dayOfWeek="*">
+            <ns2:SEDTask taskType="filesubmitter">
+                <ns2:SEDTaskProperty id="72" key="file.submit.folder">${laurentius.home}/submit/dwr/</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="73" key="service">DeliveryWithReceipt</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="74" key="action">Delivery</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="75" key="receiverEBox"/>
+                <ns2:SEDTaskProperty id="76" key="senderEBox">b.department</ns2:SEDTaskProperty>
             </ns2:SEDTask>
         </ns2:SEDCronJob>
     </SEDCronJobs>
     <SEDTaskTypes>
         <ns2:SEDTaskType type="archive" name="Archive data" jndi="java:global/Laurentius-basic-tasks/TaskArchive!si.laurentius.commons.interfaces.TaskExecutionInterface" description="Archive data to 'xml' and files to archive-storage">
-            <ns2:SEDTaskTypeProperty id="26" key="archive.folder" description="Archive folder" mandatory="true" type="string"/>
-            <ns2:SEDTaskTypeProperty id="27" key="archive.chunk.size" description="Max mail count in chunk" mandatory="true" type="int"/>
-            <ns2:SEDTaskTypeProperty id="28" key="archive.delete.records" description="Delete exported records (true/false)" mandatory="true" type="boolean"/>
-            <ns2:SEDTaskTypeProperty id="29" key="archive.day.offset" description="Archive records older than [n] days" mandatory="true" type="int"/>
+            <ns2:SEDTaskTypeProperty id="30" key="archive.folder" description="Archive folder" mandatory="true" type="string"/>
+            <ns2:SEDTaskTypeProperty id="31" key="archive.chunk.size" description="Max mail count in chunk" mandatory="true" type="int"/>
+            <ns2:SEDTaskTypeProperty id="32" key="archive.delete.records" description="Delete exported records (true/false)" mandatory="true" type="boolean"/>
+            <ns2:SEDTaskTypeProperty id="33" key="archive.day.offset" description="Archive records older than [n] days" mandatory="true" type="int"/>
         </ns2:SEDTaskType>
         <ns2:SEDTaskType type="backup" name="Backup data" jndi="java:global/Laurentius-basic-tasks/TaskBackup!si.laurentius.commons.interfaces.TaskExecutionInterface" description="Backup data to 'xml' and files to backup-storage">
-            <ns2:SEDTaskTypeProperty id="30" key="backup.folder" description="Archive folder" mandatory="true" type="string"/>
-            <ns2:SEDTaskTypeProperty id="31" key="backup.chunk.size" description="Max mail count in chunk" mandatory="true" type="int"/>
-            <ns2:SEDTaskTypeProperty id="32" key="backup.clear.first" description="Clear backup folder (true/false)" mandatory="true" type="boolean"/>
+            <ns2:SEDTaskTypeProperty id="34" key="backup.folder" description="Archive folder" mandatory="true" type="string"/>
+            <ns2:SEDTaskTypeProperty id="35" key="backup.chunk.size" description="Max mail count in chunk" mandatory="true" type="int"/>
+            <ns2:SEDTaskTypeProperty id="36" key="backup.clear.first" description="Clear backup folder (true/false)" mandatory="true" type="boolean"/>
+        </ns2:SEDTaskType>
+        <ns2:SEDTaskType type="filesubmitter" name="File subbmiter" jndi="java:global/Laurentius-basic-tasks/TaskFileSubmitter!si.laurentius.commons.interfaces.TaskExecutionInterface" description="Task submits mail in given folder. '">
+            <ns2:SEDTaskTypeProperty id="60" key="file.submit.folder" description="Submit folder" mandatory="true" type="string"/>
+            <ns2:SEDTaskTypeProperty id="61" key="service" description="Service" mandatory="true" type="string"/>
+            <ns2:SEDTaskTypeProperty id="62" key="action" description="Action" mandatory="true" type="string"/>
+            <ns2:SEDTaskTypeProperty id="63" key="receiverEBox" description="Receiver box" mandatory="true" type="string"/>
+            <ns2:SEDTaskTypeProperty id="64" key="senderEBox" description="Sender box" mandatory="true" type="string"/>
         </ns2:SEDTaskType>
         <ns2:SEDTaskType type="inboxreport" name="Inbox report" jndi="java:global/Laurentius-basic-tasks/TaskEmailInboxMailReport!si.laurentius.commons.interfaces.TaskExecutionInterface" description="Incomings mail list from sed box">
-            <ns2:SEDTaskTypeProperty id="33" key="sedbox" description="SED-BOX" mandatory="true" type="string"/>
-            <ns2:SEDTaskTypeProperty id="34" key="email.to" description="Receiver email addresses, separated by comma." mandatory="true" type="string"/>
-            <ns2:SEDTaskTypeProperty id="35" key="email.from" description="Sender email address." mandatory="true" type="string"/>
-            <ns2:SEDTaskTypeProperty id="36" key="email.subject" description="EMail subject." mandatory="true" type="string"/>
-            <ns2:SEDTaskTypeProperty id="37" key="mail.config.jndi" description="Mail config jndi(def: java:jboss/mail/Default)" mandatory="true" type="string"/>
-            <ns2:SEDTaskTypeProperty id="38" key="skip.on.NoMail" description="Supress if not Mail " mandatory="true" type="boolean"/>
-            <ns2:SEDTaskTypeProperty id="39" key="new.only" description="Only if new mail " mandatory="true" type="boolean"/>
-            <ns2:SEDTaskTypeProperty id="40" key="mail.status" description="Status list" mandatory="true" type="list" valueList=",DELETED"/>
+            <ns2:SEDTaskTypeProperty id="38" key="sedbox" description="SED-BOX" mandatory="true" type="string"/>
+            <ns2:SEDTaskTypeProperty id="39" key="email.to" description="Receiver email addresses, separated by comma." mandatory="true" type="string"/>
+            <ns2:SEDTaskTypeProperty id="40" key="email.from" description="Sender email address." mandatory="true" type="string"/>
+            <ns2:SEDTaskTypeProperty id="41" key="email.subject" description="EMail subject." mandatory="true" type="string"/>
+            <ns2:SEDTaskTypeProperty id="42" key="mail.config.jndi" description="Mail config jndi(def: java:jboss/mail/Default)" mandatory="true" type="string"/>
+            <ns2:SEDTaskTypeProperty id="43" key="skip.on.NoMail" description="Supress if not Mail " mandatory="true" type="boolean"/>
+            <ns2:SEDTaskTypeProperty id="44" key="new.only" description="Only if new mail " mandatory="true" type="boolean"/>
+            <ns2:SEDTaskTypeProperty id="45" key="mail.status" description="Status list" mandatory="true" type="list" valueList=",DELETED"/>
         </ns2:SEDTaskType>
         <ns2:SEDTaskType type="statusreport" name="Status report" jndi="java:global/Laurentius-basic-tasks/TaskEmailStatusReport!si.laurentius.commons.interfaces.TaskExecutionInterface" description="Incoming outcomming mail report from sed box">
-            <ns2:SEDTaskTypeProperty id="41" key="sedbox" description="SED-BOX" mandatory="true" type="string"/>
-            <ns2:SEDTaskTypeProperty id="42" key="email.to" description="Receiver email addresses, separated by comma." mandatory="true" type="string"/>
-            <ns2:SEDTaskTypeProperty id="43" key="email.from" description="Sender email address." mandatory="true" type="string"/>
-            <ns2:SEDTaskTypeProperty id="44" key="email.subject" description="EMail subject." mandatory="true" type="string"/>
-            <ns2:SEDTaskTypeProperty id="45" key="mail.config.jndi" description="Mail config jndi(def: java:jboss/mail/Default)" mandatory="true" type="string"/>
+            <ns2:SEDTaskTypeProperty id="46" key="sedbox" description="SED-BOX" mandatory="true" type="string"/>
+            <ns2:SEDTaskTypeProperty id="47" key="email.to" description="Receiver email addresses, separated by comma." mandatory="true" type="string"/>
+            <ns2:SEDTaskTypeProperty id="48" key="email.from" description="Sender email address." mandatory="true" type="string"/>
+            <ns2:SEDTaskTypeProperty id="49" key="email.subject" description="EMail subject." mandatory="true" type="string"/>
+            <ns2:SEDTaskTypeProperty id="50" key="mail.config.jndi" description="Mail config jndi(def: java:jboss/mail/Default)" mandatory="true" type="string"/>
         </ns2:SEDTaskType>
         <ns2:SEDTaskType type="zpp-plugin" name="ZPP plugin" jndi="java:global/plugin-zpp/ZPPTask!si.laurentius.commons.interfaces.TaskExecutionInterface" description="Sign deliveryadvice for incomming mail">
-            <ns2:SEDTaskTypeProperty id="46" key="zpp.sedbox" description="Receiver sedbox." mandatory="true" type="string"/>
-            <ns2:SEDTaskTypeProperty id="47" key="zpp.sign.key.alias" description="Signature key alias." mandatory="true" type="string"/>
-            <ns2:SEDTaskTypeProperty id="48" key="zpp.sign.keystore" description="Keystore name." mandatory="true" type="string"/>
+            <ns2:SEDTaskTypeProperty id="51" key="zpp.sedbox" description="Receiver sedbox." mandatory="true" type="string"/>
+            <ns2:SEDTaskTypeProperty id="52" key="zpp.sign.key.alias" description="Signature key alias." mandatory="true" type="string"/>
+            <ns2:SEDTaskTypeProperty id="53" key="zpp.sign.keystore" description="Keystore name." mandatory="true" type="string"/>
         </ns2:SEDTaskType>
     </SEDTaskTypes>
     <SEDBoxes>
         <ns3:SEDBox localBoxName="a.department" activeFromDate="2016-04-20+02:00">
-            <ns3:Export active="true" exportMetaData="true" folder="${laurentius.home}/export-a" fileMask="${Service}_${Id}"/>
+            <ns3:Export active="false" exportMetaData="true" folder="${laurentius.home}/export/a" fileMask="${Service}_${Id}"/>
+            <ns3:Execute active="false" command="" parameters=""/>
         </ns3:SEDBox>
         <ns3:SEDBox localBoxName="b.department" activeFromDate="2016-04-20+02:00">
-            <ns3:Export active="true" exportMetaData="true" folder="${laurentius.home}/export-b" fileMask="${Id}_${SenderEBox}_${Service}"/>
+            <ns3:Export active="false" exportMetaData="true" folder="${laurentius.home}/export/b" fileMask="${Id}_${SenderEBox}_${Service}"/>
+            <ns3:Execute active="false" command="" parameters=""/>
         </ns3:SEDBox>
     </SEDBoxes>
     <SEDPlugins>
         <ns4:SEDPlugin webContext="/laurentius-web/zpp-plugin" type="LegalZPP" name="ZPP plugin" description="ZPP - e-delivery: SVEV 2.0 service implementation" jndiInInterceptor="java:global/plugin-zpp/ZPPOutInterceptor!si.laurentius.commons.interfaces.SoapInterceptorInterface" jndiOutInterceptor="java:global/plugin-zpp/ZPPOutInterceptor!si.laurentius.commons.interfaces.SoapInterceptorInterface" tasksJNDIs="java:global/plugin-zpp/ZPPTask!si.laurentius.commons.interfaces.TaskExecutionInterface" jndi="java:global/plugin-zpp/ZPPPluginDescription!si.laurentius.commons.interfaces.PluginDescriptionInterface"/>
-<ns4:SEDPlugin webContext="/laurentius-web/testcase-plugin" type="TestCasePlugin" name="Test case plugin" description="Test case " jndiInInterceptor="" jndiOutInterceptor="java:global/plugin-zpp/ZPPOutInterceptor!si.laurentius.commons.interfaces.SoapInterceptorInterface" tasksJNDIs="java:global/plugin-zpp/ZPPTask!si.laurentius.commons.interfaces.TaskExecutionInterface" jndi="java:global/plugin-testcase/TestCasePluginDescription!si.laurentius.commons.interfaces.PluginDescriptionInterface"/>
+        <ns4:SEDPlugin webContext="/laurentius-web/testcase-plugin" type="TestCasePlugin" name="Test case plugin" description="Test case " jndiInInterceptor="" jndiOutInterceptor="java:global/plugin-zpp/ZPPOutInterceptor!si.laurentius.commons.interfaces.SoapInterceptorInterface" tasksJNDIs="java:global/plugin-zpp/ZPPTask!si.laurentius.commons.interfaces.TaskExecutionInterface" jndi="java:global/plugin-testcase/TestCasePluginDescription!si.laurentius.commons.interfaces.PluginDescriptionInterface"/>
     </SEDPlugins>
     <SEDProperties>
         <ns5:SEDProperty key="si.laurentius.pmode" value="pmode-conf.xml" group="SYSTEM"/>
+        <ns5:SEDProperty key="si.laurentius.domain" value="mb-laurentius.si" group="SYSTEM"/>
     </SEDProperties>
     <SEDUsers>
         <ns6:SEDUser userId="user" activeFromDate="2016-04-20+02:00">
             <ns3:SEDBox localBoxName="a.department" activeFromDate="2016-04-20+02:00">
-                <ns3:Export active="true" exportMetaData="true" folder="${laurentius.home}/export-a" fileMask="${Service}_${Id}"/>
+                <ns3:Export active="false" exportMetaData="true" folder="${laurentius.home}/export/a" fileMask="${Service}_${Id}"/>
+                <ns3:Execute active="false" command="" parameters=""/>
             </ns3:SEDBox>
             <ns3:SEDBox localBoxName="b.department" activeFromDate="2016-04-20+02:00">
-                <ns3:Export active="true" exportMetaData="true" folder="${laurentius.home}/export-b" fileMask="${Id}_${SenderEBox}_${Service}"/>
+                <ns3:Export active="false" exportMetaData="true" folder="${laurentius.home}/export/b" fileMask="${Id}_${SenderEBox}_${Service}"/>
+                <ns3:Execute active="false" command="" parameters=""/>
             </ns3:SEDBox>
         </ns6:SEDUser>
         <ns6:SEDUser userId="admin" adminRole="true" activeFromDate="2016-04-20+02:00">
             <ns3:SEDBox localBoxName="a.department" activeFromDate="2016-04-20+02:00">
-                <ns3:Export active="true" exportMetaData="true" folder="${laurentius.home}/export-a" fileMask="${Service}_${Id}"/>
+                <ns3:Export active="false" exportMetaData="true" folder="${laurentius.home}/export/a" fileMask="${Service}_${Id}"/>
+                <ns3:Execute active="false" command="" parameters=""/>
             </ns3:SEDBox>
             <ns3:SEDBox localBoxName="b.department" activeFromDate="2016-04-20+02:00">
-                <ns3:Export active="true" exportMetaData="true" folder="${laurentius.home}/export-b" fileMask="${Id}_${SenderEBox}_${Service}"/>
+                <ns3:Export active="false" exportMetaData="true" folder="${laurentius.home}/export/b" fileMask="${Id}_${SenderEBox}_${Service}"/>
+                <ns3:Execute active="false" command="" parameters=""/>
             </ns3:SEDBox>
         </ns6:SEDUser>
     </SEDUsers>
     <SEDCertStores>
-        <ns7:SEDCertStore id="660" name="def-keystore" filePath="${laurentius.home}/security/test-laurentius-keystore.jks" type="jks" password="test1234">
-            <ns7:SEDCertificate id="661" alias="test-laurentius" issuerDN="CN=test-laurentius, OU=laurentius, OU=cif, OU=vsrs, OU=si" subjectDN="CN=test-laurentius, OU=laurentius, OU=cif, OU=vsrs, OU=si" validFrom="2016-09-09T12:23:11+02:00" validTo="2019-09-09T12:23:11+02:00" serialNumber="398002935" type="X.509" keyEntry="true" keyPassword="key1234"/>
-            <ns7:SEDCertificate id="662" alias="test-zpp-sign" issuerDN="CN=test-zpp-sign, OU=laurentius, OU=cif, OU=vsrs, OU=si" subjectDN="CN=test-zpp-sign, OU=laurentius, OU=cif, OU=vsrs, OU=si" validFrom="2016-09-09T12:23:12+02:00" validTo="2019-09-09T12:23:12+02:00" serialNumber="1174236342" type="X.509" keyEntry="true" keyPassword="key1234"/>
+        <ns7:SEDCertStore id="1" name="def-keystore" filePath="${laurentius.home}/security/test-laurentius-keystore.jks" type="jks" password="test1234">
+            <ns7:SEDCertificate id="2" alias="test-laurentius" issuerDN="CN=test-laurentius, OU=laurentius, OU=cif, OU=vsrs, OU=si" subjectDN="CN=test-laurentius, OU=laurentius, OU=cif, OU=vsrs, OU=si" validFrom="2016-09-09T12:23:11+02:00" validTo="2019-09-09T12:23:11+02:00" serialNumber="398002935" type="X.509" keyEntry="true" keyPassword="key1234"/>
+            <ns7:SEDCertificate id="3" alias="test-zpp-sign" issuerDN="CN=test-zpp-sign, OU=laurentius, OU=cif, OU=vsrs, OU=si" subjectDN="CN=test-zpp-sign, OU=laurentius, OU=cif, OU=vsrs, OU=si" validFrom="2016-09-09T12:23:12+02:00" validTo="2019-09-09T12:23:12+02:00" serialNumber="1174236342" type="X.509" keyEntry="true" keyPassword="key1234"/>
         </ns7:SEDCertStore>
-        <ns7:SEDCertStore id="663" name="def-truststore" filePath="${laurentius.home}/security/test-laurentius-truststore.jks" type="jks" password="test1234">
-            <ns7:SEDCertificate id="664" alias="test-laurentius" issuerDN="CN=test-laurentius, OU=laurentius, OU=cif, OU=vsrs, OU=si" subjectDN="CN=test-laurentius, OU=laurentius, OU=cif, OU=vsrs, OU=si" validFrom="2016-09-09T12:23:11+02:00" validTo="2019-09-09T12:23:11+02:00" serialNumber="398002935" type="X.509" keyEntry="false"/>
-            <ns7:SEDCertificate id="665" alias="court-laurentius" issuerDN="CN=court-laurentius, OU=laurentius, OU=cif, OU=vsrs, OU=si" subjectDN="CN=court-laurentius, OU=laurentius, OU=cif, OU=vsrs, OU=si" validFrom="2016-09-09T12:23:13+02:00" validTo="2019-09-09T12:23:13+02:00" serialNumber="450867929" type="X.509" keyEntry="false"/>
-            <ns7:SEDCertificate id="666" alias="court-tls-client" issuerDN="CN=court-tls, OU=laurentius, OU=cif, OU=vsrs, OU=si" subjectDN="CN=court-tls, OU=laurentius, OU=cif, OU=vsrs, OU=si" validFrom="2016-09-09T12:23:14+02:00" validTo="2019-09-09T12:23:14+02:00" serialNumber="487500109" type="X.509" keyEntry="false"/>
-            <ns7:SEDCertificate id="667" alias="b2g-test.sodisce.si" issuerDN="OU=sigov-ca, O=state-institutions, C=si" subjectDN="SERIALNUMBER=1236292610022 + CN=b2g-test.sodisce.si, OU=Servers, OU=web-certificates, O=state-institutions, C=si" validFrom="2012-11-05T11:06:30+01:00" validTo="2017-11-05T19:31:52+01:00" serialNumber="979270568" type="X.509" keyEntry="false"/>
+        <ns7:SEDCertStore id="4" name="def-truststore" filePath="${laurentius.home}/security/test-laurentius-truststore.jks" type="jks" password="test1234">
+            <ns7:SEDCertificate id="5" alias="test-laurentius" issuerDN="CN=test-laurentius, OU=laurentius, OU=cif, OU=vsrs, OU=si" subjectDN="CN=test-laurentius, OU=laurentius, OU=cif, OU=vsrs, OU=si" validFrom="2016-09-09T12:23:11+02:00" validTo="2019-09-09T12:23:11+02:00" serialNumber="398002935" type="X.509" keyEntry="false"/>
+            <ns7:SEDCertificate id="6" alias="court-laurentius" issuerDN="CN=court-laurentius, OU=laurentius, OU=cif, OU=vsrs, OU=si" subjectDN="CN=court-laurentius, OU=laurentius, OU=cif, OU=vsrs, OU=si" validFrom="2016-09-09T12:23:13+02:00" validTo="2019-09-09T12:23:13+02:00" serialNumber="450867929" type="X.509" keyEntry="false"/>
+            <ns7:SEDCertificate id="7" alias="court-tls-client" issuerDN="CN=court-tls, OU=laurentius, OU=cif, OU=vsrs, OU=si" subjectDN="CN=court-tls, OU=laurentius, OU=cif, OU=vsrs, OU=si" validFrom="2016-09-09T12:23:14+02:00" validTo="2019-09-09T12:23:14+02:00" serialNumber="487500109" type="X.509" keyEntry="false"/>
+            <ns7:SEDCertificate id="8" alias="b2g-test.sodisce.si" issuerDN="OU=sigov-ca, O=state-institutions, C=si" subjectDN="SERIALNUMBER=1236292610022 + CN=b2g-test.sodisce.si, OU=Servers, OU=web-certificates, O=state-institutions, C=si" validFrom="2012-11-05T11:06:30+01:00" validTo="2017-11-05T19:31:52+01:00" serialNumber="979270568" type="X.509" keyEntry="false"/>
         </ns7:SEDCertStore>
-        <ns7:SEDCertStore id="668" name="tls-store" filePath="${laurentius.home}/security/test-tls-keystore.jks" type="jks" password="test1234">
-            <ns7:SEDCertificate id="669" alias="test-tls" issuerDN="CN=test-tls, OU=laurentius, OU=cif, OU=vsrs, OU=si" subjectDN="CN=test-tls, OU=laurentius, OU=cif, OU=vsrs, OU=si" validFrom="2016-09-09T12:23:10+02:00" validTo="2019-09-09T12:23:10+02:00" serialNumber="578232686" type="X.509" keyEntry="true" keyPassword="key1234"/>
+        <ns7:SEDCertStore id="9" name="tls-store" filePath="${laurentius.home}/security/test-tls-keystore.jks" type="jks" password="test1234">
+            <ns7:SEDCertificate id="10" alias="test-tls" issuerDN="CN=test-tls, OU=laurentius, OU=cif, OU=vsrs, OU=si" subjectDN="CN=test-tls, OU=laurentius, OU=cif, OU=vsrs, OU=si" validFrom="2016-09-09T12:23:10+02:00" validTo="2019-09-09T12:23:10+02:00" serialNumber="578232686" type="X.509" keyEntry="true" keyPassword="key1234"/>
         </ns7:SEDCertStore>
     </SEDCertStores>
 </SedLookups>

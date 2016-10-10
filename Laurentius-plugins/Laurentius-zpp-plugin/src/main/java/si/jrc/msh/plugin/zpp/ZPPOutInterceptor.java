@@ -197,7 +197,7 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
    * @param msg
    */
   @Override
-  public void handleMessage(SoapMessage msg) {
+  public boolean handleMessage(SoapMessage msg) {
     long l = LOG.logStart(msg);
 
     boolean isRequest = MessageUtils.isRequestor(msg);
@@ -227,6 +227,7 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
       }
     }
     LOG.logEnd(l);
+    return true;
   }
 
   private void prepareToZPPDelivery(MSHOutMail outMail, QName sv)

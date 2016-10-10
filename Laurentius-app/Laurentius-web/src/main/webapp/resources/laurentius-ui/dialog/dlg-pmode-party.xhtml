@@ -16,7 +16,9 @@
         <p:dialog  header="#{msg['PModePartyDialog']}" widgetVar="pModePartyDialog" 
                    modal="true" hideEffect="fade" resizable="false" appendTo="@(body)" height="480" width="850">
 
+
             <h:form id="pModePartyDialogForm" >
+
                 <p:layout id="pModeParty" style="min-width:820px; height:470px; "  >
 
                     <p:layoutUnit position="center"   >
@@ -36,10 +38,10 @@
                                     </p:row>
                                     <p:row>
                                         <p:column>
-                                            <h:outputText value="#{msg['Id']}:"  />
+                                            <h:outputText value="#{msg['Id']}:"   />
                                         </p:column>
                                         <p:column>
-                                            <p:inputText id="partyId" value="#{pModePartyView.editable.id}"  style="width: 160px" >
+                                            <p:inputText id="partyId" value="#{pModePartyView.editable.id}" disabled="#{!pModePartyView.isEditableNew()}"  style="width: 160px" >
                                             </p:inputText>
                                         </p:column>
                                         <p:column>                                    
@@ -52,19 +54,26 @@
                                             </p:inputText>
                                         </p:column>
                                         <p:column>                                    
-                                            <h:outputText value="#{msg['IsLocalIdentity']}:"  />
+                                            <p:selectBooleanCheckbox itemLabel="#{msg['Active']}:" id="exIdentityActive"
+                                                                     value="#{pModePartyView.editableIdentityActive}" 
+                                                                     style="width: 100%"
+                                                                     disabled="#{pModePartyView.editableLocalIdentity}"
+                                               >
+                                            </p:selectBooleanCheckbox>
                                         </p:column>
-                                        <p:column>
-                                            <p:selectBooleanCheckbox id="locIdentity"
+                                        <p:column>                                    
+                                            <p:selectBooleanCheckbox itemLabel="#{msg['IsLocalIdentity']}:" id="locIdentity"
                                                                      value="#{pModePartyView.editableLocalIdentity}" 
-                                                                     style="width: 30px"
+                                                                     style="width: 100%"
                                                                      >  
                                                 <p:ajax update=":dlgPModeParty:pModePartyDialogForm:partyTab:domain 
                                                         :dlgPModeParty:pModePartyDialogForm:partyTab:lockeystore 
                                                         :dlgPModeParty:pModePartyDialogForm:partyTab:locSignAlias 
-                                                        :dlgPModeParty:pModePartyDialogForm:partyTab:locDecAlias" />
+                                                        :dlgPModeParty:pModePartyDialogForm:partyTab:locDecAlias
+                                                        :dlgPModeParty:pModePartyDialogForm:partyTab:exIdentityActive"/>
                                             </p:selectBooleanCheckbox>
                                         </p:column>
+                                       
                                     </p:row>
                                     <p:row>
                                         <p:column colspan="6" >
@@ -78,16 +87,16 @@
                                         </p:column>
                                         <p:column>
                                             <p:selectOneMenu id="lockeystore" 
-                                                             value="#{pModePartyView.editable.localPartySecurity.keystoreName}"
+                                                             value="#{pModePartyView.currrentLocalPartySecurity.keystoreName}"
                                                              style="width:160px"
                                                              disabled="#{!pModePartyView.editableLocalIdentity}"
-                                                            >
+                                                             >
                                                 <f:selectItem noSelectionOption="true" />
                                                 <f:selectItems value="#{adminSEDKeyStores.list}" var="ks"
                                                                itemLabel="#{ks.name}" 
                                                                itemValue="#{ks.name}"
                                                                /> 
-                                            
+
                                                 <p:ajax update=":dlgPModeParty:pModePartyDialogForm:partyTab:locSignAlias :dlgPModeParty:pModePartyDialogForm:partyTab:locDecAlias" />
                                             </p:selectOneMenu>
                                         </p:column>
@@ -96,13 +105,13 @@
                                         </p:column>
                                         <p:column>
                                             <p:selectOneMenu id="locSignAlias" 
-                                                             value="#{pModePartyView.editable.localPartySecurity.signatureKeyAlias}"
+                                                             value="#{pModePartyView.currrentLocalPartySecurity.signatureKeyAlias}"
                                                              style="width: 160px"
                                                              disabled="#{!pModePartyView.editableLocalIdentity}"
-                                                         >
+                                                             >
                                                 <f:selectItem noSelectionOption="true" />
                                                 <f:selectItems value="#{pModePartyView.currentLocalKeystoreCerts}" var="cs" itemLabel="#{cs.alias}" itemValue="#{cs.alias}" itemDisabled="#{!cs.keyEntry}" /> 
-                                              
+
                                             </p:selectOneMenu>
                                         </p:column>
                                         <p:column>                                    
@@ -110,14 +119,14 @@
                                         </p:column>
                                         <p:column>
                                             <p:selectOneMenu id="locDecAlias" 
-                                                             value="#{pModePartyView.editable.localPartySecurity.decryptionKeyAlias}"
+                                                             value="#{pModePartyView.currrentLocalPartySecurity.decryptionKeyAlias}"
                                                              style="width:160px"
                                                              disabled="#{!pModePartyView.editableLocalIdentity}"
                                                              >
                                                 <f:selectItem noSelectionOption="true" />
                                                 <f:selectItems value="#{pModePartyView.currentLocalKeystoreCerts}" var="cs" 
                                                                itemLabel="#{cs.alias}" itemValue="#{cs.alias}" itemDisabled="#{!cs.keyEntry}" />
-      
+
 
                                             </p:selectOneMenu>
 
@@ -136,7 +145,7 @@
                                         </p:column>
                                         <p:column>
                                             <p:selectOneMenu id="exccertstore" 
-                                                             value="#{pModePartyView.editable.exchangePartySecurity.trustoreName}"
+                                                             value="#{pModePartyView.currrentExchangePartySecurity.trustoreName}"
                                                              style="width: 160px" >
                                                 <f:selectItem noSelectionOption="true" />
                                                 <f:selectItems value="#{adminSEDKeyStores.list}" var="ks" itemLabel="#{ks.name}" itemValue="#{ks.name}" />
@@ -148,7 +157,7 @@
                                         </p:column>
                                         <p:column>
                                             <p:selectOneMenu id="excSignAlias" 
-                                                             value="#{pModePartyView.editable.exchangePartySecurity.signatureCertAlias}"
+                                                             value="#{pModePartyView.currrentExchangePartySecurity.signatureCertAlias}"
                                                              style="width: 160px" >
                                                 <f:selectItem noSelectionOption="true" />
                                                 <f:selectItems value="#{pModePartyView.currentExchangeTruststoreCerts}" 
@@ -160,7 +169,7 @@
                                         </p:column>
                                         <p:column>
                                             <p:selectOneMenu id="excencAlias" 
-                                                             value="#{pModePartyView.editable.exchangePartySecurity.encryptionCertAlias}"
+                                                             value="#{pModePartyView.currrentExchangePartySecurity.encryptionCertAlias}"
                                                              style="width: 160px" >
                                                 <f:selectItem noSelectionOption="true" />
                                                 <f:selectItems value="#{pModePartyView.currentExchangeTruststoreCerts}" 
@@ -173,6 +182,9 @@
                                 <hr />
                                 <b>#{msg['Identity']}</b>
                                 <p:dataTable id="TblIdentity" 
+                                             selectionMode="single"
+                                             selection="#{pModePartyView.selectedPartyId}"
+                                             rowKey="#{sp}"
                                              var="sp" 
                                              value="#{pModePartyView.editable.partyIds}"
                                              style="padding: 0px; margin: 0px;box-sizing: border-box; "
@@ -182,6 +194,19 @@
                                              editMode="cell"
                                              >
                                     <p:ajax event="cellEdit" listener="#{pModePartyView.onCellEditTableComplete}" />
+                                    <f:facet name="header">
+                                        <p:commandButton value="#{msg['Add']}" styleClass="toolbar-Button" 
+                                                         icon="ui-icon-svg-add ui-icon-size-22"  
+                                                         update=":dlgPModeParty:pModePartyDialogForm:partyTab:TblIdentity" 
+                                                         actionListener="#{pModePartyView.createPartyId()}"
+                                                          />
+                                       
+                                        <p:commandButton value="#{msg['Delete']}" styleClass="toolbar-Button" 
+                                                         icon="ui-icon-svg-remove ui-icon-size-22"  
+                                                         actionListener="#{pModePartyView.removeSelectedPartyId()}"
+                                                         update=":dlgPModeParty:pModePartyDialogForm:partyTab:TblIdentity" />
+
+                                    </f:facet>
 
 
                                     <p:column headerText="#{msg['Type']}" >
@@ -362,8 +387,8 @@
                                 <p:commandButton value="#{msg['Ok']}"  styleClass="toolbar-Button" 
                                                  icon="ui-icon-svg-ok ui-icon-size-22" 
                                                  action="#{pModePartyView.addOrUpdateEditable()}"
-                                                 oncomplete="PF('pModePartyDialog').hide()" 
-                                                 update=":forms:SettingsPModesParties:TblPModeParties"
+                                                 oncomplete="if (args &amp;&amp; args.saved) PF('pModePartyDialog').hide()" 
+                                                 update=":forms:messages :forms:SettingsPModesParties:TblPModeParties"
                                                  />
                                 <p:commandButton value="#{msg['Cancel']}" styleClass="toolbar-Button" 
                                                  icon="ui-icon-svg-cancel ui-icon-size-22"

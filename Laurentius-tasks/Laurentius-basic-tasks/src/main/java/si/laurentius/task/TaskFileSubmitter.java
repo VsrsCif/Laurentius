@@ -25,6 +25,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Properties;
 import java.util.regex.Pattern;
 import javax.ejb.EJB;
@@ -33,14 +34,13 @@ import javax.ejb.Stateless;
 import si.laurentius.msh.outbox.mail.MSHOutMail;
 import si.laurentius.msh.outbox.payload.MSHOutPart;
 import si.laurentius.msh.outbox.payload.MSHOutPayload;
-import si.laurentius.msh.pmode.PMode;
-import si.laurentius.msh.pmode.PartyIdentitySet;
 //import org.msh.svev.pmode.PMode;
 import si.laurentius.cron.SEDTaskType;
 import si.laurentius.cron.SEDTaskTypeProperty;
 import si.laurentius.commons.MimeValues;
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.SEDOutboxMailStatus;
+import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.exception.PModeException;
 import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.interfaces.PModeInterface;
@@ -91,7 +91,6 @@ public class TaskFileSubmitter implements TaskExecutionInterface {
 
   StorageUtils mSU = new StorageUtils();
 
-  String outFileFormat = "%s_%03d.xml";
 
   private static final SEDLogger LOG = new SEDLogger(TaskFileSubmitter.class);
 
@@ -127,9 +126,9 @@ public class TaskFileSubmitter implements TaskExecutionInterface {
 
     File fRoot = new File(sfolder);
     if (!fRoot.exists()) {
-      sw.append("Submit folder: " + sfolder + " not exists!");
+      sw.append("Submit folder not exist!");
     } else if (!fRoot.isDirectory()) {
-      sw.append("Submit folder: " + sfolder + " is not a folder!");
+      sw.append("Submit folder is not a folder!");
     } else {
       File[] flst =
           fRoot.listFiles((File dir, String name) -> name.startsWith(OUTMAIL_FILENAME) &&
@@ -152,6 +151,19 @@ public class TaskFileSubmitter implements TaskExecutionInterface {
             try (FileInputStream fp = new FileInputStream(file)) {
 
               pmail.load(fp);
+              if (!pmail.containsKey(PROP_SERVICE) ){
+                pmail.setProperty(PROP_SERVICE, p.getProperty(PROP_SERVICE));
+              }
+              if (!pmail.containsKey(PROP_ACTION)){
+                pmail.setProperty(PROP_ACTION, p.getProperty(PROP_ACTION));
+              }
+              if (!pmail.containsKey(PROP_RECEIVER_EBOX)){
+                pmail.setProperty(PROP_RECEIVER_EBOX, p.getProperty(PROP_RECEIVER_EBOX));
+              }
+              if (!pmail.containsKey(PROP_SENDER_EBOX)){
+                pmail.setProperty(PROP_SENDER_EBOX, p.getProperty(PROP_SENDER_EBOX));
+              }
+              
 
               BigInteger bi = processOutMail(pmail, fMetaData);
               File fewFMetaData = new File(file.getAbsolutePath() + OUTMAIL_SUFFIX_SUBMITTED);
@@ -203,8 +215,8 @@ public class TaskFileSubmitter implements TaskExecutionInterface {
       }
 
     }
-    sw.append("Submited '" + iVal + "' from folder: " + sfolder);
-    sw.append("backup ends in : " + (l - LOG.getTime()) + " ms\n");
+    sw.append("Submited '" + iVal + "'" );
+    sw.append(" in : " + (LOG.getTime()-l) + " ms\n");
     LOG.logEnd(l);
     return sw.toString();
   }
@@ -235,31 +247,58 @@ public class TaskFileSubmitter implements TaskExecutionInterface {
     String msgId = readProperty(p, PROP_SENDER_MSG_ID, true);
     String service = readProperty(p, PROP_SERVICE, true);
     String action = readProperty(p, PROP_ACTION, true);
-    String sender = readProperty(p, PROP_SENDER_EBOX, true);
-    String receiver = readProperty(p, PROP_RECEIVER_EBOX, true);
+    String senderName = "";
+    String senderBox = readProperty(p, PROP_SENDER_EBOX, true);
+    String receiverName = "";
+    String receiverBox = readProperty(p, PROP_RECEIVER_EBOX, true);
     String payload = readProperty(p, PROP_PAYLOAD, true);
     String[] lst = payload.split(";");
-    // validate data
-    /*
-     * if (isValidMailAddress(sender)) { throw new FSException("Sender SEDBox: '" + sender +
-     * "' is not valid!"); } if (isValidMailAddress(receiver)) { throw new
-     * FSException("Receiver SEDBox: '" + receiver + "' is not valid!"); }
-     */
+    
+    if (senderBox.contains("@")){
+      senderName = senderBox.substring(0,senderBox.indexOf("@") );
+      if (senderBox.endsWith("@"+SEDSystemProperties.getLocalDomain())){
+         throw new FSException(String.format("Sender box '%s' do not match local domain '%s'", senderBox, SEDSystemProperties.getLocalDomain()));
+      }
+      if (mLookups.getSEDBoxByAddressName(senderBox)==null){
+        throw new FSException(String.format("Sender box '%s' do not exists!'", senderBox));
+      }
+    }else {
+      senderName = senderBox;
+      senderBox +="@"+SEDSystemProperties.getLocalDomain();
+    }
+    if (receiverBox.contains("@")){
+      senderName = receiverBox.substring(0,receiverBox.indexOf("@") );
+    }else {
+      receiverName = receiverBox;
+      receiverBox +="@"+SEDSystemProperties.getLocalDomain();
+      
+      if (mLookups.getSEDBoxByAddressName(receiverBox)==null){
+        throw new FSException(String.format("Receiver box '%s' do not exists!'", receiverBox));
+      }
+    }
+    
 
     if (lst == null || lst.length == 0) {
       throw new FSException("No payload to submit");
     }
-
+    
+    if (!Utils.isEmptyString(service)) {
+      List<MSHOutMail>  lstSendMail = mdao.getMailBySenderMessageId(MSHOutMail.class, msgId);
+      if (!lstSendMail.isEmpty()) {
+        throw new FSException(String.format("Message with senderMessageId '%s' already submitted %s (cnt: %d)",  msgId,lstSendMail.get(0).getSubmittedDate().toString(), lstSendMail.size()) );
+      }
+    }
+    
     MSHOutMail mout = new MSHOutMail();
-    mout.setMessageId(Utils.getInstance().getGuidString());
+    mout.setSenderMessageId(msgId);
     mout.setService(service);
     mout.setAction(action);
-    mout.setConversationId(msgId);
-    mout.setSenderEBox(sender);
-    mout.setSenderName(sender);
+    
+    mout.setSenderEBox(senderBox);
+    mout.setSenderName(senderName);
     mout.setRefToMessageId(msgId);
-    mout.setReceiverEBox(receiver);
-    mout.setReceiverName(receiver);
+    mout.setReceiverEBox(receiverBox);
+    mout.setReceiverName(receiverName);
     mout.setSubject(service + " " + msgId);
     // prepare mail to persist
     Date dt = new Date();
@@ -350,8 +389,12 @@ public class TaskFileSubmitter implements TaskExecutionInterface {
     tt.setType("filesubmitter");
     tt.setName("File subbmiter");
     tt.setDescription(
-        "Tasks submits mail in given folder. Mail must be in form: 'receiver-box_service_action'");
+        "Task submits mail in given folder. '");
     tt.getSEDTaskTypeProperties().add(createTTProperty(KEY_EXPORT_FOLDER, "Submit folder"));
+    tt.getSEDTaskTypeProperties().add(createTTProperty(PROP_SERVICE, "Service"));
+    tt.getSEDTaskTypeProperties().add(createTTProperty(PROP_ACTION, "Action"));
+    tt.getSEDTaskTypeProperties().add(createTTProperty(PROP_RECEIVER_EBOX, "Receiver box"));
+    tt.getSEDTaskTypeProperties().add(createTTProperty(PROP_SENDER_EBOX, "Sender box"));
 
     return tt;
   }
@@ -372,13 +415,4 @@ public class TaskFileSubmitter implements TaskExecutionInterface {
     return createTTProperty(key, desc, true, "string", null, null);
   }
 
-  /**
-   *
-   * @param address
-   * @return
-   */
-  public static boolean isValidMailAddress(String address) {
-    return address != null && EMAIL_PATTEREN.matcher(address).matches();
-
-  }
 }

@@ -31,7 +31,7 @@
                         </f:facet>
                         <p:row>
                             <p:column>
-                                <h:outputText value="Izberite izhodni predal:" />
+                                <h:outputText value="Izberite lokalni predal:" />
                             </p:column>
                             <p:column>
                                 <p:selectOneMenu id="ebox" value="#{TCStressTest.testSenderEBox}" style="width:150px" >
@@ -44,14 +44,14 @@
                         </p:row>
                         <p:row>
                             <p:column>
-                                <h:outputText value="Vnesite naslovnikov predal:" />
+                                <h:outputText value="Vnesite predal naslovnika/pošiljatelja:" />
                             </p:column>
                             <p:column>
                                 <h:inputText value="#{TCStressTest.testReceiverEBox}" style="width: 100%"/>
                             </p:column>
                         </p:row>
                     </p:panelGrid>
-
+                    <hr />
                     <h3>Obremenitveni test: večja količina pošiljk</h3>
                     <p:panelGrid columns="2">
                         <h:outputText value="Storitev:" />
@@ -72,7 +72,7 @@
                             <f:selectItem itemLabel="5000" itemValue="5000" />
                         </p:selectOneMenu>
                     </p:panelGrid>
-                    
+
                     <p:progressBar widgetVar="pbDRWAjax" ajax="true" value="#{TCStressTest.stressTestProgress}" 
                                    labelTemplate="{value}%" styleClass="animated" global="false" > 
                         <p:ajax event="complete" listener="#{TCStressTest.onStressTestComplete()}" update="messages"
@@ -88,7 +88,7 @@
                                      oncomplete="PF('pbDRWAjax').cancel();PF('startDRW').enable();" />
                     <br />
 
-
+                    <hr />
                     <h3>Obremenitveni test: Prenos velikih pošiljk</h3>
                     <p:panelGrid columns="2">
                         <h:outputText value="Storitev:" />
@@ -107,13 +107,14 @@
                             <f:selectItem itemLabel="100MB" itemValue="100000" />
                         </p:selectOneMenu>
                     </p:panelGrid>
-                    
+
                     <p:progressBar widgetVar="pbPSAjax" ajax="true" value="#{TCStressTest.payloadSizeTestProgress}" 
                                    labelTemplate="{value}%" styleClass="animated" global="false" > 
                         <p:ajax event="complete" listener="#{TCStressTest.onPayloadSizeTestComplete()}" update="messages"
                                 oncomplete="PF('startPS').enable()"/>
                     </p:progressBar>
                     <br />
+
                     <p:commandButton value="Prični" 
                                      onclick="PF('pbPSAjax').start();PF('startPS').disable();" 
                                      actionListener="#{TCStressTest.executePayloadSizeTest()}"
@@ -122,6 +123,52 @@
                     <p:commandButton value="Prekini" actionListener="#{TCStressTest.cancelPayloadSizeTest()}" 
                                      oncomplete="PF('pbPSAjax').cancel();PF('startPS').enable();" />
                     <br />
+
+                    <p:outputPanel rendered="#{TCStressTest.getRegistredDisableServicePlugin().size() > 0}">
+                        <hr />
+                        <h3>Robustnost: Nedelovanje strežnika: HTTP - 503</h3>
+                        <p:selectOneMenu value="#{TCStressTest.disableService}"  style="width: 200px !important" >
+                                    <f:selectItem noSelectionOption="true" />
+                                    <f:selectItems value="#{TCStressTest.getRegistredDisableServicePlugin()}" />                   
+                                </p:selectOneMenu>
+                                <p:commandButton value="Dodaj"                                      
+                                                 actionListener="#{TCStressTest.addNewDisableService()}"
+                                                 update=":testcase-forms:datalist" />
+
+                                                 
+                        <p:dataTable id="datalist" value="#{TCStressTest.disableServiceList}"
+                                     scrollable="true"
+                                     scrollHeight="135" 
+                                     var="ds" >
+                            <f:facet name="header">
+                                Seznam vseh aktivnih blokad na strežniku (Prejemnik je vedno "lokalni" predal)
+                            </f:facet>
+                            <p:column style="width:32px;">
+                                <p:commandButton update=":testcase-forms:datalist" 
+                                                 icon="ui-icon-sed-remove" 
+                                                 title="Delete" 
+                                                 disabled="#{!testCasePluginData.isUserLocalBox(ds.receiverBox)}"
+                                                 actionListener="#{TCStressTest.removeSelectedService}">
+                                    <f:attribute name="disabledService" value="#{ds}" />
+                                </p:commandButton>
+                            </p:column>
+
+                            <p:column width="60" headerText="Storitev">
+                                <h:outputText value="#{ds.serviceId}" />
+                            </p:column>
+                            <p:column width="60" headerText="Pošiljatelj">
+                                <h:outputText value="#{ds.senderBox}" />
+                            </p:column>
+                            <p:column width="60" headerText="Prejemnik">
+                                <h:outputText value="#{ds.receiverBox}" />
+                            </p:column>
+
+                        </p:dataTable>
+
+                    </p:outputPanel>
+
+
+
 
                 </p:layoutUnit>                       
             </p:layout>

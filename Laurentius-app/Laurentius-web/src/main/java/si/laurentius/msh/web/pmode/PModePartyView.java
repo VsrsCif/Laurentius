@@ -14,23 +14,18 @@
  */
 package si.laurentius.msh.web.pmode;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.component.html.HtmlInputText;
-import javax.faces.event.ValueChangeEvent;
-import org.primefaces.component.datatable.DataTable;
 import org.primefaces.event.CellEditEvent;
-import org.primefaces.event.RowEditEvent;
-import org.primefaces.event.SelectEvent;
-import org.primefaces.event.UnselectEvent;
 import si.laurentius.cert.SEDCertStore;
 import si.laurentius.cert.SEDCertificate;
 import si.laurentius.commons.SEDJNDI;
+import si.laurentius.commons.exception.PModeException;
 import si.laurentius.commons.interfaces.PModeInterface;
 import si.laurentius.commons.interfaces.SEDLookupsInterface;
 import si.laurentius.commons.utils.SEDLogger;
@@ -103,30 +98,63 @@ public class PModePartyView extends AbstractPModeJSFView<PartyIdentitySet> {
 
   }
 
-  /**
-   *
-   */
   @Override
-  public void persistEditable() {
-    long l = LOG.logStart();
+  public boolean validateData() {
     PartyIdentitySet sv = getEditable();
-    if (sv != null) {
-      mPModeInteface.addPartyIdentitySet(sv);
-      setEditable(null);
+    if (sv != null && isEditableNew()) {
+      if (Utils.isEmptyString(sv.getId())) {
+        facesContext().addMessage(null,
+            new FacesMessage(FacesMessage.SEVERITY_WARN, "Id is empty!", "Id must not be empty!"));
+        return false;
+      } else if (mPModeInteface.partyIdentitySetExists(sv.getId())) {
+        facesContext().addMessage(null,
+            new FacesMessage(FacesMessage.SEVERITY_WARN, "Id alredy exists!", "Id must be unique!"));
+        return false;
+      } else if (!sv.getIsLocalIdentity() &&  Utils.isEmptyString(sv.getDomain())) {
+        facesContext().addMessage(null,
+            new FacesMessage(FacesMessage.SEVERITY_WARN, "Domain is empty!", "For exchange party domain must not be empty!"));
+        return false;
+      } else if (sv.getPartyIds().isEmpty()) {
+        facesContext().addMessage(null,
+            new FacesMessage(FacesMessage.SEVERITY_WARN, "Identifier list empty", "Define at least one PartyIdentifier"));
+        return false;
+      } 
+      
+      return true;
     }
+    return true;
   }
 
   /**
    *
    */
   @Override
-  public void updateEditable() {
+  public boolean persistEditable() {
     long l = LOG.logStart();
+    boolean bsuc = false;
+    PartyIdentitySet sv = getEditable();
+    if (sv != null) {      
+      mPModeInteface.addPartyIdentitySet(sv);
+      setEditable(null);
+      bsuc = true;
+    }
+    return bsuc;
+  }
+
+  /**
+   *
+   */
+  @Override
+  public boolean updateEditable() {
+    boolean bsuc = false;
+    
     PartyIdentitySet sv = getEditable();
     if (sv != null) {
       mPModeInteface.updatePartyIdentitySet(sv);
       setEditable(null);
+      bsuc = true;
     }
+    return bsuc;
   }
 
   /**
@@ -140,6 +168,16 @@ public class PModePartyView extends AbstractPModeJSFView<PartyIdentitySet> {
     LOG.logEnd(l);
     return lst;
 
+  }
+  
+  public void setEditableIdentityActive(boolean bVal) {
+    if (getEditable() != null) {
+      getEditable().setIsLocalIdentity(bVal);
+    }
+  }
+
+  public boolean getEditableIdentityActive() {
+    return getEditable() != null && getEditable().getActive()!=null ? getEditable().getActive() : true;
   }
 
   public void setEditableLocalIdentity(boolean bVal) {
@@ -165,7 +203,7 @@ public class PModePartyView extends AbstractPModeJSFView<PartyIdentitySet> {
   }
 
   public List<SEDCertificate> getCurrentTLSKeyCerts() {
-    if (getCurrrentTransportTLS() != null && 
+    if (getCurrrentTransportTLS() != null &&
         !Utils.isEmptyString(getCurrrentTransportTLS().getKeyStoreName())) {
       String keystoreName = getCurrrentTransportTLS().getKeyStoreName();
       SEDCertStore cs = mLookUp.getSEDCertStoreByName(keystoreName);
@@ -175,8 +213,8 @@ public class PModePartyView extends AbstractPModeJSFView<PartyIdentitySet> {
     }
     return Collections.emptyList();
   }
-  
-   public List<SEDCertificate> getCurrentExchangeTruststoreCerts() {
+
+  public List<SEDCertificate> getCurrentExchangeTruststoreCerts() {
     if (getEditable() != null && getEditable().getExchangePartySecurity() != null &&
         !Utils.isEmptyString(getEditable().getExchangePartySecurity().getTrustoreName())) {
       String keystoreName = getEditable().getExchangePartySecurity().getTrustoreName();
@@ -187,8 +225,7 @@ public class PModePartyView extends AbstractPModeJSFView<PartyIdentitySet> {
     }
     return Collections.emptyList();
   }
-  
-  
+
   public String getListAsString(List<String> lst) {
     return lst != null ? String.join(",", lst) : "";
   }
@@ -213,8 +250,7 @@ public class PModePartyView extends AbstractPModeJSFView<PartyIdentitySet> {
     }
     return null;
   }
-  
- 
+
   public Protocol.Proxy getCurrrentProxy() {
     PartyIdentitySetType.TransportProtocol tc = getCurrentTransportProtocol();
     if (tc != null) {
@@ -225,8 +261,8 @@ public class PModePartyView extends AbstractPModeJSFView<PartyIdentitySet> {
     }
     return null;
   }
-  
-   public Protocol.Address getCurrrentAddress() {
+
+  public Protocol.Address getCurrrentAddress() {
     PartyIdentitySetType.TransportProtocol tc = getCurrentTransportProtocol();
     if (tc != null) {
       if (tc.getAddress() == null) {
@@ -235,6 +271,61 @@ public class PModePartyView extends AbstractPModeJSFView<PartyIdentitySet> {
       return tc.getAddress();
     }
     return null;
+  }
+
+  public PartyIdentitySetType.LocalPartySecurity getCurrrentLocalPartySecurity() {
+    if (getEditable() != null) {
+      if (getEditable().getLocalPartySecurity() == null) {
+        getEditable().setLocalPartySecurity(new PartyIdentitySetType.LocalPartySecurity());
+      }
+      return getEditable().getLocalPartySecurity();
+    }
+    return null;
+  }
+
+  public PartyIdentitySetType.ExchangePartySecurity getCurrrentExchangePartySecurity() {
+    if (getEditable() != null) {
+      if (getEditable().getExchangePartySecurity() == null) {
+        getEditable().setExchangePartySecurity(new PartyIdentitySetType.ExchangePartySecurity());
+      }
+      return getEditable().getExchangePartySecurity();
+    }
+    return null;
+  }
+
+  public void createPartyId() {
+    if (getEditable() != null) {
+      PartyIdentitySetType.PartyId ps = new PartyIdentitySetType.PartyId();
+      ps.setType("type");
+      ps.setValueSource("address");
+      getEditable().getPartyIds().add(ps);
+    }
+  }
+
+  public void removeSelectedPartyId() {
+
+  }
+
+  public void onCellEditTableComplete(CellEditEvent cee) {
+    LOG.formatedlog("Cell edit rindex %d, row key %s, new val %s ", cee.getRowIndex(),
+        cee.getRowKey(), cee.getNewValue());
+
+  }
+
+  public PartyIdentitySetType.PartyId getSelectedPartyId() {
+    return selectedPartyId;
+  }
+
+  public void setSelectedPartyId(PartyIdentitySetType.PartyId spi) {
+    LOG.formatedlog("Select partyId: %d", getPartyIdIndex(spi));
+    this.selectedPartyId = spi;
+  }
+
+  public int getPartyIdIndex(PartyIdentitySetType.PartyId pi) {
+    if (getEditable() != null && pi != null && getEditable().getPartyIds().contains(pi)) {
+      return getEditable().getPartyIds().indexOf(pi);
+    }
+    return -1;
   }
 
 }

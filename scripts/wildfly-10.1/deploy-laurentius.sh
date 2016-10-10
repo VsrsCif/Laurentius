@@ -113,7 +113,7 @@ if [ "$INIT" = "TRUE" ]; then
 	cp "$LAU_BUNDLE/modules/org.apache.ws.securitymodule.xml" "$WILDFLY_HOME/modules/system/layers/base/org/apache/ws/security/main/module.xml"
 
 	# copy start scripts
-	cp "$LAU_BUNDLE/widlfly-10.1/laurentius-demo.sh" "$WILDFLY_HOME/bin/"
+	cp "$LAU_BUNDLE/wildfly-10.1/laurentius-demo.sh" "$WILDFLY_HOME/bin/"
 	chmod u+x "$WILDFLY_HOME/bin/laurentius-demo.sh"
 
 	# create home folder
@@ -121,12 +121,12 @@ if [ "$INIT" = "TRUE" ]; then
 	cp -r "$LAU_BUNDLE/laurentius-home" "$LAU_HOME"
 	
 	# copy configuration
-	cp "$LAU_BUNDLE/widlfly-10.1/config/laurentius-roles.properties" "$WILDFLY_HOME/standalone/configuration/"
-	cp "$LAU_BUNDLE/widlfly-10.1/config/laurentius-users.properties" "$WILDFLY_HOME/standalone/configuration/"
-	cp "$LAU_BUNDLE/widlfly-10.1/config/standalone-laurentius.xml" "$WILDFLY_HOME/standalone/configuration/"
-	cp "$LAU_BUNDLE/widlfly-10.1/config/test-tls-keystore.jks" "$WILDFLY_HOME/standalone/configuration/"
+	cp "$LAU_BUNDLE/wildfly-10.1/config/laurentius-roles.properties" "$WILDFLY_HOME/standalone/configuration/"
+	cp "$LAU_BUNDLE/wildfly-10.1/config/laurentius-users.properties" "$WILDFLY_HOME/standalone/configuration/"
+	cp "$LAU_BUNDLE/wildfly-10.1/config/standalone-laurentius.xml" "$WILDFLY_HOME/standalone/configuration/"
+	cp "$LAU_BUNDLE/wildfly-10.1/config/test-tls-keystore.jks" "$WILDFLY_HOME/standalone/configuration/"
 	mv "$WILDFLY_HOME/bin/standalone.conf" "$WILDFLY_HOME/bin/standalone.conf.bck"
-	cp "$LAU_BUNDLE/widlfly-10.1/config/standalone.conf" "$WILDFLY_HOME/bin/"
+	cp "$LAU_BUNDLE/wildfly-10.1/config/standalone.conf" "$WILDFLY_HOME/bin/"
 	
 
 

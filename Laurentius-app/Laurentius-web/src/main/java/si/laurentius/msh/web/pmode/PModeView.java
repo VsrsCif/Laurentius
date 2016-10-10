@@ -49,6 +49,11 @@ public class PModeView extends AbstractPModeJSFView<PMode> {
 
   }
 
+   @Override
+  public boolean validateData() {
+    
+    return true;
+  }
   /**
    *
    */
@@ -78,26 +83,33 @@ public class PModeView extends AbstractPModeJSFView<PMode> {
    *
    */
   @Override
-  public void persistEditable() {
+  public boolean persistEditable() {
+    
     long l = LOG.logStart();
+    boolean bsuc = false;
     PMode sv = getEditable();
     if (sv != null) {      
       mPModeInteface.addPMode(sv);
       setEditable(null);
+      bsuc = true;
     }
+    return bsuc;
   }
 
   /**
    *
    */
   @Override
-  public void updateEditable() {
+  public boolean updateEditable() {
     long l = LOG.logStart();
+    boolean bsuc = false;
     PMode sv = getEditable();
     if (sv != null) {      
       mPModeInteface.updatePMode(sv);
       setEditable(null);
+      bsuc = true;
     }
+    return bsuc;
   }
 
   /**

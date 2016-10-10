@@ -60,6 +60,7 @@
     
     <query name="si.laurentius.msh.inbox.mail.MSHInMail.getById" ><![CDATA[SELECT p FROM MSHInMail p WHERE p.Id = :id]]></query>
     <query name="si.laurentius.msh.inbox.mail.MSHInMail.getByMessageId" ><![CDATA[SELECT p FROM MSHInMail p WHERE p.MessageId = :messageId]]></query>    
+    <query name="si.laurentius.msh.inbox.mail.MSHInMail.getBySenderMessageId" ><![CDATA[SELECT p FROM MSHInMail p WHERE p.SenderMessageId = :senderMessageId]]></query>        
     <query name="si.laurentius.msh.inbox.mail.MSHInMail.getByConvIdAndAction" ><![CDATA[SELECT p FROM MSHInMail p WHERE p.ConversationId = :convId and p.Action = :action]]></query>    
     <query name="si.laurentius.msh.inbox.mail.MSHInMail.getList" ><![CDATA[SELECT p FROM MSHInMail p ]]></query>    
     <query name="si.laurentius.msh.inbox.mail.MSHInMail.getByIdAndReceiverBox" >

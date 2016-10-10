@@ -60,6 +60,11 @@ public class AdminSEDCronJobView extends AbstractAdminJSFView<SEDCronJob> {
     return mdbLookups.getSEDCronJobById(id);
   }
 
+   @Override
+  public boolean validateData() {
+    
+    return true;
+  }
   /**
      *
      */
@@ -104,7 +109,8 @@ public class AdminSEDCronJobView extends AbstractAdminJSFView<SEDCronJob> {
      *
      */
   @Override
-  public void persistEditable() {
+  public boolean persistEditable() {
+    boolean bsuc = false;
     SEDCronJob ecj = getEditable();
     if (ecj != null) {
       mdbLookups.addSEDCronJob(ecj);
@@ -118,7 +124,9 @@ public class AdminSEDCronJobView extends AbstractAdminJSFView<SEDCronJob> {
         mshScheduler.getServices().createCalendarTimer(se, checkTest);
 
       }
+      bsuc = true;
     }
+    return bsuc;
 
   }
 
@@ -126,10 +134,12 @@ public class AdminSEDCronJobView extends AbstractAdminJSFView<SEDCronJob> {
      *
      */
   @Override
-  public void updateEditable() {
+  public boolean updateEditable() {
     SEDCronJob ecj = getEditable();
+    boolean bsuc = false;
     if (ecj != null) {
       mdbLookups.updateSEDCronJob(ecj);
+      
       for (Timer t : mshScheduler.getServices().getAllTimers()) {
         if (t.getInfo().equals(ecj.getId())) {
           t.cancel();
@@ -145,8 +155,9 @@ public class AdminSEDCronJobView extends AbstractAdminJSFView<SEDCronJob> {
         TimerConfig checkTest = new TimerConfig(ecj.getId(), false);
         mshScheduler.getServices().createCalendarTimer(se, checkTest);
       }
-
+    bsuc =true;
     }
+    return bsuc;
   }
 
   /**

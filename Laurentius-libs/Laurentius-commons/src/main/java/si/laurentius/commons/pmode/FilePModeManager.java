@@ -101,7 +101,7 @@ public class FilePModeManager implements PModeInterface {
 
   @Override
   public void addPartyIdentitySet(PartyIdentitySet val) {
-    if (getPartyIdentitySetById(val.getId())!=null){
+    if (partyIdentitySetExists(val.getId())){
       throw new PModeException(String.format("PartyIdentitySet with Id '%s' already exists!",val.getId() ));
     }
     
@@ -451,6 +451,15 @@ public class FilePModeManager implements PModeInterface {
     }
     throw new PModeException(String.format("No PartyIdentitySet for id: '%s'.", id));
   }
+  
+  public boolean partyIdentitySetExists(String id) {
+    for (PartyIdentitySet pm : getPartyIdentitySets()) {
+      if (Objects.equals(pm.getId(), id)) {
+        return true;
+      }
+    }
+    return false;
+  }
 
   /**
    * Method returs PartyIdentitySet for Authorization. Method is used for pull signal
@@ -541,7 +550,7 @@ public class FilePModeManager implements PModeInterface {
   public PartyIdentitySet getPartyIdentitySetForSEDAddress(String address)
       throws PModeException {
     if (Utils.isEmptyString(address) || !address.contains("@")) {
-      throw new IllegalArgumentException(String.format("SED Address must be " +
+      throw new PModeException(String.format("SED Address must be " +
           "composed with [localpart]@[domain]. Address '%s'", address));
     }
 

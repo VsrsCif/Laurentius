@@ -78,7 +78,6 @@ public class MSHExportBean implements MessageListener {
   StorageUtils msStorageUtils = new StorageUtils();
   StringFormater msfFormat = new StringFormater();
 
- 
   @Override
   public void onMessage(Message msg) {
     long t = LOG.logStart();
@@ -112,7 +111,7 @@ public class MSHExportBean implements MessageListener {
     }
 
     String exportFolderName;
-    File exportFolder ;
+    File exportFolder;
     if (sb.getExport() != null && sb.getExport().getActive() &&
         sb.getExport().getFileMask() != null) {
       Export e = sb.getExport();
@@ -126,6 +125,7 @@ public class MSHExportBean implements MessageListener {
         LOG.logError(t, "Message with id: '" + jmsMessageId + "' export failed!" + errMsg, null);
         return;
       }
+
     } else {
       String errMsg = String.format(
           "Receiver box '%s' does not have configurationf for exporting mail! Export suppressed for mail %d!",
@@ -137,12 +137,17 @@ public class MSHExportBean implements MessageListener {
     // export metadata
     List<String> listFiles = new ArrayList<>();
 
-    if (sb.getExport().getExportMetaData()!=null && sb.getExport().getExportMetaData()) {
-      String fn = exportFolder.getAbsolutePath() + File.separator + "metadata." +
-          MimeValues.MIME_XML.getSuffix();
+    if (sb.getExport().getExportMetaData() != null && sb.getExport().getExportMetaData()) {
+      File fn = new File(exportFolder.getAbsolutePath() + File.separator + "metadata." +
+          MimeValues.MIME_XML.getSuffix());
+      if (fn.exists() && sb.getExport().getOverwrite() != null && sb.getExport().getOverwrite()) {
+        fn.delete();
+      }
+
       try {
+
         XMLUtils.serialize(mail, fn);
-        listFiles.add(fn);
+        listFiles.add(fn.getAbsolutePath());
 
       } catch (JAXBException | FileNotFoundException ex) {
         String errMsg = String.format("Failed to serialize metadata: %s!",
@@ -156,7 +161,8 @@ public class MSHExportBean implements MessageListener {
     for (MSHInPart mip : mail.getMSHInPayload().getMSHInParts()) {
       File f;
       try {
-        f = msStorageUtils.copyFileToFolder(mip.getFilepath(), exportFolder);
+        f = msStorageUtils.copyFileToFolder(mip.getFilepath(), exportFolder,
+            sb.getExport().getOverwrite() != null && sb.getExport().getOverwrite());
         listFiles.add(f.getAbsolutePath());
       } catch (StorageException ex) {
         String errMsg = String.format("Failed to export file %s! Error %s",
@@ -168,8 +174,8 @@ public class MSHExportBean implements MessageListener {
     }
     // execute file 
     if (sb.getExecute() != null && sb.getExecute().getActive() != null &&
-         sb.getExecute().getActive() &&
-         !Utils.isEmptyString(sb.getExecute().getCommand())) {
+        sb.getExecute().getActive() &&
+        !Utils.isEmptyString(sb.getExecute().getCommand())) {
       Execute e = sb.getExecute();
       String command = StringFormater.replaceProperties(e.getCommand());
       String params = String.join(File.pathSeparator, listFiles) + " " + msfFormat.format(
@@ -197,7 +203,8 @@ public class MSHExportBean implements MessageListener {
 
       if (procRes != 0) {
         String errMsg = String.format(
-            "Execution process return value '%d'. Normal termination is '0'!",
+            "Execution process %s return value '%d'. Normal termination is '0'!",
+            command.length() > 20 ? "..." + command.substring(command.length() - 20) : command,
             procRes);
         setStatusToInMail(mail, SEDInboxMailStatus.ERROR, errMsg);
         LOG.logError(t, String.format("Message with id: %d failed to export: %s", mail.getId(),

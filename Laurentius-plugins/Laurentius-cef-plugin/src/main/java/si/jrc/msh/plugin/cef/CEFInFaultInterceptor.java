@@ -75,7 +75,7 @@ public class CEFInFaultInterceptor implements SoapInterceptorInterface {
    * @param msg
    */
   @Override
-  public void handleMessage(SoapMessage msg) {
+  public boolean handleMessage(SoapMessage msg) {
     long l = LOG.logStart();
     
     // !!!!!!!!!!!!!!!!!!!!!!!
@@ -93,8 +93,9 @@ public class CEFInFaultInterceptor implements SoapInterceptorInterface {
         fireAdviceOfDeliveryNotification(mOutMail, inboxSb, type );
       }      
     }*/
-
+   
     LOG.logEnd(l);
+    return true;
   }
 
  

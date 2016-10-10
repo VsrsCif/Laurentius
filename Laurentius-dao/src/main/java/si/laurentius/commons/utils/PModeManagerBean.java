@@ -245,4 +245,10 @@ public class PModeManagerBean implements PModeInterface {
   public void updateService(Service val) {
     getPModeManager().updateService(val);
   }
+
+  @Override
+  public boolean partyIdentitySetExists(String id) {
+    return getPModeManager().partyIdentitySetExists(id);
+  }
+  
 }

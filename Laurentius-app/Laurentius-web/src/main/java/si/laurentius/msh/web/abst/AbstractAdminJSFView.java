@@ -5,6 +5,7 @@
 package si.laurentius.msh.web.abst;
 
 import java.util.List;
+import org.primefaces.context.RequestContext;
 
 /**
  *
@@ -18,21 +19,29 @@ abstract public class AbstractAdminJSFView<T> extends AbstractJSFView {
   private T mtSelected;
 
   /**
-     *
-     */
+   *
+   */
   public void addOrUpdateEditable() {
-    if (isEditableNew()) {
-      persistEditable();
-      setNew(null);
-    } else {
-      updateEditable();
-      setEditable(null);
+    boolean bsuc = false;
+    if (validateData()) {
+
+      if (isEditableNew()) {
+        bsuc = persistEditable();
+        setNew(null);
+      } else {
+        bsuc = updateEditable();
+        setEditable(null);
+      }
     }
+    RequestContext.getCurrentInstance().addCallbackParam("saved", bsuc);
+
   }
 
+  abstract public boolean validateData();
+
   /**
-     *
-     */
+   *
+   */
   abstract public void createEditable();
 
   /**
@@ -74,13 +83,13 @@ abstract public class AbstractAdminJSFView<T> extends AbstractJSFView {
   }
 
   /**
-     *
-     */
-  abstract public void persistEditable();
+   *
+   */
+  abstract public boolean persistEditable();
 
   /**
-     *
-     */
+   *
+   */
   abstract public void removeSelected();
 
   /**
@@ -118,8 +127,8 @@ abstract public class AbstractAdminJSFView<T> extends AbstractJSFView {
   }
 
   /**
-     *
-     */
-  abstract public void updateEditable();
+   *
+   */
+  abstract public boolean updateEditable();
 
 }

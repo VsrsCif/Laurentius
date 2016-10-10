@@ -10,7 +10,7 @@ rm -rf "$FOLDER_DEPLOY/$WILDFLY_HOME"
 unzip -q "$WILDFLY_HOME.zip" -d $FOLDER_DEPLOY
 
 
-cd "$FOLDER_DEPLOY/$BOUNDLE_NAME/widlfly-10.1"
+cd "$FOLDER_DEPLOY/$BOUNDLE_NAME/wildfly-10.1"
 
 ./deploy-laurentius.sh --init -w "../../$WILDFLY_HOME"
 

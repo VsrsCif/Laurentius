@@ -1,0 +1,4 @@
+senderMessageId=002
+receiverEBox=a.department
+payload=test-1.pdf;test-2.pdf;test-3.pdf
+

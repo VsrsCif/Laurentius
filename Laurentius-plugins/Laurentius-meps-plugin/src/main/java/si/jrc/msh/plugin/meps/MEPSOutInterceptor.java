@@ -34,9 +34,10 @@ public class MEPSOutInterceptor implements SoapInterceptorInterface {
    * @param msg
    */
   @Override
-  public void handleMessage(SoapMessage msg) {
+  public boolean handleMessage(SoapMessage msg) {
     // create one pdf with white pages
     // file message
+    return true;
 
   }
 

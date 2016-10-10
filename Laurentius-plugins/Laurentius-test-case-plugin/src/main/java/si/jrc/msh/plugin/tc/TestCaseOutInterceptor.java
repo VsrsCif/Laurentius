@@ -21,9 +21,12 @@ import javax.ejb.TransactionManagementType;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.transport.http.AbstractHTTPDestination;
+import si.jrc.msh.plugin.tc.utils.DisableService;
+import si.jrc.msh.plugin.tc.utils.DisableServiceUtils;
 import si.laurentius.commons.cxf.SoapUtils;
 import si.laurentius.commons.interfaces.SoapInterceptorInterface;
 import si.laurentius.commons.utils.SEDLogger;
+import si.laurentius.msh.inbox.mail.MSHInMail;
 
 /**
  *
@@ -50,19 +53,30 @@ public class TestCaseOutInterceptor implements SoapInterceptorInterface {
    * @param message
    */
   @Override
-  public void handleMessage(SoapMessage message) {
+  public boolean handleMessage(SoapMessage message) {
     long l = LOG.logStart(message);
 
-      boolean bBackChannel = !SoapUtils.isRequestMessage(message);
-    if (bBackChannel) {
-
-      HttpServletResponse response = (HttpServletResponse) message.getExchange()
+    boolean bBackChannel = !SoapUtils.isRequestMessage(message);
+    MSHInMail im = SoapUtils.getMSHInMail(message);
+    LOG.formatedWarning("got inmail  %s is backchannel %s", im, bBackChannel );
+    if (bBackChannel && im != null) {
+      String service = im.getService();
+      String rb = im.getReceiverEBox();
+      String sb = im.getSenderEBox();
+      boolean bER= DisableServiceUtils.existsDisableService(service, sb, rb);
+      LOG.formatedWarning("exists rule  %s ",  bER );
+      if (bER){
+        HttpServletResponse response = (HttpServletResponse) message.getExchange()
           .getInMessage().get(AbstractHTTPDestination.HTTP_RESPONSE);
-      response.setStatus(503);
-      message.getInterceptorChain().abort();
+        response.setStatus(503);
+        message.getInterceptorChain().abort();
+        return false;
+      }
+      
 
     }
     LOG.logEnd(l);
+    return true;
   }
 
   

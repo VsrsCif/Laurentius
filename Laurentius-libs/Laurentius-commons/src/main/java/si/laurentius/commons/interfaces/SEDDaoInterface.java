@@ -83,6 +83,15 @@ public interface SEDDaoInterface {
    * @return
    */
   <T> List<T> getMailByMessageId(Class<T> type, String mailId);
+  
+   /**
+   *
+   * @param <T>
+   * @param type
+   * @param mailId
+   * @return
+   */
+  <T> List<T> getMailBySenderMessageId(Class<T> type, String mailSenderId);
 
   /**
    *

@@ -17,6 +17,7 @@ package si.laurentius.msh.jms;
 import java.math.BigInteger;
 import javax.ejb.ActivationConfigProperty;
 import javax.ejb.EJB;
+import javax.ejb.EJBException;
 import javax.ejb.MessageDriven;
 import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
@@ -126,10 +127,12 @@ public class MSHQueueBean implements MessageListener {
     }
     LOG.formatedlog("Get EBMSMessageContext for message: %s", jmsMessageId);
     // get pmode EBMSMessageContext
+    
+    
     EBMSMessageContext sd;
     try {
       sd = mpModeManager.createMessageContextForOutMail(mail);
-    } catch (PModeException ex) {
+    } catch (   PModeException ex) {
       String errDesc = String.format(
           "Error retrieving EBMSMessageContext for message id: '%d'. Error: %s",
           jmsMessageId, ex.getMessage());
@@ -137,6 +140,26 @@ public class MSHQueueBean implements MessageListener {
       setStatusToOutMail(mail, SEDOutboxMailStatus.FAILED, errDesc, ex);
       mPluginOutEventHandler.outEvent(mail, null,
           OutMailEventLisneterInterface.PluginOutEvent.FAILED);
+      return;
+    }catch ( EJBException  ex) {
+      Exception exc =   ex.getCausedByException();
+      String errDesc = String.format(
+          "Error retrieving EBMSMessageContext for message id: '%d'. Error: %s",
+          jmsMessageId, exc.getMessage());
+      LOG.logError(t, errDesc, ex);
+      setStatusToOutMail(mail, SEDOutboxMailStatus.FAILED, errDesc, ex);
+      mPluginOutEventHandler.outEvent(mail, null,
+          OutMailEventLisneterInterface.PluginOutEvent.FAILED);
+      return;
+    }
+    
+    if (sd.getReceiverPartyIdentitySet().getActive()!= null && sd.getReceiverPartyIdentitySet().getActive()){
+    String errDesc = String.format(
+          "Receiver %s is inactive. (Check pmode settings.) Message is set to pending status.",
+          sd.getReceiverPartyIdentitySet().getId());
+      LOG.logWarn(t, errDesc, null);
+      setStatusToOutMail(mail, SEDOutboxMailStatus.PENDING, errDesc, null);
+      
       return;
     }
 

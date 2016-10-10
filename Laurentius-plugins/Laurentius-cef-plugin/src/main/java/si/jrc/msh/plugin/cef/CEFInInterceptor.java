@@ -82,7 +82,7 @@ public class CEFInInterceptor implements SoapInterceptorInterface {
    * @param msg
    */
   @Override
-  public void handleMessage(SoapMessage msg) {
+  public boolean handleMessage(SoapMessage msg) {
     long l = LOG.logStart();
     boolean isBackChannel = SoapUtils.isRequestMessage(msg);
 
@@ -129,6 +129,7 @@ public class CEFInInterceptor implements SoapInterceptorInterface {
     }
 
     LOG.logEnd(l);
+    return true;
   }
 
   /**

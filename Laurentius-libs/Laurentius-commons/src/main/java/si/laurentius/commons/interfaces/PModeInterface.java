@@ -167,6 +167,8 @@ public interface PModeInterface {
       throws PModeException;
 
   
+  public boolean partyIdentitySetExists(String id);
+  
   public List<PMode> getPModes() throws PModeException;
   public List<Service> getServices() throws PModeException;
   public List<PartyIdentitySet> getPartyIdentitySets() throws PModeException;

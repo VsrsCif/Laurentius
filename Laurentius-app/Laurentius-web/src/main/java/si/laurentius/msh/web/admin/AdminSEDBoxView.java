@@ -108,26 +108,39 @@ public class AdminSEDBoxView extends AbstractAdminJSFView<SEDBox> {
      *
      */
   @Override
-  public void persistEditable() {
+  public boolean persistEditable() {
     SEDBox sb = getEditable();
+    boolean bsuc = false;
     if (sb != null) {
       mdbLookups.addSEDBox(sb);
       setEditable(null);
+      bsuc = true;
     }
+    return bsuc;
   }
 
   /**
      *
      */
   @Override
-  public void updateEditable() {
+  public boolean updateEditable() {
+    
     SEDBox sb = getEditable();
+    boolean bsuc = false;
     if (sb != null) {
       mdbLookups.updateSEDBox(sb);
       setEditable(null);
+      return bsuc;
+      
     }
+    return bsuc;
   }
 
+   @Override
+  public boolean validateData() {
+    
+    return true;
+  }
   /**
    *
    * @return

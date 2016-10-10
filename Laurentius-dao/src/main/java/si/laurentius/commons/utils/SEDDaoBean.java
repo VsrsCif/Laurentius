@@ -364,6 +364,24 @@ public class SEDDaoBean implements SEDDaoInterface {
     LOG.logEnd(l);
     return result;
   }
+  
+  /**
+   *
+   * @param <T>
+   * @param type
+   * @param mailMessageId - ebms nessage id
+   * @return
+   */
+  @Override
+  public <T> List<T> getMailBySenderMessageId(Class<T> type, String mailMessageId) {
+    long l = LOG.logStart(type, mailMessageId);
+    TypedQuery<T> tq = memEManager.createNamedQuery(type.getName() + ".getBySenderMessageId", type);
+    tq.setParameter("senderMessageId", mailMessageId);
+    List<T> result = tq.getResultList();
+    LOG.logEnd(l);
+    return result;
+  }
+  
 
   /**
    *

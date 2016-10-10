@@ -75,7 +75,7 @@ public class CEFOutFaultInterceptor implements SoapInterceptorInterface {
    * @param msg
    */
   @Override
-  public void handleMessage(SoapMessage msg) {
+  public boolean handleMessage(SoapMessage msg) {
     long l = LOG.logStart();
    
     SEDBox inboxSb = SoapUtils.getMSHInMailReceiverBox(msg);
@@ -87,6 +87,7 @@ public class CEFOutFaultInterceptor implements SoapInterceptorInterface {
     }
 
     LOG.logEnd(l);
+    return true;
   }
 
   /**

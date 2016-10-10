@@ -10,6 +10,7 @@
         <property column="Active_Date_To" name="ActiveToDate"  length="32" type="java.util.Date" />    
         <component name="Export" class="si.laurentius.ebox.Export">
             <property column="EXPORT_ACTIVE" name="Active"  type="java.lang.Boolean" />    
+            <property column="EXPORT_OVERWRITE" name="Overwrite"  type="java.lang.Boolean" />                
             <property column="EXPORT_METADATA" name="ExportMetaData"  type="java.lang.Boolean" />                
             <property column="EXPORT_FOLDER" name="Folder" type="java.lang.String" length="512"  />    
             <property column="EXPORT_FILE_MASK" name="FileMask" type="java.lang.String" length="512"  />    

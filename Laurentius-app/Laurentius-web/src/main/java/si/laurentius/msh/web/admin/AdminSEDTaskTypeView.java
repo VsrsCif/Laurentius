@@ -63,6 +63,11 @@ public class AdminSEDTaskTypeView extends AbstractAdminJSFView<SEDTaskType> {
     setNew(ecj);
   }
 
+   @Override
+  public boolean validateData() {
+    
+    return true;
+  }
   /**
      *
      */
@@ -104,22 +109,28 @@ public class AdminSEDTaskTypeView extends AbstractAdminJSFView<SEDTaskType> {
      *
      */
   @Override
-  public void persistEditable() {
+  public boolean persistEditable() {
     SEDTaskType ecj = getEditable();
+    boolean bsuc = false;
     if (ecj != null) {
       mdbLookups.addSEDTaskType(ecj);
+      bsuc = true;
     }
+    return bsuc;
   }
 
   /**
      *
      */
   @Override
-  public void updateEditable() {
+  public boolean updateEditable() {
     SEDTaskType ecj = getEditable();
+    boolean bsuc = false;
     if (ecj != null) {
       mdbLookups.updateSEDTaskType(ecj);
+      bsuc = true;
     }
+    return bsuc;
   }
 
   /**

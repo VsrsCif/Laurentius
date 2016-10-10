@@ -22,6 +22,7 @@ import javax.faces.bean.SessionScoped;
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.interfaces.PModeInterface;
 import si.laurentius.commons.utils.SEDLogger;
+import si.laurentius.msh.pmode.PartyIdentitySet;
 import si.laurentius.msh.pmode.ReceptionAwareness;
 
 /**
@@ -74,30 +75,41 @@ public class PModeReceptionAwarenessView extends AbstractPModeJSFView<ReceptionA
 
   }
 
+   @Override
+  public boolean validateData() {
+    
+    return true;
+  }
   /**
    *
    */
   @Override
-  public void persistEditable() {
+  public boolean persistEditable() {
     long l = LOG.logStart();
+    boolean bsuc = false;
     ReceptionAwareness sv = getEditable();
     if (sv != null) {      
       mPModeInteface.addReceptionAwareness(sv);
       setEditable(null);
+      bsuc= true;
     }
+    return bsuc;
   }
 
   /**
    *
    */
   @Override
-  public void updateEditable() {
+  public boolean  updateEditable() {
     long l = LOG.logStart();
+    boolean bsuc = false;
     ReceptionAwareness sv = getEditable();
     if (sv != null) {      
       mPModeInteface.updateReceptionAwareness(sv);
       setEditable(null);
+      bsuc= true;
     }
+    return bsuc;
   }
 
   /**

@@ -270,7 +270,7 @@ public class StorageUtils {
    * @param replaceExisting - replace if target file exists
    * @throws si.laurentius.commons.exception.StorageException, file already exists, error reading file
    */
-  public void copyFile(File sourceFile, File destFile, boolean replaceExisting)
+  public static void copyFile(File sourceFile, File destFile, boolean replaceExisting)
       throws StorageException {
 
     try {
@@ -301,6 +301,22 @@ public class StorageUtils {
    */
   public File copyFileToFolder(String storageFilePath, File folder)
       throws StorageException {
+    
+    return copyFileToFolder(storageFilePath, folder, false);
+  }
+  
+  /**
+   * Copy relative storage file to dest folder.
+   *
+   * @param storageFilePath - relative storage file path
+   * @param folder - deset folder
+   * @param bOverWrite . overwrite dest file if exists
+   * @return dest file
+   * @throws StorageException - if dest folder could not be created of file could not be copied to
+   * dest folder
+   */
+  public File copyFileToFolder(String storageFilePath, File folder, boolean bOverWrite)
+      throws StorageException {
 
     if (!folder.exists() && !folder.mkdirs()) {
       throw new StorageException(format("Could not create dest folder: '%s' to copy file: '%s'.",
@@ -313,7 +329,7 @@ public class StorageUtils {
       throw new StorageException(format("Could not create folder '%s'", pf.getAbsolutePath()));
     }
 
-    copyFile(srcFile, destFile, false);
+    copyFile(srcFile, destFile, bOverWrite);
     return destFile;
   }
 

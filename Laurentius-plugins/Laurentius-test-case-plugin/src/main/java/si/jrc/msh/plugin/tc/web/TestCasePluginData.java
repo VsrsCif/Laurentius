@@ -24,7 +24,6 @@ import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
-import javax.faces.application.FacesMessage;
 import javax.faces.application.ViewHandler;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -38,12 +37,9 @@ import si.jrc.msh.plugin.tc.utils.TestUtils;
 import si.laurentius.commons.SEDGUIConstants;
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.SEDSystemProperties;
-import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.interfaces.SEDDaoInterface;
 import si.laurentius.commons.interfaces.SEDLookupsInterface;
 import si.laurentius.commons.utils.SEDLogger;
-import si.laurentius.commons.utils.Utils;
-import si.laurentius.msh.outbox.mail.MSHOutMail;
 import si.laurentius.user.SEDUser;
 
 /**
@@ -67,8 +63,6 @@ public class TestCasePluginData {
 
   @EJB(mappedName = SEDJNDI.JNDI_SEDLOOKUPS)
   SEDLookupsInterface mDBLookUp;
-
-
 
   TestUtils mTestUtils = new TestUtils();
 
@@ -172,9 +166,6 @@ public class TestCasePluginData {
     facesContext.setViewRoot(viewroot);
   }
 
- 
-  
-
   public LoginManager getLoginManager() {
     return loginManager;
   }
@@ -183,6 +174,15 @@ public class TestCasePluginData {
     this.loginManager = loginManager;
   }
 
-  
+  public boolean isUserLocalBox(String locbox) {
+    LOG.formatedWarning("RECEIVER BOX: %s", locbox);
+
+    String[] bx = locbox.split("@");
+    // allow to all to delete/manage  bad boxes
+    if (bx.length != 2 || !bx[1].equals(SEDSystemProperties.getLocalDomain())) {
+      return true;
+    }
+    return getUserEBoxes().contains(bx[0]);
+  }
 
 }

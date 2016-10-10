@@ -18,13 +18,21 @@ import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.xml.soap.MessageFactory;
+import javax.xml.soap.SOAPConstants;
+import javax.xml.soap.SOAPException;
+import javax.xml.soap.SOAPMessage;
 import org.apache.cxf.binding.soap.SoapMessage;
-import org.apache.cxf.transport.http.AbstractHTTPDestination;
+import org.apache.cxf.endpoint.Endpoint;
+import org.apache.cxf.interceptor.InterceptorChain;
+import org.apache.cxf.interceptor.OutgoingChainInterceptor;
+import org.apache.cxf.message.Message;
+import org.apache.cxf.message.MessageImpl;
+import si.jrc.msh.plugin.tc.utils.DisableServiceUtils;
 import si.laurentius.commons.cxf.SoapUtils;
 import si.laurentius.commons.interfaces.SoapInterceptorInterface;
 import si.laurentius.commons.utils.SEDLogger;
+import si.laurentius.msh.inbox.mail.MSHInMail;
 
 /**
  *
@@ -42,14 +50,59 @@ public class TestCaseInInterceptor implements SoapInterceptorInterface {
 
   /**
    *
-   * @param message
+   * @param msg
    */
   @Override
-  public void handleMessage(SoapMessage message) {
+  public boolean handleMessage(SoapMessage msg) {
     long l = LOG.logStart();
 
+    boolean isBackChannel = SoapUtils.isRequestMessage(msg);
+    MSHInMail im = SoapUtils.getMSHInMail(msg);
 
+    LOG.formatedWarning("got inmail  %s is backchannel %s", im, isBackChannel);
+    if (!msg.getExchange().isOneWay() && !isBackChannel) {
+
+      String service = im.getService();
+      String rb = im.getReceiverEBox();
+      String sb = im.getSenderEBox();
+      boolean bER = DisableServiceUtils.existsDisableService(service, sb, rb);
+      LOG.formatedWarning("exists rule  %s ", bER);
+      if (bER) {
+
+        Endpoint e = msg.getExchange().get(Endpoint.class);
+
+        Message responseMsg = new MessageImpl();
+        responseMsg.setExchange(msg.getExchange());
+        responseMsg = e.getBinding().createMessage(responseMsg);
+        msg.getExchange().setOutMessage(responseMsg);
+
+        MessageFactory mf;
+        try {
+          mf = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
+          SOAPMessage soapMessage = mf.createMessage();
+
+          responseMsg.setContent(SOAPMessage.class, soapMessage);
+
+          InterceptorChain chainOut =
+              OutgoingChainInterceptor.getOutInterceptorChain(msg
+                  .getExchange());
+          chainOut.add(new CXFOutHttpErrorInterceptor(503));
+
+          LOG.logWarn("got out interceptor:" + chainOut, null);
+          responseMsg.setInterceptorChain(chainOut);
+
+          chainOut.doIntercept(responseMsg);
+
+          msg.getInterceptorChain().abort();
+          return false;
+        } catch (SOAPException ex) {
+          LOG.logError(l, ex);
+        }
+      }
+    }
+    
     LOG.logEnd(l);
+    return true;
   }
 
   /**
