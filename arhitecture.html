@@ -38,16 +38,20 @@
 
 
         <h1 id="arhitecture:status">Statusi izhodne in dohodne pošte</h1>
-        Pošiljka pri odpremi in sprejemu gre skozi različne statuse. Statuse pošiljke spreminjajo dogodki na pošiljki ti. "eventi". Ni pa nujno,
+        Odprema izhodne pošte in sprejem dohodne pošte je proces pri katerem pošiljka prehaja skozi različne statuse. 
+        Status pošiljke spreminjajo dogodki na pošiljki, ni pa nujno,
         da vsak dogodek na pošiljki spremeni status pošiljke. Npr. V statusu pošiljanje se lahko izvede več dogodkov: kriptiranje, podpisovanje, "plugin obdelava" itd.
         Pri vseh dogodkih (posledično sprembah statusa) se beleži čas dogodka, aplikacijo, ki je prožila dogodek, ter v primeru človeškega posega: id uporabnika, ki je sprožil dogodek.
+        
         <h2>Izhodna pošta</h2>
-        Prvi status izhodne pošiljke je "SUBMITTED". Pošiljka je uspešno dodana v pošiljanje, če je skladna, s katero izmed PMode konfiguracijo. Končni status pošiljke je status SENT. 
-        V primeru, da je v pošiljko v statusu ERROR, je potreben administratorski poseg, ki odstrani vzrok napake ter ponovno sproži pošiljanje oz. pošiljke izbriše.
+        Prvi status izhodne pošiljke je "SUBMITTED". Pošiljka je uspešno dodana v pošiljanje, če je skladna, 
+        s katerim izmed PMode konfiguracijami. Končni status pošiljke je status SENT oz. DELIVERED če obstaja PMode pravilo
+        za pošiljanje informaciji o uspešnem sprejemu pošiljke na strani naslovnik. 
+        V primeru, da je v pošiljko v statusu ERROR oz. FAILED, je potreben administratorski poseg, ki odstrani vzrok 
+        napake ter ponovno sproži pošiljanje oz. pošiljke izbriše.
 
-        V nadaljevanju je opis statusov z barvnimi oznakami. Barve posamezne pošiljke se prikazujejo v uporabniški aplikaciji, 
-        pri posamezni pošiljki. <br /><br />
-        <img src="img/statuses-outmail.png" alt="Outmail statuses" width="680"/>
+        V nadaljevanju je tabela s podrobnejšim opisom statusov. <br /><br />
+        
         <table class="styled-table">
 
             <tbody>
@@ -62,7 +66,19 @@
                     <td style="background-color: orange;">orange</td>
                     <td>Pripravljena</td>
                     <td>Pošiljka uspešno oddana v odpremo. V primeru, da je pošiljka nepopolna: ne obstaja PMode konfiguracija ali 
-                        pošiljka ni skladna s PMode konfiguracijo se pošiljka zavrne, še pred sprejemom.</td>
+                        pošiljka ni skladna s PMode konfiguracijo se pošiljka zavrne, še pred sprejemom. 
+                        V primeru, da je naslovnik označen kot "začasno neaktiven" se pošiljki spremeni status v "PENDING", sicer se proži proces 
+                    odrpreme.</td>
+                </tr>
+                <tr>
+                    <td>PUSHING</td>
+                    <td style="background-color: lightgray;">gray</td>
+                    <td>V pošiljanju</td>
+                    <td>Pošiljka se pripravi za odpremo (kriptiranje, podpisovanje itd.) ter se poskuša oddati v naslovnikov MSH. 
+                        V tem statusu so lahko samo sporočila, ki imajo MEP (mesage exchange pattern) določeno pošiljanje PUSH.
+                        V primeru TCP/HTTP, SOAP napake se skladno s PMODE konfiguracijo (ReceptionAwareness/Retry) ponovno poskuša oddati.
+                        Pri tem pošiljka preide v status SCHEDULE.
+                        V primeru napake pri pripravi na pošiljanje in po preteku števila poskusov oddaje, se pošiljka prestavi v status "FAILED".</td>
                 </tr>
                 <tr>
                     <td>SCHEDULE</td>
@@ -70,24 +86,20 @@
                     <td>Ponovno pošiljanje</td>
                     <td>Zaradi napake pri pošiljanju (TCP/HTTP),se pošiljka ponovno poskuša oddati skladno z urnikom ReceptionAwareness/Retry)</td>
                 </tr>
-                <tr>
-                    <td>PUSHING</td>
-                    <td style="background-color: gray;">gray</td>
-                    <td>V pošiljanju</td>
-                    <td>Pošiljka se pripravi za odpremo (kriptiranje, podpisovanje itd.) ter se poskuša oddati v naslovnikov MSH. 
-                        V tem statusu so lahko samo sporočila, ki imajo MEP (mesage exchange pattern) določeno pošiljanje PUSH.
-                        V primeru TCP/HTTP, SOAP napake se skladno s PMODE konfiguracijo (ReceptionAwareness/Retry) ponovno poskuša oddati. Pri tem pošiljka preide v status RESEND.
-                        V primeru napake pri pripravi na pošiljanje in po preteku števila poskusov oddaje, se pošiljka prestavi v status "ERROR".</td>
-                </tr>
+                
                 <tr>
                     <td>PULLREADY</td>
-                    <td style="background-color: gray;">gray</td>
+                    <td style="background-color: lightgray;">gray</td>
                     <td>V pošiljanju</td>
                     <td>Pošiljka je pripravljena na prevzem in čaka na signal za PULL. V tem statusu so lahko samo sporočila,
                     ki imajo MEP (mesage exchange pattern) določeno pošiljanje PULL 
-                    
-                    
                     </td>
+                </tr>
+                <tr style="background-color: lightblue;">
+                    <td>PROCESS</td>
+                    <td style="background-color: gray;">gray</td>
+                    <td>V obdelavi</td>
+                    <td>V času izvajanja "plugin" procedure, se pošiljki spremeni status v PROCESS.</td>
                 </tr>
 
                 <tr>
@@ -100,15 +112,15 @@
                     <td>ERROR</td>
                     <td style="background-color: red;">red</td>
                     <td>Napaka</td>
-                    <td>Napaka pri pripravi na odpremo oz. pošiljka se v predvidenih poskusih ni uspela prenesti na naslovnikov MSH. Zato se je pošiljanje končalo.
-                        Koda napake!
+                    <td>Napaka pri pripravi na odpremo oz. pošiljka se v predvidenih poskusih ni uspela prenesti na naslovnikov MSH.
+                        V primeru da gre za TCP napako se pošiljka ponovno poskuša poslati skladno s PMode nastavitvami.
                     </td>
                 </tr>            
                 <tr>
                     <td>FAILED</td>
                     <td style="background-color: darkred;">darkred</td>
                     <td>Neuspešna dostava</td>
-                    <td>Pošiljka ni bila uspešno prenesena na naslovnikov MSH</td>
+                    <td>Pošiljka ni bila uspešno prenesena na naslovnikov MSH. Potreben je administratorski poseg oz. odprava napake. </td>
                 </tr>
                 <tr>
                     <td>DELETED</td>
@@ -116,21 +128,34 @@
                     <td>Izbrisana</td>
                     <td>Pošiljka je „ročno“ izbrisana</td>
                 </tr>
+                <tr>
+                    <td>PENDING</td>
+                    <td style="background-color: black;">black</td>
+                    <td>V čakakanju</td>
+                    <td>Naslovnik je v nastavitvah označen kot začasno neaktiven.</td>
+                </tr>
             </tbody>
-        </table>
+        </table><br/><br/><br/>
+        Prehodi statusov izhodne pošiljke, ki ji proži aplikacija.<br>
+        <img src="img/out-status.svg" alt="Statuses" width="680"/><br><br>
+        Ročno proženi prehodi statusov izhodne pošiljke v spletnem vmesniku.<br>
+        <img src="img/out-status-hand.svg" alt="Statuses" width="680"/>
 
 
 
 
 
         <h2>Dohodna pošta</h2>
-        V primeru, da za dohodno pošiljko obstaja PMode konfiguracija in je skladna s konfiguracijo, se pošiljka zapiše v tabelo dohodne pošte s statusom:
-        RECEIVE. V primeru, da ne obstaja PMode konfiguracija oz. pošiljka ni skladna s konfiguracijo, se pošiljatelju vrne ustrezno sporočilo. 
-        Pošiljka je na voljo za prevzem v zaledne sisteme, ko je v statusu RECEIVED. Ko aplikacija prevzame pošiljke se ta nastavi v status DELIVERED.
+        
+        V primeru, da za dohodno pošiljko obstaja PMode konfiguracija in je skladna s pmode konfiguracijo, 
+        se pošiljka zapiše v tabelo dohodne pošte s statusom:
+        RECEIVED ali PLOCKED. V primeru, da ne obstaja PMode konfiguracija oz. pošiljka ni skladna s konfiguracijo,
+        se pošiljatelju vrne ustrezna ebMS napaka.  Pošiljka v statusu RECEIVED je pripravjena za prevzem v zaledne sisteme. 
+        Pošiljka v statusu PLOCKED pa je zaklenjena s strani vstavka in čaka na obdelavo. 
+        Ko je pošiljka uspešno dostavljena v zaledni sistem dobi status DELIVERED. Natačnejši pomeni statusov so 
+        opisani v spodnji tabeli.
 
-        V nadaljevanju je opis statusov z barvnimi oznakami. Barve posamezne pošiljke se prikazujejo v uporabniški aplikaciji, 
-        pri posamezni pošiljki. <br /><br />
-        <img src="img/statuses-inmail.png" alt="Inmail statuses" width="680"/>
+        <br />
         <table class="styled-table">        
             <tbody>
                 <tr>
@@ -140,22 +165,37 @@
                     <th>Opis</th>
                 </tr>
                 <tr>
-                    <td>RECEIVE</td>
-                    <td style="background-color: orange;">orange</td>
-                    <td>V sprejemu</td>
-                    <td>Sporočilo sprejeto. Za pošiljko obstaja PMode konfiguracija in je skladna z nastavitvami v PMode konfiguraciji.</td>
-                </tr>
-                <tr>
-                    <td>PROCESS</td>
-                    <td style="background-color: gray;">gray</td>
-                    <td>V obdelavi</td>
-                    <td>V primeru, da se za sprejeto pošiljko zaganjajo "plugin" procedure, se pošiljki spremeni status v PROCESS.</td>
-                </tr>
-                <tr>
                     <td>RECEIVED</td>
                     <td style="background-color: green;">green</td>
                     <td>Sprejeto</td>
-                    <td>Pošiljka je pripravljena za prevzem v končno aplikacijo. </td></tr>
+                    <td>Pošiljka je uspešno sprejeta in je pripravljena za prevzem v zaledno aplikacijo. V primeru, da je za naslovnikov 
+                        predal določen avtomatski izvoz (in zagon zunanjih programov) se po uspešnem izvozu pošiljki samodejno spremeni status 
+                        v "DELIVERED"; v primeru napake pa v status ERROR.
+                    </td>
+                </tr>
+              
+                 <tr style="background-color: lightblue;">
+                    <td>PLOCKED</td>
+                    <td style="background-color: lightgray;">lightgray</td>
+                    <td>Zaklenjeno - vstavke</td>
+                    <td>V primeru, da je za sprejeto pošiljko določeno izvajanje
+                        "plugin" procedur se pošiljki nastavi status PLOCKED. (S tem prepreči prevzem pošiljk v zaledne sisteme).</td>
+                </tr>
+                
+                <tr style="background-color: lightblue;">
+                    <td>PROCESS</td>
+                    <td style="background-color: gray;">gray</td>
+                    <td>V obdelavi</td>
+                    <td>V času izvajanja "plugin" procedure, se pošiljki spremeni status v PROCESS.</td>
+                </tr>
+                <tr style="background-color: lightblue;">
+                    <td>PREADY</td>
+                    <td style="background-color: darkgreen; color: whitesmoke">darkgreen</td>
+                    <td>Pripravljeno - plugin</td>
+                    <td>V primeru, da se po izvajanju "plugin" procedure čaka na zunanji dogodek zaradi katerega
+                        pošiljka še ni pripravljena za prevzem v zaledni sistem se pošiljka nastavi v status PREADY.</td>
+                </tr>
+                
                 <tr>
                     <td>LOCKED</td>
                     <td style="background-color: lightgray;">lightgray</td>
@@ -173,7 +213,7 @@
                     <td>ERROR</td>
                     <td style="background-color: red;">red</td>
                     <td>Napaka</td>
-                    <td>Napaka procesiranju dohodne pošte. Potreben je poseg administratorja</td>
+                    <td>Napaka procesiranju ali izvozu dohodne pošte. Potreben je poseg administratorja, ki pošiljko vrne v začetni status</td>
                 </tr>
                 <tr>
                     <td>DELETED</td>
@@ -184,8 +224,10 @@
             </tbody>
         </table>
         <br/><br/><br/>
-        Statusi pošiljke od pričetka pošiljanja do prevzema v končni sistem.
-        <img src="img/statuses.png" alt="Statuses" width="680"/>
+        Prehodi statusov dohodne pošiljke, ki ji proži aplikacija.<br>
+        <img src="img/in-status.svg" alt="Statuses" width="680"/><br><br>
+        Ročno proženi prehodi statusov dohodne pošiljke v spletnem vmesniku.<br>
+        <img src="img/in-status-hand.svg" alt="Statuses" width="680"/>
 
         <h1 id="arhitecture:project"> Projekt Laurentius</h1>
         Projekt Laurentius je izdelan z maven tehnologijo, kar omogoča CI (Continuous integration) razvoj ter uporabo različnih IDE, ki podpirajo maven projekte. Aplikacija je sestavljena modularno in sledi logičnemu modelu predstavljenem na začetku tega dokumenta. 
