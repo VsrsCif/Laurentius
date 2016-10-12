@@ -38,7 +38,6 @@ import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.SEDValues;
 import si.laurentius.commons.exception.PModeException;
 import si.laurentius.commons.exception.StorageException;
-import si.laurentius.commons.interfaces.JMSManagerInterface;
 import si.laurentius.commons.interfaces.PModeInterface;
 import si.laurentius.commons.interfaces.SEDDaoInterface;
 import si.laurentius.commons.pmode.EBMSMessageContext;
@@ -126,6 +125,16 @@ public class MSHQueueBean implements MessageListener {
       return;
     }
     LOG.formatedlog("Get EBMSMessageContext for message: %s", jmsMessageId);
+    
+    if (SEDOutboxMailStatus.DELIVERED.getValue().equals(mail.getStatus())
+        || SEDOutboxMailStatus.DELETED.getValue().equals(mail.getStatus())
+        || SEDOutboxMailStatus.SENT.getValue().equals(mail.getStatus())        
+        ) {
+        String strMsg = String.format("Out mail '%d' in wrong status: '%s'. Mail sending suppresed! ", jmsMessageId, mail.getStatus());
+        LOG.logError(t, strMsg, null);
+        return;
+    
+    }
     // get pmode EBMSMessageContext
     
     

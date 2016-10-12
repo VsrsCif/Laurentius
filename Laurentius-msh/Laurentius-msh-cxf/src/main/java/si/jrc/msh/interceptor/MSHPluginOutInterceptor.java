@@ -52,9 +52,10 @@ public class MSHPluginOutInterceptor extends AbstractSoapInterceptor {
     long l = LOG.logStart();
     EBMSMessageContext ectx = SoapUtils.getEBMSMessageOutContext(msg);
     MSHOutMail outMail = SoapUtils.getMSHOutMail(msg);
-
+   String strInMsgId = outMail!=null? outMail.getMessageId(): "No-msg-id";
+     
    if (ectx == null) {
-      LOG.formatedlog("No EBMSMessageContext context for out mail: '%d'.",outMail!=null? outMail.getId(): -1);
+      LOG.formatedWarning("No EBMSMessageContext context for out mail: '%s'.", strInMsgId);
     } else if (ectx.getPMode() != null &&
          ectx.getPMode().getPlugins() != null &&
          ectx.getPMode().getPlugins().getOutPlugins() != null &&
@@ -66,21 +67,25 @@ public class MSHPluginOutInterceptor extends AbstractSoapInterceptor {
         try {
           SoapInterceptorInterface example = InitialContext.doLookup(jndiName);
           if (!example.handleMessage(msg)){
-              LOG.formatedWarning("plugin: %s returned false - stop executing", jndiName);
+              LOG.formatedWarning("Plugin: %s returned false  for out mail : '%s'- stop executing.", jndiName ,strInMsgId);
               break;
           };
         } catch (NamingException ex) {
-          LOG.logError(l, String.format("SoapInterceptorInterface '%s' not found!", jndiName), ex);
+          String errmsg = String.format(
+              "(OutMsgID: '%s' ) Plugin '%s' not registred! Check deployment folder!",strInMsgId, jndiName,
+              ex.getMessage());
+          LOG.logError(l, errmsg, ex);
+          throw new EBMSError(EBMSErrorCode.PModeConfigurationError,outMail!=null? outMail.getMessageId(): null,
+              errmsg, ex, SoapFault.FAULT_CODE_SERVER);
         } catch (Throwable ex) {
           String errmsg = String.format(
-              "SoapInterceptorInterface '%s' throws an error with message: %s!", jndiName,
+              "(OutMsgID: '%s' ) SoapInterceptorInterface '%s' throws an error with message: %s!",strInMsgId, jndiName,
               ex.getMessage());
           LOG.logError(l, errmsg, ex);
           throw new EBMSError(EBMSErrorCode.Other,outMail!=null? outMail.getMessageId(): null,
               errmsg, ex, SoapFault.FAULT_CODE_CLIENT);
         }
-      }
-    
+      }    
     }
     LOG.logEnd(l);
   }

@@ -6,7 +6,6 @@ package si.laurentius.msh.web.gui.entities;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import si.laurentius.commons.SEDInboxMailStatus;
@@ -45,6 +44,17 @@ public class InMailTableFilter {
    *
    */
   protected Date receivedDateTo;
+
+  
+   /**
+   *
+   */
+  protected Date statusDateFrom;
+
+  /**
+   *
+   */
+  protected Date statusDateTo;
 
   /**
    *
@@ -245,6 +255,24 @@ public class InMailTableFilter {
   public void setSubject(String subject) {
     this.subject = subject;
   }
+
+  public Date getStatusDateFrom() {
+    return statusDateFrom;
+  }
+
+  public void setStatusDateFrom(Date statusDateFrom) {
+    this.statusDateFrom = statusDateFrom;
+  }
+
+  public Date getStatusDateTo() {
+    return statusDateTo;
+  }
+
+  public void setStatusDateTo(Date statusDateTo) {
+    this.statusDateTo = statusDateTo;
+  }
+  
+  
 
   @Override
   public String toString() {

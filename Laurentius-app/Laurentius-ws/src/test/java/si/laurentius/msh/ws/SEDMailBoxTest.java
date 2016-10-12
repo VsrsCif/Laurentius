@@ -1125,25 +1125,6 @@ public class SEDMailBoxTest extends TestUtils {
   public void test_J_ModifyOutMail() throws Exception {
     LOG.info("test_J_ModifyOutMail");
 
-    // assert abort
-    assertModifyOutMail(createOutMail(), SEDOutboxMailStatus.SUBMITTED, ModifOutActionCode.ABORT,
-        SEDOutboxMailStatus.CANCELED, null);
-    assertModifyOutMail(createOutMail(), SEDOutboxMailStatus.ERROR, ModifOutActionCode.ABORT,
-        SEDOutboxMailStatus.CANCELED, null);
-    assertModifyOutMail(createOutMail(), SEDOutboxMailStatus.FAILED, ModifOutActionCode.ABORT,
-        SEDOutboxMailStatus.CANCELED, null);
-    assertModifyOutMail(createOutMail(), SEDOutboxMailStatus.SCHEDULE, ModifOutActionCode.ABORT,
-        SEDOutboxMailStatus.CANCELED, null);
-    assertModifyOutMail(createOutMail(), SEDOutboxMailStatus.CANCELED, ModifOutActionCode.ABORT,
-        SEDOutboxMailStatus.CANCELED, null);
-    assertModifyOutMail(createOutMail(), SEDOutboxMailStatus.CANCELING, ModifOutActionCode.ABORT,
-        SEDOutboxMailStatus.CANCELING, null);
-
-    assertModifyOutMail(createOutMail(), SEDOutboxMailStatus.SENT, ModifOutActionCode.ABORT, null,
-        SEDExceptionCode.INVALID_DATA);
-    assertModifyOutMail(createOutMail(), SEDOutboxMailStatus.PUSHING, ModifOutActionCode.ABORT,
-        null, SEDExceptionCode.INVALID_DATA);
-
     // assert Delete
     assertModifyOutMail(createOutMail(), SEDOutboxMailStatus.SUBMITTED, ModifOutActionCode.DELETE,
         SEDOutboxMailStatus.DELETED, null);
@@ -1153,18 +1134,11 @@ public class SEDMailBoxTest extends TestUtils {
         SEDOutboxMailStatus.DELETED, null);
     assertModifyOutMail(createOutMail(), SEDOutboxMailStatus.SCHEDULE, ModifOutActionCode.DELETE,
         SEDOutboxMailStatus.DELETED, null);
-    assertModifyOutMail(createOutMail(), SEDOutboxMailStatus.CANCELED, ModifOutActionCode.DELETE,
-        SEDOutboxMailStatus.DELETED, null);
-
-    assertModifyOutMail(createOutMail(), SEDOutboxMailStatus.CANCELING, ModifOutActionCode.DELETE,
-        null, SEDExceptionCode.INVALID_DATA);
     assertModifyOutMail(createOutMail(), SEDOutboxMailStatus.SENT, ModifOutActionCode.DELETE, null,
         SEDExceptionCode.INVALID_DATA);
     assertModifyOutMail(createOutMail(), SEDOutboxMailStatus.PUSHING, ModifOutActionCode.DELETE,
         null, SEDExceptionCode.INVALID_DATA);
 
-    // assert resend
-    // todo
   }
 
 }

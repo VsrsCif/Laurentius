@@ -76,17 +76,7 @@ public enum SEDOutboxMailStatus {
   /**
    *
    */
-  DELETED("DELETED", "Pošiljka je izbrisana", "black"),
-
-  /**
-   *
-   */
-  CANCELED("CANCELED", "Pošiljnje je preklicano", "yellow"),
-
-  /**
-   *
-   */
-  CANCELING("CANCELING", "Pošiljnje je v postopku preklica", "darkgray");
+  DELETED("DELETED", "Pošiljka je izbrisana", "black");
 
   String mstrVal;
   String mstrDesc;

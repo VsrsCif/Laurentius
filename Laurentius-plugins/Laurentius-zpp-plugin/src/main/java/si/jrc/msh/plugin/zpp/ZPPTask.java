@@ -275,6 +275,7 @@ public class ZPPTask implements TaskExecutionInterface {
       mp.setName(mp.getFilename().substring(0, mp.getFilename().lastIndexOf(".")));
 
       mDB.serializeOutMail(mout, "", "ZPPDeliveryPlugin", "");
+      mDB.setStatusToInMail(mInMail, SEDInboxMailStatus.PREADY, "AdviceOfDelivery created and submitted to out queue");
 
     } catch (IOException | SEDSecurityException | StorageException ex) {
       String msg = "Error occured while creating delivery advice file!";

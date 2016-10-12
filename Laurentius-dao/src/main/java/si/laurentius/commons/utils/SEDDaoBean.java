@@ -14,7 +14,6 @@
  */
 package si.laurentius.commons.utils;
 
-import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -23,8 +22,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.Local;
@@ -68,12 +65,10 @@ import static si.laurentius.commons.SEDSystemProperties.SYS_PROP_JNDI_JMS_PREFIX
 import static si.laurentius.commons.SEDSystemProperties.SYS_PROP_JNDI_PREFIX;
 import si.laurentius.commons.SEDTaskStatus;
 import si.laurentius.commons.SEDValues;
-import si.laurentius.commons.exception.HashException;
 import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.interfaces.JMSManagerInterface;
 import si.laurentius.commons.interfaces.SEDDaoInterface;
 import si.laurentius.msh.outbox.payload.MSHOutPart;
-import si.laurentius.msh.outbox.payload.MSHOutPayload;
 
 /**
  *
@@ -315,7 +310,7 @@ public class SEDDaoBean implements SEDDaoInterface {
     SEDTaskExecution dt = null;
 
     TypedQuery<SEDTaskExecution> tq =
-        memEManager.createNamedQuery("laurentius.si/cron.SEDTaskExecution.getByStatusAndType",
+        memEManager.createNamedQuery("si.laurentius.cron.SEDTaskExecution.getByStatusAndType",
             SEDTaskExecution.class);
 
     tq.setParameter("status", SEDTaskStatus.SUCCESS.getValue());

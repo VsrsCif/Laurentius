@@ -192,13 +192,13 @@
                                     </f:facet>
 
                                     <h:outputText  value="#{msg['ReceivedFromDate']}:" />
-                                    <p:calendar  value="#{InMailDataView.inMailModel.filter.receivedDateFrom}" pattern="dd.MM.yyyy" 
-                                                 mask="true" navigator="true" showOn="button"   styleClass="searchDate" />
+                                    <p:calendar  value="#{InMailDataView.inMailModel.filter.receivedDateFrom}" pattern="dd.MM.yyyy HH:mm" 
+                                                 mask="true" navigator="true" showOn="button"   styleClass="searchDate" style="width: 100%" />
 
 
                                     <h:outputText value="#{msg['ReceivedToDate']}:" />
-                                    <p:calendar  value="#{InMailDataView.inMailModel.filter.receivedDateTo}" pattern="dd.MM.yyyy"
-                                                 mask="true" navigator="true" showOn="button" styleClass="searchDate" />
+                                    <p:calendar  value="#{InMailDataView.inMailModel.filter.receivedDateTo}" pattern="dd.MM.yyyy HH:mm"
+                                                 mask="true" navigator="true" showOn="button" styleClass="searchDate" style="width: 100%"/>
 
                                     <h:outputText value="#{msg['SenderBox']}:" />
                                     <h:inputText value="#{InMailDataView.inMailModel.filter.senderEBox}" style="width: 100%" />
@@ -208,6 +208,15 @@
                                                           value="#{InMailDataView.inMailModel.filter.statusList}" >                                               
                                         <f:selectItems value="#{InMailDataView.inStatuses}"   />
                                     </p:selectCheckboxMenu>
+                                    
+                                    <h:outputText  value="#{msg['StatusChangeFromDate']}:" />
+                                    <p:calendar  value="#{InMailDataView.inMailModel.filter.statusDateFrom}" pattern="dd.MM.yyyy HH:mm" 
+                                                 mask="true" navigator="true" showOn="button"   styleClass="searchDate" style="width: 100%" />
+
+
+                                    <h:outputText value="#{msg['StatusChangeToDate']}:" />
+                                    <p:calendar  value="#{InMailDataView.inMailModel.filter.statusDateTo}" pattern="dd.MM.yyyy HH:mm"
+                                                 mask="true" navigator="true" showOn="button" styleClass="searchDate" style="width: 100%"/>
 
                                     <h:outputText value="#{msg['Service']}:" />
                                     <h:inputText value="#{InMailDataView.inMailModel.filter.service}" style="width: 100%" />
@@ -249,13 +258,13 @@
                                     </f:facet>
 
                                     <h:outputText value="#{msg['SubmittedFromDate']}:" />
-                                    <p:calendar  value="#{OutMailDataView.outMailModel.filter.submittedDateFrom}" pattern="dd.MM.yyyy" 
-                                                 mask="true" navigator="true" showOn="button"   styleClass="searchDate"/>
+                                    <p:calendar  value="#{OutMailDataView.outMailModel.filter.submittedDateFrom}" pattern="dd.MM.yyyy HH:mm" 
+                                                 mask="true" navigator="true" showOn="button"   styleClass="searchDate" style="width: 100%"/>
 
 
                                     <h:outputText value="#{msg['SubmittedToDate']}" />
-                                    <p:calendar  value="#{OutMailDataView.outMailModel.filter.submittedDateTo}" pattern="dd.MM.yyyy"
-                                                 mask="true" navigator="true" showOn="button" styleClass="searchDate"/>
+                                    <p:calendar  value="#{OutMailDataView.outMailModel.filter.submittedDateTo}" pattern="dd.MM.yyyy HH:mm"
+                                                 mask="true" navigator="true" showOn="button" styleClass="searchDate" style="width: 100%"/>
 
                                     <h:outputText value="#{msg['ReceiverBox']}:" />
                                     <h:inputText value="#{OutMailDataView.outMailModel.filter.receiverEBox}" style="width: 100%" />
@@ -267,6 +276,15 @@
                                                           style="width: 100%" >
                                         <f:selectItems value="#{OutMailDataView.outStatuses}"   />
                                     </p:selectCheckboxMenu>
+                                    
+                                     <h:outputText  value="#{msg['StatusChangeFromDate']}:" />
+                                    <p:calendar  value="#{OutMailDataView.outMailModel.filter.statusDateFrom}" pattern="dd.MM.yyyy HH:mm" 
+                                                 mask="true" navigator="true" showOn="button"   styleClass="searchDate" style="width: 100%"/>
+
+
+                                    <h:outputText value="#{msg['StatusChangeToDate']}:" />
+                                    <p:calendar  value="#{OutMailDataView.outMailModel.filter.statusDateTo}" pattern="dd.MM.yyyy HH:mm"
+                                                 mask="true" navigator="true" showOn="button" styleClass="searchDate" style="width: 100%" />
 
                                     <h:outputText value="#{msg['Service']}" />
                                     <h:inputText value="#{OutMailDataView.outMailModel.filter.service}" style="width: 100%"/>

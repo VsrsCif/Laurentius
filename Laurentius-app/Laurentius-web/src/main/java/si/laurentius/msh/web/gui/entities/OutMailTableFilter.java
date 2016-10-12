@@ -8,7 +8,6 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import si.laurentius.commons.SEDInboxMailStatus;
 import si.laurentius.commons.SEDOutboxMailStatus;
 
 /**
@@ -66,6 +65,15 @@ public class OutMailTableFilter {
    */
   protected Date submittedDateTo;
   
+     /**
+   *
+   */
+  protected Date statusDateFrom;
+
+  /**
+   *
+   */
+  protected Date statusDateTo;
   
   public OutMailTableFilter() {
      for (SEDOutboxMailStatus st: SEDOutboxMailStatus.values()){
@@ -235,6 +243,24 @@ public class OutMailTableFilter {
     this.submittedDateTo = submittedDateTo;
   }
 
+  public Date getStatusDateFrom() {
+    return statusDateFrom;
+  }
+
+  public void setStatusDateFrom(Date statusDateFrom) {
+    this.statusDateFrom = statusDateFrom;
+  }
+
+  public Date getStatusDateTo() {
+    return statusDateTo;
+  }
+
+  public void setStatusDateTo(Date statusDateTo) {
+    this.statusDateTo = statusDateTo;
+  }
+
+  
+  
   @Override
   public String toString() {
     return "OutMailTableFilter{" + "action=" + action + ", conversationId=" + conversationId +

@@ -777,6 +777,7 @@ public class SEDMailBox implements SEDMailBoxWS {
       TypedQuery<OutMail> q = getEntityManager().createQuery(cq);
       omail = q.getSingleResult();
       switch (dt.getAction()) {
+        /*Not need this 
         case ABORT:
           if (omail.getStatus().equalsIgnoreCase(SEDOutboxMailStatus.SUBMITTED.getValue()) ||
               omail.getStatus().equalsIgnoreCase(SEDOutboxMailStatus.FAILED.getValue()) ||
@@ -809,13 +810,12 @@ public class SEDMailBox implements SEDMailBoxWS {
                 SEDExceptionCode.INVALID_DATA);
           }
 
-          break;
+          break; */
         case DELETE:
           if (omail.getStatus().equalsIgnoreCase(SEDOutboxMailStatus.SUBMITTED.getValue()) ||
               omail.getStatus().equalsIgnoreCase(SEDOutboxMailStatus.ERROR.getValue()) ||
               omail.getStatus().equalsIgnoreCase(SEDOutboxMailStatus.FAILED.getValue()) ||
-              omail.getStatus().equalsIgnoreCase(SEDOutboxMailStatus.SCHEDULE.getValue()) ||
-              omail.getStatus().equalsIgnoreCase(SEDOutboxMailStatus.CANCELED.getValue())) {
+              omail.getStatus().equalsIgnoreCase(SEDOutboxMailStatus.SCHEDULE.getValue()) ) {
             omail.setStatus(SEDOutboxMailStatus.DELETED.getValue());
             omail.setStatusDate(Calendar.getInstance().getTime());
 
@@ -834,8 +834,7 @@ public class SEDMailBox implements SEDMailBoxWS {
             ou.setSenderEBox(omail.getSenderEBox());
             rsp.getRData().setOutEvent(ou);
           } else if (omail.getStatus().equalsIgnoreCase(SEDOutboxMailStatus.SENT.getValue()) ||
-              omail.getStatus().equalsIgnoreCase(SEDOutboxMailStatus.PUSHING.getValue()) ||
-              omail.getStatus().equalsIgnoreCase(SEDOutboxMailStatus.CANCELING.getValue())) {
+              omail.getStatus().equalsIgnoreCase(SEDOutboxMailStatus.PUSHING.getValue()) ) {
             throw SEDRequestUtils.createSEDException(
                 "Sent mail or mail in progress can not be DELETED", SEDExceptionCode.INVALID_DATA);
           }
@@ -843,8 +842,8 @@ public class SEDMailBox implements SEDMailBoxWS {
         case RESEND:
           if (omail.getStatus().equalsIgnoreCase(SEDOutboxMailStatus.ERROR.getValue()) ||
               omail.getStatus().equalsIgnoreCase(SEDOutboxMailStatus.FAILED.getValue()) ||
-              omail.getStatus().equalsIgnoreCase(SEDOutboxMailStatus.DELETED.getValue()) ||
-              omail.getStatus().equalsIgnoreCase(SEDOutboxMailStatus.CANCELED.getValue())) {
+              omail.getStatus().equalsIgnoreCase(SEDOutboxMailStatus.DELETED.getValue()) 
+              ) {
 
             omail.setStatus(SEDOutboxMailStatus.SCHEDULE.getValue());
             omail.setStatusDate(Calendar.getInstance().getTime());

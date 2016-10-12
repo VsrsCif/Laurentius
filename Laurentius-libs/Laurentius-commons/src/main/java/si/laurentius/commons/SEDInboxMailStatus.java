@@ -37,6 +37,11 @@ public enum SEDInboxMailStatus {
    *
    */
   PROCESS("PROCESS", "Message is locked by plugin", "darkgray"),
+  
+    /**
+   *
+   */
+  PREADY("PREADY", "Message is locked by plugin", "darkgreen"),
 
   /**
    *

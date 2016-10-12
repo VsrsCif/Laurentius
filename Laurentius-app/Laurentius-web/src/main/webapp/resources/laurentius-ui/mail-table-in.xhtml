@@ -23,7 +23,7 @@
                                  rowKey="#{inMail.id}"
                                  currentPageReportTemplate="#{msg['Showing']} {startRecord}-{endRecord} #{msg['OutOf']} {totalRecords}"
                                  paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                                 rowsPerPageTemplate="25,50,100,200" 
+                                 rowsPerPageTemplate="25,50,100,200,500,1000" 
                                  paginator="true" 
                                  rows="50" 
                                  lazy="true"
@@ -49,7 +49,7 @@
                             <h:outputText value="#{inMail.conversationId}" />
                         </p:column>
                         <p:column width="120" headerText="#{msg['RecDate']}">
-                            <h:outputText value="#{inMail.receivedDate}"  ><f:convertDateTime pattern="dd.MM.yyyy hh:mm" timeZone="CET" /></h:outputText>
+                            <h:outputText value="#{inMail.receivedDate}"  ><f:convertDateTime pattern="dd.MM.yyyy HH:mm" timeZone="CET" /></h:outputText>
                         </p:column>
 
                         <p:column headerText="#{msg['Sender']}">
@@ -192,7 +192,7 @@
                                     <h:outputText value="#{mailEvents.status}" />
                                 </p:column>
                                 <p:column width="140" headerText="#{msg['Date']}">
-                                    <h:outputText value="#{mailEvents.date}"  ><f:convertDateTime pattern="dd.MM.yyyy hh:mm:ss" timeZone="CET" /></h:outputText>
+                                    <h:outputText value="#{mailEvents.date}"  ><f:convertDateTime pattern="dd.MM.yyyy HH:mm:ss" timeZone="CET" /></h:outputText>
 
                                 </p:column>
                                 <p:column headerText="#{msg['Description']}">
