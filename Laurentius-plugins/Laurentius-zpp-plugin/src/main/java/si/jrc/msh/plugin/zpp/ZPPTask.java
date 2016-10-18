@@ -8,18 +8,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
-import javax.faces.application.FacesMessage;
-import javax.jms.JMSException;
-import javax.naming.NamingException;
 import org.apache.xmlgraphics.util.MimeConstants;
 import si.laurentius.msh.inbox.mail.MSHInMail;
 import si.laurentius.msh.outbox.mail.MSHOutMail;
@@ -66,6 +60,7 @@ public class ZPPTask implements TaskExecutionInterface {
   private static final String SIGN_ALIAS = "zpp.sign.key.alias";
   private static final String SIGN_KEYSTORE = "zpp.sign.keystore";
   private static final String REC_SEDBOX = "zpp.sedbox";
+  private static final String PROCESS_MAIL_COUNT = "zpp.max.mail.count";
 
   SEDCrypto mSedCrypto = new SEDCrypto();
   HashUtils mpHU = new HashUtils();
@@ -121,12 +116,26 @@ public class ZPPTask implements TaskExecutionInterface {
     } else {
       sedBox = p.getProperty(REC_SEDBOX);
     }
+    int maxMailProc = 100;
+    if (p.containsKey(PROCESS_MAIL_COUNT)) {
+      String val = p.getProperty(PROCESS_MAIL_COUNT);
+      if (!Utils.isEmptyString(val)) {
+        try {
+          maxMailProc = Integer.parseInt(val);
+        } catch (NumberFormatException nfe) {
+          LOG.logError(String.format(
+              "Error parameter '%s'. Value '%s' is not a number Mail count 100 is setted!",
+              PROCESS_MAIL_COUNT, val), nfe);
+        }
+      }
+
+    }
 
     MSHInMail mi = new MSHInMail();
     mi.setStatus(SEDInboxMailStatus.PLOCKED.getValue());
     mi.setReceiverEBox(sedBox + "@" + SEDSystemProperties.getLocalDomain());
 
-    List<MSHInMail> lst = mDB.getDataList(MSHInMail.class, -1, 100, "Id", "ASC", mi);
+    List<MSHInMail> lst = mDB.getDataList(MSHInMail.class, -1, maxMailProc, "Id", "ASC", mi);
     sw.append("got " + lst.size() + " mails for sedbox: '" + sedBox + "'!");
 
     // set status to proccess
@@ -170,6 +179,8 @@ public class ZPPTask implements TaskExecutionInterface {
     tt.getSEDTaskTypeProperties().add(createTTProperty(REC_SEDBOX, "Receiver sedbox."));
     tt.getSEDTaskTypeProperties().add(createTTProperty(SIGN_ALIAS, "Signature key alias."));
     tt.getSEDTaskTypeProperties().add(createTTProperty(SIGN_KEYSTORE, "Keystore name."));
+    tt.getSEDTaskTypeProperties().add(createTTProperty(PROCESS_MAIL_COUNT,
+        "Max mail count proccesed."));
     return tt;
   }
 
@@ -275,7 +286,8 @@ public class ZPPTask implements TaskExecutionInterface {
       mp.setName(mp.getFilename().substring(0, mp.getFilename().lastIndexOf(".")));
 
       mDB.serializeOutMail(mout, "", "ZPPDeliveryPlugin", "");
-      mDB.setStatusToInMail(mInMail, SEDInboxMailStatus.PREADY, "AdviceOfDelivery created and submitted to out queue");
+      mDB.setStatusToInMail(mInMail, SEDInboxMailStatus.PREADY,
+          "AdviceOfDelivery created and submitted to out queue");
 
     } catch (IOException | SEDSecurityException | StorageException ex) {
       String msg = "Error occured while creating delivery advice file!";

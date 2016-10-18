@@ -37,7 +37,7 @@ h1 {
     font-family: Arial, sans-serif;
     font-size: 13px;
     box-sizing: border-box;   
-    
+
 }
 
 .ui-picklist-list-wrapper {
@@ -118,6 +118,10 @@ h1 {
 }
 
 
+.ui-selectonemenu {
+    box-sizing: border-box; width: 100%;
+    min-width: 50px !important;
+}
 
 .ui-datatable-cell-red {
     background-color: indianred;
@@ -240,7 +244,7 @@ td.ui-panelgrid-cell.label {
 .ui-dialog .ui-widget-header {
     text-align: left !important;   
     vertical-align: middle !important;
-   box-sizing: border-box;   
+    box-sizing: border-box;   
 }
 
 .ui-picklist.ui-picklist-responsive .ui-picklist-list-wrapper {
@@ -268,7 +272,7 @@ td.ui-panelgrid-cell.label {
     display: table;
     float: right;
     vertical-align: middle;
-    
+
 }
 .ui-toolbar-group-right label,
 .ui-toolbar-group-right b,
@@ -276,5 +280,5 @@ td.ui-panelgrid-cell.label {
 .ui-toolbar-group-right div {
     display: table-cell;
     vertical-align: middle;
-    
+
 }

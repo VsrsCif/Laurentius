@@ -229,17 +229,7 @@
                                             </f:facet>
                                         </p:cellEditor>
                                     </p:column>
-                                    <!-- p:column headerText="# {msg['EbmsPartIDList']}">
-                                        <p:cellEditor >
-                                            <f:facet name="output">
-                                                <h:outputText value="# {pModePartyView.getListAsString(sp.identifiers)}" />
-                                            </f:facet>
-                                            <f:facet name="input">
-                                                <h:outputText value="# {pModePartyView.getListAsString(sp.identifiers)}" />
-                                            </f:facet>
-
-                                        </p:cellEditor>                                                                   
-                                    </p:column -->
+                                
                                 </p:dataTable>
 
 
@@ -251,9 +241,12 @@
                                     <h:outputText value="#{msg['Transport']}" />
                                 </f:facet>
                                 <hr />
-
+                                <h:outputText value="#{msg['Id']}"  />
+                                <h:inputText value="#{pModePartyView.currentTransportProtocol.id}"  style="width:100%;"/>
+                                <hr />
                                 <b><h:outputText value="#{msg['Address']}" /></b>
                                 <p:panelGrid   style="width:100%;" >
+                                
                                     <p:row>
                                         <p:column>
                                             <h:outputText value="#{msg['Address']}"  />
@@ -362,20 +355,7 @@
 
 
                             </p:tab>
-                            <!-- p:tab   id="XMLTab" title="# {msg['XML']}">
-                                <f:facet name="title">
-
-                                    <h:outputText value="# {msg['XML']}" />
-                                </f:facet>
-
-
-                                <pe:codeMirror id="codeMirror" mode="xml"  class="CodeMirrorXML"
-                                               theme="eclipse" value="# {pModePartyView.currentObjectAsString}" 
-                                               lineNumbers="true" 
-                                               lineWrapping="true"
-                                               readonly="true"
-                                               />  
-                            </p:tab -->
+                            
                         </p:tabView>
 
                     </p:layoutUnit>

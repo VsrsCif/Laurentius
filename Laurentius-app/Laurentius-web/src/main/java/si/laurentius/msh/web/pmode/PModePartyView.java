@@ -25,7 +25,6 @@ import org.primefaces.event.CellEditEvent;
 import si.laurentius.cert.SEDCertStore;
 import si.laurentius.cert.SEDCertificate;
 import si.laurentius.commons.SEDJNDI;
-import si.laurentius.commons.exception.PModeException;
 import si.laurentius.commons.interfaces.PModeInterface;
 import si.laurentius.commons.interfaces.SEDLookupsInterface;
 import si.laurentius.commons.utils.SEDLogger;
@@ -233,7 +232,9 @@ public class PModePartyView extends AbstractPModeJSFView<PartyIdentitySet> {
   public PartyIdentitySetType.TransportProtocol getCurrentTransportProtocol() {
     if (getEditable() != null) {
       if (getEditable().getTransportProtocols().isEmpty()) {
-        getEditable().getTransportProtocols().add(new PartyIdentitySetType.TransportProtocol());
+        PartyIdentitySetType.TransportProtocol pt = new PartyIdentitySetType.TransportProtocol();
+        pt.setId("default");
+        getEditable().getTransportProtocols().add(pt);
       }
       return getEditable().getTransportProtocols().get(0);
     }

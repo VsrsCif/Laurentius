@@ -160,38 +160,6 @@ public class EBMSEndpoint implements Provider<SOAPMessage> {
             ex);
       }
     }
-
-    /* // serialize to file
-    Export e = sb.getExport();
-    if (e != null && e.getActive()) {
-
-      String val = msfFormat.format(e.getFileMask(), mail);
-      int i = 1;
-      try {
-        String folder = StringFormater.replaceProperties(e.getFolder());
-        File fld = new File(folder);
-        if (!fld.exists()) {
-          fld.mkdirs();
-        }
-        String filPrefix = fld.getAbsolutePath() + File.separator + val;
-        if (e.getExportMetaData()) {
-          String fileMetaData = filPrefix + "." + MimeValues.MIME_XML.getSuffix();
-          try {
-
-            XMLUtils.serialize(mail, fld.getAbsolutePath() + File.separator + val + "."
-                + MimeValues.MIME_XML.getSuffix());
-          } catch (JAXBException | FileNotFoundException ex) {
-            LOG.logError(l, "Export metadata ERROR. Export file:" + fileMetaData + ".", ex);
-          }
-        }
-        File outBinFolder = new File(filPrefix);
-        for (MSHInPart mp : mail.getMSHInPayload().getMSHInParts()) {
-          msuStorageUtils.copyFileToFolder(mp.getFilepath(),outBinFolder);
-        }
-      } catch ( StorageException ex) {
-        LOG.logError(l, "Export ERROR", ex);
-      }
-    }*/
     LOG.logEnd(l);
   }
 

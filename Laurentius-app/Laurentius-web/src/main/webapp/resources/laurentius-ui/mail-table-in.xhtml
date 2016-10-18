@@ -13,10 +13,10 @@
     </composite:interface>
 
     <composite:implementation >
-        <p:layout   widgetVar="InMailDataMain" style="min-width:400px;min-height:400px;height: 100%;width: 100%"  >
+        <p:layout    widgetVar="InMailDataMain" style="min-width:400px;min-height:400px;height: 100%;width: 100%"  >
             <p:layoutUnit position="center" style="width:100%;height:100%;padding: 0px; margin: 0px" gutter="0" >
                 <p:scrollPanel mode="native" style="width:100%;height:100%"> <!-- p:dataTable scrollable does not resize when toogled suth panel -->
-                    <p:dataTable id="OutMailTable" 
+                    <p:dataTable id="InMailTable" 
                                  var="inMail"
                                  value="#{InMailDataView.mailList}" 
                                  selection="#{InMailDataView.selected}" 
@@ -36,10 +36,7 @@
                         <p:ajax event="rowSelect" listener="#{InMailDataView.onRowSelect}" 
                                 update="forms:InMailPanel:InMailTab" />   
                         <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
-                        <!-- p:column width="60" headerText="# { msg['Nu']}">
-                            <h:outputText value=" # { InMailDataView.rowIndex(inMail) + 1}" />
-                        </p:column -->
-                        
+
 
                         <p:column width="70" style="background-color:#{InMailDataView.getStatusColor(inMail.status)}"
                                   headerText="#{msg['Status']}">
@@ -67,6 +64,7 @@
                         </p:column>
                     </p:dataTable>
                 </p:scrollPanel>
+                
             </p:layoutUnit>
             <p:layoutUnit  position="south" resizable="true" closable="true" collapsible="true"
                            size="200" minSize="40" maxSize="400" style="width:100%;height:100%;padding: 0px; margin: 0px"
@@ -116,7 +114,7 @@
                                 <tr>
                                     <td align="right" width="100px">#{msg['RefMessageId']}:</td> 
                                     <td align="left"><h:inputText value="#{InMailDataView.currentMail.refToMessageId}" style="width:100%;"  readonly='true' /></td>
-                                    
+
                                     <td align="right" width="100px">#{msg['Service']}:</td> 
                                     <td align="left" ><h:inputText value="#{InMailDataView.currentMail.service}" style="width:100%;"  readonly='true' /></td>
                                     <td align="right" width="100px">#{msg['Action']}:</td> 
@@ -216,7 +214,6 @@
                 </p:tabView>
             </p:layoutUnit>
         </p:layout>
-
 
     </composite:implementation>
 

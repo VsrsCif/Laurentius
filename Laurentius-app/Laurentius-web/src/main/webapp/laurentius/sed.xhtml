@@ -18,6 +18,9 @@
         <h:body>
 
             <h:form id="forms" >
+                <p:idleMonitor timeout="1200000">
+                    <p:ajax event="idle" listener="#{loginManager.logout()}" />
+                </p:idleMonitor>
                 <p:ajaxExceptionHandler type="javax.faces.application.ViewExpiredException"
                                         update="exceptionDialog"
                                         onexception="PF('exceptionDialog').show();" />
@@ -52,13 +55,15 @@
                                                  icon="ui-icon-size-22 ui-icon-svg-csv"
 
                                                  update=":dlgExportOutData:exportOutDataDialogForm"
-                                                 oncomplete="PF('exportOutDataDialog').show()"/>
+                                                 oncomplete="PF('exportOutDataDialog').show()"
+                                                 />
 
                                 <p:commandButton value="#{msg['ExportCSV']}" styleClass="toolbar-Button"  
                                                  rendered="#{MainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_INBOX)}" 
                                                  icon="ui-icon-size-22 ui-icon-svg-csv"
                                                  update=":dlgExportInData:exportInDataDialogForm"
-                                                 oncomplete="PF('exportInDataDialog').show()"/>
+                                                 oncomplete="PF('exportInDataDialog').show()"
+                                                 />
 
                                 <span class="ui-separator">
                                     <span class="ui-icon ui-icon-grip-dotted-vertical " />
@@ -75,13 +80,17 @@
                                                  actionListener="#{OutMailDataView.resendSelectedMail()}" 
                                                  icon="ui-icon-size-22 ui-icon-svg-mail-resend"
                                                  update=":forms:MainPanel :forms:messages"
-                                                 ajax="true"/>
+                                                 ajax="true"
+                                                 onclick="PF('blockMainPanel').show();"
+                                                 />
                                 <p:commandButton value="#{msg['Delete selected']}" styleClass="toolbar-Button"  
                                                  icon="ui-icon-svg-remove ui-icon-size-22" 
                                                  rendered="#{MainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_OUTBOX)}" 
                                                  actionListener="#{OutMailDataView.deleteSelectedMail()}" 
                                                  update=":forms:MainPanel"
-                                                 ajax="true"/>
+                                                 ajax="true"
+                                                 onclick="PF('blockMainPanel').show();"
+                                                 />
 
                                 <p:commandButton value="#{msg['Save']}" styleClass="toolbar-Button"  
                                                  icon="ui-icon-size-22 ui-icon-svg-csv"
@@ -96,40 +105,47 @@
                                                  ajax="true"/>
 
                                 <p:menuButton value="#{msg['ChangeStatus']}" 
-                                              
+
                                               rendered="#{MainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_INBOX)}" 
                                               >
-                                    
+
                                     <p:menuitem value="PLOCKED" 
                                                 actionListener="#{InMailDataView.setPluginLockedSelectedMail()}"
                                                 icon="ui-icon-size-16 ui-icon-svg-status-gray"
                                                 update=":forms:MainPanel :forms:messages"
-                                                 ajax="true"/>
+                                                ajax="true"
+                                                onclick="PF('blockMainPanel').show();"/>
                                     <p:menuitem value="RECEIVED" 
                                                 icon="ui-icon-size-16 ui-icon-svg-status-green"
                                                 actionListener="#{InMailDataView.setReceivedSelectedMail}" 
                                                 update=":forms:MainPanel :forms:messages"
-                                                 ajax="true"
+                                                ajax="true"
+                                                onclick="PF('blockMainPanel').show();"
                                                 />
                                     <p:separator />
                                     <p:menuitem value="DELETED" 
                                                 actionListener="#{InMailDataView.deleteSelectedMail()}"
                                                 icon="ui-icon-size-16 ui-icon-svg-status-UV"
                                                 update=":forms:MainPanel :forms:messages"
-                                                 ajax="true" />                                    
+                                                ajax="true" 
+                                                onclick="PF('blockMainPanel').show();"/>                                    
                                 </p:menuButton >
-                                
+
                                 <p:commandButton value="#{msg['Export']}" styleClass="toolbar-Button"  
                                                  rendered="#{MainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_INBOX)}" 
                                                  actionListener="#{InMailDataView.exportSelectedMail()}"
-                                                icon="ui-icon-size-22 ui-icon-svg-export"
-                                                update=":forms:MainPanel :forms:messages"
-                                                 ajax="true"/>
+                                                 icon="ui-icon-size-22 ui-icon-svg-export"
+                                                 update=":forms:MainPanel :forms:messages"
+                                                 ajax="true"
+                                                 onclick="PF('blockMainPanel').show();"/>
 
 
                             </f:facet>
 
                             <f:facet name="right"  >
+
+
+
 
                                 <p:outputLabel value="#{msg['User']}:" /> <b>#{userSessionData.user.userId}</b>
                                 <span class="ui-separator">
@@ -142,12 +158,16 @@
                                     <f:selectItems value="#{userSessionData.userEBoxes}" />
                                 </p:selectOneMenu>
                                 <p:outputLabel value="#{ApplicationData.domain}" />
+                                <span class="ui-separator">
+                                    <span class="ui-icon ui-icon-grip-dotted-vertical " />
+                                </span>
+
 
                             </f:facet>
 
                         </p:toolbar>
                     </p:layoutUnit>
-                    <p:layoutUnit  position="center"  gutter="0" >
+                    <p:layoutUnit id="MainPanelUnit" position="center"  gutter="0" >
                         <h:panelGroup id="MainPanel">
                             <sui:mail-table-in id="InMailPanel" rendered="#{MainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_INBOX)  }"  />
                             <sui:mail-table-out id="OutMailPanel" rendered="#{MainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_OUTBOX)}"  />
@@ -172,16 +192,43 @@
                                 </iframe>  
                             </p:outputPanel>  
                         </h:panelGroup>
-                    </p:layoutUnit>
-                    <p:layoutUnit position="south" resizable="false" size="20" minSize="20" maxSize="200">
+                        <p:blockUI block="MainPanelUnit" trigger=":forms:btnRefresh">
+                            <h:graphicImage value="#{resource['images:/ajax-progress.gif']}"  /> 
+                            <h:outputText value="#{msg['Refresh']}" />
+                        </p:blockUI>
+                        
+                        <p:blockUI block="MainPanelUnit" widgetVar="blockMainPanel" >
+                            <h:graphicImage value="#{resource['images:/ajax-progress.gif']}"  /> 
+                            <h:outputText value="#{msg['Process']}" />
+                        </p:blockUI>
 
+                    </p:layoutUnit>
+                    <p:layoutUnit position="south" resizable="false" size="32" minSize="32" maxSize="32">
+                        <p:toolbar  id="status-bar" style="padding: 0; margin: 0; height: 24px; vertical-align: middle;">
+                            <f:facet name="right">
+                                <p:outputLabel value="AJAX Status:" />
+                                <p:ajaxStatus style="height:26px;width:30px;padding:0 5px;">
+                                    <f:facet name="default">
+                                        <h:graphicImage value="#{resource['images:/ajax-idle.gif']}" width="18" height="18"  />
+                                    </f:facet>
+
+                                    <f:facet name="start">
+                                        <h:graphicImage value="#{resource['images:/ajax-progress.gif']}" width="18" height="18" />
+                                    </f:facet>
+
+                                    <f:facet name="complete">
+                                        <h:graphicImage value="#{resource['images:/ajax-idle.gif']}" width="18" height="18"  />
+                                    </f:facet>
+                                </p:ajaxStatus>
+                            </f:facet>
+                        </p:toolbar>
                     </p:layoutUnit>
                     <p:layoutUnit position="west" resizable="false" size="320" minSize="320" maxSize="320">
                         <p:accordionPanel id="toolbars" >
                             <p:ajax event="tabChange" listener="#{MainWindow.onToolbarTabChange}" update="forms:MainPanel forms:toolbar" />
                             <p:tab id="PANEL_INBOX"  >
                                 <f:facet name="title">
-                                    
+
                                     <span class="ui-iconui-icon-size-32 ui-icon-svg-status-green"  />
                                     <h:graphicImage value="#{resource['images:/inbox.svg']}" width="22" height="22" />
                                     <h:outputText value="#{msg['Inbox']}" />                                 
@@ -208,7 +255,7 @@
                                                           value="#{InMailDataView.inMailModel.filter.statusList}" >                                               
                                         <f:selectItems value="#{InMailDataView.inStatuses}"   />
                                     </p:selectCheckboxMenu>
-                                    
+
                                     <h:outputText  value="#{msg['StatusChangeFromDate']}:" />
                                     <p:calendar  value="#{InMailDataView.inMailModel.filter.statusDateFrom}" pattern="dd.MM.yyyy HH:mm" 
                                                  mask="true" navigator="true" showOn="button"   styleClass="searchDate" style="width: 100%" />
@@ -219,10 +266,19 @@
                                                  mask="true" navigator="true" showOn="button" styleClass="searchDate" style="width: 100%"/>
 
                                     <h:outputText value="#{msg['Service']}:" />
-                                    <h:inputText value="#{InMailDataView.inMailModel.filter.service}" style="width: 100%" />
+                                    <p:selectOneMenu id="cmpService" value="#{InMailDataView.inMailModel.filter.service}"  style="width: 100% !important;min-width: 100% !important">
+                                        <p:ajax update=":forms:toolbars:InFilterAction"/>
+                                        <f:selectItem noSelectionOption="true"  />
+                                        <f:selectItems value="#{pModeServiceView.list}" var="srv" itemLabel="#{srv.id}" 
+                                                       itemValue="#{srv.id}"/>
+                                    </p:selectOneMenu>
 
                                     <h:outputText value="#{msg['Action']}:" />
-                                    <h:inputText value="#{InMailDataView.inMailModel.filter.action}" style="width: 100%" />
+                                    <p:selectOneMenu id="InFilterAction" value="#{InMailDataView.inMailModel.filter.action}" style="width: 100% !important;min-width: 100% !important" >
+                                        <f:selectItem noSelectionOption="false"  />
+                                        <f:selectItems value="#{InMailDataView.currentFilterServiceActionList}" var="act" 
+                                                       itemLabel="#{act.name}" itemValue="#{act.name}"/>
+                                    </p:selectOneMenu>
 
                                     <h:outputText value="#{msg['Transaction']}:" />
                                     <h:inputText value="#{InMailDataView.inMailModel.filter.conversationId}" style="width: 100%"/>
@@ -276,8 +332,8 @@
                                                           style="width: 100%" >
                                         <f:selectItems value="#{OutMailDataView.outStatuses}"   />
                                     </p:selectCheckboxMenu>
-                                    
-                                     <h:outputText  value="#{msg['StatusChangeFromDate']}:" />
+
+                                    <h:outputText  value="#{msg['StatusChangeFromDate']}:" />
                                     <p:calendar  value="#{OutMailDataView.outMailModel.filter.statusDateFrom}" pattern="dd.MM.yyyy HH:mm" 
                                                  mask="true" navigator="true" showOn="button"   styleClass="searchDate" style="width: 100%"/>
 
@@ -287,10 +343,18 @@
                                                  mask="true" navigator="true" showOn="button" styleClass="searchDate" style="width: 100%" />
 
                                     <h:outputText value="#{msg['Service']}" />
-                                    <h:inputText value="#{OutMailDataView.outMailModel.filter.service}" style="width: 100%"/>
+                                    <p:selectOneMenu id="OutFilterService" value="#{OutMailDataView.outMailModel.filter.service}"  style="width: 100% !important;min-width: 100% !important" >
+                                        <p:ajax update=":forms:toolbars:OutFilterAction"/>
+                                        <f:selectItem noSelectionOption="true"  />
+                                        <f:selectItems value="#{pModeServiceView.list}" var="srv" itemLabel="#{srv.id}" itemValue="#{srv.id}"/>
+                                    </p:selectOneMenu>
 
                                     <h:outputText value="#{msg['Action']}" />
-                                    <h:inputText value="#{OutMailDataView.outMailModel.filter.action}" style="width: 100%" />
+                                    <p:selectOneMenu id="OutFilterAction" value="#{OutMailDataView.outMailModel.filter.action}"  style="width: 100% !important;min-width: 100% !important" >
+                                        <f:selectItem noSelectionOption="false"  />
+                                        <f:selectItems value="#{OutMailDataView.currentFilterServiceActionList}" var="act" 
+                                                       itemLabel="#{act.name}" itemValue="#{act.name}"/>
+                                    </p:selectOneMenu>
 
                                     <h:outputText value="#{msg['Transaction']}:" />
                                     <h:inputText value="#{OutMailDataView.outMailModel.filter.conversationId}" style="width: 100%"/>
@@ -325,7 +389,7 @@
                                                 icon="ui-icon-svg-service ui-icon-size-22" 
                                                 actionListener="#{MainWindow.onToolbarButtonAction}" 
                                                 update="forms:MainPanel"
-                                                 >
+                                                >
                                         <f:attribute name="panel" value="PANEL_SETT_PMODE_SERVICES" />
                                     </p:menuitem>
                                     <p:menuitem value="#{msg['Parties']}" 
@@ -402,7 +466,7 @@
                                                 update="forms:MainPanel">
                                         <f:attribute name="panel" value="PANEL_SETT_CERTS" />
                                     </p:menuitem>
-                                    
+
                                     <p:menuitem value="#{msg['Scheduler']}" 
                                                 icon="ui-icon-svg-scheduler ui-icon-size-22" 
                                                 actionListener="#{MainWindow.onToolbarButtonAction}"  

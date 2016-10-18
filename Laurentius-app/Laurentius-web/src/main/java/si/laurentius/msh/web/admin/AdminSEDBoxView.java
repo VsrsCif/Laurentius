@@ -101,7 +101,7 @@ public class AdminSEDBoxView extends AbstractAdminJSFView<SEDBox> {
     if (getSelected() != null && getSelected().getExecute() == null) {
       getSelected().setExecute(new Execute());
     }
-    super.startEditSelected(); // To change body of generated methods, choose Tools | Templates.
+    super.startEditSelected(); 
   }
 
   /**

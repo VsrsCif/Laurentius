@@ -35,12 +35,11 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.model.UploadedFile;
-import si.laurentius.cert.SEDCertStore;
-import si.laurentius.cert.SEDCertificate;
 import si.laurentius.commons.MimeValues;
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.SEDOutboxMailStatus;
@@ -141,6 +140,8 @@ public class OutMailDataView extends AbstractMailView<MSHOutMail, MSHOutEvent> i
       }
 
     }
+    RequestContext context = RequestContext.getCurrentInstance();
+    context.execute("PF('blockMainPanel').hide();");   
     LOG.logEnd(l);
   }
 
@@ -383,7 +384,8 @@ public class OutMailDataView extends AbstractMailView<MSHOutMail, MSHOutEvent> i
           "No mail selected"));
 
     }
-    
+    RequestContext context = RequestContext.getCurrentInstance();
+    context.execute("PF('blockMainPanel').hide();");    
     LOG.logEnd(l);
   }
 
@@ -484,6 +486,18 @@ public class OutMailDataView extends AbstractMailView<MSHOutMail, MSHOutEvent> i
     if (getNewOutMail()!= null 
         && !Utils.isEmptyString(getNewOutMail().getService())) {
       String srvId = getNewOutMail().getService();
+      Service srv = mPMode.getServiceById(srvId);
+      if (srv != null) {
+        return srv.getActions();
+      }
+    }
+    return Collections.emptyList();
+  }
+   
+   public List<Service.Action> getCurrentFilterServiceActionList() {
+    if (getOutMailModel().getFilter()!= null 
+        && !Utils.isEmptyString(getOutMailModel().getFilter().getService())) {
+      String srvId = getOutMailModel().getFilter().getService();
       Service srv = mPMode.getServiceById(srvId);
       if (srv != null) {
         return srv.getActions();

@@ -20,6 +20,7 @@ import java.io.FileNotFoundException;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,6 +32,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.jms.JMSException;
 import javax.naming.NamingException;
+import org.primefaces.context.RequestContext;
 import si.laurentius.msh.inbox.event.MSHInEvent;
 import si.laurentius.msh.inbox.mail.MSHInMail;
 import si.laurentius.msh.inbox.payload.MSHInPart;
@@ -39,13 +41,14 @@ import org.primefaces.model.StreamedContent;
 import si.laurentius.commons.MimeValues;
 import si.laurentius.commons.SEDInboxMailStatus;
 import si.laurentius.commons.SEDJNDI;
-import si.laurentius.commons.SEDOutboxMailStatus;
 import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.interfaces.JMSManagerInterface;
+import si.laurentius.commons.interfaces.PModeInterface;
 import si.laurentius.commons.interfaces.SEDDaoInterface;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StorageUtils;
-import si.laurentius.msh.outbox.mail.MSHOutMail;
+import si.laurentius.commons.utils.Utils;
+import si.laurentius.msh.pmode.Service;
 import si.laurentius.msh.web.abst.AbstractMailView;
 
 /**
@@ -67,6 +70,9 @@ public class InMailDataView extends AbstractMailView<MSHInMail, MSHInEvent> impl
 
   @ManagedProperty(value = "#{userSessionData}")
   private UserSessionData userSessionData;
+
+  @EJB(mappedName = SEDJNDI.JNDI_PMODE)
+  PModeInterface mPMode;
 
   @PostConstruct
   private void init() {
@@ -130,7 +136,7 @@ public class InMailDataView extends AbstractMailView<MSHInMail, MSHInEvent> impl
     MSHInPart inpart = null;
 
     if (mMail == null || mMail.getMSHInPayload() == null ||
-         mMail.getMSHInPayload().getMSHInParts().isEmpty()) {
+        mMail.getMSHInPayload().getMSHInParts().isEmpty()) {
       return null;
     }
 
@@ -196,12 +202,14 @@ public class InMailDataView extends AbstractMailView<MSHInMail, MSHInEvent> impl
 
   public void setStatusSelectedMail(SEDInboxMailStatus status) {
     long l = LOG.logStart();
+
     if (getSelected() != null && !getSelected().isEmpty()) {
       List<MSHInMail> milst = getSelected();
       for (MSHInMail mi : milst) {
+
         try {
           mDB.setStatusToInMail(mi, status, "Status changed to '" + status.getValue() +
-              "' deleted by " +
+              "' by " +
               getUserSessionData().getUser().getUserId(), getUserSessionData().getUser().getUserId(),
               "laurentius-web");
         } catch (StorageException ex) {
@@ -210,12 +218,15 @@ public class InMailDataView extends AbstractMailView<MSHInMail, MSHInEvent> impl
           facesContext().addMessage(null, new FacesMessage(
               "'Napaka pri spreminjanju statusa pošiljke",
               mail));
-          LOG.logError(l, ex);
+
           break;
         }
+
       }
 
     }
+    RequestContext context = RequestContext.getCurrentInstance();
+    context.execute("PF('blockMainPanel').hide();");
     LOG.logEnd(l);
   }
 
@@ -240,7 +251,21 @@ public class InMailDataView extends AbstractMailView<MSHInMail, MSHInEvent> impl
         }
       }
     }
+    RequestContext context = RequestContext.getCurrentInstance();
+    context.execute("PF('blockMainPanel').hide();");
     LOG.logEnd(l);
+  }
+
+  public List<Service.Action> getCurrentFilterServiceActionList() {
+    if (getInMailModel().getFilter() != null &&
+         !Utils.isEmptyString(getInMailModel().getFilter().getService())) {
+      String srvId = getInMailModel().getFilter().getService();
+      Service srv = mPMode.getServiceById(srvId);
+      if (srv != null) {
+        return srv.getActions();
+      }
+    }
+    return Collections.emptyList();
   }
 
 }

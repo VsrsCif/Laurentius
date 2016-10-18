@@ -2,7 +2,7 @@ package si.laurentius.msh.web.gui;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import org.primefaces.event.TabChangeEvent;
@@ -11,12 +11,13 @@ import org.primefaces.event.TabChangeEvent;
  *
  * @author Jože Rihtaršič
  */
-@ViewScoped
+@SessionScoped
 @ManagedBean(name = "MainWindow")
 public class MainWindow {
 
   String mstrWindowShow = AppConstant.S_PANEL_INBOX;
-
+  int currentProgressVal =0;
+  String currentProgressLabel ="";
   /**
    *
    * @param summary
@@ -57,5 +58,23 @@ public class MainWindow {
       FacesContext.getCurrentInstance().addMessage(null, msg);
     }
   }
+
+  public int getCurrentProgressVal() {
+    return currentProgressVal;
+  }
+
+  public void setCurrentProgressVal(int currentProgressVal) {
+    this.currentProgressVal = currentProgressVal;
+  }
+
+  public String getCurrentProgressLabel() {
+    return currentProgressLabel;
+  }
+
+  public void setCurrentProgressLabel(String currentProgressLabel) {
+    this.currentProgressLabel = currentProgressLabel;
+  }
+  
+   
 
 }

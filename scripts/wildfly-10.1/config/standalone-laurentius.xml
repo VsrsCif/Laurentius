@@ -412,7 +412,7 @@
         <subsystem xmlns="urn:jboss:domain:undertow:3.1">
             <buffer-cache name="default"/>
             <server name="default-server">
-                <http-listener name="default" socket-binding="http" redirect-socket="https" max-post-size="150000000"/>
+                <http-listener name="default" socket-binding="http" redirect-socket="https" max-post-size="150000000" max-parameters="10000"/>
                 <host name="default-host" alias="localhost">
                     <location name="/" handler="welcome-content"/>
                     <filter-ref name="server-header"/>
@@ -421,8 +421,8 @@
                 </host>
             </server>
             <server name="laurentius-msh-server" default-host="laurentius-msh-host">         
-                <http-listener name="laurentius-msh-http" socket-binding="laurentius-msh-http" max-post-size="150000000" />       
-                <https-listener name="laurentius-msh-https" socket-binding="laurentius-msh-https" security-realm="LaurentiusTLSRealm" max-post-size="150000000"/>
+                <http-listener name="laurentius-msh-http" socket-binding="laurentius-msh-http" max-post-size="150000000" max-parameters="10000"/>       
+                <https-listener name="laurentius-msh-https" socket-binding="laurentius-msh-https" security-realm="LaurentiusTLSRealm" max-post-size="150000000" max-parameters="10000"/>
                 <host name="laurentius-msh-host" alias="localhost">
                     <location name="/" handler="welcome-content"/>
                     <access-log pattern="%h %l %u [%t] &quot;%r&quot; %s %b &quot;%{i,Referer}&quot; &quot;%{i,User-Agent}&quot;"/>
