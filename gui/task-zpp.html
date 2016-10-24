@@ -55,12 +55,25 @@
         
        
          <h2 id="gui/task-zpp:zpp-plugin">Opravilo: Vročanje ZPP</h2>
-        Opravilo "Vročanje ZPP" (zpp-plugin) je avtomatskemu vročanju prispele pošte po ZPP. Opravilo je sestavni del dodatka ZPP-plugin
+        Namen opravila "Vročanje ZPP" (zpp-plugin) je avtomatskema prevzemanje 
+        prispele pošte po ZPP. Povratnice služijo kot dokazna listina, da je bil
+        naslovnik seznanjen o prejeti pošiljkih.
+        
+        Za pravilno delovanje opravila je potrebno določiti naslednje podatke:
+         <ul>
+            <li><b>Varni dohodni predal: (zpp.sedbox)</b>. Varni predal za katerega se avtomatsko vroča prejete pošiljke;</li>
+            <li><b>Naziv ključa za podpisovanje (zpp.sign.key.alias)</b>. Naziv ključa v varni shrambi s katerim se podpisuje povratnice. 
+                Shramba in ključ je določena v nastavitvah aplikacije Laurentius. </li>
+            <li><b>Naziv varne shrambe ključev (zpp.sign.keystore) </b>. Naziv shrambe ključev, kot je določena v nastavitvah Laurentius.</li>
+            <li><b>Maksimalno število pošiljk: (zpp.max.mail.count) </b>. Maksimalno število pošiljk, ki se lahko vročijo ob zagonu opravila. Hitrost vročanja se določa
+            z frekvenco zaganjanja opravila in maksimalnim številom pošiljk, ki se vročijo ob zagonu opravila.</li>
+        </ul>
         
         <img src="img/gui/zpp-task.png" alt="ZPP task" width="680"/> <br />
-        Opravilo ne vsebuje parametrov.  
+        
+        
         V dialogu za nastavlanje opravil se lahko poljubno nastavi urnike vročanja/prevzemanja dohodne pošte. Spodnji primer je za prevzemanje 
-        od ponedljka-petka od 8 do 16 ure. <br /><br />
+        od ponedeljka-sobote od 5 do 15 ure. <br /><br />
         
         <img src="img/gui/zpp-task-cron.png" alt="ZPP task cron" width="680"/> <br />
          
