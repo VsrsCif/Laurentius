@@ -21,6 +21,7 @@
                 <ns2:SEDTaskProperty id="21" key="zpp.sedbox">a.department</ns2:SEDTaskProperty>
                 <ns2:SEDTaskProperty id="22" key="zpp.sign.key.alias">test-zpp-sign</ns2:SEDTaskProperty>
                 <ns2:SEDTaskProperty id="23" key="zpp.sign.keystore">def-keystore</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty key="zpp.max.mail.count">100</ns2:SEDTaskProperty>
             </ns2:SEDTask>
         </ns2:SEDCronJob>
         <ns2:SEDCronJob id="24" name="zpp-b" active="true" second="0" minute="*/1" hour="5,6,7,8,9,10,11,12,13,14,15" dayOfMonth="*" month="*" dayOfWeek="1-6">
@@ -28,6 +29,7 @@
                 <ns2:SEDTaskProperty id="25" key="zpp.sedbox">b.department</ns2:SEDTaskProperty>
                 <ns2:SEDTaskProperty id="26" key="zpp.sign.key.alias">test-zpp-sign</ns2:SEDTaskProperty>
                 <ns2:SEDTaskProperty id="27" key="zpp.sign.keystore">def-keystore</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty key="zpp.max.mail.count">100</ns2:SEDTaskProperty>
             </ns2:SEDTask>
         </ns2:SEDCronJob>
         <ns2:SEDCronJob id="28" name="submit-dwr" active="true" second="0" minute="*/1" hour="*" dayOfMonth="*" month="*" dayOfWeek="*">
@@ -80,6 +82,7 @@
             <ns2:SEDTaskTypeProperty id="51" key="zpp.sedbox" description="Receiver sedbox." mandatory="true" type="string"/>
             <ns2:SEDTaskTypeProperty id="52" key="zpp.sign.key.alias" description="Signature key alias." mandatory="true" type="string"/>
             <ns2:SEDTaskTypeProperty id="53" key="zpp.sign.keystore" description="Keystore name." mandatory="true" type="string"/>
+            <ns2:SEDTaskTypeProperty key="zpp.max.mail.count" description="Max mail count proccesed." mandatory="true" type="string"/>
         </ns2:SEDTaskType>
     </SEDTaskTypes>
     <SEDBoxes>

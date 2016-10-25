@@ -162,7 +162,7 @@ public class MSHQueueBean implements MessageListener {
       return;
     }
     
-    if (sd.getReceiverPartyIdentitySet().getActive()!= null && sd.getReceiverPartyIdentitySet().getActive()){
+    if (sd.getReceiverPartyIdentitySet().getActive()!= null && !sd.getReceiverPartyIdentitySet().getActive()){
     String errDesc = String.format(
           "Receiver %s is inactive. (Check pmode settings.) Message is set to pending status.",
           sd.getReceiverPartyIdentitySet().getId());

@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -157,6 +158,7 @@ public class EBMSInInterceptor extends AbstractEBMSInterceptor {
       // check if message already exists
 
       List<MSHInMail> dupllst = getDAO().getMailByMessageId(MSHInMail.class, messageId);
+      List<MSHInMail> dupInclusionllst  =new ArrayList<>();
 
       LOG.formatedlog("Got %d in messages with message id: %s", dupllst.size(), messageId);
 
@@ -179,11 +181,16 @@ public class EBMSInInterceptor extends AbstractEBMSInterceptor {
                 "Message with id %s (receiver id: %d) already received in conversation %s date:  %s",
                 messageId, dmi.getId(), dmi.getConversationId(),
                 SimpleDateFormat.getDateTimeInstance().format(recDate)));
+            dupInclusionllst.add(dmi);
           }
+          
         }
+        dupllst.clear();
+        
+        
         String warn = sw.toString();
 
-        if (!warn.isEmpty()) {
+        if (!dupInclusionllst.isEmpty()) {
           LOG.logWarn(warn, null);
           if (dd.getEliminate()) {
             SignalMessage as4Receipt =
@@ -386,8 +393,11 @@ public class EBMSInInterceptor extends AbstractEBMSInterceptor {
     LOG.logEnd(l);
     return outmctx;
   }
+  
+  
 
-  public void processUserMessageUnit(SoapMessage msg, UserMessage um, EBMSMessageContext ectx,
+
+  public MSHInMail processUserMessageUnit(SoapMessage msg, UserMessage um, EBMSMessageContext ectx,
       String msgId, QName sv) {
     long l = LOG.logStart();
 
@@ -461,15 +471,7 @@ public class EBMSInInterceptor extends AbstractEBMSInterceptor {
     mMail.setStatus(null);
     //mMail.setStatusDate(dt);
     mMail.setReceivedDate(dt);
-    /*try {
-      getDAO().serializeInMail(mMail, "Laurentius-msh-ws");
-    } catch (StorageException ex) {
-      String errmsg = "Internal error occured while serializing incomming mail.";
-      LOG.logError(l, errmsg, ex);
-      throw new EBMSError(EBMSErrorCode.ExternalPayloadError, mMail.getMessageId(), errmsg,
-          SoapFault.FAULT_CODE_CLIENT);
-    }
-    */
+   
 
     msg.getExchange().put(MSHInMail.class, mMail);
 
@@ -479,6 +481,8 @@ public class EBMSInInterceptor extends AbstractEBMSInterceptor {
             SEDSystemProperties.getLocalDomain(), request.getSOAPPart()
             .getDocumentElement(), dt);
     msg.getExchange().put(SignalMessage.class, as4Receipt);
+    
+    return mMail;
 
   }
 

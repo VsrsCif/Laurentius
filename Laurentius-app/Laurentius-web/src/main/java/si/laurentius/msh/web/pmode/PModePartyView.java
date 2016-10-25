@@ -171,7 +171,7 @@ public class PModePartyView extends AbstractPModeJSFView<PartyIdentitySet> {
   
   public void setEditableIdentityActive(boolean bVal) {
     if (getEditable() != null) {
-      getEditable().setIsLocalIdentity(bVal);
+      getEditable().setActive(bVal);
     }
   }
 

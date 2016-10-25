@@ -22,18 +22,15 @@ import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Calendar;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.UUID;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.util.JAXBSource;
 import javax.xml.transform.stream.StreamSource;
 import org.apache.xmlgraphics.util.MimeConstants;
 import org.junit.After;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import si.jrc.msh.plugin.zpp.ZPPConstants;
 import si.jrc.msh.plugin.zpp.ZPPOutInterceptor;
 import si.jrc.msh.plugin.zpp.utils.FOPUtils;
 import si.laurentius.commons.MimeValues;
@@ -41,8 +38,12 @@ import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.exception.FOPException;
 import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.utils.SEDLogger;
-import si.laurentius.commons.utils.StorageUtils;
+import si.laurentius.msh.inbox.mail.MSHInMail;
+import si.laurentius.msh.inbox.payload.MSHInPart;
+import si.laurentius.msh.inbox.payload.MSHInPayload;
 import si.laurentius.msh.outbox.mail.MSHOutMail;
+import si.laurentius.msh.outbox.payload.MSHOutPart;
+import si.laurentius.msh.outbox.payload.MSHOutPayload;
 
 /**
  *
@@ -50,7 +51,9 @@ import si.laurentius.msh.outbox.mail.MSHOutMail;
  */
 public class FOPUtilsTest {
 
-  protected static final String LAU_HOME = "target/TEST-LAU_HOME";
+  protected static final String FOP_CONFIG_FILE = "src/test/resources/SVEV/fop.xconf";
+  protected static final String XSLT_FO_FOLDER = "src/test/resources/SVEV/xslt/";
+  protected static final String LAU_HOME = "target/TEST-LAU_HOME/";
   protected final SEDLogger LOG = new SEDLogger(ZPPOutInterceptor.class);
   FOPUtils mfpFop = null;
 
@@ -80,6 +83,144 @@ public class FOPUtilsTest {
   public void tearDown() {
   }
 
+  @Test
+  public void testGenerateDeliveryNotificationVisualization()
+      throws JAXBException,  IOException, FOPException {
+    
+    /*
+OBVESTILO O PRISPELI POŠILJKI
+Pošiljatelj
+<podatki o sodišču>
+Naslovnik
+<podatki o naslovniku>
+Zadeva : Obvestilo o prispeli pošiljki in pravni pouk o posledicah neprevzema
+Obveščamo vas, da je v vaš varen elektronski predal dne <datum posredovanja obvestila> prispela
+pošiljka z oznako <oznaka e-pošiljke>.
+Pošiljko lahko prevzamete v roku 15 dni v vašem varnem elektronskem predalu na naslovu
+<naslov s povezavo za dostop>. Rok za prevzem začne teči od dne <datum posredovanja
+obvestila>. Če v tem roku pošiljke ne boste prevzeli, se bo po sedmem odstavku 141.a člena ZPP s
+potekom tega roka vročitev štela za opravljeno.
+Naša oznaka
+<Oznaka SVEV sporočila>
+<Kraj nastanka obvestila>, <Datum nastanka obvestila>
+*/
+    
+    
+    MSHOutMail om = createOutMail();
+
+
+    FOPUtils instance = new FOPUtils(new File(FOP_CONFIG_FILE), XSLT_FO_FOLDER);
+    File ftxt = new File(LAU_HOME + "DeliveryNotification.txt");
+    File fpdf = new File(LAU_HOME + "DeliveryNotification.pdf");
+    instance.generateVisualization(om, ftxt, FOPUtils.FopTransformations.DeliveryNotification,
+        MimeConstants.MIME_PLAIN_TEXT);
+    String strRes = null;
+    
+//    OBVESTILO O PRISPELI POŠILJKI
+
+    instance.generateVisualization(om, fpdf, FOPUtils.FopTransformations.DeliveryNotification,
+        MimeConstants.MIME_PDF);
+
+  
+    
+  }
+  
+  /**
+   * 
+    VROČILNICA
+    Pošiljatelj
+    < podatki o sodišču>
+    Naslovnik
+    < podatki o naslovniku>
+    Zadeva : Potrjena vročilnica po ZPP
+    Naslovnik potrjujem, da sem dne <datum elektronskega podpisa vročilnice> sprejel pošiljko z
+    oznako <oznaka e-pošiljke>.
+    To sporočilo je potrdilo o vročitvi pošiljke in opravljeni storitvi.
+    Naša oznaka
+    <Oznaka SVEV sporočila>
+    Storitev : Elektronska vročitev pošiljke po ZPP
+    Datum opravljene storitve : <Datum opravljene storitve>
+    <Kraj nastanka obvestila>, <Datum nastanka obvestila>
+   * 
+   * 
+   * @throws JAXBException
+   * @throws IOException
+   * @throws FOPException 
+   */
+
+  @Test
+  public void testGenerateAdviceOfDeliveryVisualization()
+  throws JAXBException,  IOException, FOPException {
+    
+   
+    
+    MSHInMail im = createInMail();
+
+    
+    FOPUtils instance = new FOPUtils(new File(FOP_CONFIG_FILE), XSLT_FO_FOLDER);
+    File ftxt = new File(LAU_HOME + "AdviceOfDelivery.txt");
+    File fpdf = new File(LAU_HOME + "AdviceOfDelivery.pdf");
+    instance.generateVisualization(im, ftxt, FOPUtils.FopTransformations.AdviceOfDelivery,
+        MimeConstants.MIME_PLAIN_TEXT);
+
+    instance.generateVisualization(im, fpdf, FOPUtils.FopTransformations.AdviceOfDelivery,
+        MimeConstants.MIME_PDF);
+
+  
+  }
+
+  @Test
+  public void testGenerateFictionNotification() {
+  /**
+   * 
+OBVESTILO O VROČENI POŠILJKI
+Pošiljatelj
+< podatki o sodišču>
+Naslovnik
+< podatki o naslovniku>
+Zadeva : Obvestilo o vročeni pošiljki kot posledica neprevzema pošiljke
+Ker pošiljke z oznako <oznaka e-pošiljke> niste prevzeli v roku 15 dni, se je po sedmem odstavka
+141.a člena ZPP s potekom tega roka vročitev štela za opravljeno dne <datum fikcije>. Pošiljka je
+bila tega dne puščena v vašem varnem elektronskem predalu, lahko pa jo prevzamete tudi
+pri:<podatki o sodišču>.
+Naša oznaka
+<Oznaka SVEV sporočila>
+<Kraj nastanka obvestila>, <Datum nastanka obvestila>
+   */
+  }
+
+  @Test
+  public void testGenerateFictionAdviceOfDelivery() 
+       throws JAXBException,  IOException, FOPException {
+    MSHOutMail om = createOutMail();
+   /**
+    * 
+   
+ VROČILNICA NA PODLAGI FIKCIJE
+Pošiljatelj
+< podatki o sodišču>
+Naslovnik
+< podatki o naslovniku>
+Zadeva : Potrdilo o opravljeni vročitvi na podlagi fikcije po ZPP
+Potrjujemo,
+• da je naslovnik pošiljke z oznako <oznaka e-pošiljke> dne <datum posredovanja obvestila>
+prejel obvestilo o tej pošiljki s pravnim poukom o posledicah neprevzema v 15 dneh,
+• da naslovnik pošiljke v 15 dneh od dneva obvestila o prispeli pošiljki ni prevzel, zato se po
+sedmem odstavku 141.a člena ZPP šteje, da je bila vročitev opravljena dne <datum
+fikcije>,
+• da je bila po poteku 15 dnevnega roka iz sistema <ponudnik e-predala> naslovniku
+pošiljka puščena v njegovem varnem elektronskem predalu in poslano obvestilo, da lahko
+pisanje prevzame tudi pri < podatki o sodišču>.
+To sporočilo je potrdilo o vročitvi pošiljke in opravljeni storitvi.
+Naša oznaka
+<določi ponudnik e-predala>
+Storitev : Elektronska vročitev pošiljke po ZPP
+Datum opravljene storitve :<Datum: ponudnik e-predala>
+<Kraj opravljene storitve>, <Datum nastanka obvestila>
+    */
+  
+  }
+
   /**
    * Test of generateVisualization method, of class FOPUtils.
    *
@@ -93,10 +234,6 @@ public class FOPUtilsTest {
       throws JAXBException,
       FileNotFoundException, FOPException, IOException, StorageException {
 
-    String fopConfigFile = "src/test/resources/SVEV/fop.xconf";
-    String xsltFolder =
-        "src/test/resources/SVEV/xslt/LegalDelivery_ZPP-DeliveryNotification.fo";
-
     MSHOutMail mout = new MSHOutMail();
     mout.setAction("DeliveryNotification");
     mout.setId(BigInteger.valueOf(1234));
@@ -109,35 +246,93 @@ public class FOPUtilsTest {
     mout.setSenderMessageId("SenderMessageID");
     mout.setSentDate(Calendar.getInstance().getTime());
 
-     
-
     JAXBSource source = new JAXBSource(JAXBContext.newInstance(mout.getClass()), mout);
 
-    FOPUtils instance = new FOPUtils(new File(fopConfigFile), xsltFolder);
+    FOPUtils instance = new FOPUtils(new File(FOP_CONFIG_FILE), XSLT_FO_FOLDER);
 
-    try (FileOutputStream fos = new FileOutputStream("test.txt")) {
-      instance.generateVisualization(source, fos, new StreamSource(xsltFolder),
+    try (FileOutputStream fos = new FileOutputStream(LAU_HOME + "test.txt")) {
+      instance.generateVisualization(source, fos, new StreamSource(XSLT_FO_FOLDER +
+          FOPUtils.FopTransformations.DeliveryNotification.getFileName()),
           MimeConstants.MIME_PLAIN_TEXT);
     }
-    try (FileOutputStream fos = new FileOutputStream("test.pdf")) {
-      instance.generateVisualization(source, fos, new StreamSource(xsltFolder),
+    try (FileOutputStream fos = new FileOutputStream(LAU_HOME + "test.pdf")) {
+      instance.generateVisualization(source, fos, new StreamSource(XSLT_FO_FOLDER +
+          FOPUtils.FopTransformations.DeliveryNotification.getFileName()),
           MimeConstants.MIME_PDF);
     }
 
   }
 
-  public FOPUtils getFOP() {
-    if (mfpFop == null) {
-      File fconf =
-          new File(System.getProperty(SEDSystemProperties.SYS_PROP_HOME_DIR) + File.separator +
-               ZPPConstants.SVEV_FOLDER + File.separator + ZPPConstants.FOP_CONFIG_FILENAME);
+  private MSHInMail createInMail() {
 
-      mfpFop =
-          new FOPUtils(fconf, System.getProperty(SEDSystemProperties.SYS_PROP_HOME_DIR) +
-               File.separator + ZPPConstants.SVEV_FOLDER + File.separator +
-               ZPPConstants.XSLT_FOLDER);
-    }
-    return mfpFop;
+    MSHInMail im = new MSHInMail();
+
+    im.setSenderMessageId("SM_ID-" + UUID.randomUUID().toString());
+    im.setAction("action");
+    im.setService("LegalDelivery_ZPP");
+    im.setConversationId(UUID.randomUUID().toString());
+    im.setReceiverName("Mr. Receiver Name");
+    im.setReceiverEBox("receiver.name@test-sed.si");
+    im.setSenderName("Mr. Sender Name");
+    im.setSenderEBox("izvrsba@test-sed.si");
+
+    String testContent = "Test content";
+    im.setMSHInPayload(new MSHInPayload());
+    MSHInPart ip = new MSHInPart();
+    ip.setFilename("Test.txt");
+    ip.setDescription("test attachment");
+
+    ip.setMimeType(MimeValues.MIME_TEXI.getMimeType());
+    MSHInPart.Property iprop1 = new MSHInPart.Property();
+    iprop1.setName("Property 1");
+    iprop1.setValue("value");
+    MSHInPart.Property iprop2 = new MSHInPart.Property();
+    iprop2.setName("Property 2");
+    iprop2.setValue("value");
+
+    ip.getProperties().add(iprop1);
+    ip.getProperties().add(iprop2);
+
+    im.getMSHInPayload().getMSHInParts().add(ip);
+
+    return im;
+
+  }
+
+  private MSHOutMail createOutMail() {
+
+    MSHOutMail om = new MSHOutMail();
+
+    om.setSenderMessageId("SM_ID-" + UUID.randomUUID().toString());
+    om.setAction("DeliveryNotification");
+    om.setService("LegalDelivery_ZPP");
+    om.setConversationId(UUID.randomUUID().toString());
+    om.setReceiverName("Mr. Receiver Name");
+    om.setReceiverEBox("receiver.name@test-sed.si");
+    om.setSenderName("Mr. Sender Name");
+    om.setSenderEBox("izvrsba@test-sed.si");
+
+    String testContent = "Test content";
+    om.setMSHOutPayload(new MSHOutPayload());
+    MSHOutPart op = new MSHOutPart();
+    op.setFilename("Test.txt");
+    op.setDescription("test attachment");
+    op.setMimeType(MimeValues.MIME_TEXI.getMimeType());
+
+    MSHOutPart.Property iprop1 = new MSHOutPart.Property();
+    iprop1.setName("Property 1");
+    iprop1.setValue("value");
+    MSHOutPart.Property iprop2 = new MSHOutPart.Property();
+    iprop2.setName("Property 2");
+    iprop2.setValue("value");
+
+    op.getProperties().add(iprop1);
+    op.getProperties().add(iprop2);
+
+    om.getMSHOutPayload().getMSHOutParts().add(op);
+
+    return om;
+
   }
 
 }

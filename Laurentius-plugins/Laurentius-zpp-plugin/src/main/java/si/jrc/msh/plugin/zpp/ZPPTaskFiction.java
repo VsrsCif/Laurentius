@@ -54,12 +54,12 @@ import si.laurentius.commons.utils.sec.KeystoreUtils;
  */
 @Stateless
 @Local(TaskExecutionInterface.class)
-public class ZPPTask implements TaskExecutionInterface {
+public class ZPPTaskFiction implements TaskExecutionInterface {
 
-  private static final SEDLogger LOG = new SEDLogger(ZPPTask.class);
+  private static final SEDLogger LOG = new SEDLogger(ZPPTaskFiction.class);
   private static final String SIGN_ALIAS = "zpp.sign.key.alias";
   private static final String SIGN_KEYSTORE = "zpp.sign.keystore";
-  private static final String REC_SEDBOX = "zpp.sedbox";
+  private static final String SEND_SEDBOX = "zpp.senderbox";
   private static final String PROCESS_MAIL_COUNT = "zpp.max.mail.count";
 
   SEDCrypto mSedCrypto = new SEDCrypto();
@@ -110,12 +110,13 @@ public class ZPPTask implements TaskExecutionInterface {
     }
 
     String sedBox = "";
-    if (!p.containsKey(REC_SEDBOX)) {
+    if (!p.containsKey(SEND_SEDBOX)) {
       throw new TaskException(TaskException.TaskExceptionCode.InitException,
-          "Missing parameter:  '" + REC_SEDBOX + "'!");
+          "Missing parameter:  '" + SEND_SEDBOX + "'!");
     } else {
-      sedBox = p.getProperty(REC_SEDBOX);
+      sedBox = p.getProperty(SEND_SEDBOX);
     }
+
     int maxMailProc = 100;
     if (p.containsKey(PROCESS_MAIL_COUNT)) {
       String val = p.getProperty(PROCESS_MAIL_COUNT);
@@ -131,19 +132,19 @@ public class ZPPTask implements TaskExecutionInterface {
 
     }
 
-    MSHInMail mi = new MSHInMail();
-    mi.setStatus(SEDInboxMailStatus.PLOCKED.getValue());
+    MSHOutMail mi = new MSHOutMail();
+    mi.setStatus(SEDOutboxMailStatus.SENT.getValue());
+    mi.setSenderEBox(sedBox + "@" + SEDSystemProperties.getLocalDomain());
+    mi.setAction(ZPPConstants.S_ZPP_ACTION_DELIVERY_NOTIFICATION);
     mi.setService(ZPPConstants.S_ZPP_SERVICE);
-    mi.setAction(ZPPConstants.S_ZPP_ACTION_DELIVERY_NOTIFICATION);    
-    mi.setReceiverEBox(sedBox + "@" + SEDSystemProperties.getLocalDomain());
 
-    List<MSHInMail> lst = mDB.getDataList(MSHInMail.class, -1, maxMailProc, "Id", "ASC", mi);
+    List<MSHOutMail> lst = mDB.getDataList(MSHOutMail.class, -1, maxMailProc, "Id", "ASC", mi);
     sw.append("got " + lst.size() + " mails for sedbox: '" + sedBox + "'!");
 
     // set status to proccess
     lst.stream().forEach((m) -> {
       try {
-        mDB.setStatusToInMail(m, SEDInboxMailStatus.PROCESS, "Add message to zpp deliver proccess");
+        mDB.setStatusToOutMail(m, SEDOutboxMailStatus.PROCESS, "Add message to zpp deliver proccess");
       } catch (StorageException ex) {
         String msg = String.format("Error occurred processing mail: '%s'. Err: %s.", m.getId(),
             ex.getMessage());
@@ -152,9 +153,9 @@ public class ZPPTask implements TaskExecutionInterface {
       }
     });
 
-    for (MSHInMail m : lst) {
+    for (MSHOutMail m : lst) {
       try {
-        processInZPPDelivery(m, signKeyAlias, keystore);
+        processZPPFictionDelivery(m, signKeyAlias, keystore);
       } catch (FOPException | HashException | ZPPException ex) {
         String msg = String.format("Error occurred processing mail: '%s'. Err: %s.", m.getId(),
             ex.getMessage());
@@ -164,7 +165,7 @@ public class ZPPTask implements TaskExecutionInterface {
       }
     }
 
-    sw.append("Endzpp plugin task");
+    sw.append("End zpp fiction plugin task");
     return sw.toString();
   }
 
@@ -175,10 +176,12 @@ public class ZPPTask implements TaskExecutionInterface {
   @Override
   public SEDTaskType getTaskDefinition() {
     SEDTaskType tt = new SEDTaskType();
-    tt.setType("zpp-plugin");
-    tt.setName("ZPP plugin");
-    tt.setDescription("Create and Sign adviceOfDelivery for incomming mail");
-    tt.getSEDTaskTypeProperties().add(createTTProperty(REC_SEDBOX, "Receiver sedbox."));
+    tt.setType("zpp-fiction-plugin");
+    tt.setName("zpp fiction plugin");
+    tt.setDescription(
+        "Create FictionAdviceOfDelivery for outgoing mail and send ficiton notification to " +
+        "receiver");
+    tt.getSEDTaskTypeProperties().add(createTTProperty(SEND_SEDBOX, "Sender sedbox."));
     tt.getSEDTaskTypeProperties().add(createTTProperty(SIGN_ALIAS, "Signature key alias."));
     tt.getSEDTaskTypeProperties().add(createTTProperty(SIGN_KEYSTORE, "Keystore name."));
     tt.getSEDTaskTypeProperties().add(createTTProperty(PROCESS_MAIL_COUNT,
@@ -211,17 +214,34 @@ public class ZPPTask implements TaskExecutionInterface {
    * @throws HashException
    * @throws si.jrc.msh.plugin.zpp.exception.ZPPException
    */
-  public void processInZPPDelivery(MSHInMail mInMail, String signAlias, String keystore)
+  private void processZPPFictionDelivery(MSHOutMail mOutMail, String signAlias, String keystore)
       throws FOPException,
       HashException,
       ZPPException {
     long l = LOG.logStart();
-    // create delivery advice
+    // create Fiction notification
+    // sent it to receiver
+
+    // create Fiction AdviceOfDeliver
+    // set as delivered
+  }
+
+  private MSHOutMail createZPPFictionNotification(MSHOutMail mOutMail, String signAlias,
+      String keystore)
+      throws ZPPException, FOPException {
+    long l = LOG.logStart();
+    MSHOutMail moFNotification = null;
+
+    /*
+    
+    
     File fDNViz = null;
     File fDA = null;
+    
+    // create vizualization
     try {
       // vizualization
-      fDNViz = StorageUtils.getNewStorageFile("pdf", "AdviceOfDelivery");
+      fDNViz = StorageUtils.getNewStorageFile("pdf", "AdviceOfDeliveryFiction");
       String path = fDNViz.getAbsolutePath();
       path = path.substring(0, path.lastIndexOf(".pdf")) + ".xml";
       // xml enveloped delivery advice
@@ -229,22 +249,22 @@ public class ZPPTask implements TaskExecutionInterface {
     } catch (StorageException ex) {
       String msg = "Error occured while creating delivery advice file!";
       throw new ZPPException(msg, ex);
-
     }
-
-    getFOP().generateVisualization(mInMail, fDNViz, FOPUtils.FopTransformations.AdviceOfDelivery,
+    
+    getFOP().generateVisualization(mOutMail, fDNViz, FOPUtils.FopTransformations.AdviceOfDeliveryFiction,
         MimeConstants.MIME_PDF);
+    
     MSHOutMail mout = new MSHOutMail();
     mout.setMessageId(Utils.getInstance().getGuidString());
     mout.setService(ZPPConstants.S_ZPP_SERVICE);
-    mout.setAction(ZPPConstants.S_ZPP_ACTION_ADVICE_OF_DELIVERY);
-    mout.setConversationId(mInMail.getConversationId());
-    mout.setSenderEBox(mInMail.getReceiverEBox());
-    mout.setSenderName(mInMail.getReceiverName());
-    mout.setRefToMessageId(mInMail.getMessageId());
-    mout.setReceiverEBox(mInMail.getSenderEBox());
-    mout.setReceiverName(mInMail.getSenderName());
-    mout.setSubject(ZPPConstants.S_ZPP_ACTION_ADVICE_OF_DELIVERY);
+    mout.setAction(ZPPConstants.S_ZPP_ACTION_FICTION_NOTIFICATION);
+    mout.setConversationId(mOutMail.getConversationId());
+    mout.setSenderEBox(mOutMail.getSenderEBox());
+    mout.setSenderName(mOutMail.getSenderName());
+    mout.setRefToMessageId(mOutMail.getMessageId()); // ---??? is better no ref to - in twoway delivery ?
+    mout.setReceiverEBox(mOutMail.getReceiverEBox());
+    mout.setReceiverName(mOutMail.getReceiverName());
+    mout.setSubject(ZPPConstants.S_ZPP_ACTION_FICTION_NOTIFICATION);
     // prepare mail to persist
     Date dt = new Date();
     // set current status
@@ -256,9 +276,9 @@ public class ZPPTask implements TaskExecutionInterface {
 
     try (FileOutputStream fos = new FileOutputStream(fDA)) {
       MSHOutPart mp = new MSHOutPart();
-      mp.setDescription("DeliveryAdvice");
+      mp.setDescription(ZPPConstants.S_ZPP_ACTION_FICTION_NOTIFICATION);
       mp.setFilepath(StorageUtils.getRelativePath(fDNViz));
-      mp.setMimeType(MimeValues.MIME_XML.getMimeType());
+      mp.setMimeType(MimeValues.MIME_PDF.getMimeType());
       mout.getMSHOutPayload().getMSHOutParts().add(mp);
 
       SEDCertStore cs = msedLookup.getSEDCertStoreByName(keystore);
@@ -296,7 +316,9 @@ public class ZPPTask implements TaskExecutionInterface {
       throw new ZPPException(msg, ex);
     }
 
+     */
     LOG.logEnd(l);
+    return moFNotification;
   }
 
   /**

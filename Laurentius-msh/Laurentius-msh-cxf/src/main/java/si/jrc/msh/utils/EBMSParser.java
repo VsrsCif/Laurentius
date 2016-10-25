@@ -52,7 +52,6 @@ import si.laurentius.commons.pmode.PModeUtils;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.Utils;
 import si.laurentius.msh.pmode.ReceptionAwareness;
-import si.laurentius.msh.pmode.TransportChannelType;
 
 /**
  *
