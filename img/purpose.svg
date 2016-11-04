@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<!-- Created with Inkscape (http://www.inkscape.org/) by Joze Rihtarsic 
+with nuvola icons-->
 
 <svg:svg
-   xmlns:ns0="&amp;#38;#38;#38;#38;#38;#38;#38;#38;#38;#38;#38;#38;ns_ai;"
-   xmlns:i="&amp;#38;#38;#38;#38;#38;#38;#38;#38;ns_ai;"
-   xmlns:ns1="&amp;#38;#38;#38;#38;#38;#38;#38;#38;#38;ns_ai;"
-   xmlns:ns2="&amp;#38;#38;#38;#38;#38;#38;#38;#38;#38;#38;ns_ai;"
-   xmlns:ns="&amp;#38;#38;#38;#38;#38;#38;#38;#38;#38;#38;#38;ns_ai;"
    xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/"
    xmlns:dc="http://purl.org/dc/elements/1.1/"
    xmlns:cc="http://creativecommons.org/ns#"
@@ -21,7 +17,28 @@
    id="svg4499"
    version="1.1"
    inkscape:version="0.91 r"
+   docname="purpose.svg"
    sodipodi:docname="purpose.svg">
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1680"
+     inkscape:window-height="998"
+     id="namedview2235"
+     showgrid="false"
+     inkscape:zoom="1.143"
+     inkscape:cx="330.83851"
+     inkscape:cy="562.67128"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g4604-4-63-5-8" />
   <svg:defs
      id="defs4501">
     <svg:marker
@@ -8800,7 +8817,7 @@
        x2="121.2769"
        y2="13.3879" />
   </svg:defs>
-  <sodipodi:namedview
+  <namedview
      id="base"
      pagecolor="#ffffff"
      bordercolor="#666666"
@@ -8826,7 +8843,6 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </svg:metadata>
@@ -10823,13 +10839,13 @@
            style="overflow:visible;fill:none"
            transform="matrix(0.18527416,0,0,0.22321586,167.78806,280.94367)" />
         <svg:path
-           sodipodi:nodetypes="cccccsssscc"
+           nodetypes="cccccsssscc"
            style="overflow:visible;fill:url(#linearGradient4610-9-2)"
            id="path151-6-5"
            d="m 175.82322,269.60732 0.016,0.38334 -0.016,-0.0729 -0.1495,26.06938 0.008,0.0707 c 0.57916,5.00083 7.45636,8.77207 15.99694,8.77207 8.8913,0 15.84612,-4.15689 15.85631,-9.46337 l 0.0505,-26.36983 c 0.008,-4.08554 -6.65632,-5.08325 -15.54358,-5.18764 -5.04183,-0.0591 -16.32031,0.61355 -16.16831,4.69923 z"
            inkscape:connector-curvature="0" />
         <svg:path
-           sodipodi:nodetypes="csssccccsscccccsscccc"
+           nodetypes="csssccccsscccccsscccc"
            style="overflow:visible;fill:url(#linearGradient4607-1-8)"
            id="path166-3-98"
            d="m 206.54112,272.12712 c 0.0434,-0.24525 0.0676,-0.49337 0.0676,-0.7446 0,-4.39872 -6.68431,-6.13106 -14.92994,-6.13106 -8.24526,0 -14.9294,1.73255 -14.9294,6.13106 0,0.10102 0.008,0.20045 0.0133,0.30026 l -0.0133,0 0,24.59322 0.0362,0 c 0.50841,4.15263 6.98004,7.43819 14.8931,7.43819 8.24544,0 14.92993,-3.56621 14.92993,-7.96434 0,-0.25104 -0.0239,-0.4993 -0.0676,-0.74442 l 0,-22.87824 1.6e-4,0 z m -28.20263,-0.7446 c 0,-3.0209 4.7623,5.98998 12.62367,5.98998 7.8623,0 14.05786,-9.01088 14.05786,-5.98998 0,0.0997 -0.008,0.19999 -0.0186,0.30026 l -26.64333,0 c -0.0133,-0.10033 -0.0186,-0.20044 -0.0186,-0.30026 z"
@@ -10877,40 +10893,40 @@
            transform="matrix(0.18527416,0,0,0.22321586,167.88941,252.37204)" />
         <svg:g
            style="overflow:visible;stroke:#000000;stroke-width:2.06850076"
-           ns:rgbTrio="#4F008000FFFF"
-           ns:dimmedPercent="50"
-           ns:layer="yes"
+           rgbTrio="#4F008000FFFF"
+           dimmedPercent="50"
+           layer="yes"
            id="Layer_1-5-2-7"
            transform="matrix(0.27666661,0,0.10323965,0.1806742,-6.293594,490.33697)">
           <svg:path
              id="path158-1-8"
              d="M 236.071,3.411 230.976,10.625 22.298,48.94 1.743,234.753 6.419,240.172 224.868,200.061 240.747,8.83 236.071,3.411 Z"
              style="fill:#3a55a5;stroke:none"
-             ns:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:path
              id="path159-4-0"
              d="M 216.889,191.803 16.04,228.68 30.245,57.613 231.095,20.735 216.889,191.803 Z"
              style="fill:#3a55a5;stroke:none"
-             ns:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:path
              id="path160-7-7"
              d="M 230.718,21.166 122.726,152.67 30.709,58.563 230.718,21.166 Z"
              style="fill:#3a55a5;stroke:none"
-             ns:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:path
              id="path161-7-2"
              d="M 230.786,20.368 122.572,132.621 30.588,57.55 230.786,20.368 Z"
              style="fill:#3a55a5;stroke:none"
-             ns:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:path
              id="path162-5-7"
              d="M 29.79,58.581 13.911,249.813 232.361,209.702 248.24,18.471 29.79,58.581 Z"
              style="opacity:0.2;stroke:none"
-             ns:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:linearGradient
              y2="83.324303"
@@ -10932,7 +10948,7 @@
              id="path169-9-9"
              d="M 231.39,4.271 226.301,5.206 17.622,43.521 1.743,234.753 220.192,194.642 236.071,3.411 231.39,4.271 Z"
              style="fill:url(#linearGradient12785);stroke:none"
-             ns:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:linearGradient
              y2="89.750298"
@@ -10954,7 +10970,7 @@
              id="path176-0-8"
              d="m 228.074,17.594 c 0,0 -195.372,35.872 -204.112,37.477 -0.701,8.44 -13.662,164.537 -14.838,178.699 14.192,-2.605 197.644,-36.29 206.083,-37.84 0.7,-8.44 13.663,-164.535 14.836,-178.697 -0.933,0.172 -1.969,0.361 -1.969,0.361 z"
              style="fill:url(#linearGradient12787);stroke:none"
-             ns:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:linearGradient
              gradientTransform="matrix(0.9929,-0.1191,-0.056,1.0138,7.7556,8.876)"
@@ -10977,7 +10993,7 @@
              id="path183-4-4"
              d="M 212.213,186.384 11.364,223.261 25.569,52.194 226.419,15.316 212.213,186.384 Z"
              style="fill:url(#linearGradient12789);stroke:none"
-             ns:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:linearGradient
              y2="77.567299"
@@ -10999,7 +11015,7 @@
              id="path190-2-5"
              d="M 226.042,15.747 118.05,147.251 26.034,53.145 226.042,15.747 Z"
              style="fill:url(#linearGradient12791);stroke:none"
-             ns:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:linearGradient
              gradientTransform="matrix(0.9929,-0.1191,-0.056,1.0138,7.7556,8.876)"
@@ -11054,71 +11070,71 @@
              id="path205-7-5"
              d="M 226.11,14.949 117.896,127.202 25.913,52.131 226.11,14.949 Z"
              style="fill:url(#linearGradient12793);stroke:none"
-             ns:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:path
              id="path206-8-4"
              d="m 161.286,188.736 c 23.618,-4.43 44.142,-8.28 46.437,-8.708 0.28,-2.759 2.399,-23.476 4.826,-47.208 -14.987,40.14 -31.536,49.326 -51.263,55.916 z"
              style="opacity:0.3;fill:#ffffff;stroke:none"
-             ns:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:path
              id="path207-1-3"
              d="m 62.959,51.423 c -10.43,1.937 -18.476,3.431 -22.699,4.216 -0.077,0.061 -0.154,0.123 -0.228,0.182 15.398,12.567 70.439,57.488 77.371,63.146 1.525,-1.581 6.515,-6.759 13.474,-13.976 -7.203,0.413 -14.751,0.125 -19.948,-1.175 -11.482,-2.871 -42.648,-29.525 -49.62,-41.008 -3.549,-5.846 -1.356,-9.35 1.65,-11.385 z"
              style="opacity:0.4;fill:#ffffff;stroke:none"
-             ns:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
         </svg:g>
         <svg:path
-           sodipodi:nodetypes="cccccc"
+           nodetypes="cccccc"
            inkscape:connector-curvature="0"
            id="polygon674"
            d="m 166.60613,551.76904 82.74511,-24.92657 0.91047,-78.46725 -183.894294,-17.28035 -0.57329,73.97986 z"
            style="overflow:visible;fill:url(#XMLID_22_)" />
         <svg:path
-           sodipodi:nodetypes="ccccc"
+           nodetypes="ccccc"
            inkscape:connector-curvature="0"
            id="polygon760-0-7"
            d="m 98.231066,427.07443 0,91.69233 -32.38842,-14.03109 0.16599,-119.4821 z"
            style="overflow:visible;fill:url(#XMLID_33_-2-6)" />
         <svg:path
-           sodipodi:nodetypes="cccccccc"
+           nodetypes="cccccccc"
            inkscape:connector-curvature="0"
            id="polygon780-8-6"
            d="m 167.80264,427.78277 0.10348,-8.49977 -73.882154,-20.66677 0,16.86555 -27.86096,-28.59926 0.17371,7.18352 26.6121,37.9188 z"
            style="overflow:visible;opacity:0.5;fill:url(#linearGradient4482-7)" />
         <svg:path
-           sodipodi:nodetypes="ccccccc"
+           nodetypes="ccccccc"
            id="path795-5-1"
            d="m 180.66694,422.51071 1.47934,-0.79103 -36.75263,-41.18532 -82.269354,-0.46513 c -0.72042,0.61385 -1.43736,1.23404 -2.02839,1.95864 l 33.10049,45.37359 z"
            style="overflow:visible;fill:#000080"
            inkscape:connector-curvature="0" />
         <svg:path
-           sodipodi:nodetypes="ccccc"
+           nodetypes="ccccc"
            inkscape:connector-curvature="0"
            id="polygon805-8-4"
            d="M 95.158966,424.74996 185.4181,421.74842 149.18569,380.54039 63.061436,380.0688 Z"
            style="overflow:visible;fill:#0000ff" />
         <svg:path
-           sodipodi:nodetypes="ccccc"
+           nodetypes="ccccc"
            inkscape:connector-curvature="0"
            id="polygon760-0"
            d="m 130.46488,441.15187 0,91.69233 -32.388444,-14.0311 0.16599,-119.48207 z"
            style="overflow:visible;fill:url(#XMLID_33_-2)" />
         <svg:path
-           sodipodi:nodetypes="cccccccc"
+           nodetypes="cccccccc"
            inkscape:connector-curvature="0"
            id="polygon780-8"
            d="m 203.01177,441.71695 0.10348,-8.35939 -73.88215,-20.32549 0,16.58705 -31.014134,-29.56252 0.46044,3.47602 29.478624,42.31703 z"
            style="overflow:visible;opacity:0.5;fill:url(#linearGradient4482)" />
         <svg:path
-           sodipodi:nodetypes="ccccccc"
+           nodetypes="ccccccc"
            id="path795-5"
            d="m 215.08758,436.92359 1.47936,-0.79681 -36.75263,-41.48581 -82.269344,-0.46853 c -0.72045,0.61833 -1.43739,1.24303 -2.02842,1.97293 l 33.100494,45.70464 z"
            style="overflow:visible;fill:#000080"
            inkscape:connector-curvature="0" />
         <svg:path
-           sodipodi:nodetypes="ccccc"
+           nodetypes="ccccc"
            inkscape:connector-curvature="0"
            id="polygon805-8"
            d="m 128.84967,438.39035 87.71727,-2.96507 -35.21206,-40.70766 -83.698834,-0.46586 z"
@@ -11144,13 +11160,13 @@
            style="overflow:visible;fill:url(#XMLID_29_)"
            inkscape:connector-curvature="0" />
         <svg:path
-           sodipodi:nodetypes="ccccc"
+           nodetypes="ccccc"
            inkscape:connector-curvature="0"
            id="polygon760"
            d="m 165.81048,444.88371 0,104.77437 -35.32581,-16.03292 0.18116,-136.52901 z"
            style="overflow:visible;fill:url(#XMLID_33_)" />
         <svg:path
-           sodipodi:nodetypes="ccccc"
+           nodetypes="ccccc"
            inkscape:connector-curvature="0"
            id="polygon767"
            d="m 65.760816,504.56844 101.112314,45.90607 0,-5.40297 L 65.760816,501.9283 Z"
@@ -11161,7 +11177,7 @@
            style="overflow:visible;opacity:0.6;fill:#ffffff"
            inkscape:connector-curvature="0" />
         <svg:path
-           sodipodi:nodetypes="cccccccc"
+           nodetypes="cccccccc"
            inkscape:connector-curvature="0"
            id="polygon780"
            d="m 130.57938,397.67016 0.0412,6.7178 35.68146,67.11893 84.63925,-11.00104 0.11838,-14.33182 -84.45551,-34.84715 0,28.43775 z"
@@ -11187,7 +11203,7 @@
            style="overflow:visible;fill:#0000ff"
            transform="matrix(3.9862975,0,0,4.8026392,87.222926,352.44727)" />
         <svg:path
-           sodipodi:nodetypes="cccccccccccc"
+           nodetypes="cccccccccccc"
            inkscape:connector-curvature="0"
            id="polygon812"
            d="m 160.27323,490.85738 -25.22529,-6.00809 -0.0519,4.06302 -0.0918,6.70928 0,0 -0.10374,7.46331 -0.0359,2.67026 0,0 -0.3787,29.41465 25.13361,11.47983 0.18728,-13.68272 z"
@@ -11213,7 +11229,7 @@
            style="overflow:visible;fill:url(#XMLID_42_-9)"
            inkscape:connector-curvature="0" />
         <svg:path
-           sodipodi:nodetypes="cccccccccccc"
+           nodetypes="cccccccccccc"
            inkscape:connector-curvature="0"
            id="polygon812-9"
            d="m 123.24187,463.89152 -17.82319,-4.0272 -0.0367,2.72342 -0.0646,4.49722 0,0 -0.0732,5.0026 -0.0266,1.78988 0,0 -0.26758,19.71648 17.75844,7.69488 0.13247,-9.17145 z"
@@ -11225,40 +11241,40 @@
            style="overflow:visible;fill:#8cc7ff;fill-opacity:1" />
         <svg:g
            style="overflow:visible;stroke:#000000;stroke-width:2.06850076"
-           ns2:rgbTrio="#4F008000FFFF"
-           ns2:dimmedPercent="50"
-           ns2:layer="yes"
+           rgbTrio="#4F008000FFFF"
+           dimmedPercent="50"
+           layer="yes"
            id="Layer_1-5-2"
            transform="matrix(0.27666661,0,0.10323965,0.1806742,58.226836,490.67512)">
           <svg:path
              id="path158-1"
              d="M 236.071,3.411 230.976,10.625 22.298,48.94 1.743,234.753 6.419,240.172 224.868,200.061 240.747,8.83 236.071,3.411 Z"
              style="fill:#3a55a5;stroke:none"
-             ns2:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:path
              id="path159-4"
              d="M 216.889,191.803 16.04,228.68 30.245,57.613 231.095,20.735 216.889,191.803 Z"
              style="fill:#3a55a5;stroke:none"
-             ns2:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:path
              id="path160-7"
              d="M 230.718,21.166 122.726,152.67 30.709,58.563 230.718,21.166 Z"
              style="fill:#3a55a5;stroke:none"
-             ns2:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:path
              id="path161-7"
              d="M 230.786,20.368 122.572,132.621 30.588,57.55 230.786,20.368 Z"
              style="fill:#3a55a5;stroke:none"
-             ns2:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:path
              id="path162-5"
              d="M 29.79,58.581 13.911,249.813 232.361,209.702 248.24,18.471 29.79,58.581 Z"
              style="opacity:0.2;stroke:none"
-             ns2:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:linearGradient
              y2="83.324303"
@@ -11280,7 +11296,7 @@
              id="path169-9"
              d="M 231.39,4.271 226.301,5.206 17.622,43.521 1.743,234.753 220.192,194.642 236.071,3.411 231.39,4.271 Z"
              style="fill:url(#linearGradient12795);stroke:none"
-             ns2:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:linearGradient
              y2="89.750298"
@@ -11302,7 +11318,7 @@
              id="path176-0"
              d="m 228.074,17.594 c 0,0 -195.372,35.872 -204.112,37.477 -0.701,8.44 -13.662,164.537 -14.838,178.699 14.192,-2.605 197.644,-36.29 206.083,-37.84 0.7,-8.44 13.663,-164.535 14.836,-178.697 -0.933,0.172 -1.969,0.361 -1.969,0.361 z"
              style="fill:url(#linearGradient12797);stroke:none"
-             ns2:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:linearGradient
              gradientTransform="matrix(0.9929,-0.1191,-0.056,1.0138,7.7556,8.876)"
@@ -11325,7 +11341,7 @@
              id="path183-4"
              d="M 212.213,186.384 11.364,223.261 25.569,52.194 226.419,15.316 212.213,186.384 Z"
              style="fill:url(#linearGradient12799);stroke:none"
-             ns2:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:linearGradient
              y2="77.567299"
@@ -11347,7 +11363,7 @@
              id="path190-2"
              d="M 226.042,15.747 118.05,147.251 26.034,53.145 226.042,15.747 Z"
              style="fill:url(#linearGradient12801);stroke:none"
-             ns2:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:linearGradient
              gradientTransform="matrix(0.9929,-0.1191,-0.056,1.0138,7.7556,8.876)"
@@ -11402,31 +11418,31 @@
              id="path205-7"
              d="M 226.11,14.949 117.896,127.202 25.913,52.131 226.11,14.949 Z"
              style="fill:url(#linearGradient12803);stroke:none"
-             ns2:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:path
              id="path206-8"
              d="m 161.286,188.736 c 23.618,-4.43 44.142,-8.28 46.437,-8.708 0.28,-2.759 2.399,-23.476 4.826,-47.208 -14.987,40.14 -31.536,49.326 -51.263,55.916 z"
              style="opacity:0.3;fill:#ffffff;stroke:none"
-             ns2:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:path
              id="path207-1"
              d="m 62.959,51.423 c -10.43,1.937 -18.476,3.431 -22.699,4.216 -0.077,0.061 -0.154,0.123 -0.228,0.182 15.398,12.567 70.439,57.488 77.371,63.146 1.525,-1.581 6.515,-6.759 13.474,-13.976 -7.203,0.413 -14.751,0.125 -19.948,-1.175 -11.482,-2.871 -42.648,-29.525 -49.62,-41.008 -3.549,-5.846 -1.356,-9.35 1.65,-11.385 z"
              style="opacity:0.4;fill:#ffffff;stroke:none"
-             ns2:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
         </svg:g>
         <svg:path
            inkscape:transform-center-y="0.69100169"
            inkscape:transform-center-x="-0.13528962"
-           sodipodi:nodetypes="cccscc"
+           nodetypes="cccscc"
            id="path829-9"
            d="m 121.67326,466.89303 -14.95249,-3.73907 c 0,0 -0.0936,5.70586 -0.0561,11.77081 2.0864,2.84505 4.7516,5.10568 7.5068,6.45269 2.79286,1.36544 5.15879,1.55142 7.26403,0.70283 -0.0452,-4.7917 0.23782,-15.18726 0.23782,-15.18726 z"
            style="overflow:visible;fill:url(#XMLID_41_-8)"
            inkscape:connector-curvature="0" />
         <svg:path
-           sodipodi:nodetypes="cccccccccccc"
+           nodetypes="cccccccccccc"
            inkscape:connector-curvature="0"
            id="polygon812-9-3"
            d="m 88.321806,454.12399 -15.4531,-3.36246 -0.0319,2.2739 -0.0561,3.75488 0,0 -0.0636,4.17686 -0.0213,1.49444 0,0 -0.23197,16.46202 15.39693,6.42474 0.11465,-7.6576 z"
@@ -11437,31 +11453,31 @@
            d="m 73.938536,454.67634 -0.13673,8.71693 c 0,-0.005 -0.17344,11.12644 -0.21734,13.94814 1.04517,0.45797 10.46893,4.57218 12.84989,5.61028 0.0319,-1.90317 0.39072,-24.96259 0.4127,-26.47904 -1.40661,-0.29007 -10.82792,-2.23138 -12.89386,-2.65629 -0.008,0.41476 -0.016,0.85998 -0.016,0.85998 z"
            style="overflow:visible;fill:#8cc7ff;fill-opacity:1" />
         <svg:path
-           sodipodi:nodetypes="cccscc"
+           nodetypes="cccscc"
            id="path829-9-4"
            d="m 86.846356,456.44416 -12.96414,-3.12188 c 0,0 -0.0811,4.76403 -0.0487,9.82787 1.80898,2.37544 4.11977,4.26294 6.50855,5.38762 2.42148,1.14004 4.4728,1.29532 6.29809,0.58683 -0.0391,-4.00079 0.20616,-12.68044 0.20616,-12.68044 z"
            style="overflow:visible;fill:url(#XMLID_41_-8-7)"
            inkscape:connector-curvature="0" />
         <svg:g
            style="overflow:visible;stroke:#000000;stroke-width:1.13809657"
-           ns1:rgbTrio="#FFFF4F004F00"
-           ns1:dimmedPercent="50"
-           ns1:editable="no"
-           ns1:layer="yes"
+           rgbTrio="#FFFF4F004F00"
+           dimmedPercent="50"
+           editable="no"
+           layer="yes"
            id="Layer_2"
            transform="matrix(0.38638371,0,0,0.42735348,71.007476,272.83743)">
           <svg:path
              id="path156"
              d="M 256,256 0,256 0,0 l 256,0 0,256 z"
              style="opacity:0.36000001;fill:none;stroke:none"
-             ns1:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
         </svg:g>
         <svg:g
            style="overflow:visible;stroke:#000000;stroke-width:2.06850076"
-           ns1:rgbTrio="#4F008000FFFF"
-           ns1:dimmedPercent="50"
-           ns1:layer="yes"
+           rgbTrio="#4F008000FFFF"
+           dimmedPercent="50"
+           layer="yes"
            id="Layer_1-5"
            transform="matrix(0.27666661,0,0.10323965,0.1806742,147.60457,528.93544)">
           <svg:linearGradient
@@ -11481,11 +11497,11 @@
                offset="1" />
           </svg:linearGradient>
           <svg:path
-             sodipodi:nodetypes="ccccc"
+             nodetypes="ccccc"
              id="path169"
              d="m -36.969053,-162.60028 -15.879,191.231998 85.328462,-17.13355 70.849861,-193.258418 c 0,0 -124.074367,16.18095 -140.299323,19.15997 z"
              style="fill:url(#linearGradient7804);stroke:none"
-             ns1:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:linearGradient
              y2="89.750298"
@@ -11504,11 +11520,11 @@
                offset="1" />
           </svg:linearGradient>
           <svg:path
-             sodipodi:nodetypes="ccccc"
+             nodetypes="ccccc"
              id="path176"
              d="m -30.629053,-151.05028 c -0.701,8.44 -13.662,164.536998 -14.838,178.698998 14.192,-2.605 71.488864,-24.1254705 79.927864,-25.6754705 0.7,-8.44 65.663279,-181.4002275 65.663279,-181.4002275 0,0 -111.882108,24.9115 -130.753143,28.3767 z"
              style="fill:url(#linearGradient7806);stroke:none"
-             ns1:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:linearGradient
              gradientTransform="matrix(0.9929,-0.1191,-0.056,1.0138,7.7556,8.876)"
@@ -11528,11 +11544,11 @@
                offset="1" />
           </svg:linearGradient>
           <svg:path
-             sodipodi:nodetypes="ccccc"
+             nodetypes="ccccc"
              id="path183"
              d="m 36.157125,-1.4904825 -79.384178,18.6302005 14.205,-171.066998 130.374423,-24.71347 z"
              style="fill:url(#linearGradient7808);stroke:none"
-             ns1:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:linearGradient
              y2="77.567299"
@@ -11551,11 +11567,11 @@
                offset="1" />
           </svg:linearGradient>
           <svg:path
-             sodipodi:nodetypes="cccc"
+             nodetypes="cccc"
              id="path190"
              d="m 99.486197,-176.18233 -43.90025,111.905588 -84.143,-88.699538 z"
              style="fill:url(#linearGradient7810);stroke:none"
-             ns1:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:linearGradient
              gradientTransform="matrix(0.9929,-0.1191,-0.056,1.0138,7.7556,8.876)"
@@ -11607,18 +11623,18 @@
                offset="1" />
           </svg:linearGradient>
           <svg:path
-             sodipodi:nodetypes="cccc"
+             nodetypes="cccc"
              id="path205"
              d="m 99.782457,-175.62871 -36.47751,96.709428 -91.983,-75.070998 z"
              style="fill:url(#linearGradient7812);stroke:none"
-             ns1:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:path
-             sodipodi:nodetypes="cccccccc"
+             nodetypes="cccccccc"
              id="path207"
              d="m 8.3679469,-154.69828 c -10.43,1.937 -18.4759999,3.431 -22.6989999,4.216 -0.077,0.061 -0.154,0.123 -0.228,0.182 15.39799995,12.567 70.439,57.487998 77.371,63.145998 1.525,-1.581 1.86706,-6.08319 8.82606,-13.300188 -7.203,0.413 -10.10306,-0.55081 -15.30006,-1.85081 -11.482,-2.871 -42.648,-29.525 -49.6200001,-41.008 -3.549,-5.846 -1.356,-9.35 1.65,-11.385 z"
              style="opacity:0.4;fill:#ffffff;stroke:none"
-             ns1:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
         </svg:g>
         <svg:path
@@ -11637,13 +11653,13 @@
            d="m 233.10975,290.40493 c -8.24526,0 -14.9294,4.03017 -14.9294,9.00119 0,4.97123 6.68414,9.00116 14.9294,9.00116 8.24544,0 14.92994,-4.02993 14.92994,-9.00116 -1.6e-4,-4.97102 -6.6845,-9.00119 -14.92994,-9.00119 z m 0,16.21863 c -7.86156,0 -13.34029,-3.80337 -13.34029,-7.21744 0,-3.4141 5.47892,-7.21724 13.34029,-7.21724 7.8623,0 13.34122,3.80314 13.34122,7.21724 0,3.41407 -5.47892,7.21744 -13.34122,7.21744 z"
            inkscape:connector-curvature="0" />
         <svg:path
-           sodipodi:nodetypes="cccccsssscc"
+           nodetypes="cccccsssscc"
            style="overflow:visible;fill:url(#linearGradient4610-9-2-0)"
            id="path151-6-5-5"
            d="m 217.35533,273.26741 0.016,0.38334 -0.016,-0.0729 -0.1495,26.06938 0.008,0.0707 c 0.57917,5.0008 7.45636,8.77204 15.99695,8.77204 8.89129,0 15.84611,-4.15689 15.8563,-9.46337 l 0.0508,-26.36983 c 0.008,-4.08554 -6.65632,-5.08325 -15.54358,-5.18764 -5.04183,-0.0591 -16.32034,0.61355 -16.16831,4.69925 z"
            inkscape:connector-curvature="0" />
         <svg:path
-           sodipodi:nodetypes="csssccccsscccccsscccc"
+           nodetypes="csssccccsscccccsscccc"
            style="overflow:visible;fill:url(#linearGradient4607-1-8-2)"
            id="path166-3-98-1"
            d="m 248.07323,275.78724 c 0.0434,-0.24527 0.0676,-0.49338 0.0676,-0.74461 0,-4.39873 -6.68434,-6.13108 -14.92996,-6.13108 -8.24526,0 -14.92938,1.73255 -14.92938,6.13108 0,0.10079 0.008,0.20045 0.0133,0.30027 l -0.0133,0 0,24.59322 0.0362,0 c 0.50838,4.15263 6.98001,7.43819 14.89306,7.43819 8.24544,0 14.92996,-3.56624 14.92996,-7.96436 0,-0.25105 -0.0239,-0.49931 -0.0676,-0.74443 l 0,-22.87824 1.8e-4,0 z m -28.20263,-0.74461 c 0,-3.0209 4.76233,5.98996 12.6237,5.98996 7.86227,0 14.05783,-9.01086 14.05783,-5.98996 0,0.0997 -0.008,0.2 -0.0186,0.30027 l -26.64336,0 c -0.0106,-0.10034 -0.0186,-0.20045 -0.0186,-0.30027 z"
@@ -11693,37 +11709,37 @@
           <svg:g
              transform="matrix(0.49498387,0,0,0.83738477,71.850538,-513.89126)"
              id="Layer_1-1"
-             i:layer="yes"
-             i:dimmedPercent="50"
-             i:rgbTrio="#4F008000FFFF"
+             layer="yes"
+             dimmedPercent="50"
+             rgbTrio="#4F008000FFFF"
              style="overflow:visible;stroke:#000000;stroke-width:0.69138545">
             <svg:path
                inkscape:connector-curvature="0"
-               i:knockout="Off"
+               knockout="Off"
                style="fill:#3a55a5;stroke:none"
                d="M 236.071,3.411 230.976,10.625 22.298,48.94 1.743,234.753 6.419,240.172 224.868,200.061 240.747,8.83 236.071,3.411 Z"
                id="path158" />
             <svg:path
                inkscape:connector-curvature="0"
-               i:knockout="Off"
+               knockout="Off"
                style="fill:#3a55a5;stroke:none"
                d="M 216.889,191.803 16.04,228.68 30.245,57.613 231.095,20.735 216.889,191.803 Z"
                id="path159" />
             <svg:path
                inkscape:connector-curvature="0"
-               i:knockout="Off"
+               knockout="Off"
                style="fill:#3a55a5;stroke:none"
                d="M 230.718,21.166 122.726,152.67 30.709,58.563 230.718,21.166 Z"
                id="path160" />
             <svg:path
                inkscape:connector-curvature="0"
-               i:knockout="Off"
+               knockout="Off"
                style="fill:#3a55a5;stroke:none"
                d="M 230.786,20.368 122.572,132.621 30.588,57.55 230.786,20.368 Z"
                id="path161" />
             <svg:path
                inkscape:connector-curvature="0"
-               i:knockout="Off"
+               knockout="Off"
                style="opacity:0.2;stroke:none"
                d="M 29.79,58.581 13.911,249.813 232.361,209.702 248.24,18.471 29.79,58.581 Z"
                id="path162" />
@@ -11745,7 +11761,7 @@
             </svg:linearGradient>
             <svg:path
                inkscape:connector-curvature="0"
-               i:knockout="Off"
+               knockout="Off"
                style="fill:url(#linearGradient5231);stroke:none"
                d="M 231.39,4.271 226.301,5.206 17.622,43.521 1.743,234.753 220.192,194.642 236.071,3.411 231.39,4.271 Z"
                id="path169-4" />
@@ -11767,7 +11783,7 @@
             </svg:linearGradient>
             <svg:path
                inkscape:connector-curvature="0"
-               i:knockout="Off"
+               knockout="Off"
                style="fill:url(#linearGradient5233);stroke:none"
                d="m 228.074,17.594 c 0,0 -195.372,35.872 -204.112,37.477 -0.701,8.44 -13.662,164.537 -14.838,178.699 14.192,-2.605 197.644,-36.29 206.083,-37.84 0.7,-8.44 13.663,-164.535 14.836,-178.697 -0.933,0.172 -1.969,0.361 -1.969,0.361 z"
                id="path176-7" />
@@ -11790,7 +11806,7 @@
             </svg:linearGradient>
             <svg:path
                inkscape:connector-curvature="0"
-               i:knockout="Off"
+               knockout="Off"
                style="fill:url(#linearGradient5235);stroke:none"
                d="M 212.213,186.384 11.364,223.261 25.569,52.194 226.419,15.316 212.213,186.384 Z"
                id="path183-3" />
@@ -11812,7 +11828,7 @@
             </svg:linearGradient>
             <svg:path
                inkscape:connector-curvature="0"
-               i:knockout="Off"
+               knockout="Off"
                style="fill:url(#linearGradient5237);stroke:none"
                d="M 226.042,15.747 118.05,147.251 26.034,53.145 226.042,15.747 Z"
                id="path190-8" />
@@ -11867,19 +11883,19 @@
             </svg:linearGradient>
             <svg:path
                inkscape:connector-curvature="0"
-               i:knockout="Off"
+               knockout="Off"
                style="fill:url(#linearGradient5239);stroke:none"
                d="M 226.11,14.949 117.896,127.202 25.913,52.131 226.11,14.949 Z"
                id="path205-1" />
             <svg:path
                inkscape:connector-curvature="0"
-               i:knockout="Off"
+               knockout="Off"
                style="opacity:0.3;fill:#ffffff;stroke:none"
                d="m 161.286,188.736 c 23.618,-4.43 44.142,-8.28 46.437,-8.708 0.28,-2.759 2.399,-23.476 4.826,-47.208 -14.987,40.14 -31.536,49.326 -51.263,55.916 z"
                id="path206" />
             <svg:path
                inkscape:connector-curvature="0"
-               i:knockout="Off"
+               knockout="Off"
                style="opacity:0.4;fill:#ffffff;stroke:none"
                d="m 62.959,51.423 c -10.43,1.937 -18.476,3.431 -22.699,4.216 -0.077,0.061 -0.154,0.123 -0.228,0.182 15.398,12.567 70.439,57.488 77.371,63.146 1.525,-1.581 6.515,-6.759 13.474,-13.976 -7.203,0.413 -14.751,0.125 -19.948,-1.175 -11.482,-2.871 -42.648,-29.525 -49.62,-41.008 -3.549,-5.846 -1.356,-9.35 1.65,-11.385 z"
                id="path207-10" />
@@ -11888,17 +11904,17 @@
              id="g7731">
             <svg:g
                style="overflow:visible;stroke:#000000;stroke-width:0.64863074"
-               i:rgbTrio="#FFFF4F004F00"
-               i:dimmedPercent="50"
-               i:editable="no"
-               i:layer="yes"
+               rgbTrio="#FFFF4F004F00"
+               dimmedPercent="50"
+               editable="no"
+               layer="yes"
                id="Layer_2-6"
                transform="matrix(0.54845325,0,0,0.85866128,27.492198,-543.04997)">
               <svg:path
                  id="path156-2"
                  d="M 256,256 0,256 0,0 l 256,0 0,256 z"
                  style="opacity:0.36000001;fill:none;stroke:none"
-                 i:knockout="Off"
+                 knockout="Off"
                  inkscape:connector-curvature="0" />
             </svg:g>
           </svg:g>
@@ -12409,13 +12425,13 @@
            style="overflow:visible;fill:none"
            transform="matrix(0.18527416,0,0,0.22321586,167.78806,280.94367)" />
         <svg:path
-           sodipodi:nodetypes="cccccsssscc"
+           nodetypes="cccccsssscc"
            style="overflow:visible;fill:url(#linearGradient4610-9-2-3)"
            id="path151-6-5-6"
            d="m 175.82322,269.60732 0.016,0.38334 -0.016,-0.0729 -0.1495,26.06938 0.008,0.0707 c 0.57916,5.00083 7.45636,8.77207 15.99694,8.77207 8.8913,0 15.84612,-4.15689 15.85631,-9.46337 l 0.0505,-26.36983 c 0.008,-4.08554 -6.65632,-5.08325 -15.54358,-5.18764 -5.04183,-0.0591 -16.32031,0.61355 -16.16831,4.69923 z"
            inkscape:connector-curvature="0" />
         <svg:path
-           sodipodi:nodetypes="csssccccsscccccsscccc"
+           nodetypes="csssccccsscccccsscccc"
            style="overflow:visible;fill:url(#linearGradient4607-1-8-4)"
            id="path166-3-98-12"
            d="m 206.54112,272.12712 c 0.0434,-0.24525 0.0676,-0.49337 0.0676,-0.7446 0,-4.39872 -6.68431,-6.13106 -14.92994,-6.13106 -8.24526,0 -14.9294,1.73255 -14.9294,6.13106 0,0.10102 0.008,0.20045 0.0133,0.30026 l -0.0133,0 0,24.59322 0.0362,0 c 0.50841,4.15263 6.98004,7.43819 14.8931,7.43819 8.24544,0 14.92993,-3.56621 14.92993,-7.96434 0,-0.25104 -0.0239,-0.4993 -0.0676,-0.74442 l 0,-22.87824 1.6e-4,0 z m -28.20263,-0.7446 c 0,-3.0209 4.7623,5.98998 12.62367,5.98998 7.8623,0 14.05786,-9.01088 14.05786,-5.98998 0,0.0997 -0.008,0.19999 -0.0186,0.30026 l -26.64333,0 c -0.0133,-0.10033 -0.0186,-0.20044 -0.0186,-0.30026 z"
@@ -12463,40 +12479,40 @@
            transform="matrix(0.18527416,0,0,0.22321586,167.88941,252.37204)" />
         <svg:g
            style="overflow:visible;stroke:#000000;stroke-width:1.67062938"
-           ns0:rgbTrio="#4F008000FFFF"
-           ns0:dimmedPercent="50"
-           ns0:layer="yes"
+           rgbTrio="#4F008000FFFF"
+           dimmedPercent="50"
+           layer="yes"
            id="Layer_1-5-2-7-5"
            transform="matrix(0.27666661,0,0.10323965,0.1806742,-6.293594,490.33697)">
           <svg:path
              id="path158-1-8-4"
              d="M 236.071,3.411 230.976,10.625 22.298,48.94 1.743,234.753 6.419,240.172 224.868,200.061 240.747,8.83 236.071,3.411 Z"
              style="fill:#3a55a5;stroke:none"
-             ns0:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:path
              id="path159-4-0-9"
              d="M 216.889,191.803 16.04,228.68 30.245,57.613 231.095,20.735 216.889,191.803 Z"
              style="fill:#3a55a5;stroke:none"
-             ns0:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:path
              id="path160-7-7-1"
              d="M 230.718,21.166 122.726,152.67 30.709,58.563 230.718,21.166 Z"
              style="fill:#3a55a5;stroke:none"
-             ns0:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:path
              id="path161-7-2-6"
              d="M 230.786,20.368 122.572,132.621 30.588,57.55 230.786,20.368 Z"
              style="fill:#3a55a5;stroke:none"
-             ns0:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:path
              id="path162-5-7-7"
              d="M 29.79,58.581 13.911,249.813 232.361,209.702 248.24,18.471 29.79,58.581 Z"
              style="opacity:0.2;stroke:none"
-             ns0:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:linearGradient
              y2="83.324303"
@@ -12518,7 +12534,7 @@
              id="path169-9-9-0"
              d="M 231.39,4.271 226.301,5.206 17.622,43.521 1.743,234.753 220.192,194.642 236.071,3.411 231.39,4.271 Z"
              style="fill:url(#linearGradient12785-1);stroke:none"
-             ns0:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:linearGradient
              y2="89.750298"
@@ -12540,7 +12556,7 @@
              id="path176-0-8-5"
              d="m 228.074,17.594 c 0,0 -195.372,35.872 -204.112,37.477 -0.701,8.44 -13.662,164.537 -14.838,178.699 14.192,-2.605 197.644,-36.29 206.083,-37.84 0.7,-8.44 13.663,-164.535 14.836,-178.697 -0.933,0.172 -1.969,0.361 -1.969,0.361 z"
              style="fill:url(#linearGradient12787-6);stroke:none"
-             ns0:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:linearGradient
              gradientTransform="matrix(0.9929,-0.1191,-0.056,1.0138,7.7556,8.876)"
@@ -12563,7 +12579,7 @@
              id="path183-4-4-3"
              d="M 212.213,186.384 11.364,223.261 25.569,52.194 226.419,15.316 212.213,186.384 Z"
              style="fill:url(#linearGradient9092);stroke:none"
-             ns0:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:linearGradient
              y2="77.567299"
@@ -12585,7 +12601,7 @@
              id="path190-2-5-5"
              d="M 226.042,15.747 118.05,147.251 26.034,53.145 226.042,15.747 Z"
              style="fill:url(#linearGradient12791-5);stroke:none"
-             ns0:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:linearGradient
              gradientTransform="matrix(0.9929,-0.1191,-0.056,1.0138,7.7556,8.876)"
@@ -12640,71 +12656,71 @@
              id="path205-7-5-9"
              d="M 226.11,14.949 117.896,127.202 25.913,52.131 226.11,14.949 Z"
              style="fill:url(#linearGradient9094);stroke:none"
-             ns0:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:path
              id="path206-8-4-6"
              d="m 161.286,188.736 c 23.618,-4.43 44.142,-8.28 46.437,-8.708 0.28,-2.759 2.399,-23.476 4.826,-47.208 -14.987,40.14 -31.536,49.326 -51.263,55.916 z"
              style="opacity:0.3;fill:#ffffff;stroke:none"
-             ns0:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:path
              id="path207-1-3-5"
              d="m 62.959,51.423 c -10.43,1.937 -18.476,3.431 -22.699,4.216 -0.077,0.061 -0.154,0.123 -0.228,0.182 15.398,12.567 70.439,57.488 77.371,63.146 1.525,-1.581 6.515,-6.759 13.474,-13.976 -7.203,0.413 -14.751,0.125 -19.948,-1.175 -11.482,-2.871 -42.648,-29.525 -49.62,-41.008 -3.549,-5.846 -1.356,-9.35 1.65,-11.385 z"
              style="opacity:0.4;fill:#ffffff;stroke:none"
-             ns0:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
         </svg:g>
         <svg:path
-           sodipodi:nodetypes="cccccc"
+           nodetypes="cccccc"
            inkscape:connector-curvature="0"
            id="polygon674-4"
            d="m 166.60613,551.76904 82.74511,-24.92657 0.91047,-78.46725 -183.894294,-17.28035 -0.57329,73.97986 z"
            style="overflow:visible;fill:url(#XMLID_22_-3)" />
         <svg:path
-           sodipodi:nodetypes="ccccc"
+           nodetypes="ccccc"
            inkscape:connector-curvature="0"
            id="polygon760-0-7-2"
            d="m 98.231066,427.07443 0,91.69233 -32.38842,-14.03109 0.16599,-119.4821 z"
            style="overflow:visible;fill:url(#XMLID_33_-2-6-8)" />
         <svg:path
-           sodipodi:nodetypes="cccccccc"
+           nodetypes="cccccccc"
            inkscape:connector-curvature="0"
            id="polygon780-8-6-6"
            d="m 167.80264,427.78277 0.10348,-8.49977 -73.882154,-20.66677 0,16.86555 -27.86096,-28.59926 0.17371,7.18352 26.6121,37.9188 z"
            style="overflow:visible;opacity:0.5;fill:url(#linearGradient4482-7-1)" />
         <svg:path
-           sodipodi:nodetypes="ccccccc"
+           nodetypes="ccccccc"
            id="path795-5-1-8"
            d="m 180.66694,422.51071 1.47934,-0.79103 -36.75263,-41.18532 -82.269354,-0.46513 c -0.72042,0.61385 -1.43736,1.23404 -2.02839,1.95864 l 33.10049,45.37359 z"
            style="overflow:visible;fill:#000080"
            inkscape:connector-curvature="0" />
         <svg:path
-           sodipodi:nodetypes="ccccc"
+           nodetypes="ccccc"
            inkscape:connector-curvature="0"
            id="polygon805-8-4-8"
            d="M 95.158966,424.74996 185.4181,421.74842 149.18569,380.54039 63.061436,380.0688 Z"
            style="overflow:visible;fill:#0000ff" />
         <svg:path
-           sodipodi:nodetypes="ccccc"
+           nodetypes="ccccc"
            inkscape:connector-curvature="0"
            id="polygon760-0-3"
            d="m 130.46488,441.15187 0,91.69233 -32.388444,-14.0311 0.16599,-119.48207 z"
            style="overflow:visible;fill:url(#XMLID_33_-2-0)" />
         <svg:path
-           sodipodi:nodetypes="cccccccc"
+           nodetypes="cccccccc"
            inkscape:connector-curvature="0"
            id="polygon780-8-0"
            d="m 203.01177,441.71695 0.10348,-8.35939 -73.88215,-20.32549 0,16.58705 -31.014134,-29.56252 0.46044,3.47602 29.478624,42.31703 z"
            style="overflow:visible;opacity:0.5;fill:url(#linearGradient4482-2)" />
         <svg:path
-           sodipodi:nodetypes="ccccccc"
+           nodetypes="ccccccc"
            id="path795-5-16"
            d="m 215.08758,436.92359 1.47936,-0.79681 -36.75263,-41.48581 -82.269344,-0.46853 c -0.72045,0.61833 -1.43739,1.24303 -2.02842,1.97293 l 33.100494,45.70464 z"
            style="overflow:visible;fill:#000080"
            inkscape:connector-curvature="0" />
         <svg:path
-           sodipodi:nodetypes="ccccc"
+           nodetypes="ccccc"
            inkscape:connector-curvature="0"
            id="polygon805-8-3"
            d="m 128.84967,438.39035 87.71727,-2.96507 -35.21206,-40.70766 -83.698834,-0.46586 z"
@@ -12730,13 +12746,13 @@
            style="overflow:visible;fill:url(#XMLID_29_-7)"
            inkscape:connector-curvature="0" />
         <svg:path
-           sodipodi:nodetypes="ccccc"
+           nodetypes="ccccc"
            inkscape:connector-curvature="0"
            id="polygon760-7"
            d="m 165.81048,444.88371 0,104.77437 -35.32581,-16.03292 0.18116,-136.52901 z"
            style="overflow:visible;fill:url(#XMLID_33_-1)" />
         <svg:path
-           sodipodi:nodetypes="ccccc"
+           nodetypes="ccccc"
            inkscape:connector-curvature="0"
            id="polygon767-2"
            d="m 65.760816,504.56844 101.112314,45.90607 0,-5.40297 L 65.760816,501.9283 Z"
@@ -12747,7 +12763,7 @@
            style="overflow:visible;opacity:0.6;fill:#ffffff"
            inkscape:connector-curvature="0" />
         <svg:path
-           sodipodi:nodetypes="cccccccc"
+           nodetypes="cccccccc"
            inkscape:connector-curvature="0"
            id="polygon780-2"
            d="m 130.57938,397.67016 0.0412,6.7178 35.68146,67.11893 84.63925,-11.00104 0.11838,-14.33182 -84.45551,-34.84715 0,28.43775 z"
@@ -12773,7 +12789,7 @@
            style="overflow:visible;fill:#0000ff"
            transform="matrix(3.9862975,0,0,4.8026392,87.222926,352.44727)" />
         <svg:path
-           sodipodi:nodetypes="cccccccccccc"
+           nodetypes="cccccccccccc"
            inkscape:connector-curvature="0"
            id="polygon812-5"
            d="m 160.27323,490.85738 -25.22529,-6.00809 -0.0519,4.06302 -0.0918,6.70928 0,0 -0.10374,7.46331 -0.0359,2.67026 0,0 -0.3787,29.41465 25.13361,11.47983 0.18728,-13.68272 z"
@@ -12799,7 +12815,7 @@
            style="overflow:visible;fill:url(#XMLID_42_-9-1)"
            inkscape:connector-curvature="0" />
         <svg:path
-           sodipodi:nodetypes="cccccccccccc"
+           nodetypes="cccccccccccc"
            inkscape:connector-curvature="0"
            id="polygon812-9-8"
            d="m 123.24187,463.89152 -17.82319,-4.0272 -0.0367,2.72342 -0.0646,4.49722 0,0 -0.0732,5.0026 -0.0266,1.78988 0,0 -0.26758,19.71648 17.75844,7.69488 0.13247,-9.17145 z"
@@ -12811,40 +12827,40 @@
            style="overflow:visible;fill:#8cc7ff;fill-opacity:1" />
         <svg:g
            style="overflow:visible;stroke:#000000;stroke-width:1.67062938"
-           ns:rgbTrio="#4F008000FFFF"
-           ns:dimmedPercent="50"
-           ns:layer="yes"
+           rgbTrio="#4F008000FFFF"
+           dimmedPercent="50"
+           layer="yes"
            id="Layer_1-5-2-9"
            transform="matrix(0.27666661,0,0.10323965,0.1806742,58.226836,490.67512)">
           <svg:path
              id="path158-1-3"
              d="M 236.071,3.411 230.976,10.625 22.298,48.94 1.743,234.753 6.419,240.172 224.868,200.061 240.747,8.83 236.071,3.411 Z"
              style="fill:#3a55a5;stroke:none"
-             ns:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:path
              id="path159-4-1"
              d="M 216.889,191.803 16.04,228.68 30.245,57.613 231.095,20.735 216.889,191.803 Z"
              style="fill:#3a55a5;stroke:none"
-             ns:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:path
              id="path160-7-6"
              d="M 230.718,21.166 122.726,152.67 30.709,58.563 230.718,21.166 Z"
              style="fill:#3a55a5;stroke:none"
-             ns:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:path
              id="path161-7-1"
              d="M 230.786,20.368 122.572,132.621 30.588,57.55 230.786,20.368 Z"
              style="fill:#3a55a5;stroke:none"
-             ns:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:path
              id="path162-5-1"
              d="M 29.79,58.581 13.911,249.813 232.361,209.702 248.24,18.471 29.79,58.581 Z"
              style="opacity:0.2;stroke:none"
-             ns:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:linearGradient
              y2="83.324303"
@@ -12866,7 +12882,7 @@
              id="path169-9-2"
              d="M 231.39,4.271 226.301,5.206 17.622,43.521 1.743,234.753 220.192,194.642 236.071,3.411 231.39,4.271 Z"
              style="fill:url(#linearGradient12795-3);stroke:none"
-             ns:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:linearGradient
              y2="89.750298"
@@ -12888,7 +12904,7 @@
              id="path176-0-1"
              d="m 228.074,17.594 c 0,0 -195.372,35.872 -204.112,37.477 -0.701,8.44 -13.662,164.537 -14.838,178.699 14.192,-2.605 197.644,-36.29 206.083,-37.84 0.7,-8.44 13.663,-164.535 14.836,-178.697 -0.933,0.172 -1.969,0.361 -1.969,0.361 z"
              style="fill:url(#linearGradient12797-7);stroke:none"
-             ns:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:linearGradient
              gradientTransform="matrix(0.9929,-0.1191,-0.056,1.0138,7.7556,8.876)"
@@ -12911,7 +12927,7 @@
              id="path183-4-8"
              d="M 212.213,186.384 11.364,223.261 25.569,52.194 226.419,15.316 212.213,186.384 Z"
              style="fill:url(#linearGradient9096);stroke:none"
-             ns:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:linearGradient
              y2="77.567299"
@@ -12933,7 +12949,7 @@
              id="path190-2-2"
              d="M 226.042,15.747 118.05,147.251 26.034,53.145 226.042,15.747 Z"
              style="fill:url(#linearGradient12801-2);stroke:none"
-             ns:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:linearGradient
              gradientTransform="matrix(0.9929,-0.1191,-0.056,1.0138,7.7556,8.876)"
@@ -12988,31 +13004,31 @@
              id="path205-7-4"
              d="M 226.11,14.949 117.896,127.202 25.913,52.131 226.11,14.949 Z"
              style="fill:url(#linearGradient9098);stroke:none"
-             ns:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:path
              id="path206-8-6"
              d="m 161.286,188.736 c 23.618,-4.43 44.142,-8.28 46.437,-8.708 0.28,-2.759 2.399,-23.476 4.826,-47.208 -14.987,40.14 -31.536,49.326 -51.263,55.916 z"
              style="opacity:0.3;fill:#ffffff;stroke:none"
-             ns:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:path
              id="path207-1-6"
              d="m 62.959,51.423 c -10.43,1.937 -18.476,3.431 -22.699,4.216 -0.077,0.061 -0.154,0.123 -0.228,0.182 15.398,12.567 70.439,57.488 77.371,63.146 1.525,-1.581 6.515,-6.759 13.474,-13.976 -7.203,0.413 -14.751,0.125 -19.948,-1.175 -11.482,-2.871 -42.648,-29.525 -49.62,-41.008 -3.549,-5.846 -1.356,-9.35 1.65,-11.385 z"
              style="opacity:0.4;fill:#ffffff;stroke:none"
-             ns:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
         </svg:g>
         <svg:path
            inkscape:transform-center-y="0.69100169"
            inkscape:transform-center-x="-0.13528962"
-           sodipodi:nodetypes="cccscc"
+           nodetypes="cccscc"
            id="path829-9-2"
            d="m 121.67326,466.89303 -14.95249,-3.73907 c 0,0 -0.0936,5.70586 -0.0561,11.77081 2.0864,2.84505 4.7516,5.10568 7.5068,6.45269 2.79286,1.36544 5.15879,1.55142 7.26403,0.70283 -0.0452,-4.7917 0.23782,-15.18726 0.23782,-15.18726 z"
            style="overflow:visible;fill:url(#XMLID_41_-8-6)"
            inkscape:connector-curvature="0" />
         <svg:path
-           sodipodi:nodetypes="cccccccccccc"
+           nodetypes="cccccccccccc"
            inkscape:connector-curvature="0"
            id="polygon812-9-3-7"
            d="m 88.321806,454.12399 -15.4531,-3.36246 -0.0319,2.2739 -0.0561,3.75488 0,0 -0.0636,4.17686 -0.0213,1.49444 0,0 -0.23197,16.46202 15.39693,6.42474 0.11465,-7.6576 z"
@@ -13023,31 +13039,31 @@
            d="m 73.938536,454.67634 -0.13673,8.71693 c 0,-0.005 -0.17344,11.12644 -0.21734,13.94814 1.04517,0.45797 10.46893,4.57218 12.84989,5.61028 0.0319,-1.90317 0.39072,-24.96259 0.4127,-26.47904 -1.40661,-0.29007 -10.82792,-2.23138 -12.89386,-2.65629 -0.008,0.41476 -0.016,0.85998 -0.016,0.85998 z"
            style="overflow:visible;fill:#8cc7ff;fill-opacity:1" />
         <svg:path
-           sodipodi:nodetypes="cccscc"
+           nodetypes="cccscc"
            id="path829-9-4-4"
            d="m 86.846356,456.44416 -12.96414,-3.12188 c 0,0 -0.0811,4.76403 -0.0487,9.82787 1.80898,2.37544 4.11977,4.26294 6.50855,5.38762 2.42148,1.14004 4.4728,1.29532 6.29809,0.58683 -0.0391,-4.00079 0.20616,-12.68044 0.20616,-12.68044 z"
            style="overflow:visible;fill:url(#XMLID_41_-8-7-0)"
            inkscape:connector-curvature="0" />
         <svg:g
            style="overflow:visible;stroke:#000000;stroke-width:0.91918629"
-           ns2:rgbTrio="#FFFF4F004F00"
-           ns2:dimmedPercent="50"
-           ns2:editable="no"
-           ns2:layer="yes"
+           rgbTrio="#FFFF4F004F00"
+           dimmedPercent="50"
+           editable="no"
+           layer="yes"
            id="Layer_2-0"
            transform="matrix(0.38638371,0,0,0.42735348,71.007476,272.83743)">
           <svg:path
              id="path156-0"
              d="M 256,256 0,256 0,0 l 256,0 0,256 z"
              style="opacity:0.36000001;fill:none;stroke:none"
-             ns2:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
         </svg:g>
         <svg:g
            style="overflow:visible;stroke:#000000;stroke-width:1.67062938"
-           ns2:rgbTrio="#4F008000FFFF"
-           ns2:dimmedPercent="50"
-           ns2:layer="yes"
+           rgbTrio="#4F008000FFFF"
+           dimmedPercent="50"
+           layer="yes"
            id="Layer_1-5-1"
            transform="matrix(0.27666661,0,0.10323965,0.1806742,147.60457,528.93544)">
           <svg:linearGradient
@@ -13067,11 +13083,11 @@
                offset="1" />
           </svg:linearGradient>
           <svg:path
-             sodipodi:nodetypes="ccccc"
+             nodetypes="ccccc"
              id="path169-2"
              d="m -36.969053,-162.60028 -15.879,191.231998 85.328462,-17.13355 70.849861,-193.258418 c 0,0 -124.074367,16.18095 -140.299323,19.15997 z"
              style="fill:url(#linearGradient9100);stroke:none"
-             ns2:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:linearGradient
              y2="89.750298"
@@ -13090,11 +13106,11 @@
                offset="1" />
           </svg:linearGradient>
           <svg:path
-             sodipodi:nodetypes="ccccc"
+             nodetypes="ccccc"
              id="path176-2"
              d="m -30.629053,-151.05028 c -0.701,8.44 -13.662,164.536998 -14.838,178.698998 14.192,-2.605 71.488864,-24.1254705 79.927864,-25.6754705 0.7,-8.44 65.663279,-181.4002275 65.663279,-181.4002275 0,0 -111.882108,24.9115 -130.753143,28.3767 z"
              style="fill:url(#linearGradient9102);stroke:none"
-             ns2:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:linearGradient
              gradientTransform="matrix(0.9929,-0.1191,-0.056,1.0138,7.7556,8.876)"
@@ -13114,11 +13130,11 @@
                offset="1" />
           </svg:linearGradient>
           <svg:path
-             sodipodi:nodetypes="ccccc"
+             nodetypes="ccccc"
              id="path183-5"
              d="m 36.157125,-1.4904825 -79.384178,18.6302005 14.205,-171.066998 130.374423,-24.71347 z"
              style="fill:url(#linearGradient9104);stroke:none"
-             ns2:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:linearGradient
              y2="77.567299"
@@ -13137,11 +13153,11 @@
                offset="1" />
           </svg:linearGradient>
           <svg:path
-             sodipodi:nodetypes="cccc"
+             nodetypes="cccc"
              id="path190-3"
              d="m 99.486197,-176.18233 -43.90025,111.905588 -84.143,-88.699538 z"
              style="fill:url(#linearGradient9106);stroke:none"
-             ns2:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:linearGradient
              gradientTransform="matrix(0.9929,-0.1191,-0.056,1.0138,7.7556,8.876)"
@@ -13193,18 +13209,18 @@
                offset="1" />
           </svg:linearGradient>
           <svg:path
-             sodipodi:nodetypes="cccc"
+             nodetypes="cccc"
              id="path205-8"
              d="m 99.782457,-175.62871 -36.47751,96.709428 -91.983,-75.070998 z"
              style="fill:url(#linearGradient9108);stroke:none"
-             ns2:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:path
-             sodipodi:nodetypes="cccccccc"
+             nodetypes="cccccccc"
              id="path207-2"
              d="m 8.3679469,-154.69828 c -10.43,1.937 -18.4759999,3.431 -22.6989999,4.216 -0.077,0.061 -0.154,0.123 -0.228,0.182 15.39799995,12.567 70.439,57.487998 77.371,63.145998 1.525,-1.581 1.86706,-6.08319 8.82606,-13.300188 -7.203,0.413 -10.10306,-0.55081 -15.30006,-1.85081 -11.482,-2.871 -42.648,-29.525 -49.6200001,-41.008 -3.549,-5.846 -1.356,-9.35 1.65,-11.385 z"
              style="opacity:0.4;fill:#ffffff;stroke:none"
-             ns2:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
         </svg:g>
         <svg:path
@@ -13223,13 +13239,13 @@
            d="m 233.10975,290.40493 c -8.24526,0 -14.9294,4.03017 -14.9294,9.00119 0,4.97123 6.68414,9.00116 14.9294,9.00116 8.24544,0 14.92994,-4.02993 14.92994,-9.00116 -1.6e-4,-4.97102 -6.6845,-9.00119 -14.92994,-9.00119 z m 0,16.21863 c -7.86156,0 -13.34029,-3.80337 -13.34029,-7.21744 0,-3.4141 5.47892,-7.21724 13.34029,-7.21724 7.8623,0 13.34122,3.80314 13.34122,7.21724 0,3.41407 -5.47892,7.21744 -13.34122,7.21744 z"
            inkscape:connector-curvature="0" />
         <svg:path
-           sodipodi:nodetypes="cccccsssscc"
+           nodetypes="cccccsssscc"
            style="overflow:visible;fill:url(#linearGradient4610-9-2-0-1)"
            id="path151-6-5-5-9"
            d="m 217.35533,273.26741 0.016,0.38334 -0.016,-0.0729 -0.1495,26.06938 0.008,0.0707 c 0.57917,5.0008 7.45636,8.77204 15.99695,8.77204 8.89129,0 15.84611,-4.15689 15.8563,-9.46337 l 0.0508,-26.36983 c 0.008,-4.08554 -6.65632,-5.08325 -15.54358,-5.18764 -5.04183,-0.0591 -16.32034,0.61355 -16.16831,4.69925 z"
            inkscape:connector-curvature="0" />
         <svg:path
-           sodipodi:nodetypes="csssccccsscccccsscccc"
+           nodetypes="csssccccsscccccsscccc"
            style="overflow:visible;fill:url(#linearGradient4607-1-8-2-4)"
            id="path166-3-98-1-0"
            d="m 248.07323,275.78724 c 0.0434,-0.24527 0.0676,-0.49338 0.0676,-0.74461 0,-4.39873 -6.68434,-6.13108 -14.92996,-6.13108 -8.24526,0 -14.92938,1.73255 -14.92938,6.13108 0,0.10079 0.008,0.20045 0.0133,0.30027 l -0.0133,0 0,24.59322 0.0362,0 c 0.50838,4.15263 6.98001,7.43819 14.89306,7.43819 8.24544,0 14.92996,-3.56624 14.92996,-7.96436 0,-0.25105 -0.0239,-0.49931 -0.0676,-0.74443 l 0,-22.87824 1.8e-4,0 z m -28.20263,-0.74461 c 0,-3.0209 4.76233,5.98996 12.6237,5.98996 7.86227,0 14.05783,-9.01086 14.05783,-5.98996 0,0.0997 -0.008,0.2 -0.0186,0.30027 l -26.64336,0 c -0.0106,-0.10034 -0.0186,-0.20045 -0.0186,-0.30027 z"
@@ -13295,7 +13311,7 @@
            id="rect9994-3"
            style="opacity:1;fill:#ababab;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.29564667;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
         <svg:path
-           sodipodi:nodetypes="cccc"
+           nodetypes="cccc"
            inkscape:connector-curvature="0"
            id="rect9994-3-7"
            d="m 165.28605,19.481229 91.79761,40.911177 -183.847763,0 z"
@@ -13325,7 +13341,7 @@
                id="rect9662-3-73"
                style="opacity:1;fill:url(#linearGradient7406);fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.29564667;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
             <svg:path
-               sodipodi:nodetypes="ccccc"
+               nodetypes="ccccc"
                inkscape:connector-curvature="0"
                id="rect9662-3-8-3"
                d="m 118.05503,189.74529 16.70495,-0.23722 2.34013,98.36776 -21.36541,0 z"
@@ -13368,7 +13384,7 @@
                  d="m 118.05503,189.74529 16.70495,-0.23722 2.34013,98.36776 -21.36541,0 z"
                  id="rect9662-3-8-3-8"
                  inkscape:connector-curvature="0"
-                 sodipodi:nodetypes="ccccc" />
+                 nodetypes="ccccc" />
               <svg:rect
                  style="opacity:1;fill:url(#linearGradient7418);fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.29564667;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
                  id="rect9662-3-7-9-2"
@@ -13402,7 +13418,7 @@
                id="rect9662-3-73-7"
                style="opacity:1;fill:url(#linearGradient7422);fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.29564667;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
             <svg:path
-               sodipodi:nodetypes="ccccc"
+               nodetypes="ccccc"
                inkscape:connector-curvature="0"
                id="rect9662-3-8-3-3"
                d="m 118.05503,189.74529 16.70495,-0.23722 2.34013,98.36776 -21.36541,0 z"
@@ -13439,7 +13455,7 @@
                id="rect9662-3-73-2"
                style="opacity:1;fill:url(#linearGradient9900);fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.29564667;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
             <svg:path
-               sodipodi:nodetypes="ccccc"
+               nodetypes="ccccc"
                inkscape:connector-curvature="0"
                id="rect9662-3-8-3-9"
                d="m 118.05503,189.74529 16.70495,-0.23722 2.34013,98.36776 -21.36541,0 z"
@@ -13456,7 +13472,7 @@
           </svg:g>
         </svg:g>
         <svg:path
-           sodipodi:nodetypes="cccc"
+           nodetypes="cccc"
            inkscape:connector-curvature="0"
            id="rect9994-3-7-1"
            d="m 165.2593,23.744325 72.36069,32.385254 -144.920423,0 z"
@@ -13494,7 +13510,7 @@
            id="rect9994-3-9"
            style="opacity:1;fill:#ababab;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.41241252;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
         <svg:path
-           sodipodi:nodetypes="cccc"
+           nodetypes="cccc"
            inkscape:connector-curvature="0"
            id="rect9994-3-7-6"
            d="m 165.28605,19.481229 91.79761,40.911177 -183.847763,0 z"
@@ -13524,7 +13540,7 @@
                id="rect9662-3-73-53"
                style="opacity:1;fill:url(#linearGradient7406-2);fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.41241252;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
             <svg:path
-               sodipodi:nodetypes="ccccc"
+               nodetypes="ccccc"
                inkscape:connector-curvature="0"
                id="rect9662-3-8-3-1"
                d="m 118.05503,189.74529 16.70495,-0.23722 2.34013,98.36776 -21.36541,0 z"
@@ -13567,7 +13583,7 @@
                  d="m 118.05503,189.74529 16.70495,-0.23722 2.34013,98.36776 -21.36541,0 z"
                  id="rect9662-3-8-3-8-4"
                  inkscape:connector-curvature="0"
-                 sodipodi:nodetypes="ccccc" />
+                 nodetypes="ccccc" />
               <svg:rect
                  style="opacity:1;fill:url(#linearGradient7418-6);fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.41241252;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
                  id="rect9662-3-7-9-2-9"
@@ -13601,7 +13617,7 @@
                id="rect9662-3-73-7-6"
                style="opacity:1;fill:url(#linearGradient7422-4);fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.41241252;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
             <svg:path
-               sodipodi:nodetypes="ccccc"
+               nodetypes="ccccc"
                inkscape:connector-curvature="0"
                id="rect9662-3-8-3-3-6"
                d="m 118.05503,189.74529 16.70495,-0.23722 2.34013,98.36776 -21.36541,0 z"
@@ -13638,7 +13654,7 @@
                id="rect9662-3-73-2-8"
                style="opacity:1;fill:url(#linearGradient9900-1);fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.41241252;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
             <svg:path
-               sodipodi:nodetypes="ccccc"
+               nodetypes="ccccc"
                inkscape:connector-curvature="0"
                id="rect9662-3-8-3-9-6"
                d="m 118.05503,189.74529 16.70495,-0.23722 2.34013,98.36776 -21.36541,0 z"
@@ -13655,7 +13671,7 @@
           </svg:g>
         </svg:g>
         <svg:path
-           sodipodi:nodetypes="cccc"
+           nodetypes="cccc"
            inkscape:connector-curvature="0"
            id="rect9994-3-7-1-4"
            d="m 165.2593,23.744325 72.36069,32.385254 -144.920423,0 z"
@@ -13673,27 +13689,27 @@
          d="m -87.841732,-139.5445 c 95.5622006,-27.14266 54.656319,-202.41968 83.7705385,-323.58635"
          id="path9795"
          inkscape:connector-curvature="0"
-         sodipodi:nodetypes="cc" />
+         nodetypes="cc" />
       <svg:path
          style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:4.27813005;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Lend-9)"
          d="M -87.369998,-140.03067 C -0.97981453,-149.32338 75.394093,-343.19899 103.7991,-395.69234"
          id="path9795-5"
          inkscape:connector-curvature="0"
-         sodipodi:nodetypes="cc" />
+         nodetypes="cc" />
       <svg:text
          xml:space="preserve"
          style="font-style:normal;font-weight:normal;font-size:57.04173279px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
          x="71.467522"
          y="-530.07635"
          id="text10196"
-         sodipodi:linespacing="125%"
+         linespacing="125%"
          transform="scale(0.84066216,1.1895385)"><svg:tspan
-           sodipodi:role="line"
+           role="line"
            id="tspan10198"
            x="71.467522"
            y="-530.07635"
            style="font-size:39.21619415px">1. National eDelivery </svg:tspan><svg:tspan
-           sodipodi:role="line"
+           role="line"
            x="71.467522"
            y="-481.05615"
            id="tspan10200"
@@ -13704,14 +13720,14 @@
          x="257.95679"
          y="-399.11942"
          id="text10196-9"
-         sodipodi:linespacing="125%"
+         linespacing="125%"
          transform="scale(0.84066216,1.1895385)"><svg:tspan
-           sodipodi:role="line"
+           role="line"
            id="tspan10198-0"
            x="257.95679"
            y="-399.11942"
            style="font-size:39.21619415px">2. National</svg:tspan><svg:tspan
-           sodipodi:role="line"
+           role="line"
            x="257.95679"
            y="-350.09918"
            id="tspan10200-7"
@@ -13722,19 +13738,19 @@
          x="271.95175"
          y="-233.75633"
          id="text10196-9-1"
-         sodipodi:linespacing="125%"
+         linespacing="125%"
          transform="scale(0.84066216,1.1895385)"><svg:tspan
-           sodipodi:role="line"
+           role="line"
            x="271.95175"
            y="-233.75633"
            id="tspan10200-7-1"
            style="font-size:39.21619415px">Contractors: </svg:tspan><svg:tspan
-           sodipodi:role="line"
+           role="line"
            x="271.95175"
            y="-191.84312"
            style="font-size:32.08597565px"
            id="tspan10250">postal highway, </svg:tspan><svg:tspan
-           sodipodi:role="line"
+           role="line"
            x="271.95175"
            y="-151.73566"
            style="font-size:32.08597565px"
@@ -13745,9 +13761,9 @@
          x="244.9763"
          y="-2.6570706"
          id="text10196-9-0"
-         sodipodi:linespacing="125%"
+         linespacing="125%"
          transform="scale(0.84066216,1.1895385)"><svg:tspan
-           sodipodi:role="line"
+           role="line"
            x="244.9763"
            y="-2.6570706"
            id="tspan10200-7-6"
@@ -13758,24 +13774,24 @@
          x="254.40945"
          y="148.29039"
          id="text10196-9-1-9"
-         sodipodi:linespacing="125%"
+         linespacing="125%"
          transform="scale(0.84066216,1.1895385)"><svg:tspan
-           sodipodi:role="line"
+           role="line"
            x="254.40945"
            y="148.29039"
            id="tspan10200-7-1-4"
            style="font-size:39.21619415px">Bigger parties </svg:tspan><svg:tspan
-           sodipodi:role="line"
+           role="line"
            x="254.40945"
            y="197.31064"
            style="font-size:39.21619415px"
            id="tspan10301">to the proceeding: </svg:tspan><svg:tspan
-           sodipodi:role="line"
+           role="line"
            x="254.40945"
            y="239.22383"
            style="font-size:32.08597565px"
            id="tspan10252-7">Banks, insurance </svg:tspan><svg:tspan
-           sodipodi:role="line"
+           role="line"
            x="254.40945"
            y="279.3313"
            style="font-size:32.08597565px"
@@ -13786,14 +13802,14 @@
          x="-82.435623"
          y="361.79282"
          id="text10196-9-0-0"
-         sodipodi:linespacing="125%"
+         linespacing="125%"
          transform="scale(0.84066216,1.1895385)"><svg:tspan
-           sodipodi:role="line"
+           role="line"
            x="-76.193199"
            y="361.79282"
            id="tspan10200-7-6-9"
            style="font-size:39.21619415px;text-align:center;text-anchor:middle">Public </svg:tspan><svg:tspan
-           sodipodi:role="line"
+           role="line"
            x="-82.435631"
            y="410.81305"
            style="font-size:39.21619415px;text-align:center;text-anchor:middle"
@@ -13804,34 +13820,34 @@
          x="978.10938"
          y="-123.66707"
          id="text10196-9-3"
-         sodipodi:linespacing="125%"
+         linespacing="125%"
          transform="scale(0.84066216,1.1895385)"><svg:tspan
-           sodipodi:role="line"
+           role="line"
            x="978.10938"
            y="-123.66707"
            id="tspan10200-7-9"
            style="font-size:39.21619415px;text-align:center;text-anchor:middle">Universal protocol</svg:tspan><svg:tspan
-           sodipodi:role="line"
+           role="line"
            x="984.35181"
            y="-74.646828"
            style="font-size:39.21619415px;text-align:center;text-anchor:middle"
            id="tspan10350">(security, realibility, </svg:tspan><svg:tspan
-           sodipodi:role="line"
+           role="line"
            x="984.35181"
            y="-25.626585"
            style="font-size:39.21619415px;text-align:center;text-anchor:middle"
            id="tspan10352">addressing) with </svg:tspan><svg:tspan
-           sodipodi:role="line"
+           role="line"
            x="984.35181"
            y="23.393658"
            style="font-size:39.21619415px;text-align:center;text-anchor:middle"
            id="tspan10354">various business </svg:tspan><svg:tspan
-           sodipodi:role="line"
+           role="line"
            x="978.10938"
            y="72.413902"
            style="font-size:39.21619415px;text-align:center;text-anchor:middle"
            id="tspan10356">transaction</svg:tspan><svg:tspan
-           sodipodi:role="line"
+           role="line"
            x="978.10938"
            y="121.43414"
            style="font-size:39.21619415px;text-align:center;text-anchor:middle"
@@ -13841,55 +13857,55 @@
          id="g5297-4-1-4">
         <svg:g
            style="overflow:visible;stroke:#000000;stroke-width:0.50340974"
-           ns:rgbTrio="#FFFF4F004F00"
-           ns:dimmedPercent="50"
-           ns:editable="no"
-           ns:layer="yes"
+           rgbTrio="#FFFF4F004F00"
+           dimmedPercent="50"
+           editable="no"
+           layer="yes"
            id="Layer_2-6-5-0-1"
            transform="matrix(0.62756575,0,0,0.97232754,-66.150016,-462.62267)">
           <svg:path
              id="path156-2-0-24-4"
              d="M 256,256 0,256 0,0 l 256,0 0,256 z"
              style="opacity:0.36000001;fill:none;stroke:none"
-             ns:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
         </svg:g>
         <svg:g
            style="overflow:visible;stroke:#000000;stroke-width:0.53659219"
-           ns:rgbTrio="#4F008000FFFF"
-           ns:dimmedPercent="50"
-           ns:layer="yes"
+           rgbTrio="#4F008000FFFF"
+           dimmedPercent="50"
+           layer="yes"
            id="Layer_1-1-7-0-9"
            transform="matrix(0.56638359,0,0,0.94823453,-15.393139,-429.60404)">
           <svg:path
              id="path158-0-5-0"
              d="M 236.071,3.411 230.976,10.625 22.298,48.94 1.743,234.753 6.419,240.172 224.868,200.061 240.747,8.83 236.071,3.411 Z"
              style="fill:#3a55a5;stroke:none"
-             ns:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:path
              id="path159-3-6-6"
              d="M 216.889,191.803 16.04,228.68 30.245,57.613 231.095,20.735 216.889,191.803 Z"
              style="fill:#3a55a5;stroke:none"
-             ns:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:path
              id="path160-8-8-0"
              d="M 230.718,21.166 122.726,152.67 30.709,58.563 230.718,21.166 Z"
              style="fill:#3a55a5;stroke:none"
-             ns:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:path
              id="path161-2-6-5"
              d="M 230.786,20.368 122.572,132.621 30.588,57.55 230.786,20.368 Z"
              style="fill:#3a55a5;stroke:none"
-             ns:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:path
              id="path162-8-26-8"
              d="M 29.79,58.581 13.911,249.813 232.361,209.702 248.24,18.471 29.79,58.581 Z"
              style="opacity:0.2;stroke:none"
-             ns:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:linearGradient
              y2="83.324303"
@@ -13911,7 +13927,7 @@
              id="path169-4-1-5-0"
              d="M 231.39,4.271 226.301,5.206 17.622,43.521 1.743,234.753 220.192,194.642 236.071,3.411 231.39,4.271 Z"
              style="fill:url(#linearGradient5231-2-9-6);stroke:none"
-             ns:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:linearGradient
              y2="89.750298"
@@ -13933,7 +13949,7 @@
              id="path176-7-6-3-8"
              d="m 228.074,17.594 c 0,0 -195.372,35.872 -204.112,37.477 -0.701,8.44 -13.662,164.537 -14.838,178.699 14.192,-2.605 197.644,-36.29 206.083,-37.84 0.7,-8.44 13.663,-164.535 14.836,-178.697 -0.933,0.172 -1.969,0.361 -1.969,0.361 z"
              style="fill:url(#linearGradient5233-3-1-4);stroke:none"
-             ns:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:linearGradient
              gradientTransform="matrix(0.9929,-0.1191,-0.056,1.0138,7.7556,8.876)"
@@ -13956,7 +13972,7 @@
              id="path183-3-3-9-1"
              d="M 212.213,186.384 11.364,223.261 25.569,52.194 226.419,15.316 212.213,186.384 Z"
              style="fill:url(#linearGradient10639);stroke:none"
-             ns:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:linearGradient
              y2="77.567299"
@@ -13978,7 +13994,7 @@
              id="path190-8-3-3-8"
              d="M 226.042,15.747 118.05,147.251 26.034,53.145 226.042,15.747 Z"
              style="fill:url(#linearGradient5237-5-8-4);stroke:none"
-             ns:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:linearGradient
              gradientTransform="matrix(0.9929,-0.1191,-0.056,1.0138,7.7556,8.876)"
@@ -14033,19 +14049,19 @@
              id="path205-1-7-8-4"
              d="M 226.11,14.949 117.896,127.202 25.913,52.131 226.11,14.949 Z"
              style="fill:url(#linearGradient10641);stroke:none"
-             ns:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:path
              id="path206-4-6-9"
              d="m 161.286,188.736 c 23.618,-4.43 44.142,-8.28 46.437,-8.708 0.28,-2.759 2.399,-23.476 4.826,-47.208 -14.987,40.14 -31.536,49.326 -51.263,55.916 z"
              style="opacity:0.3;fill:#ffffff;stroke:none"
-             ns:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:path
              id="path207-10-3-3-1"
              d="m 62.959,51.423 c -10.43,1.937 -18.476,3.431 -22.699,4.216 -0.077,0.061 -0.154,0.123 -0.228,0.182 15.398,12.567 70.439,57.488 77.371,63.146 1.525,-1.581 6.515,-6.759 13.474,-13.976 -7.203,0.413 -14.751,0.125 -19.948,-1.175 -11.482,-2.871 -42.648,-29.525 -49.62,-41.008 -3.549,-5.846 -1.356,-9.35 1.65,-11.385 z"
              style="opacity:0.4;fill:#ffffff;stroke:none"
-             ns:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
         </svg:g>
         <svg:g
@@ -14076,7 +14092,7 @@
                    y="682.32086"
                    x="-742.13239">@</svg:text>
                 <svg:path
-                   sodipodi:nodetypes="sccssccssssccsszszsz"
+                   nodetypes="sccssccssssccsszszsz"
                    style="fill:#ff0000;fill-opacity:1"
                    inkscape:connector-curvature="0"
                    id="path2993-7-14-7"
@@ -14092,55 +14108,55 @@
         </svg:g>
         <svg:g
            style="overflow:visible;stroke:#000000;stroke-width:0.50872785"
-           ns0:rgbTrio="#FFFF4F004F00"
-           ns0:dimmedPercent="50"
-           ns0:editable="no"
-           ns0:layer="yes"
+           rgbTrio="#FFFF4F004F00"
+           dimmedPercent="50"
+           editable="no"
+           layer="yes"
            id="Layer_2-6-5-0-1-6"
            transform="matrix(0.61812648,0,0,0.96664424,234.59056,-271.5242)">
           <svg:path
              id="path156-2-0-24-4-2"
              d="M 256,256 0,256 0,0 l 256,0 0,256 z"
              style="opacity:0.36000001;fill:none;stroke:none"
-             ns0:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
         </svg:g>
         <svg:g
            style="overflow:visible;stroke:#000000;stroke-width:0.56078434"
-           ns0:rgbTrio="#4F008000FFFF"
-           ns0:dimmedPercent="50"
-           ns0:layer="yes"
+           rgbTrio="#4F008000FFFF"
+           dimmedPercent="50"
+           layer="yes"
            id="Layer_1-1-7-0-9-5"
            transform="matrix(0.52161921,0,0,0.94269205,270.55003,-220.21628)">
           <svg:path
              id="path158-0-5-0-9"
              d="M 236.071,3.411 230.976,10.625 22.298,48.94 1.743,234.753 6.419,240.172 224.868,200.061 240.747,8.83 236.071,3.411 Z"
              style="fill:#3a55a5;stroke:none"
-             ns0:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:path
              id="path159-3-6-6-7"
              d="M 216.889,191.803 16.04,228.68 30.245,57.613 231.095,20.735 216.889,191.803 Z"
              style="fill:#3a55a5;stroke:none"
-             ns0:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:path
              id="path160-8-8-0-7"
              d="M 230.718,21.166 122.726,152.67 30.709,58.563 230.718,21.166 Z"
              style="fill:#3a55a5;stroke:none"
-             ns0:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:path
              id="path161-2-6-5-1"
              d="M 230.786,20.368 122.572,132.621 30.588,57.55 230.786,20.368 Z"
              style="fill:#3a55a5;stroke:none"
-             ns0:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:path
              id="path162-8-26-8-3"
              d="M 29.79,58.581 13.911,249.813 232.361,209.702 248.24,18.471 29.79,58.581 Z"
              style="opacity:0.2;stroke:none"
-             ns0:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:linearGradient
              y2="83.324303"
@@ -14162,7 +14178,7 @@
              id="path169-4-1-5-0-1"
              d="M 231.39,4.271 226.301,5.206 17.622,43.521 1.743,234.753 220.192,194.642 236.071,3.411 231.39,4.271 Z"
              style="fill:url(#linearGradient5231-2-9-6-7);stroke:none"
-             ns0:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:linearGradient
              y2="89.750298"
@@ -14184,7 +14200,7 @@
              id="path176-7-6-3-8-7"
              d="m 228.074,17.594 c 0,0 -195.372,35.872 -204.112,37.477 -0.701,8.44 -13.662,164.537 -14.838,178.699 14.192,-2.605 197.644,-36.29 206.083,-37.84 0.7,-8.44 13.663,-164.535 14.836,-178.697 -0.933,0.172 -1.969,0.361 -1.969,0.361 z"
              style="fill:url(#linearGradient5233-3-1-4-8);stroke:none"
-             ns0:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:linearGradient
              gradientTransform="matrix(0.9929,-0.1191,-0.056,1.0138,7.7556,8.876)"
@@ -14207,7 +14223,7 @@
              id="path183-3-3-9-1-8"
              d="M 212.213,186.384 11.364,223.261 25.569,52.194 226.419,15.316 212.213,186.384 Z"
              style="fill:url(#linearGradient10518);stroke:none"
-             ns0:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:linearGradient
              y2="77.567299"
@@ -14229,7 +14245,7 @@
              id="path190-8-3-3-8-0"
              d="M 226.042,15.747 118.05,147.251 26.034,53.145 226.042,15.747 Z"
              style="fill:url(#linearGradient5237-5-8-4-1);stroke:none"
-             ns0:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:linearGradient
              gradientTransform="matrix(0.9929,-0.1191,-0.056,1.0138,7.7556,8.876)"
@@ -14284,19 +14300,19 @@
              id="path205-1-7-8-4-7"
              d="M 226.11,14.949 117.896,127.202 25.913,52.131 226.11,14.949 Z"
              style="fill:url(#linearGradient10520);stroke:none"
-             ns0:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:path
              id="path206-4-6-9-2"
              d="m 161.286,188.736 c 23.618,-4.43 44.142,-8.28 46.437,-8.708 0.28,-2.759 2.399,-23.476 4.826,-47.208 -14.987,40.14 -31.536,49.326 -51.263,55.916 z"
              style="opacity:0.3;fill:#ffffff;stroke:none"
-             ns0:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:path
              id="path207-10-3-3-1-8"
              d="m 62.959,51.423 c -10.43,1.937 -18.476,3.431 -22.699,4.216 -0.077,0.061 -0.154,0.123 -0.228,0.182 15.398,12.567 70.439,57.488 77.371,63.146 1.525,-1.581 6.515,-6.759 13.474,-13.976 -7.203,0.413 -14.751,0.125 -19.948,-1.175 -11.482,-2.871 -42.648,-29.525 -49.62,-41.008 -3.549,-5.846 -1.356,-9.35 1.65,-11.385 z"
              style="opacity:0.4;fill:#ffffff;stroke:none"
-             ns0:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
         </svg:g>
         <svg:g
@@ -14327,7 +14343,7 @@
                    y="682.32086"
                    x="-742.13239">@</svg:text>
                 <svg:path
-                   sodipodi:nodetypes="sccssccssssccsszszsz"
+                   nodetypes="sccssccssssccsszszsz"
                    style="fill:#ff0000;fill-opacity:1"
                    inkscape:connector-curvature="0"
                    id="path2993-7-14-7-9"
@@ -14369,7 +14385,7 @@
                    y="682.32086"
                    x="-742.13239">@</svg:text>
                 <svg:path
-                   sodipodi:nodetypes="sccssccssssccsszszsz"
+                   nodetypes="sccssccssssccsszszsz"
                    style="fill:#ff0000;fill-opacity:1"
                    inkscape:connector-curvature="0"
                    id="path2993-7-14-7-4"
@@ -14385,40 +14401,40 @@
         </svg:g>
         <svg:g
            style="overflow:visible;stroke:#000000;stroke-width:0.61080068"
-           ns0:rgbTrio="#4F008000FFFF"
-           ns0:dimmedPercent="50"
-           ns0:layer="yes"
+           rgbTrio="#4F008000FFFF"
+           dimmedPercent="50"
+           layer="yes"
            id="Layer_1-1-7-0-9-0"
            transform="matrix(0.49498387,0,0,0.83738477,-820.48735,-657.70331)">
           <svg:path
              id="path158-0-5-0-1"
              d="M 236.071,3.411 230.976,10.625 22.298,48.94 1.743,234.753 6.419,240.172 224.868,200.061 240.747,8.83 236.071,3.411 Z"
              style="fill:#3a55a5;stroke:none"
-             ns0:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:path
              id="path159-3-6-6-2"
              d="M 216.889,191.803 16.04,228.68 30.245,57.613 231.095,20.735 216.889,191.803 Z"
              style="fill:#3a55a5;stroke:none"
-             ns0:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:path
              id="path160-8-8-0-73"
              d="M 230.718,21.166 122.726,152.67 30.709,58.563 230.718,21.166 Z"
              style="fill:#3a55a5;stroke:none"
-             ns0:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:path
              id="path161-2-6-5-7"
              d="M 230.786,20.368 122.572,132.621 30.588,57.55 230.786,20.368 Z"
              style="fill:#3a55a5;stroke:none"
-             ns0:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:path
              id="path162-8-26-8-6"
              d="M 29.79,58.581 13.911,249.813 232.361,209.702 248.24,18.471 29.79,58.581 Z"
              style="opacity:0.2;stroke:none"
-             ns0:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:linearGradient
              y2="83.324303"
@@ -14440,7 +14456,7 @@
              id="path169-4-1-5-0-9"
              d="M 231.39,4.271 226.301,5.206 17.622,43.521 1.743,234.753 220.192,194.642 236.071,3.411 231.39,4.271 Z"
              style="fill:url(#linearGradient10775);stroke:none"
-             ns0:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:linearGradient
              y2="89.750298"
@@ -14462,7 +14478,7 @@
              id="path176-7-6-3-8-5"
              d="m 228.074,17.594 c 0,0 -195.372,35.872 -204.112,37.477 -0.701,8.44 -13.662,164.537 -14.838,178.699 14.192,-2.605 197.644,-36.29 206.083,-37.84 0.7,-8.44 13.663,-164.535 14.836,-178.697 -0.933,0.172 -1.969,0.361 -1.969,0.361 z"
              style="fill:url(#linearGradient10777);stroke:none"
-             ns0:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:linearGradient
              gradientTransform="matrix(0.9929,-0.1191,-0.056,1.0138,7.7556,8.876)"
@@ -14485,7 +14501,7 @@
              id="path183-3-3-9-1-85"
              d="M 212.213,186.384 11.364,223.261 25.569,52.194 226.419,15.316 212.213,186.384 Z"
              style="fill:url(#linearGradient10779);stroke:none"
-             ns0:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:linearGradient
              y2="77.567299"
@@ -14507,7 +14523,7 @@
              id="path190-8-3-3-8-8"
              d="M 226.042,15.747 118.05,147.251 26.034,53.145 226.042,15.747 Z"
              style="fill:url(#linearGradient10781);stroke:none"
-             ns0:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:linearGradient
              gradientTransform="matrix(0.9929,-0.1191,-0.056,1.0138,7.7556,8.876)"
@@ -14562,23 +14578,23 @@
              id="path205-1-7-8-4-5"
              d="M 226.11,14.949 117.896,127.202 25.913,52.131 226.11,14.949 Z"
              style="fill:url(#linearGradient10783);stroke:none"
-             ns0:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:path
              id="path206-4-6-9-25"
              d="m 161.286,188.736 c 23.618,-4.43 44.142,-8.28 46.437,-8.708 0.28,-2.759 2.399,-23.476 4.826,-47.208 -14.987,40.14 -31.536,49.326 -51.263,55.916 z"
              style="opacity:0.3;fill:#ffffff;stroke:none"
-             ns0:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
           <svg:path
              id="path207-10-3-3-1-9"
              d="m 62.959,51.423 c -10.43,1.937 -18.476,3.431 -22.699,4.216 -0.077,0.061 -0.154,0.123 -0.228,0.182 15.398,12.567 70.439,57.488 77.371,63.146 1.525,-1.581 6.515,-6.759 13.474,-13.976 -7.203,0.413 -14.751,0.125 -19.948,-1.175 -11.482,-2.871 -42.648,-29.525 -49.62,-41.008 -3.549,-5.846 -1.356,-9.35 1.65,-11.385 z"
              style="opacity:0.4;fill:#ffffff;stroke:none"
-             ns0:knockout="Off"
+             knockout="Off"
              inkscape:connector-curvature="0" />
         </svg:g>
         <svg:g
-           transform="matrix(0.27593139,0,0,0.42697051,-974.00628,-863.48511)"
+           transform="matrix(0.30021445,0,0,0.42697051,-994.78052,-863.48511)"
            id="g4604-4-63-5-2">
           <svg:g
              id="g4515-4-8-1-3"
@@ -14605,7 +14621,7 @@
                    y="682.32086"
                    x="-742.13239">@</svg:text>
                 <svg:path
-                   sodipodi:nodetypes="sccssccssssccsszszsz"
+                   nodetypes="sccssccssssccsszszsz"
                    style="fill:#ff0000;fill-opacity:1"
                    inkscape:connector-curvature="0"
                    id="path2993-7-14-7-2"
@@ -14614,7 +14630,7 @@
                    inkscape:connector-curvature="0"
                    id="path4542-0-88-8-6"
                    d="m -521.07052,726.46635 c -0.94158,-0.79145 -1.71248,-2.83686 -1.71312,-4.54535 -5.8e-4,-1.70849 3.12284,-15.38125 6.94108,-30.38391 3.81825,-15.00266 6.79026,-27.43953 6.60449,-27.63751 -0.18577,-0.19794 -2.042,-1.84029 -4.12494,-3.64962 -2.08293,-1.80933 -5.05444,-6.17348 -6.60332,-9.69812 -7.50982,-17.08933 0.48818,-37.83675 16.42657,-42.61181 9.77457,-2.9284 21.8214,3.11223 27.45172,13.76508 3.52437,6.66833 4.22533,19.88069 1.44443,27.22641 -1.68234,4.44394 -8.23561,13.04032 -10.92851,14.33574 -0.65659,0.31585 0.0968,5.0107 2.00552,12.49706 1.68148,6.59515 4.984,19.78446 7.33894,29.30963 5.97177,24.15423 7.11472,22.9305 -21.36439,22.87433 -12.95644,-0.0256 -22.45942,-0.62537 -23.47847,-1.48193 z"
-                   style="opacity:0.66000001;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.77735907;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+                   style="opacity:0.66000001;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.74525762;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
               </svg:g>
             </svg:g>
           </svg:g>
@@ -14628,21 +14644,21 @@
            d="m 179.88264,245.02687 -31.1827,-14.15187 7.5,-3.4375 z"
            id="path4506"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="cccc" />
+           nodetypes="cccc" />
         <svg:path
            style="fill:url(#linearGradient6968);fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
            d="m 124.45079,232.13514 -84.676034,-48.08326 25.45583,-11.3137 z"
            id="path4574"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="cccc" />
+           nodetypes="cccc" />
         <svg:path
            style="fill:#4d4d4d;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
            d="m 217.21421,218.08809 -38.08799,25.35212 -24.63789,-23.74422 40.50093,-15.84916 z"
            id="path4508"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="ccccc" />
+           nodetypes="ccccc" />
         <svg:path
-           sodipodi:nodetypes="ccccc"
+           nodetypes="ccccc"
            style="fill:url(#linearGradient4286);fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
            d="m 218.72555,194.67978 0.22214,-160.473769 -86.99233,19.961296 0.36505,183.464433 z"
            id="path4278"
@@ -14657,25 +14673,25 @@
            d="m 192.27976,193.33271 5.6954,11.83615 -44.88207,23.09038 -0.3889,-23.39844 z"
            id="path4460-7-4"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="ccccc" />
+           nodetypes="ccccc" />
         <svg:path
            style="fill:#9ca5b0;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
            d="m 133.11285,229.4393 0.0884,9.05981 27.60023,-12.77431 0.17678,-8.87444 z"
            id="path4462"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="ccccc" />
+           nodetypes="ccccc" />
         <svg:path
            style="fill:#9ca5b0;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
            d="m 198.73446,199.95132 -0.0156,3.79369 0.78656,3.30455 22.24599,-9.04075 0.17678,-7.42462 z"
            id="path4462-7"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="cccccc" />
+           nodetypes="cccccc" />
         <svg:path
            style="fill:#525b62;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
            d="m 217.3955,215.35166 0.0464,2.857 -20.32722,-12.80381 -0.0861,-5.73029 1.78159,1.19846 0.047,3.00554 z"
            id="path4520"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="ccccccc" />
+           nodetypes="ccccccc" />
         <svg:path
            style="fill:#909ba7;fill-opacity:1;fill-rule:evenodd;stroke:url(#linearGradient6972);stroke-width:4.41492891;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            d="M 94.985291,32.057751 94.356481,202.36129"
@@ -14686,13 +14702,13 @@
            d="M 220.40912,21.224904 132.07427,39.895159 60.931926,12.26559 147.05715,1.721704 Z"
            id="path3643"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="ccccc" />
+           nodetypes="ccccc" />
         <svg:path
            style="fill:#dddede;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
            d="m 197.03622,199.7995 1.70862,1.1542 23.05923,-10.48512 -1.40349,-1.1901 z"
            id="path4466-0"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="ccccc" />
+           nodetypes="ccccc" />
         <svg:path
            inkscape:connector-curvature="0"
            id="path4310"
@@ -14703,13 +14719,13 @@
            d="M 152.30988,50.678503 151.68107,219.25469"
            id="path4330"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="cc" />
+           nodetypes="cc" />
         <svg:path
            style="fill:#909ba7;fill-opacity:1;fill-rule:evenodd;stroke:url(#linearGradient4332-4);stroke-width:4.41492891;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            d="M 177.93294,44.040412 177.53195,188.35415"
            id="path4330-7"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="cc" />
+           nodetypes="cc" />
         <svg:path
            style="fill:#909ba7;fill-opacity:1;fill-rule:evenodd;stroke:url(#linearGradient4218);stroke-width:4.41492891;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            d="M 114.76468,45.323118 114.13587,215.62666"
@@ -14725,69 +14741,69 @@
            d="M 217.39042,173.07048 166.8772,47.4035 136.11805,53.767461 217.71155,190.3497 Z"
            id="path4230"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="ccccc" />
+           nodetypes="ccccc" />
         <svg:path
            inkscape:connector-curvature="0"
            id="path4250"
            d="M 75.764676,31.326384 75.135866,188.28891"
            style="fill:#909ba7;fill-opacity:1;fill-rule:evenodd;stroke:url(#linearGradient4252);stroke-width:4.41492891;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-           sodipodi:nodetypes="cc" />
+           nodetypes="cc" />
         <svg:path
            style="fill:#4a535a;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
            d="m 133.11285,229.4835 -1e-5,9.01561 -72.831994,-52.50268 0,-7.24785 z"
            id="path4460"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="ccccc" />
+           nodetypes="ccccc" />
         <svg:path
            style="fill:#adadae;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
            d="m 60.243776,178.75349 1.80974,-0.85754 71.059334,48.58234 0,3.00521 z"
            id="path4464"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="ccccc" />
+           nodetypes="ccccc" />
         <svg:path
            style="fill:url(#linearGradient4530);fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
            d="m 219.71406,214.8107 -2.20971,0.91513 -18.46393,-11.61158 1.71944,-0.66958 z"
            id="path4522"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="ccccc" />
+           nodetypes="ccccc" />
         <svg:path
            style="fill:#dddede;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
            d="m 133.11284,226.45619 1e-5,3.00521 27.95728,-12.42156 -2.20085,-1.30401 z"
            id="path4466"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="ccccc" />
+           nodetypes="ccccc" />
         <svg:path
            style="fill:url(#linearGradient4494-7);fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
            d="m 183.02691,240.85812 -2.25,1.625 -24.42072,-17.46749 2.21875,-1.14063 z"
            id="path4486"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="ccccc" />
+           nodetypes="ccccc" />
         <svg:path
            style="fill:url(#linearGradient6976);fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
            d="m 180.61159,242.13031 -0.0625,3.5 -24.16923,-17.55709 -0.0183,-3.03661 z"
            id="path4496"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="ccccc" />
+           nodetypes="ccccc" />
         <svg:path
            style="fill:#a0a4aa;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
            d="m 182.67658,240.52606 -0.0183,3.68329 -2.22801,1.34191 0.0259,-3.58242 z"
            id="path4518"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="ccccc" />
+           nodetypes="ccccc" />
         <svg:path
            inkscape:connector-curvature="0"
            id="path4532"
            d="m 219.52225,214.62705 -0.0183,2.83954 -2.10302,0.96691 -0.0366,-2.87929 z"
            style="fill:#a4a9ae;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-           sodipodi:nodetypes="ccccc" />
+           nodetypes="ccccc" />
         <svg:path
-           sodipodi:nodetypes="ccccc"
+           nodetypes="ccccc"
            style="fill:#000080;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
            d="m 153.02427,198.92743 0.125,7.75 16.45968,11.26664 0.006,-1.73336 z"
            id="path4534"
            inkscape:connector-curvature="0" />
         <svg:path
-           sodipodi:nodetypes="ccccc"
+           nodetypes="ccccc"
            style="fill:#0000ff;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
            d="m 213.76694,192.85027 -7.5432,-13.342 -52.88151,19.9454 16.10263,16.80149 z"
            id="path4536"
@@ -14797,91 +14813,91 @@
            d="m 213.76804,192.86554 0,1.52535 -1.95265,0.83839 -42.29878,22.81751 -0.13899,-1.91959 z"
            id="path4556"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="cccccc" />
+           nodetypes="cccccc" />
         <svg:path
            style="fill:#909ba7;fill-opacity:1;fill-rule:evenodd;stroke:url(#linearGradient4332-6);stroke-width:4.41492891;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            d="M 220.36063,58.03049 131.97904,82.461475"
            id="path4330-0"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="cc" />
+           nodetypes="cc" />
         <svg:path
            style="fill:#909ba7;fill-opacity:1;fill-rule:evenodd;stroke:url(#linearGradient4332-6-1);stroke-width:4.41492891;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            d="M 218.30324,172.63334 132.0537,208.28148"
            id="path4330-0-1"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="cc" />
+           nodetypes="cc" />
         <svg:path
            style="fill:#909ba7;fill-opacity:1;fill-rule:evenodd;stroke:url(#linearGradient4332-6-4);stroke-width:4.41492891;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            d="m 219.73656,105.67919 -87.46283,29.17658"
            id="path4330-0-4"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="cc" />
+           nodetypes="cc" />
         <svg:path
            style="fill:#909ba7;fill-opacity:1;fill-rule:evenodd;stroke:url(#linearGradient4332-6-17);stroke-width:4.41492891;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            d="m 220.50153,127.22491 -88.50141,31.6583"
            id="path4330-0-6"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="cc" />
+           nodetypes="cc" />
         <svg:path
            style="fill:#909ba7;fill-opacity:1;fill-rule:evenodd;stroke:url(#linearGradient4332-6-6);stroke-width:4.41492891;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            d="M 62.153327,50.022271 132.62962,82.695969"
            id="path4330-0-0"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="cc" />
+           nodetypes="cc" />
         <svg:path
            style="fill:#909ba7;fill-opacity:1;fill-rule:evenodd;stroke:url(#linearGradient4332-6-6-8);stroke-width:4.41492891;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            d="m 63.524435,100.04484 68.528085,34.25081"
            id="path4330-0-0-3"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="cc" />
+           nodetypes="cc" />
         <svg:path
            style="fill:#909ba7;fill-opacity:1;fill-rule:evenodd;stroke:url(#linearGradient4332-6-6-3);stroke-width:4.41492939;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            d="m 63.943999,123.04749 67.783301,36.0127"
            id="path4330-0-0-0"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="cc" />
+           nodetypes="cc" />
         <svg:path
            style="fill:#909ba7;fill-opacity:1;fill-rule:evenodd;stroke:url(#linearGradient4332-6-6-2);stroke-width:4.41492891;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            d="m 62.967746,162.10902 69.774904,45.48717"
            id="path4330-0-0-2"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="cc" />
+           nodetypes="cc" />
         <svg:path
            style="fill:#909ba7;fill-opacity:1;fill-rule:evenodd;stroke:url(#linearGradient4332-6-6-8-2);stroke-width:4.41492891;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            d="M 62.060488,74.418128 132.53678,110.24607"
            id="path4330-0-0-3-1"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="cc" />
+           nodetypes="cc" />
         <svg:path
            style="fill:#909ba7;fill-opacity:1;fill-rule:evenodd;stroke:url(#linearGradient4332-6-6-3-8);stroke-width:4.41492939;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            d="m 61.626169,142.67292 70.056191,40.43362"
            id="path4330-0-0-0-8"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="cc" />
+           nodetypes="cc" />
         <svg:path
            inkscape:connector-curvature="0"
            id="path4250-6"
            d="M 63.139683,22.871897 62.510873,179.83443"
            style="fill:#909ba7;fill-opacity:1;fill-rule:evenodd;stroke:url(#linearGradient4252-7);stroke-width:4.41492891;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-           sodipodi:nodetypes="cc" />
+           nodetypes="cc" />
         <svg:path
            style="fill:#909ba7;fill-opacity:1;fill-rule:evenodd;stroke:url(#linearGradient4332-6-4-0);stroke-width:4.41492891;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            d="M 218.91841,82.119685 132.37434,109.57059"
            id="path4330-0-4-3"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="cc" />
+           nodetypes="cc" />
         <svg:path
            style="fill:#909ba7;fill-opacity:1;fill-rule:evenodd;stroke:url(#linearGradient4332-6-17-0);stroke-width:4.41492891;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            d="M 218.86459,149.76076 132.20034,182.72"
            id="path4330-0-6-5"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="cc" />
+           nodetypes="cc" />
         <svg:path
            style="fill:#909ba7;fill-opacity:1;fill-rule:evenodd;stroke:url(#linearGradient4332-4-3);stroke-width:4.41492891;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            d="M 133.24522,52.111133 132.84423,226.37716"
            id="path4330-7-9-0"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="cc" />
+           nodetypes="cc" />
         <svg:path
            style="fill:url(#linearGradient6978);fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
            d="m 131.93136,39.847522 0.16264,17.240153 -71.074974,-30.414232 0,-14.312579 z"
@@ -14899,7 +14915,7 @@
            inkscape:connector-curvature="0" />
         <svg:text
            transform="matrix(1,-0.24145098,0,1,0,0)"
-           sodipodi:linespacing="125%"
+           linespacing="125%"
            id="text4542"
            y="88.249931"
            x="150.81439"
@@ -14909,10 +14925,10 @@
              y="88.249931"
              x="150.81439"
              id="tspan4544"
-             sodipodi:role="line">BANK</svg:tspan></svg:text>
+             role="line">BANK</svg:tspan></svg:text>
         <svg:text
            transform="matrix(1,-0.24145098,0,1,0,0)"
-           sodipodi:linespacing="125%"
+           linespacing="125%"
            id="text4542-8"
            y="88.292686"
            x="151.9353"
@@ -14922,7 +14938,7 @@
              y="88.292686"
              x="151.9353"
              id="tspan4544-7"
-             sodipodi:role="line">BANK</svg:tspan></svg:text>
+             role="line">BANK</svg:tspan></svg:text>
       </svg:g>
       <svg:g
          transform="matrix(0.7661488,0,0,1.0710728,497.56403,-17.855223)"
@@ -14932,21 +14948,21 @@
            d="m 179.88264,245.02687 -31.1827,-14.15187 7.5,-3.4375 z"
            id="path4506-2"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="cccc" />
+           nodetypes="cccc" />
         <svg:path
            style="fill:url(#linearGradient6968-3);fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
            d="m 124.45079,232.13514 -84.676034,-48.08326 25.45583,-11.3137 z"
            id="path4574-0"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="cccc" />
+           nodetypes="cccc" />
         <svg:path
            style="fill:#4d4d4d;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
            d="m 217.21421,218.08809 -38.08799,25.35212 -24.63789,-23.74422 40.50093,-15.84916 z"
            id="path4508-7"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="ccccc" />
+           nodetypes="ccccc" />
         <svg:path
-           sodipodi:nodetypes="ccccc"
+           nodetypes="ccccc"
            style="fill:url(#linearGradient4286-7);fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
            d="m 218.72555,194.67978 0.22214,-160.473769 -86.99233,19.961296 0.36505,183.464433 z"
            id="path4278-6"
@@ -14961,25 +14977,25 @@
            d="m 192.27976,193.33271 5.6954,11.83615 -44.88207,23.09038 -0.3889,-23.39844 z"
            id="path4460-7-4-5"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="ccccc" />
+           nodetypes="ccccc" />
         <svg:path
            style="fill:#9ca5b0;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
            d="m 133.11285,229.4393 0.0884,9.05981 27.60023,-12.77431 0.17678,-8.87444 z"
            id="path4462-6"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="ccccc" />
+           nodetypes="ccccc" />
         <svg:path
            style="fill:#9ca5b0;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
            d="m 198.73446,199.95132 -0.0156,3.79369 0.78656,3.30455 22.24599,-9.04075 0.17678,-7.42462 z"
            id="path4462-7-9"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="cccccc" />
+           nodetypes="cccccc" />
         <svg:path
            style="fill:#525b62;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
            d="m 217.3955,215.35166 0.0464,2.857 -20.32722,-12.80381 -0.0861,-5.73029 1.78159,1.19846 0.047,3.00554 z"
            id="path4520-2"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="ccccccc" />
+           nodetypes="ccccccc" />
         <svg:path
            style="fill:#909ba7;fill-opacity:1;fill-rule:evenodd;stroke:url(#linearGradient6972-2);stroke-width:4.72267294;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            d="M 94.985291,32.057751 94.356481,202.36129"
@@ -14990,13 +15006,13 @@
            d="M 220.40912,21.224904 132.07427,39.895159 60.931926,12.26559 147.05715,1.721704 Z"
            id="path3643-6"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="ccccc" />
+           nodetypes="ccccc" />
         <svg:path
            style="fill:#dddede;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
            d="m 197.03622,199.7995 1.70862,1.1542 23.05923,-10.48512 -1.40349,-1.1901 z"
            id="path4466-0-2"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="ccccc" />
+           nodetypes="ccccc" />
         <svg:path
            inkscape:connector-curvature="0"
            id="path4310-1"
@@ -15007,13 +15023,13 @@
            d="M 152.30988,50.678503 151.68107,219.25469"
            id="path4330-04"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="cc" />
+           nodetypes="cc" />
         <svg:path
            style="fill:#909ba7;fill-opacity:1;fill-rule:evenodd;stroke:url(#linearGradient4332-4-9);stroke-width:4.72267294;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            d="M 177.93294,44.040412 177.53195,188.35415"
            id="path4330-7-7"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="cc" />
+           nodetypes="cc" />
         <svg:path
            style="fill:#909ba7;fill-opacity:1;fill-rule:evenodd;stroke:url(#linearGradient4218-3);stroke-width:4.72267294;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            d="M 114.76468,45.323118 114.13587,215.62666"
@@ -15029,69 +15045,69 @@
            d="M 217.39042,173.07048 166.8772,47.4035 136.11805,53.767461 217.71155,190.3497 Z"
            id="path4230-5"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="ccccc" />
+           nodetypes="ccccc" />
         <svg:path
            inkscape:connector-curvature="0"
            id="path4250-63"
            d="M 75.764676,31.326384 75.135866,188.28891"
            style="fill:#909ba7;fill-opacity:1;fill-rule:evenodd;stroke:url(#linearGradient4252-78);stroke-width:4.72267294;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-           sodipodi:nodetypes="cc" />
+           nodetypes="cc" />
         <svg:path
            style="fill:#4a535a;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
            d="m 133.11285,229.4835 -1e-5,9.01561 -72.831994,-52.50268 0,-7.24785 z"
            id="path4460-9"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="ccccc" />
+           nodetypes="ccccc" />
         <svg:path
            style="fill:#adadae;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
            d="m 60.243776,178.75349 1.80974,-0.85754 71.059334,48.58234 0,3.00521 z"
            id="path4464-6"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="ccccc" />
+           nodetypes="ccccc" />
         <svg:path
            style="fill:url(#linearGradient4530-0);fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
            d="m 219.71406,214.8107 -2.20971,0.91513 -18.46393,-11.61158 1.71944,-0.66958 z"
            id="path4522-0"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="ccccc" />
+           nodetypes="ccccc" />
         <svg:path
            style="fill:#dddede;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
            d="m 133.11284,226.45619 1e-5,3.00521 27.95728,-12.42156 -2.20085,-1.30401 z"
            id="path4466-2"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="ccccc" />
+           nodetypes="ccccc" />
         <svg:path
            style="fill:url(#linearGradient4494-7-6);fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
            d="m 183.02691,240.85812 -2.25,1.625 -24.42072,-17.46749 2.21875,-1.14063 z"
            id="path4486-2"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="ccccc" />
+           nodetypes="ccccc" />
         <svg:path
            style="fill:url(#linearGradient6976-8);fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
            d="m 180.61159,242.13031 -0.0625,3.5 -24.16923,-17.55709 -0.0183,-3.03661 z"
            id="path4496-6"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="ccccc" />
+           nodetypes="ccccc" />
         <svg:path
            style="fill:#a0a4aa;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
            d="m 182.67658,240.52606 -0.0183,3.68329 -2.22801,1.34191 0.0259,-3.58242 z"
            id="path4518-8"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="ccccc" />
+           nodetypes="ccccc" />
         <svg:path
            inkscape:connector-curvature="0"
            id="path4532-7"
            d="m 219.52225,214.62705 -0.0183,2.83954 -2.10302,0.96691 -0.0366,-2.87929 z"
            style="fill:#a4a9ae;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-           sodipodi:nodetypes="ccccc" />
+           nodetypes="ccccc" />
         <svg:path
-           sodipodi:nodetypes="ccccc"
+           nodetypes="ccccc"
            style="fill:#000080;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
            d="m 153.02427,198.92743 0.125,7.75 16.45968,11.26664 0.006,-1.73336 z"
            id="path4534-8"
            inkscape:connector-curvature="0" />
         <svg:path
-           sodipodi:nodetypes="ccccc"
+           nodetypes="ccccc"
            style="fill:#0000ff;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
            d="m 213.76694,192.85027 -7.5432,-13.342 -52.88151,19.9454 16.10263,16.80149 z"
            id="path4536-1"
@@ -15101,91 +15117,91 @@
            d="m 213.76804,192.86554 0,1.52535 -1.95265,0.83839 -42.29878,22.81751 -0.13899,-1.91959 z"
            id="path4556-1"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="cccccc" />
+           nodetypes="cccccc" />
         <svg:path
            style="fill:#909ba7;fill-opacity:1;fill-rule:evenodd;stroke:url(#linearGradient4332-6-46);stroke-width:4.72267294;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            d="M 220.36063,58.03049 131.97904,82.461475"
            id="path4330-0-8"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="cc" />
+           nodetypes="cc" />
         <svg:path
            style="fill:#909ba7;fill-opacity:1;fill-rule:evenodd;stroke:url(#linearGradient4332-6-1-7);stroke-width:4.72267294;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            d="M 218.30324,172.63334 132.0537,208.28148"
            id="path4330-0-1-8"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="cc" />
+           nodetypes="cc" />
         <svg:path
            style="fill:#909ba7;fill-opacity:1;fill-rule:evenodd;stroke:url(#linearGradient4332-6-4-2);stroke-width:4.72267294;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            d="m 219.73656,105.67919 -87.46283,29.17658"
            id="path4330-0-4-0"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="cc" />
+           nodetypes="cc" />
         <svg:path
            style="fill:#909ba7;fill-opacity:1;fill-rule:evenodd;stroke:url(#linearGradient4332-6-17-5);stroke-width:4.72267294;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            d="m 220.50153,127.22491 -88.50141,31.6583"
            id="path4330-0-6-6"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="cc" />
+           nodetypes="cc" />
         <svg:path
            style="fill:#909ba7;fill-opacity:1;fill-rule:evenodd;stroke:url(#linearGradient4332-6-6-80);stroke-width:4.72267294;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            d="M 62.153327,50.022271 132.62962,82.695969"
            id="path4330-0-0-36"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="cc" />
+           nodetypes="cc" />
         <svg:path
            style="fill:#909ba7;fill-opacity:1;fill-rule:evenodd;stroke:url(#linearGradient4332-6-6-8-4);stroke-width:4.72267294;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            d="m 63.524435,100.04484 68.528085,34.25081"
            id="path4330-0-0-3-7"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="cc" />
+           nodetypes="cc" />
         <svg:path
            style="fill:#909ba7;fill-opacity:1;fill-rule:evenodd;stroke:url(#linearGradient4332-6-6-3-2);stroke-width:4.72267389;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            d="m 63.943999,123.04749 67.783301,36.0127"
            id="path4330-0-0-0-7"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="cc" />
+           nodetypes="cc" />
         <svg:path
            style="fill:#909ba7;fill-opacity:1;fill-rule:evenodd;stroke:url(#linearGradient4332-6-6-2-4);stroke-width:4.72267294;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            d="m 62.967746,162.10902 69.774904,45.48717"
            id="path4330-0-0-2-8"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="cc" />
+           nodetypes="cc" />
         <svg:path
            style="fill:#909ba7;fill-opacity:1;fill-rule:evenodd;stroke:url(#linearGradient4332-6-6-8-2-2);stroke-width:4.72267294;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            d="M 62.060488,74.418128 132.53678,110.24607"
            id="path4330-0-0-3-1-5"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="cc" />
+           nodetypes="cc" />
         <svg:path
            style="fill:#909ba7;fill-opacity:1;fill-rule:evenodd;stroke:url(#linearGradient4332-6-6-3-8-6);stroke-width:4.72267389;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            d="m 61.626169,142.67292 70.056191,40.43362"
            id="path4330-0-0-0-8-2"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="cc" />
+           nodetypes="cc" />
         <svg:path
            inkscape:connector-curvature="0"
            id="path4250-6-1"
            d="M 63.139683,22.871897 62.510873,179.83443"
            style="fill:#909ba7;fill-opacity:1;fill-rule:evenodd;stroke:url(#linearGradient4252-7-8);stroke-width:4.72267294;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-           sodipodi:nodetypes="cc" />
+           nodetypes="cc" />
         <svg:path
            style="fill:#909ba7;fill-opacity:1;fill-rule:evenodd;stroke:url(#linearGradient4332-6-4-0-2);stroke-width:4.72267294;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            d="M 218.91841,82.119685 132.37434,109.57059"
            id="path4330-0-4-3-7"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="cc" />
+           nodetypes="cc" />
         <svg:path
            style="fill:#909ba7;fill-opacity:1;fill-rule:evenodd;stroke:url(#linearGradient4332-6-17-0-1);stroke-width:4.72267294;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            d="M 218.86459,149.76076 132.20034,182.72"
            id="path4330-0-6-5-8"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="cc" />
+           nodetypes="cc" />
         <svg:path
            style="fill:#909ba7;fill-opacity:1;fill-rule:evenodd;stroke:url(#linearGradient4332-4-3-3);stroke-width:4.72267294;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            d="M 133.24522,52.111133 132.84423,226.37716"
            id="path4330-7-9-0-8"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="cc" />
+           nodetypes="cc" />
         <svg:path
            style="fill:url(#linearGradient6978-9);fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
            d="m 131.93136,39.847522 0.16264,17.240153 -71.074974,-30.414232 0,-14.312579 z"
@@ -15203,7 +15219,7 @@
            inkscape:connector-curvature="0" />
         <svg:text
            transform="matrix(1,-0.24145098,0,1,0,0)"
-           sodipodi:linespacing="125%"
+           linespacing="125%"
            id="text4542-86"
            y="88.249931"
            x="150.81439"
@@ -15213,10 +15229,10 @@
              y="88.249931"
              x="150.81439"
              id="tspan4544-5"
-             sodipodi:role="line">BANK</svg:tspan></svg:text>
+             role="line">BANK</svg:tspan></svg:text>
         <svg:text
            transform="matrix(1,-0.24145098,0,1,0,0)"
-           sodipodi:linespacing="125%"
+           linespacing="125%"
            id="text4542-8-4"
            y="88.292686"
            x="151.9353"
@@ -15226,19 +15242,19 @@
              y="88.292686"
              x="151.9353"
              id="tspan4544-7-6"
-             sodipodi:role="line">BANK</svg:tspan></svg:text>
+             role="line">BANK</svg:tspan></svg:text>
       </svg:g>
       <svg:g
          transform="matrix(0.91093235,0,0,1.2952514,802.04268,-612.51791)"
          id="g8382">
         <svg:path
-           sodipodi:nodetypes="ccccc"
+           nodetypes="ccccc"
            style="fill:#a1c0df;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
            d="m 219.36279,135.55144 0.96215,60.03935 -89.94249,42.95973 0.75311,-73.84494 z"
            id="path4308"
            inkscape:connector-curvature="0" />
         <svg:path
-           sodipodi:nodetypes="ccccc"
+           nodetypes="ccccc"
            style="fill:url(#linearGradient4248);fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
            d="m 133.76009,161.86021 -1.26024,70.3777 -73.613827,-30.5713 -0.107988,-68.97302 z"
            id="path4240-0"
@@ -15253,20 +15269,20 @@
            d="M 220.79711,123.78112 131.00637,148.0825 57.902667,119.90401 142.64314,107.03023 Z"
            id="path3643-7"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="ccccc" />
+           nodetypes="ccccc" />
         <svg:path
            style="fill:#909ba7;fill-opacity:1;fill-rule:evenodd;stroke:url(#linearGradient4332-4-31);stroke-width:3.93852758;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            d="m 178.0717,141.38441 -0.50296,42.31146"
            id="path4330-7-5"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="cc" />
+           nodetypes="cc" />
         <svg:path
            style="fill:#909ba7;fill-opacity:1;fill-rule:evenodd;stroke:url(#linearGradient4218-9);stroke-width:3.93852758;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            d="m 114.48462,147.69669 -0.62881,71.98343"
            id="path4210-1"
            inkscape:connector-curvature="0" />
         <svg:path
-           sodipodi:nodetypes="cccccc"
+           nodetypes="cccccc"
            style="fill:url(#linearGradient4228-1);fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
            d="m 219.21838,138.004 -89.35663,28.56676 -69.650022,-28.28427 0.17678,-3.71231 69.473242,29.69848 z"
            id="path4220-8"
@@ -15276,62 +15292,62 @@
            d="M 218.19141,186.61201 C 208.58069,176.45917 190.41638,165.282 186.59048,150.1535 l -49.96901,-0.49126 c 0,0 67.10348,31.14609 80.91002,40.98182 z"
            id="path4230-8"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="ccccc" />
+           nodetypes="ccccc" />
         <svg:path
            inkscape:connector-curvature="0"
            id="path4250-2"
            d="m 75.108078,137.73243 -0.62881,68.94824"
            style="fill:#909ba7;fill-opacity:1;fill-rule:evenodd;stroke:url(#linearGradient4252-5);stroke-width:3.93852758;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-           sodipodi:nodetypes="cc" />
+           nodetypes="cc" />
         <svg:path
            style="fill:#909ba7;fill-opacity:1;fill-rule:evenodd;stroke:url(#linearGradient4332-6-6-2-7);stroke-width:3.93852735;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            d="m 59.831258,166.87514 72.571792,32.00823"
            id="path4330-0-0-2-9"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="cc" />
+           nodetypes="cc" />
         <svg:path
            style="fill:#4a535a;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
            d="m 133.11285,229.4835 -1e-5,9.01561 -74.641891,-34.11629 -0.01263,-8.54802 z"
            id="path4460-99"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="ccccc" />
+           nodetypes="ccccc" />
         <svg:path
            style="fill:#adadae;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
            d="m 58.474152,195.79825 0.793847,-1.0427 73.844851,31.72274 0,3.00521 z"
            id="path4464-8"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="ccccc" />
+           nodetypes="ccccc" />
         <svg:path
            style="fill:#dddede;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
            d="m 195.14024,199.98388 2.93674,1.10486 23.57804,-10.16623 -1.40349,-1.23429 z"
            id="path4466-9"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="ccccc" />
+           nodetypes="ccccc" />
         <svg:path
            style="fill:#a0a4aa;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
            d="m 196.00383,250.32216 -0.0183,3.68329 -2.22801,1.34191 0.0259,-3.58242 z"
            id="path4518-4"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="ccccc" />
+           nodetypes="ccccc" />
         <svg:path
            style="fill:#909ba7;fill-opacity:1;fill-rule:evenodd;stroke:url(#linearGradient4332-6-6-3-5);stroke-width:3.93852758;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            d="m 59.591243,132.33745 73.285847,31.03348"
            id="path4330-0-0-0-6"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="cc" />
+           nodetypes="cc" />
         <svg:path
            inkscape:connector-curvature="0"
            id="path4250-6-4"
            d="m 60.364333,128.54413 -0.08058,67.28297"
            style="fill:#909ba7;fill-opacity:1;fill-rule:evenodd;stroke:url(#linearGradient4252-9);stroke-width:3.93852758;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-           sodipodi:nodetypes="cc" />
+           nodetypes="cc" />
         <svg:path
            style="fill:url(#linearGradient4465-8);fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
            d="m 131.17103,147.34752 0.16785,17.24015 -73.353139,-30.41423 0,-14.31258 z"
            id="path4457-2"
            inkscape:connector-curvature="0" />
         <svg:path
-           sodipodi:nodetypes="ccccc"
+           nodetypes="ccccc"
            inkscape:connector-curvature="0"
            id="path4371-2"
            d="m 194.91227,207.57166 0.0563,-23.18714 -17.07654,6.87548 0.22738,24.3595 z"
@@ -15341,9 +15357,9 @@
            d="m 218.90164,128.85981 -0.62881,62.27045"
            id="path4330-2-9"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="cc" />
+           nodetypes="cc" />
         <svg:path
-           sodipodi:nodetypes="ccccc"
+           nodetypes="ccccc"
            inkscape:connector-curvature="0"
            id="path4371-2-0"
            d="m 178.11851,215.62589 -0.3361,-26.86994 -20.42285,9.18448 0.0314,27.55044 z"
@@ -15353,15 +15369,15 @@
            d="m 132.92732,226.45707 1e-5,3.00521 24.55695,-10.74076 -1.13651,-2.25076 z"
            id="path4466-0-5"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="ccccc" />
+           nodetypes="ccccc" />
         <svg:path
            style="fill:#909ba7;fill-opacity:1;fill-rule:evenodd;stroke:url(#linearGradient4332-7);stroke-width:3.93852806;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            d="m 156.20245,145.60541 -0.62881,72.31145"
            id="path4330-8"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="cc" />
+           nodetypes="cc" />
         <svg:path
-           sodipodi:nodetypes="cc"
+           nodetypes="cc"
            inkscape:connector-curvature="0"
            id="path4310-12"
            d="m 197.00789,134.17884 -0.51412,65.82354"
@@ -15371,28 +15387,28 @@
            d="m 217.69052,166.57236 c -13.24293,22.09318 -42.77408,32.02402 -85.4772,32.64376"
            id="path4330-0-1-3"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="cc" />
+           nodetypes="cc" />
         <svg:path
            style="fill:#909ba7;fill-opacity:1;fill-rule:evenodd;stroke:url(#linearGradient4332-6-17-9);stroke-width:3.93852758;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            d="m 219.77091,134.17025 -87.76814,29.10653"
            id="path4330-0-6-1"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="cc" />
+           nodetypes="cc" />
         <svg:path
            style="fill:#909ba7;fill-opacity:1;fill-rule:evenodd;stroke:url(#linearGradient4332-9);stroke-width:3.93852735;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            d="m 133.53732,150.81735 -0.62881,76.4299"
            id="path4330-2"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="cc" />
+           nodetypes="cc" />
         <svg:path
-           sodipodi:nodetypes="ccccc"
+           nodetypes="ccccc"
            style="fill:url(#linearGradient4455);fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
            d="m 221.20024,123.72444 -0.1367,12.20527 -89.5397,28.99502 -0.115,-17.34612 z"
            id="path4447-6"
            inkscape:connector-curvature="0" />
         <svg:text
            transform="matrix(1.0034087,-0.33606983,0,0.99660287,0,0)"
-           sodipodi:linespacing="125%"
+           linespacing="125%"
            id="text4513"
            y="206.79343"
            x="147.20949"
@@ -15402,25 +15418,25 @@
              y="206.79343"
              x="147.20949"
              id="tspan4515"
-             sodipodi:role="line">Copmany</svg:tspan></svg:text>
+             role="line">Copmany</svg:tspan></svg:text>
         <svg:path
            style="fill:#9ca5b0;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
            d="m 132.946,229.66003 0.0884,9.05981 24.61745,-11.94082 0.01,-8.34327 z"
            id="path4462-1"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="ccccc" />
+           nodetypes="ccccc" />
         <svg:path
            style="fill:#9ca5b0;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
            d="m 198.19264,201.00201 0.0439,8.08754 23.15543,-10.87177 0.17678,-7.42462 z"
            id="path4462-7-7"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="ccccc" />
+           nodetypes="ccccc" />
         <svg:path
            style="fill:#4a535a;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
            d="m 198.32914,200.9 -0.0445,8.17592 -3.26717,-1.10492 0.0287,-8.01601 z"
            id="path4460-7"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="ccccc" />
+           nodetypes="ccccc" />
       </svg:g>
       <svg:g
          transform="matrix(1.6584609,0,0,2.2439056,704.83963,91.842886)"
@@ -15431,7 +15447,7 @@
            d="m 39.189023,12.401459 c -17.162253,0 -31.1345748,3.630659 -31.1984999,18.543528 l 0.1020207,-2.365304 -0.2647666,66.252975 -0.00151,0.353452 c 0.1704469,13.83272 14.3301178,21.74256 31.3656478,21.74256 17.034619,0 30.566117,-7.90984 30.856065,-21.74256 0.0022,-0.115932 0.02928,-0.236106 0.02978,-0.353452 0.0011,-0.22621 -0.0191,-0.438281 -0.02542,-0.663077 l 0.261926,-61.103462 -0.02826,0 C 70.349919,18.15325 56.351275,12.401459 39.189023,12.401459 Z"
            style="fill:url(#linearGradient2639);stroke:none"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="sccccscccccs" />
+           nodetypes="sccccscccccs" />
         <svg:path
            id="path3205"
            d="m 71.262,19.34752 c 0,6.949292 -14.558,12.58352 -32.516,12.58352 C 20.788,31.93104 6.23,26.296812 6.23,19.34752 6.23,12.398228 20.788,6.764 38.746,6.764 c 17.958,0 32.516,5.634228 32.516,12.58352 z"
@@ -15443,13 +15459,13 @@
            style="fill:#b3b3b3;stroke:none"
            inkscape:connector-curvature="0" />
         <svg:path
-           sodipodi:nodetypes="cc"
+           nodetypes="cc"
            inkscape:connector-curvature="0"
            id="path4330-6"
            d="M 7.4294944,22.536568 7.3417459,101.35954"
            style="fill:#909ba7;fill-opacity:1;fill-rule:evenodd;stroke:url(#linearGradient4332-0);stroke-width:2.21768117;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
         <svg:path
-           sodipodi:nodetypes="cc"
+           nodetypes="cc"
            inkscape:connector-curvature="0"
            id="path4330-8-1"
            d="M 69.17443,102.77833 69.347251,24.143936"
@@ -15459,21 +15475,21 @@
            d="m 6.2690656,94.336826 c -0.2027693,8.137504 13.5190074,18.277494 32.3505464,18.277494 18.831537,0 25.958961,-3.70851 20.857704,-6.42563 -1.551145,0.74933 -1.495826,0.79985 -2.405879,0.0865 -1.649582,-0.34369 -0.355012,3.39457 -18.464265,3.39457 -18.693484,0 -26.921018,-10.149657 -30.0695988,-15.656404 z"
            style="fill:#a2a9cb;fill-opacity:1;stroke:none"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="csccscc" />
+           nodetypes="csccscc" />
         <svg:path
-           sodipodi:nodetypes="cc"
+           nodetypes="cc"
            inkscape:connector-curvature="0"
            id="path4330-0-6-7"
            d="m 40.000382,33.953098 0.146109,76.124862"
            style="fill:#909ba7;fill-opacity:1;fill-rule:evenodd;stroke:url(#linearGradient4332-31-3);stroke-width:2.21768117;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
         <svg:path
-           sodipodi:nodetypes="cc"
+           nodetypes="cc"
            inkscape:connector-curvature="0"
            id="path4330-7-6"
            d="M 19.629528,31.148917 18.937889,105.70302"
            style="fill:#909ba7;fill-opacity:1;fill-rule:evenodd;stroke:url(#linearGradient4332-4-4);stroke-width:2.21768117;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
         <svg:path
-           sodipodi:nodetypes="cc"
+           nodetypes="cc"
            inkscape:connector-curvature="0"
            id="path4330-8-4"
            d="M 57.86629,106.22464 57.820512,31.383158"
@@ -15483,56 +15499,56 @@
            d="m 6.2519051,21.619255 c 0.075532,5.080987 13.4925189,12.923982 32.4660519,12.923982 18.973531,0 32.464197,-7.902361 32.528737,-12.042087 0.04759,-2.891865 -0.08061,-0.83092 0.0028,-3.72591 -1.148049,2.471849 -3.641906,12.626062 -32.33434,13.034188 C 14.309641,32.159422 7.6896781,23.678662 6.3934919,17.360414 c -0.07894,1.401619 -0.1561782,3.277287 -0.1415868,4.258841 z"
            style="fill:url(#linearGradient2651);stroke:none"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="ssccscs" />
+           nodetypes="ssccscs" />
         <svg:path
            id="path3236-4"
            d="m 6.2188952,35.734306 c 0.1560927,4.543162 13.5257908,11.500802 32.1365818,11.500802 18.61079,0 31.954334,-8.60115 31.954334,-12.448789 0.04668,-4.3006 -0.04313,3.755981 0.03872,-0.549266 -1.126099,3.675977 -14.369872,12.034022 -32.26684,12.034022 -18.474353,0 -29.486452,-6.874607 -31.9439689,-11.18081 z"
            style="fill:url(#linearGradient2651-7);stroke:none"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="csccscc" />
+           nodetypes="csccscc" />
         <svg:path
            id="path3236-4-2"
            d="m 6.3038557,56.129304 c 0.1559669,5.859399 13.5148913,14.83279 32.1106843,14.83279 18.595792,0 31.928583,-11.093055 31.928583,-16.055425 0.04664,-5.546562 -0.0431,4.844156 0.03868,-0.708398 -1.125192,4.740974 -14.358293,15.520494 -32.240839,15.520494 -18.459465,0 -29.4626885,-8.866304 -31.9182257,-14.420091 z"
            style="fill:url(#linearGradient2651-7-2);stroke:none"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="csccscc" />
+           nodetypes="csccscc" />
         <svg:path
            id="path3236-4-2-4"
            d="m 6.2175954,86.69056 c 0.1580099,5.328853 13.3051706,16.37872 32.1445476,16.37872 18.839378,0 32.733567,-12.977604 32.733567,-17.490649 0.04726,-5.044341 -0.224654,5.195433 -0.141804,0.145641 -1.139929,4.311697 -14.752127,16.214268 -32.868917,16.214268 -18.701265,0 -29.4618665,-10.952486 -31.9495686,-16.0034 z"
            style="fill:url(#linearGradient2651-7-2-6);stroke:none"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="csccscc" />
+           nodetypes="csccscc" />
         <svg:path
            id="path3236-4-6"
            d="m 6.1918764,46.122667 c 0.1567202,5.48333 13.5801716,13.880794 32.2657866,13.880794 18.685616,0 32.082808,-10.381084 32.082808,-15.024959 0.04687,-5.190572 -0.0433,4.533249 0.03887,-0.662932 -1.130626,4.436689 -14.427647,14.524359 -32.39657,14.524359 -18.54863,0 -29.6050027,-8.297248 -32.0723994,-13.494582 z"
            style="fill:url(#linearGradient2651-7-1);stroke:none"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="csccscc" />
+           nodetypes="csccscc" />
         <svg:path
            id="path3236-4-2-44"
            d="m 6.1500944,66.698521 c 0.1561242,5.859399 13.5284856,14.83279 32.1429846,14.83279 18.614499,0 31.960703,-11.093055 31.960703,-16.055425 0.04669,-5.546562 -0.04313,4.844156 0.03872,-0.708398 -1.126325,4.740974 -14.372738,15.520495 -32.273272,15.520495 -18.478034,0 -29.4923264,-8.866305 -31.950333,-14.420092 z"
            style="fill:url(#linearGradient2651-7-2-1);stroke:none"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="csccscc" />
+           nodetypes="csccscc" />
         <svg:path
            id="path3236-4-2-7"
            d="m 6.5200107,77.330215 c 0.1551828,5.859398 13.4469153,14.832789 31.9491763,14.832789 18.502261,0 31.767992,-11.093054 31.767992,-16.055424 0.04641,-5.546562 -0.04287,4.844156 0.03849,-0.708398 -1.119533,4.740974 -14.286076,15.520494 -32.078677,15.520494 -18.366619,0 -29.3145004,-8.866305 -31.7576872,-14.420091 z"
            style="fill:url(#linearGradient2651-7-2-12);stroke:none"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="csccscc" />
+           nodetypes="csccscc" />
         <svg:path
            style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.3696135;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            d="m 60.866658,111.20169 4.145969,-3.33747 2.731795,-3.98224"
            id="path4759"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="ccc" />
+           nodetypes="ccc" />
         <svg:path
            style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:0.2956908;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
            d="m 64.758023,108.06843 0,-10.479301"
            id="path4765"
            inkscape:connector-curvature="0" />
         <svg:path
-           sodipodi:nodetypes="cssc"
+           nodetypes="cssc"
            inkscape:connector-curvature="0"
            id="path4330-8-5"
            d="m 58.467377,96.526475 c 2.379062,0.27574 5.156616,0.225282 6.849491,0.238007 3.961692,0.02978 9.428526,-0.752034 10.691717,-1.681935 3.288963,-2.421177 -2.517812,-5.117399 -5.774875,-7.429309"
@@ -15542,7 +15558,7 @@
            d="m 6.0115229,101.06564 c 0.1581312,6.1101 14.5238401,15.62734 33.3773091,15.73275 13.320942,0.0745 18.469006,-3.28208 21.533386,-4.43529 0.04729,-5.78388 0.05758,0.76975 0.140503,-5.02038 -2.595699,0.6811 -3.861739,3.84729 -21.54633,4.9793 C 21.831801,113.45403 6.0115229,101.06564 6.2132952,94.865529 Z"
            style="fill:url(#linearGradient2651-7-2-6-0);stroke:none"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="cscczcc" />
+           nodetypes="cscczcc" />
         <svg:ellipse
            style="opacity:0.79900004;fill:#a2a9cb;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.14832167;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
            id="path4767"
@@ -15588,7 +15604,7 @@
          id="rect9994-3-8"
          style="opacity:1;fill:#ababab;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.20957971;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
       <svg:path
-         sodipodi:nodetypes="cccc"
+         nodetypes="cccc"
          inkscape:connector-curvature="0"
          id="rect9994-3-7-2"
          d="m 226.56847,250.83249 122.08864,40.91117 -244.51316,0 z"
@@ -15619,7 +15635,7 @@
            d="m 118.05503,189.74529 16.70495,-0.23722 2.34013,98.36776 -21.36541,0 z"
            id="rect9662-3-8-3-81"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="ccccc" />
+           nodetypes="ccccc" />
         <svg:rect
            style="opacity:1;fill:url(#linearGradient6963);fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.20957971;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
            id="rect9662-3-7-9-5"
@@ -15655,7 +15671,7 @@
              id="rect9662-3-73-0-6"
              style="opacity:1;fill:url(#linearGradient6967);fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.20957971;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
           <svg:path
-             sodipodi:nodetypes="ccccc"
+             nodetypes="ccccc"
              inkscape:connector-curvature="0"
              id="rect9662-3-8-3-8-8"
              d="m 118.05503,189.74529 16.70495,-0.23722 2.34013,98.36776 -21.36541,0 z"
@@ -15697,7 +15713,7 @@
            d="m 118.05503,189.74529 16.70495,-0.23722 2.34013,98.36776 -21.36541,0 z"
            id="rect9662-3-8-3-3-7"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="ccccc" />
+           nodetypes="ccccc" />
         <svg:rect
            style="opacity:1;fill:url(#linearGradient6979);fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.20957971;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
            id="rect9662-3-7-9-1-4"
@@ -15734,7 +15750,7 @@
            d="m 118.05503,189.74529 16.70495,-0.23722 2.34013,98.36776 -21.36541,0 z"
            id="rect9662-3-8-3-9-2"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="ccccc" />
+           nodetypes="ccccc" />
         <svg:rect
            style="opacity:1;fill:url(#linearGradient6987);fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.20957971;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
            id="rect9662-3-7-9-6-8"
@@ -15746,7 +15762,7 @@
            ry="0" />
       </svg:g>
       <svg:path
-         sodipodi:nodetypes="cccc"
+         nodetypes="cccc"
          inkscape:connector-curvature="0"
          id="rect9994-3-7-1-9"
          d="m 226.53289,255.09558 96.238,32.38526 -192.74072,0 z"
@@ -15798,7 +15814,7 @@
          id="rect9994-3-8-8"
          style="opacity:1;fill:#ababab;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.58022106;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
       <svg:path
-         sodipodi:nodetypes="cccc"
+         nodetypes="cccc"
          inkscape:connector-curvature="0"
          id="rect9994-3-7-2-7"
          d="m 226.56847,250.83249 122.08864,40.91117 -244.51316,0 z"
@@ -15829,7 +15845,7 @@
            d="m 118.05503,189.74529 16.70495,-0.23722 2.34013,98.36776 -21.36541,0 z"
            id="rect9662-3-8-3-81-3"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="ccccc" />
+           nodetypes="ccccc" />
         <svg:rect
            style="opacity:1;fill:url(#linearGradient6963-9);fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.58022106;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
            id="rect9662-3-7-9-5-4"
@@ -15865,7 +15881,7 @@
              id="rect9662-3-73-0-6-3"
              style="opacity:1;fill:url(#linearGradient6967-2);fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.58022106;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
           <svg:path
-             sodipodi:nodetypes="ccccc"
+             nodetypes="ccccc"
              inkscape:connector-curvature="0"
              id="rect9662-3-8-3-8-8-3"
              d="m 118.05503,189.74529 16.70495,-0.23722 2.34013,98.36776 -21.36541,0 z"
@@ -15907,7 +15923,7 @@
            d="m 118.05503,189.74529 16.70495,-0.23722 2.34013,98.36776 -21.36541,0 z"
            id="rect9662-3-8-3-3-7-9"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="ccccc" />
+           nodetypes="ccccc" />
         <svg:rect
            style="opacity:1;fill:url(#linearGradient6979-1);fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.58022106;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
            id="rect9662-3-7-9-1-4-2"
@@ -15944,7 +15960,7 @@
            d="m 118.05503,189.74529 16.70495,-0.23722 2.34013,98.36776 -21.36541,0 z"
            id="rect9662-3-8-3-9-2-8"
            inkscape:connector-curvature="0"
-           sodipodi:nodetypes="ccccc" />
+           nodetypes="ccccc" />
         <svg:rect
            style="opacity:1;fill:url(#linearGradient6987-3);fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.58022106;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
            id="rect9662-3-7-9-6-8-8"
@@ -15956,7 +15972,7 @@
            ry="0" />
       </svg:g>
       <svg:path
-         sodipodi:nodetypes="cccc"
+         nodetypes="cccc"
          inkscape:connector-curvature="0"
          id="rect9994-3-7-1-9-3"
          d="m 226.53289,255.09558 96.238,32.38526 -192.74072,0 z"
@@ -15988,39 +16004,39 @@
        d="m 148.48622,627.11493 c 72.06264,-5.47811 79.5238,-2.38094 130.71428,-1.42856"
        id="path9795-5-8"
        inkscape:connector-curvature="0"
-       sodipodi:nodetypes="cc" />
+       nodetypes="cc" />
     <svg:path
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Lend-9-6-6)"
        d="m 140.18784,627.43752 c 72.06264,-5.47811 116.84523,48.33334 145.89285,68.57143"
        id="path9795-5-8-6"
        inkscape:connector-curvature="0"
-       sodipodi:nodetypes="cc" />
+       nodetypes="cc" />
     <svg:path
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Lend-9-6-6-5)"
        d="m 151.95033,626.95032 c 50.7882,-3.86085 93.89367,109.25413 115.40019,148.42528"
        id="path9795-5-8-6-8"
        inkscape:connector-curvature="0"
-       sodipodi:nodetypes="cc" />
+       nodetypes="cc" />
     <svg:path
        style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Lend-9-6-6-5-2)"
        d="m 141.12967,626.616 c 72.06264,-5.47811 47.0238,167.9762 43.92856,186.78571"
        id="path9795-5-8-6-8-2"
        inkscape:connector-curvature="0"
-       sodipodi:nodetypes="cc" />
+       nodetypes="cc" />
     <svg:path
        style="opacity:1;fill:#79f292;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:3;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        d="m 514.47974,647.31662 111.18314,-0.35714 -7.52198,-33.16788 64.19594,56.73295 -63.91803,55.86331 7.00948,-32.5291 -110.94855,-0.12627 z"
        id="rect10362"
        inkscape:connector-curvature="0"
-       sodipodi:nodetypes="cccccccc" />
+       nodetypes="cccccccc" />
     <svg:text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        x="518.56305"
        y="681.44501"
        id="text10364"
-       sodipodi:linespacing="125%"><svg:tspan
-         sodipodi:role="line"
+       linespacing="125%"><svg:tspan
+         role="line"
          id="tspan10366"
          x="518.56305"
          y="681.44501"
@@ -16031,12 +16047,12 @@
        x="12.121826"
        y="731.13367"
        id="text10390"
-       sodipodi:linespacing="125%"><svg:tspan
-         sodipodi:role="line"
+       linespacing="125%"><svg:tspan
+         role="line"
          id="tspan10392"
          x="12.121826"
          y="731.13367">Court </svg:tspan><svg:tspan
-         sodipodi:role="line"
+         role="line"
          x="12.121826"
          y="781.13367"
          id="tspan10394" /></svg:text>
