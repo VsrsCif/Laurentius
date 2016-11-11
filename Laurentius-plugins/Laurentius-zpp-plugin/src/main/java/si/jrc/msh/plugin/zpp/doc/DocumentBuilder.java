@@ -25,6 +25,7 @@ import si.laurentius.commons.exception.SEDSecurityException;
 import si.laurentius.commons.utils.StorageUtils;
 import si.laurentius.commons.utils.sec.DigestMethodCode;
 import si.laurentius.commons.utils.sec.XMLSignatureUtils;
+import si.laurentius.msh.inbox.mail.MSHInMail;
 
 /**
  *
@@ -152,6 +153,16 @@ public abstract class DocumentBuilder {
    * @throws SEDSecurityException
    */
   public abstract void createMail(MSHOutMail dce, FileOutputStream fos, KeyStore.PrivateKeyEntry key)
+      throws SEDSecurityException;
+  
+    /**
+   *
+   * @param dce
+   * @param fos
+   * @param key
+   * @throws SEDSecurityException
+   */
+  public abstract void createMail(MSHInMail dce, FileOutputStream fos, KeyStore.PrivateKeyEntry key)
       throws SEDSecurityException;
 
   /**

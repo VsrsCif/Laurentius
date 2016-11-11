@@ -74,8 +74,8 @@
                                                  />
                                 <p:commandButton value="#{msg['Cancel']}" styleClass="toolbar-Button" 
                                                  icon="ui-icon-svg-cancel ui-icon-size-22"
-                                                 oncomplete="PF('pluginDialog').hide()" 
-                                                 />
+                                                 onclick="PF('pluginDialog').hide();return false;"/>
+                                                 
                             </f:facet>
                         </p:toolbar>
                     </p:layoutUnit>

@@ -153,5 +153,10 @@ public class SEDTestDao implements SEDDaoInterface{
       throws StorageException {
     
   }
+
+  @Override
+  public void updateOutMail(MSHOutMail mail, String statusDesc, String userID)
+      throws StorageException {
+    }
   
 }

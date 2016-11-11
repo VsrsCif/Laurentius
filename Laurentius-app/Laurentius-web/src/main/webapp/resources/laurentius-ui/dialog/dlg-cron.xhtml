@@ -101,7 +101,10 @@
                                                  oncomplete="PF('cronDialog').hide()" 
                                                  update=":forms:SettingsCron:TblCron"
                                                  />
-                                <p:commandButton value="#{msg['Cancel']}" styleClass="toolbar-Button" icon="ui-icon-svg-cancel ui-icon-size-22" oncomplete="PF('cronDialog').hide()" />
+                                <p:commandButton value="#{msg['Cancel']}"
+                                                 styleClass="toolbar-Button"
+                                                 icon="ui-icon-svg-cancel ui-icon-size-22" 
+                                                 onclick="PF('cronDialog').hide();return false;"/>                                                 
                             </f:facet>
                         </p:toolbar>
                     </p:layoutUnit>

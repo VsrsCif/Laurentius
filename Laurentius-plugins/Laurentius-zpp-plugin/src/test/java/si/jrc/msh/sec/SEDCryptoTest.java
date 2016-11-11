@@ -22,12 +22,7 @@ import si.laurentius.commons.utils.sec.KeystoreUtils;
  */
 public class SEDCryptoTest {
 
-  private static final String KEYSTORE = "/certs/msh.e-box-b-keystore.jks";
-  private static final String KEYSTORE_PASSWORD = "test1234";
-  private static final String KEYSTORE_TYPE = "JKS";
-  private static final String KEY_PASSWORD = "key1234";
 
-  private static final String SIGN_KEY_ALIAS = "msh.e-box-b.si";
   private static final String TEST_DATA = "This is a SECRET NOTE!";
   private File mfSecretFile;
 
@@ -45,10 +40,6 @@ public class SEDCryptoTest {
       mfSecretFile = null;
       Logger.getLogger(SEDCryptoTest.class.getName()).log(Level.SEVERE, null, ex);
     }
-    // set store key password parameters
-    System.getProperties().setProperty(SEDSystemProperties.SYS_PROP_HOME_DIR,
-        "src/test/resources/certs");
-
   }
 
   /**
@@ -103,20 +94,20 @@ public class SEDCryptoTest {
     instance.encryptFile(mfSecretFile, fEnc, skey);
 
     KeyStore ks =
-        cu.getKeystore(SEDCryptoTest.class.getResourceAsStream(KEYSTORE), KEYSTORE_TYPE,
-            KEYSTORE_PASSWORD.toCharArray());
+        cu.getKeystore(SEDCryptoTest.class.getResourceAsStream(TestProperties.KEYSTORE), TestProperties.KEYSTORE_TYPE,
+            TestProperties.KEYSTORE_PASSWORD.toCharArray());
 
     // sign key cert
-    X509Certificate ca = cu.getTrustedCertForAlias(ks, SIGN_KEY_ALIAS);
-    assertNotNull("Initialize error: cert with alias: '" + SIGN_KEY_ALIAS
-        + "' not found in trustore: '" + KEYSTORE + "'!", ca);
+    X509Certificate ca = cu.getTrustedCertForAlias(ks, TestProperties.SIGN_KEY_ALIAS);
+    assertNotNull("Initialize error: cert with alias: '" + TestProperties.SIGN_KEY_ALIAS
+        + "' not found in trustore: '" + TestProperties.KEYSTORE + "'!", ca);
     // enc key
     String encKey =
         instance.encryptKeyWithReceiverPublicKey(skey, ca, "receiver@test.sign.com", "key-id");
     assertNotNull("Encrypting key not succeded!", encKey);
 
     // Decrypting key
-    KeyStore.PrivateKeyEntry ke = cu.getPrivateKeyEntryForAlias(ks, SIGN_KEY_ALIAS, KEY_PASSWORD);
+    KeyStore.PrivateKeyEntry ke = cu.getPrivateKeyEntryForAlias(ks, TestProperties.SIGN_KEY_ALIAS, TestProperties.KEY_PASSWORD);
     Key decKey = instance.decryptKey(encKey, ke.getPrivateKey(), alg);
     assertNotNull("Decrypting key not succeded!", decKey);
 

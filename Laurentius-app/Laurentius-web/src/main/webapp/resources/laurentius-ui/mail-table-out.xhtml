@@ -33,6 +33,11 @@
                                  >
                         <p:ajax event="rowSelect" listener="#{OutMailDataView.onRowSelect}" 
                                 update="forms:OutMailPanel:OutMailTab" />
+                         <p:ajax event="page"
+                                onstart="PF('blockMainPanel').show();"
+                                oncomplete="PF('blockMainPanel').hide();"
+                                />  
+                        
                         
                         <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
                         

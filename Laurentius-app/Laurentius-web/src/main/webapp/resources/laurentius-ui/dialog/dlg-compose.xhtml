@@ -102,7 +102,8 @@
                                                  oncomplete="PF('mailComposeDialog').hide()"   />
                                 <p:commandButton value="#{msg['Cancel']}" styleClass="toolbar-Button"                                                  
                                                  icon="ui-icon-svg-cancel ui-icon-size-22" 
-                                                 oncomplete="PF('mailComposeDialog').hide()" />
+                                                 onclick="PF('mailComposeDialog').hide();return false;"/>
+                                                 
                             </f:facet>
                         </p:toolbar>
                     </p:layoutUnit>

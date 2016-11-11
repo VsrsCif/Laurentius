@@ -14,9 +14,9 @@
 
         <!-- sed-box ADD/EDIT dialog! -->
         <p:dialog  header="#{msg['SEDBoxDialog']}" widgetVar="sedboxDialog" modal="true" hideEffect="fade" resizable="false" 
-                   appendTo="@(body)" width="650">
+                   appendTo="@(body)" width="850">
             <h:form id="sedboxDialogForm" >
-                <p:layout id="sedboxDetails" style="min-width:550px;min-height:380px;">
+                <p:layout id="sedboxDetails" style="min-width:800px;min-height:600px;">
                     <p:layoutUnit position="center" rendered="#{empty adminSEDBoxView.editable}" >
                         <h:outputText value="#{msg['SelectTableRow']}" />
                     </p:layoutUnit>
@@ -33,74 +33,151 @@
                             <h:outputText value="#{msg['ActiveToDate']}:" />                            
                             <p:calendar class="searchDate" value="#{adminSEDBoxView.editable.activeToDate}" pattern="dd.MM.yyyy" mask="true" navigator="true" showOn="button" />
                         </p:panelGrid>
-                        <p:panelGrid  columns="2" columnClasses="label,value" style="width: 100%">
-                            <f:facet name="header">
-                                <p:selectBooleanCheckbox widgetVar="exportActive" 
-                                                         value="#{adminSEDBoxView.editable.export.active}" 
-                                                         style="width: 20px"
-                                                         >  
-                                    <p:ajax update=":dlgsedbox:sedboxDialogForm:exMetaData 
-                                            :dlgsedbox:sedboxDialogForm:exOverwrite 
-                                            :dlgsedbox:sedboxDialogForm:exFM 
-                                            :dlgsedbox:sedboxDialogForm:exFld
-                                            :dlgsedbox:sedboxDialogForm:chExecute
-                                            :dlgsedbox:sedboxDialogForm:exCmd
-                                            :dlgsedbox:sedboxDialogForm:exParams
-                                            "/>
-                                </p:selectBooleanCheckbox>
-                                <h:outputText value="#{msg['Export']}" />
+                        <p:tabView id="SEDBoxTab" style="height: 100%" >
+                            <p:tab   id="ExportTab" >
+                                <f:facet name="title">
+                                    <h:graphicImage value="#{resource['images:/export.svg']}" width="22" height="22" />
+                                    <h:outputText value="#{msg['Export']}" />
+                                </f:facet>
 
-                            </f:facet>
+                                <p:panelGrid  columns="2" columnClasses="label,value" style="width: 100%">
+                                    <f:facet name="header">
+                                        <p:selectBooleanCheckbox widgetVar="exportActive" 
+                                                                 value="#{adminSEDBoxView.editable.export.active}" 
+                                                                 style="width: 20px"
+                                                                 >  
+                                            <p:ajax update=":dlgsedbox:sedboxDialogForm:SEDBoxTab:exMetaData 
+                                                    :dlgsedbox:sedboxDialogForm:SEDBoxTab:exOverwrite 
+                                                    :dlgsedbox:sedboxDialogForm:SEDBoxTab:exFM 
+                                                    :dlgsedbox:sedboxDialogForm:SEDBoxTab:exFld
+                                                    :dlgsedbox:sedboxDialogForm:SEDBoxTab:chExecute
+                                                    :dlgsedbox:sedboxDialogForm:SEDBoxTab:exCmd
+                                                    :dlgsedbox:sedboxDialogForm:SEDBoxTab:exParams
+                                                    "/>
+                                        </p:selectBooleanCheckbox>
+                                        <h:outputText value="#{msg['Export']}" />
 
-                            <p:selectBooleanCheckbox id="exMetaData" itemLabel="#{msg['ExportMetadata']}" 
-                                                     value="#{adminSEDBoxView.editable.export.exportMetaData}"  
-                                                     disabled="#{!adminSEDBoxView.editable.export.active}"
-                                                     style="width: 100%"/>
-                            <p:selectBooleanCheckbox id="exOverwrite" itemLabel="#{msg['Overwrite']}" 
-                                                     value="#{adminSEDBoxView.editable.export.overwrite}"  
-                                                     disabled="#{!adminSEDBoxView.editable.export.active}"
-                                                     style="width: 100%"/>
+                                    </f:facet>
+
+                                    <p:selectBooleanCheckbox id="exMetaData" itemLabel="#{msg['ExportMetadata']}" 
+                                                             value="#{adminSEDBoxView.editable.export.exportMetaData}"  
+                                                             disabled="#{!adminSEDBoxView.editable.export.active}"
+                                                             style="width: 100%"/>
+                                    <p:selectBooleanCheckbox id="exOverwrite" itemLabel="#{msg['Overwrite']}" 
+                                                             value="#{adminSEDBoxView.editable.export.overwrite}"  
+                                                             disabled="#{!adminSEDBoxView.editable.export.active}"
+                                                             style="width: 100%"/>
 
 
-                            <h:outputText value="#{msg['FileMask']}:" />
-                            <p:inputText id="exFM" 
-                                         value="#{adminSEDBoxView.editable.export.fileMask}" 
-                                         disabled="#{!adminSEDBoxView.editable.export.active}"
-                                         style="width: 100%"/>
+                                    <h:outputText value="#{msg['FileMask']}:" />
+                                    <p:inputText id="exFM" 
+                                                 value="#{adminSEDBoxView.editable.export.fileMask}" 
+                                                 disabled="#{!adminSEDBoxView.editable.export.active}"
+                                                 style="width: 100%"/>
 
-                            <h:outputText value="#{msg['Folder']}:" />
-                            <p:inputText id="exFld" 
-                                         value="#{adminSEDBoxView.editable.export.folder}" 
-                                         disabled="#{!adminSEDBoxView.editable.export.active}"
-                                         style="width: 100%"/>
-                        </p:panelGrid>
-                        <p:panelGrid  columns="2" columnClasses="label,value" style="width: 100%" >
-                            <f:facet name="header" >
-                                <h:selectBooleanCheckbox 
-                                    id="chExecute" 
-                                    value="#{adminSEDBoxView.editable.execute.active}"  
-                                    style="width: 20px" 
-                                    disabled="#{!adminSEDBoxView.editable.export.active}"  >                                  
-                                    <p:ajax update=":dlgsedbox:sedboxDialogForm:exCmd
-                                            :dlgsedbox:sedboxDialogForm:exParams
-                                            "/>
-                                </h:selectBooleanCheckbox>
-                                <h:outputText value="#{msg['Execute']}" />
-                            </f:facet>
+                                    <h:outputText value="#{msg['Folder']}:" />
+                                    <p:inputText id="exFld" 
+                                                 value="#{adminSEDBoxView.editable.export.folder}" 
+                                                 disabled="#{!adminSEDBoxView.editable.export.active}"
+                                                 style="width: 100%"/>
+                                </p:panelGrid>
+                                <p:panelGrid  columns="2" columnClasses="label,value" style="width: 100%" >
+                                    <f:facet name="header" >
+                                        <h:selectBooleanCheckbox 
+                                            id="chExecute" 
+                                            value="#{adminSEDBoxView.editable.execute.active}"  
+                                            style="width: 20px" 
+                                            disabled="#{!adminSEDBoxView.editable.export.active}"  >                                  
+                                            <p:ajax update=":dlgsedbox:sedboxDialogForm:SEDBoxTab:exCmd
+                                                    :dlgsedbox:sedboxDialogForm:SEDBoxTab:exParams
+                                                    "/>
+                                        </h:selectBooleanCheckbox>
+                                        <h:outputText value="#{msg['Execute']}" />
+                                    </f:facet>
 
-                            <h:outputText value="#{msg['Command']}:" />
-                            <p:inputText id="exCmd" 
-                                         value="#{adminSEDBoxView.editable.execute.command}" 
-                                         disabled="#{!(adminSEDBoxView.editable.export.active &amp;&amp; adminSEDBoxView.editable.execute.active)}"
-                                         style="width: 100%"/>
+                                    <h:outputText value="#{msg['Command']}:" />
+                                    <p:inputText id="exCmd" 
+                                                 value="#{adminSEDBoxView.editable.execute.command}" 
+                                                 disabled="#{!(adminSEDBoxView.editable.export.active &amp;&amp; adminSEDBoxView.editable.execute.active)}"
+                                                 style="width: 100%"/>
 
-                            <h:outputText value="#{msg['Parameters']}:" />
-                            <p:inputText id="exParams" value="#{adminSEDBoxView.editable.execute.parameters}" 
-                                         style="width: 100%"
-                                         disabled="#{!(adminSEDBoxView.editable.export.active &amp;&amp; adminSEDBoxView.editable.execute.active)}"
-                                         />
+                                    <h:outputText value="#{msg['Parameters']}:" />
+                                    <p:inputText id="exParams" value="#{adminSEDBoxView.editable.execute.parameters}" 
+                                                 style="width: 100%"
+                                                 disabled="#{!(adminSEDBoxView.editable.export.active &amp;&amp; adminSEDBoxView.editable.execute.active)}"
+                                                 />
 
-                        </p:panelGrid>
+                                </p:panelGrid>
+                            </p:tab>
+                            <p:tab   id="Transformation" >
+                                <f:facet name="title">
+                                    <h:graphicImage value="#{resource['images:/xslt.svg']}" width="22" height="22" />
+                                    <h:outputText value="#{msg['XMLTransform']}" />
+                                </f:facet>
+                                
+                                 <p:dataTable id="TblTransformation" 
+                                             selectionMode="single"
+                                             selection="#{pModePartyView.selectedPartyId}"
+                                             rowKey="#{sp}"
+                                             var="sp" 
+                                             value="#{pModePartyView.editable.partyIds}"
+                                             style="padding: 0px; margin: 0px;box-sizing: border-box; "
+                                             scrollable="true" 
+                                             scrollHeight="100%"                   
+                                             editable="true"
+                                             editMode="cell"
+                                             >
+                                    <p:ajax event="cellEdit" listener="#{pModePartyView.onCellEditTableComplete}" />
+                                    <f:facet name="header">
+                                        <p:commandButton value="#{msg['Add']}" styleClass="toolbar-Button" 
+                                                         icon="ui-icon-svg-add ui-icon-size-22"  
+                                                         update=":dlgPModeParty:pModePartyDialogForm:partyTab:TblIdentity" 
+                                                         actionListener="#{pModePartyView.createPartyId()}"
+                                                          />
+                                       
+                                        <p:commandButton value="#{msg['Delete']}" styleClass="toolbar-Button" 
+                                                         icon="ui-icon-svg-remove ui-icon-size-22"  
+                                                         actionListener="#{pModePartyView.removeSelectedPartyId()}"
+                                                         update=":dlgPModeParty:pModePartyDialogForm:partyTab:TblIdentity" />
+
+                                    </f:facet>
+
+                                     <p:column headerText="#{msg['Service']}" >
+                                        <p:cellEditor>
+                                            <f:facet name="output"><h:outputText value="" /></f:facet>
+                                            <f:facet name="input"><p:inputText value="" style="width:100%"/></f:facet>
+                                        </p:cellEditor>
+                                    </p:column>
+                                    <p:column headerText="#{msg['Action']}" >
+                                        <p:cellEditor>
+                                            <f:facet name="output"><h:outputText value="" /></f:facet>
+                                            <f:facet name="input"><p:inputText value="" style="width:100%"/></f:facet>
+                                        </p:cellEditor>
+                                    </p:column>
+                                    <p:column headerText="#{msg['PayloadType']}" >
+                                        <p:cellEditor>
+                                            <f:facet name="output"><h:outputText value="" /></f:facet>
+                                            <f:facet name="input"><p:inputText value="" style="width:100%"/></f:facet>
+                                        </p:cellEditor>
+                                    </p:column>
+                                     <p:column headerText="#{msg['Transformation']}" >
+                                        <p:cellEditor>
+                                            <f:facet name="output"><h:outputText value="" /></f:facet>
+                                            <f:facet name="input"><p:inputText value="" style="width:100%"/></f:facet>
+                                        </p:cellEditor>
+                                    </p:column>
+                                    <p:column headerText="#{msg['Rule']}" >
+                                        <p:cellEditor>
+                                            <f:facet name="output"><h:outputText value="" /></f:facet>
+                                            <f:facet name="input"><p:inputText value="" style="width:100%"/></f:facet>
+                                        </p:cellEditor>
+                                    </p:column>
+
+                                
+                                </p:dataTable>
+                                
+                            </p:tab>
+                        </p:tabView>
                     </p:layoutUnit>
                     <p:layoutUnit position="south"  size="40" minSize="40" maxSize="40" >
                         <p:toolbar 
@@ -113,7 +190,7 @@
                                                  oncomplete="PF('sedboxDialog').hide()"   />
                                 <p:commandButton value="#{msg['Cancel']}" styleClass="toolbar-Button" 
                                                  icon="ui-icon-svg-cancel ui-icon-size-22" 
-                                                 oncomplete="PF('sedboxDialog').hide()" />
+                                                 onclick="PF('sedboxDialog').hide();return false;"/>
                             </f:facet>
                         </p:toolbar>
                     </p:layoutUnit>

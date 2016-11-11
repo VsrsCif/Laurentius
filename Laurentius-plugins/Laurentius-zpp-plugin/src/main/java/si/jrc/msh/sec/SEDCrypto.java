@@ -12,6 +12,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.crypto.Cipher;
 import javax.crypto.CipherOutputStream;
 import javax.crypto.KeyGenerator;
@@ -144,6 +146,27 @@ public class SEDCrypto {
       throw new SEDSecurityException(SEDSecurityException.SEDSecurityExceptionCode.InvalidKey, ex,
           ex.getMessage());
     }
+    return decryptKey(doc, rsaKey, targetKeyAlg);
+  }
+   public Key decryptKey(File fnKey, Key rsaKey, SymEncAlgorithms targetKeyAlg)
+      throws SEDSecurityException {
+
+    Key keyDec = null;
+    Document doc;
+    try {
+      doc = XMLUtils.deserializeToDom(fnKey);
+    } catch (IOException | ParserConfigurationException | SAXException ex) {
+      throw new SEDSecurityException(SEDSecurityException.SEDSecurityExceptionCode.InvalidKey, ex,
+          ex.getMessage());
+    }
+    return decryptKey(doc, rsaKey, targetKeyAlg);
+  }
+   
+  public Key decryptKey( Document docKey, Key rsaKey, SymEncAlgorithms targetKeyAlg)
+      throws SEDSecurityException {
+
+    Key keyDec = null;
+   
 
     XMLCipher keyCipher;
     try {
@@ -158,7 +181,7 @@ public class SEDCrypto {
     X509Certificate xc;
     EncryptedKey key;
     try {
-      key = keyCipher.loadEncryptedKey(doc, doc.getDocumentElement());
+      key = keyCipher.loadEncryptedKey(docKey, docKey.getDocumentElement());
       xc = key.getKeyInfo().getX509Certificate();
     } catch (XMLEncryptionException | KeyResolverException ex) {
       throw new SEDSecurityException(
@@ -205,6 +228,19 @@ public class SEDCrypto {
    * @return
    * @throws SEDSecurityException
    */
+  public EncryptedKey file2SimetricEncryptedKey(File encKeyFile) throws SEDSecurityException {
+
+    Document doc;
+    try {
+      doc = XMLUtils.deserializeToDom(encKeyFile);
+    } catch (IOException | ParserConfigurationException | SAXException ex) {
+       throw new SEDSecurityException(SEDSecurityException.SEDSecurityExceptionCode.XMLParseException,
+          ex, ENC_SIMETRIC_KEY_ALG);
+    }
+    return element2SimetricEncryptedKey(doc.getDocumentElement());
+    
+  }
+  
   public EncryptedKey element2SimetricEncryptedKey(Element e) throws SEDSecurityException {
 
     XMLCipher keyCipher;

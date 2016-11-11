@@ -917,6 +917,43 @@ public class SEDDaoBean implements SEDDaoInterface {
     }
     LOG.logEnd(l);
   }
+  
+  @Override
+  public void updateOutMail(MSHOutMail mail, String statusDesc, String user)
+      throws StorageException {
+    long l = LOG.logStart();
+    // --------------------
+    // serialize data to db
+    try {
+
+      mutUTransaction.begin();
+      // persist mail event
+      MSHOutEvent me = new MSHOutEvent();
+      me.setMailId(mail.getId());
+      me.setStatus(mail.getStatus());
+      me.setDescription(statusDesc);
+      me.setUserId(user);
+      me.setDate(mail.getStatusDate());
+      // persist mail
+      memEManager.merge(mail);
+      memEManager.persist(me);
+      mutUTransaction.commit();
+    } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException |
+        HeuristicRollbackException | SecurityException | IllegalStateException ex) {
+      {
+        try {
+          mutUTransaction.rollback();
+        } catch (IllegalStateException | SecurityException | SystemException ex1) {
+          LOG.logWarn(l, "", ex);
+        }
+        String msg =
+            "Error occurred on update in mail: '" + mail.getId() + "'! Err:" + ex.getMessage();
+        LOG.logError(l, msg, ex);
+        throw new StorageException(msg, ex);
+      }
+    }
+    LOG.logEnd(l);
+  }
 
   public void sendOutMessage(MSHOutMail mail, int retry, long delay, String userId,
       String applicationId)

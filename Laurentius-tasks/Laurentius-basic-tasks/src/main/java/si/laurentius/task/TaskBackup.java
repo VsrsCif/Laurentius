@@ -41,7 +41,6 @@ import si.laurentius.commons.interfaces.exception.TaskException;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StorageUtils;
 import si.laurentius.commons.utils.StringFormater;
-import si.laurentius.commons.utils.Utils;
 import si.laurentius.commons.utils.xml.XMLUtils;
 
 /**
@@ -61,6 +60,11 @@ public class TaskBackup implements TaskExecutionInterface {
      *
      */
   public static String KEY_CHUNK_SIZE = "backup.chunk.size";
+  
+  /**
+     *
+     */
+  public static String KEY_BACKUP_PASSWORD = "backup.passwords";
 
   /**
      *
@@ -105,6 +109,7 @@ public class TaskBackup implements TaskExecutionInterface {
 
     String sfolder;
     boolean bDelOldFolder;
+    boolean bBackupPassword;
     int iChunkSize;
 
     if (!p.containsKey(KEY_EXPORT_FOLDER)) {
@@ -118,6 +123,12 @@ public class TaskBackup implements TaskExecutionInterface {
     } else {
       bDelOldFolder = p.getProperty(KEY_DELETE_OLD).trim().equalsIgnoreCase("true");
     }
+    if (!p.containsKey(KEY_BACKUP_PASSWORD)) {
+      bBackupPassword = false;
+    } else {
+      bBackupPassword = p.getProperty(KEY_BACKUP_PASSWORD).trim().equalsIgnoreCase("true");
+    }
+    
     if (!p.containsKey(KEY_CHUNK_SIZE)) {
       iChunkSize = 1000;
     } else {
@@ -138,18 +149,18 @@ public class TaskBackup implements TaskExecutionInterface {
 
     sw.append("- Backup settings and lookups");
     lst = LOG.getTime();
-    mLookups.exportLookups(bckFolder, true);
+    mLookups.exportLookups(bckFolder, bBackupPassword);
     sw.append(" end: " + (lst - LOG.getTime()) + " ms\n");
 
     sw.append("---------------------\nBackup out mail\n");
     lst = LOG.getTime();
-    String rs = archiveOutMails(null, bckFolder, iChunkSize);
+    String rs = backupOutMails(null, bckFolder, iChunkSize);
     sw.append(rs);
     sw.append(" end: " + (lst - LOG.getTime()) + " ms\n---------------------\n\n");
 
     sw.append("---------------------\nBackup in mail");
     lst = LOG.getTime();
-    rs = archiveInMails(null, bckFolder, iChunkSize);
+    rs = backupInMails(null, bckFolder, iChunkSize);
     sw.append(rs);
     sw.append(" end: " + (lst - LOG.getTime()) + " ms\n---------------------\n\n");
 
@@ -200,7 +211,7 @@ public class TaskBackup implements TaskExecutionInterface {
    * @param iChunkSize
    * @return
    */
-  public String archiveOutMails(Date to, File f, int iChunkSize) throws TaskException {
+  public String backupOutMails(Date to, File f, int iChunkSize) throws TaskException {
     StringWriter sw = new StringWriter();
     MSHOutMailList noList = new MSHOutMailList();
     SearchParameters sp = new SearchParameters();
@@ -263,7 +274,7 @@ public class TaskBackup implements TaskExecutionInterface {
    * @return
    * @throws TaskException
    */
-  public String archiveInMails(Date to, File f, int iChunkSize) throws TaskException {
+  public String backupInMails(Date to, File f, int iChunkSize) throws TaskException {
     StringWriter sw = new StringWriter();
     MSHInMailList noList = new MSHInMailList();
     SearchParameters sp = new SearchParameters();
@@ -383,6 +394,10 @@ public class TaskBackup implements TaskExecutionInterface {
         createTTProperty(KEY_CHUNK_SIZE, "Max mail count in chunk", true, "int", null, null));
     tt.getSEDTaskTypeProperties().add(
         createTTProperty(KEY_DELETE_OLD, "Clear backup folder (true/false)", true, "boolean", null,
+            null));
+    
+    tt.getSEDTaskTypeProperties().add(
+        createTTProperty(KEY_BACKUP_PASSWORD, "Backup passwords (true/false)", true, "boolean", null,
             null));
 
     return tt;

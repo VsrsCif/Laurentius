@@ -57,7 +57,7 @@ public abstract class AbstractMailView<T, S> {
   /**
    *
    */
-  protected T mMail;
+  //protected T mMail;
   private List<T> selected;
 
   /**
@@ -125,7 +125,8 @@ public abstract class AbstractMailView<T, S> {
    * @return
    */
   public T getCurrentMail() {
-    return mMail;
+    
+    return selected == null || selected.isEmpty()?null: selected.get(0);
   }
   
   public List<T> getSelected() {
@@ -260,7 +261,7 @@ public abstract class AbstractMailView<T, S> {
    * @param mail
    */
   public void setCurrentMail(T mail) {
-    this.mMail = mail;
+//    this.mMail = mail;
     updateEventList();
   }
 

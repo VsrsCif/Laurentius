@@ -42,19 +42,6 @@ public class FOPUtils {
 
   }
 
-
-  /*
-   * public static void main(String... args) { try { File cfile = new
-   * File("/sluzba/code/SVEV2.0/laurentius.home/svev/fop.xconf"); File fIn = new File(
-   * "/sluzba/mag-naloga/izmenjava-podatkov/code/SVEVDemo/msh-AS4/msh/inbox/msh-as4/msh--653980083958689530-Request.xml"
-   * ); File fOut = new File(
-   * "/sluzba/mag-naloga/izmenjava-podatkov/code/SVEVDemo/msh-AS4/msh/inbox/msh-as4/msh--653980083958689530-Request.pdf"
-   * ); String folder =
-   * "/sluzba/mag-naloga/izmenjava-podatkov/code/SVEVDemo/msh-AS4/msh/config/xslt/";
-   * 
-   * FOPUtils fu = new FOPUtils(cfile, folder); / fu.generateVisualization(fIn, fOut, "",
-   * FopTransformations.DeliveryNotification); } catch (FOPException ex) { ex.printStackTrace(); }
-   */
   /**
    *
    * @param outMail
@@ -140,7 +127,8 @@ public class FOPUtils {
     }
   }
 
-  private FopFactory getFopFactory() throws SAXException, IOException {
+  private FopFactory getFopFactory()
+      throws SAXException, IOException {
     if (mfopFactorory == null) {
       mfopFactorory = FopFactory.newInstance(msfConfigFile);
     }
@@ -148,25 +136,7 @@ public class FOPUtils {
 
   }
 
-  /*
-   * 
-   * public byte[] generateVisualization(File inputRequest, String service, FopTransformations xslt)
-   * throws FOPException { // get service + "get vssl" ByteArrayOutputStream bos = new
-   * ByteArrayOutputStream(); Source src = new StreamSource(inputRequest);
-   * generateVisualization(src, bos, new StreamSource(getTransformatinoFile(xslt, service))); return
-   * bos.toByteArray(); }
-   * 
-   * 
-   * 
-   * public void generateVisualization(File fIn, File fOut, String service, FopTransformations xslt)
-   * throws FOPException {
-   * 
-   * File tmplxslt = getTransformatinoFile(xslt, service); try (OutputStream out = new
-   * FileOutputStream(fOut)) { generateVisualization(new StreamSource(fIn), out, new
-   * StreamSource(tmplxslt)); } catch (IOException ex) { String msg =
-   * "Error generating visualization: Error writing to file :'" + fOut + "'!"; throw new
-   * FOPException(msg, ex); } }
-   */
+  
   private File getTransformatinoFile(FopTransformations xslt) {
     if (mTransformationFolder == null) {
       return new File(xslt.getFileName());
@@ -176,24 +146,18 @@ public class FOPUtils {
   }
 
   /**
-     *
-     */
+   *
+   */
   public enum FopTransformations {
 
     /**
-         *
-         */
+     *
+     */
     DeliveryNotification("LegalDelivery_ZPP-DeliveryNotification.fo"),
-
-    /**
-         *
-         */
     AdviceOfDelivery("LegalDelivery_ZPP-AdviceOfDelivery.fo"),
-
-    /**
-         *
-         */
-    AdviceOfDeliveryFiction("LegalDelivery_ZPP-AdviceOfDeliveryFiction.fo");
+    AdviceOfDeliveryFictionNotification("LegalDelivery_ZPP-AdviceOfDeliveryFictionNotification.fo"),
+    AdviceOfDeliveryFiction("LegalDelivery_ZPP-AdviceOfDeliveryFiction.fo"),
+    DeliveryReciept("LegalDelivery_ZPP-DeliveryReciept.fo");
 
     private final String mstrfileName;
 

@@ -8,12 +8,21 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.security.KeyStore;
+import java.security.PrivateKey;
+import java.security.cert.X509Certificate;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionManagement;
+import javax.ejb.TransactionManagementType;
 import org.apache.xmlgraphics.util.MimeConstants;
 import si.laurentius.msh.inbox.mail.MSHInMail;
 import si.laurentius.msh.outbox.mail.MSHOutMail;
@@ -26,6 +35,7 @@ import si.jrc.msh.plugin.zpp.doc.DocumentSodBuilder;
 import si.jrc.msh.plugin.zpp.exception.ZPPException;
 import si.jrc.msh.plugin.zpp.utils.FOPUtils;
 import si.jrc.msh.sec.SEDCrypto;
+import si.jrc.msh.sec.pdf.SignUtils;
 import si.laurentius.cert.SEDCertificate;
 import si.laurentius.commons.MimeValues;
 import si.laurentius.commons.SEDInboxMailStatus;
@@ -54,6 +64,7 @@ import si.laurentius.commons.utils.sec.KeystoreUtils;
  */
 @Stateless
 @Local(TaskExecutionInterface.class)
+@TransactionManagement(TransactionManagementType.BEAN)
 public class ZPPTask implements TaskExecutionInterface {
 
   private static final SEDLogger LOG = new SEDLogger(ZPPTask.class);
@@ -134,7 +145,7 @@ public class ZPPTask implements TaskExecutionInterface {
     MSHInMail mi = new MSHInMail();
     mi.setStatus(SEDInboxMailStatus.PLOCKED.getValue());
     mi.setService(ZPPConstants.S_ZPP_SERVICE);
-    mi.setAction(ZPPConstants.S_ZPP_ACTION_DELIVERY_NOTIFICATION);    
+    mi.setAction(ZPPConstants.S_ZPP_ACTION_DELIVERY_NOTIFICATION);
     mi.setReceiverEBox(sedBox + "@" + SEDSystemProperties.getLocalDomain());
 
     List<MSHInMail> lst = mDB.getDataList(MSHInMail.class, -1, maxMailProc, "Id", "ASC", mi);
@@ -217,23 +228,7 @@ public class ZPPTask implements TaskExecutionInterface {
       ZPPException {
     long l = LOG.logStart();
     // create delivery advice
-    File fDNViz = null;
-    File fDA = null;
-    try {
-      // vizualization
-      fDNViz = StorageUtils.getNewStorageFile("pdf", "AdviceOfDelivery");
-      String path = fDNViz.getAbsolutePath();
-      path = path.substring(0, path.lastIndexOf(".pdf")) + ".xml";
-      // xml enveloped delivery advice
-      fDA = new File(path); // create deliveryadvice
-    } catch (StorageException ex) {
-      String msg = "Error occured while creating delivery advice file!";
-      throw new ZPPException(msg, ex);
 
-    }
-
-    getFOP().generateVisualization(mInMail, fDNViz, FOPUtils.FopTransformations.AdviceOfDelivery,
-        MimeConstants.MIME_PDF);
     MSHOutMail mout = new MSHOutMail();
     mout.setMessageId(Utils.getInstance().getGuidString());
     mout.setService(ZPPConstants.S_ZPP_SERVICE);
@@ -252,17 +247,15 @@ public class ZPPTask implements TaskExecutionInterface {
     mout.setSubmittedDate(dt);
     mout.setStatusDate(dt);
 
-    mout.setMSHOutPayload(new MSHOutPayload());
+    File fDNViz = null;
+    try {
+      fDNViz = StorageUtils.getNewStorageFile("pdf", "AdviceOfDelivery");
 
-    try (FileOutputStream fos = new FileOutputStream(fDA)) {
-      MSHOutPart mp = new MSHOutPart();
-      mp.setDescription("DeliveryAdvice");
-      mp.setFilepath(StorageUtils.getRelativePath(fDNViz));
-      mp.setMimeType(MimeValues.MIME_XML.getMimeType());
-      mout.getMSHOutPayload().getMSHOutParts().add(mp);
+      getFOP().generateVisualization(mInMail, fDNViz, FOPUtils.FopTransformations.AdviceOfDelivery,
+          MimeConstants.MIME_PDF);
 
+      // sign with receiver certificate 
       SEDCertStore cs = msedLookup.getSEDCertStoreByName(keystore);
-
       SEDCertificate aliasCrt =
           msedLookup.getSEDCertificatForAlias(signAlias, cs, true);
       if (aliasCrt == null) {
@@ -277,23 +270,26 @@ public class ZPPTask implements TaskExecutionInterface {
         LOG.logError(l, msg, null);
         throw new ZPPException(msg);
       }
+      signPDFDocument(cs, aliasCrt, fDNViz);
+      // sign with systemCertificate
 
-      // create signed delivery advice
-      dsbSodBuilder.createMail(mout, fos, mkeyUtils.getPrivateKeyEntryForAlias(signAlias, cs));
+      mout.setMSHOutPayload(new MSHOutPayload());
+      MSHOutPart mp = new MSHOutPart();
       mp.setDescription("DeliveryAdvice");
-
-      mp.setFilepath(StorageUtils.getRelativePath(fDA));
-      mp.setMd5(mpHU.getMD5Hash(fDA));
-      mp.setFilename(fDA.getName());
+      mp.setMimeType(MimeValues.MIME_PDF.getMimeType());
+      mout.getMSHOutPayload().getMSHOutParts().add(mp);
+      mp.setMd5(mpHU.getMD5Hash(fDNViz));
+      mp.setFilename(fDNViz.getName());
+      mp.setFilepath(StorageUtils.getRelativePath(fDNViz));
       mp.setName(mp.getFilename().substring(0, mp.getFilename().lastIndexOf(".")));
 
       mDB.serializeOutMail(mout, "", "ZPPDeliveryPlugin", "");
       mDB.setStatusToInMail(mInMail, SEDInboxMailStatus.PREADY,
           "AdviceOfDelivery created and submitted to out queue");
-
-    } catch (IOException | SEDSecurityException | StorageException ex) {
-      String msg = "Error occured while creating delivery advice file!";
-      throw new ZPPException(msg, ex);
+    } catch (StorageException ex) {
+      String msg = ex.getMessage();
+      LOG.logError(l, msg, ex);
+      throw new ZPPException(msg);
     }
 
     LOG.logEnd(l);
@@ -317,4 +313,19 @@ public class ZPPTask implements TaskExecutionInterface {
     return mfpFop;
   }
 
+  private void signPDFDocument(SEDCertStore sc, SEDCertificate scc, File f) {
+    try {
+      File ftmp = File.createTempFile("tmp_sign", ".pdf");
+
+      KeyStore ks = mkeyUtils.getKeystore(sc);
+      PrivateKey pk = (PrivateKey) mkeyUtils.getPrivateKeyForAlias(ks, scc.getAlias(),
+          scc.getKeyPassword());
+      X509Certificate xcert = mkeyUtils.getTrustedCertForAlias(ks, scc.getAlias());
+      SignUtils su = new SignUtils(pk, xcert);
+      su.signPDF(f, ftmp, true);
+      Files.move(ftmp.toPath(), f.toPath(), StandardCopyOption.REPLACE_EXISTING);
+    } catch (IOException | SEDSecurityException ex) {
+      Logger.getLogger(ZPPOutInterceptor.class.getName()).log(Level.SEVERE, null, ex);
+    }
+  }
 }

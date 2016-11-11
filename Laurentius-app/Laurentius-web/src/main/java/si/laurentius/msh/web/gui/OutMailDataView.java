@@ -184,12 +184,13 @@ public class OutMailDataView extends AbstractMailView<MSHOutMail, MSHOutEvent> i
   public StreamedContent getFile(BigInteger bi) {
     long l = LOG.logStart();
     MSHOutPart part = null;
-    if (mMail == null || mMail.getMSHOutPayload() == null ||
-        mMail.getMSHOutPayload().getMSHOutParts().isEmpty()) {
+    MSHOutMail mom = getCurrentMail();
+    if (mom == null || mom.getMSHOutPayload() == null ||
+        mom.getMSHOutPayload().getMSHOutParts().isEmpty()) {
       return null;
     }
 
-    for (MSHOutPart ip : mMail.getMSHOutPayload().getMSHOutParts()) {
+    for (MSHOutPart ip : mom.getMSHOutPayload().getMSHOutParts()) {
       if (ip.getId().equals(bi)) {
         part = ip;
         break;
@@ -474,8 +475,9 @@ public class OutMailDataView extends AbstractMailView<MSHOutMail, MSHOutEvent> i
    */
   @Override
   public void updateEventList() {
-    if (this.mMail != null) {
-      mlstMailEvents = mDB.getMailEventList(MSHOutEvent.class, mMail.getId());
+    MSHOutMail mpo = getCurrentMail();
+    if (mpo!= null) {
+      mlstMailEvents = mDB.getMailEventList(MSHOutEvent.class, mpo.getId());
     } else {
       this.mlstMailEvents = null;
     }

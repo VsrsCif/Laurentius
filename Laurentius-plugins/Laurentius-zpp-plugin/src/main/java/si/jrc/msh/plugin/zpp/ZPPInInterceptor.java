@@ -26,6 +26,9 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.Local;
@@ -39,6 +42,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.transaction.UserTransaction;
 import javax.xml.bind.JAXBException;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.xml.security.encryption.EncryptedKey;
@@ -47,8 +51,10 @@ import si.laurentius.msh.inbox.mail.MSHInMail;
 import si.laurentius.msh.inbox.payload.MSHInPart;
 import si.laurentius.msh.outbox.mail.MSHOutMail;
 import org.oasis_open.docs.ebxml_msg.ebms.v3_0.ns.core._200704.SignalMessage;
+import org.w3c.dom.Document;
 import si.laurentius.ebox.SEDBox;
 import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
 import si.jrc.msh.plugin.zpp.doc.DocumentSodBuilder;
 import si.jrc.msh.plugin.zpp.utils.FOPUtils;
 import si.jrc.msh.sec.SEDCrypto;
@@ -139,15 +145,19 @@ public class ZPPInInterceptor implements SoapInterceptorInterface {
         processInZPPDelivery(mInMail);
       }
 
+      if (mInMail != null && ZPPConstants.S_ZPP_SERVICE.equals(mInMail.getService()) &&
+          ZPPConstants.S_ZPP_ACTION_FICTION_NOTIFICATION.equals(mInMail.getAction())) {
+        processInZPPFictionNotification(mInMail);
+      }
+
       /*
       if (mInMail != null && ZPPConstants.S_ZPP_SERVICE.equals(mInMail.getService()) &&
           ZPPConstants.S_ZPP_ACTION_ADVICE_OF_DELIVERY.equals(mInMail.getAction())) {
         processInZPPAdviceOfDelivery(mInMail, msg);
       }*/
-
       if (sigAnies != null) {
         LOG.log("Proccess in signal elments");
-        processSignalMessages((List<Element>) sigAnies, moutMail, sb);      
+        processSignalMessages((List<Element>) sigAnies, moutMail, sb);
       }
     } catch (FOPException | HashException | SEDSecurityException ex) {
       LOG.logError(l, ex);
@@ -170,6 +180,14 @@ public class ZPPInInterceptor implements SoapInterceptorInterface {
         }
       }
 
+    } catch (IOException ex) {
+      Logger.getLogger(ZPPInInterceptor.class.getName()).log(Level.SEVERE, null, ex);
+    } catch (ParserConfigurationException ex) {
+      Logger.getLogger(ZPPInInterceptor.class.getName()).log(Level.SEVERE, null, ex);
+    } catch (SAXException ex) {
+      Logger.getLogger(ZPPInInterceptor.class.getName()).log(Level.SEVERE, null, ex);
+    } catch (JAXBException ex) {
+      Logger.getLogger(ZPPInInterceptor.class.getName()).log(Level.SEVERE, null, ex);
     }
     LOG.logEnd(l);
     return true;
@@ -227,7 +245,7 @@ public class ZPPInInterceptor implements SoapInterceptorInterface {
 
         }
       }
-      if (moutMail != null && k != null) {        
+      if (moutMail != null && k != null) {
         decryptMail(k, moutMail.getConversationId(), sb);
 
       }
@@ -278,8 +296,8 @@ public class ZPPInInterceptor implements SoapInterceptorInterface {
         //mDB.set
       }
 
-    } catch (StorageException | JAXBException | TransformerException | IOException |
-        SEDSecurityException ex) {
+    } catch (StorageException | JAXBException | TransformerException | IOException
+        | SEDSecurityException ex) {
       LOG.logError(l, ex);
     }
     LOG.logEnd(l);
@@ -305,6 +323,54 @@ public class ZPPInInterceptor implements SoapInterceptorInterface {
       LOG.logError(l, "Error setting status ERROR to MSHInMail :'" + mInMail.getId() + "'!", ex);
     }
 
+    LOG.logEnd(l);
+  }
+
+  public void processInZPPFictionNotification(MSHInMail inMail)
+      throws FOPException, HashException, SEDSecurityException, IOException, ParserConfigurationException, SAXException, JAXBException {
+    long l = LOG.logStart();
+    File encKeyFile = null;
+    EncryptedKey ek = null;
+    for (MSHInPart mip : inMail.getMSHInPayload().getMSHInParts()) {
+      if (Objects.equals(mip.getType(), ZPPConstants.ELM_SIGNAL_ENCRYPTED_KEY)) {
+        encKeyFile = StorageUtils.getFile(mip.getFilepath());
+        ek = mSedCrypto.file2SimetricEncryptedKey(encKeyFile);
+
+        break;
+      }
+    }
+
+    Key k = null;
+
+    // resolve certificate
+    X509Certificate xc;
+    try {
+      xc = ek.getKeyInfo().getX509Certificate();
+    } catch (KeyResolverException ex) {
+      String errmsg =
+          "Could not resolve Cert info from Encrypted key key DeliveryAdvice " +
+          inMail.getId() + "Err:" + ex.getMessage();
+      LOG.logError(l, errmsg, ex);
+
+      return;
+    }
+    Key pk = mkeyUtils.getPrivateKeyForX509Cert(msedLookup.getSEDCertStore(), xc);
+    if (pk == null) {
+      String errmsg =
+          "Could not get private key for cert: " + xc.getSubjectDN() +
+          ". Private key is needed to decrypt Encrypted key for " +
+          inMail.getConversationId();
+      LOG.logError(l, errmsg, null);
+      
+
+      return;
+    }
+    k = mSedCrypto.decryptEncryptedKey(XMLUtils.deserializeToDom(encKeyFile).getDocumentElement(), pk, SEDCrypto.SymEncAlgorithms.AES128_CBC);
+
+    if (inMail != null && k != null) {
+      decryptMail(k, inMail.getConversationId(), null);
+
+    }
     LOG.logEnd(l);
   }
 
@@ -417,13 +483,15 @@ public class ZPPInInterceptor implements SoapInterceptorInterface {
         } catch (StorageException ex) {
           LOG.logError(l, "Error updating mail :'" + mi.getId() + "'!", ex);
         }
-        
-        if (sb.getExport()!= null && sb.getExport().getActive()!= null && sb.getExport().getActive()){
+
+        if (sb.getExport() != null && sb.getExport().getActive() != null &&
+            sb.getExport().getActive()) {
           try {
             mJMS.exportInMail(mi.getId().longValue());
           } catch (NamingException | JMSException ex) {
-            LOG.logError(l, "Error occured while submitting mail to export queue:'" + mi.getId() + "'!", ex);
-          }        
+            LOG.logError(l, "Error occured while submitting mail to export queue:'" + mi.getId() +
+                "'!", ex);
+          }
         }
 
       }

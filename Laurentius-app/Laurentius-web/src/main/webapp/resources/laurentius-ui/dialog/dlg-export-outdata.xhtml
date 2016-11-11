@@ -55,8 +55,8 @@
 
 
                                 <p:commandButton value="#{msg['Cancel']}"  styleClass="toolbar-Button" 
-                                                 icon="ui-icon-svg-cancel ui-icon-size-22"
-                                                 oncomplete="PF('exportOutDataDialog').hide();" />
+                                                 icon="ui-icon-svg-cancel ui-icon-size-22"                                                 
+                                                onclick="PF('exportOutDataDialog').hide();return false;"/>
                             </f:facet>
                         </p:toolbar>
                     </p:layoutUnit>

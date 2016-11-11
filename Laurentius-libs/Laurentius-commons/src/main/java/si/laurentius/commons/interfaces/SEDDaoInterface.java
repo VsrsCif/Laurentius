@@ -182,6 +182,16 @@ public interface SEDDaoInterface {
    * @throws StorageException
    */
   void updateInMail(MSHInMail mail, String statusDesc, String userID) throws StorageException;
+  
+   /**
+   *
+   * @param mail
+   * @param statusDesc
+   * @param userID
+   * @throws StorageException
+   */
+  void updateOutMail(MSHOutMail mail, String statusDesc, String userID) throws StorageException;
+
 
   /**
    *

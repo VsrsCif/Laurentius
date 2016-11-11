@@ -119,8 +119,9 @@ public class InMailDataView extends AbstractMailView<MSHInMail, MSHInEvent> impl
    */
   @Override
   public void updateEventList() {
-    if (this.mMail != null) {
-      mlstMailEvents = mDB.getMailEventList(MSHInEvent.class, mMail.getId());
+    MSHInMail mim = getCurrentMail();
+    if (mim != null) {
+      mlstMailEvents = mDB.getMailEventList(MSHInEvent.class, mim.getId());
     } else {
       mlstMailEvents = null;
     }
@@ -134,13 +135,13 @@ public class InMailDataView extends AbstractMailView<MSHInMail, MSHInEvent> impl
   @Override
   public StreamedContent getFile(BigInteger bi) {
     MSHInPart inpart = null;
-
-    if (mMail == null || mMail.getMSHInPayload() == null ||
-        mMail.getMSHInPayload().getMSHInParts().isEmpty()) {
+    MSHInMail mim = getCurrentMail();
+    if (mim == null || mim.getMSHInPayload() == null ||
+        mim.getMSHInPayload().getMSHInParts().isEmpty()) {
       return null;
     }
 
-    for (MSHInPart ip : mMail.getMSHInPayload().getMSHInParts()) {
+    for (MSHInPart ip : mim.getMSHInPayload().getMSHInParts()) {
       if (ip.getId().equals(bi)) {
         inpart = ip;
         break;
@@ -258,7 +259,7 @@ public class InMailDataView extends AbstractMailView<MSHInMail, MSHInEvent> impl
 
   public List<Service.Action> getCurrentFilterServiceActionList() {
     if (getInMailModel().getFilter() != null &&
-         !Utils.isEmptyString(getInMailModel().getFilter().getService())) {
+        !Utils.isEmptyString(getInMailModel().getFilter().getService())) {
       String srvId = getInMailModel().getFilter().getService();
       Service srv = mPMode.getServiceById(srvId);
       if (srv != null) {

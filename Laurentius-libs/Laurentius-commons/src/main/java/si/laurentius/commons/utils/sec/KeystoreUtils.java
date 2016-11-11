@@ -419,7 +419,28 @@ public class KeystoreUtils {
     return getPrivateKeyForAlias(ks, alias, psswd);
 
   }
+  
+  /**
+   *
+   * @param sc
+   * @param alias
+   * @return
+   * @throws SEDSecurityException
+   */
+  public X509Certificate getTrustedCertForAlias(SEDCertStore sc, String alias)
+      throws SEDSecurityException {
+    X509Certificate cert = null;
+    try {
 
+      cert = (X509Certificate) getKeystore(sc).getCertificate(alias);
+
+    } catch (KeyStoreException ex) {
+      throw new SEDSecurityException(CertificateException, ex,
+          "Exception occured when retrieving: '" + alias + "' cert!");
+    }
+    return cert;
+  
+  }
   /**
    *
    * @param ks
@@ -440,6 +461,8 @@ public class KeystoreUtils {
     }
     return cert;
   }
+  
+ 
 
   /**
    *

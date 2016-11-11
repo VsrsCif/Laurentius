@@ -14,14 +14,22 @@
  */
 package si.jrc.msh.plugin.zpp;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.security.InvalidKeyException;
 import java.security.Key;
+import java.security.KeyStore;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.PrivateKey;
+import java.security.SignatureException;
+import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import java.util.Base64;
+import java.util.List;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Resource;
@@ -40,9 +48,7 @@ import javax.transaction.NotSupportedException;
 import javax.transaction.RollbackException;
 import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
-import javax.xml.bind.JAXBException;
 import javax.xml.namespace.QName;
-import javax.xml.transform.TransformerException;
 import org.apache.cxf.binding.soap.SoapFault;
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.message.MessageUtils;
@@ -56,6 +62,10 @@ import si.jrc.msh.plugin.zpp.exception.ZPPException;
 import si.jrc.msh.plugin.zpp.utils.FOPUtils;
 import si.jrc.msh.sec.SEDCrypto;
 import si.jrc.msh.sec.SEDKey;
+import si.jrc.msh.sec.pdf.SignUtils;
+import si.jrc.msh.sec.pdf.ValidateSignatureUtils;
+import si.laurentius.cert.SEDCertStore;
+import si.laurentius.cert.SEDCertificate;
 import si.laurentius.commons.MimeValues;
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.SEDOutboxMailStatus;
@@ -67,13 +77,16 @@ import si.laurentius.commons.exception.HashException;
 import si.laurentius.commons.exception.SEDSecurityException;
 import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.interfaces.SEDDaoInterface;
+import si.laurentius.commons.interfaces.SEDLookupsInterface;
 import si.laurentius.commons.interfaces.SoapInterceptorInterface;
 import si.laurentius.commons.pmode.EBMSMessageContext;
 import si.laurentius.commons.utils.HashUtils;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StorageUtils;
+import si.laurentius.commons.utils.sec.KeystoreUtils;
 import si.laurentius.commons.utils.xml.XMLUtils;
 import si.laurentius.msh.inbox.mail.MSHInMail;
+import si.laurentius.msh.pmode.PartyIdentitySetType;
 
 /**
  *
@@ -86,6 +99,11 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
 
   @EJB(mappedName = SEDJNDI.JNDI_SEDDAO)
   SEDDaoInterface mDB;
+
+  @EJB(mappedName = SEDJNDI.JNDI_SEDLOOKUPS)
+  SEDLookupsInterface mdbLookup;
+
+  KeystoreUtils mKeystoreUtils = new KeystoreUtils();
 
   /**
    *
@@ -106,6 +124,7 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
   FOPUtils mfpFop = null;
   HashUtils mpHU = new HashUtils();
   SEDCrypto mscCrypto = new SEDCrypto();
+  KeystoreUtils mksu = new KeystoreUtils();
 
   /**
    *
@@ -115,6 +134,7 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
 
   private SEDKey createAndStoreNewKey(BigInteger bi)
       throws SEDSecurityException, ZPPException {
+
     long l = LOG.logStart(bi);
     SEDKey sk;
 
@@ -220,13 +240,14 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
 
     MSHInMail mInMail = SoapUtils.getMSHInMail(msg);
 
-    LOG.formatedlog("**************** in mail %s, service %s ", mInMail,mInMail!=null?mInMail.getService():"sss");
+    LOG.formatedlog("**************** in mail %s, service %s ", mInMail, mInMail != null ?
+        mInMail.getService() : "sss");
     // if service ZPP delivery, action delivery
     if (outMail != null && ZPPConstants.S_ZPP_SERVICE.equals(ectx.getService().getServiceName())) {
 
       if (ZPPConstants.S_ZPP_ACTION_DELIVERY_NOTIFICATION.equals(ectx.getAction().getName())) {
         try {
-          prepareToZPPDelivery(outMail, sv);
+          prepareToZPPDelivery(outMail, ectx, sv);
         } catch (HashException | SEDSecurityException | StorageException | FOPException
             | ZPPException ex) {
           LOG.logError(l, ex.getMessage(), ex);
@@ -234,24 +255,29 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
         }
       } else if (ZPPConstants.S_ZPP_ACTION_FICTION_NOTIFICATION.equals(ectx.getAction().getName())) {
         try {
-          prepareFictionNotification(outMail, sv);
+          prepareFictionNotification(outMail, ectx, msg);
+
         } catch (HashException | SEDSecurityException | StorageException | FOPException
             | ZPPException ex) {
           LOG.logError(l, ex.getMessage(), ex);
           throw new SoapFault(ex.getMessage(), sv);
         }
+      } else if (Objects.equals(ZPPConstants.S_ZPP_SERVICE, outMail.getService()) &&
+          Objects.equals(ZPPConstants.S_ZPP_ACTION_ADVICE_OF_DELIVERY, outMail.getAction())) {
+        processOutZPPAdviceOfDelivery(outMail, ectx, msg);
       }
-    } 
-    
-    if (mInMail != null && ZPPConstants.S_ZPP_SERVICE.equals(mInMail.getService()) &&
-        ZPPConstants.S_ZPP_ACTION_ADVICE_OF_DELIVERY.equals(mInMail.getAction())) {
-      processInZPPAdviceOfDelivery(mInMail, msg);
+    }
+    if (mInMail != null) {
+      if (Objects.equals(ZPPConstants.S_ZPP_SERVICE, mInMail.getService()) &&
+          Objects.equals(ZPPConstants.S_ZPP_ACTION_ADVICE_OF_DELIVERY, mInMail.getAction())) {
+        processInZPPAdviceOfDelivery(mInMail, msg);
+      }
     }
     LOG.logEnd(l);
     return true;
   }
 
-  private void prepareToZPPDelivery(MSHOutMail outMail, QName sv)
+  private void prepareToZPPDelivery(MSHOutMail outMail, EBMSMessageContext eoutCtx, QName sv)
       throws SEDSecurityException,
       StorageException, FOPException, HashException, ZPPException {
     long l = LOG.logStart(outMail);
@@ -294,6 +320,15 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
               ZPPConstants.MSG_DELIVERY_NOTIFICATION_FILENAME + "-");
       getFOP().generateVisualization(outMail, fDNViz,
           FOPUtils.FopTransformations.DeliveryNotification, MimeValues.MIME_PDF.getMimeType());
+
+      String keyStore =
+          eoutCtx.getSenderPartyIdentitySet().getLocalPartySecurity().getKeystoreName();
+      String alias =
+          eoutCtx.getSenderPartyIdentitySet().getLocalPartySecurity().getSignatureKeyAlias();
+      SEDCertStore sc = mdbLookup.getSEDCertStoreByName(keyStore);
+      SEDCertificate scc = mdbLookup.getSEDCertificatForAlias(alias, sc, true);
+      signPDFDocument(sc, scc, fDNViz, true);
+
       String fPDFVizualization = StorageUtils.getRelativePath(fDNViz);
 
       MSHOutPart ptNew = new MSHOutPart();
@@ -324,15 +359,40 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
 
   }
 
-  private void prepareFictionNotification(MSHOutMail outMail, QName sv)
+  private void prepareFictionNotification(MSHOutMail outMail, EBMSMessageContext ectx,
+      SoapMessage msg)
       throws SEDSecurityException,
       StorageException, FOPException, HashException, ZPPException {
 
-    // generate fiction notification for receiver
-    // generate encrypted key with receiver key
-    // generate out mail
-    // generate fiction notification for sender
-    // update ficition notification
+    long l = LOG.logStart();
+
+    
+  }
+
+  public void processOutZPPAdviceOfDelivery(MSHOutMail om, EBMSMessageContext eoutCtx,
+      SoapMessage msg) {
+
+    try {
+      MSHOutPart mp = om.getMSHOutPayload().getMSHOutParts().get(0);
+      File fda = StorageUtils.getFile(mp.getFilepath());
+      ValidateSignatureUtils vsu = new ValidateSignatureUtils();
+      List<X509Certificate> cslst = vsu.getSignatureCerts(fda);
+      // is 
+      if (cslst.size() < 2) {
+        String keyStore =
+            eoutCtx.getSenderPartyIdentitySet().getLocalPartySecurity().getKeystoreName();
+        String alias =
+            eoutCtx.getSenderPartyIdentitySet().getLocalPartySecurity().getSignatureKeyAlias();
+        SEDCertStore sc = mdbLookup.getSEDCertStoreByName(keyStore);
+        SEDCertificate scc = mdbLookup.getSEDCertificatForAlias(alias, sc, true);
+
+        signPDFDocument(sc, scc, fda, true);
+      }
+    } catch (IOException | CertificateException | NoSuchAlgorithmException | InvalidKeyException
+        | NoSuchProviderException | SignatureException ex) {
+      Logger.getLogger(ZPPOutInterceptor.class.getName()).log(Level.SEVERE, null, ex);
+    }
+
   }
 
   public void processInZPPAdviceOfDelivery(MSHInMail mInMail, SoapMessage msg) {
@@ -348,30 +408,29 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
       File docFile =
           StorageUtils.getFile(mInMail.getMSHInPayload().getMSHInParts().get(0).getFilepath());
 
-      String x509 =
-          XMLUtils.getElementValue(new FileInputStream(docFile),
-              ZPPInInterceptor.class.getResourceAsStream("/xslt/getX509CertFromDocument.xsl"));
-      if (x509 != null) {
-        X509Certificate xc =
-            mscCrypto.getCertificate(new ByteArrayInputStream(Base64.getDecoder().decode(x509)));
-        // get key
-        Key key = getEncryptionKeyForDeliveryAdvice(moID);
-        LOG.log("processInZPPAdviceoFDelivery - get key" + key);
-        Element elKey =
-            mscCrypto.encryptedKeyWithReceiverPublicKey(key, xc, mInMail.getSenderEBox(),
-                mInMail.getConversationId());
-        LOG.log("processInZPPAdviceoFDelivery - get encrypted key" + elKey);
-        // got signal message:
-        SignalMessage signal = msg.getExchange().get(SignalMessage.class);
-        signal.getAnies().add(elKey);
-        //mDB.set
+      ValidateSignatureUtils vsu = new ValidateSignatureUtils();
+      List<X509Certificate> lvc = vsu.getSignatureCerts(docFile.getAbsolutePath());
 
-        mDB.setStatusToOutMail(mom, SEDOutboxMailStatus.DELIVERED, "Received ZPP advice of delivery",
-            null, null, StorageUtils.getRelativePath(docFile), MimeValues.MIME_XML.getMimeType());
-      }
+      X509Certificate xc = lvc.get(0);
 
-    } catch (StorageException | JAXBException | TransformerException | IOException
-        | SEDSecurityException ex) {
+      // get key
+      Key key = getEncryptionKeyForDeliveryAdvice(moID);
+      LOG.log("processInZPPAdviceoFDelivery - get key" + key);
+      Element elKey =
+          mscCrypto.encryptedKeyWithReceiverPublicKey(key, xc, mInMail.getSenderEBox(),
+              mInMail.getConversationId());
+      LOG.log("processInZPPAdviceoFDelivery - get encrypted key" + elKey);
+      // got signal message:
+      SignalMessage signal = msg.getExchange().get(SignalMessage.class);
+      signal.getAnies().add(elKey);
+      //mDB.set
+
+      mDB.setStatusToOutMail(mom, SEDOutboxMailStatus.DELIVERED, "Received ZPP advice of delivery",
+          null, null, StorageUtils.getRelativePath(docFile), MimeValues.MIME_XML.getMimeType());
+
+    } catch (StorageException | IOException
+        | SEDSecurityException | CertificateException | NoSuchAlgorithmException
+        | InvalidKeyException | NoSuchProviderException | SignatureException ex) {
       LOG.logError(l, ex);
     }
     LOG.logEnd(l);
@@ -383,6 +442,29 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
         memEManager.createNamedQuery("si.jrc.msh.sec.SEDKey.getById", SEDKey.class);
     q.setParameter("id", mailId);
     return q.getSingleResult();
-
   }
+
+  private File signPDFDocument(SEDCertStore sc, SEDCertificate scc, File f, boolean replace) {
+    long l = LOG.logStart();
+    File ftmp = null;
+    try {
+      ftmp = StorageUtils.getNewStorageFile("pdf", "zpp-signed");
+      KeyStore ks = mKeystoreUtils.getKeystore(sc);
+      PrivateKey pk = (PrivateKey) mKeystoreUtils.getPrivateKeyForAlias(ks, scc.getAlias(),
+          scc.getKeyPassword());
+      X509Certificate xcert = mKeystoreUtils.getTrustedCertForAlias(ks, scc.getAlias());
+      SignUtils su = new SignUtils(pk, xcert);
+      su.signPDF(f, ftmp, true);
+      if (replace) {
+        Files.move(ftmp.toPath(), f.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        ftmp = f;
+      }
+    } catch (IOException | SEDSecurityException ex) {
+      LOG.logError(l, ex);
+    } catch (StorageException ex) {
+      Logger.getLogger(ZPPOutInterceptor.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    return ftmp;
+  }
+  
 }

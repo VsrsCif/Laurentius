@@ -31,6 +31,7 @@ import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Logger.getLogger;
 import static javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI;
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import static javax.xml.bind.Marshaller.JAXB_FORMATTED_OUTPUT;
@@ -38,6 +39,7 @@ import static javax.xml.bind.Marshaller.JAXB_FRAGMENT;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.util.JAXBResult;
 import javax.xml.bind.util.JAXBSource;
+import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -137,7 +139,8 @@ public class XMLUtils {
     final Unmarshaller um = JAXBContext.newInstance(cls).createUnmarshaller();
     return um.unmarshal(elmnt);
   }
-   /**
+
+  /**
    *
    * @param elmnt
    * @param xsltSource
@@ -448,21 +451,22 @@ public class XMLUtils {
   public static String serializeToString(Element rootElement, boolean setXmlDecl) {
     DOMImplementationLS lsImpl =
         (DOMImplementationLS) rootElement.getOwnerDocument().getImplementation()
-        .getFeature("LS", "3.0");
+            .getFeature("LS", "3.0");
     LSSerializer serializer = lsImpl.createLSSerializer();
     serializer.getDomConfig().setParameter("xml-declaration", setXmlDecl); // set it to false to get
     // String without
     // xml-declaration
     return serializer.writeToString(rootElement);
   }
-  
-  public static boolean serialize(Document doc, boolean setXmlDecl, File f) throws FileNotFoundException {
+
+  public static boolean serialize(Document doc, boolean setXmlDecl, File f)
+      throws FileNotFoundException {
     DOMImplementationLS lsImpl =
         (DOMImplementationLS) doc.getImplementation()
-        .getFeature("LS", "3.0");
+            .getFeature("LS", "3.0");
     LSSerializer serializer = lsImpl.createLSSerializer();
     serializer.getDomConfig().setParameter("xml-declaration", setXmlDecl); // set it to false to get
-    
+
     LSOutput output = lsImpl.createLSOutput();
     output.setByteStream(new FileOutputStream(f));
     return serializer.write(doc, output);
@@ -566,6 +570,25 @@ public class XMLUtils {
 
     return sw.toString();
 
+  }
+
+  public static <T> T deepCopyJAXB(T object, Class<T> clazz) {
+    try {
+      JAXBContext jaxbContext = JAXBContext.newInstance(clazz);
+      JAXBElement<T> contentObject = new JAXBElement<>(new QName(clazz.getSimpleName()), clazz,
+          object);
+      JAXBSource source = new JAXBSource(jaxbContext, contentObject);
+      return jaxbContext.createUnmarshaller().unmarshal(source, clazz).getValue();
+    } catch (JAXBException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  public static <T> T deepCopyJAXB(T object) {
+    if (object == null) {
+      throw new RuntimeException("Can't guess at class");
+    }
+    return deepCopyJAXB(object, (Class<T>) object.getClass());
   }
 
 }

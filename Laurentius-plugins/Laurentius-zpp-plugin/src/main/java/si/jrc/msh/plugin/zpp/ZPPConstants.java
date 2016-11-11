@@ -55,6 +55,11 @@ public class ZPPConstants {
      *
      */
   public static final String S_ZPP_ACTION_FICTION_NOTIFICATION = "FictionNotification";
+  
+    /**
+     *
+     */
+  public static final String S_ZPP_ACTION_ADVICE_OF_DELIVERY_FICTION = "AdviceOfDeliveryFiction";
 
   /**
      *

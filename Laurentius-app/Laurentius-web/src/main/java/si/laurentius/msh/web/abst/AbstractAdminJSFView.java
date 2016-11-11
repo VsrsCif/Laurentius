@@ -6,6 +6,9 @@ package si.laurentius.msh.web.abst;
 
 import java.util.List;
 import org.primefaces.context.RequestContext;
+import si.laurentius.commons.utils.SEDLogger;
+import si.laurentius.commons.utils.xml.XMLUtils;
+import si.laurentius.msh.web.admin.AdminSEDUserView;
 
 /**
  *
@@ -13,7 +16,7 @@ import org.primefaces.context.RequestContext;
  * @param <T>
  */
 abstract public class AbstractAdminJSFView<T> extends AbstractJSFView {
-
+private static final SEDLogger LOG = new SEDLogger(AbstractAdminJSFView.class);
   private T mtEditable;
   private T mtNew;
   private T mtSelected;
@@ -22,19 +25,23 @@ abstract public class AbstractAdminJSFView<T> extends AbstractJSFView {
    *
    */
   public void addOrUpdateEditable() {
+    long l = LOG.logStart();
     boolean bsuc = false;
+    
     if (validateData()) {
 
       if (isEditableNew()) {
         bsuc = persistEditable();
         setNew(null);
+        LOG.formatedWarning("store new");
       } else {
+        LOG.formatedWarning("update editable");
         bsuc = updateEditable();
         setEditable(null);
       }
     }
     RequestContext.getCurrentInstance().addCallbackParam("saved", bsuc);
-
+    LOG.logEnd(l);
   }
 
   abstract public boolean validateData();
@@ -97,7 +104,11 @@ abstract public class AbstractAdminJSFView<T> extends AbstractJSFView {
    * @param edtbl
    */
   public void setEditable(T edtbl) {
-    this.mtEditable = edtbl;
+    if (edtbl!= null) {
+      this.mtEditable =  XMLUtils.deepCopyJAXB(edtbl);    
+    } else {
+      this.mtEditable = null;
+    }
   }
 
   /**

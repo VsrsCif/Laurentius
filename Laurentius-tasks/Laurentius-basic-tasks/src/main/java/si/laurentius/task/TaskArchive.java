@@ -58,7 +58,6 @@ import si.laurentius.commons.interfaces.exception.TaskException;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StorageUtils;
 import si.laurentius.commons.utils.StringFormater;
-import si.laurentius.commons.utils.Utils;
 import si.laurentius.commons.utils.xml.XMLUtils;
 
 /**
@@ -88,6 +87,12 @@ public class TaskArchive implements TaskExecutionInterface {
      *
      */
   public static String KEY_ARCHIVE_OFFSET = "archive.day.offset";
+  
+  /**
+     *
+     */
+  public static String KEY_ARCHIVE_PASSWORD = "archive.passwords";
+  
 
   /**
      *
@@ -127,6 +132,7 @@ public class TaskArchive implements TaskExecutionInterface {
 
     String sfolder;
     boolean bDelRecords;
+    boolean bArchivePassword;
     int iChunkSize;
     int dayOffset;
     Date dtArhiveTo;
@@ -173,12 +179,18 @@ public class TaskArchive implements TaskExecutionInterface {
     } else {
       bDelRecords = p.getProperty(KEY_DELETE_RECORDS).trim().equalsIgnoreCase("true");
     }
+    
+    if (!p.containsKey(KEY_ARCHIVE_PASSWORD)) {
+      bArchivePassword = false;
+    } else {
+      bArchivePassword = p.getProperty(KEY_ARCHIVE_PASSWORD).trim().equalsIgnoreCase("true");
+    }
 
     sw.append("- Init folders:");
     long lst = LOG.getTime();
     File archFolder = initFolders(sfolder, backupFolder);
 
-    File fbackMails = new File(archFolder, "backup-mails.txt");
+    File fbackMails = new File(archFolder, "archive-mails.txt");
 
     try (FileWriter fw = new FileWriter(fbackMails)) {
 
@@ -186,7 +198,7 @@ public class TaskArchive implements TaskExecutionInterface {
 
       sw.append("- Arhive settings and lookups");
       lst = LOG.getTime();
-      mLookups.exportLookups(archFolder, true);
+      mLookups.exportLookups(archFolder, bArchivePassword);
       sw.append(" end: " + (lst - LOG.getTime()) + " ms\n");
 
       sw.append("---------------------\nArhive out mail\n");
@@ -299,7 +311,7 @@ public class TaskArchive implements TaskExecutionInterface {
     SearchParameters sp = new SearchParameters();
     sp.setSubmittedDateTo(to);
     long l = mdao.getDataListCount(MSHOutMail.class, sp);
-    sw.append("\tbackup " + l + " outmail\n");
+    sw.append("\tarchive " + l + " outmail\n");
     long pages = l / iChunkSize + 1;
 
     int iPage = 0;
@@ -465,27 +477,7 @@ public class TaskArchive implements TaskExecutionInterface {
     });
   }
 
-  /*
-   * @Override public String getType() { return "archive"; }
-   * 
-   * @Override public String getName() { return "Archive data"; }
-   * 
-   * @Override public String getDesc() { return
-   * "Archive data to 'xml' and files to archive-storage"; }
-   * 
-   * @Override public Properties getProperties() { Properties p = new Properties();
-   * p.setProperty(KEY_EXPORT_FOLDER, "Archive folder"); p.setProperty(KEY_CHUNK_SIZE,
-   * "Max mail count in chunk"); p.setProperty(KEY_DELETE_RECORDS,
-   * "Delete exported records (true/false)"); p.setProperty(KEY_ARCHIVE_OFFSET,
-   * "Archive records older than [n] days");
-   * 
-   * return p; }
-   */
-  /**
-   *
-   * @return
-   */
-  @Override
+    @Override
   public SEDTaskType getTaskDefinition() {
     SEDTaskType tt = new SEDTaskType();
     tt.setType("archive");
@@ -496,6 +488,9 @@ public class TaskArchive implements TaskExecutionInterface {
         createTTProperty(KEY_CHUNK_SIZE, "Max mail count in chunk", true, "int", null, null));
     tt.getSEDTaskTypeProperties().add(
         createTTProperty(KEY_DELETE_RECORDS, "Delete exported records (true/false)", true,
+            "boolean", null, null));
+     tt.getSEDTaskTypeProperties().add(
+        createTTProperty(KEY_ARCHIVE_PASSWORD, "Archive passwords (true/false)", false,
             "boolean", null, null));
     tt.getSEDTaskTypeProperties().add(
         createTTProperty(KEY_ARCHIVE_OFFSET, "Archive records older than [n] days", true, "int",

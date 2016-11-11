@@ -30,6 +30,7 @@ import si.crea.schemas._2004.document.VisualisationsType;
 import si.laurentius.commons.exception.SEDSecurityException;
 import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.utils.Utils;
+import si.laurentius.msh.inbox.mail.MSHInMail;
 
 /**
  *
@@ -220,6 +221,12 @@ public class DocumentEVemBuilder extends DocumentBuilder {
       strRes = mstrMimeTypes.getProperty(mimetype.trim().toLowerCase());
     }
     return strRes != null ? strRes : "bin";
+  }
+
+  @Override
+  public void createMail(MSHInMail dce, FileOutputStream fos, KeyStore.PrivateKeyEntry key)
+      throws SEDSecurityException {
+    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
   }
 
 }
