@@ -57,8 +57,8 @@ import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 import si.jrc.msh.plugin.zpp.doc.DocumentSodBuilder;
 import si.jrc.msh.plugin.zpp.utils.FOPUtils;
-import si.jrc.msh.sec.SEDCrypto;
-import si.jrc.msh.sec.SEDKey;
+import si.laurentius.lce.enc.SEDCrypto;
+import si.laurentius.lce.enc.SEDKey;
 import si.laurentius.commons.MimeValues;
 import si.laurentius.commons.SEDInboxMailStatus;
 import si.laurentius.commons.SEDJNDI;
@@ -77,8 +77,9 @@ import si.laurentius.commons.utils.HashUtils;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StorageUtils;
 import si.laurentius.commons.utils.StringFormater;
-import si.laurentius.commons.utils.sec.KeystoreUtils;
+
 import si.laurentius.commons.utils.xml.XMLUtils;
+import si.laurentius.lce.KeystoreUtils;
 
 /**
  *

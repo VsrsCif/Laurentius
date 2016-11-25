@@ -12,17 +12,15 @@
 
     <h:body>
         <h:form id="testcase-forms" >
-
             <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
             <!-- main window -->    
             <p:layout id="TestCasePlugin" style="min-width:400px;min-height:400px;"  fullPage="true" >
                 <p:layoutUnit position="north"   >
+                    <h1 style="padding: 2;margin: 0;background: gray;color: white;"> Orodja za izvajanje testnih scenarijev</h1>
                     <h3>Testni podatki</h3>
                     <p:panelGrid  style="width: 580px">
                         <f:facet name="header">
-
                             <h:outputText value="Vnesite testne podatke" />
-
                         </f:facet>
                         <p:row>
                             <p:column>
@@ -48,15 +46,14 @@
                     </p:panelGrid>
                 </p:layoutUnit>
 
-                <p:layoutUnit position="center"   >
-                    <h3>Orodja za izvajanje testnih scenarijev</h3>
-                    <p:tabView id="TestCaseTab" style="height: 100%" >
+                <p:layoutUnit position="center"   >                    
+                    <p:tabView id="TestCaseTab"  >
                         <p:tab   id="InMailDataTab" >
                             <f:facet name="title">
                                 <h:graphicImage value="#{resource['images:/test.svg']}" width="22" height="22" />
-                                <h:outputText value="Večja količina pošiljk" />
+                                <h:outputText value="Obremenitveni test" />
                             </f:facet>
-                            <h3>Obremenitveni test: večja količina pošiljk</h3>
+                            <h3>Večja količina pošiljk</h3>
                             Namen orodja je generiranje večje količine datotek ter pošiljanje v naslovnikov sistem.<br />
                             <p:panelGrid columns="2">
                                 <h:outputText value="Storitev:" />
@@ -77,7 +74,7 @@
                                     <f:selectItem itemLabel="5000" itemValue="5000" />
                                 </p:selectOneMenu>
                             </p:panelGrid>
-                            <hr />
+
                             <p:progressBar widgetVar="pbDRWAjax" ajax="true" value="#{TCStressTest.stressTestProgress}" 
                                            labelTemplate="{value}%" styleClass="animated" global="false" > 
                                 <p:ajax event="complete" listener="#{TCStressTest.onStressTestComplete()}" update=":testcase-forms:messages"
@@ -91,15 +88,10 @@
 
                             <p:commandButton value="Prekini" actionListener="#{TCStressTest.cancelStressTest()}" 
                                              oncomplete="PF('pbDRWAjax').cancel();PF('startDRW').enable();" />
-                        </p:tab>
-                        <p:tab >
-                            <f:facet name="title">
-                                <h:graphicImage value="#{resource['images:/test.svg']}" width="22" height="22" />                            
-                                <h:outputText value="Prenos velikih pošilj" />
-                            </f:facet>
 
+                            <hr /><hr />
 
-                            <h3>Obremenitveni test: Prenos velikih pošiljk</h3>
+                            <h3>Prenos velikih pošiljk</h3>
                             Namen orodja je generiranje velikih datotek ter pošiljanje v naslovnikov sistem.<br />
                             <p:panelGrid columns="2">
                                 <h:outputText value="Storitev:" />
@@ -118,7 +110,6 @@
                                     <f:selectItem itemLabel="100MB" itemValue="100000" />
                                 </p:selectOneMenu>
                             </p:panelGrid>
-<hr />
                             <p:progressBar widgetVar="pbPSAjax" ajax="true" value="#{TCStressTest.payloadSizeTestProgress}" 
                                            labelTemplate="{value}%" styleClass="animated" global="false" > 
                                 <p:ajax event="complete" listener="#{TCStressTest.onPayloadSizeTestComplete()}" update=":testcase-forms:messages"
@@ -145,7 +136,7 @@
                                 Namen orodja je za določene storitve/pošiljatelje nastaviti nedelovanje servisa. Ob klicu storitve
                                 je odgovor SoapFault -  HTTP - 503.
                                 <br /> <br /> 
-                             
+
                                 <p:selectOneMenu value="#{TCStressTest.disableService}"  style="width: 200px !important" >
                                     <f:selectItem noSelectionOption="true" />
                                     <f:selectItems value="#{TCStressTest.getRegistredDisableServicePlugin()}" />                   
@@ -186,30 +177,73 @@
 
                             </p:outputPanel>
                         </p:tab>
-                          <p:tab >
+                        <p:tab >
                             <f:facet name="title">
                                 <h:graphicImage value="#{resource['images:/test.svg']}" width="22" height="22" />                            
                                 <h:outputText value="Fiktivna vročitev" />
                             </f:facet>
-                             Namen orodja je spremeniti čas oddaje pošiljke v naslovnikov sistem. Tako da je nastopil rok za
-                             fiktivno vročitev 
-                             <br /> <br /> 
-                             
+                            <h3>ZPP vročanje</h3>
+                            Namen orodja je spremeniti čas oddaje pošiljke v naslovnikov sistem. Tako da je nastopil rok za
+                            fiktivno vročitev 
+                            <br /> <br /> 
+
                             Vnesite ID izhodne pošiljke. Id za pošiljko dobite v Orodju "Izhodna pošta", 
                             v zavihku "Podatki kuverte" (Spodaj) podatek ID.  Spreminjanje datuma dostav v naslovnikov sistem 
                             deluje samo za pošiljke v statusu Poslano (SENT)<br /> 
                             <h:outputText value="Id:" />
-                                    <p:inputNumber value="#{TCStressTest.fictionMailId}" decimalPlaces="0" style="width: 200px%"/>
-                            
-                           
-                             <br />
+                            <p:inputNumber value="#{TCStressTest.fictionMailId}" decimalPlaces="0" style="width: 200px"/>
+
+
+                            <br />
                             Nastavi čas oddaje v naslovnikov sistem (Danes - 15 dni):
                             <p:commandButton value="Nastavi" 
-                                              actionListener="#{TCStressTest.changeSentDateAction}"
+                                             actionListener="#{TCStressTest.changeSentDateAction}"
                                              update=":testcase-forms:messages"
-                                           
-                                              />
-                          </p:tab>
+
+                                             />
+                        </p:tab>
+
+                        <p:tab >
+                            <f:facet name="title">
+                                <h:graphicImage value="#{resource['images:/test.svg']}" width="22" height="22" />                            
+                                <h:outputText value="Generični testi" />
+                            </f:facet>
+                            <h3>Testni primeri: izvršilni postopki</h3>
+                            Namen orodja je testiranje obdelave prejete pošte, ki nastanejo v izvršilnih postopkih.
+                            <br /> <br /> 
+                            <h:outputText value="Storitev:" />
+                            <p:selectOneMenu value="#{genericTestCases.genericTestService}"  style="width: 200px !important" >
+                                <f:selectItem itemLabel="DeliveryWithReceipt" itemValue="DeliveryWithReceipt" />
+                                <f:selectItem itemLabel="LegalDelivery_ZPP" itemValue="LegalDelivery_ZPP" />                   
+                            </p:selectOneMenu>
+                            
+                                <p:scrollPanel mode="native" style="width:100%;height:300px"> 
+                                    <div>
+                                        
+                                    <p:repeat value="#{genericTestCases.testCases}" var="tc"  >
+
+
+                                        <h:panelGrid columns="2" cellpadding="2">
+                                            <h:outputText value="Test:" />
+                                            <h:outputText value="#{tc.name}" style="font-weight: bold"/>
+
+                                            <h:outputText value="Opis:" />
+                                            <h:outputText value="#{tc.description}" style="font-weight: bold"/>
+
+                                            <p:commandButton value="Pošlji" 
+                                                             actionListener="#{genericTestCases.submitTestCaseMail(tc)}"
+                                                             update=":testcase-forms:messages"
+
+                                                             />
+                                        </h:panelGrid>
+
+
+                                        <hr />
+                                    </p:repeat>
+                                        </div>
+                                </p:scrollPanel>
+
+                        </p:tab>
                     </p:tabView>
 
 

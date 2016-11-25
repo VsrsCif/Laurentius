@@ -45,6 +45,7 @@
         <module>Laurentius-msh-xsd</module>                
         <module>Laurentius-wsdl</module>        
         <module>Laurentius-commons</module>
+        <module>Laurentius-lce</module>
         <module>Laurentius-viz</module>
     </modules>
 </project>

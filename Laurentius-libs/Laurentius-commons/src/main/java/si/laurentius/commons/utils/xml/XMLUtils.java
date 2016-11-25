@@ -500,6 +500,16 @@ public class XMLUtils {
     return obj;
   }
 
+  public static synchronized void transform(Document source, InputStream xsltSource,  File fileResult)
+      throws TransformerConfigurationException, JAXBException, TransformerException,
+      ParserConfigurationException, SAXException, IOException {
+    
+    TransformerFactory factory = TransformerFactory.newInstance();
+    Transformer transformer = factory.newTransformer(new StreamSource(xsltSource));
+    transformer.transform(new DOMSource(source), new StreamResult(fileResult));
+
+  }
+
   /**
    *
    * @param jabxObj

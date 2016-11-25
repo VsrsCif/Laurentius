@@ -57,6 +57,12 @@
             <version>${project.version}</version>
             <scope>provided</scope>            
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>Laurentius-lce</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>            
+        </dependency>
         
         <!-- GUI uses prifeaces componens --> 
         <dependency>

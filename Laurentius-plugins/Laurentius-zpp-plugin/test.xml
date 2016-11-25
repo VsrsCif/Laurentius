@@ -1,0 +1,93 @@
+<izv:OpisPosiljke schemaVersion="1.0" xmlns:izv="http://sodisce.si/izvrsba">
+	<izv:Glava>
+		<izv:Prejemnik idUdelezenec="2323232" ime-naziv="" priimek-naziv="POŠTNA BANKA SLOVENIJE d.d." maticna="232323" davcna="23232">
+			<izv:Naslov drzava="" hisnaStevilka="5" kraj="MARIBOR" nazivPosta="MARIBOR" sifPosta="2000" ulica="Vita Kraigherja"/>
+			<izv:Vloga nazivVloga="dolžnikov dolžnik"/>
+		</izv:Prejemnik>
+	</izv:Glava>
+	<izv:Vsebina>
+		<izv:ProcesnoDejanje sifProcesnoDejanje="566" nazivProcesnoDejanje="Potrdilo o pravnomočnosti in izvršljivosti">
+			<izv:PotrdiloOPravnomocnosti>
+				<izv:Dolzniki>
+					<izv:Dolznik>
+						<izv:Oseba idUdelezenec="232323" ime-naziv="Mirko" priimek-naziv="Pobalinko">
+							<izv:Naslov drzava="SVN" hisnaStevilka="2323" kraj="SPODNJI DUPLEK" nazivPosta="SPODNJI DUPLEK" sifPosta="2241" ulica="Cesta k Dravi"/>
+						</izv:Oseba>
+					</izv:Dolznik>
+				</izv:Dolzniki>
+				<izv:Upniki>
+					<izv:Upniki>
+						<izv:Oseba idUdelezenec="23232323" ime-naziv="" priimek-naziv="STANOVANJSKI SKLAD REPUBLIKE SLOVENIJE">
+							<izv:Naslov drzava="SVN" hisnaStevilka="31" kraj="LJUBLJANA" nazivPosta="LJUBLJANA" sifPosta="1000" ulica="Poljanska cesta"/>
+						</izv:Oseba>
+						<izv:Zastopnik idUdelezenec="23232323" ime-naziv="STANINVEST D.O.O." priimek-naziv="">
+							<izv:Naslov drzava="SVN" hisnaStevilka="19" kraj="MARIBOR" nazivPosta="MARIBOR" sifPosta="2000" ulica="Gregorčičeva ulica"/>
+						</izv:Zastopnik>
+					</izv:Upniki>
+				</izv:Upniki>
+				<izv:OpravilnaStevilka vpisnik="VL" zadevaLeto="2015" zadevaStevilka="2323223232"/>
+				<izv:trenutniDatum>2015-09-04+02:00</izv:trenutniDatum>
+				<izv:datumSklepaOIzvrsbi>2015-07-27+02:00</izv:datumSklepaOIzvrsbi>
+				<izv:vrednostIzvrsbe>232323,88</izv:vrednostIzvrsbe>
+				<izv:vrednostIzvrsbePrezivnina>23232,88 EUR</izv:vrednostIzvrsbePrezivnina>
+				<izv:Valuta>EUR</izv:Valuta>
+				<izv:datumaSklepa>2015-09-04+02:00</izv:datumaSklepa>
+				<izv:datumPravnomocnosti>2015-08-28+02:00</izv:datumPravnomocnosti>
+				<izv:podpisnik>Samostojni sodniški pomočnik: Lea Zafred l.r.</izv:podpisnik>
+				<izv:pristojnoSodisce>Okrajno sodišče v Mariboru</izv:pristojnoSodisce>
+				<izv:PrejemnikiPravnomocnegaSklepa>
+					<izv:Prejemnik idUdelezenec="23232323" ime-naziv="" priimek-naziv="POŠTNA BANKA SLOVENIJE d.d." maticna="23232323" davcna="23232323">
+						<izv:Naslov drzava="" hisnaStevilka="5" kraj="MARIBOR" nazivPosta="MARIBOR" sifPosta="2000" ulica="Vita Kraigherja"/>
+					</izv:Prejemnik>
+					<izv:Prejemnik idUdelezenec="23232323" ime-naziv="" priimek-naziv="SPAR SLOVENIJA TRGOVSKO PODJETJE D.O.O. LJUBLJANA SPAR SLOVENIJA D.O.O." maticna="23232323" davcna="">
+						<izv:Naslov drzava="" hisnaStevilka="23232" kraj="LJUBLJANA" nazivPosta="LJUBLJANA" sifPosta="1000" ulica="LETALIŠKA CESTA"/>
+					</izv:Prejemnik>
+					<izv:Prejemnik idUdelezenec="1" ime-naziv="STANINVEST D.O.O." priimek-naziv="" maticna="" davcna="2323232323">
+						<izv:Naslov drzava="SVN" hisnaStevilka="232323" kraj="MARIBOR" nazivPosta="MARIBOR" sifPosta="2000" ulica="Gregorčičeva ulica"/>
+					</izv:Prejemnik>
+				</izv:PrejemnikiPravnomocnegaSklepa>
+				<izv:PrejemnikiSklepa>
+					<izv:Prejemnik idUdelezenec="12341" ime-naziv="Mirko" priimek-naziv="Pobalinko" maticna="23232" davcna="23232">
+						<izv:Naslov drzava="SVN" hisnaStevilka="23232323" kraj="SPODNJI DUPLEK" nazivPosta="SPODNJI DUPLEK" sifPosta="2241" ulica="Cesta k Dravi"/>
+						<izv:datumVrocitve>2015-08-19+02:00</izv:datumVrocitve>
+					</izv:Prejemnik>
+				</izv:PrejemnikiSklepa>
+				<izv:RacunDolznika racun="23232323232"/>
+			</izv:PotrdiloOPravnomocnosti>
+		</izv:ProcesnoDejanje>
+		<izv:ProcesnoDejanje sifProcesnoDejanje="536" nazivProcesnoDejanje="Sklep o izvršbi">
+			<izv:SklepOIzvrsbi>
+				<izv:Dolzniki>
+					<izv:Dolznik>
+						<izv:Oseba idUdelezenec="12341" ime-naziv="Mirko" priimek-naziv="Pobalinko">
+							<izv:Naslov drzava="SVN" hisnaStevilka="11111" kraj="SPODNJI DUPLEK" nazivPosta="SPODNJI DUPLEK" sifPosta="2241" ulica="Cesta k Dravi"/>
+						</izv:Oseba>
+					</izv:Dolznik>
+				</izv:Dolzniki>
+				<izv:Upniki>
+					<izv:Upniki>
+						<izv:Oseba idUdelezenec="27200739" ime-naziv="" priimek-naziv="STANOVANJSKI SKLAD REPUBLIKE SLOVENIJE">
+							<izv:Naslov drzava="SVN" hisnaStevilka="31" kraj="LJUBLJANA" nazivPosta="LJUBLJANA" sifPosta="1000" ulica="Poljanska cesta"/>
+						</izv:Oseba>
+						<izv:Zastopnik idUdelezenec="27200740" ime-naziv="STANINVEST D.O.O." priimek-naziv="">
+							<izv:Naslov drzava="SVN" hisnaStevilka="19" kraj="MARIBOR" nazivPosta="MARIBOR" sifPosta="2000" ulica="Gregorčičeva ulica"/>
+						</izv:Zastopnik>
+					</izv:Upniki>
+				</izv:Upniki>
+				<izv:OpravilnaStevilka vpisnik="VL" zadevaLeto="2015" zadevaStevilka="83278"/>
+				<izv:RacunSodnikTaks racun="SI56 0110 0845 0100 810"/>
+				<izv:datumSklepaOIzvrsbi>2015-07-27+02:00</izv:datumSklepaOIzvrsbi>
+				<izv:vrednostIzvrsbe>2323288</izv:vrednostIzvrsbe>
+				<izv:vrednostIzvrsbePrezivnina>23232,88 EUR</izv:vrednostIzvrsbePrezivnina>
+				<izv:Valuta>EUR</izv:Valuta>
+				<izv:OznakaVpisnika>0000</izv:OznakaVpisnika>
+				<izv:podpisnik>Samostojni sodniški pomočnik: Lea Zafred l.r.</izv:podpisnik>
+				<izv:oprostitevTakse>false</izv:oprostitevTakse>
+				<izv:Sklic>23232323</izv:Sklic>
+				<izv:PristojnoSodisce>Okrajno sodišče v Mariboru</izv:PristojnoSodisce>
+				<izv:stroskiUpnika>73,16 EUR</izv:stroskiUpnika>
+				<izv:Zavrzeno/>
+			</izv:SklepOIzvrsbi>
+		</izv:ProcesnoDejanje>
+	</izv:Vsebina>
+</izv:OpisPosiljke>

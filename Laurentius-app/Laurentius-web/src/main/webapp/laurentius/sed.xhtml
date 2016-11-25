@@ -24,6 +24,7 @@
                                         onexception="PF('exceptionDialog').show();" />
 
                 <p:growl id="messages" showDetail="true" />
+            
                 <!-- main window -->    
                 <p:layout style="min-width:400px;min-height:400px;"  fullPage="true"  >
                     <!-- toolbar -->    
@@ -192,13 +193,13 @@
                         </h:panelGroup>
                         <p:blockUI block="MainPanelUnit" 
                                    trigger=":forms:btnRefresh 
-                                            :forms:toolbars:btnInRefresh 
-                                            :forms:toolbars:btnOutRefresh
-                                            :forms:ebox">
+                                   :forms:toolbars:btnInRefresh 
+                                   :forms:toolbars:btnOutRefresh
+                                   :forms:ebox">
                             <h:graphicImage value="#{resource['images:/ajax-progress.gif']}"  /> 
                             <h:outputText value="#{msg['Refresh']}" />
                         </p:blockUI>
-                        
+
                         <p:blockUI block="MainPanelUnit" widgetVar="blockMainPanel" >
                             <h:graphicImage value="#{resource['images:/ajax-progress.gif']}"  /> 
                             <h:outputText value="#{msg['Process']}" />
@@ -299,12 +300,12 @@
 
                                     <h:outputText value="" />
                                     <p:commandButton id="btnInRefresh"                                                     
-                                        value="#{msg['Search']}" 
+                                                     value="#{msg['Search']}" 
                                                      icon="ui-icon-size-32 ui-icon-svg-search"                                             
                                                      style="width: 100%; height: 36px"
                                                      update=":forms:MainPanel"
                                                      ajax="true"
-                                                     
+
                                                      />
                                 </p:panelGrid>
 
@@ -379,7 +380,7 @@
 
                                     <h:outputText value="" />
                                     <p:commandButton id="btnOutRefresh"
-                                        value="#{msg['Search']}" 
+                                                     value="#{msg['Search']}" 
                                                      icon="ui-icon-size-32 ui-icon-svg-search"                                             
                                                      style="width: 100%; height: 36px"
                                                      update=":forms:MainPanel" ajax="true"
@@ -510,8 +511,9 @@
             </h:form>
 
             <dlg:dlg-compose id="dlgCompose" />
+            <dlg:dlg-certificate id="dlgcertificate" />
             <dlg:dlg-tasktype id="dlgTaskType" />
-            <dlg:dlg-keystore id="dlgKeyStore" />
+
             <dlg:dlg-sedbox id="dlgsedbox" />
             <dlg:dlg-user id="dlguser" />
             <dlg:dlg-cron id="dlgcron" />

@@ -18,7 +18,8 @@ import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.message.Exchange;
 import org.apache.cxf.phase.Phase;
 import si.laurentius.commons.utils.SEDLogger;
-import si.laurentius.commons.utils.sec.KeystoreUtils;
+import si.laurentius.lce.KeystoreUtils;
+
 
 /**
  *

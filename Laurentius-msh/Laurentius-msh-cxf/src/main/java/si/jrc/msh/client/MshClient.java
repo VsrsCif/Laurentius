@@ -19,8 +19,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import javax.ejb.EJB;
-import javax.ejb.Stateless;
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.TrustManager;
 import javax.xml.namespace.QName;
@@ -59,7 +57,6 @@ import si.jrc.msh.interceptor.MSHPluginInInterceptor;
 import si.jrc.msh.interceptor.MSHPluginOutFaultInterceptor;
 import si.jrc.msh.interceptor.MSHPluginOutInterceptor;
 import si.laurentius.commons.MimeValues;
-import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.cxf.SoapUtils;
 import si.laurentius.commons.exception.SEDSecurityException;
 import si.laurentius.commons.exception.StorageException;
@@ -68,7 +65,8 @@ import si.laurentius.commons.pmode.EBMSMessageContext;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StorageUtils;
 import si.laurentius.commons.utils.Utils;
-import si.laurentius.commons.utils.sec.KeystoreUtils;
+import si.laurentius.lce.KeystoreUtils;
+
 
 /**
  * Sets up MSH client and submits message.

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 (http://www.altova.com) by XMLSpy 2007 Professional Ed., Installed for 5 users (with SMP from 2007-02-06 to 2008-02-07) (CIF VSRS) -->
+<!--Metadata: 
+Owner: Supreme Court Republic of Slovenia 
+Product: Laurentius
+Product Version: 1.0.0
+Artifact Type: Schema
+Descriptive Name: EBox
+Date: 20160309 (09 March 2016)
+Author: Joze Rihtarsic
+-->
+<!-- 
+Copyright 2016, Supreme Court Republic of Slovenia 
+
+ Licensed under the EUPL, Version 1.1 or – as soon they will be approved by 
+ the European Commission - subsequent versions of the EUPL (the "Licence");
+ You may not use this work except in compliance with the Licence.
+ You may obtain a copy of the Licence at:
+
+ https://joinup.ec.europa.eu/software/page/eupl
+
+ Unless required by applicable law or agreed to in writing, software 
+ distributed under the Licence is distributed on an "AS IS" basis, WITHOUT 
+ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the Licence for the specific language governing permissions and  
+ limitations under the Licence.
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://laurentius.si/testcase" targetNamespace="http://laurentius.si/testcase" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="MailTestCases">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="MailTestCase" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:complexContent>
+							<xs:extension base="ns1:MailTestCase">
+							</xs:extension>
+						</xs:complexContent>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="MailTestCase">
+		<xs:annotation>
+			<xs:documentation xml:lang="sl">Xslt transformation</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<!-- xs:element ref="usr:SEDUser" maxOccurs="unbounded"/ -->
+			<xs:element name="Payload" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:attribute name="ebmsId" use="optional">
+						<xs:annotation>
+							<xs:documentation xml:lang="sl">ebMS ID </xs:documentation>
+						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:maxLength value="128"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+					<xs:attribute name="filename" use="optional">
+						<xs:annotation>
+							<xs:documentation xml:lang="sl">Naziv priponke </xs:documentation>
+						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:maxLength value="128"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+					<xs:attribute name="description" use="optional">
+						<xs:annotation>
+							<xs:documentation xml:lang="sl">Opis priponke</xs:documentation>
+						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:maxLength value="512"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+					<xs:attribute name="type" use="optional">
+						<xs:annotation>
+							<xs:documentation xml:lang="sl">Pošiljateljeva oznaka tipa priponke (racun, vloga,  RC01, itd.) </xs:documentation>
+						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:maxLength value="64"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+					<xs:attribute name="filepath" use="required">
+						<xs:annotation>
+							<xs:documentation xml:lang="sl">pot datoteke . </xs:documentation>
+						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:maxLength value="128"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+					<xs:attribute name="mimeType" use="required">
+						<xs:annotation>
+							<xs:documentation xml:lang="sl">Mimetip priponke: plain/text, application/pdf, plain/xml, itd..  </xs:documentation>
+						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="xs:token">
+								<xs:maxLength value="128"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+					<xs:attribute name="encoding">
+						<xs:annotation>
+							<xs:documentation xml:lang="sl">kodiranje priponke oz kodna stran: UTF-8, CP1252-2 itd..  </xs:documentation>
+						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="xs:token">
+								<xs:maxLength value="128"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="description"/>
+		<xs:attribute name="name"/>
+	</xs:complexType>
+</xs:schema>

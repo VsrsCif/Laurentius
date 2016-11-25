@@ -223,6 +223,7 @@ public abstract class AbstractMailView<T, S> {
    * @param event
    */
   public void onRowUnselect(UnselectEvent event) {
+    
     setCurrentMail(null);
   }
 

@@ -5,7 +5,6 @@
 package si.jrc.msh.plugin.zpp;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.nio.file.Files;
@@ -34,8 +33,8 @@ import si.laurentius.cron.SEDTaskTypeProperty;
 import si.jrc.msh.plugin.zpp.doc.DocumentSodBuilder;
 import si.jrc.msh.plugin.zpp.exception.ZPPException;
 import si.jrc.msh.plugin.zpp.utils.FOPUtils;
-import si.jrc.msh.sec.SEDCrypto;
-import si.jrc.msh.sec.pdf.SignUtils;
+import si.laurentius.lce.enc.SEDCrypto;
+import si.laurentius.lce.sign.pdf.SignUtils;
 import si.laurentius.cert.SEDCertificate;
 import si.laurentius.commons.MimeValues;
 import si.laurentius.commons.SEDInboxMailStatus;
@@ -56,7 +55,8 @@ import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StorageUtils;
 import si.laurentius.commons.utils.StringFormater;
 import si.laurentius.commons.utils.Utils;
-import si.laurentius.commons.utils.sec.KeystoreUtils;
+import si.laurentius.lce.KeystoreUtils;
+
 
 /**
  *

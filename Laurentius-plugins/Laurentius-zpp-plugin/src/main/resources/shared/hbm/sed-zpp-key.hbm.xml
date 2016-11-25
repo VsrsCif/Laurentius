@@ -1,19 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd" >
-<hibernate-mapping>    
-    <class name="si.jrc.msh.sec.SEDKey"
-           table="PLUGIN_ZPP_KEY">
-        <id name="Id" type="java.math.BigInteger" >
-            <column name="ID" scale="0" />
-            <!-- generator class="sequence">
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+  <class name="si.laurentius.lce.enc.SEDKey" table="PLUGIN_ZPP_KEY">
+    <id name="Id" type="java.math.BigInteger">
+      <column name="ID" scale="0"/>
+      <!-- generator class="sequence">
                 <param name="sequence">SEQ_PLUGIN_ZPP_KEY</param>
             </generator -->
-        </id>        
-        <property column="ALGORITHM" name="Algorithm"  length="512" type="java.lang.String" />       
-        <property column="FORMAT" name="Format"  length="64" type="java.lang.String" />
-        <property column="KEY_DATA" name="Encoded"  type="[B" />        
-    </class>    
-    <query name="si.jrc.msh.sec.SEDKey.getById" ><![CDATA[SELECT p FROM SEDKey p WHERE p.Id = :id]]></query>
- 
-    
+    </id>
+    <property column="ALGORITHM" length="512" name="Algorithm" type="java.lang.String"/>
+    <property column="FORMAT" length="64" name="Format" type="java.lang.String"/>
+    <property column="KEY_DATA" name="Encoded" type="[B"/>
+  </class>
+  <query name="si.jrc.msh.sec.SEDKey.getById">SELECT p FROM SEDKey p WHERE p.Id = :id</query>
 </hibernate-mapping>

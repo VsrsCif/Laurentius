@@ -8,7 +8,6 @@ import java.util.List;
 import org.primefaces.context.RequestContext;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.xml.XMLUtils;
-import si.laurentius.msh.web.admin.AdminSEDUserView;
 
 /**
  *
@@ -29,13 +28,10 @@ private static final SEDLogger LOG = new SEDLogger(AbstractAdminJSFView.class);
     boolean bsuc = false;
     
     if (validateData()) {
-
       if (isEditableNew()) {
         bsuc = persistEditable();
         setNew(null);
-        LOG.formatedWarning("store new");
       } else {
-        LOG.formatedWarning("update editable");
         bsuc = updateEditable();
         setEditable(null);
       }
@@ -105,6 +101,7 @@ private static final SEDLogger LOG = new SEDLogger(AbstractAdminJSFView.class);
    */
   public void setEditable(T edtbl) {
     if (edtbl!= null) {
+      // create a copy
       this.mtEditable =  XMLUtils.deepCopyJAXB(edtbl);    
     } else {
       this.mtEditable = null;
@@ -117,7 +114,7 @@ private static final SEDLogger LOG = new SEDLogger(AbstractAdminJSFView.class);
    */
   public void setNew(T edtbl) {
     this.mtNew = edtbl;
-    setEditable(edtbl);
+    this.mtEditable =edtbl;
   }
 
   /**
@@ -139,6 +136,7 @@ private static final SEDLogger LOG = new SEDLogger(AbstractAdminJSFView.class);
 
   /**
    *
+   * @return 
    */
   abstract public boolean updateEditable();
 

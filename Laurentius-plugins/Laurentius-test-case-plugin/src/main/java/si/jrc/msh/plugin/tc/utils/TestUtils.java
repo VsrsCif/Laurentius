@@ -24,8 +24,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -34,11 +32,13 @@ import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StorageUtils;
 import si.laurentius.commons.utils.StringFormater;
+import si.laurentius.commons.utils.xml.XMLUtils;
 import si.laurentius.msh.outbox.mail.MSHOutMail;
 import si.laurentius.msh.outbox.payload.MSHOutPart;
 import si.laurentius.msh.outbox.payload.MSHOutPayload;
 import si.laurentius.msh.outbox.property.MSHOutProperties;
 import si.laurentius.msh.outbox.property.MSHOutProperty;
+import si.laurentius.testcase.MailTestCases;
 
 /**
  *
@@ -47,7 +47,12 @@ import si.laurentius.msh.outbox.property.MSHOutProperty;
 public class TestUtils {
 
   private static final SEDLogger LOG = new SEDLogger(TestUtils.class);
-  public static String BLOB_FOLDER = "${laurentius.home}/test-pdf/";
+  public static String ROOT_FOLDER = "${laurentius.home}/test-case/";
+  public static String BLOB_FOLDER = ROOT_FOLDER + "/test-pdf/";
+  public static String GENERIC_FOLDER = ROOT_FOLDER + "/generic-cases/";
+  
+  public static String GENERIC_METADATA = GENERIC_FOLDER + "/testcases.xml";
+  
   public static File[] mTstFiles = null;
   
   StorageUtils mstrgUtils = new StorageUtils();
@@ -63,6 +68,18 @@ public class TestUtils {
         service, action,
         TCLookUp.SUBJECTS[rnd.nextInt(TCLookUp.SUBJECTS.length)], getRandomFiles(1, 5,
         rnd), String.format("VL %d/2016", rnd.nextInt(10000)));
+
+  }
+   public MSHOutMail createOutMail(int imsgs, String senderBox, String recName, String recBox,
+      String service, String action,  List<File> lstfiles) {
+
+    Random rnd = new Random(Calendar.getInstance().getTimeInMillis());
+
+    return createOutMail(recBox, recName, senderBox,
+        TCLookUp.SENDER_NAMES[rnd.nextInt(
+            TCLookUp.SENDER_NAMES.length)],
+        service, action,
+        TCLookUp.SUBJECTS[rnd.nextInt(TCLookUp.SUBJECTS.length)],lstfiles, String.format("VL %d/2016", rnd.nextInt(10000)));
 
   }
   
@@ -139,7 +156,7 @@ public class TestUtils {
         
         op.setDescription(i++ == 0 ? "Sklep" : "Priloga");
         op.setFilepath(StorageUtils.getRelativePath(fStorage));        
-        op.setMimeType(MimeValues.MIME_PDF.getMimeType());
+        op.setMimeType(MimeValues.getMimeTypeByFileName(f.getName()));
         om.getMSHOutPayload().getMSHOutParts().add(op);
       } catch (StorageException ex) {
         LOG.logError(l, ex);
@@ -161,6 +178,18 @@ public class TestUtils {
 
     }
     return mTstFiles;
+  }
+  
+  public static MailTestCases getGenericTestCases(){
+    MailTestCases mtc = null;
+    File f = new File(StringFormater.replaceProperties(GENERIC_METADATA));
+    try {
+      mtc = (MailTestCases) XMLUtils.deserialize(f, MailTestCases.class);
+    } catch (JAXBException ex) {
+      LOG.logError(ex.toString(), ex);
+    }
+    return mtc;
+  
   }
 
 }

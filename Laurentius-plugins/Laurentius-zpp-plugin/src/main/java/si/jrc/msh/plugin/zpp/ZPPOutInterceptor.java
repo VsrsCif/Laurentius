@@ -60,10 +60,10 @@ import si.laurentius.msh.outbox.payload.MSHOutPayload;
 import si.jrc.msh.plugin.zpp.doc.DocumentSodBuilder;
 import si.jrc.msh.plugin.zpp.exception.ZPPException;
 import si.jrc.msh.plugin.zpp.utils.FOPUtils;
-import si.jrc.msh.sec.SEDCrypto;
-import si.jrc.msh.sec.SEDKey;
-import si.jrc.msh.sec.pdf.SignUtils;
-import si.jrc.msh.sec.pdf.ValidateSignatureUtils;
+import si.laurentius.lce.enc.SEDCrypto;
+import si.laurentius.lce.enc.SEDKey;
+import si.laurentius.lce.sign.pdf.SignUtils;
+import si.laurentius.lce.sign.pdf.ValidateSignatureUtils;
 import si.laurentius.cert.SEDCertStore;
 import si.laurentius.cert.SEDCertificate;
 import si.laurentius.commons.MimeValues;
@@ -83,10 +83,9 @@ import si.laurentius.commons.pmode.EBMSMessageContext;
 import si.laurentius.commons.utils.HashUtils;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StorageUtils;
-import si.laurentius.commons.utils.sec.KeystoreUtils;
-import si.laurentius.commons.utils.xml.XMLUtils;
+
+import si.laurentius.lce.KeystoreUtils;
 import si.laurentius.msh.inbox.mail.MSHInMail;
-import si.laurentius.msh.pmode.PartyIdentitySetType;
 
 /**
  *

@@ -13,8 +13,8 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import javax.persistence.TypedQuery;
 import javax.xml.bind.JAXBException;
+import si.laurentius.cert.crl.SEDCertCRL;
 import si.laurentius.cert.SEDCertStore;
 import si.laurentius.cert.SEDCertificate;
 import si.laurentius.cron.SEDCronJob;
@@ -41,6 +41,26 @@ public class SEDTestLookup implements SEDLookupsInterface {
   public SEDTestLookup(InputStream is)
       throws IOException, JAXBException {
     init(is);
+  }
+
+  @Override
+  public boolean addSEDCertCRL(SEDCertCRL sb) {
+    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+  }
+
+  @Override
+  public SEDCertCRL getSEDCertCRLByIssuerDNAndUrl(String issuerDn, String http, String ldap) {
+    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+  }
+
+  @Override
+  public List<SEDCertCRL> getSEDCertCRLs() {
+    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+  }
+
+  @Override
+  public SEDCertCRL getSEDCertCRLById(BigInteger id) {
+    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
   }
 
   private void init(InputStream is)
@@ -299,7 +319,12 @@ public class SEDTestLookup implements SEDLookupsInterface {
   }
 
   @Override
-  public boolean removeEDCertStore(SEDCertStore sb) {
+  public boolean removeSEDCertCRL(SEDCertCRL sb) {
+    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+  }
+
+  @Override
+  public boolean removeSEDCertStore(SEDCertStore sb) {
     return remove(sb);
   }
 
@@ -330,6 +355,11 @@ public class SEDTestLookup implements SEDLookupsInterface {
 
   @Override
   public boolean updateSEDBox(SEDBox sb) {
+    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+  }
+
+  @Override
+  public boolean updateSEDCertCRL(SEDCertCRL sb) {
     throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
   }
 

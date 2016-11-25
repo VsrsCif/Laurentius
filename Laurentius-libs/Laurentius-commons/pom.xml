@@ -47,11 +47,6 @@
             <version>${project.version}</version>		
         </dependency>
         
-        <dependency>
-            <groupId>org.apache.santuario</groupId>
-            <artifactId>xmlsec</artifactId>
-            <scope>provided</scope>
-        </dependency>
        
         <dependency>
             <groupId>log4j</groupId>

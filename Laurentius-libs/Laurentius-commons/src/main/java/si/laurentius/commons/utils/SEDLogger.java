@@ -17,6 +17,7 @@ package si.laurentius.commons.utils;
 import java.io.StringWriter;
 import static java.lang.Thread.currentThread;
 import static java.util.Calendar.getInstance;
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
@@ -108,6 +109,7 @@ public class SEDLogger {
     return mlTime;
   }
 
+  
   /**
    *
    * @param lTime
@@ -123,9 +125,11 @@ public class SEDLogger {
       }
       strParams = sw.toString();
     }
+    long logTime = (getTime() - lTime);
+      mlgLogger.log(logTime > 1000?Level.DEBUG:logTime > 60000?Level.WARN:Level.INFO,  
+          getCurrentMethodName() + ": - END ( " + (getTime() - lTime) + " ms) " +
+           strParams);
 
-    mlgLogger.info(getCurrentMethodName() + ": - END ( " + (getTime() - lTime) + " ms) " +
-         strParams);
   }
 
   /**

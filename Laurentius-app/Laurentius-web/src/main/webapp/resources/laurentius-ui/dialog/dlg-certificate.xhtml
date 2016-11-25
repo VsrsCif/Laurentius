@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      >
+    <composite:interface>
+    </composite:interface>
+
+    <composite:implementation >      
+        <!-- Cert ADD/EDIT dialog! -->
+        <p:dialog   header="#{msg['SEDCertDialog']}" widgetVar="certDialog" modal="true" hideEffect="fade" 
+                    resizable="false" appendTo="@(body)" width="900" >
+            <h:form id="certDialogForm">
+                <p:panelGrid  columns="6"  style="width:100%; height: 100% ">
+                <h:outputText value="#{msg['Type']}" />
+                <p:column>
+                    <p:selectOneMenu value="#{adminSEDKeyStores.importStore.type}"  style="width: 300px !important" >
+                        <f:selectItem itemLabel="JKS" itemValue="JKS" />
+                        <f:selectItem itemLabel="PKCS12" itemValue="PKCS12" />
+                    </p:selectOneMenu>  
+                </p:column>
+                <h:outputText value="#{msg['Password']}" />
+                <p:inputText value="#{adminSEDKeyStores.importStore.password}" required="true" />
+                <p:commandButton value="#{msg['Open']}"
+                                 styleClass="toolbar-Button"
+                                 icon="ui-icon-svg-ok ui-icon-size-22" 
+                                 actionListener="#{adminSEDKeyStores.refreshCurrentKeystore(adminSEDKeyStores.importStore)}"
+                                 update=":dlgcertificate:certDialogForm:TblCertficates"
+                                 />
+                
+                </p:panelGrid>
+
+                <p:layout id="certData" style="min-width:650px;height:380px;">
+
+                    <p:layoutUnit  header="Seznam ključev" position="west" size="180" minSize="300" maxSize="300"  >
+
+                        <p:dataTable id="TblCertficates" 
+                                     value="#{adminSEDKeyStores.importStore.SEDCertificates}" 
+                                     var="crt" 
+                                     scrollable="true" 
+                                     scrollHeight="100%"
+                                     selectionMode="single"
+                                     rowKey="#{crt.alias}"
+                                     selection="#{adminSEDKeyStores.selectedImportCertificate}"
+                                     >
+                            <p:ajax event="rowSelect"
+                                    listener="#{adminSEDKeyStores.importStoreRowSelectionChanged()}"
+                                update=":dlgcertificate:certDialogForm:certData" />  
+                            
+                            <p:column headerText="#{msg['IsKey']}">
+                                <h:outputText value="#{crt.keyEntry}" />
+                            </p:column>
+                            <p:column headerText="#{msg['Alias']}">
+                                <h:outputText value="#{crt.alias}" />
+                            </p:column>
+                            
+                            <p:column headerText="#{msg['Password']}">
+                                <h:inputText value="#{crt.keyPassword}" style="width:70px;"  rendered="#{crt.keyEntry}" />
+                            </p:column>
+
+                        </p:dataTable>
+
+
+                    </p:layoutUnit>
+                    <p:layoutUnit  header="Cert data" position="center"   >
+                        <p:panelGrid  columns="2"  style="width:100%; height: 100% ">
+
+
+
+                            <h:outputText value="#{msg['Version']}:" />
+                            <h:outputText  value="#{adminSEDKeyStores.currentCert.version}" style="width: 260px"  />
+
+                            <h:outputText value="#{msg['SubjectDN']}:" />
+                            <h:outputText  value="#{adminSEDKeyStores.currentCert.subjectX500Principal.name}" style="width: 260px"  />
+
+                            <h:outputText value="#{msg['IssuerDN']}:" />
+                            <h:outputText  value="#{adminSEDKeyStores.currentCert.issuerDN.name}" style="width: 260px"  />
+
+
+                            <h:outputText value="#{msg['ValidFrom']}:" />
+                            
+                            <h:outputText  value="#{adminSEDKeyStores.currentCert.notBefore}" style="width: 100%">
+                                <f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
+                            </h:outputText>
+                            
+                            <h:outputText value="#{msg['ValidTo']}:" />                            
+                            <h:outputText  value="#{adminSEDKeyStores.currentCert.notAfter}" style="width: 100%">
+                                <f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
+                            </h:outputText>
+                            
+                           
+
+                            <h:outputText value="#{msg['SerialNumber']}:" />
+                            <h:outputText  value="#{adminSEDKeyStores.currentCert.serialNumber}" style="width: 260px"  />
+
+                            <h:outputText value="#{msg['SignAlg']}:" />
+                            <h:outputText  value="#{adminSEDKeyStores.currentCert.sigAlgName}" style="width: 260px"  />
+                            <h:outputText value="#{msg['KeyAlg']}:" />
+                            <h:outputText  value="#{adminSEDKeyStores.currentCert.publicKey.algorithm}" style="width: 260px"  />
+
+
+                        </p:panelGrid>
+                    </p:layoutUnit>
+
+
+
+                    <p:layoutUnit position="south"  size="40" minSize="40" maxSize="40" >
+                        <p:toolbar 
+                            styleClass="dialogButtonBar" >
+                            <f:facet name="right"  >
+                                <p:commandButton value="#{msg['Import']}"  styleClass="toolbar-Button" 
+                                                 icon="ui-icon-svg-ok ui-icon-size-22" 
+                                                 actionListener="#{adminSEDKeyStores.importSelectedCertificates()}"
+                                                 update=":forms:SettingsCertPanel:CertTabView:CertKeyStoreTab"
+                                                 onclick="PF('certDialog').hide();"/>
+
+                                <p:commandButton value="#{msg['Cancel']}"
+                                                 styleClass="toolbar-Button"
+                                                 icon="ui-icon-svg-cancel ui-icon-size-22" 
+                                                 onclick="PF('certDialog').hide();return false;"/>
+                            </f:facet>
+                        </p:toolbar>
+                    </p:layoutUnit>
+                </p:layout>
+            </h:form>
+        </p:dialog>
+    </composite:implementation>
+</html>

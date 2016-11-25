@@ -107,14 +107,17 @@ h1 {
 
 
 
+
 .ui-datatable-odd {
     background: #ffffff;    
     padding:1px 1px;  
+    
 }
 
 .ui-datatable-even {
     background: #D2D5F9;
     padding:1px 1px;  
+    
 }
 
 

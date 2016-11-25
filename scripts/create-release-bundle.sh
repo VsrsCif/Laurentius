@@ -24,8 +24,10 @@ mkdir $FOLDER_DEPLOY
 cp "$LAU_PROJECT/Laurentius-libs/Laurentius-msh-xsd/target/Laurentius-msh-xsd-1.0.jar" "$ZIP_FILENAME/modules/" 	
 cp "$LAU_PROJECT/Laurentius-libs/Laurentius-wsdl/target/Laurentius-wsdl-1.0.jar" "$ZIP_FILENAME/modules/"
 cp "$LAU_PROJECT/Laurentius-libs/Laurentius-commons/target/Laurentius-commons-1.0.jar" "$ZIP_FILENAME/modules/"
+cp "$LAU_PROJECT/Laurentius-libs/Laurentius-lce/target/Laurentius-lce-1.0.jar" "$ZIP_FILENAME/modules/"
 cp "$LAU_PROJECT/scripts/wildfly-10.1/modules/si.laurentius.module.xml" "$ZIP_FILENAME/modules/"
 cp "$LAU_PROJECT/scripts/wildfly-10.1/modules/org.apache.ws.securitymodule.xml" "$ZIP_FILENAME/modules/"
+cp -r "$LAU_PROJECT/scripts/wildfly-10.1/modules/org"  "$ZIP_FILENAME/modules/"
 
 # commons ejbs
 cp "$LAU_PROJECT/Laurentius-dao/target/Laurentius-dao.jar" "$ZIP_FILENAME/deployments/"

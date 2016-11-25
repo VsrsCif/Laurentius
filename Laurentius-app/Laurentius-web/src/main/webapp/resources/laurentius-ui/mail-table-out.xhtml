@@ -31,13 +31,18 @@
                                  scrollable="true" 
                                  scrollHeight="100%"
                                  >
-                        <p:ajax event="rowSelect" listener="#{OutMailDataView.onRowSelect}" 
+                        <p:ajax event="rowSelect" 
+                                listener="#{OutMailDataView.onRowSelect}" 
                                 update="forms:OutMailPanel:OutMailTab" />
                          <p:ajax event="page"
                                 onstart="PF('blockMainPanel').show();"
                                 oncomplete="PF('blockMainPanel').hide();"
                                 />  
-                        
+                         <f:facet name="header">
+                            <p:commandButton id="toggler" type="button" value="#{msg['Columns']}" 
+                                             style="float:right" icon="ui-icon-calculator" />
+                            <p:columnToggler datasource="OutMailTable" trigger="toggler" />
+                        </f:facet>
                         
                         <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
                         

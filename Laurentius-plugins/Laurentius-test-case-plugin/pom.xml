@@ -111,7 +111,10 @@
     <build>
         <finalName>${war.final.name}</finalName>
         <plugins>
-           
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jaxb2-maven-plugin</artifactId>
+            </plugin>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
             </plugin>           

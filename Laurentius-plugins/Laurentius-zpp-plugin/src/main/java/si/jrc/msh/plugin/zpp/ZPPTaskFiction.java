@@ -5,7 +5,6 @@
 package si.jrc.msh.plugin.zpp;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.StringWriter;
@@ -29,7 +28,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import org.apache.xmlgraphics.util.MimeConstants;
-import org.w3c.dom.Element;
 import si.laurentius.msh.inbox.mail.MSHInMail;
 import si.laurentius.msh.outbox.mail.MSHOutMail;
 import si.laurentius.msh.outbox.payload.MSHOutPart;
@@ -40,9 +38,9 @@ import si.laurentius.cron.SEDTaskTypeProperty;
 import si.jrc.msh.plugin.zpp.doc.DocumentSodBuilder;
 import si.jrc.msh.plugin.zpp.exception.ZPPException;
 import si.jrc.msh.plugin.zpp.utils.FOPUtils;
-import si.jrc.msh.sec.SEDCrypto;
-import si.jrc.msh.sec.SEDKey;
-import si.jrc.msh.sec.pdf.SignUtils;
+import si.laurentius.lce.enc.SEDCrypto;
+import si.laurentius.lce.enc.SEDKey;
+import si.laurentius.lce.sign.pdf.SignUtils;
 import si.laurentius.cert.SEDCertificate;
 import si.laurentius.commons.MimeValues;
 import si.laurentius.commons.SEDInboxMailStatus;
@@ -65,8 +63,7 @@ import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StorageUtils;
 import si.laurentius.commons.utils.StringFormater;
 import si.laurentius.commons.utils.Utils;
-import si.laurentius.commons.utils.sec.KeystoreUtils;
-import si.laurentius.commons.utils.xml.XMLUtils;
+import si.laurentius.lce.KeystoreUtils;
 import si.laurentius.msh.inbox.payload.MSHInPart;
 import si.laurentius.msh.inbox.payload.MSHInPayload;
 import si.laurentius.msh.pmode.PartyIdentitySet;
@@ -283,16 +280,15 @@ public class ZPPTaskFiction implements TaskExecutionInterface {
       throw new ZPPException("Receiver sedbox: '" + sedBox +
           "' does not have defined party serurity!");
     }
-    String recKeystore = pis.getLocalPartySecurity().getKeystoreName();
-    String recSignKeyAlias = pis.getLocalPartySecurity().getSignatureKeyAlias();
+    String recKeystore = pis.getExchangePartySecurity().getTrustoreName();
+    String recSignKeyAlias = pis.getExchangePartySecurity().getSignatureCertAlias();
 
     if (Utils.isEmptyString(recKeystore) || Utils.isEmptyString(recSignKeyAlias)) {
       throw new ZPPException("Receiver sedbox: '" + sedBox +
           "' does not have certificate for signing!");
     }
     SEDCertStore recSc = msedLookup.getSEDCertStoreByName(recKeystore);
-    SEDCertificate recScc = msedLookup.getSEDCertificatForAlias(recSignKeyAlias, sc, false);
-
+    
     MSHOutMail moFNotification = null;
     File fEncryptedKey = null;
     File fDNViz = null;

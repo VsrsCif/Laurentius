@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ns1:MailTestCases  xmlns:ns1="http://laurentius.si/testcase" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<ns1:MailTestCase description="Osnovni primer – vključuje več dolžnikov in več upnikov" name="TC_001">
+		<ns1:Payload type="" filepath="IVPN_646246_0.pdf" ebmsId="" filename="IVPN_646246_0.pdf" encoding="BIN" description="Potrdilo o pravnomočnosti" mimeType="application/pdf"/>
+		<ns1:Payload type="" filepath="IVPN_646246_1.pdf" ebmsId="" filename="IVPN_646246_1.pdf" encoding="BIN" description="Sklep" mimeType="application/pdf"/>
+		<ns1:Payload type="" filepath="IVPN_646246_2.pdf" ebmsId="" filename="IVPN_646246_2.pdf" encoding="BIN" description="Predlog za izvršbo" mimeType="application/pdf"/>
+		<ns1:Payload type="" filepath="IVPN_646246_3.xml" ebmsId="" filename="IVPN_646246_3.xml" encoding="UTF-8" description="XML podatki" mimeType="text/xml"/>
+	</ns1:MailTestCase>
+	<ns1:MailTestCase description="Banka je upnik in dolžnikov dolžnik" name="TC_002">
+		<ns1:Payload type="" filepath="IVPN_646254_0.pdf" ebmsId="" filename="IVPN_646254_0.pdf" encoding="BIN" description="Potrdilo o pravnomočnosti" mimeType="application/pdf"/>
+		<ns1:Payload type="" filepath="IVPN_646254_1.pdf" ebmsId="" filename="IVPN_646254_1.pdf" encoding="BIN" description="Sklep" mimeType="application/pdf"/>
+		<ns1:Payload type="" filepath="IVPN_646254_2.pdf" ebmsId="" filename="IVPN_646254_2.pdf" encoding="BIN" description="Predlog za izvršbo" mimeType="application/pdf"/>
+		<ns1:Payload type="" filepath="IVPN_646254_3.xml" ebmsId="" filename="IVPN_646254_3.xml" encoding="UTF-8" description="XML podatki" mimeType="text/xml"/>
+	</ns1:MailTestCase>
+		<ns1:MailTestCase description="En sam upnik in en sam dolžnik" name="TC_006">
+		<ns1:Payload type="" filepath="IVPN_646245_0.pdf" ebmsId="" filename="IVPN_646245_0.pdf" encoding="BIN" description="Potrdilo o pravnomočnosti" mimeType="application/pdf"/>
+		<ns1:Payload type="" filepath="IVPN_646245_1.pdf" ebmsId="" filename="IVPN_646245_1.pdf" encoding="BIN" description="Sklep" mimeType="application/pdf"/>
+		<ns1:Payload type="" filepath="IVPN_646245_2.pdf" ebmsId="" filename="IVPN_646245_2.pdf" encoding="BIN" description="Predlog za izvršbo" mimeType="application/pdf"/>
+		<ns1:Payload type="" filepath="IVPN_646245_3.xml" ebmsId="" filename="IVPN_646245_3.xml" encoding="UTF-8" description="XML podatki" mimeType="text/xml"/>
+	</ns1:MailTestCase>
+		<ns1:MailTestCase description="En upnik, več dolžnikov" name="TC_007">
+		<ns1:Payload type="" filepath="IVPN_646246_0.pdf" ebmsId="" filename="IVPN_646246_0.pdf" encoding="BIN" description="Potrdilo o pravnomočnosti" mimeType="application/pdf"/>
+		<ns1:Payload type="" filepath="IVPN_646246_1.pdf" ebmsId="" filename="IVPN_646246_1.pdf" encoding="BIN" description="Sklep" mimeType="application/pdf"/>
+		<ns1:Payload type="" filepath="IVPN_646246_2.pdf" ebmsId="" filename="IVPN_646246_2.pdf" encoding="BIN" description="Predlog za izvršbo" mimeType="application/pdf"/>
+		<ns1:Payload type="" filepath="IVPN_646246_3.xml" ebmsId="" filename="IVPN_646246_3.xml" encoding="UTF-8" description="XML podatki" mimeType="text/xml"/>
+	</ns1:MailTestCase>
+</ns1:MailTestCases>

@@ -76,6 +76,8 @@ public class SEDSystemProperties {
    * </p>
    */
   public static final String SYS_PROP_FOLDER_SECURITY_DEF = "security";
+  
+  public static final String SYS_PROP_FOLDER_CRL_DEF = "crl";
   /**
    * Default value for plugin folder name.
    *

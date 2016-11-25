@@ -18,6 +18,7 @@ import java.io.File;
 import java.math.BigInteger;
 import java.util.List;
 import javax.ejb.Local;
+import si.laurentius.cert.crl.SEDCertCRL;
 import si.laurentius.cert.SEDCertStore;
 import si.laurentius.cert.SEDCertificate;
 import si.laurentius.cron.SEDCronJob;
@@ -46,6 +47,14 @@ public interface SEDLookupsInterface {
    * @return
    */
   boolean addSEDCertStore(SEDCertStore sb);
+  
+    /**
+   *
+   * @param sb
+   * @return
+   */
+  boolean addSEDCertCRL(SEDCertCRL  sb);
+
 
   /**
    *
@@ -136,12 +145,22 @@ public interface SEDLookupsInterface {
   List<SEDCertStore> getSEDCertStore();
   
   /**
+   * Return list of registred key/trust stores
+   * @return List of SEDCertCRL
+   */
+  List<SEDCertCRL> getSEDCertCRLs();
+  
+  
+  
+  /**
    * Method return SEDCertStore by sed id.
    * @param id Certificate store name
    * @throw IllegalArgumentException if storname is null or empty
    * @return SEDCertStore if not found return null
    */
   public SEDCertStore getSEDCertStoreById(BigInteger id);
+  
+   
   
   /**
    * Method return SEDCertStore by name.
@@ -178,6 +197,16 @@ public interface SEDLookupsInterface {
       String storeName, boolean isKey);
    
    
+    /**
+   * Method return SEDCertCRL by sed id.
+   * @param id of crl
+   * @throw IllegalArgumentException if storname is null or empty
+   * @return SEDCertCRL if not found return null
+   */
+  public SEDCertCRL getSEDCertCRLById(BigInteger id);
+  
+  public SEDCertCRL getSEDCertCRLByIssuerDNAndUrl(String issuerDn, String http, String ldap);
+  
   /**
    *
    * @return
@@ -214,7 +243,14 @@ public interface SEDLookupsInterface {
    * @param sb
    * @return
    */
-  boolean removeEDCertStore(SEDCertStore sb);
+  boolean removeSEDCertStore(SEDCertStore sb);
+  
+    /**
+   *
+   * @param sb
+   * @return
+   */
+  boolean removeSEDCertCRL(SEDCertCRL sb);
 
   /**
    *
@@ -258,6 +294,13 @@ public interface SEDLookupsInterface {
    */
   boolean updateSEDCertStore(SEDCertStore sb);
 
+  
+    /**
+   *
+   * @param sb
+   * @return
+   */
+  boolean updateSEDCertCRL(SEDCertCRL sb); 
   /**
    *
    * @param sb

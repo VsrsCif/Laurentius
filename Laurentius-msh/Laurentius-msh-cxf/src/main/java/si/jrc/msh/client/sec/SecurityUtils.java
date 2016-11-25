@@ -16,8 +16,6 @@ package si.jrc.msh.client.sec;
 
 import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +32,8 @@ import si.laurentius.cert.SEDCertificate;
 import si.jrc.msh.exception.EBMSError;
 import si.jrc.msh.interceptor.EBMSOutInterceptor;
 import si.laurentius.commons.utils.SEDLogger;
-import si.laurentius.commons.utils.sec.KeystoreUtils;
+import si.laurentius.lce.KeystoreUtils;
+
 
 /**
  *

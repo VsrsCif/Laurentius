@@ -52,7 +52,6 @@ import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.utils.GZIPUtil;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StorageUtils;
-import si.laurentius.commons.utils.sec.KeystoreUtils;
 import si.laurentius.commons.pmode.EBMSMessageContext;
 import si.laurentius.commons.utils.Utils;
 
@@ -76,10 +75,7 @@ public class EBMSOutInterceptor extends AbstractEBMSInterceptor {
    */
   protected final GZIPUtil mGZIPUtils = new GZIPUtil();
 
-  /**
-   * Keystore tools
-   */
-  private final KeystoreUtils mKSUtis = new KeystoreUtils();
+
 
   /**
    * Contstructor EBMSOutInterceptor for setting instance in a phase Phase.PRE_PROTOCOL

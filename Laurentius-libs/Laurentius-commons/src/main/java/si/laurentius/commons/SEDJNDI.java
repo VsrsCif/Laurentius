@@ -71,4 +71,11 @@ public class SEDJNDI {
   public static final String JNDI_PMODE =
       "java:global/Laurentius-dao/PModeManagerBean!si.laurentius.commons.interfaces.PModeInterface";
 
+  
+    
+  /**
+     *
+     */
+  public static final String JNDI_SEDCRL =
+      "java:global/Laurentius-dao/SEDCertCRLBean!si.laurentius.commons.interfaces.SEDCertCRLInterface";
 }

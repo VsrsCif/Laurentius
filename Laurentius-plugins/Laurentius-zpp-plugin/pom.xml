@@ -67,6 +67,13 @@
             <version>${project.version}</version>		
             <scope>provided</scope>	
         </dependency>
+        
+         <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>Laurentius-lce</artifactId>
+            <version>${project.version}</version>		
+            <scope>provided</scope>	
+        </dependency>
     
       
         <dependency>
@@ -82,13 +89,11 @@
         <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcprov-jdk15on</artifactId>
-            <version>1.55</version>
         </dependency>
  
         <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcpkix-jdk15on</artifactId>
-            <version>1.55</version>
         </dependency>
       
         <dependency>
@@ -155,7 +160,7 @@
                             <implementation-version>${project.version}</implementation-version>             
                             <Implementation-Build>${buildNumber}</Implementation-Build>                            
                             <Dependencies>org.apache.cxf,org.apache.cxf.impl,org.apache.commons.io, org.apache.ws.security, 
-                                org.apache.santuario.xmlsec,si.laurentius</Dependencies>
+                                org.apache.pdfbox,  org.apache.santuario.xmlsec,si.laurentius</Dependencies>
                         </manifestEntries>
                     </archive>                                 
                 </configuration>                 

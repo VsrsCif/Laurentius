@@ -77,8 +77,11 @@ rem  copy module libraries
 copy "%LAU_BUNDLE%\modules\Laurentius-msh-xsd-1.0.jar" "%WILDFLY_HOME%\modules\si\laurentius\main\"
 copy "%LAU_BUNDLE%\modules\Laurentius-wsdl-1.0.jar" "%WILDFLY_HOME%\modules\si\laurentius\main\"
 copy "%LAU_BUNDLE%\modules\Laurentius-commons-1.0.jar" "%WILDFLY_HOME%\modules\si\laurentius\main\"
+copy "%LAU_BUNDLE%\modules\Laurentius-lce-1.0.jar" "%WILDFLY_HOME%\modules\si\laurentius\main\"
+
 rem  copy module descriptor
 copy "%LAU_BUNDLE%\modules\si.laurentius.module.xml" "%WILDFLY_HOME%\modules\si\laurentius\main\module.xml"
+xcopy "%LAU_BUNDLE%\modules\org" "%WILDFLY_HOME%\modules\org" /S /E
 
 rem  deploy commons ejbs
 copy "%LAU_BUNDLE%\deployments\Laurentius-dao.jar"  "%WILDFLY_HOME%\standalone\deployments\"
@@ -89,6 +92,7 @@ copy "%LAU_BUNDLE%\deployments\laurentius-ws.war"  "%WILDFLY_HOME%\standalone\de
 copy "%LAU_BUNDLE%\deployments\laurentius-web.war"  "%WILDFLY_HOME%\standalone\deployments\"
 copy "%LAU_BUNDLE%\deployments\plugin-zpp.war"  "%WILDFLY_HOME%\standalone\deployments\"
 copy "%LAU_BUNDLE%\deployments\plugin-testcase.war"  "%WILDFLY_HOME%\standalone\deployments\"
+
 
 
 

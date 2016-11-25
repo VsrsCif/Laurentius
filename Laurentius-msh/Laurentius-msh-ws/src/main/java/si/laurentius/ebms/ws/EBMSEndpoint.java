@@ -152,7 +152,9 @@ public class EBMSEndpoint implements Provider<SOAPMessage> {
       LOG.logError(l, "Error setting status ERROR to MSHInMail :'" + mail.getId() + "'!", ex);
     }
 
-    if (sb.getExport() != null && sb.getExport().getActive() != null && sb.getExport().getActive()) {
+    if (sb.getExport() != null && sb.getExport().getActive() != null 
+        && sb.getExport().getActive()
+        || sb.getXSLT()!= null        ) {
       try {
         mJMS.exportInMail(mail.getId().longValue());
       } catch (NamingException | JMSException ex) {

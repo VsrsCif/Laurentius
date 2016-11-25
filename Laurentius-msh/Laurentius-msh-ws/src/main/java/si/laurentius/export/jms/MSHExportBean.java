@@ -15,11 +15,15 @@
 package si.laurentius.export.jms;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.ActivationConfigProperty;
 import javax.ejb.EJB;
 import javax.ejb.MessageDriven;
@@ -30,9 +34,16 @@ import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.persistence.NoResultException;
 import javax.xml.bind.JAXBException;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathExpressionException;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 import si.laurentius.commons.MimeValues;
 import si.laurentius.commons.SEDInboxMailStatus;
 import si.laurentius.commons.SEDJNDI;
+import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.SEDValues;
 import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.interfaces.SEDDaoInterface;
@@ -47,6 +58,11 @@ import si.laurentius.ebox.Export;
 import si.laurentius.ebox.SEDBox;
 import si.laurentius.msh.inbox.mail.MSHInMail;
 import si.laurentius.msh.inbox.payload.MSHInPart;
+import si.laurentius.msh.xslt.XSLTNamespaceContext;
+import si.laurentius.msh.xslt.XPathUtils;
+import si.laurentius.msh.xslt.XSLTUtils;
+import si.laurentius.xslt.SEDXslt;
+import si.laurentius.xslt.XPathRule;
 
 /**
  *
@@ -78,6 +94,8 @@ public class MSHExportBean implements MessageListener {
   StorageUtils msStorageUtils = new StorageUtils();
   StringFormater msfFormat = new StringFormater();
 
+  XPathUtils mxsltUtils = new XPathUtils();
+
   @Override
   public void onMessage(Message msg) {
     long t = LOG.logStart();
@@ -108,6 +126,10 @@ public class MSHExportBean implements MessageListener {
       setStatusToInMail(mail, SEDInboxMailStatus.ERROR, errMsg);
       LOG.logError(t, "Message with id: '" + jmsMessageId + "' export failed!" + errMsg, null);
       return;
+    }
+
+    if (sb.getXSLT() != null) {
+      tranformPayloads(sb.getXSLT(), mail);
     }
 
     String exportFolderName;
@@ -231,6 +253,72 @@ public class MSHExportBean implements MessageListener {
     } catch (StorageException ex) {
       LOG.logError("Failed to set status to message with id: '" + mail.getId() + "'!", ex);
     }
+  }
+
+  public void tranformPayloads(SEDXslt xslt, MSHInMail mim) {
+    LOG.formatedlog("XSLT for box");
+    for (XPathRule xpr : xslt.getXPathRules()) {
+      LOG.formatedlog("XSLT for box rule 1");
+      if (Objects.equals(xpr.getService(), mim.getService()) &&
+          Objects.equals(xpr.getAction(), mim.getAction()) &&
+          mim.getMSHInPayload() != null &&
+          !mim.getMSHInPayload().getMSHInParts().isEmpty()) {
+
+        LOG.formatedlog("XSLT for box rule 2");
+        List<MSHInPart> miplst = mim.getMSHInPayload().getMSHInParts();
+        XPath xpath = mxsltUtils.createXPathFromNSContext(new XSLTNamespaceContext(
+            xslt.getNamespaces()));
+        List<MSHInPart> mipNewPayload = new ArrayList<>();
+        for (MSHInPart mip : miplst) {
+          LOG.formatedlog("XSLT for box rule 3");
+          if (Objects.equals(mip.getMimeType(), MimeValues.MIME_XML.getMimeType())) {
+            LOG.formatedlog("XSLT for box rule 4");
+            try {
+              Document doc = XMLUtils.deserializeToDom(StorageUtils.getFile(mip.getFilepath()));
+              if (mxsltUtils.doesRuleApply(doc, xpath, xpr.getXPath(), xpr.getValue())) {
+                LOG.formatedlog("XSLT for box rule 5");
+                String trFile = StringFormater.replaceProperties(xpr.getTransformation());
+                LOG.formatedlog("XSLT file %s ", trFile);
+                
+
+                try {
+                  File fRes = StorageUtils.getNewStorageFile("xml", "xslt");
+                  XSLTUtils.transform(doc, new File(trFile), fRes);
+
+                  MSHInPart mipt = new MSHInPart();
+                  mipt.setDescription("Transform");
+                  mipt.setMimeType(MimeValues.MIME_XML.getMimeType());
+                  mipt.setFilename(fRes.getName());
+                  mipt.setSource("xslt");
+                  mipt.setFilepath(StorageUtils.getRelativePath(fRes));
+                  mipt.setName("transformation");
+                  mipNewPayload.add(mipt);
+
+                } catch (JAXBException | TransformerException | StorageException ex) {
+                  LOG.logError(ex.getMessage(), ex);
+                }
+
+              }
+            } catch (IOException | ParserConfigurationException | SAXException
+                | XPathExpressionException ex) {
+              LOG.logError(ex.getMessage(), ex);
+            }
+
+          }
+        }
+        // add new payloads
+        if (!mipNewPayload.isEmpty()) {
+          mim.getMSHInPayload().getMSHInParts().addAll(mipNewPayload);
+          try {
+            mDB.updateInMail(mim, "transform", "");
+          } catch (StorageException ex) {
+            LOG.logError(ex.getMessage(), ex);
+          }
+        }
+
+      }
+    }
+
   }
 
 }

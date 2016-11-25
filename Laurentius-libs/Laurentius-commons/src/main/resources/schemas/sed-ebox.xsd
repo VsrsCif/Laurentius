@@ -25,8 +25,9 @@ Copyright 2016, Supreme Court Republic of Slovenia
  See the Licence for the specific language governing permissions and  
  limitations under the Licence.
 -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://laurentius.si/ebox" xmlns:usr="http://laurentius.si/user" targetNamespace="http://laurentius.si/ebox" elementFormDefault="qualified" attributeFormDefault="unqualified">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://laurentius.si/ebox" xmlns:usr="http://laurentius.si/user" xmlns:xslt="http://laurentius.si/xslt" targetNamespace="http://laurentius.si/ebox" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xs:import namespace="http://laurentius.si/user" schemaLocation="./sed-user.xsd"/>
+	<xs:import namespace="http://laurentius.si/xslt" schemaLocation="./sed-xslt.xsd"/>
 	<xs:element name="SEDBox" type="ns1:SEDBox"/>
 	<xs:complexType name="SEDBox">
 		<xs:annotation>
@@ -36,6 +37,7 @@ Copyright 2016, Supreme Court Republic of Slovenia
 			<!-- xs:element ref="usr:SEDUser" maxOccurs="unbounded"/ -->
 			<xs:element name="Export" type="ns1:Export" minOccurs="0"/>
 			<xs:element name="Execute" type="ns1:Execute" minOccurs="0"/>
+			<xs:element name="XSLT" type="xslt:SEDXslt" minOccurs="0"/>
 		</xs:sequence>
 		<xs:attribute name="localBoxName" type="xs:string" use="required">
 			<xs:annotation>

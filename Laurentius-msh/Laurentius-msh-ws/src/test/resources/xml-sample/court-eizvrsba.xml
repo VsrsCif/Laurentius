@@ -1,0 +1,167 @@
+<izv:OpisPosiljke schemaVersion="1.1" xmlns:izv="http://sodisce.si/izvrsba">
+	<izv:Glava>
+		<izv:Posiljatelj ime-naziv="Okrajno sodišče v Mariboru, Izvršilni oddelek" maticna="5023025001">
+			<izv:Naslov drzava="SVN" ulica="Cafova 1" sifPosta="2508" kraj="Maribor"/>
+		</izv:Posiljatelj>
+		<izv:Prejemnik idUdelezenec="28848246" ime-naziv="Živa" priimek-naziv="Groza" maticna="4512330334" davcna="124527653" vrsta="fizicna">
+			<izv:Naslov drzava="SVN" hisnaStevilka="1000" kraj="MARIBOR - DOSTAVA" nazivPosta="MARIBOR - DOSTAVA" sifPosta="2000" ulica="STROSSMAYERJEVA"/>
+			<izv:Vloga nazivVloga="tretji"/>
+		</izv:Prejemnik>
+	</izv:Glava>
+	<izv:Vsebina>
+		<izv:ProcesnoDejanje sifProcesnoDejanje="568" nazivProcesnoDejanje="VL predlog za izvršbo">
+			<izv:Predlog tipEopravila="011" nacinVlozitve="splet" dtPoslano="2016-08-11+02:00" dtSprejeto="2016-08-11T00:00:00.000+02:00" stIzvodov="1" stPrilog="0" opisPriloge="" gospodarska="true" prezivnina="false">
+				<izv:Sodisce>
+					<izv:Naslov drzava="SVN" hisnaStevilka="" kraj="Ljubljana" nazivPosta="Ljubljana" sifPosta="1000" ulica="Kersnikova  2"/>
+					<izv:nazivSodisce>Okrajno sod. v Ljubljani - centralni oddelek za verodostojno listino</izv:nazivSodisce>
+				</izv:Sodisce>
+				<izv:Vlagatelj ime-naziv="Srečko " priimek-naziv="Nesrečnik"/>
+				<izv:Dolzniki>
+					<izv:Dolznik>
+						<izv:Oseba idUdelezenec="1" ime-naziv="" priimek-naziv="AVTOMOBILI in KARJOLE, d.o.o." maticna="6207428067" davcna="80223423" vrsta="pravna" zastopaDrzavnoPravobranilstvo="false">
+							<izv:Naslov drzava="SVN" hisnaStevilka="1000" nazivPosta="Maribor" sifPosta="2000" ulica="Ulica Vita Kraigherja"/>
+						</izv:Oseba>
+						<izv:PredlaganaIzvrsba>
+							<izv:Premicnina prodajaPoplacilo="true" veckratniRubez="true" zlasti=""/>
+							<izv:DenarnaSredstvaOPP>
+								<izv:TRR nazivBanke="" racun="SI56022222222222222" sklic="" vrstaRacuna="SI_IBAN"/>
+							</izv:DenarnaSredstvaOPP>
+						</izv:PredlaganaIzvrsba>
+					</izv:Dolznik>
+				</izv:Dolzniki>
+				<izv:Upniki>
+					<izv:Upniki>
+						<izv:Oseba idUdelezenec="2" ime-naziv="" priimek-naziv="KAO storitveno podjetje d.o.o." maticna="530674234230" davcna="619234287" vrsta="pravna">
+							<izv:RacunZaNakazilo racun="SI_IBAN SI56022222222222222" imetnikRacuna="KAO D.O.O."/>
+							<izv:Naslov drzava="SVN" hisnaStevilka="1000" nazivPosta="Maribor" sifPosta="2000" ulica="Meljska cesta"/>
+						</izv:Oseba>
+						<izv:Zastopnik idUdelezenec="3" ime-naziv="Srečko" priimek-naziv="Nesrečnik" maticna="" davcna="" vrsta="fizicna" polozaj="Poslovodja">
+							<izv:Naslov drzava="" hisnaStevilka="" nazivPosta="" sifPosta="" ulica=""/>
+						</izv:Zastopnik>
+					</izv:Upniki>
+				</izv:Upniki>
+				<izv:OznakaZahtevka>
+					<izv:VerodostojneListine>
+						<izv:VerodostojnaListina sifListina="1" oznaka="2600718" datumZapadlosti="2016-04-28+02:00" datum="2016-03-29+02:00" znesek="219.60" valuta="EUR">
+							<izv:ZamudneObresti>
+								<izv:ObrestZakonska odDatuma="2016-04-29+02:00"/>
+							</izv:ZamudneObresti>
+						</izv:VerodostojnaListina>
+						<izv:VerodostojnaListina sifListina="1" oznaka="2601390" datumZapadlosti="2016-08-05+02:00" datum="2016-07-06+02:00" znesek="486.02" valuta="EUR">
+							<izv:ZamudneObresti>
+								<izv:ObrestZakonska odDatuma="2016-08-06+02:00"/>
+							</izv:ZamudneObresti>
+						</izv:VerodostojnaListina>
+						<izv:VerodostojnaListina sifListina="1" oznaka="1602127" datumZapadlosti="2016-07-12+02:00" datum="2016-07-12+02:00" znesek="524.44" valuta="EUR">
+							<izv:ZamudneObresti>
+								<izv:ObrestZakonska odDatuma="2016-07-13+02:00"/>
+							</izv:ZamudneObresti>
+						</izv:VerodostojnaListina>
+					</izv:VerodostojneListine>
+					<izv:StroskiUpnika zakonskeZamudneObresti="true">
+						<izv:StrosekTaksa zahtevani="true"/>
+						<izv:StrosekDrugo opis="STROŠKI SESTAVE PREDLOGA" valuta="EUR" znesek="50.00"/>
+					</izv:StroskiUpnika>
+				</izv:OznakaZahtevka>
+				<izv:Izvrsitelji>
+					<izv:Izvrsitelj>
+						<izv:Oseba idUdelezenec="4" ime-naziv="Živa" priimek-naziv="Groza" maticna="4512330334" davcna="124527653">
+							<izv:Naslov drzava="SVN" hisnaStevilka="1000" nazivPosta="MARIBOR - DOSTAVA" sifPosta="2000" ulica="STROSSMAYERJEVA"/>
+						</izv:Oseba>
+					</izv:Izvrsitelj>
+				</izv:Izvrsitelji>
+				<izv:OkrajnoSodisce nazivSodisce="Okrajno sodišče v Mariboru" sifSodisce="S24"/>
+				<izv:PrilozenIzvrsilniNaslov>false</izv:PrilozenIzvrsilniNaslov>
+			</izv:Predlog>
+		</izv:ProcesnoDejanje>
+		<izv:ProcesnoDejanje sifProcesnoDejanje="566" nazivProcesnoDejanje="Potrdilo o pravnomočnosti in izvršljivosti">
+			<izv:PotrdiloOPravnomocnosti>
+				<izv:Dolzniki>
+					<izv:Dolznik>
+						<izv:Oseba idUdelezenec="28848243" ime-naziv="" priimek-naziv="AVTOMOBILI in KARJOLE, d.o.o." vrsta="pravna">
+							<izv:Naslov drzava="SVN" hisnaStevilka="100" kraj="Maribor" nazivPosta="Maribor" sifPosta="2000" ulica="Ulica Vita Kraigherja"/>
+						</izv:Oseba>
+					</izv:Dolznik>
+				</izv:Dolzniki>
+				<izv:Upniki>
+					<izv:Upniki>
+						<izv:Oseba idUdelezenec="28848244" ime-naziv="" priimek-naziv="KAO storitveno podjetje d.o.o." vrsta="pravna">
+							<izv:Naslov drzava="SVN" hisnaStevilka="1000" kraj="Maribor" nazivPosta="Maribor" sifPosta="2000" ulica="Meljska cesta"/>
+						</izv:Oseba>
+						<izv:Zastopnik idUdelezenec="28848245" ime-naziv="Srečko" priimek-naziv="Nesrečnik" vrsta="fizicna">
+							<izv:Naslov drzava="" hisnaStevilka="" kraj="" nazivPosta="" sifPosta="" ulica=""/>
+						</izv:Zastopnik>
+					</izv:Upniki>
+				</izv:Upniki>
+				<izv:OpravilnaStevilka vpisnik="VL" zadevaLeto="2016" zadevaStevilka="1"/>
+				<izv:trenutniDatum>2016-10-24+02:00</izv:trenutniDatum>
+				<izv:datumSklepaOIzvrsbi>2016-08-12+02:00</izv:datumSklepaOIzvrsbi>
+				<izv:Izvrsitelj idUdelezenec="28848246" ime-naziv="Živa" priimek-naziv="Groza"/>
+				<izv:vrednostIzvrsbe>1230.06</izv:vrednostIzvrsbe>
+				<izv:vrednostIzvrsbePrezivnina>1230.06</izv:vrednostIzvrsbePrezivnina>
+				<izv:Valuta>EUR</izv:Valuta>
+				<izv:datumaSklepa>2016-10-24+02:00</izv:datumaSklepa>
+				<izv:datumPravnomocnosti>2016-10-04+02:00</izv:datumPravnomocnosti>
+				<izv:podpisnik>Višji sodniški pomočnik: Samo Všečnik</izv:podpisnik>
+				<izv:pristojnoSodisce>Okrajno sodišče v Mariboru</izv:pristojnoSodisce>
+				<izv:PrejemnikiPravnomocnegaSklepa>
+					<izv:Prejemnik idUdelezenec="28848244" ime-naziv="" priimek-naziv="KAO storitveno podjetje d.o.o." maticna="5306744000" davcna="61907987" vrsta="pravna">
+						<izv:Naslov drzava="SVN" hisnaStevilka="1000" kraj="Maribor" nazivPosta="Maribor" sifPosta="2000" ulica="Meljska cesta"/>
+						<izv:Vloga nazivVloga="upnik"/>
+					</izv:Prejemnik>
+					<izv:Prejemnik idUdelezenec="28848246" ime-naziv="Živa" priimek-naziv="Groza" maticna="4512330334" davcna="124527653" vrsta="fizicna">
+						<izv:Naslov drzava="SVN" hisnaStevilka="1000" kraj="MARIBOR - DOSTAVA" nazivPosta="MARIBOR - DOSTAVA" sifPosta="2000" ulica="STROSSMAYERJEVA"/>
+						<izv:Vloga nazivVloga="tretji"/>
+					</izv:Prejemnik>
+					<izv:Prejemnik idUdelezenec="29153164" ime-naziv="" priimek-naziv="NOVA KREDITNA BANKA MARIBOR d.d." maticna="5860580" davcna="23421513" vrsta="pravna">
+						<izv:Naslov drzava="" hisnaStevilka="1000" kraj="MARIBOR" nazivPosta="MARIBOR" sifPosta="2505" ulica="Ulica Vita Kraigherja"/>
+						<izv:Vloga nazivVloga="dolžnikov dolžnik"/>
+					</izv:Prejemnik>
+				</izv:PrejemnikiPravnomocnegaSklepa>
+				<izv:PrejemnikiSklepa>
+					<izv:Prejemnik idUdelezenec="28848243" ime-naziv="" priimek-naziv="Avtomobili in Karjole d.o.o." maticna="5154235256" davcna="42341445" vrsta="pravna">
+						<izv:Naslov drzava="SVN" hisnaStevilka="1000" kraj="Maribor" nazivPosta="Maribor" sifPosta="2000" ulica="Ulica Vita Kraigherja"/>
+						<izv:Vloga nazivVloga="dolžnik"/>
+						<izv:datumVrocitve>2016-08-18+02:00</izv:datumVrocitve>
+					</izv:Prejemnik>
+				</izv:PrejemnikiSklepa>
+				<izv:RacunDolznika racun="123112313448867"/>
+			</izv:PotrdiloOPravnomocnosti>
+		</izv:ProcesnoDejanje>
+		<izv:ProcesnoDejanje sifProcesnoDejanje="536" nazivProcesnoDejanje="Sklep o izvršbi">
+			<izv:SklepOIzvrsbi>
+				<izv:Dolzniki>
+					<izv:Dolznik>
+						<izv:Oseba idUdelezenec="28848243" ime-naziv="" priimek-naziv="Avtomobili in Karjole d.o.o." vrsta="pravna">
+							<izv:Naslov drzava="SVN" hisnaStevilka="1000" kraj="Maribor" nazivPosta="Maribor" sifPosta="2000" ulica="Ulica Vita Kraigherja"/>
+						</izv:Oseba>
+					</izv:Dolznik>
+				</izv:Dolzniki>
+				<izv:Upniki>
+					<izv:Upniki>
+						<izv:Oseba idUdelezenec="28848244" ime-naziv="" priimek-naziv="KAO storitveno podjetje d.o.o." vrsta="pravna">
+							<izv:Naslov drzava="SVN" hisnaStevilka="1000" kraj="Maribor" nazivPosta="Maribor" sifPosta="2000" ulica="Meljska cesta"/>
+						</izv:Oseba>
+						<izv:Zastopnik idUdelezenec="28848245" ime-naziv="Mirko" priimek-naziv="Pobalinko" vrsta="fizicna">
+							<izv:Naslov drzava="" hisnaStevilka="" kraj="" nazivPosta="" sifPosta="" ulica=""/>
+						</izv:Zastopnik>
+					</izv:Upniki>
+				</izv:Upniki>
+				<izv:OpravilnaStevilka vpisnik="VL" zadevaLeto="2016" zadevaStevilka="78338"/>
+				<izv:RacunSodnikTaks racun="SI56 0110 0845 0100 810"/>
+				<izv:datumSklepaOIzvrsbi>2016-08-12+02:00</izv:datumSklepaOIzvrsbi>
+				<izv:Izvrsitelj idUdelezenec="28848246" ime-naziv="Živa" priimek-naziv="Groza"/>
+				<izv:vrednostIzvrsbe>1230.06</izv:vrednostIzvrsbe>
+				<izv:vrednostIzvrsbePrezivnina>1230.06</izv:vrednostIzvrsbePrezivnina>
+				<izv:Valuta>EUR</izv:Valuta>
+				<izv:OznakaVpisnika>0000</izv:OznakaVpisnika>
+				<izv:podpisnik>Višji sodniški pomočnik: Samo Vššečnik</izv:podpisnik>
+				<izv:oprostitevTakse>false</izv:oprostitevTakse>
+				<izv:Sklic>20001-280964480</izv:Sklic>
+				<izv:PristojnoSodisce>Okrajno sodišče v Mariboru</izv:PristojnoSodisce>
+				<izv:stroskiUpnika>74.00</izv:stroskiUpnika>
+				<izv:Zavrzeno/>
+			</izv:SklepOIzvrsbi>
+		</izv:ProcesnoDejanje>
+	</izv:Vsebina>
+</izv:OpisPosiljke>

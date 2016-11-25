@@ -30,16 +30,22 @@
                                  style="padding: 0px; margin: 0px"
                                  scrollable="true" 
                                  scrollHeight="100%"
-
-
                                  >
-                        <p:ajax event="rowSelect" listener="#{InMailDataView.onRowSelect}" 
-                                update="forms:InMailPanel:InMailTab" />  
+                        <f:facet name="header">
+                            <p:commandButton id="toggler" type="button" value="#{msg['Columns']}" 
+                                             style="float:right" icon="ui-icon-calculator" />
+                            <p:columnToggler datasource="InMailTable" trigger="toggler" />
+                        </f:facet>
+
+                        <p:ajax event="rowSelect"  
+                                listener="#{InMailDataView.onRowSelect}" 
+                                update="forms:InMailPanel:InMailTab" />                          
                         <p:ajax event="page"
                                 onstart="PF('blockMainPanel').show();"
                                 oncomplete="PF('blockMainPanel').hide();"
+                                update="forms:InMailPanel:InMailTab" 
                                 />  
-                        
+
                         <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
 
 
@@ -69,7 +75,7 @@
                         </p:column>
                     </p:dataTable>
                 </p:scrollPanel>
-                
+
             </p:layoutUnit>
             <p:layoutUnit  position="south" resizable="true" closable="true" collapsible="true"
                            size="200" minSize="40" maxSize="400" style="width:100%;height:100%;padding: 0px; margin: 0px"
@@ -155,6 +161,9 @@
                                 </p:column>
                                 <p:column width="60" headerText="#{msg['Encrypted']}">
                                     <h:outputText value="#{plpart.isEncrypted}" />
+                                </p:column>
+                                <p:column width="60" headerText="#{msg['Source']}">
+                                    <h:outputText value="#{plpart.source}" />
                                 </p:column>
                                 <p:column width="60" headerText="#{msg['Download']}">
                                     <p:commandButton ajax="false" value="#{msg['Download']}"

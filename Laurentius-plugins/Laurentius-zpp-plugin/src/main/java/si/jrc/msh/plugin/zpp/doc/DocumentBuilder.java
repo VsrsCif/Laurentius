@@ -23,8 +23,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import si.laurentius.commons.exception.SEDSecurityException;
 import si.laurentius.commons.utils.StorageUtils;
-import si.laurentius.commons.utils.sec.DigestMethodCode;
-import si.laurentius.commons.utils.sec.XMLSignatureUtils;
+import si.laurentius.lce.DigestMethodCode;
+import si.laurentius.lce.sign.xml.XMLSignatureUtils;
 import si.laurentius.msh.inbox.mail.MSHInMail;
 
 /**
