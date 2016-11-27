@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--Metadata: 
+Owner: Supreme Court Republic of Slovenia 
+Product: SVEV-MSH
+Product Version: 1.0.0
+Artifact Type: Schema
+Descriptive Name: SVEV mail 
+Date: 20151101 (1 November 2015)
+Author: Joze Rihtarsic
+-->
+<!-- 
+Copyright 2015, Supreme Court Republic of Slovenia 
+
+ Licensed under the EUPL, Version 1.1 or – as soon they will be approved by 
+ the European Commission - subsequent versions of the EUPL (the "Licence");
+ You may not use this work except in compliance with the Licence.
+ You may obtain a copy of the Licence at:
+
+ https://joinup.ec.europa.eu/software/page/eupl
+
+ Unless required by applicable law or agreed to in writing, software 
+ distributed under the Licence is distributed on an "AS IS" basis, WITHOUT 
+ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the Licence for the specific language governing permissions and  
+ limitations under the Licence.
+-->
+<definitions name="mailbox" targetNamespace="http://laurentius.si" 
+             xmlns:tns="http://laurentius.si" 
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+             xmlns="http://schemas.xmlsoap.org/wsdl/" 
+             xmlns:ns="http://schemas.xmlsoap.org/soap/encoding/">
+    <documentation>
+        WSDL določa servise za integracijo s SVEV-MSH modulom
+        * za odpremo pošiljke preko MSH modula
+        * prevzemanje statusov izhodnih pošiljk
+        * prevzemanje dohodne pošte
+
+        Author: Jože Rihtaršič
+
+        Version:  1.0.0
+
+        History: 
+        1.0.0:  2015-11-01 
+        - Izdelava wsdl vmesnika
+    </documentation>
+    <types>
+        <xsd:schema>
+            <xsd:import namespace="http://laurentius.si" schemaLocation="exception/sedexception.xsd"/>
+            <xsd:import namespace="http://laurentius.si" schemaLocation="messages/SubmitMailRequest.xsd"/>
+            <xsd:import namespace="http://laurentius.si" schemaLocation="messages/SubmitMailResponse.xsd"/>
+            <xsd:import namespace="http://laurentius.si" schemaLocation="messages/OutMailListRequest.xsd"/>
+            <xsd:import namespace="http://laurentius.si" schemaLocation="messages/OutMailListResponse.xsd"/>
+            <xsd:import namespace="http://laurentius.si" schemaLocation="messages/OutMailEventListRequest.xsd"/>
+            <xsd:import namespace="http://laurentius.si" schemaLocation="messages/OutMailEventListResponse.xsd"/>
+            <xsd:import namespace="http://laurentius.si" schemaLocation="messages/InMailListRequest.xsd"/>
+            <xsd:import namespace="http://laurentius.si" schemaLocation="messages/InMailListResponse.xsd"/>
+            <xsd:import namespace="http://laurentius.si" schemaLocation="messages/ModifyInMailRequest.xsd"/>
+            <xsd:import namespace="http://laurentius.si" schemaLocation="messages/ModifyInMailResponse.xsd"/>
+            <xsd:import namespace="http://laurentius.si" schemaLocation="messages/ModifyOutMailRequest.xsd"/>
+            <xsd:import namespace="http://laurentius.si" schemaLocation="messages/ModifyOutMailResponse.xsd"/>
+            <xsd:import namespace="http://laurentius.si" schemaLocation="messages/InMailEventListRequest.xsd"/>
+            <xsd:import namespace="http://laurentius.si" schemaLocation="messages/InMailEventListResponse.xsd"/>
+            <xsd:import namespace="http://laurentius.si" schemaLocation="messages/GetInMailRequest.xsd"/>
+            <xsd:import namespace="http://laurentius.si" schemaLocation="messages/GetInMailResponse.xsd"/>
+
+        </xsd:schema>
+    </types>
+    <message name="SEDException">
+        <part name="SEDException" element="tns:SEDException"/>
+    </message>
+    <message name="SubmitMailRequest">
+        <part name="SubmitMailRequest" element="tns:SubmitMailRequest"/>
+    </message>
+    <message name="SubmitMailResponse">
+        <part name="SubmitMailResponse" element="tns:SubmitMailResponse"/>
+    </message>
+    <message name="OutMailListRequest">
+        <part name="OutMailListRequest" element="tns:OutMailListRequest"/>
+    </message>
+    <message name="OutMailListResponse">
+        <part name="OutMailListResponse" element="tns:OutMailListResponse"/>
+    </message>
+    <message name="OutMailEventListRequest">
+        <part name="OutMailEventListRequest" element="tns:OutMailEventListRequest"/>
+    </message>
+    <message name="OutMailEventListResponse">
+        <part name="OutMailEventListResponse" element="tns:OutMailEventListResponse"/>
+    </message>
+    <message name="InMailEventListRequest">
+        <part name="InMailEventListRequest" element="tns:InMailEventListRequest"/>
+    </message>
+    <message name="InMailEventListResponse">
+        <part name="InMailEventListResponse" element="tns:InMailEventListResponse"/>
+    </message>
+    <message name="InMailListRequest">
+        <part name="IntMailListRequest" element="tns:InMailListRequest"/>
+    </message>
+    <message name="InMailListResponse">
+        <part name="InMailListResponse" element="tns:InMailListResponse"/>
+    </message>
+    <message name="ModifyInMailRequest">
+        <part name="ModifyInMailRequest" element="tns:ModifyInMailRequest"/>
+    </message>
+    <message name="ModifyInMailResponse">
+        <part name="ModifyInMailResponse" element="tns:ModifyInMailResponse"/>
+    </message>
+    <message name="ModifyOutMailRequest">
+        <part name="ModifyOutMailRequest" element="tns:ModifyOutMailRequest"/>
+    </message>
+    <message name="ModifyOutMailResponse">
+        <part name="ModifyOutMailResponse" element="tns:ModifyOutMailResponse"/>
+    </message>
+    <message name="GetInMailRequest">
+        <part name="GetInMailRequest" element="tns:GetInMailRequest"/>
+    </message>
+    <message name="GetInMailResponse">
+        <part name="GetInMailResponse" element="tns:GetInMailResponse"/>
+    </message>
+    <portType name="SEDMailBoxWS">
+        <operation name="submitMail">
+            <documentation>
+                Oddaja pošiljke v vročanje/dostavo
+            </documentation>
+            <input message="tns:SubmitMailRequest"/>
+            <output message="tns:SubmitMailResponse"/>
+            <fault name="SEDException" message="tns:SEDException"/>
+        </operation>
+        <operation name="getOutMailList">
+            <documentation>
+                Pregled pošte v vročanje
+            </documentation>
+            <input message="tns:OutMailListRequest"/>
+            <output message="tns:OutMailListResponse"/>
+            <fault name="SEDException" message="tns:SEDException"/>
+        </operation>
+        <operation name="getInMailList">
+            <documentation>
+                Pregled dohodne pošte
+            </documentation>
+            <input message="tns:InMailListRequest"/>
+            <output message="tns:InMailListResponse"/>
+            <fault name="SEDException" message="tns:SEDException"/>
+        </operation>
+        <operation name="getInMailEventList">
+            <documentation>
+                Pregled dogodtkov na dohodni pošiljke
+            </documentation>
+            <input message="tns:InMailEventListRequest"/>
+            <output message="tns:InMailEventListResponse"/>
+            <fault name="SEDException" message="tns:SEDException"/>
+        </operation>
+        <operation name="getOutMailEventList">
+            <documentation>
+                Pregled dogodkov na izhodni pošiljke
+            </documentation>
+            <input message="tns:OutMailEventListRequest"/>
+            <output message="tns:OutMailEventListResponse"/>
+            <fault name="SEDException" message="tns:SEDException"/>
+        </operation>
+        <operation name="modifyInMail">
+            <documentation>
+                Zaklepanje in prevzemanje dohodne pošte
+            </documentation>
+            <input message="tns:ModifyInMailRequest"/>
+            <output message="tns:ModifyInMailResponse"/>
+            <fault name="SEDException" message="tns:SEDException"/>
+        </operation>
+        
+        <operation name="modifyOutMail">
+            <documentation>
+                Zaklepanje in prevzemanje dohodne pošte
+            </documentation>
+            <input message="tns:ModifyOutMailRequest"/>
+            <output message="tns:ModifyOutMailResponse"/>
+            <fault name="SEDException" message="tns:SEDException"/>
+        </operation>
+        
+        <operation name="getInMail">
+            <documentation>
+                Pridobivanje binarne vsebine dohodne pošiljke
+            </documentation>
+            <input message="tns:GetInMailRequest"/>
+            <output message="tns:GetInMailResponse"/>
+            <fault name="SEDException" message="tns:SEDException"/>
+        </operation>
+    </portType>
+    <binding name="SEDMailBoxPortBinding" type="tns:SEDMailBoxWS">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="submitMail">
+            <soap:operation soapAction="http://laurentius.si.submitMail"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="SEDException">
+                <soap:fault name="SEDException" use="literal"/>
+            </fault>
+        </operation>
+        <operation name="getOutMailList">
+            <soap:operation soapAction="http://laurentius.si.getOutMailList"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="SEDException">
+                <soap:fault name="SEDException" use="literal"/>
+            </fault>
+        </operation>
+        <operation name="getInMailList">
+            <soap:operation soapAction="http://laurentius.si.getInMailList"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="SEDException">
+                <soap:fault name="SEDException" use="literal"/>
+            </fault>
+        </operation>
+        <operation name="getInMailEventList">
+            <soap:operation soapAction="http://laurentius.si.getInMailEventList"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="SEDException">
+                <soap:fault name="SEDException" use="literal"/>
+            </fault>
+        </operation>
+        <operation name="getOutMailEventList">
+            <soap:operation soapAction="http://laurentius.si.getOutMailEventList"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="SEDException">
+                <soap:fault name="SEDException" use="literal"/>
+            </fault>
+        </operation>
+        <operation name="modifyInMail">
+            <soap:operation soapAction="http://laurentius.si.modifyInMail"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="SEDException">
+                <soap:fault name="SEDException" use="literal"/>
+            </fault>
+        </operation>
+        <operation name="modifyOutMail">
+            <soap:operation soapAction="http://laurentius.si.modifyOutMail"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="SEDException">
+                <soap:fault name="SEDException" use="literal"/>
+            </fault>
+        </operation>
+        <operation name="getInMail">
+            <soap:operation soapAction="http://laurentius.si.getInMail"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="SEDException">
+                <soap:fault name="SEDException" use="literal"/>
+            </fault>
+        </operation>
+    </binding>
+    <service name="mailbox">
+        <port name="SEDMailBoxWSPort" binding="tns:SEDMailBoxPortBinding">
+            <soap:address location="http://127.0.0.1:8080/SEDMailBoxWS"/>
+        </port>
+    </service>
+</definitions>

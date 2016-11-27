@@ -12,7 +12,17 @@
 				</xsl:element>
 			<xsl:variable name="uppercase" select="'ABCDEFGHIJKLMNOPQRSTUVWXYZ'"/>
 			<xsl:variable name="lowercase" select="'abcdefghijklmnopqrstuvwxyz'"/>
-			<xsl:for-each select="/xs:schema/xs:complexType[@name='MSHInMailType']/xs:attribute">
+			<xsl:for-each select="/xs:schema/xs:complexType/xs:attribute">
+				<xsl:element name="tr">
+					<xsl:element name="td">
+						<xsl:value-of select="concat(translate(substring(@name,1,1), $lowercase, $uppercase) , substring(@name, 2)) "/>
+					</xsl:element>
+					<xsl:element name="td">
+						<xsl:value-of select="xs:annotation/xs:documentation"/>
+					</xsl:element>
+				</xsl:element>
+			</xsl:for-each>
+                        <xsl:for-each select="/xs:schema/xs:element/xs:complexType/xs:sequence/xs:element[@name='Data']/xs:complexType/xs:attribute">
 				<xsl:element name="tr">
 					<xsl:element name="td">
 						<xsl:value-of select="concat(translate(substring(@name,1,1), $lowercase, $uppercase) , substring(@name, 2)) "/>

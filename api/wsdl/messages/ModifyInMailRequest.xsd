@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 (http://www.altova.com) by XMLSpy 2007 Professional Ed., Installed for 5 users (with SMP from 2007-02-06 to 2008-02-07) (CIF VSRS) -->
+<!--Metadata: 
+Owner: Supreme Court Republic of Slovenia 
+Product: SVEV-MSH
+Product Version: 1.0.0
+Artifact Type: Schema
+Descriptive Name: SVEV exception
+Date: 20151101 (1 November 2015)
+Author: Joze Rihtarsic
+-->
+<!-- 
+Copyright 2015, Supreme Court Republic of Slovenia 
+
+ Licensed under the EUPL, Version 1.1 or – as soon they will be approved by 
+ the European Commission - subsequent versions of the EUPL (the "Licence");
+ You may not use this work except in compliance with the Licence.
+ You may obtain a copy of the Licence at:
+
+ https://joinup.ec.europa.eu/software/page/eupl
+
+ Unless required by applicable law or agreed to in writing, software 
+ distributed under the Licence is distributed on an "AS IS" basis, WITHOUT 
+ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the Licence for the specific language governing permissions and  
+ limitations under the Licence.
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns="http://laurentius.si" 
+           xmlns:con="http://control.laurentius.si" 
+           targetNamespace="http://laurentius.si">
+    <xs:import namespace="http://control.laurentius.si" schemaLocation="./Control.xsd"/>
+    <xs:element name="ModifyInMailRequest">
+        <xs:complexType>
+            <xs:annotation>
+                <xs:documentation xml:lang="sl"> 
+                    Potrjevanje prejema dohodne pošte. Pošta je ob potrditvi prestavljena v status "Processed"
+                </xs:documentation>
+            </xs:annotation>
+            <xs:sequence>
+                <xs:element name="Control" type="con:Control"/>
+                <xs:element name="Data">
+                    <xs:complexType>
+                        <xs:attribute name="receiverEBox" use="optional">
+                            <xs:annotation>
+                                <xs:documentation xml:lang="sl">Naslovnikov elektronski naslov.</xs:documentation>
+                            </xs:annotation>
+                            <xs:simpleType>
+                                <xs:restriction base="xs:token">
+                                    <xs:maxLength value="64"/>
+                                    <xs:pattern value="[_\-a-zA-Z0-9\.\+]+@[a-zA-Z0-9](\.?[\-a-zA-Z0-9]*[a-zA-Z0-9])*"/>
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="mailId" type="xs:integer" use="required">
+                            <xs:annotation>
+                                <xs:documentation xml:lang="sl">Id vhodne pošiljke</xs:documentation>
+                            </xs:annotation>
+                        </xs:attribute>
+                        <xs:attribute name="action" type="ModifyActionCode" use="required">
+                            <xs:annotation>
+                                <xs:documentation>Akcije:                         
+                                    - DELIVERED pošiljka se označi kot uspešno prevzeta -> status pošiljke se spremni v 'DELIVERED'
+                                    - LOCK:     akcija pošiljko, ki še niso prevzete se nastavi v status  "LOCKED". Pošiljka se ne prikazuje več v seznamu dohodne pošte. 
+                                    - DELETE:   akcija pošiljko, ki še niso prevzete se nastavi v status  "DELETED" Pošiljka se ne prikazuje več v seznamu dohodne pošte. 
+                                </xs:documentation>
+                            </xs:annotation>                            
+                        </xs:attribute>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:simpleType name="ModifyActionCode">
+        <xs:restriction base="xs:token">
+            <xs:maxLength value="20"/>
+            <xs:enumeration value="DELIVERED"/>
+            <xs:enumeration value="LOCK"/>
+            <xs:enumeration value="DELETE"/>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>

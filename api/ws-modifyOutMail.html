@@ -1,0 +1,45 @@
+<div class ="sidebar" >    
+    <h2>Kazalo:</h2>
+    <ul>
+        <li><a href="#documentation:webservices">Spletne storitve</a></li> 
+    </ul>
+</div>
+<div class="main">
+<article class='content'>
+
+<h1>Metoda: modifyOutMail</h1>
+Shema poizvedbe: <a href="api/wsdl/messages/ModifyOutMailRequest.xsd">ModifyOutMailRequest.xsd</a><br />
+Shema odgovora: <a href="api/wsdl/messages/ModifyOutMailResponse.xsd">ModifyOutMailResponse.xsd</a><br />
+<br />
+Namen metode je brisanje oz. ponovno pošiljanje izhodne pošiljke v napaki.  
+<br />
+<h2>Parametri poizvedbe</h2>
+<div class="jrcxslt" data-xml="api/wsdl/messages/ModifyOutMailRequest.xsd" data-xslt="xslt/mshinmail2table.xslt"></div>
+
+<h2>Primer poizvedbe</h2>
+
+<pre><code>&lt;soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:laur="http://laurentius.si">
+   &lt;soapenv:Header/>
+   &lt;soapenv:Body>
+      &lt;laur:ModifyOutMailRequest>
+      &lt;Control userId="TestUser" applicationId="CMS"/>
+          &lt;Data senderEBox="izvrsba@court-laurentius.si" mailId="62" action="RESEND" />
+      &lt;/laur:ModifyOutMailRequest>
+   &lt;/soapenv:Body>
+&lt;/soapenv:Envelope>
+</code></pre>
+
+<h2>Primer odgovora</h2>
+ <pre><code>&lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+   &lt;soap:Body>
+      &lt;ns2:ModifyOutMailResponse xmlns:ns2="http://laurentius.si" xmlns:ns3="http://outbox.laurentius.si/event" xmlns:ns4="http://inbox.laurentius.si/property" xmlns:ns5="http://inbox.laurentius.si/payload" xmlns:ns6="http://inbox.laurentius.si/mail" xmlns:ns7="http://outbox.laurentius.si/property" xmlns:ns8="http://outbox.laurentius.si/payload" xmlns:ns9="http://outbox.laurentius.si/mail" xmlns:ns10="http://inbox.laurentius.si/event">
+         &lt;RControl returnValue="1"/>
+         &lt;RData>
+            &lt;OutEvent id="70" mailId="62" date="2016-11-27T20:22:42.416+01:00" status="SCHEDULE" description="Resending by user/application: TestUser/CMS" userId="TestUser" applicationId="CMS"/>
+         &lt;/RData>
+      &lt;/ns2:ModifyOutMailResponse>
+   &lt;/soap:Body>
+&lt;/soap:Envelope>
+</code></pre>
+</article>  
+</div>

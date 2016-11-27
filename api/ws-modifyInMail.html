@@ -1,0 +1,46 @@
+<div class ="sidebar" >    
+    <h2>Kazalo:</h2>
+    <ul>
+        <li><a href="#documentation:webservices">Spletne storitve</a></li> 
+    </ul>
+</div>
+<div class="main">
+<article class='content'>
+
+<h1>Metoda: modifyInMail</h1>
+Shema poizvedbe: <a href="api/wsdl/messages/ModifyInMailRequest.xsd">ModifyInMailRequest.xsd</a><br />
+Shema odgovora: <a href="api/wsdl/messages/ModifyInMailResponse.xsd">ModifyInMailResponse.xsd</a><br />
+<br />
+Namen metode je posodabljanje statusov dohodne pošte. V primeru uspešnega prevzema dohodne pošiljke 
+v ciljni sistem se pošiljka označi kot prevzeta. 
+<br />
+<h2>Parametri poizvedbe</h2>
+<div class="jrcxslt" data-xml="api/wsdl/messages/ModifyInMailRequest.xsd" data-xslt="xslt/mshinmail2table.xslt"></div>
+
+<h2>Primer poizvedbe</h2>
+
+<pre><code>&lt;soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:laur="http://laurentius.si">
+   &lt;soapenv:Header/>
+   &lt;soapenv:Body>
+      &lt;laur:ModifyInMailRequest>
+		&lt;Control userId="TestUser" applicationId="CMS"/>
+          &lt;Data receiverEBox="ezk@court-laurentius.si" mailId="53" action="DELIVERED" />
+      &lt;/laur:ModifyInMailRequest>
+   &lt;/soapenv:Body>
+&lt;/soapenv:Envelope>
+</code></pre>
+
+<h2>Primer odgovora</h2>
+ <pre><code>&lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+   &lt;soap:Body>
+      &lt;ns2:ModifyInMailResponse xmlns:ns2="http://laurentius.si" xmlns:ns3="http://outbox.laurentius.si/event" xmlns:ns4="http://inbox.laurentius.si/property" xmlns:ns5="http://inbox.laurentius.si/payload" xmlns:ns6="http://inbox.laurentius.si/mail" xmlns:ns7="http://outbox.laurentius.si/property" xmlns:ns8="http://outbox.laurentius.si/payload" xmlns:ns9="http://outbox.laurentius.si/mail" xmlns:ns10="http://inbox.laurentius.si/event">
+         &lt;RControl returnValue="1"/>
+         &lt;RData>
+            &lt;InEvent id="61" mailId="53" date="2016-11-27T20:13:54.066+01:00" status="DELIVERED" description="Message is consumed" userId="TestUser" applicationId="CMS"/>
+         &lt;/RData>
+      &lt;/ns2:ModifyInMailResponse>
+   &lt;/soap:Body>
+&lt;/soap:Envelope>
+</code></pre>
+</article>  
+</div>

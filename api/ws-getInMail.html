@@ -1,0 +1,56 @@
+<div class ="sidebar" >    
+    <h2>Kazalo:</h2>
+    <ul>
+        <li><a href="#documentation:webservices">Spletne storitve</a></li> 
+    </ul>
+</div>
+<div class="main">
+<article class='content'>
+
+<h1>Metoda: getInMailRequest</h1>
+Shema poizvedbe: <a href="api/wsdl/messages/GetInMailRequest.xsd">GetInMailRequest.xsd</a><br />
+Shema odgovora: <a href="api/wsdl/messages/GetInMailResponse.xsd">GetInMailResponse.xsd</a><br />
+Shema dohodne pošiljke: <a href="api/wsdl/entities/inbox-mail.xsd">inbox-mail.xsd</a><br /><br />
+Namen metode je prevzemanje binarne vsebine (oz. priponk) dohodne pošiljke.
+<br />
+<h2>Parametri poizvedbe</h2>
+<div class="jrcxslt" data-xml="api/wsdl/messages/GetInMailRequest.xsd" data-xslt="xslt/mshinmail2table.xslt"></div>
+<h2>Podatki izhodne pošiljke</h2>
+<div class="jrcxslt" data-xml="api/wsdl/entities/inbox-mail.xsd" data-xslt="xslt/mshinmail2table.xslt"></div>
+<h2>Primer poizvedbe</h2>
+
+<pre><code>&lt;soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:laur="http://laurentius.si">
+   &lt;soapenv:Header/>
+   &lt;soapenv:Body>
+      &lt;laur:GetInMailRequest>
+      &lt;Control userId="TestUser" applicationId="CMS"/>
+         &lt;Data receiverEBox="ezk@court-laurentius.si" mailId="53" />
+      &lt;/laur:GetInMailRequest>
+   &lt;/soapenv:Body>
+&lt;/soapenv:Envelope>
+</code></pre>
+
+<h2>Primer odgovora</h2>
+ <pre><code>&lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+   &lt;soap:Body>
+      &lt;ns2:GetInMailResponse xmlns:ns2="http://laurentius.si" xmlns:ns3="http://outbox.laurentius.si/event" xmlns:ns4="http://inbox.laurentius.si/property" xmlns:ns5="http://inbox.laurentius.si/payload" xmlns:ns6="http://inbox.laurentius.si/mail" xmlns:ns7="http://outbox.laurentius.si/property" xmlns:ns8="http://outbox.laurentius.si/payload" xmlns:ns9="http://outbox.laurentius.si/mail" xmlns:ns10="http://inbox.laurentius.si/event">
+         &lt;RControl returnValue="1"/>
+         &lt;RData>
+            &lt;ns6:InMail id="53" messageId="d017d23c-f468-4e36-b477-9bdd28315c43@court-laurentius.si" service="DeliveryWithReceipt" action="Delivery" conversationId="cms-conv-00001" subject="Fist test mail" submittedDate="2016-11-27T18:27:04.952+01:00" sentDate="2016-11-27T18:27:05.449+01:00" receivedDate="2016-11-27T18:27:06.790+01:00" receiverEBox="ezk@court-laurentius.si" receiverName="Department A" senderEBox="izvrsba@court-laurentius.si" senderName="Department B" status="ERROR" statusDate="2016-11-27T18:27:06.919+01:00">
+               &lt;ns4:InProperties>
+                  &lt;ns4:InProperty id="54" name="Opr. St.">VL 1/20016&lt;/ns4:InProperty>
+                  &lt;ns4:InProperty id="55" name="SodiSif">S20&lt;/ns4:InProperty>
+               &lt;/ns4:InProperties>
+               &lt;ns5:InPayload>
+                  &lt;ns5:InPart id="56" name="test" description="testnaDatoteka" type="1" filename="testnaDatoteka.xml" mimeType="plain/xml" encoding="UTF-8" md5="0af345bb400583971e7e8c9185730446" filepath="storage/2016/11/27/001/IN_5316187207804920749.bin">
+                     &lt;ns5:Bin>VGVzdG5vIHNwb3JvY2lsbw==&lt;/ns5:Bin>
+                  &lt;/ns5:InPart>
+               &lt;/ns5:InPayload>
+            &lt;/ns6:InMail>
+         &lt;/RData>
+      &lt;/ns2:GetInMailResponse>
+   &lt;/soap:Body>
+&lt;/soap:Envelope>
+</code></pre>
+</article>  
+</div>

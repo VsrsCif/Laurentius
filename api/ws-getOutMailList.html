@@ -1,0 +1,67 @@
+<div class ="sidebar" >    
+    <h2>Kazalo:</h2>
+    <ul>
+        <li><a href="#api/ws-submitMail.hmlt">Submit-mail</a></li> 
+        <li><a href="#documentation:webservices">Spletne storitve</a></li> 
+    </ul>
+</div>
+<div class="main">
+<article class='content'>
+
+<h1>Metoda: getOutMailList</h1>
+Shema poizvedbe: <a href="api/wsdl/messages/OutMailListRequest.xsd">OutMailListRequest.xsd</a><br />
+Shema odgovora: <a href="api/wsdl/messages/OutMailListResponse.xsd">OutMailListResponse.xsd</a><br />
+Shema izhodne pošiljke: <a href="api/wsdl/entities/outbox-mail.xsd">outbox-mail.xsd</a><br />
+
+Namen metode je pregled izhodne pošte. Obvezen podatek je pošiljateljev predal. 
+Dodatni parametri iskanja so: interval oddaje pošiljke v odpravo, naslovnik, status pošiljke itd. 
+<br />
+<h2>Parametri poizvedbe</h2>
+<div class="jrcxslt" data-xml="api/wsdl/messages/OutMailListRequest.xsd" data-xslt="xslt/mshinmail2table.xslt"></div>
+<h2>Podatki izhodne pošiljke</h2>
+<div class="jrcxslt" data-xml="api/wsdl/entities/outbox-mail.xsd" data-xslt="xslt/mshinmail2table.xslt"></div>
+
+<h2>Primer poizvedbe</h2>
+ <pre><code>&lt;soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:laur="http://laurentius.si">
+   &lt;soapenv:Header/>
+   &lt;soapenv:Body>
+      &lt;laur:OutMailListRequest>
+         &lt;Control userId="TestUser" applicationId="CMS"
+    			startIndex="0" responseSize="10000" 
+         			sortBy="Id" sortOrder="DESC"/>
+         &lt;Data senderEBox="izvrsba@court-laurentius.si" />
+      &lt;/laur:OutMailListRequest>
+   &lt;/soapenv:Body>
+&lt;/soapenv:Envelope>
+
+</code></pre>
+
+<h2>Primer odgovora</h2>
+ <pre><code>
+&lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+   &lt;soap:Body>
+      &lt;ns2:OutMailListResponse xmlns:ns2="http://laurentius.si" xmlns:ns3="http://outbox.laurentius.si/event" xmlns:ns4="http://inbox.laurentius.si/property" xmlns:ns5="http://inbox.laurentius.si/payload" xmlns:ns6="http://inbox.laurentius.si/mail" xmlns:ns7="http://outbox.laurentius.si/property" xmlns:ns8="http://outbox.laurentius.si/payload" xmlns:ns9="http://outbox.laurentius.si/mail" xmlns:ns10="http://inbox.laurentius.si/event">
+         &lt;RControl resultSize="1" startIndex="0" responseSize="1" returnValue="1"/>
+         &lt;RData>
+            &lt;ns9:OutMail id="47" senderMessageId="cms-id-00001" service="DeliveryWithReceipt" action="Delivery" conversationId="cms-conv-00001" subject="Fist test mail" submittedDate="2016-11-27T11:08:09.109+01:00" sentDate="2016-11-27T11:08:09.605+01:00" receivedDate="2016-11-27T11:08:10.359+01:00" receiverEBox="ezk@court-laurentius.si" receiverName="Department A" senderEBox="izvrsba@court-laurentius.si" senderName="Department B" status="SENT" statusDate="2016-11-27T11:08:11.144+01:00">
+               &lt;ns7:OutProperties>
+                  &lt;ns7:OutProperty id="48" name="Opr. St.">VL 1/20016&lt;/ns7:OutProperty>
+                  &lt;ns7:OutProperty id="49" name="SodiSif">S20&lt;/ns7:OutProperty>
+               &lt;/ns7:OutProperties>
+               &lt;ns8:OutPayload>
+                  &lt;ns8:OutPart id="50" name="test" description="testnaDatoteka" type="1" 
+                filename="testnaDatoteka.xml" mimeType="plain/xml" encoding="UTF-8" 
+                md5="0af345bb400583971e7e8c9185730446" 
+                filepath="storage/2016/11/27/001/OUT_739805106502904822.bin"/>
+               &lt;/ns8:OutPayload>
+            &lt;/ns9:OutMail>
+         &lt;/RData>
+      &lt;/ns2:OutMailListResponse>
+   &lt;/soap:Body>
+&lt;/soap:Envelope>
+</code></pre>
+
+
+
+</article>  
+</div>

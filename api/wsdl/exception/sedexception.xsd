@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Metadata: 
+Owner: Supreme Court Republic of Slovenia 
+Product: SVEV-MSH
+Product Version: 1.0.0
+Artifact Type: Schema
+Descriptive Name: SVEV exception
+Date: 20150612 (12 June 2012)
+Author: Joze Rihtarsic
+-->
+<!-- 
+Copyright 2015, Supreme Court Republic of Slovenia 
+
+ Licensed under the EUPL, Version 1.1 or – as soon they will be approved by 
+ the European Commission - subsequent versions of the EUPL (the "Licence");
+ You may not use this work except in compliance with the Licence.
+ You may obtain a copy of the Licence at:
+
+ https://joinup.ec.europa.eu/software/page/eupl
+
+ Unless required by applicable law or agreed to in writing, software 
+ distributed under the Licence is distributed on an "AS IS" basis, WITHOUT 
+ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the Licence for the specific language governing permissions and  
+ limitations under the Licence.
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://laurentius.si" targetNamespace="http://laurentius.si" elementFormDefault="qualified" attributeFormDefault="unqualified">
+    <xs:element name="SEDException" type="tns:SEDException"/>
+    <xs:complexType name="SEDException">
+        <xs:sequence>
+            <xs:element name="errorCode" type="tns:SEDExceptionCode" minOccurs="0"/>
+            <xs:element name="message" type="xs:string" minOccurs="0"/>
+            <xs:element name="errorDump" type="xs:string"  minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>dodatni podatki o napaki, npr. exception stack trace, uporabno v fazi razvoja
+                        servisev in za vzdrževanje
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:simpleType name="SEDExceptionCode">
+        <xs:restriction base="xs:string">            
+            <xs:enumeration value="PModeNotExists"/>
+            <xs:enumeration value="RequiredDataNotExists"/>
+            <xs:enumeration value="InvalidPMode"/>
+            <xs:enumeration value="InvalidData"/>
+            <xs:enumeration value="MissingData"/>            
+            <xs:enumeration value="ServerError"/>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>

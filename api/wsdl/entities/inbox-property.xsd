@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Metadata: 
+Owner: Supreme Court Republic of Slovenia 
+Product: SVEV-MSH
+Product Version: 1.0.0
+Artifact Type: Schema
+Descriptive Name: Payload part of user mail message
+Date: 20150612 (12 June 2015)
+Author: Joze Rihtarsic
+-->
+<!-- 
+Copyright 2015, Supreme Court Republic of Slovenia 
+
+ Licensed under the EUPL, Version 1.1 or – as soon they will be approved by 
+ the European Commission - subsequent versions of the EUPL (the "Licence");
+ You may not use this work except in compliance with the Licence.
+ You may obtain a copy of the Licence at:
+
+ https://joinup.ec.europa.eu/software/page/eupl
+
+ Unless required by applicable law or agreed to in writing, software 
+ distributed under the Licence is distributed on an "AS IS" basis, WITHOUT 
+ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the Licence for the specific language governing permissions and  
+ limitations under the Licence.
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+           xmlns:ns1="http://inbox.laurentius.si/property"
+           targetNamespace="http://inbox.laurentius.si/property" 
+           elementFormDefault="qualified" attributeFormDefault="unqualified">
+    <xs:element name="InProperties">
+        <xs:annotation>
+            <xs:documentation>MSH parametri, ki so določeni v pmode konfiguraciji</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="InProperty" type="ns1:InProperty" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="InProperty">
+        <xs:annotation>
+            <xs:documentation>MSH lastnosi sporočila, določeni v p-mode konfiguraciji</xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="ns1:propertyValue">
+                <xs:attribute name="id" use="optional" type="xs:integer">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="sl">Enolična oznaka lastnosti</xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="name" use="optional">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="sl">Naziv lastnosti </xs:documentation>
+                    </xs:annotation>
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                            <xs:minLength value="1"/>
+                            <xs:maxLength value="64"/>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:attribute>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
+    <xs:simpleType name="propertyValue">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="512"/>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>

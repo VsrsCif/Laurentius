@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Metadata: 
+Owner: Supreme Court Republic of Slovenia 
+Product: SVEV-MSH
+Product Version: 1.0.0
+Artifact Type: Schema
+Descriptive Name: SVEV exception
+Date: 20150612 (12 June 2012)
+Author: Joze Rihtarsic
+-->
+<!-- 
+Copyright 2015, Supreme Court Republic of Slovenia 
+
+ Licensed under the EUPL, Version 1.1 or – as soon they will be approved by 
+ the European Commission - subsequent versions of the EUPL (the "Licence");
+ You may not use this work except in compliance with the Licence.
+ You may obtain a copy of the Licence at:
+
+ https://joinup.ec.europa.eu/software/page/eupl
+
+ Unless required by applicable law or agreed to in writing, software 
+ distributed under the Licence is distributed on an "AS IS" basis, WITHOUT 
+ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the Licence for the specific language governing permissions and  
+ limitations under the Licence.
+-->
+<xs:schema xmlns:scr="http://rcontrol.laurentius.si" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://rcontrol.laurentius.si">
+    <xs:complexType name="RControl">
+        <xs:attribute name="resultSize" type="xs:integer" use="optional">
+            <xs:annotation>
+                <xs:documentation>V primeru, da je rezultat seznam, je vrednost atributa
+                    stevil vseh rezultatov, ki ustrezajo iskanim pogojem</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="startIndex" type="xs:integer" use="optional">
+            <xs:annotation>
+                <xs:documentation>V primeru, da je rezultat seznam, je vrednost atributa index prve vrstice v odgovoru  celotnega rezultata. </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="responseSize" type="xs:integer" use="optional">
+            <xs:annotation>
+                <xs:documentation>V primeru, da je rezultat seznam, je vrednost stevilo vrstic v odgovoru (responseSize je manjse ali enako resultSize)</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+            
+        <xs:attribute name="returnValue" use="required">
+            <xs:annotation>
+                <xs:documentation>status rezultata servisa: 1=OK   2=WARNING  </xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:int">
+                    <xs:enumeration value="1"/>
+                    <xs:enumeration value="2"/>
+                        
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="returnCode" type="xs:int" use="required">
+            <xs:annotation>
+                <xs:documentation>specifična koda napake (ko je returnValue ERROR) ali (delnega) uspeha (ko je
+                    returnValue OK ali WARNING)
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="returnText" type="xs:string" use="optional">
+            <xs:annotation>
+                <xs:documentation>tekstovni opis napake (ko je returnValue ERROR) ali (delnega) uspeha (ko je
+                    returnValue OK ali WARNING)
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="errorDump" type="xs:string" use="optional">
+            <xs:annotation>
+                <xs:documentation>dodatni podatki o napaki, npr. exception stack trace, uporabno v fazi razvoja
+                    servisev in za vzdrževanje
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+</xs:schema>

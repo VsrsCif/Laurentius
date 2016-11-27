@@ -42,9 +42,9 @@ var jrcxslt = {
         return xhttp.responseXML;
     },
 
-    displayResult: function (div, xsltfile, xmlfile)
+    displayResult: function (div, xsltfile, xsdfile)
     {
-        var xml = this.loadXMLDoc(xmlfile);
+        var xml = this.loadXMLDoc(xsdfile);
         var xsl = this.loadXMLDoc(xsltfile);
 // code for IE
         if (window.ActiveXObject || xhttp.responseType == "msxml-document")
