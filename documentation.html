@@ -2,7 +2,8 @@
     <h2>Kazalo:</h2>
     <ul>
         <li><a href="#gui/Laurentius">Uporabniška navodila</a></li> 
-        <li><a href="#documentation:webservices">Spletne storitve</a></li> 
+        <li><a href="#api/web-services">Spletne storitve</a></li> 
+        <li><a href="#testcase/testcases">Spletne storitve</a></li> 
     </ul>
 </div>
 <div class="main">
@@ -10,50 +11,34 @@
     
     <!-- a href="#project">Zgradna projekta</a><br  / -->
     
-   <h1 id="documentation:webservices">Spletni servisi</h1>
+    <h1 id="documentation:admin-gui">Uporabniški vmesnik (GUI)</h1>
+    Aplikacija Laurentius vsebuje spletni uporabniški vmesnik namenjen administraciji 
+    uporabnikov, predalov, certifikatov in ključev, dodatkov (plugin-ov),  
+    nastavitev povezovanja ti. "pmode" nastavitve, ...,
+    ter za pregled dohodne in izhodne pošte. Navodila za uporabno uporabniškega vmesnika se nahaja na naslovu:
+    <a href="#gui/Laurentius">uporabniška navodila</a>. 
+
    
-Metode omogočajo pošiljanje izhodne, prevzemanje dohodne pošte ter poizvedovanju po statusih posameznih pošiljk. 
-<br />
-Vsi klici spletnih morajo vsebovati enolično oznako aplikacije, ki kliče servis ter enolično oznako uporabnika, 
-ki je povzročil klic servisa. Podrobnejši opisi posameznih parametrov so v WSDL-opisu spletnega servisa.  <br /><br />
-V demo aplikaciji so spletne storitve dostopne na naslovu:
-<a href="http://localhost:8080/laurentius-ws/mailbox?wsdl" >http://localhost:8080/laurentius-ws/mailbox?wsdl</a>
-<br /><br />
-
-
-<h2>Odprava pošte</h2>
-<b>Metoda:</b> <a href="#api/ws-submitMail" >submitMail</a>. <br />
-<b>Namen metode</b> je oddaja izhodne pošiljke v vročanje. Vhodni parameter je infoset podatkov  „OutMail“, ki vsebuje pošiljatelja, naslovnika, opis vsebine, priponke in dodatne parametre pošiljke. 
-
-<h2>Seznam izhodne pošte</h2>
-<b>Metoda:</b> <a href="#api/ws-getOutMailList" >getOutMailList</a>. <br />
-<b>Namen metode</b> je pregled izhodne pošte. Obvezen podatek je pošiljateljev predal. Dodatni parametri iskanja so: interval oddaje pošiljke v odpravo, naslovnik, status pošiljke itd. 
-
-<h2>Spremeni status izhodne pošiljke</h2>
-<b>Metoda:</b> <a href="#api/ws-modifyOutMail" >modifyOutMail</a>. <br />
-<b>Namen metode</b> je brisanje oz. ponovno pošiljanje izhodne pošiljke v napaki.  
-
-<h2>Seznam dogodkov na izhodni pošiljki</h2>
-<b>Metoda:</b> <a href="#api/ws-getOutMailEvents" >getOutMailEvents</a>. <br />
-<b>Namen metode</b> je pridobivanje seznama dogodkov na izhodni pošiljki. Seznam dogodkov služi kot revizijska sled in se lahko uporablja za sledenje pošiljke. 
-
-<h2>Seznam dohodne pošte</h2>
-<b>Metoda:</b> <a href="#api/ws-getInMailList" >getInMailList</a>. <br />
-<b>Namen metode</b> je pridobivanje seznama dohodne pošte. Na podlagi vrnjenega seznama ciljna aplikacija lahko kontrolirano prevzema dohodno pošto. V infosetu vrnjenih podatkov ni binarnih vsebin dohodne pošte. 
-
-<h2>Pridobi dohodno pošiljko</h2>
-<b>Metoda:</b> <a href="#api/ws-getInMail" >getInMail</a>. <br /> 
-<b>Namen metode</b>  je prevzemanje binarne vsebine dohodne pošiljke.
     
-<h2>Spremeni status dohodne pošiljke</h2>
-<b>Metoda:</b> <a href="#api/ws-modifyInMail" >modifyInMail</a>. <br />
-<b>Namen metode</b> je posodabljanje statusov dohodne pošte. V primeru uspešnega prevzema dohodne pošiljke 
-v ciljni sistem se pošiljka označi kot prevzeta. 
+   <h1 id="documentation:webservices">Spletni servisi</h1>
+   Namen spletnih servisov je zagotoviti enostavno integracijo aplikacije Laurentius-a 
+   z zalednimi sistemi. Metode omogočajo pošiljanje izhodne pošte in prevzemanje dohodne pošte 
+   ter poizvedovanju po statusih posamezne izhodne in dohodne pošiljke. Z izdelavo integracij je 
+   končnim uporabnikom omogočena kontrola, pregled in sledenje nad izhodnimi in dohodnimi pošiljkami 
+   iz aplikacije v katerih pošiljka nastane oz. se prevzame v obdelavo. <br />   
+   Podrobnejši opis spletnih servisov s primeri je dostopen na naslovu: <a href="#api/web-services">spletne storitve</a>.
 
-<h2>Seznam dogodkov na dohodni pošiljki</h2>
-<b>Metoda:</b> <a href="#api/ws-getInMailEvents" >getInMailEvents</a>. <br />
-<b>Namen metode</b> je pridobivanje seznama dogodkov na dohodni pošiljki. 
- 
+   <h1 id="documentation:testcases">Testni primeri</h1>
+   Namen testnih primerov je določiti merljive cilje, ki jih aplikacija Laurentius mora izpolnjevati. Na podlagi testnih primerov 
+   so nastali tudi testni scenariji, ki služijo za regresijsko testiranje aplikacije. Trenutno je v teku avtomatizacija
+   vseh testnih scenarijev. Uspešno končani testni scenariji so pogoj za produkcijsko objavo nove različice aplikacije Laurentius. 
+   Uporabniki aplikacije Laurentius lahko tudi z lastnim izvajanjem posameznih testnih scenarijev preverjajo pravilnost namestitve in kvaliteto
+   izdelave integracije z zalednimi sistemi. Seznam testnih primerov se nahaja na spletni strani:
+   <a href="#testcase/testcases">testni scenariji</a>.
+   
+     
+   
+   
 
 
 
