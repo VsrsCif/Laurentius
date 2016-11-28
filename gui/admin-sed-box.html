@@ -62,10 +62,20 @@
         <img src="img/gui/sb-list.png" alt="SEDBox admin" width="680"/> <br />
         <br />
         Ob kliki na gumb <b>Dodaj</b>(add),  <b>Uredi</b>(Edit) ali dvojnem kliku na izbrano 
-        vstico se prikaže dialog za dodajanje/urejanje predala.<br /><br />
+        vstico se prikaže dialog za dodajanje/urejanje predala. 
+        <br /><br />
         <center>
-            <img src="img/gui/sb-edit.png" alt="SEDBox admin" width="500"/> <br />
+            <img src="img/gui/sb-transformation.png" alt="SEDBox admin" width="680"/> <br />
         </center><br />
+        Urejanje predala je razdeljeno v štiri razdelke:
+        <ul>
+            <li><b>Splošni podatki</b>: ki določajo naziv predala in aktivno obdobje predala</li>
+            <li><b>XML transformacija</b>: omogoča ob prejemu pošiljke avtomatsko transformacijo XML datotek v 
+                želeno obliko za uvoz pošiljke v zaledne sisteme</li>
+            <li><b>Izvozi</b>: omogoča ob prejemu pošiljke avtomatsko izvoz pošiljk na datotečni sistem </li>
+            <li><b>Izvajanje procesov</b>: omogoča ob prejemu pošiljke zagon zunanjih procesov za obdelavo in sprejem dohodne pošte.</li>
+        </ul>
+        
         <h2 id="gui/admin-sed-box:add-edit">Dodajanje, urejanje SED-predala</h2>      
         <ul>
             <li><b>SED-Predal(SED-box):</b> ob dodajanju novega predala se določi predpona predala (tomi.novak oz. racunovodstvo, kar izdela 
@@ -77,6 +87,23 @@
                 pošta za ta predal vrnjena z napako: naslovnik ne obstaja oz. je neaktiven. Ko je predal označen kot neaktive se ga
                 ne da več aktivirati!</li>
         </ul>
+        <h2 id="gui/admin-sed-box:xstltransform">XML transformacija</h2>
+        V primeru, da so izpolnjeni vsi pogoji v prejeti pošiljki: ustrezna storitev, akcija ter pošiljka vsebuje XML priponke
+        z ustreznim podatkom (tabela:Transformacije, stolpec Vrednost), v elementu/atributu, ki ga določa XPath (tabela:Transformacije, stolpec XPath)
+        se na prejeti XML priponki izvrši XSLT transformacija. <br />
+        V tabeli "Imenski prostor" se vnaša seznam okrajšav imenskega prostora uporabljenega v "XPath" ukazu.<br />
+         
+        <center>
+            <img src="img/gui/sb-xslt.png" alt="sb-xslt.png" width="680"/> <br />
+        </center><br />
+        Rezultat transformacije se pripne kot nova priponka v pošiljki z označenim virom XSTL.
+        <center>
+            <img src="img/gui/sb-newmail.png" alt="New Mail" width="680"/> <br />
+        </center><br />
+        
+        
+        
+        
         <h2 id="gui/admin-sed-box:export">Izvoz dohodne pošte</h2>
 
         Parametri določajo lastnosti izvoza pošiljke na datotečni sistem. Avtomatski izvoz je namenjen 
@@ -101,7 +128,7 @@
         Vnosna polja za nastavitve zaganjanje procesov<br />
         <ul>
             <li><b>ukaz(Command):</b> je pote do skripte oz aplikacije <code>c:\export-script.bat</code> oz. 
-                <code>${sed.home}\scripts\export-appl.exe</code>. </li>
+                <code>${laurentius.home}\scripts\export-appl.exe</code>. </li>
             <li><b>Parametri: (parameters)</b> kot prvi parameter je vedno sezmam datotek v dohodni pošti 
                 (Poti so ločeni znakom za ločevanje poti kot ga določa OS: windows: ';', Linux: ':'), nato sledijo
                 parametri določeni v tej lastnosti. Parametri so lahko fiksni oz. <a href="#gui/admin-sed-box:inmailproperties" >parametri dohodne pošte</a> , npr:
