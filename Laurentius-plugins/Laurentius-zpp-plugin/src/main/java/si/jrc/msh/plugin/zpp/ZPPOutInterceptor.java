@@ -86,6 +86,7 @@ import si.laurentius.commons.utils.StorageUtils;
 
 import si.laurentius.lce.KeystoreUtils;
 import si.laurentius.msh.inbox.mail.MSHInMail;
+import si.laurentius.commons.interfaces.SEDCertStoreInterface;
 
 /**
  *
@@ -101,6 +102,9 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
 
   @EJB(mappedName = SEDJNDI.JNDI_SEDLOOKUPS)
   SEDLookupsInterface mdbLookup;
+  
+    @EJB(mappedName = SEDJNDI.JNDI_DBCERTSTORE)
+  SEDCertStoreInterface mCertBean;
 
   KeystoreUtils mKeystoreUtils = new KeystoreUtils();
 
@@ -324,7 +328,12 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
           eoutCtx.getSenderPartyIdentitySet().getLocalPartySecurity().getKeystoreName();
       String alias =
           eoutCtx.getSenderPartyIdentitySet().getLocalPartySecurity().getSignatureKeyAlias();
-      SEDCertStore sc = mdbLookup.getSEDCertStoreByName(keyStore);
+      
+      
+      SEDCertStore sc = mCertBean.getCertificateStore();
+          
+          
+          
       SEDCertificate scc = mdbLookup.getSEDCertificatForAlias(alias, sc, true);
       signPDFDocument(sc, scc, fDNViz, true);
 
@@ -382,15 +391,15 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
             eoutCtx.getSenderPartyIdentitySet().getLocalPartySecurity().getKeystoreName();
         String alias =
             eoutCtx.getSenderPartyIdentitySet().getLocalPartySecurity().getSignatureKeyAlias();
-        SEDCertStore sc = mdbLookup.getSEDCertStoreByName(keyStore);
+        SEDCertStore sc = mCertBean.getCertificateStore();
         SEDCertificate scc = mdbLookup.getSEDCertificatForAlias(alias, sc, true);
 
         signPDFDocument(sc, scc, fda, true);
       }
-    } catch (IOException | CertificateException | NoSuchAlgorithmException | InvalidKeyException
+    } catch (SEDSecurityException | IOException | CertificateException | NoSuchAlgorithmException | InvalidKeyException
         | NoSuchProviderException | SignatureException ex) {
       Logger.getLogger(ZPPOutInterceptor.class.getName()).log(Level.SEVERE, null, ex);
-    }
+    } 
 
   }
 

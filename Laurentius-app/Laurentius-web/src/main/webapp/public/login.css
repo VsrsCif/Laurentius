@@ -48,12 +48,19 @@
 }
 
 
-.ui-icon-sed-ok {
-    height: 22px;
-    width:  22px;
-    margin-top: 0;
-    top:0;
-    background-image: url('ok.png')  !important;
+.ui-icon-size-22 {
+    width:  22px !important;
+    height:  22px !important;
+    background-size: 22px 22px !important;
+}
+.ui-icon-size-32 {
+       
+    width:  32px !important;
+    height:  32px !important;
+    background-size: 32px 32px !important;
+}
+.ui-icon-svg-ok {
+    background-image: url('ok.svg') !important;    
 }
 
 .image-Button {

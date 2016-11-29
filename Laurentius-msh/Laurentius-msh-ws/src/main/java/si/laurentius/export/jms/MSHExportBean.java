@@ -15,7 +15,6 @@
 package si.laurentius.export.jms;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigInteger;
@@ -43,7 +42,6 @@ import org.xml.sax.SAXException;
 import si.laurentius.commons.MimeValues;
 import si.laurentius.commons.SEDInboxMailStatus;
 import si.laurentius.commons.SEDJNDI;
-import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.SEDValues;
 import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.interfaces.SEDDaoInterface;
@@ -51,6 +49,7 @@ import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StorageUtils;
 import si.laurentius.commons.utils.Utils;
 import si.laurentius.commons.interfaces.SEDLookupsInterface;
+import si.laurentius.commons.interfaces.exception.InMailProcessException;
 import si.laurentius.commons.utils.StringFormater;
 import si.laurentius.commons.utils.xml.XMLUtils;
 import si.laurentius.ebox.Execute;
@@ -128,41 +127,93 @@ public class MSHExportBean implements MessageListener {
       return;
     }
 
+    List lstExportFiles = null;
     if (sb.getXSLT() != null) {
-      tranformPayloads(sb.getXSLT(), mail);
+      try {
+        tranformPayloads(sb.getXSLT(), mail);
+      } catch (InMailProcessException ex) {
+        setStatusToInMail(mail, SEDInboxMailStatus.ERROR, ex.getMessage());
+        LOG.logError(t, "Message with id: '" + jmsMessageId + "' export failed!" + ex.getMessage(),
+            ex);
+        return;
+      }
     }
 
-    String exportFolderName;
-    File exportFolder;
-    if (sb.getExport() != null && sb.getExport().getActive() &&
-        sb.getExport().getFileMask() != null) {
-      Export e = sb.getExport();
-      exportFolderName = msfFormat.format(e.getFileMask(), mail);
-      String folder = StringFormater.replaceProperties(e.getFolder());
-      exportFolder = new File(folder + File.separator + exportFolderName);
-      if (!exportFolder.exists() && !exportFolder.mkdirs()) {
-        String errMsg = String.format("Export failed! Could not create export folder '%s'!",
-            folder);
-        setStatusToInMail(mail, SEDInboxMailStatus.ERROR, errMsg);
-        LOG.logError(t, "Message with id: '" + jmsMessageId + "' export failed!" + errMsg, null);
+    if (sb.getExport() != null && sb.getExport().getActive()) {
+      try {
+        lstExportFiles = exportMail(sb.getExport(), mail);
+      } catch (InMailProcessException ex) {
+        setStatusToInMail(mail, SEDInboxMailStatus.ERROR, ex.getMessage());
+        LOG.logError(t, "Message with id: '" + jmsMessageId + "' export failed!" + ex.getMessage(),
+            ex);
+        return;
+
+      }
+    }
+
+    // execute file 
+    if (sb.getExecute() != null && sb.getExecute().getActive() != null &&
+        sb.getExecute().getActive()) {
+      try {
+        executeProcessForMail(sb.getExecute(), mail, lstExportFiles);
+        
+        // mark as delivered
+        setStatusToInMail(mail, SEDInboxMailStatus.DELIVERED, "Mail successfully exported!");
+      } catch (InMailProcessException ex) {
+        setStatusToInMail(mail, SEDInboxMailStatus.ERROR, ex.getMessage());
+        LOG.logError(t, "Message with id: '" + jmsMessageId + "' Execution failed!" +
+            ex.getMessage(),
+            ex);
         return;
       }
 
-    } else {
-      String errMsg = String.format(
-          "Receiver box '%s' does not have configurationf for exporting mail! Export suppressed for mail %d!",
-          mail.getReceiverEBox(), mail.getId());
-      setStatusToInMail(mail, SEDInboxMailStatus.ERROR, errMsg);
-      LOG.logError(t, errMsg, null);
-      return;
     }
+    
+
+    LOG.logEnd(t, jmsMessageId);
+  }
+
+  public long executeProcessForMail(Execute e, MSHInMail mail, List<String> lstExportFiles)
+      throws InMailProcessException {
+    if (!Utils.isEmptyString(e.getCommand())) {
+      String errMsg = "Execution external procces failed! No command defimed!";
+      throw new InMailProcessException(InMailProcessException.ProcessExceptionCode.InitException,
+          errMsg);
+    }
+
+    String command = StringFormater.replaceProperties(e.getCommand());
+    String params =
+        (lstExportFiles != null ? String.join(File.pathSeparator, lstExportFiles) + " " : "") +
+        msfFormat.format(
+            e.getParameters(), mail);
+    return executeCommand(mail, command, params);
+
+  }
+
+  public List<String> exportMail(Export e, MSHInMail mail)
+      throws InMailProcessException {
+
+    String exportFolderName;
+    File exportFolder;
     // export metadata
     List<String> listFiles = new ArrayList<>();
 
-    if (sb.getExport().getExportMetaData() != null && sb.getExport().getExportMetaData()) {
-      File fn = new File(exportFolder.getAbsolutePath() + File.separator + "metadata." +
+    exportFolderName = msfFormat.format(e.getFileMask(), mail);
+    String folder = StringFormater.replaceProperties(e.getFolder());
+    exportFolder = new File(folder + File.separator + exportFolderName);
+    if (!exportFolder.exists() && !exportFolder.mkdirs()) {
+      String errMsg = String.format("Export failed! Could not create export folder '%s'!",
+          folder);
+      throw new InMailProcessException(InMailProcessException.ProcessExceptionCode.InitException,
+          errMsg);
+    }
+
+    boolean overwriteFiles = e.getOverwrite() != null && e.getOverwrite();
+    if (e.getExportMetaData() != null && e.getExportMetaData()) {
+      File fn = new File(exportFolder.getAbsolutePath() + File.separator + String.format(
+          "metadata_%06d.", mail.getId()) +
           MimeValues.MIME_XML.getSuffix());
-      if (fn.exists() && sb.getExport().getOverwrite() != null && sb.getExport().getOverwrite()) {
+      if (fn.exists() && overwriteFiles) {
         fn.delete();
       }
 
@@ -174,43 +225,32 @@ public class MSHExportBean implements MessageListener {
       } catch (JAXBException | FileNotFoundException ex) {
         String errMsg = String.format("Failed to serialize metadata: %s!",
             ex.getMessage());
-        setStatusToInMail(mail, SEDInboxMailStatus.ERROR, errMsg);
-        LOG.logError(t, "Message with id: '" + jmsMessageId + "' export failed!" + errMsg, ex);
-        return;
-      }
-    }
+        throw new InMailProcessException(
+            InMailProcessException.ProcessExceptionCode.ProcessException, errMsg);
 
-    for (MSHInPart mip : mail.getMSHInPayload().getMSHInParts()) {
-      File f;
-      try {
-        f = msStorageUtils.copyFileToFolder(mip.getFilepath(), exportFolder,
-            sb.getExport().getOverwrite() != null && sb.getExport().getOverwrite());
-        listFiles.add(f.getAbsolutePath());
-      } catch (StorageException ex) {
-        String errMsg = String.format("Failed to export file %s! Error %s",
-            mip.getFilepath(), ex.getMessage());
-        setStatusToInMail(mail, SEDInboxMailStatus.ERROR, errMsg);
-        LOG.logError(t, "Message with id: '" + jmsMessageId + "' export failed!" + errMsg, ex);
-        return;
+      }
+
+      for (MSHInPart mip : mail.getMSHInPayload().getMSHInParts()) {
+        File f;
+        try {
+          f = msStorageUtils.copyFileToFolder(mip.getFilepath(), exportFolder,
+              e.getOverwrite() != null && e.getOverwrite());
+          listFiles.add(f.getAbsolutePath());
+        } catch (StorageException ex) {
+          String errMsg = String.format("Failed to export file %s! Error %s",
+              mip.getFilepath(), ex.getMessage());
+          throw new InMailProcessException(
+              InMailProcessException.ProcessExceptionCode.ProcessException, errMsg);
+        }
       }
     }
-    // execute file 
-    if (sb.getExecute() != null && sb.getExecute().getActive() != null &&
-        sb.getExecute().getActive() &&
-        !Utils.isEmptyString(sb.getExecute().getCommand())) {
-      Execute e = sb.getExecute();
-      String command = StringFormater.replaceProperties(e.getCommand());
-      String params = String.join(File.pathSeparator, listFiles) + " " + msfFormat.format(
-          e.getParameters(), mail);
-      executeCommand(mail, command, params);
-    } else {
-      setStatusToInMail(mail, SEDInboxMailStatus.DELIVERED, "Mail successfully exported!");
-    }
-    LOG.logEnd(t, jmsMessageId);
+    return listFiles;
   }
 
-  public void executeCommand(MSHInMail mail, String cmd, String param) {
+  public long executeCommand(MSHInMail mail, String cmd, String param)
+      throws InMailProcessException {
     long t = LOG.logStart();
+    long procRes = -1;
     try {
       String command = StringFormater.replaceProperties(cmd);
       ProcessBuilder builder = new ProcessBuilder(command, param);
@@ -218,7 +258,7 @@ public class MSHExportBean implements MessageListener {
           mail.getId());
       long lSt = LOG.getTime();
       Process process = builder.start();
-      long procRes = process.waitFor();
+      procRes = process.waitFor();
       LOG.formatedlog(
           "END execution of command '%s', params '%s' for mail %d in %d ms. Return value %d",
           command, param, mail.getId(), (LOG.getTime() - lSt), procRes);
@@ -228,9 +268,11 @@ public class MSHExportBean implements MessageListener {
             "Execution process %s return value '%d'. Normal termination is '0'!",
             command.length() > 20 ? "..." + command.substring(command.length() - 20) : command,
             procRes);
-        setStatusToInMail(mail, SEDInboxMailStatus.ERROR, errMsg);
-        LOG.logError(t, String.format("Message with id: %d failed to export: %s", mail.getId(),
-            errMsg), null);
+
+        throw new InMailProcessException(
+            InMailProcessException.ProcessExceptionCode.ProcessException,
+            errMsg);
+
       } else {
         setStatusToInMail(mail, SEDInboxMailStatus.DELIVERED,
             "Mail successfully exported with proccess execution!");
@@ -240,11 +282,13 @@ public class MSHExportBean implements MessageListener {
       String errMsg = String.format(
           "Execution process failed %s!",
           ex.getMessage());
-      setStatusToInMail(mail, SEDInboxMailStatus.ERROR, errMsg);
-      LOG.logError(t, String.format("Message with id: %d failed to export: %s", mail.getId(),
-          errMsg), ex);
+      throw new InMailProcessException(
+          InMailProcessException.ProcessExceptionCode.ProcessException,
+          errMsg, ex, false, true);
+
     }
     LOG.logEnd(t);
+    return procRes;
   }
 
   public void setStatusToInMail(MSHInMail mail, SEDInboxMailStatus status, String msg) {
@@ -255,7 +299,8 @@ public class MSHExportBean implements MessageListener {
     }
   }
 
-  public void tranformPayloads(SEDXslt xslt, MSHInMail mim) {
+  public void tranformPayloads(SEDXslt xslt, MSHInMail mim)
+      throws InMailProcessException {
     LOG.formatedlog("XSLT for box");
     for (XPathRule xpr : xslt.getXPathRules()) {
       LOG.formatedlog("XSLT for box rule 1");
@@ -279,7 +324,6 @@ public class MSHExportBean implements MessageListener {
                 LOG.formatedlog("XSLT for box rule 5");
                 String trFile = StringFormater.replaceProperties(xpr.getTransformation());
                 LOG.formatedlog("XSLT file %s ", trFile);
-                
 
                 try {
                   File fRes = StorageUtils.getNewStorageFile("xml", "xslt");
@@ -295,13 +339,24 @@ public class MSHExportBean implements MessageListener {
                   mipNewPayload.add(mipt);
 
                 } catch (JAXBException | TransformerException | StorageException ex) {
-                  LOG.logError(ex.getMessage(), ex);
+                  String errMsg = String.format(
+                      "XSLT transformation failed %s!",
+                      ex.getMessage());
+                  throw new InMailProcessException(
+                      InMailProcessException.ProcessExceptionCode.ProcessException,
+                      errMsg, ex, false, true);
                 }
 
               }
             } catch (IOException | ParserConfigurationException | SAXException
                 | XPathExpressionException ex) {
-              LOG.logError(ex.getMessage(), ex);
+
+              String errMsg = String.format(
+                  "XSLT transformation failed %s!",
+                  ex.getMessage());
+              throw new InMailProcessException(
+                  InMailProcessException.ProcessExceptionCode.ProcessException,
+                  errMsg, ex, false, true);
             }
 
           }
@@ -312,7 +367,12 @@ public class MSHExportBean implements MessageListener {
           try {
             mDB.updateInMail(mim, "transform", "");
           } catch (StorageException ex) {
-            LOG.logError(ex.getMessage(), ex);
+            String errMsg = String.format(
+                "XSLT transformation failed %s!",
+                ex.getMessage());
+            throw new InMailProcessException(
+                InMailProcessException.ProcessExceptionCode.ProcessException,
+                errMsg, ex, false, true);
           }
         }
 

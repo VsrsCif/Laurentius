@@ -171,7 +171,7 @@ public class SEDMailBoxTest extends TestUtils {
       assertNotNull("Response/RData", mer.getRData());
       assertNotNull("Response/RData/OutEvent", mer.getRData().getOutEvent());
       assertEquals("Mail id", om.getId(), mer.getRData().getOutEvent().getMailId());
-      assertEquals("Sender box", om.getSenderEBox(), mer.getRData().getOutEvent().getSenderEBox());
+//      assertEquals("Sender box", om.getSenderEBox(), mer.getRData().getOutEvent().getSenderEBox());
 
       OutMail omtest = getOutMail(om.getId());
       assertNotNull("OutMail not exists in db", omtest);
@@ -353,7 +353,6 @@ public class SEDMailBoxTest extends TestUtils {
       InEvent mevent = new InEvent();
 
       mevent.setMailId(mail.getId());
-      mevent.setReceiverEBox(mail.getReceiverEBox());
       mevent.setStatus(mail.getStatus());
       mevent.setDate(mail.getStatusDate());
       mevent.setUserId("userID");
@@ -384,7 +383,7 @@ public class SEDMailBoxTest extends TestUtils {
         OutEvent mevent = new OutEvent();
 
         mevent.setMailId(mail.getId());
-        mevent.setSenderEBox(mail.getSenderEBox());
+//        mevent.setSenderEBox(mail.getSenderEBox());
         mevent.setStatus(mail.getStatus());
         mevent.setDate(mail.getStatusDate());
         mevent.setUserId("userID");
@@ -445,7 +444,7 @@ public class SEDMailBoxTest extends TestUtils {
         OutEvent mevent = new OutEvent();
 
         mevent.setMailId(mail.getId());
-        mevent.setSenderEBox(mail.getSenderEBox());
+//        mevent.setSenderEBox(mail.getSenderEBox());
         mevent.setStatus(mail.getStatus());
         mevent.setDate(mail.getStatusDate());
         mevent.setUserId("userID");
@@ -1087,7 +1086,7 @@ public class SEDMailBoxTest extends TestUtils {
     mimr.setData(new ModifyInMailRequest.Data());
     mimr.getData().setMailId(im.getId());
     mimr.getData().setReceiverEBox(im.getReceiverEBox());
-    mimr.getData().setAction(ModifyActionCode.ACCEPT);
+    mimr.getData().setAction(ModifyActionCode.DELIVERED);
     ModifyInMailResponse mer = mTestInstance.modifyInMail(mimr);
     assertNotNull("Response", mer);
     assertNotNull("Response/RControl", mer.getRControl());
@@ -1097,8 +1096,6 @@ public class SEDMailBoxTest extends TestUtils {
     assertNotNull("Response/RData", mer.getRData());
     assertNotNull("Response/RData/InEvent", mer.getRData().getInEvent());
     assertEquals("Mail id", im.getId(), mer.getRData().getInEvent().getMailId());
-    assertEquals("Receiver box", im.getReceiverEBox(), mer.getRData().getInEvent()
-        .getReceiverEBox());
 
     // get inmail and check status
     GetInMailRequest gimr = new GetInMailRequest();

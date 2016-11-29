@@ -38,13 +38,13 @@ import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.SEDValues;
 import si.laurentius.commons.exception.PModeException;
 import si.laurentius.commons.exception.StorageException;
+import si.laurentius.commons.interfaces.OutMailEventInterface;
 import si.laurentius.commons.interfaces.PModeInterface;
 import si.laurentius.commons.interfaces.SEDDaoInterface;
 import si.laurentius.commons.pmode.EBMSMessageContext;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StorageUtils;
 import si.laurentius.commons.utils.Utils;
-import si.laurentius.commons.interfaces.OutMailEventLisneterInterface;
 import si.laurentius.commons.interfaces.SEDLookupsInterface;
 
 /**
@@ -148,7 +148,7 @@ public class MSHQueueBean implements MessageListener {
       LOG.logError(t, errDesc, ex);
       setStatusToOutMail(mail, SEDOutboxMailStatus.FAILED, errDesc, ex);
       mPluginOutEventHandler.outEvent(mail, null,
-          OutMailEventLisneterInterface.PluginOutEvent.FAILED);
+          OutMailEventInterface.PluginOutEvent.FAILED);
       return;
     }catch ( EJBException  ex) {
       Exception exc =   ex.getCausedByException();
@@ -158,7 +158,7 @@ public class MSHQueueBean implements MessageListener {
       LOG.logError(t, errDesc, ex);
       setStatusToOutMail(mail, SEDOutboxMailStatus.FAILED, errDesc, ex);
       mPluginOutEventHandler.outEvent(mail, null,
-          OutMailEventLisneterInterface.PluginOutEvent.FAILED);
+          OutMailEventInterface.PluginOutEvent.FAILED);
       return;
     }
     
@@ -191,7 +191,7 @@ public class MSHQueueBean implements MessageListener {
 
       if (sm.getError() != null) {
 
-        mPluginOutEventHandler.outEvent(mail, sd, OutMailEventLisneterInterface.PluginOutEvent.ERROR);
+        mPluginOutEventHandler.outEvent(mail, sd, OutMailEventInterface.PluginOutEvent.ERROR);
 
         setStatusToOutMail(mail, SEDOutboxMailStatus.ERROR, sm.getError().getSubMessage(),
             sm.getResultFile(), sm.getMimeType());
@@ -203,7 +203,7 @@ public class MSHQueueBean implements MessageListener {
 
           if (resendMail(mail, sd, jmsRetryCount, jmsRetryDelay)) {
             mPluginOutEventHandler.outEvent(mail, sd,
-                OutMailEventLisneterInterface.PluginOutEvent.RESEND);
+                OutMailEventInterface.PluginOutEvent.RESEND);
           } else {
             setStatusToOutMail(mail, SEDOutboxMailStatus.FAILED,
                 "Max resend mail reached",
@@ -217,14 +217,14 @@ public class MSHQueueBean implements MessageListener {
               null, sm.getMimeType());
 
           mPluginOutEventHandler.outEvent(mail, sd,
-              OutMailEventLisneterInterface.PluginOutEvent.FAILED);
+              OutMailEventInterface.PluginOutEvent.FAILED);
         }
 
       } else {
         setStatusToOutMail(mail, SEDOutboxMailStatus.SENT, "Message sent to receiver MSH",
             sm.getResultFile(), sm.getMimeType());
 
-        mPluginOutEventHandler.outEvent(mail, sd, OutMailEventLisneterInterface.PluginOutEvent.SEND);
+        mPluginOutEventHandler.outEvent(mail, sd, OutMailEventInterface.PluginOutEvent.SEND);
       }
 
     }

@@ -25,6 +25,7 @@ import org.primefaces.event.CellEditEvent;
 import si.laurentius.cert.SEDCertStore;
 import si.laurentius.cert.SEDCertificate;
 import si.laurentius.commons.SEDJNDI;
+import si.laurentius.commons.exception.SEDSecurityException;
 import si.laurentius.commons.interfaces.PModeInterface;
 import si.laurentius.commons.interfaces.SEDLookupsInterface;
 import si.laurentius.commons.utils.SEDLogger;
@@ -32,6 +33,7 @@ import si.laurentius.commons.utils.Utils;
 import si.laurentius.msh.pmode.PartyIdentitySet;
 import si.laurentius.msh.pmode.PartyIdentitySetType;
 import si.laurentius.msh.pmode.Protocol;
+import si.laurentius.commons.interfaces.SEDCertStoreInterface;
 
 /**
  *
@@ -51,6 +53,9 @@ public class PModePartyView extends AbstractPModeJSFView<PartyIdentitySet> {
 
   @EJB(mappedName = SEDJNDI.JNDI_SEDLOOKUPS)
   SEDLookupsInterface mLookUp;
+
+  @EJB(mappedName = SEDJNDI.JNDI_DBCERTSTORE)
+  SEDCertStoreInterface mCertBean;
 
   PartyIdentitySetType.PartyId selectedPartyId;
 
@@ -109,16 +114,18 @@ public class PModePartyView extends AbstractPModeJSFView<PartyIdentitySet> {
         facesContext().addMessage(null,
             new FacesMessage(FacesMessage.SEVERITY_WARN, "Id alredy exists!", "Id must be unique!"));
         return false;
-      } else if (!sv.getIsLocalIdentity() &&  Utils.isEmptyString(sv.getDomain())) {
+      } else if (!sv.getIsLocalIdentity() && Utils.isEmptyString(sv.getDomain())) {
         facesContext().addMessage(null,
-            new FacesMessage(FacesMessage.SEVERITY_WARN, "Domain is empty!", "For exchange party domain must not be empty!"));
+            new FacesMessage(FacesMessage.SEVERITY_WARN, "Domain is empty!",
+                "For exchange party domain must not be empty!"));
         return false;
       } else if (sv.getPartyIds().isEmpty()) {
         facesContext().addMessage(null,
-            new FacesMessage(FacesMessage.SEVERITY_WARN, "Identifier list empty", "Define at least one PartyIdentifier"));
+            new FacesMessage(FacesMessage.SEVERITY_WARN, "Identifier list empty",
+                "Define at least one PartyIdentifier"));
         return false;
-      } 
-      
+      }
+
       return true;
     }
     return true;
@@ -132,7 +139,7 @@ public class PModePartyView extends AbstractPModeJSFView<PartyIdentitySet> {
     long l = LOG.logStart();
     boolean bsuc = false;
     PartyIdentitySet sv = getEditable();
-    if (sv != null) {      
+    if (sv != null) {
       mPModeInteface.addPartyIdentitySet(sv);
       setEditable(null);
       bsuc = true;
@@ -146,7 +153,7 @@ public class PModePartyView extends AbstractPModeJSFView<PartyIdentitySet> {
   @Override
   public boolean updateEditable() {
     boolean bsuc = false;
-    
+
     PartyIdentitySet sv = getEditable();
     if (sv != null) {
       mPModeInteface.updatePartyIdentitySet(sv);
@@ -168,7 +175,7 @@ public class PModePartyView extends AbstractPModeJSFView<PartyIdentitySet> {
     return lst;
 
   }
-  
+
   public void setEditableIdentityActive(boolean bVal) {
     if (getEditable() != null) {
       getEditable().setActive(bVal);
@@ -176,7 +183,8 @@ public class PModePartyView extends AbstractPModeJSFView<PartyIdentitySet> {
   }
 
   public boolean getEditableIdentityActive() {
-    return getEditable() != null && getEditable().getActive()!=null ? getEditable().getActive() : true;
+    return getEditable() != null && getEditable().getActive() != null ? getEditable().getActive() :
+        true;
   }
 
   public void setEditableLocalIdentity(boolean bVal) {
@@ -202,6 +210,16 @@ public class PModePartyView extends AbstractPModeJSFView<PartyIdentitySet> {
   }
 
   public List<SEDCertificate> getCurrentTLSKeyCerts() {
+
+     if (getCurrrentTransportTLS() != null) {
+    try {
+      return mCertBean.getCertificateStore().getSEDCertificates();
+    } catch (SEDSecurityException ex) {
+      LOG.logError(ex.getMessage(), ex);
+    }
+     }
+    return Collections.emptyList();
+    /*
     if (getCurrrentTransportTLS() != null &&
         !Utils.isEmptyString(getCurrrentTransportTLS().getKeyStoreName())) {
       String keystoreName = getCurrrentTransportTLS().getKeyStoreName();
@@ -210,11 +228,21 @@ public class PModePartyView extends AbstractPModeJSFView<PartyIdentitySet> {
         return cs.getSEDCertificates();
       }
     }
-    return Collections.emptyList();
+    return Collections.emptyList();*/
   }
 
   public List<SEDCertificate> getCurrentExchangeTruststoreCerts() {
-    if (getEditable() != null && getEditable().getExchangePartySecurity() != null &&
+    if (getEditable() != null && getEditable().getExchangePartySecurity() != null) {
+      try {
+        return mCertBean.getCertificateStore().getSEDCertificates();
+      } catch (SEDSecurityException ex) {
+        LOG.logError(ex.getMessage(), ex);
+      }
+    }
+
+    return Collections.emptyList();
+
+    /*if (getEditable() !=null && getEditable().getExchangePartySecurity() != null &&
         !Utils.isEmptyString(getEditable().getExchangePartySecurity().getTrustoreName())) {
       String keystoreName = getEditable().getExchangePartySecurity().getTrustoreName();
       SEDCertStore cs = mLookUp.getSEDCertStoreByName(keystoreName);
@@ -222,7 +250,8 @@ public class PModePartyView extends AbstractPModeJSFView<PartyIdentitySet> {
         return cs.getSEDCertificates();
       }
     }
-    return Collections.emptyList();
+
+    return Collections.emptyList();*/
   }
 
   public String getListAsString(List<String> lst) {

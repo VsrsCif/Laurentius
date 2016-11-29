@@ -15,13 +15,17 @@
 package si.laurentius.commons.interfaces;
 
 import javax.ejb.Local;
+import si.laurentius.cert.SEDCertStore;
+import si.laurentius.commons.exception.SEDSecurityException;
 
 /**
  *
  * @author Jože Rihtaršič
  */
 @Local
-public interface SEDCertCRLInterface {
+public interface SEDCertStoreInterface {
 
   void refreshCrlLists();
+  SEDCertStore getCertificateStore() throws SEDSecurityException ;
+  SEDCertStore getRootCACertificateStore() throws SEDSecurityException ;
 }

@@ -56,6 +56,7 @@ import si.laurentius.commons.utils.StorageUtils;
 import si.laurentius.commons.utils.StringFormater;
 import si.laurentius.commons.utils.Utils;
 import si.laurentius.lce.KeystoreUtils;
+import si.laurentius.commons.interfaces.SEDCertStoreInterface;
 
 
 /**
@@ -89,6 +90,10 @@ public class ZPPTask implements TaskExecutionInterface {
 
   @EJB(mappedName = SEDJNDI.JNDI_SEDLOOKUPS)
   SEDLookupsInterface msedLookup;
+  
+  
+  @EJB(mappedName = SEDJNDI.JNDI_DBCERTSTORE)
+  SEDCertStoreInterface mCertBean;
 
   // TODO externalize
   /**
@@ -255,7 +260,15 @@ public class ZPPTask implements TaskExecutionInterface {
           MimeConstants.MIME_PDF);
 
       // sign with receiver certificate 
-      SEDCertStore cs = msedLookup.getSEDCertStoreByName(keystore);
+      
+      SEDCertStore cs;
+      try {
+        cs = mCertBean.getCertificateStore();
+      } catch (SEDSecurityException ex) {
+        String msg = "Error opening keystore - check configuration!";
+        LOG.logError(l, msg, null);
+        throw new ZPPException(msg);
+      }
       SEDCertificate aliasCrt =
           msedLookup.getSEDCertificatForAlias(signAlias, cs, true);
       if (aliasCrt == null) {

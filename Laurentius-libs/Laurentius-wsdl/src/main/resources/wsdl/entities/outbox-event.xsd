@@ -53,7 +53,7 @@ Copyright 2015, Supreme Court Republic of Slovenia
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="senderEBox" use="required">
+        <!-- xs:attribute name="senderEBox" use="required">
             <xs:annotation>
                 <xs:documentation xml:lang="sl">Naslovnikov elektronski naslov.</xs:documentation>
             </xs:annotation>
@@ -63,7 +63,7 @@ Copyright 2015, Supreme Court Republic of Slovenia
                     <xs:pattern value="[_\-a-zA-Z0-9\.\+]+@[a-zA-Z0-9](\.?[\-a-zA-Z0-9]*[a-zA-Z0-9])*"/>
                 </xs:restriction>
             </xs:simpleType>
-        </xs:attribute>
+        </xs:attribute -->
         <xs:attribute name="date" type="xs:dateTime" use="required">
             <xs:annotation>
                 <xs:documentation xml:lang="sl">Datum/čas statusa</xs:documentation>

@@ -48,7 +48,7 @@
 			<tns:PartyId type="urn:oasis:names:tc:ebcore:partyid-type:unregistered:si-svev:sed-box" valueSource="address"/>
 			<tns:TransportProtocol id="defalut" isTwoWayProtocol="true">
 				<tns:Address connectionTimeout="120000" receiveTimeout="180000" chunked="false">https://127.0.0.1:8443/laurentius/msh</tns:Address>
-				<tns:TLS trustStoreName="truststore"/>
+				<tns:TLS trustStoreName="keystore"/>
 				<tns:SOAPVersion>1.2</tns:SOAPVersion>
 			</tns:TransportProtocol>
 			<tns:LocalPartySecurity signatureKeyAlias="test-laurentius" decryptionKeyAlias="test-laurentius" keystoreName="keystore"/>
@@ -59,10 +59,10 @@
 			<tns:PartyId type="urn:oasis:names:tc:ebcore:partyid-type:unregistered:si-svev:sed-box" valueSource="address"/>
 			<tns:TransportProtocol id="court-https" isTwoWayProtocol="true">
 				<tns:Address connectionTimeout="120000" receiveTimeout="180000" chunked="false">https://b2g-test.sodisce.si/laurentius/msh</tns:Address>
-				<tns:TLS keyAlias="test-tls" keyStoreName="keystore" trustStoreName="truststore"/>
+				<tns:TLS keyAlias="test-tls" keyStoreName="keystore" trustStoreName="keystore"/>
 				<tns:SOAPVersion>1.2</tns:SOAPVersion>
 			</tns:TransportProtocol>
-			<tns:ExchangePartySecurity signatureCertAlias="court-laurentius" trustoreName="truststore"/>
+			<tns:ExchangePartySecurity signatureCertAlias="court-laurentius" trustoreName="keystore"/>
 		</tns:PartyIdentitySet>
 	</tns:Parties>
 	<tns:SecurityPolicies>

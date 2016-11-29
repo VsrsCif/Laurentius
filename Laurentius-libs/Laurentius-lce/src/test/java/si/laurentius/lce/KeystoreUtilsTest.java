@@ -351,7 +351,7 @@ public class KeystoreUtilsTest {
     
     int iTrgCertCount = sctarget.getSEDCertificates().size();
     int iSrcCertCount = scSource.getSEDCertificates().size();
-    instance.mergeCertStores(sctarget, scSource);
+    instance.mergeCertStores(sctarget, scSource, false, true);
     
     assertEquals(iTrgCertCount+iSrcCertCount, sctarget.getSEDCertificates().size());
   }

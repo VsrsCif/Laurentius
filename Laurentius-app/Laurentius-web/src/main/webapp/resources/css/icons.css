@@ -58,6 +58,9 @@
 .ui-icon-svg-export {
     background-image: url("#{resource['images:/export.svg']}") !important;    
 }
+.ui-icon-svg-execute {
+    background-image: url("#{resource['images:/execute.svg']}") !important;    
+}
 .ui-icon-svg-csv {
     background-image: url("#{resource['images:/csv.svg']}") !important;    
 }
@@ -134,6 +137,9 @@
 
 .ui-icon-svg-certificate {
     background-image: url("#{resource['images:/certificate.svg']}") !important;    
+}
+.ui-icon-svg-certificate-long {
+    background-image: url("#{resource['images:/certificateLong.svg.svg']}") !important;    
 }
 .ui-icon-svg-scheduler {
     background-image: url("#{resource['images:/scheduler.svg']}") !important;    

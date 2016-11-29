@@ -27,7 +27,7 @@ public class SEDJNDI {
      *
      */
   public static final String JNDI_DBCERTSTORE =
-      "java:global/Laurentius-dao/DBCertStores!si.laurentius.commons.interfaces.DBCertStoresInterface";
+      "java:global/Laurentius-dao/SEDCertStoreBean!si.laurentius.commons.interfaces.SEDCertStoreInterface";
 
   /**
      *
@@ -73,9 +73,5 @@ public class SEDJNDI {
 
   
     
-  /**
-     *
-     */
-  public static final String JNDI_SEDCRL =
-      "java:global/Laurentius-dao/SEDCertCRLBean!si.laurentius.commons.interfaces.SEDCertCRLInterface";
+ 
 }

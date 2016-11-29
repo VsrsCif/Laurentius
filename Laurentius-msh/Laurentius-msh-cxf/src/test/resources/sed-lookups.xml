@@ -94,12 +94,10 @@
         </ns6:SEDUser>
     </SEDUsers>
     <SEDCertStores>
-        <ns7:SEDCertStore id="1" name="truststore-def" filePath="${laurentius.home}/../src/test/resources/security/msh.e-box-a-truststore.jks" type="jks" password="test1234">
-            <ns7:SEDCertificate id="2" alias="msh.e-box-b.si" issuerDN="CN=msh.e-box-b.si, OU=test, OU=msh, OU=jrc, OU=si" subjectDN="CN=msh.e-box-b.si, OU=test, OU=msh, OU=jrc, OU=si" validFrom="2016-02-29T14:55:29+01:00" validTo="2021-02-27T14:55:29+01:00" serialNumber="1048029646" type="X.509" keyEntry="false"/>
-            <ns7:SEDCertificate id="3" alias="msh.e-box-a.si" issuerDN="CN=msh.e-box-a.si, OU=test, OU=msh, OU=jrc, OU=si" subjectDN="CN=msh.e-box-a.si, OU=test, OU=msh, OU=jrc, OU=si" validFrom="2016-02-29T14:55:28+01:00" validTo="2021-02-27T14:55:28+01:00" serialNumber="1725505630" type="X.509" keyEntry="false"/>
-        </ns7:SEDCertStore>
-        <ns7:SEDCertStore id="4"  name="keystore-def"  filePath="${laurentius.home}/../src/test/resources/security/msh.e-box-a-keystore.jks" type="jks" password="test1234">
+        
+        <ns7:SEDCertStore id="4"  name="keystore"  filePath="${laurentius.home}/../src/test/resources/security/msh.e-box-a-keystore.jks" type="jks" password="test1234">
             <ns7:SEDCertificate id="5" alias="msh.e-box-a.si" issuerDN="CN=msh.e-box-a.si, OU=test, OU=msh, OU=jrc, OU=si" subjectDN="CN=msh.e-box-a.si, OU=test, OU=msh, OU=jrc, OU=si" validFrom="2016-02-29T14:55:28+01:00" validTo="2021-02-27T14:55:28+01:00" serialNumber="1725505630" type="X.509" keyEntry="true" keyPassword="key1234"/>
+            <ns7:SEDCertificate id="2" alias="msh.e-box-b.si" issuerDN="CN=msh.e-box-b.si, OU=test, OU=msh, OU=jrc, OU=si" subjectDN="CN=msh.e-box-b.si, OU=test, OU=msh, OU=jrc, OU=si" validFrom="2016-02-29T14:55:29+01:00" validTo="2021-02-27T14:55:29+01:00" serialNumber="1048029646" type="X.509" keyEntry="true" keyPassword="key1234"/>
         </ns7:SEDCertStore>
     </SEDCertStores>
 </SedLookups>

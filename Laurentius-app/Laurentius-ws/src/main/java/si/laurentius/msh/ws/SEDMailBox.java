@@ -118,7 +118,6 @@ public class SEDMailBox implements SEDMailBoxWS {
 
   private static final SEDLogger LOG = new SEDLogger(SEDMailBox.class);
 
-
   /**
    *
    */
@@ -130,9 +129,9 @@ public class SEDMailBox implements SEDMailBoxWS {
    */
   @PersistenceContext(unitName = "ebMS_PU", name = "ebMS_PU")
   protected EntityManager memEManager;
-  
+
   HashUtils mpHU = new HashUtils();
-  
+
   @EJB(mappedName = SEDJNDI.JNDI_PMODE)
   protected PModeInterface mpModeManager = null;
 
@@ -335,7 +334,7 @@ public class SEDMailBox implements SEDMailBoxWS {
       if (im.getInPayload() != null && !im.getInPayload().getInParts().isEmpty()) {
         for (InPart ip : im.getInPayload().getInParts()) {
           try {
-            ip.setBin(msuStorageUtils.getByteArray(ip.getFilepath()));            
+            ip.setBin(msuStorageUtils.getByteArray(ip.getFilepath()));
           } catch (StorageException ingore) {
 
           }
@@ -394,6 +393,12 @@ public class SEDMailBox implements SEDMailBoxWS {
     rsp.setRControl(rc);
     rsp.setRData(new InMailEventListResponse.RData());
 
+    TypedQuery<InEvent> q = getEntityManager().createNamedQuery(
+        NamedQueries.LAU_NQ_INMAIL_GET_EVENTS, InEvent.class);
+    q.setParameter(NamedQueries.NQ_PARAM_RECEIVER_EBOX, dt.getReceiverEBox());
+    q.setParameter(NamedQueries.NQ_PARAM_MAIL_ID, dt.getMailId());
+
+    /*
     CriteriaQuery<Long> cqCount = createSearchCriteria(dt, InEvent.class, true, null, null);
     CriteriaQuery<InEvent> cq = createSearchCriteria(dt, InEvent.class, false, c.getSortOrder(),
         c.getSortBy());
@@ -409,12 +414,13 @@ public class SEDMailBox implements SEDMailBoxWS {
     if (iStarIndex > 0) {
       q.setFirstResult(iStarIndex);
     }
-
+     */
     List<InEvent> lst = q.getResultList();
     if (!lst.isEmpty()) {
       rsp.getRData().getInEvents().addAll(lst);
     }
     rc.setResponseSize(BigInteger.valueOf(lst.size()));
+    rc.setResultSize(BigInteger.valueOf(lst.size()));
 
     return rsp;
   }
@@ -524,26 +530,34 @@ public class SEDMailBox implements SEDMailBoxWS {
     rsp.setRControl(rc);
     rsp.setRData(new OutMailEventListResponse.RData());
 
-    CriteriaQuery<Long> cqCount = createSearchCriteria(dt, OutEvent.class, true, null, null);
+    TypedQuery<OutEvent> q = getEntityManager().createNamedQuery(
+        NamedQueries.LAU_NQ_OUTMAIL_GET_EVENTS, OutEvent.class);
+    q.setParameter(NamedQueries.NQ_PARAM_SENDER_EBOX, dt.getSenderEBox());
+    q.setParameter(NamedQueries.NQ_PARAM_MAIL_ID, dt.getMailId() == null ? -1 : dt.getMailId());
+    q.setParameter(NamedQueries.NQ_PARAM_SENDER_MAIL_ID,
+        Utils.isEmptyString(dt.getSenderMessageId()) ? "" : dt.getSenderMessageId());
+
+    /* CriteriaQuery<Long> cqCount = createSearchCriteria(dt, OutEvent.class, true, null, null);
     CriteriaQuery<OutEvent> cq = createSearchCriteria(dt, OutEvent.class, false, c.getSortOrder(),
         c.getSortBy());
 
     Long l = getEntityManager().createQuery(cqCount).getSingleResult();
     rc.setResultSize(BigInteger.valueOf(l));
-
-    TypedQuery<OutEvent> q = getEntityManager().createQuery(cq);
+    TypedQuery<OutEvent> q = getEntityManager().createQuery(cq); *
+   
     if (iResCountIndex > 0) {
       q.setMaxResults(iResCountIndex);
     }
     if (iStarIndex > 0) {
       q.setFirstResult(iStarIndex);
     }
-
+     */
     List<OutEvent> lst = q.getResultList();
     if (!lst.isEmpty()) {
       rsp.getRData().getOutEvents().addAll(lst);
     }
     rc.setResponseSize(BigInteger.valueOf(lst.size()));
+    rc.setResultSize(rc.getResponseSize());
 
     return rsp;
   }
@@ -611,8 +625,6 @@ public class SEDMailBox implements SEDMailBoxWS {
     return rsp;
   }
 
-
-
   private UserTransaction getUserTransaction() {
     // for jetty
     if (mutUTransaction == null) {
@@ -674,7 +686,7 @@ public class SEDMailBox implements SEDMailBoxWS {
 
     if (dt.getAction() == null) {
       throw SEDRequestUtils
-          .createSEDException("Action is required!", SEDExceptionCode.MISSING_DATA);
+          .createSEDException("Invalid or missing action!", SEDExceptionCode.INVALID_DATA);
     }
 
     // init response
@@ -697,11 +709,28 @@ public class SEDMailBox implements SEDMailBoxWS {
       im = q.getSingleResult();
 
       if (SEDInboxMailStatus.RECEIVED.getValue().equals(im.getStatus()) ||
-          SEDInboxMailStatus.LOCKED.getValue().equals(im.getStatus())) {
+          SEDInboxMailStatus.LOCKED.getValue().equals(im.getStatus()) ||
+          SEDInboxMailStatus.ERROR.getValue().equals(im.getStatus())) {
 
-        SEDInboxMailStatus st =
-            dt.getAction().equals(ModifyActionCode.ACCEPT) ? SEDInboxMailStatus.DELIVERED :
-            SEDInboxMailStatus.LOCKED;
+        SEDInboxMailStatus st = null;
+        switch (dt.getAction()) {
+          case DELIVERED:
+            st = SEDInboxMailStatus.DELIVERED;
+            break;
+          case LOCK:
+            st = SEDInboxMailStatus.LOCKED;
+            break;
+          case DELETE:
+            st = SEDInboxMailStatus.DELETED;
+            break;       
+        }
+        if (st == null){
+              String message =
+                String.format("Action  %s is not supported !",
+                    dt.getAction().value());
+            throw SEDRequestUtils.createSEDException(message, SEDExceptionCode.INVALID_DATA);
+        }
+
         Date date = Calendar.getInstance().getTime();
         im.setDeliveredDate(date);
         im.setStatusDate(date);
@@ -709,6 +738,12 @@ public class SEDMailBox implements SEDMailBoxWS {
         InEvent ie = setInMailStatus(im, st.getDesc(), c.getUserId(), c.getApplicationId());
         rsp.getRData().setInEvent(ie);
 
+      } else {
+        String message =
+            String.format("Mail with id '%s' and  ebox: %s is in invalid status %s !",
+                param.getData().getMailId()
+                    .toString(), param.getData().getReceiverEBox(), im.getStatus());
+        throw SEDRequestUtils.createSEDException(message, SEDExceptionCode.REQUIRED_DATA_NOT_EXISTS);
       }
 
     } catch (NoResultException ignore) {
@@ -815,7 +850,7 @@ public class SEDMailBox implements SEDMailBoxWS {
           if (omail.getStatus().equalsIgnoreCase(SEDOutboxMailStatus.SUBMITTED.getValue()) ||
               omail.getStatus().equalsIgnoreCase(SEDOutboxMailStatus.ERROR.getValue()) ||
               omail.getStatus().equalsIgnoreCase(SEDOutboxMailStatus.FAILED.getValue()) ||
-              omail.getStatus().equalsIgnoreCase(SEDOutboxMailStatus.SCHEDULE.getValue()) ) {
+              omail.getStatus().equalsIgnoreCase(SEDOutboxMailStatus.SCHEDULE.getValue())) {
             omail.setStatus(SEDOutboxMailStatus.DELETED.getValue());
             omail.setStatusDate(Calendar.getInstance().getTime());
 
@@ -831,10 +866,10 @@ public class SEDMailBox implements SEDMailBoxWS {
             ou.setMailId(omail.getId());
             ou.setDate(omail.getStatusDate());
             ou.setStatus(omail.getStatus());
-            ou.setSenderEBox(omail.getSenderEBox());
+//            ou.setSenderEBox(omail.getSenderEBox());
             rsp.getRData().setOutEvent(ou);
           } else if (omail.getStatus().equalsIgnoreCase(SEDOutboxMailStatus.SENT.getValue()) ||
-              omail.getStatus().equalsIgnoreCase(SEDOutboxMailStatus.PUSHING.getValue()) ) {
+              omail.getStatus().equalsIgnoreCase(SEDOutboxMailStatus.PUSHING.getValue())) {
             throw SEDRequestUtils.createSEDException(
                 "Sent mail or mail in progress can not be DELETED", SEDExceptionCode.INVALID_DATA);
           }
@@ -842,8 +877,7 @@ public class SEDMailBox implements SEDMailBoxWS {
         case RESEND:
           if (omail.getStatus().equalsIgnoreCase(SEDOutboxMailStatus.ERROR.getValue()) ||
               omail.getStatus().equalsIgnoreCase(SEDOutboxMailStatus.FAILED.getValue()) ||
-              omail.getStatus().equalsIgnoreCase(SEDOutboxMailStatus.DELETED.getValue()) 
-              ) {
+              omail.getStatus().equalsIgnoreCase(SEDOutboxMailStatus.DELETED.getValue())) {
 
             omail.setStatus(SEDOutboxMailStatus.SCHEDULE.getValue());
             omail.setStatusDate(Calendar.getInstance().getTime());
@@ -854,15 +888,15 @@ public class SEDMailBox implements SEDMailBoxWS {
                     c.getUserId(), c.getApplicationId());
 
             rsp.getRData().setOutEvent(ou);
-            
+
             try {
               addMailToSubmitQueue(omail);
-            } catch(SEDException_Exception se){
-                setOutMailStatus(omail,
-                    "Error occured while resending mail: " + c.getUserId() + "/" 
-                        + c.getApplicationId() + " Error: " + se.getMessage(),
-                    c.getUserId(), c.getApplicationId());
-                  throw se;
+            } catch (SEDException_Exception se) {
+              setOutMailStatus(omail,
+                  "Error occured while resending mail: " + c.getUserId() + "/" +
+                  c.getApplicationId() + " Error: " + se.getMessage(),
+                  c.getUserId(), c.getApplicationId());
+              throw se;
             }
           } else {
             throw SEDRequestUtils.createSEDException("Mail in status " + omail.getStatus() +
@@ -964,7 +998,7 @@ public class SEDMailBox implements SEDMailBoxWS {
       // persist mail event
       OutEvent me = new OutEvent();
       me.setMailId(mail.getId());
-      me.setSenderEBox(mail.getSenderEBox());
+//      me.setSenderEBox(mail.getSenderEBox());
       me.setSenderMessageId(mail.getSenderMessageId());
       me.setStatus(mail.getStatus());
       me.setDescription(SEDOutboxMailStatus.SUBMITTED.getDesc());
@@ -987,8 +1021,8 @@ public class SEDMailBox implements SEDMailBoxWS {
       LOG.formatedlog("Transaction commited: user %s, appl %s, pmodeId %s", userID, applicationId,
           pmodeId);
 
-    } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException |
-        HeuristicRollbackException | SecurityException | IllegalStateException ex) {
+    } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException
+        | HeuristicRollbackException | SecurityException | IllegalStateException ex) {
 
       try {
         getUserTransaction().rollback();
@@ -1095,7 +1129,7 @@ public class SEDMailBox implements SEDMailBoxWS {
       throws SEDException_Exception {
     InEvent me = new InEvent();
     me.setMailId(im.getId());
-    me.setReceiverEBox(im.getReceiverEBox());
+
     me.setStatus(im.getStatus());
     me.setDate(im.getStatusDate());
     me.setDescription(desc);
@@ -1106,8 +1140,8 @@ public class SEDMailBox implements SEDMailBoxWS {
       getEntityManager().merge(im);
       getEntityManager().persist(me);
       getUserTransaction().commit();
-    } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException |
-        HeuristicRollbackException | SecurityException | IllegalStateException ex) {
+    } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException
+        | HeuristicRollbackException | SecurityException | IllegalStateException ex) {
       {
         try {
           getUserTransaction().rollback();
@@ -1126,7 +1160,7 @@ public class SEDMailBox implements SEDMailBoxWS {
 
     OutEvent me = new OutEvent();
     me.setMailId(om.getId());
-    me.setSenderEBox(om.getSenderEBox());
+//    me.setSenderEBox(om.getSenderEBox());
     me.setStatus(om.getStatus());
     me.setDate(om.getStatusDate());
     me.setDescription(desc);
@@ -1137,8 +1171,8 @@ public class SEDMailBox implements SEDMailBoxWS {
       getEntityManager().merge(om);
       getEntityManager().persist(me);
       getUserTransaction().commit();
-    } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException |
-        HeuristicRollbackException | SecurityException | IllegalStateException ex) {
+    } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException
+        | HeuristicRollbackException | SecurityException | IllegalStateException ex) {
       {
         try {
           getUserTransaction().rollback();
@@ -1247,23 +1281,24 @@ public class SEDMailBox implements SEDMailBoxWS {
       throw SEDRequestUtils.createSEDException("Invalid format: SenderEBox",
           SEDExceptionCode.INVALID_DATA);
     }
-    
-     PartyIdentitySet sPID;
+
+    PartyIdentitySet sPID;
     PartyIdentitySet rPID;
     Service srv;
-    
+
     PMode pm;
     try {
       sPID = mpModeManager.getPartyIdentitySetForSEDAddress(mail.getSenderEBox());
       rPID = mpModeManager.getPartyIdentitySetForSEDAddress(mail.getReceiverEBox());
-      srv =mpModeManager.getServiceById(mail.getService());
+      srv = mpModeManager.getServiceById(mail.getService());
       Service.Action act = PModeUtils.getActionFromService(mail.getAction(), srv);
-      pm = mpModeManager.getPModeForLocalPartyAsSender(sPID.getId(),act.getSendingRole(), rPID.getId(),
+      pm = mpModeManager.getPModeForLocalPartyAsSender(sPID.getId(), act.getSendingRole(),
+          rPID.getId(),
           mail.getService());
     } catch (PModeException ex) {
       throw SEDRequestUtils.createSEDException(
           ex.getMessage(), SEDExceptionCode.INVALID_DATA);
-    }    
+    }
     return pm;
   }
 

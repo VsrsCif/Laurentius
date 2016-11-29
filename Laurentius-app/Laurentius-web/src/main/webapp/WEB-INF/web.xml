@@ -48,10 +48,6 @@
             <form-error-page>/public/login.xhtml</form-error-page>
         </form-login-config>
     </login-config>
-     
-    
-
-    
     <!-- error-page>
         <error-code>403</error-code>
         <location>/WEB-INF/error-pages/forbidden.xhtml</location>
@@ -60,7 +56,6 @@
         <error-code>404</error-code>
         <location>/WEB-INF/error-pages/notFound.xhtml</location>
     </error-page -->
-
     <!-- System roles -->
     <security-role>
         <role-name>ADMIN</role-name>
@@ -71,6 +66,4 @@
     <session-config>
         <session-timeout>480</session-timeout>
     </session-config>
-
- 
 </web-app>

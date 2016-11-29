@@ -19,9 +19,10 @@
             <property column="EXECUTE_ACTIVE" name="Active"  type="java.lang.Boolean" />    
             <property column="EXECUTE_COMMAND" name="Command"  type="java.lang.String" length="512"  /> 
             <property column="EXECUTE_PARAMETERS" name="Parameters" type="java.lang.String" length="512"  />    
-            
+       
         </component>
         <component name="XSLT" class="si.laurentius.xslt.SEDXslt">
+            <property column="XSLT_ACTIVE" name="Active"  type="java.lang.Boolean" />    
             <bag name="namespaces"  access="field" cascade="all" lazy="false"  >
                 <key not-null="true">
                     <column name="laubox"  />

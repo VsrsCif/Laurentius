@@ -43,26 +43,28 @@ import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.SEDSystemProperties;
 import static si.laurentius.commons.SEDSystemProperties.SYS_PROP_HOME_DIR;
 import si.laurentius.commons.exception.SEDSecurityException;
-import si.laurentius.commons.interfaces.SEDCertCRLInterface;
 import si.laurentius.commons.interfaces.SEDLookupsInterface;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.Utils;
 import si.laurentius.lce.KeystoreUtils;
 import si.laurentius.lce.crl.CRLVerifier;
+import si.laurentius.commons.interfaces.SEDCertStoreInterface;
 
 /**
  * @author Jože Rihtaršič
  */
 @Startup
 @Singleton
-@Local(SEDCertCRLInterface.class)
+@Local(SEDCertStoreInterface.class)
 @TransactionManagement(TransactionManagementType.BEAN)
-public class SEDCertCRLBean implements SEDCertCRLInterface {
+public class SEDCertStoreBean implements SEDCertStoreInterface {
 
+  public static final String KEYSTORE_NAME = "keystore";
+  public static final String ROOTCA_NAME = "rootCA";
   /**
    *
    */
-  protected static SEDLogger LOG = new SEDLogger(SEDCertCRLBean.class);
+  protected static SEDLogger LOG = new SEDLogger(SEDCertStoreBean.class);
   // min, sec, milis.
 
   KeystoreUtils mku = new KeystoreUtils();
@@ -72,6 +74,24 @@ public class SEDCertCRLBean implements SEDCertCRLInterface {
   public static final long S_UPDATE_TIMEOUT = 10 * 60 * 1000; // 10 minutes
   @EJB(mappedName = SEDJNDI.JNDI_SEDLOOKUPS)
   SEDLookupsInterface mdLookups;
+
+  @Override
+  public SEDCertStore getCertificateStore()
+      throws SEDSecurityException {
+    SEDCertStore cs = mdLookups.getSEDCertStoreByName(KEYSTORE_NAME);
+    mku.refreshCertStore(cs);
+    mdLookups.updateSEDCertStore(cs);
+    return cs;
+  }
+
+  @Override
+  public SEDCertStore getRootCACertificateStore()
+      throws SEDSecurityException {
+    SEDCertStore cs = mdLookups.getSEDCertStoreByName(ROOTCA_NAME);
+    mku.refreshCertStore(cs);
+    mdLookups.updateSEDCertStore(cs);
+    return cs;
+  }
 
   @Override
   public void refreshCrlLists() {

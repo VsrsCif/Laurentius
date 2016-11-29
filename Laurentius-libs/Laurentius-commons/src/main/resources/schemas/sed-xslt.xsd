@@ -26,29 +26,30 @@ Copyright 2016, Supreme Court Republic of Slovenia
  limitations under the Licence.
 -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://laurentius.si/xslt" targetNamespace="http://laurentius.si/xslt" elementFormDefault="qualified" attributeFormDefault="unqualified">
-    <xs:element name="SEDXslt" type="ns1:SEDXslt"/>
-    <xs:complexType name="SEDXslt">
-        <xs:annotation>
-            <xs:documentation xml:lang="sl">Xslt transformation</xs:documentation>
-        </xs:annotation>
-        <xs:sequence>
-            <!-- xs:element ref="usr:SEDUser" maxOccurs="unbounded"/ -->
-            <xs:element name="Namespace" type="ns1:Namespace" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element name="XPathRule" type="ns1:XPathRule" minOccurs="0" maxOccurs="unbounded"/>
-        </xs:sequence>
-    </xs:complexType>
-    <xs:complexType name="Namespace">
-        <xs:attribute name="id" type="xs:integer" use="required" />
-        <xs:attribute name="prefix" type="xs:string" use="required"/>
-        <xs:attribute name="namespace" type="xs:string" use="required"/>
-    </xs:complexType>
-    <xs:complexType name="XPathRule"> 
-        <xs:attribute name="id" type="xs:integer" use="required" />
-        <xs:attribute name="service" type="xs:string" use="required"/>
-        <xs:attribute name="action" type="xs:string" use="required"/>
-        <xs:attribute name="transformation" type="xs:string" use="required"/>
-        <xs:attribute name="xPath" type="xs:string" use="required"/>
-        <xs:attribute name="value" type="xs:string" use="required"/>
-        <xs:attribute name="schema" type="xs:string" />
-    </xs:complexType>
+	<xs:element name="SEDXslt" type="ns1:SEDXslt"/>
+	<xs:complexType name="SEDXslt">
+		<xs:annotation>
+			<xs:documentation xml:lang="sl">Xslt transformation</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<!-- xs:element ref="usr:SEDUser" maxOccurs="unbounded"/ -->
+			<xs:element name="Namespace" type="ns1:Namespace" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="XPathRule" type="ns1:XPathRule" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="active" type="xs:boolean"/>
+	</xs:complexType>
+	<xs:complexType name="Namespace">
+		<xs:attribute name="id" type="xs:integer" use="required"/>
+		<xs:attribute name="prefix" type="xs:string" use="required"/>
+		<xs:attribute name="namespace" type="xs:string" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="XPathRule">
+		<xs:attribute name="id" type="xs:integer" use="required"/>
+		<xs:attribute name="service" type="xs:string" use="required"/>
+		<xs:attribute name="action" type="xs:string" use="required"/>
+		<xs:attribute name="transformation" type="xs:string" use="required"/>
+		<xs:attribute name="xPath" type="xs:string" use="required"/>
+		<xs:attribute name="value" type="xs:string" use="required"/>
+		<xs:attribute name="schema" type="xs:string"/>
+	</xs:complexType>
 </xs:schema>

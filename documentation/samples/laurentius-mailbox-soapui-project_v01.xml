@@ -1,0 +1,2422 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:soapui-project id="41cb47c7-e861-4337-b7b9-75d0ff613f57" activeEnvironment="Default" name="laurentius-mailbox" resourceRoot="" soapui-version="5.2.1" abortOnError="false" runType="SEQUENTIAL" xmlns:con="http://eviware.com/soapui/config"><con:settings/><con:interface xsi:type="con:WsdlInterface" id="ce6a3d4d-14b0-4640-882d-1d4ad96185a8" wsaVersion="NONE" name="SEDMailBoxPortBinding" type="wsdl" bindingName="{http://laurentius.si}SEDMailBoxPortBinding" soapVersion="1_1" anonymous="optional" definition="http://localhost:8580/laurentius-ws/mailbox?wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart="http://localhost:8580/laurentius-ws/mailbox?wsdl"><con:part><con:url>http://localhost:8580/laurentius-ws/mailbox?wsdl</con:url><con:content><![CDATA[<definitions name="mailbox" targetNamespace="http://laurentius.si" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://laurentius.si" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns="http://schemas.xmlsoap.org/soap/encoding/" xmlns="http://schemas.xmlsoap.org/wsdl/">
+  <documentation>WSDL določa servise za integracijo s SVEV-MSH modulom
+        * za odpremo pošiljke preko MSH modula
+        * prevzemanje statusov izhodnih pošiljk
+        * prevzemanje dohodne pošte
+
+        Author: Jože Rihtaršič
+
+        Version:  1.0.0
+
+        History: 
+        1.0.0:  2015-11-01 
+        - Izdelava wsdl vmesnika</documentation>
+  <types>
+    <xsd:schema>
+      <xsd:import namespace="http://laurentius.si" schemaLocation="http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=exception/sedexception.xsd"/>
+      <xsd:import namespace="http://laurentius.si" schemaLocation="http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=messages/SubmitMailRequest.xsd"/>
+      <xsd:import namespace="http://laurentius.si" schemaLocation="http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=messages/SubmitMailResponse.xsd"/>
+      <xsd:import namespace="http://laurentius.si" schemaLocation="http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=messages/OutMailListRequest.xsd"/>
+      <xsd:import namespace="http://laurentius.si" schemaLocation="http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=messages/OutMailListResponse.xsd"/>
+      <xsd:import namespace="http://laurentius.si" schemaLocation="http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=messages/OutMailEventListRequest.xsd"/>
+      <xsd:import namespace="http://laurentius.si" schemaLocation="http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=messages/OutMailEventListResponse.xsd"/>
+      <xsd:import namespace="http://laurentius.si" schemaLocation="http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=messages/InMailListRequest.xsd"/>
+      <xsd:import namespace="http://laurentius.si" schemaLocation="http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=messages/InMailListResponse.xsd"/>
+      <xsd:import namespace="http://laurentius.si" schemaLocation="http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=messages/ModifyInMailRequest.xsd"/>
+      <xsd:import namespace="http://laurentius.si" schemaLocation="http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=messages/ModifyInMailResponse.xsd"/>
+      <xsd:import namespace="http://laurentius.si" schemaLocation="http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=messages/ModifyOutMailRequest.xsd"/>
+      <xsd:import namespace="http://laurentius.si" schemaLocation="http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=messages/ModifyOutMailResponse.xsd"/>
+      <xsd:import namespace="http://laurentius.si" schemaLocation="http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=messages/InMailEventListRequest.xsd"/>
+      <xsd:import namespace="http://laurentius.si" schemaLocation="http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=messages/InMailEventListResponse.xsd"/>
+      <xsd:import namespace="http://laurentius.si" schemaLocation="http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=messages/GetInMailRequest.xsd"/>
+      <xsd:import namespace="http://laurentius.si" schemaLocation="http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=messages/GetInMailResponse.xsd"/>
+    </xsd:schema>
+  </types>
+  <message name="ModifyOutMailResponse">
+    <part element="tns:ModifyOutMailResponse" name="ModifyOutMailResponse"></part>
+  </message>
+  <message name="InMailEventListResponse">
+    <part element="tns:InMailEventListResponse" name="InMailEventListResponse"></part>
+  </message>
+  <message name="OutMailListRequest">
+    <part element="tns:OutMailListRequest" name="OutMailListRequest"></part>
+  </message>
+  <message name="ModifyInMailRequest">
+    <part element="tns:ModifyInMailRequest" name="ModifyInMailRequest"></part>
+  </message>
+  <message name="InMailListResponse">
+    <part element="tns:InMailListResponse" name="InMailListResponse"></part>
+  </message>
+  <message name="ModifyInMailResponse">
+    <part element="tns:ModifyInMailResponse" name="ModifyInMailResponse"></part>
+  </message>
+  <message name="OutMailEventListResponse">
+    <part element="tns:OutMailEventListResponse" name="OutMailEventListResponse"></part>
+  </message>
+  <message name="OutMailEventListRequest">
+    <part element="tns:OutMailEventListRequest" name="OutMailEventListRequest"></part>
+  </message>
+  <message name="ModifyOutMailRequest">
+    <part element="tns:ModifyOutMailRequest" name="ModifyOutMailRequest"></part>
+  </message>
+  <message name="GetInMailResponse">
+    <part element="tns:GetInMailResponse" name="GetInMailResponse"></part>
+  </message>
+  <message name="OutMailListResponse">
+    <part element="tns:OutMailListResponse" name="OutMailListResponse"></part>
+  </message>
+  <message name="InMailListRequest">
+    <part element="tns:InMailListRequest" name="IntMailListRequest"></part>
+  </message>
+  <message name="GetInMailRequest">
+    <part element="tns:GetInMailRequest" name="GetInMailRequest"></part>
+  </message>
+  <message name="SubmitMailResponse">
+    <part element="tns:SubmitMailResponse" name="SubmitMailResponse"></part>
+  </message>
+  <message name="SEDException">
+    <part element="tns:SEDException" name="SEDException"></part>
+  </message>
+  <message name="SubmitMailRequest">
+    <part element="tns:SubmitMailRequest" name="SubmitMailRequest"></part>
+  </message>
+  <message name="InMailEventListRequest">
+    <part element="tns:InMailEventListRequest" name="InMailEventListRequest"></part>
+  </message>
+  <portType name="SEDMailBoxWS">
+    <operation name="submitMail">
+      <documentation>Oddaja pošiljke v vročanje/dostavo</documentation>
+      <input message="tns:SubmitMailRequest"></input>
+      <output message="tns:SubmitMailResponse"></output>
+      <fault message="tns:SEDException" name="SEDException"></fault>
+    </operation>
+    <operation name="getOutMailList">
+      <documentation>Pregled pošte v vročanje</documentation>
+      <input message="tns:OutMailListRequest"></input>
+      <output message="tns:OutMailListResponse"></output>
+      <fault message="tns:SEDException" name="SEDException"></fault>
+    </operation>
+    <operation name="getInMailList">
+      <documentation>Pregled dohodne pošte</documentation>
+      <input message="tns:InMailListRequest"></input>
+      <output message="tns:InMailListResponse"></output>
+      <fault message="tns:SEDException" name="SEDException"></fault>
+    </operation>
+    <operation name="getInMailEventList">
+      <documentation>Pregled dogodtkov na dohodni pošiljke</documentation>
+      <input message="tns:InMailEventListRequest"></input>
+      <output message="tns:InMailEventListResponse"></output>
+      <fault message="tns:SEDException" name="SEDException"></fault>
+    </operation>
+    <operation name="getOutMailEventList">
+      <documentation>Pregled dogodkov na izhodni pošiljke</documentation>
+      <input message="tns:OutMailEventListRequest"></input>
+      <output message="tns:OutMailEventListResponse"></output>
+      <fault message="tns:SEDException" name="SEDException"></fault>
+    </operation>
+    <operation name="modifyInMail">
+      <documentation>Zaklepanje in prevzemanje dohodne pošte</documentation>
+      <input message="tns:ModifyInMailRequest"></input>
+      <output message="tns:ModifyInMailResponse"></output>
+      <fault message="tns:SEDException" name="SEDException"></fault>
+    </operation>
+    <operation name="modifyOutMail">
+      <documentation>Zaklepanje in prevzemanje dohodne pošte</documentation>
+      <input message="tns:ModifyOutMailRequest"></input>
+      <output message="tns:ModifyOutMailResponse"></output>
+      <fault message="tns:SEDException" name="SEDException"></fault>
+    </operation>
+    <operation name="getInMail">
+      <documentation>Pridobivanje binarne vsebine dohodne pošiljke</documentation>
+      <input message="tns:GetInMailRequest"></input>
+      <output message="tns:GetInMailResponse"></output>
+      <fault message="tns:SEDException" name="SEDException"></fault>
+    </operation>
+  </portType>
+  <binding name="SEDMailBoxPortBinding" type="tns:SEDMailBoxWS">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="submitMail">
+      <soap:operation soapAction="http://laurentius.si.submitMail"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="SEDException">
+        <soap:fault name="SEDException" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getOutMailList">
+      <soap:operation soapAction="http://laurentius.si.getOutMailList"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="SEDException">
+        <soap:fault name="SEDException" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getInMailList">
+      <soap:operation soapAction="http://laurentius.si.getInMailList"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="SEDException">
+        <soap:fault name="SEDException" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getInMailEventList">
+      <soap:operation soapAction="http://laurentius.si.getInMailEventList"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="SEDException">
+        <soap:fault name="SEDException" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getOutMailEventList">
+      <soap:operation soapAction="http://laurentius.si.getOutMailEventList"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="SEDException">
+        <soap:fault name="SEDException" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="modifyInMail">
+      <soap:operation soapAction="http://laurentius.si.modifyInMail"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="SEDException">
+        <soap:fault name="SEDException" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="modifyOutMail">
+      <soap:operation soapAction="http://laurentius.si.modifyOutMail"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="SEDException">
+        <soap:fault name="SEDException" use="literal"/>
+      </fault>
+    </operation>
+    <operation name="getInMail">
+      <soap:operation soapAction="http://laurentius.si.getInMail"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+      <fault name="SEDException">
+        <soap:fault name="SEDException" use="literal"/>
+      </fault>
+    </operation>
+  </binding>
+  <service name="mailbox">
+    <port binding="tns:SEDMailBoxPortBinding" name="SEDMailBoxWSPort">
+      <soap:address location="http://sluzba-HP:8580/laurentius-ws/mailbox"/>
+    </port>
+  </service>
+</definitions>]]></con:content><con:type>http://schemas.xmlsoap.org/wsdl/</con:type></con:part><con:part><con:url>http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=exception/sedexception.xsd</con:url><con:content><![CDATA[<!--Metadata: 
+Owner: Supreme Court Republic of Slovenia 
+Product: SVEV-MSH
+Product Version: 1.0.0
+Artifact Type: Schema
+Descriptive Name: SVEV exception
+Date: 20150612 (12 June 2012)
+Author: Joze Rihtarsic-->
+<!--Copyright 2015, Supreme Court Republic of Slovenia 
+
+ Licensed under the EUPL, Version 1.1 or – as soon they will be approved by 
+ the European Commission - subsequent versions of the EUPL (the "Licence");
+ You may not use this work except in compliance with the Licence.
+ You may obtain a copy of the Licence at:
+
+ https://joinup.ec.europa.eu/software/page/eupl
+
+ Unless required by applicable law or agreed to in writing, software 
+ distributed under the Licence is distributed on an "AS IS" basis, WITHOUT 
+ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the Licence for the specific language governing permissions and  
+ limitations under the Licence.-->
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://laurentius.si" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://laurentius.si">
+  <xs:element name="SEDException" type="tns:SEDException"/>
+  <xs:complexType name="SEDException">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="errorCode" type="tns:SEDExceptionCode"/>
+      <xs:element minOccurs="0" name="message" type="xs:string"/>
+      <xs:element minOccurs="0" name="errorDump" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>dodatni podatki o napaki, npr. exception stack trace, uporabno v fazi razvoja
+                        servisev in za vzdrževanje</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="SEDExceptionCode">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="PModeNotExists"/>
+      <xs:enumeration value="RequiredDataNotExists"/>
+      <xs:enumeration value="InvalidPMode"/>
+      <xs:enumeration value="InvalidData"/>
+      <xs:enumeration value="MissingData"/>
+      <xs:enumeration value="ServerError"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>]]></con:content><con:type>http://www.w3.org/2001/XMLSchema</con:type></con:part><con:part><con:url>http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=messages/SubmitMailRequest.xsd</con:url><con:content><![CDATA[<!--Metadata: 
+Owner: Supreme Court Republic of Slovenia 
+Product: SVEV-MSH
+Product Version: 1.0.0
+Artifact Type: Schema
+Descriptive Name: SVEV exception
+Date: 20150612 (12 June 2012)
+Author: Joze Rihtarsic-->
+<!--Copyright 2015, Supreme Court Republic of Slovenia 
+
+ Licensed under the EUPL, Version 1.1 or – as soon they will be approved by 
+ the European Commission - subsequent versions of the EUPL (the "Licence");
+ You may not use this work except in compliance with the Licence.
+ You may obtain a copy of the Licence at:
+
+ https://joinup.ec.europa.eu/software/page/eupl
+
+ Unless required by applicable law or agreed to in writing, software 
+ distributed under the Licence is distributed on an "AS IS" basis, WITHOUT 
+ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the Licence for the specific language governing permissions and  
+ limitations under the Licence.-->
+<xs:schema targetNamespace="http://laurentius.si" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://outbox.laurentius.si/mail" xmlns:con="http://control.laurentius.si" xmlns="http://laurentius.si">
+  <xs:import namespace="http://control.laurentius.si" schemaLocation="http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=messages/Control.xsd"/>
+  <xs:import namespace="http://outbox.laurentius.si/mail" schemaLocation="http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=entities/outbox-mail.xsd"/>
+  <xs:element name="SubmitMailRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Control" type="con:Control"/>
+        <xs:element name="Data">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element ref="ns1:OutMail"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>]]></con:content><con:type>http://www.w3.org/2001/XMLSchema</con:type></con:part><con:part><con:url>http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=messages/Control.xsd</con:url><con:content><![CDATA[<!--Metadata: 
+Owner: Supreme Court Republic of Slovenia 
+Product: SVEV-MSH
+Product Version: 1.0.0
+Artifact Type: Schema
+Descriptive Name: SVEV exception
+Date: 20150612 (12 June 2012)
+Author: Joze Rihtarsic-->
+<!--Copyright 2015, Supreme Court Republic of Slovenia 
+
+ Licensed under the EUPL, Version 1.1 or – as soon they will be approved by 
+ the European Commission - subsequent versions of the EUPL (the "Licence");
+ You may not use this work except in compliance with the Licence.
+ You may obtain a copy of the Licence at:
+
+ https://joinup.ec.europa.eu/software/page/eupl
+
+ Unless required by applicable law or agreed to in writing, software 
+ distributed under the Licence is distributed on an "AS IS" basis, WITHOUT 
+ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the Licence for the specific language governing permissions and  
+ limitations under the Licence.-->
+<xs:schema targetNamespace="http://control.laurentius.si" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:scc="http://control.laurentius.si">
+  <xs:complexType name="Control">
+    <xs:attribute name="userId" use="required">
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">ID uporabnika, ki je sprožil spletno poizvedbo</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:maxLength value="64"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="applicationId" use="required">
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">ID aplikacije, ki je sprožila spletno poizvedbo</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:maxLength value="64"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute default="0" name="startIndex" type="xs:integer">
+      <xs:annotation>
+        <xs:documentation>V primeru, da je rezultat seznam, atribut omogoča paginacijo rezultatov. Vrednost atributa je 
+                    je index prvega zapisa v vrnjenih rezultatov. Npr da</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="10000" name="responseSize" type="xs:integer">
+      <xs:annotation>
+        <xs:documentation>V primeru, da je rezultat seznam, atribut omogoča paginacijo rezultatov. Stevilo vrstic, ki naj jih poizvedba vrne</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="Id" name="sortBy" type="xs:token">
+      <xs:annotation>
+        <xs:documentation>Lastnost po kateri so vrnjeni rezultati urejeni.Nabor lastnosti je enak naboru atributov (z veliko začetnico) v vrnjeni antieti.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute default="DESC" name="sortOrder" type="xs:token">
+      <xs:annotation>
+        <xs:documentation>Kako so urejeni vrnjeni rezultati:Narajscajoce/padajoce</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+</xs:schema>]]></con:content><con:type>http://www.w3.org/2001/XMLSchema</con:type></con:part><con:part><con:url>http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=entities/outbox-mail.xsd</con:url><con:content><![CDATA[<!--Metadata: 
+Owner: Supreme Court Republic of Slovenia 
+Product: SVEV-MSH
+Product Version: 1.0.0
+Artifact Type: Schema
+Descriptive Name: SVEV mail 
+Date: 20151101 (1 Novebmer 2015)
+Author: Joze Rihtarsic-->
+<!--Copyright 2015, Supreme Court Republic of Slovenia 
+
+ Licensed under the EUPL, Version 1.1 or – as soon they will be approved by 
+ the European Commission - subsequent versions of the EUPL (the "Licence");
+ You may not use this work except in compliance with the Licence.
+ You may obtain a copy of the Licence at:
+
+ https://joinup.ec.europa.eu/software/page/eupl
+
+ Unless required by applicable law or agreed to in writing, software 
+ distributed under the Licence is distributed on an "AS IS" basis, WITHOUT 
+ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the Licence for the specific language governing permissions and  
+ limitations under the Licence.-->
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://outbox.laurentius.si/mail" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns3="http://outbox.laurentius.si/property" xmlns:ns2="http://outbox.laurentius.si/payload" xmlns:ns1="http://outbox.laurentius.si/mail">
+  <xs:import namespace="http://outbox.laurentius.si/property" schemaLocation="http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=entities/outbox-property.xsd"/>
+  <xs:import namespace="http://outbox.laurentius.si/payload" schemaLocation="http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=entities/outbox-payload.xsd"/>
+  <xs:element name="OutMail" type="ns1:OutMailType"/>
+  <xs:complexType name="OutMailType">
+    <xs:annotation>
+      <xs:appinfo>Schema MSHMail infoset</xs:appinfo>
+      <xs:documentation xml:lang="sl">Shema določa xml infoset izhodne in dohodne pošte, ki se vroča preko SVEV MSH modula. Sestavni deli vsakega maila so:
+                - pošiljatelj
+                - prejemnik
+                - storitev (Storitev, akcija v storitvi)
+                - vsebine, ki se vročajo</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" ref="ns3:OutProperties"/>
+      <xs:element minOccurs="0" ref="ns2:OutPayload"/>
+    </xs:sequence>
+    <xs:attribute name="id" type="xs:integer" use="optional">
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">Enolična oznaka pošiljke SED. Številko določa bazna sekvenca ob zapisu v bazo</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="refToMessageId" use="optional">
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">Referenca na messageId dohodne pošiljke. Vrednost atributa je enaka
+                    Messaging/MessageInfo/RefToMessageId v ebMS headerju izhodnega sporočila.</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="64"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="messageId" use="optional">
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">Enolična oznaka pošiljke MSH. Pri izhodni pošti se oznaka določi ob dodajanju pošiljke v pošiljanje. Vrednost atributa je enaka
+                    Messaging/MessageInfo/MessageId v ebMS headerju izhodnega sporočila. Pri dohodni pošti se določi mshid določi ob uspešnem prejemu pošiljke.</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="64"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="senderMessageId" use="required">
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">Enolična oznaka pošiljke pošiljatelja. Kombinacija:  @senderEBox  in @senderMessageId mora bit enolična. ID se uporablja tudi za kontrolo pri oddaji pošiljke v vročanje.  Namen atributa je kontrola, ali je pošiljka že bila oddana v dostavo. 
+                    V primeru, da se sendereBox in senderMessageId že nahaja v tabeli za transport. Servis vrne mshMessageId "prvega sporočila"</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="64"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="service" use="required">
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">Storitve odpreme, ki jo določena v PMode parametrih</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:maxLength value="64"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="action" use="required">
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">Akcija v storitvi odpreme, ki jo določena v PMode parametrih  (npr: RegistredMail, LegalZPP, LegalZKP in LegalZUP, SMTPDelivery)</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:maxLength value="64"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="conversationId" use="optional">
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">enolična oznaka "poslovne transakcije" v izmenjavi podaktov. V primeru, da ni podan se v prvem sporočilo avtomatsko zgenerira kot UUID@[domena posiljatelja].</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="64"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="subject" use="optional">
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">Opis vsebine sporočila</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="512"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="submittedDate" type="xs:dateTime" use="optional">
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">Datum oddaje pošiljke v vročanje. Datum določi MSH ob prevem uspešnem prejemu pošiljke</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="sentDate" type="xs:dateTime" use="optional">
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">Datum pošiljanja sporočila naslovnikovemu MSH-ju</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="receivedDate" type="xs:dateTime" use="optional">
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">Datum sprejema v naslovnikove MSH. Datum je obvezen za dohodno pošto.sentDate in receiveDate se lahko razlikujeta glede na spodaj ležeči protokol (HTTP,SMTP), multihop etc..</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="deliveredDate" type="xs:dateTime" use="optional">
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">Datum prevzema pošiljke. Datum je obvezen za dohodne pošiljke, ki so bile uspešno prevzete iz MSH-ja</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="receiverEBox" use="required">
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">Naslovnikov eBox naslov (email oblika). domena določa PMode konfiguracijo naslovnikovega strežnika</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:maxLength value="64"/>
+          <xs:pattern value="[_\-a-zA-Z0-9\.\+]+@[a-zA-Z0-9](\.?[\-a-zA-Z0-9]*[a-zA-Z0-9])*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="receiverName" use="required">
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">Naslovnikov naziv.</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="128"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="senderEBox" use="required">
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">Pošiljateljev  elektronski naslov (email oblika). domena določa PMode konfiguracijo naslovnikovega strežnika</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:maxLength value="64"/>
+          <xs:pattern value="[_\-a-zA-Z0-9\.\+]+@[a-zA-Z0-9](\.?[\-a-zA-Z0-9]*[a-zA-Z0-9])*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="senderName" use="required">
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">Pošiljateljev  naziv</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="128"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="status">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:maxLength value="32"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="statusDate" type="xs:dateTime"/>
+  </xs:complexType>
+</xs:schema>]]></con:content><con:type>http://www.w3.org/2001/XMLSchema</con:type></con:part><con:part><con:url>http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=entities/outbox-property.xsd</con:url><con:content><![CDATA[<!--Metadata: 
+Owner: Supreme Court Republic of Slovenia 
+Product: SVEV-MSH
+Product Version: 1.0.0
+Artifact Type: Schema
+Descriptive Name: Payload part of user mail message
+Date: 20150612 (12 June 2015)
+Author: Joze Rihtarsic-->
+<!--Copyright 2015, Supreme Court Republic of Slovenia 
+
+ Licensed under the EUPL, Version 1.1 or – as soon they will be approved by 
+ the European Commission - subsequent versions of the EUPL (the "Licence");
+ You may not use this work except in compliance with the Licence.
+ You may obtain a copy of the Licence at:
+
+ https://joinup.ec.europa.eu/software/page/eupl
+
+ Unless required by applicable law or agreed to in writing, software 
+ distributed under the Licence is distributed on an "AS IS" basis, WITHOUT 
+ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the Licence for the specific language governing permissions and  
+ limitations under the Licence.-->
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://outbox.laurentius.si/property" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://outbox.laurentius.si/property">
+  <xs:element name="OutProperties">
+    <xs:annotation>
+      <xs:documentation>MSH parametri, ki so določeni v pmode konfiguraciji</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" minOccurs="0" name="OutProperty" type="ns1:OutProperty"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="OutProperty">
+    <xs:annotation>
+      <xs:documentation>MSH lastnosi sporočila, določeni v p-mode konfiguraciji</xs:documentation>
+    </xs:annotation>
+    <xs:simpleContent>
+      <xs:extension base="ns1:propertyValue">
+        <xs:attribute name="id" type="xs:integer" use="optional">
+          <xs:annotation>
+            <xs:documentation xml:lang="sl">Enolična oznaka lastnosti</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="name" use="optional">
+          <xs:annotation>
+            <xs:documentation xml:lang="sl">Naziv lastnosti</xs:documentation>
+          </xs:annotation>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:minLength value="1"/>
+              <xs:maxLength value="64"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:attribute>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:simpleType name="propertyValue">
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="512"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>]]></con:content><con:type>http://www.w3.org/2001/XMLSchema</con:type></con:part><con:part><con:url>http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=entities/outbox-payload.xsd</con:url><con:content><![CDATA[<!--edited with XMLSpy v2008 (http://www.altova.com) by XMLSpy 2007 Professional Ed., Installed for 5 users (with SMP from 2007-02-06 to 2008-02-07) (CIF VSRS)-->
+<!--Metadata: 
+Owner: Supreme Court Republic of Slovenia 
+Product: SVEV-MSH
+Product Version: 1.0.0
+Artifact Type: Schema
+Descriptive Name: Payload part of user mail message
+Date: 20150612 (12 June 2015)
+Author: Joze Rihtarsic-->
+<!--Copyright 2015, Supreme Court Republic of Slovenia 
+
+ Licensed under the EUPL, Version 1.1 or – as soon they will be approved by 
+ the European Commission - subsequent versions of the EUPL (the "Licence");
+ You may not use this work except in compliance with the Licence.
+ You may obtain a copy of the Licence at:
+
+ https://joinup.ec.europa.eu/software/page/eupl
+
+ Unless required by applicable law or agreed to in writing, software 
+ distributed under the Licence is distributed on an "AS IS" basis, WITHOUT 
+ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the Licence for the specific language governing permissions and  
+ limitations under the Licence.-->
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://outbox.laurentius.si/payload" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://outbox.laurentius.si/payload">
+  <xs:element name="OutPayload">
+    <xs:annotation>
+      <xs:documentation>MSH vsebine</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" minOccurs="0" name="OutPart" type="ns1:OutPart"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="OutPart">
+    <xs:annotation>
+      <xs:documentation>MSH priponka/vsebina</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="Property">
+        <xs:complexType>
+          <xs:simpleContent>
+            <xs:extension base="xs:string">
+              <xs:attribute name="id" type="xs:integer" use="optional"/>
+              <xs:attribute name="name" type="xs:string" use="required"/>
+            </xs:extension>
+          </xs:simpleContent>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="Bin" type="xs:base64Binary"/>
+    </xs:sequence>
+    <xs:attribute name="id" type="xs:integer" use="optional">
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">Enolična oznaka pošiljke SED. Številko določa bazna sekvenca ob zapisu v bazo</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="name" use="optional">
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">Naziv priponke</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="128"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="description" use="optional">
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">Opis priponke</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="512"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="type" use="optional">
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">Pošiljateljeva oznaka tipa priponke (racun, vloga,  RC01, itd.)</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="64"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="filename" use="optional">
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">ime datoteke: test.pdf, racun.xml, vabilo.doc, ...</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="128"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="mimeType" use="required">
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">Mimetip priponke: plain/text, application/pdf, plain/xml, itd..</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:maxLength value="128"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="encoding" use="required">
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">kodiranje priponke oz kodna stran: UTF-8, CP1252-2 itd..</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:maxLength value="128"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="md5" use="required">
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">md5 priponke</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:maxLength value="32"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="filepath">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="1024"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+</xs:schema>]]></con:content><con:type>http://www.w3.org/2001/XMLSchema</con:type></con:part><con:part><con:url>http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=messages/SubmitMailResponse.xsd</con:url><con:content><![CDATA[<!--edited with XMLSpy v2008 (http://www.altova.com) by XMLSpy 2007 Professional Ed., Installed for 5 users (with SMP from 2007-02-06 to 2008-02-07) (CIF VSRS)-->
+<!--Metadata: 
+Owner: Supreme Court Republic of Slovenia 
+Product: SVEV-MSH
+Product Version: 1.0.0
+Artifact Type: Schema
+Descriptive Name: SVEV exception
+Date: 20150612 (12 June 2012)
+Author: Joze Rihtarsic-->
+<!--Copyright 2015, Supreme Court Republic of Slovenia 
+
+ Licensed under the EUPL, Version 1.1 or – as soon they will be approved by 
+ the European Commission - subsequent versions of the EUPL (the "Licence");
+ You may not use this work except in compliance with the Licence.
+ You may obtain a copy of the Licence at:
+
+ https://joinup.ec.europa.eu/software/page/eupl
+
+ Unless required by applicable law or agreed to in writing, software 
+ distributed under the Licence is distributed on an "AS IS" basis, WITHOUT 
+ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the Licence for the specific language governing permissions and  
+ limitations under the Licence.-->
+<xs:schema targetNamespace="http://laurentius.si" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:con="http://rcontrol.laurentius.si" xmlns="http://laurentius.si">
+  <xs:import namespace="http://rcontrol.laurentius.si" schemaLocation="http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=messages/RControl.xsd"/>
+  <xs:element name="SubmitMailResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="RControl" type="con:RControl"/>
+        <xs:element name="RData">
+          <xs:complexType>
+            <xs:attribute name="mailId" type="xs:integer" use="required">
+              <xs:annotation>
+                <xs:documentation xml:lang="sl">Enolična oznaka pošiljke, ki jo ob sprejemu določi sed.</xs:documentation>
+              </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="senderMessageId" use="required">
+              <xs:annotation>
+                <xs:documentation xml:lang="sl">Enolična oznaka pošiljke pošiljatelja. Kombinacija:  @senderEBox  in @senderMessageId mora bit enolična. ID se uporablja tudi za kontrolo pri oddaji pošiljke v vročanje.  Namen atributa je kontrola, ali je pošiljka že bila oddana v dostavo. 
+                                    V primeru, da se sendereBox in senderMessageId že nahaja v tabeli za transport. Servis vrne mshMessageId " in submitDate prve uspešne oddaje sporočila v vročanje. Element RControl/returnValue je v tem primeru WARNING (value="2))</xs:documentation>
+              </xs:annotation>
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:maxLength value="64"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="submittedDate" type="xs:dateTime" use="required">
+              <xs:annotation>
+                <xs:documentation xml:lang="sl">Datum oddaje pošiljke v vročanje. V primeru, da se senderBox in senderMessageId že nahaja v tabeli za transport. Servis vrne čas prve uspešne oddaje sporočila v vročanje</xs:documentation>
+              </xs:annotation>
+            </xs:attribute>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>]]></con:content><con:type>http://www.w3.org/2001/XMLSchema</con:type></con:part><con:part><con:url>http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=messages/RControl.xsd</con:url><con:content><![CDATA[<!--Metadata: 
+Owner: Supreme Court Republic of Slovenia 
+Product: SVEV-MSH
+Product Version: 1.0.0
+Artifact Type: Schema
+Descriptive Name: SVEV exception
+Date: 20150612 (12 June 2012)
+Author: Joze Rihtarsic-->
+<!--Copyright 2015, Supreme Court Republic of Slovenia 
+
+ Licensed under the EUPL, Version 1.1 or – as soon they will be approved by 
+ the European Commission - subsequent versions of the EUPL (the "Licence");
+ You may not use this work except in compliance with the Licence.
+ You may obtain a copy of the Licence at:
+
+ https://joinup.ec.europa.eu/software/page/eupl
+
+ Unless required by applicable law or agreed to in writing, software 
+ distributed under the Licence is distributed on an "AS IS" basis, WITHOUT 
+ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the Licence for the specific language governing permissions and  
+ limitations under the Licence.-->
+<xs:schema targetNamespace="http://rcontrol.laurentius.si" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:scr="http://rcontrol.laurentius.si">
+  <xs:complexType name="RControl">
+    <xs:attribute name="resultSize" type="xs:integer" use="optional">
+      <xs:annotation>
+        <xs:documentation>V primeru, da je rezultat seznam, je vrednost atributa
+                    stevil vseh rezultatov, ki ustrezajo iskanim pogojem</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="startIndex" type="xs:integer" use="optional">
+      <xs:annotation>
+        <xs:documentation>V primeru, da je rezultat seznam, je vrednost atributa index prve vrstice v odgovoru  celotnega rezultata.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="responseSize" type="xs:integer" use="optional">
+      <xs:annotation>
+        <xs:documentation>V primeru, da je rezultat seznam, je vrednost stevilo vrstic v odgovoru (responseSize je manjse ali enako resultSize)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="returnValue" use="required">
+      <xs:annotation>
+        <xs:documentation>status rezultata servisa: 1=OK   2=WARNING</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:int">
+          <xs:enumeration value="1"/>
+          <xs:enumeration value="2"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="returnCode" type="xs:int" use="required">
+      <xs:annotation>
+        <xs:documentation>specifična koda napake (ko je returnValue ERROR) ali (delnega) uspeha (ko je
+                    returnValue OK ali WARNING)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="returnText" type="xs:string" use="optional">
+      <xs:annotation>
+        <xs:documentation>tekstovni opis napake (ko je returnValue ERROR) ali (delnega) uspeha (ko je
+                    returnValue OK ali WARNING)</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="errorDump" type="xs:string" use="optional">
+      <xs:annotation>
+        <xs:documentation>dodatni podatki o napaki, npr. exception stack trace, uporabno v fazi razvoja
+                    servisev in za vzdrževanje</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+</xs:schema>]]></con:content><con:type>http://www.w3.org/2001/XMLSchema</con:type></con:part><con:part><con:url>http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=messages/OutMailListRequest.xsd</con:url><con:content><![CDATA[<!--edited with XMLSpy v2008 (http://www.altova.com) by XMLSpy 2007 Professional Ed., Installed for 5 users (with SMP from 2007-02-06 to 2008-02-07) (CIF VSRS)-->
+<!--Metadata: 
+Owner: Supreme Court Republic of Slovenia 
+Product: SVEV-MSH
+Product Version: 1.0.0
+Artifact Type: Schema
+Descriptive Name: SVEV exception
+Date: 20151101 (1 November 2015)
+Author: Joze Rihtarsic-->
+<!--Copyright 2015, Supreme Court Republic of Slovenia 
+
+ Licensed under the EUPL, Version 1.1 or – as soon they will be approved by 
+ the European Commission - subsequent versions of the EUPL (the "Licence");
+ You may not use this work except in compliance with the Licence.
+ You may obtain a copy of the Licence at:
+
+ https://joinup.ec.europa.eu/software/page/eupl
+
+ Unless required by applicable law or agreed to in writing, software 
+ distributed under the Licence is distributed on an "AS IS" basis, WITHOUT 
+ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the Licence for the specific language governing permissions and  
+ limitations under the Licence.-->
+<xs:schema targetNamespace="http://laurentius.si" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:con="http://control.laurentius.si" xmlns="http://laurentius.si">
+  <xs:import namespace="http://control.laurentius.si" schemaLocation="http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=messages/Control.xsd"/>
+  <xs:element name="OutMailListRequest">
+    <xs:complexType>
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">Poizvedba za pridobivanje sezname izhodne pošte.</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+        <xs:element name="Control" type="con:Control"/>
+        <xs:element name="Data">
+          <xs:complexType>
+            <xs:attribute name="senderEBox" use="optional">
+              <xs:annotation>
+                <xs:documentation xml:lang="sl">Pošiljateljev elektronski naslov.</xs:documentation>
+              </xs:annotation>
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:maxLength value="64"/>
+                  <xs:pattern value="[_\-a-zA-Z0-9\.\+]+@[a-zA-Z0-9](\.?[\-a-zA-Z0-9]*[a-zA-Z0-9])*"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="receiverEBox" use="optional">
+              <xs:annotation>
+                <xs:documentation xml:lang="sl">Naslovnikov elektronski naslov.</xs:documentation>
+              </xs:annotation>
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:maxLength value="64"/>
+                  <xs:pattern value="[_\-a-zA-Z0-9\.\+]+@[a-zA-Z0-9](\.?[\-a-zA-Z0-9]*[a-zA-Z0-9])*"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="submittedDateFrom" type="xs:dateTime" use="optional">
+              <xs:annotation>
+                <xs:documentation>Če je podatek "vnesen", servis vrača vse pošiljke z datumom sprejema večjim od vnesenega datuma</xs:documentation>
+              </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="submittedDateTo" type="xs:dateTime" use="optional">
+              <xs:annotation>
+                <xs:documentation>Če je podatek "vnesen", servis vrača vse pošiljke z datumom sprejema manjšim  od vnesenega datuma</xs:documentation>
+              </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="status" use="optional">
+              <xs:annotation>
+                <xs:documentation>Status pošiljke. Če status ni podan  je prevzeti status za pošiljke za prevzem.</xs:documentation>
+              </xs:annotation>
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:length value="20"/>
+                  <xs:enumeration value="received"/>
+                  <xs:enumeration value="processed"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="service" use="required">
+              <xs:annotation>
+                <xs:documentation xml:lang="sl">Storitve odpreme, ki jo določena v PMode parametrih</xs:documentation>
+              </xs:annotation>
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:maxLength value="64"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="action" use="required">
+              <xs:annotation>
+                <xs:documentation xml:lang="sl">Akcija v storitvi odpreme, ki jo določena v PMode parametrih  (npr: RegistredMail, LegalZPP, LegalZKP in LegalZUP, SMTPDelivery)</xs:documentation>
+              </xs:annotation>
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:maxLength value="64"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="conversationId" use="optional">
+              <xs:annotation>
+                <xs:documentation xml:lang="sl">enolična oznaka "poslovne transakcije" v izmenjavi podaktov. V primeru, da ni podan je v prvem sporočilo določen kot senderMessageId.</xs:documentation>
+              </xs:annotation>
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:maxLength value="64"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:attribute>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>]]></con:content><con:type>http://www.w3.org/2001/XMLSchema</con:type></con:part><con:part><con:url>http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=messages/OutMailListResponse.xsd</con:url><con:content><![CDATA[<!--edited with XMLSpy v2008 (http://www.altova.com) by XMLSpy 2007 Professional Ed., Installed for 5 users (with SMP from 2007-02-06 to 2008-02-07) (CIF VSRS)-->
+<!--Metadata: 
+Owner: Supreme Court Republic of Slovenia 
+Product: SVEV-MSH
+Product Version: 1.0.0
+Artifact Type: Schema
+Descriptive Name: SVEV exception
+Date: 20151101 (1 November 2015)
+Author: Joze Rihtarsic-->
+<!--Copyright 2015, Supreme Court Republic of Slovenia 
+
+ Licensed under the EUPL, Version 1.1 or – as soon they will be approved by 
+ the European Commission - subsequent versions of the EUPL (the "Licence");
+ You may not use this work except in compliance with the Licence.
+ You may obtain a copy of the Licence at:
+
+ https://joinup.ec.europa.eu/software/page/eupl
+
+ Unless required by applicable law or agreed to in writing, software 
+ distributed under the Licence is distributed on an "AS IS" basis, WITHOUT 
+ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the Licence for the specific language governing permissions and  
+ limitations under the Licence.-->
+<xs:schema targetNamespace="http://laurentius.si" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://outbox.laurentius.si/mail" xmlns:con="http://rcontrol.laurentius.si" xmlns="http://laurentius.si">
+  <xs:import namespace="http://rcontrol.laurentius.si" schemaLocation="http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=messages/RControl.xsd"/>
+  <xs:import namespace="http://outbox.laurentius.si/mail" schemaLocation="http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=entities/outbox-mail.xsd"/>
+  <xs:element name="OutMailListResponse">
+    <xs:complexType>
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">Poizvedba za pridobivanje statusov izhodnih pošiljkah. Dogodki so sortirani od  najnovejšega do najstarejšega!</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+        <xs:element name="RControl" type="con:RControl"/>
+        <xs:element name="RData">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element maxOccurs="unbounded" minOccurs="0" ref="ns1:OutMail"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>]]></con:content><con:type>http://www.w3.org/2001/XMLSchema</con:type></con:part><con:part><con:url>http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=messages/OutMailEventListRequest.xsd</con:url><con:content><![CDATA[<!--edited with XMLSpy v2008 (http://www.altova.com) by XMLSpy 2007 Professional Ed., Installed for 5 users (with SMP from 2007-02-06 to 2008-02-07) (CIF VSRS)-->
+<!--Metadata: 
+Owner: Supreme Court Republic of Slovenia 
+Product: SVEV-MSH
+Product Version: 1.0.0
+Artifact Type: Schema
+Descriptive Name: SVEV exception
+Date: 20151101 (1 Novebmer 2015)
+Author: Joze Rihtarsic-->
+<!--Copyright 2015, Supreme Court Republic of Slovenia 
+
+ Licensed under the EUPL, Version 1.1 or – as soon they will be approved by 
+ the European Commission - subsequent versions of the EUPL (the "Licence");
+ You may not use this work except in compliance with the Licence.
+ You may obtain a copy of the Licence at:
+
+ https://joinup.ec.europa.eu/software/page/eupl
+
+ Unless required by applicable law or agreed to in writing, software 
+ distributed under the Licence is distributed on an "AS IS" basis, WITHOUT 
+ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the Licence for the specific language governing permissions and  
+ limitations under the Licence.-->
+<xs:schema targetNamespace="http://laurentius.si" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:con="http://control.laurentius.si" xmlns="http://laurentius.si">
+  <xs:import namespace="http://control.laurentius.si" schemaLocation="http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=messages/Control.xsd"/>
+  <xs:element name="OutMailEventListRequest">
+    <xs:complexType>
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">Poizvedba za pridobivanje dogodkov/statusov na izhodni pošiljki. Dogodki so sortirani od najnovejšega do najstarejšega dogodka.</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+        <xs:element name="Control" type="con:Control"/>
+        <xs:element name="Data">
+          <xs:complexType>
+            <xs:attribute name="senderEBox" use="required">
+              <xs:annotation>
+                <xs:documentation xml:lang="sl">Naslovnikov elektronski naslov.</xs:documentation>
+              </xs:annotation>
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:maxLength value="64"/>
+                  <xs:pattern value="[_\-a-zA-Z0-9\.\+]+@[a-zA-Z0-9](\.?[\-a-zA-Z0-9]*[a-zA-Z0-9])*"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="mailId" type="xs:integer" use="optional">
+              <xs:annotation>
+                <xs:documentation xml:lang="sl">Id vhodne pošiljke</xs:documentation>
+              </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="senderMessageId" use="optional">
+              <xs:annotation>
+                <xs:documentation xml:lang="sl">Enolična oznaka pošiljke pošiljatelja. V primeru, da atribut ni podan, mora biti podan atribut mshMessageId</xs:documentation>
+              </xs:annotation>
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:maxLength value="64"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:attribute>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>]]></con:content><con:type>http://www.w3.org/2001/XMLSchema</con:type></con:part><con:part><con:url>http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=messages/OutMailEventListResponse.xsd</con:url><con:content><![CDATA[<!--edited with XMLSpy v2008 (http://www.altova.com) by XMLSpy 2007 Professional Ed., Installed for 5 users (with SMP from 2007-02-06 to 2008-02-07) (CIF VSRS)-->
+<!--Metadata: 
+Owner: Supreme Court Republic of Slovenia 
+Product: SVEV-MSH
+Product Version: 1.0.0
+Artifact Type: Schema
+Descriptive Name: SVEV exception
+Date: 20151101 (1 Novebmer 2015)
+Author: Joze Rihtarsic-->
+<!--Copyright 2015, Supreme Court Republic of Slovenia 
+
+ Licensed under the EUPL, Version 1.1 or – as soon they will be approved by 
+ the European Commission - subsequent versions of the EUPL (the "Licence");
+ You may not use this work except in compliance with the Licence.
+ You may obtain a copy of the Licence at:
+
+ https://joinup.ec.europa.eu/software/page/eupl
+
+ Unless required by applicable law or agreed to in writing, software 
+ distributed under the Licence is distributed on an "AS IS" basis, WITHOUT 
+ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the Licence for the specific language governing permissions and  
+ limitations under the Licence.-->
+<xs:schema targetNamespace="http://laurentius.si" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://outbox.laurentius.si/event" xmlns:con="http://rcontrol.laurentius.si" xmlns="http://laurentius.si">
+  <xs:import namespace="http://rcontrol.laurentius.si" schemaLocation="http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=messages/RControl.xsd"/>
+  <xs:import namespace="http://outbox.laurentius.si/event" schemaLocation="http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=entities/outbox-event.xsd"/>
+  <xs:element name="OutMailEventListResponse">
+    <xs:complexType>
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">Poizvedba za pridobivanje statusov izhodnih pošiljkah. Dogodki so sortirani od  najnovejšega do najstarejšega!</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+        <xs:element name="RControl" type="con:RControl"/>
+        <xs:element name="RData">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element maxOccurs="unbounded" minOccurs="0" name="OutEvent" type="ns1:OutEvent"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>]]></con:content><con:type>http://www.w3.org/2001/XMLSchema</con:type></con:part><con:part><con:url>http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=entities/outbox-event.xsd</con:url><con:content><![CDATA[<!--Metadata: 
+Owner: Supreme Court Republic of Slovenia 
+Product: SVEV-MSH
+Product Version: 1.0.0
+Artifact Type: Schema
+Descriptive Name: Payload part of user mail message
+Date: 20150612 (12 June 2015)
+Author: Joze Rihtarsic-->
+<!--Copyright 2015, Supreme Court Republic of Slovenia 
+
+ Licensed under the EUPL, Version 1.1 or – as soon they will be approved by 
+ the European Commission - subsequent versions of the EUPL (the "Licence");
+ You may not use this work except in compliance with the Licence.
+ You may obtain a copy of the Licence at:
+
+ https://joinup.ec.europa.eu/software/page/eupl
+
+ Unless required by applicable law or agreed to in writing, software 
+ distributed under the Licence is distributed on an "AS IS" basis, WITHOUT 
+ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the Licence for the specific language governing permissions and  
+ limitations under the Licence.-->
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://outbox.laurentius.si/event" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://outbox.laurentius.si/event">
+  <xs:element name="OutEvent" type="ns1:OutEvent"/>
+  <xs:complexType name="OutEvent">
+    <xs:annotation>
+      <xs:documentation xml:lang="sl">Status pošiljke</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="id" type="xs:integer">
+      <xs:annotation>
+        <xs:documentation>Event id</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="mailId" type="xs:integer">
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">Id izhodne pošiljke</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="senderMessageId" use="optional">
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">Enolična oznaka pošiljke pošiljatelja</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="64"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="senderEBox" use="required">
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">Naslovnikov elektronski naslov.</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:maxLength value="64"/>
+          <xs:pattern value="[_\-a-zA-Z0-9\.\+]+@[a-zA-Z0-9](\.?[\-a-zA-Z0-9]*[a-zA-Z0-9])*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="date" type="xs:dateTime" use="required">
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">Datum/čas statusa</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="status" use="required">
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">Koda statusa</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:maxLength value="10"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="description">
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">Opis dogodka</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="4000"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="userId" use="required">
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">ID uporabnika, ki je sporožila spremembo statusa</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:maxLength value="64"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="applicationId"/>
+  </xs:complexType>
+</xs:schema>]]></con:content><con:type>http://www.w3.org/2001/XMLSchema</con:type></con:part><con:part><con:url>http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=messages/InMailListRequest.xsd</con:url><con:content><![CDATA[<!--edited with XMLSpy v2008 (http://www.altova.com) by XMLSpy 2007 Professional Ed., Installed for 5 users (with SMP from 2007-02-06 to 2008-02-07) (CIF VSRS)-->
+<!--Metadata: 
+Owner: Supreme Court Republic of Slovenia 
+Product: SVEV-MSH
+Product Version: 1.0.0
+Artifact Type: Schema
+Descriptive Name: SVEV exception
+Date: 20151101 (1 November 2015)
+Author: Joze Rihtarsic-->
+<!--Copyright 2015, Supreme Court Republic of Slovenia 
+
+ Licensed under the EUPL, Version 1.1 or – as soon they will be approved by 
+ the European Commission - subsequent versions of the EUPL (the "Licence");
+ You may not use this work except in compliance with the Licence.
+ You may obtain a copy of the Licence at:
+
+ https://joinup.ec.europa.eu/software/page/eupl
+
+ Unless required by applicable law or agreed to in writing, software 
+ distributed under the Licence is distributed on an "AS IS" basis, WITHOUT 
+ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the Licence for the specific language governing permissions and  
+ limitations under the Licence.-->
+<xs:schema targetNamespace="http://laurentius.si" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:con="http://control.laurentius.si" xmlns="http://laurentius.si">
+  <xs:import namespace="http://control.laurentius.si" schemaLocation="http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=messages/Control.xsd"/>
+  <xs:element name="InMailListRequest">
+    <xs:complexType>
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">Poizvedba za pridobivanje sezname izhodne pošte.</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+        <xs:element name="Control" type="con:Control"/>
+        <xs:element name="Data">
+          <xs:complexType>
+            <xs:attribute name="senderEBox" use="optional">
+              <xs:annotation>
+                <xs:documentation xml:lang="sl">Pošiljateljev elektronski naslov.</xs:documentation>
+              </xs:annotation>
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:maxLength value="64"/>
+                  <xs:pattern value="[_\-a-zA-Z0-9\.\+]+@[a-zA-Z0-9](\.?[\-a-zA-Z0-9]*[a-zA-Z0-9])*"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="receiverEBox" use="optional">
+              <xs:annotation>
+                <xs:documentation xml:lang="sl">Naslovnikov elektronski naslov.</xs:documentation>
+              </xs:annotation>
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:maxLength value="64"/>
+                  <xs:pattern value="[_\-a-zA-Z0-9\.\+]+@[a-zA-Z0-9](\.?[\-a-zA-Z0-9]*[a-zA-Z0-9])*"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="receivedDateFrom" type="xs:dateTime" use="optional">
+              <xs:annotation>
+                <xs:documentation>Če je podatek "vnesen", servis vrača vse pošiljke z datumom sprejema večjim od vnesenega datuma</xs:documentation>
+              </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="receivedDateTo" type="xs:dateTime" use="optional">
+              <xs:annotation>
+                <xs:documentation>Če je podatek "vnesen", servis vrača vse pošiljke z datumom sprejema manjšim  od vnesenega datuma</xs:documentation>
+              </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="status" use="optional">
+              <xs:annotation>
+                <xs:documentation>Status pošiljke. Če status ni podan  je prevzeti status za pošiljke za prevzem.</xs:documentation>
+              </xs:annotation>
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:length value="20"/>
+                  <xs:enumeration value="received"/>
+                  <xs:enumeration value="processed"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="service" use="required">
+              <xs:annotation>
+                <xs:documentation xml:lang="sl">Storitve odpreme, ki jo določena v PMode parametrih</xs:documentation>
+              </xs:annotation>
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:maxLength value="64"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="action" use="required">
+              <xs:annotation>
+                <xs:documentation xml:lang="sl">Akcija v storitvi odpreme, ki jo določena v PMode parametrih  (npr: RegistredMail, LegalZPP, LegalZKP in LegalZUP, SMTPDelivery)</xs:documentation>
+              </xs:annotation>
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:maxLength value="64"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="conversationId" use="optional">
+              <xs:annotation>
+                <xs:documentation xml:lang="sl">enolična oznaka "poslovne transakcije" v izmenjavi podaktov. V primeru, da ni podan je v prvem sporočilo določen kot senderMessageId.</xs:documentation>
+              </xs:annotation>
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:maxLength value="64"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:attribute>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>]]></con:content><con:type>http://www.w3.org/2001/XMLSchema</con:type></con:part><con:part><con:url>http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=messages/InMailListResponse.xsd</con:url><con:content><![CDATA[<!--edited with XMLSpy v2008 (http://www.altova.com) by XMLSpy 2007 Professional Ed., Installed for 5 users (with SMP from 2007-02-06 to 2008-02-07) (CIF VSRS)-->
+<!--Metadata: 
+Owner: Supreme Court Republic of Slovenia 
+Product: SVEV-MSH
+Product Version: 1.0.0
+Artifact Type: Schema
+Descriptive Name: SVEV exception
+Date: 20151101 (1 November 2015)
+Author: Joze Rihtarsic-->
+<!--Copyright 2015, Supreme Court Republic of Slovenia 
+
+ Licensed under the EUPL, Version 1.1 or – as soon they will be approved by 
+ the European Commission - subsequent versions of the EUPL (the "Licence");
+ You may not use this work except in compliance with the Licence.
+ You may obtain a copy of the Licence at:
+
+ https://joinup.ec.europa.eu/software/page/eupl
+
+ Unless required by applicable law or agreed to in writing, software 
+ distributed under the Licence is distributed on an "AS IS" basis, WITHOUT 
+ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the Licence for the specific language governing permissions and  
+ limitations under the Licence.-->
+<xs:schema targetNamespace="http://laurentius.si" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://inbox.laurentius.si/mail" xmlns:con="http://rcontrol.laurentius.si" xmlns="http://laurentius.si">
+  <xs:import namespace="http://rcontrol.laurentius.si" schemaLocation="http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=messages/RControl.xsd"/>
+  <xs:import namespace="http://inbox.laurentius.si/mail" schemaLocation="http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=entities/inbox-mail.xsd"/>
+  <xs:element name="InMailListResponse">
+    <xs:complexType>
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">Poizvedba za pridobivanje statusov izhodnih pošiljkah. Dogodki so sortirani od  najnovejšega do najstarejšega!</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+        <xs:element name="RControl" type="con:RControl"/>
+        <xs:element name="RData">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element maxOccurs="unbounded" minOccurs="0" ref="ns1:InMail"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>]]></con:content><con:type>http://www.w3.org/2001/XMLSchema</con:type></con:part><con:part><con:url>http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=entities/inbox-mail.xsd</con:url><con:content><![CDATA[<!--Metadata: 
+Owner: Supreme Court Republic of Slovenia 
+Product: SVEV-MSH
+Product Version: 1.0.0
+Artifact Type: Schema
+Descriptive Name: SVEV mail 
+Date: 20150612 (12 June 2015)
+Author: Joze Rihtarsic-->
+<!--Copyright 2015, Supreme Court Republic of Slovenia 
+
+ Licensed under the EUPL, Version 1.1 or – as soon they will be approved by 
+ the European Commission - subsequent versions of the EUPL (the "Licence");
+ You may not use this work except in compliance with the Licence.
+ You may obtain a copy of the Licence at:
+
+ https://joinup.ec.europa.eu/software/page/eupl
+
+ Unless required by applicable law or agreed to in writing, software 
+ distributed under the Licence is distributed on an "AS IS" basis, WITHOUT 
+ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the Licence for the specific language governing permissions and  
+ limitations under the Licence.-->
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://inbox.laurentius.si/mail" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns3="http://inbox.laurentius.si/property" xmlns:ns2="http://inbox.laurentius.si/payload" xmlns:ns1="http://inbox.laurentius.si/mail">
+  <xs:import namespace="http://inbox.laurentius.si/property" schemaLocation="http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=entities/inbox-property.xsd"/>
+  <xs:import namespace="http://inbox.laurentius.si/payload" schemaLocation="http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=entities/inbox-payload.xsd"/>
+  <xs:element name="InMail" type="ns1:InMailType"/>
+  <xs:complexType name="InMailType">
+    <xs:annotation>
+      <xs:appinfo>Schema MSHMail infoset</xs:appinfo>
+      <xs:documentation xml:lang="sl">Shema določa xml infoset izhodne in dohodne pošte, ki se vroča preko SVEV MSH modula. Sestavni deli vsakega maila so:
+                - pošiljatelj
+                - prejemnik
+                - storitev (Storitev, akcija v storitvi)
+                - vsebine, ki se vročajo</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" ref="ns3:InProperties"/>
+      <xs:element minOccurs="0" ref="ns2:InPayload"/>
+    </xs:sequence>
+    <xs:attribute name="id" type="xs:integer" use="optional">
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">Enolična oznaka pošiljke SED. Številko določa bazna sekvenca ob zapisu v bazo</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="messageId" use="optional">
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">Enolična oznaka pošiljke MSH. Pri izhodni pošti se oznaka določi ob dodajanju pošiljke v pošiljanje. Vrednost atributa je enaka
+                    Messaging/MessageInfo/MessageId v ebMS headerju izhodnega sporočila. Pri dohodni pošti se določi mshid določi ob uspešnem prejemu pošiljke.</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="64"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="refToMessageId" use="optional">
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">Referenca na messageId dohodne pošiljke. Vrednost atributa je enaka
+                    Messaging/MessageInfo/RefToMessageId v ebMS headerju izhodnega sporočila.</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="64"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="senderMessageId" use="required">
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">Enolična oznaka pošiljke pošiljatelja. Kombinacija:  @senderEBox  in @senderMessageId mora bit enolična. ID se uporablja tudi za kontrolo pri oddaji pošiljke v vročanje.  Namen atributa je kontrola, ali je pošiljka že bila oddana v dostavo. 
+                    V primeru, da se sendereBox in senderMessageId že nahaja v tabeli za transport. Servis vrne mshMessageId "prvega sporočila"</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="64"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="service" use="required">
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">Storitve odpreme, ki jo določena v PMode parametrih</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:maxLength value="64"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="action" use="required">
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">Akcija v storitvi odpreme, ki jo določena v PMode parametrih  (npr: RegistredMail, LegalZPP, LegalZKP in LegalZUP, SMTPDelivery)</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:maxLength value="64"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="conversationId" use="optional">
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">enolična oznaka "poslovne transakcije" v izmenjavi podaktov. V primeru, da ni podan je v prvem sporočilo določen kot senderMessageId.</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="64"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="subject" use="optional">
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">Opis vsebine sporočila</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="512"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="submittedDate" type="xs:dateTime" use="optional">
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">Datum oddaje pošiljke v vročanje. Datum določi MSH ob prevem uspešnem prejemu pošiljke</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="sentDate" type="xs:dateTime" use="optional">
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">Datum pošiljanja sporočila naslovnikovemu MSH-ju</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="receivedDate" type="xs:dateTime" use="optional">
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">Datum sprejema v naslovnikove MSH. Datum je obvezen za dohodno pošto.sentDate in receiveDate se lahko razlikujeta glede na spodaj ležeči protokol (HTTP,SMTP), multihop etc..</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="deliveredDate" type="xs:dateTime" use="optional">
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">Datum prevzema pošiljke. Datum je obvezen za dohodne pošiljke, ki so bile uspešno prevzete iz MSH-ja</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="receiverEBox" use="required">
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">Naslovnikov eBox naslov (email oblika). domena določa PMode konfiguracijo naslovnikovega strežnika</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:maxLength value="64"/>
+          <xs:pattern value="[_\-a-zA-Z0-9\.\+]+@[a-zA-Z0-9](\.?[\-a-zA-Z0-9]*[a-zA-Z0-9])*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="receiverName" use="required">
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">Naslovnikov naziv.</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="128"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="senderEBox" use="required">
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">Pošiljateljev  elektronski naslov (email oblika). domena določa PMode konfiguracijo naslovnikovega strežnika</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:maxLength value="64"/>
+          <xs:pattern value="[_\-a-zA-Z0-9\.\+]+@[a-zA-Z0-9](\.?[\-a-zA-Z0-9]*[a-zA-Z0-9])*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="senderName" use="required">
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">Pošiljateljev  naziv</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="128"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="status">
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:maxLength value="32"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="statusDate" type="xs:dateTime"/>
+  </xs:complexType>
+</xs:schema>]]></con:content><con:type>http://www.w3.org/2001/XMLSchema</con:type></con:part><con:part><con:url>http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=entities/inbox-property.xsd</con:url><con:content><![CDATA[<!--Metadata: 
+Owner: Supreme Court Republic of Slovenia 
+Product: SVEV-MSH
+Product Version: 1.0.0
+Artifact Type: Schema
+Descriptive Name: Payload part of user mail message
+Date: 20150612 (12 June 2015)
+Author: Joze Rihtarsic-->
+<!--Copyright 2015, Supreme Court Republic of Slovenia 
+
+ Licensed under the EUPL, Version 1.1 or – as soon they will be approved by 
+ the European Commission - subsequent versions of the EUPL (the "Licence");
+ You may not use this work except in compliance with the Licence.
+ You may obtain a copy of the Licence at:
+
+ https://joinup.ec.europa.eu/software/page/eupl
+
+ Unless required by applicable law or agreed to in writing, software 
+ distributed under the Licence is distributed on an "AS IS" basis, WITHOUT 
+ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the Licence for the specific language governing permissions and  
+ limitations under the Licence.-->
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://inbox.laurentius.si/property" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://inbox.laurentius.si/property">
+  <xs:element name="InProperties">
+    <xs:annotation>
+      <xs:documentation>MSH parametri, ki so določeni v pmode konfiguraciji</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" minOccurs="0" name="InProperty" type="ns1:InProperty"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="InProperty">
+    <xs:annotation>
+      <xs:documentation>MSH lastnosi sporočila, določeni v p-mode konfiguraciji</xs:documentation>
+    </xs:annotation>
+    <xs:simpleContent>
+      <xs:extension base="ns1:propertyValue">
+        <xs:attribute name="id" type="xs:integer" use="optional">
+          <xs:annotation>
+            <xs:documentation xml:lang="sl">Enolična oznaka lastnosti</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="name" use="optional">
+          <xs:annotation>
+            <xs:documentation xml:lang="sl">Naziv lastnosti</xs:documentation>
+          </xs:annotation>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:minLength value="1"/>
+              <xs:maxLength value="64"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:attribute>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:simpleType name="propertyValue">
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="512"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>]]></con:content><con:type>http://www.w3.org/2001/XMLSchema</con:type></con:part><con:part><con:url>http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=entities/inbox-payload.xsd</con:url><con:content><![CDATA[<!--edited with XMLSpy v2008 (http://www.altova.com) by XMLSpy 2007 Professional Ed., Installed for 5 users (with SMP from 2007-02-06 to 2008-02-07) (CIF VSRS)-->
+<!--Metadata: 
+Owner: Supreme Court Republic of Slovenia 
+Product: SVEV-MSH
+Product Version: 1.0.0
+Artifact Type: Schema
+Descriptive Name: Payload part of user mail message
+Date: 20150612 (12 June 2015)
+Author: Joze Rihtarsic-->
+<!--Copyright 2015, Supreme Court Republic of Slovenia 
+
+ Licensed under the EUPL, Version 1.1 or – as soon they will be approved by 
+ the European Commission - subsequent versions of the EUPL (the "Licence");
+ You may not use this work except in compliance with the Licence.
+ You may obtain a copy of the Licence at:
+
+ https://joinup.ec.europa.eu/software/page/eupl
+
+ Unless required by applicable law or agreed to in writing, software 
+ distributed under the Licence is distributed on an "AS IS" basis, WITHOUT 
+ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the Licence for the specific language governing permissions and  
+ limitations under the Licence.-->
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://inbox.laurentius.si/payload" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://inbox.laurentius.si/payload">
+  <xs:element name="InPayload">
+    <xs:annotation>
+      <xs:documentation>MSH vsebine</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" minOccurs="0" name="InPart" type="ns1:InPart"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="InPart">
+    <xs:annotation>
+      <xs:documentation>MSH priponka/vsebina</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="Property">
+        <xs:complexType>
+          <xs:simpleContent>
+            <xs:extension base="xs:string">
+              <xs:attribute name="id" type="xs:integer" use="optional"/>
+              <xs:attribute name="name" type="xs:string" use="required"/>
+            </xs:extension>
+          </xs:simpleContent>
+        </xs:complexType>
+      </xs:element>
+      <xs:element minOccurs="0" name="Bin" type="xs:base64Binary"/>
+    </xs:sequence>
+    <xs:attribute name="id" type="xs:integer" use="optional">
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">Enolična  pošiljateljeva oznaka priponke</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="name" use="optional">
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">Naziv priponke</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="128"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="description" use="optional">
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">Opis priponke</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="512"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="type" use="optional">
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">Pošiljateljeva oznaka tipa priponke (racun, vloga,  RC01, itd.)</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="64"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="filename" use="optional">
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">ime datoteke: test.pdf, racun.xml, vabilo.doc, ...</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="128"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="mimeType" use="required">
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">Mimetip priponke: plain/text, application/pdf, plain/xml, itd..</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:maxLength value="128"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="encoding" use="required">
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">kodiranje priponke oz kodna stran: UTF-8, CP1252-2 itd..</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:maxLength value="128"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="md5" use="required">
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">md5 priponke</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:maxLength value="32"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="filepath">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="1024"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+</xs:schema>]]></con:content><con:type>http://www.w3.org/2001/XMLSchema</con:type></con:part><con:part><con:url>http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=messages/ModifyInMailRequest.xsd</con:url><con:content><![CDATA[<!--edited with XMLSpy v2008 (http://www.altova.com) by XMLSpy 2007 Professional Ed., Installed for 5 users (with SMP from 2007-02-06 to 2008-02-07) (CIF VSRS)-->
+<!--Metadata: 
+Owner: Supreme Court Republic of Slovenia 
+Product: SVEV-MSH
+Product Version: 1.0.0
+Artifact Type: Schema
+Descriptive Name: SVEV exception
+Date: 20151101 (1 November 2015)
+Author: Joze Rihtarsic-->
+<!--Copyright 2015, Supreme Court Republic of Slovenia 
+
+ Licensed under the EUPL, Version 1.1 or – as soon they will be approved by 
+ the European Commission - subsequent versions of the EUPL (the "Licence");
+ You may not use this work except in compliance with the Licence.
+ You may obtain a copy of the Licence at:
+
+ https://joinup.ec.europa.eu/software/page/eupl
+
+ Unless required by applicable law or agreed to in writing, software 
+ distributed under the Licence is distributed on an "AS IS" basis, WITHOUT 
+ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the Licence for the specific language governing permissions and  
+ limitations under the Licence.-->
+<xs:schema targetNamespace="http://laurentius.si" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:con="http://control.laurentius.si" xmlns="http://laurentius.si">
+  <xs:import namespace="http://control.laurentius.si" schemaLocation="http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=messages/Control.xsd"/>
+  <xs:element name="ModifyInMailRequest">
+    <xs:complexType>
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">Potrjevanje prejema dohodne pošte. Pošta je ob potrditvi prestavljena v status "Processed"</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+        <xs:element name="Control" type="con:Control"/>
+        <xs:element name="Data">
+          <xs:complexType>
+            <xs:attribute name="receiverEBox" use="optional">
+              <xs:annotation>
+                <xs:documentation xml:lang="sl">Naslovnikov elektronski naslov.</xs:documentation>
+              </xs:annotation>
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:maxLength value="64"/>
+                  <xs:pattern value="[_\-a-zA-Z0-9\.\+]+@[a-zA-Z0-9](\.?[\-a-zA-Z0-9]*[a-zA-Z0-9])*"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="mailId" type="xs:integer" use="required">
+              <xs:annotation>
+                <xs:documentation xml:lang="sl">Id vhodne pošiljke</xs:documentation>
+              </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="action" type="ModifyActionCode" use="required">
+              <xs:annotation>
+                <xs:documentation>Akcije:                         
+                                    - ACCEPT: pošiljka se označi kot uspešno prevzeta -> status pošiljke se spremni v 'Processed'
+                                    - LOCK:     akcija pošiljko, ki še niso prevzete se nastavi v status  "Locked" Takšne pošiljke se ne prikazujejo več v seznamu dohodne pošte.</xs:documentation>
+              </xs:annotation>
+            </xs:attribute>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:simpleType name="ModifyActionCode">
+    <xs:restriction base="xs:token">
+      <xs:maxLength value="20"/>
+      <xs:enumeration value="ACCEPT"/>
+      <xs:enumeration value="LOCK"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>]]></con:content><con:type>http://www.w3.org/2001/XMLSchema</con:type></con:part><con:part><con:url>http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=messages/ModifyInMailResponse.xsd</con:url><con:content><![CDATA[<!--edited with XMLSpy v2008 (http://www.altova.com) by XMLSpy 2007 Professional Ed., Installed for 5 users (with SMP from 2007-02-06 to 2008-02-07) (CIF VSRS)-->
+<!--Metadata: 
+Owner: Supreme Court Republic of Slovenia 
+Product: SVEV-MSH
+Product Version: 1.0.0
+Artifact Type: Schema
+Descriptive Name: SVEV exception
+Date: 20151101 (1 November 2015)
+Author: Joze Rihtarsic-->
+<!--Copyright 2015, Supreme Court Republic of Slovenia 
+
+ Licensed under the EUPL, Version 1.1 or – as soon they will be approved by 
+ the European Commission - subsequent versions of the EUPL (the "Licence");
+ You may not use this work except in compliance with the Licence.
+ You may obtain a copy of the Licence at:
+
+ https://joinup.ec.europa.eu/software/page/eupl
+
+ Unless required by applicable law or agreed to in writing, software 
+ distributed under the Licence is distributed on an "AS IS" basis, WITHOUT 
+ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the Licence for the specific language governing permissions and  
+ limitations under the Licence.-->
+<xs:schema targetNamespace="http://laurentius.si" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://inbox.laurentius.si/event" xmlns:con="http://rcontrol.laurentius.si" xmlns="http://laurentius.si">
+  <xs:import namespace="http://rcontrol.laurentius.si" schemaLocation="http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=messages/RControl.xsd"/>
+  <xs:import namespace="http://inbox.laurentius.si/event" schemaLocation="http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=entities/inbox-event.xsd"/>
+  <xs:element name="ModifyInMailResponse">
+    <xs:complexType>
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">Poizvedba za pridobivanje statusov izhodnih pošiljkah. Dogodki so sortirani od  najnovejšega do najstarejšega!</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+        <xs:element name="RControl" type="con:RControl"/>
+        <xs:element name="RData">
+          <xs:complexType>
+            <xs:annotation>
+              <xs:documentation xml:lang="sl">Potrjevanje prejema dohodne pošte. Pošta je ob potrditvi prestavljena v status "Processed"</xs:documentation>
+            </xs:annotation>
+            <xs:sequence>
+              <xs:element name="InEvent" type="ns1:InEvent"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>]]></con:content><con:type>http://www.w3.org/2001/XMLSchema</con:type></con:part><con:part><con:url>http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=entities/inbox-event.xsd</con:url><con:content><![CDATA[<!--Metadata: 
+Owner: Supreme Court Republic of Slovenia 
+Product: SVEV-MSH
+Product Version: 1.0.0
+Artifact Type: Schema
+Descriptive Name: Payload part of user mail message
+Date: 20150612 (12 June 2015)
+Author: Joze Rihtarsic-->
+<!--Copyright 2015, Supreme Court Republic of Slovenia 
+
+ Licensed under the EUPL, Version 1.1 or – as soon they will be approved by 
+ the European Commission - subsequent versions of the EUPL (the "Licence");
+ You may not use this work except in compliance with the Licence.
+ You may obtain a copy of the Licence at:
+
+ https://joinup.ec.europa.eu/software/page/eupl
+
+ Unless required by applicable law or agreed to in writing, software 
+ distributed under the Licence is distributed on an "AS IS" basis, WITHOUT 
+ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the Licence for the specific language governing permissions and  
+ limitations under the Licence.-->
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://inbox.laurentius.si/event" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://inbox.laurentius.si/event">
+  <xs:element name="InEvent" type="ns1:InEvent"/>
+  <xs:complexType name="InEvent">
+    <xs:annotation>
+      <xs:documentation xml:lang="sl">Status pošiljke</xs:documentation>
+    </xs:annotation>
+    <xs:attribute name="id" type="xs:integer">
+      <xs:annotation>
+        <xs:documentation>Event id</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="mailId" type="xs:integer">
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">Id vhodne pošiljke</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="receiverEBox" use="required">
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">Naslovnikov eBox naslov (email oblika). domena določa PMode konfiguracijo naslovnikovega strežnika</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:maxLength value="64"/>
+          <xs:pattern value="[_\-a-zA-Z0-9\.\+]+@[a-zA-Z0-9](\.?[\-a-zA-Z0-9]*[a-zA-Z0-9])*"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="date" type="xs:dateTime" use="required">
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">Datum/čas statusa</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="status" use="required">
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">Koda statusa</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:maxLength value="10"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="description">
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">Opis dogodka</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:maxLength value="4000"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="userId" use="required">
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">ID uporabnika, ki je sporožila spremembo statusa</xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:token">
+          <xs:maxLength value="64"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="applicationId"/>
+  </xs:complexType>
+</xs:schema>]]></con:content><con:type>http://www.w3.org/2001/XMLSchema</con:type></con:part><con:part><con:url>http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=messages/ModifyOutMailRequest.xsd</con:url><con:content><![CDATA[<!--edited with XMLSpy v2008 (http://www.altova.com) by XMLSpy 2007 Professional Ed., Installed for 5 users (with SMP from 2007-02-06 to 2008-02-07) (CIF VSRS)-->
+<!--Metadata: 
+Owner: Supreme Court Republic of Slovenia 
+Product: SVEV-MSH
+Product Version: 1.0.0
+Artifact Type: Schema
+Descriptive Name: SVEV exception
+Date: 20151101 (1 November 2015)
+Author: Joze Rihtarsic-->
+<!--Copyright 2015, Supreme Court Republic of Slovenia 
+
+ Licensed under the EUPL, Version 1.1 or – as soon they will be approved by 
+ the European Commission - subsequent versions of the EUPL (the "Licence");
+ You may not use this work except in compliance with the Licence.
+ You may obtain a copy of the Licence at:
+
+ https://joinup.ec.europa.eu/software/page/eupl
+
+ Unless required by applicable law or agreed to in writing, software 
+ distributed under the Licence is distributed on an "AS IS" basis, WITHOUT 
+ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the Licence for the specific language governing permissions and  
+ limitations under the Licence.-->
+<xs:schema targetNamespace="http://laurentius.si" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:con="http://control.laurentius.si" xmlns="http://laurentius.si">
+  <xs:import namespace="http://control.laurentius.si" schemaLocation="http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=messages/Control.xsd"/>
+  <xs:element name="ModifyOutMailRequest">
+    <xs:complexType>
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">Potrjevanje prejema dohodne pošte. Pošta je ob potrditvi prestavljena v status "Processed"</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+        <xs:element name="Control" type="con:Control"/>
+        <xs:element name="Data">
+          <xs:complexType>
+            <xs:attribute name="senderEBox" use="optional">
+              <xs:annotation>
+                <xs:documentation xml:lang="sl">Pošiljateljev elektronski naslov.</xs:documentation>
+              </xs:annotation>
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:maxLength value="64"/>
+                  <xs:pattern value="[_\-a-zA-Z0-9\.\+]+@[a-zA-Z0-9](\.?[\-a-zA-Z0-9]*[a-zA-Z0-9])*"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="mailId" type="xs:integer" use="required">
+              <xs:annotation>
+                <xs:documentation xml:lang="sl">Id vhodne pošiljke</xs:documentation>
+              </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="action" type="ModifOutActionCode" use="required">
+              <xs:annotation>
+                <xs:documentation>Akcije:                         
+                                    - ABORT: akcija poskuša preklicati pošiljanje pošiljk. V primeru da je pošiljka že odpravljena  oz.
+                                    v statusu, kjer preklic pošiljanja nemogoče servis vrne napako. 
+                                    - DELETE:  Akcija nastaviti status pošiljke v izbrisano. 
+                                    - RESEND:  V primeru, da je pošiljka v napaki ali izbrisana akcija ponovno priži pošiljanje..</xs:documentation>
+              </xs:annotation>
+            </xs:attribute>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:simpleType name="ModifOutActionCode">
+    <xs:restriction base="xs:token">
+      <xs:maxLength value="20"/>
+      <xs:enumeration value="ABORT"/>
+      <xs:enumeration value="DELETE"/>
+      <xs:enumeration value="RESEND"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>]]></con:content><con:type>http://www.w3.org/2001/XMLSchema</con:type></con:part><con:part><con:url>http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=messages/ModifyOutMailResponse.xsd</con:url><con:content><![CDATA[<!--edited with XMLSpy v2008 (http://www.altova.com) by XMLSpy 2007 Professional Ed., Installed for 5 users (with SMP from 2007-02-06 to 2008-02-07) (CIF VSRS)-->
+<!--Metadata: 
+Owner: Supreme Court Republic of Slovenia 
+Product: SVEV-MSH
+Product Version: 1.0.0
+Artifact Type: Schema
+Descriptive Name: SVEV exception
+Date: 20151101 (1 November 2015)
+Author: Joze Rihtarsic-->
+<!--Copyright 2015, Supreme Court Republic of Slovenia 
+
+ Licensed under the EUPL, Version 1.1 or – as soon they will be approved by 
+ the European Commission - subsequent versions of the EUPL (the "Licence");
+ You may not use this work except in compliance with the Licence.
+ You may obtain a copy of the Licence at:
+
+ https://joinup.ec.europa.eu/software/page/eupl
+
+ Unless required by applicable law or agreed to in writing, software 
+ distributed under the Licence is distributed on an "AS IS" basis, WITHOUT 
+ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the Licence for the specific language governing permissions and  
+ limitations under the Licence.-->
+<xs:schema targetNamespace="http://laurentius.si" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://outbox.laurentius.si/event" xmlns:con="http://rcontrol.laurentius.si" xmlns="http://laurentius.si">
+  <xs:import namespace="http://rcontrol.laurentius.si" schemaLocation="http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=messages/RControl.xsd"/>
+  <xs:import namespace="http://outbox.laurentius.si/event" schemaLocation="http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=entities/outbox-event.xsd"/>
+  <xs:element name="ModifyOutMailResponse">
+    <xs:complexType>
+      <xs:annotation>
+        <xs:documentation xml:lang="sl"></xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+        <xs:element name="RControl" type="con:RControl"/>
+        <xs:element name="RData">
+          <xs:complexType>
+            <xs:annotation>
+              <xs:documentation xml:lang="sl">Odgovor spremembe statusa izhodne pošte</xs:documentation>
+            </xs:annotation>
+            <xs:sequence>
+              <xs:element name="OutEvent" type="ns1:OutEvent"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>]]></con:content><con:type>http://www.w3.org/2001/XMLSchema</con:type></con:part><con:part><con:url>http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=messages/InMailEventListRequest.xsd</con:url><con:content><![CDATA[<!--edited with XMLSpy v2008 (http://www.altova.com) by XMLSpy 2007 Professional Ed., Installed for 5 users (with SMP from 2007-02-06 to 2008-02-07) (CIF VSRS)-->
+<!--Metadata: 
+Owner: Supreme Court Republic of Slovenia 
+Product: SVEV-MSH
+Product Version: 1.0.0
+Artifact Type: Schema
+Descriptive Name: SVEV exception
+Date: 20151101 (1 Novebmer 2015)
+Author: Joze Rihtarsic-->
+<!--Copyright 2015, Supreme Court Republic of Slovenia 
+
+ Licensed under the EUPL, Version 1.1 or – as soon they will be approved by 
+ the European Commission - subsequent versions of the EUPL (the "Licence");
+ You may not use this work except in compliance with the Licence.
+ You may obtain a copy of the Licence at:
+
+ https://joinup.ec.europa.eu/software/page/eupl
+
+ Unless required by applicable law or agreed to in writing, software 
+ distributed under the Licence is distributed on an "AS IS" basis, WITHOUT 
+ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the Licence for the specific language governing permissions and  
+ limitations under the Licence.-->
+<xs:schema targetNamespace="http://laurentius.si" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:con="http://control.laurentius.si" xmlns="http://laurentius.si">
+  <xs:import namespace="http://control.laurentius.si" schemaLocation="http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=messages/Control.xsd"/>
+  <xs:element name="InMailEventListRequest">
+    <xs:complexType>
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">Poizvedba za pridobivanje dogodkov/statusov na izhodni pošiljki. Dogodki so sortirani od najnovejšega do najstarejšega dogodka.</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+        <xs:element name="Control" type="con:Control"/>
+        <xs:element name="Data">
+          <xs:complexType>
+            <xs:attribute name="receiverEBox" use="required">
+              <xs:annotation>
+                <xs:documentation xml:lang="sl">Naslovnikov elektronski naslov.</xs:documentation>
+              </xs:annotation>
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:maxLength value="64"/>
+                  <xs:pattern value="[_\-a-zA-Z0-9\.\+]+@[a-zA-Z0-9](\.?[\-a-zA-Z0-9]*[a-zA-Z0-9])*"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="mailId" type="xs:integer" use="required">
+              <xs:annotation>
+                <xs:documentation xml:lang="sl">Id vhodne pošiljke</xs:documentation>
+              </xs:annotation>
+            </xs:attribute>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>]]></con:content><con:type>http://www.w3.org/2001/XMLSchema</con:type></con:part><con:part><con:url>http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=messages/InMailEventListResponse.xsd</con:url><con:content><![CDATA[<!--edited with XMLSpy v2008 (http://www.altova.com) by XMLSpy 2007 Professional Ed., Installed for 5 users (with SMP from 2007-02-06 to 2008-02-07) (CIF VSRS)-->
+<!--Metadata: 
+Owner: Supreme Court Republic of Slovenia 
+Product: SVEV-MSH
+Product Version: 1.0.0
+Artifact Type: Schema
+Descriptive Name: SVEV exception
+Date: 20151101 (1 Novebmer 2015)
+Author: Joze Rihtarsic-->
+<!--Copyright 2015, Supreme Court Republic of Slovenia 
+
+ Licensed under the EUPL, Version 1.1 or – as soon they will be approved by 
+ the European Commission - subsequent versions of the EUPL (the "Licence");
+ You may not use this work except in compliance with the Licence.
+ You may obtain a copy of the Licence at:
+
+ https://joinup.ec.europa.eu/software/page/eupl
+
+ Unless required by applicable law or agreed to in writing, software 
+ distributed under the Licence is distributed on an "AS IS" basis, WITHOUT 
+ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the Licence for the specific language governing permissions and  
+ limitations under the Licence.-->
+<xs:schema targetNamespace="http://laurentius.si" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://inbox.laurentius.si/event" xmlns:con="http://rcontrol.laurentius.si" xmlns="http://laurentius.si">
+  <xs:import namespace="http://rcontrol.laurentius.si" schemaLocation="http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=messages/RControl.xsd"/>
+  <xs:import namespace="http://inbox.laurentius.si/event" schemaLocation="http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=entities/inbox-event.xsd"/>
+  <xs:element name="InMailEventListResponse">
+    <xs:complexType>
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">Poizvedba za pridobivanje statusov izhodnih pošiljkah. Dogodki so sortirani od  najnovejšega do najstarejšega!</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+        <xs:element name="RControl" type="con:RControl"/>
+        <xs:element name="RData">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element maxOccurs="unbounded" minOccurs="0" name="InEvent" type="ns1:InEvent"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>]]></con:content><con:type>http://www.w3.org/2001/XMLSchema</con:type></con:part><con:part><con:url>http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=messages/GetInMailRequest.xsd</con:url><con:content><![CDATA[<!--edited with XMLSpy v2008 (http://www.altova.com) by XMLSpy 2007 Professional Ed., Installed for 5 users (with SMP from 2007-02-06 to 2008-02-07) (CIF VSRS)-->
+<!--Metadata: 
+Owner: Supreme Court Republic of Slovenia 
+Product: SVEV-MSH
+Product Version: 1.0.0
+Artifact Type: Schema
+Descriptive Name: SVEV exception
+Date: 20151101 (1 November 2015)
+Author: Joze Rihtarsic-->
+<!--Copyright 2015, Supreme Court Republic of Slovenia 
+
+ Licensed under the EUPL, Version 1.1 or – as soon they will be approved by 
+ the European Commission - subsequent versions of the EUPL (the "Licence");
+ You may not use this work except in compliance with the Licence.
+ You may obtain a copy of the Licence at:
+
+ https://joinup.ec.europa.eu/software/page/eupl
+
+ Unless required by applicable law or agreed to in writing, software 
+ distributed under the Licence is distributed on an "AS IS" basis, WITHOUT 
+ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the Licence for the specific language governing permissions and  
+ limitations under the Licence.-->
+<xs:schema targetNamespace="http://laurentius.si" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://laurentius.si.mshmail" xmlns:con="http://control.laurentius.si" xmlns="http://laurentius.si">
+  <xs:import namespace="http://control.laurentius.si" schemaLocation="http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=messages/Control.xsd"/>
+  <xs:import namespace="http://inbox.laurentius.si/mail" schemaLocation="http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=entities/inbox-mail.xsd"/>
+  <xs:element name="GetInMailRequest">
+    <xs:complexType>
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">Poizvedba za pridobivanje dogodkov/statusov na izhodni pošiljki. Dogodki so sortirani od najnovejšega do najstarejšega dogodka.</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+        <xs:element name="Control" type="con:Control"/>
+        <xs:element name="Data">
+          <xs:complexType>
+            <xs:attribute name="receiverEBox" use="required">
+              <xs:annotation>
+                <xs:documentation xml:lang="sl">Naslovnikov elektronski naslov.</xs:documentation>
+              </xs:annotation>
+              <xs:simpleType>
+                <xs:restriction base="xs:token">
+                  <xs:maxLength value="64"/>
+                  <xs:pattern value="[_\-a-zA-Z0-9\.\+]+@[a-zA-Z0-9](\.?[\-a-zA-Z0-9]*[a-zA-Z0-9])*"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="mailId" type="xs:integer" use="required">
+              <xs:annotation>
+                <xs:documentation xml:lang="sl">Id vhodne pošiljke</xs:documentation>
+              </xs:annotation>
+            </xs:attribute>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>]]></con:content><con:type>http://www.w3.org/2001/XMLSchema</con:type></con:part><con:part><con:url>http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=messages/GetInMailResponse.xsd</con:url><con:content><![CDATA[<!--edited with XMLSpy v2008 (http://www.altova.com) by XMLSpy 2007 Professional Ed., Installed for 5 users (with SMP from 2007-02-06 to 2008-02-07) (CIF VSRS)-->
+<!--Metadata: 
+Owner: Supreme Court Republic of Slovenia 
+Product: SVEV-MSH
+Product Version: 1.0.0
+Artifact Type: Schema
+Descriptive Name: SVEV exception
+Date: 20151101 (1 November 2015)
+Author: Joze Rihtarsic-->
+<!--Copyright 2015, Supreme Court Republic of Slovenia 
+
+ Licensed under the EUPL, Version 1.1 or – as soon they will be approved by 
+ the European Commission - subsequent versions of the EUPL (the "Licence");
+ You may not use this work except in compliance with the Licence.
+ You may obtain a copy of the Licence at:
+
+ https://joinup.ec.europa.eu/software/page/eupl
+
+ Unless required by applicable law or agreed to in writing, software 
+ distributed under the Licence is distributed on an "AS IS" basis, WITHOUT 
+ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the Licence for the specific language governing permissions and  
+ limitations under the Licence.-->
+<xs:schema targetNamespace="http://laurentius.si" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://inbox.laurentius.si/mail" xmlns:con="http://rcontrol.laurentius.si" xmlns="http://laurentius.si">
+  <xs:import namespace="http://rcontrol.laurentius.si" schemaLocation="http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=messages/RControl.xsd"/>
+  <xs:import namespace="http://inbox.laurentius.si/mail" schemaLocation="http://sluzba-HP:8580/laurentius-ws/mailbox?xsd=entities/inbox-mail.xsd"/>
+  <xs:element name="GetInMailResponse">
+    <xs:complexType>
+      <xs:annotation>
+        <xs:documentation xml:lang="sl">Poizvedba za pridobivanje binarnih vsebin izhodne pošiljke</xs:documentation>
+      </xs:annotation>
+      <xs:sequence>
+        <xs:element name="RControl" type="con:RControl"/>
+        <xs:element name="RData">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element maxOccurs="1" minOccurs="0" ref="ns1:InMail"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>]]></con:content><con:type>http://www.w3.org/2001/XMLSchema</con:type></con:part></con:definitionCache><con:endpoints><con:endpoint>http://sluzba-HP:8580/laurentius-ws/mailbox</con:endpoint></con:endpoints><con:operation id="94ab18e9-a110-4a5f-9127-9a726c8d70be" isOneWay="false" action="http://laurentius.si.getInMail" name="getInMail" bindingOperationName="getInMail" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="c588de86-1647-4fec-9f95-9c87b8f81115" name="Request 1"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://sluzba-HP:8580/laurentius-ws/mailbox</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:laur="http://laurentius.si">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <laur:GetInMailRequest>
+      <Control userId="TestUser" applicationId="CMS"/>
+         <Data receiverEBox="ezk@court-laurentius.si" mailId="53" />
+      </laur:GetInMailRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://laurentius.si.getInMail"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation id="b4aa359c-b51a-48d1-b260-20bd37f6fa20" isOneWay="false" action="http://laurentius.si.getInMailEventList" name="getInMailEventList" bindingOperationName="getInMailEventList" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="1c9a3fbf-d943-45ea-9e69-749641e33f42" name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://sluzba-HP:8580/laurentius-ws/mailbox</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:laur="http://laurentius.si">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <laur:InMailEventListRequest>
+         <Control userId="?" applicationId="?" startIndex="0" responseSize="10000" sortBy="Id" sortOrder="DESC"/>
+         <Data receiverEBox="?" mailId="?"/>
+      </laur:InMailEventListRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://laurentius.si.getInMailEventList"/></con:call></con:operation><con:operation id="0e890371-b5aa-40a5-8419-ccf860427ad7" isOneWay="false" action="http://laurentius.si.getInMailList" name="getInMailList" bindingOperationName="getInMailList" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="3f313cbf-af95-43b8-bd2c-901a8b98ae93" name="Request 1"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://sluzba-HP:8580/laurentius-ws/mailbox</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:laur="http://laurentius.si">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <laur:InMailListRequest>
+      <Control userId="TestUser" applicationId="CMS"
+    			startIndex="0" responseSize="10000" 
+         			sortBy="Id" sortOrder="DESC"/>
+         <Data receiverEBox="ezk@court-laurentius.si" />
+      </laur:InMailListRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://laurentius.si.getInMailList"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation id="d1021d9b-6c67-4887-abab-70618662d685" isOneWay="false" action="http://laurentius.si.getOutMailEventList" name="getOutMailEventList" bindingOperationName="getOutMailEventList" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="a4c6937a-69dd-4dcf-937e-92ca541f900c" name="Request 1"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://sluzba-HP:8580/laurentius-ws/mailbox</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:laur="http://laurentius.si">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <laur:OutMailEventListRequest>
+         <Control userId="TestUser" applicationId="CMS" />
+         <Data senderEBox="izvrsba@court-laurentius.si"  
+         			mailId="47" />
+      </laur:OutMailEventListRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://laurentius.si.getOutMailEventList"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation id="ed135e4e-ecc6-4a93-80c1-4a66e7d7af5e" isOneWay="false" action="http://laurentius.si.getOutMailList" name="getOutMailList" bindingOperationName="getOutMailList" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="535625d0-673f-4d00-8f30-eed83a0bab40" name="Request 1"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://sluzba-HP:8580/laurentius-ws/mailbox</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:laur="http://laurentius.si">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <laur:OutMailListRequest>
+         <Control userId="TestUser" applicationId="CMS"
+    			startIndex="0" responseSize="10000" 
+         			sortBy="Id" sortOrder="DESC"/>
+         <Data senderEBox="izvrsba@court-laurentius.si" />
+      </laur:OutMailListRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://laurentius.si.getOutMailList"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation id="1f7d4fd9-75a9-4846-b7d2-2b23e0613dd2" isOneWay="false" action="http://laurentius.si.modifyInMail" name="modifyInMail" bindingOperationName="modifyInMail" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="3a4e666a-d0de-410b-b166-beccf3b6e6d4" name="Request 1"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://sluzba-HP:8580/laurentius-ws/mailbox</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:laur="http://laurentius.si">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <laur:ModifyInMailRequest>
+		<Control userId="TestUser" applicationId="CMS"/>
+          <Data receiverEBox="ezk@court-laurentius.si" mailId="53" action="ACCEPT" />
+      </laur:ModifyInMailRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://laurentius.si.modifyInMail"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation id="a1007dab-de86-422a-90e8-ae962fa17f2e" isOneWay="false" action="http://laurentius.si.modifyOutMail" name="modifyOutMail" bindingOperationName="modifyOutMail" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="55ce28a9-9da7-4959-984c-38196f15567a" name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://sluzba-HP:8580/laurentius-ws/mailbox</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:laur="http://laurentius.si">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <laur:ModifyOutMailRequest>
+         <Control userId="?" applicationId="?" startIndex="0" responseSize="10000" sortBy="Id" sortOrder="DESC"/>
+         <Data senderEBox="?" mailId="?" action="?"/>
+      </laur:ModifyOutMailRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://laurentius.si.modifyOutMail"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation id="24944308-5dcd-4a9f-aea2-127723d10aed" isOneWay="false" action="http://laurentius.si.submitMail" name="submitMail" bindingOperationName="submitMail" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="9564a63b-b8dd-4e7d-b0e0-9ed91f12a18e" name="Request 1"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://sluzba-HP:8580/laurentius-ws/mailbox</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" 
+xmlns:laur="http://laurentius.si" xmlns:mail="http://outbox.laurentius.si/mail"
+xmlns:prop="http://outbox.laurentius.si/property" 
+xmlns:pay="http://outbox.laurentius.si/payload">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <laur:SubmitMailRequest>
+         <Control userId="TestUser" applicationId="CMS" />
+         <Data>
+            <mail:OutMail 
+            	senderMessageId="cms-id-00001" 
+            	conversationId="cms-conv-00001" 
+            	service="DeliveryWithReceipt" 
+            	action="Delivery"             
+            	subject="Fist test mail" 
+             	receiverEBox="ezk@court-laurentius.si" receiverName="Department A" 
+             	senderEBox="izvrsba@court-laurentius.si" senderName="Department B"
+             
+             >
+               <prop:OutProperties>
+                  <!--Zero or more repetitions:-->
+                  <prop:OutProperty name="Opr. St.">VL 1/20016</prop:OutProperty>
+                  <prop:OutProperty name="SodiSif">S20</prop:OutProperty>
+               </prop:OutProperties>
+               <!--Optional:-->
+               <pay:OutPayload>
+                  <!--Zero or more repetitions:-->
+                   <pay:OutPart name="test" 
+                  description="testnaDatoteka"
+                  type="1" filename="testnaDatoteka.xml" 
+                  mimeType="plain/xml" 
+                  encoding="UTF-8" filepath="123">
+                     <!--Optional:-->
+                     <pay:Bin>VGVzdG5vIHNwb3JvY2lsbw==</pay:Bin>
+                  </pay:OutPart>
+               </pay:OutPayload>
+            </mail:OutMail>
+         </Data>
+      </laur:SubmitMailRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://laurentius.si.submitMail"/><con:wsrmConfig version="1.2"/></con:call></con:operation></con:interface><con:properties/><con:wssContainer/><con:oAuth2ProfileContainer/></con:soapui-project>

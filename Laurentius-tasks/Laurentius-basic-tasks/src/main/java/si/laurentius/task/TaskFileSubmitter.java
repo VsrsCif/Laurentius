@@ -137,35 +137,45 @@ public class TaskFileSubmitter implements TaskExecutionInterface {
         LOG.log("check file data: " + file.getName());
 
         try {
-          if (!isFileLocked(file)) {
+          if (isFileLocked(file)) {
+            LOG.log("check file: " + file.getName() + " is locked! - abort submitting file");
+          }
+          else  {
             Properties lock = new Properties();
             lock.setProperty("start.submitting", SDF.format(Calendar.getInstance().getTime()));
 
             File fMetaData = new File(file.getAbsolutePath() + OUTMAIL_SUFFIX_PROCESS);
             try (FileOutputStream fosMD = new FileOutputStream(fMetaData)) {
+              LOG.log("Lock file: " + file.getName() + " - create new process file");
               lock.store(fosMD, "OutMail proccessed");
             }
 
             Properties pmail = new Properties();
 
             try (FileInputStream fp = new FileInputStream(file)) {
-
+              LOG.log("Read file: " + file.getName() + "");
               pmail.load(fp);
               if (!pmail.containsKey(PROP_SERVICE) ){
                 pmail.setProperty(PROP_SERVICE, p.getProperty(PROP_SERVICE));
+                LOG.log("got service: " + p.getProperty(PROP_SERVICE) + "");
               }
               if (!pmail.containsKey(PROP_ACTION)){
                 pmail.setProperty(PROP_ACTION, p.getProperty(PROP_ACTION));
+                LOG.log("got action: " + p.getProperty(PROP_ACTION) + "");
               }
               if (!pmail.containsKey(PROP_RECEIVER_EBOX)){
                 pmail.setProperty(PROP_RECEIVER_EBOX, p.getProperty(PROP_RECEIVER_EBOX));
+                LOG.log("got receiver ebox: " + p.getProperty(PROP_RECEIVER_EBOX) + "");
               }
               if (!pmail.containsKey(PROP_SENDER_EBOX)){
                 pmail.setProperty(PROP_SENDER_EBOX, p.getProperty(PROP_SENDER_EBOX));
+                LOG.log("got sender ebox: " + p.getProperty(PROP_SENDER_EBOX) + "");                
               }
               
 
+              LOG.log("submit mail");
               BigInteger bi = processOutMail(pmail, fMetaData);
+              LOG.formatedlog("got rsponse mail %d", bi);
               File fewFMetaData = new File(file.getAbsolutePath() + OUTMAIL_SUFFIX_SUBMITTED);
               if (fMetaData.renameTo(fewFMetaData)) {
                 fMetaData = fewFMetaData;

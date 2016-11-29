@@ -12,7 +12,7 @@ import si.laurentius.msh.pmode.PluginType;
 import si.laurentius.commons.pmode.EBMSMessageContext;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.Utils;
-import si.laurentius.commons.interfaces.OutMailEventLisneterInterface;
+import si.laurentius.commons.interfaces.OutMailEventInterface;
 
 /**
  *
@@ -26,7 +26,7 @@ public class MSHPluginOutEventHandler {
   protected final static SEDLogger LOG = new SEDLogger(MSHPluginOutEventHandler.class);
 
 
- public void outEvent(MSHOutMail outMail, EBMSMessageContext ectx, OutMailEventLisneterInterface.PluginOutEvent evnt) {
+ public void outEvent(MSHOutMail outMail, EBMSMessageContext ectx, OutMailEventInterface.PluginOutEvent evnt) {
     long l = LOG.logStart();
 
     if (outMail == null){
@@ -43,7 +43,7 @@ public class MSHPluginOutEventHandler {
         String str = pt.getValue();
         if (!Utils.isEmptyString(str)) {
           try {
-            OutMailEventLisneterInterface listener = InitialContext.doLookup(str);
+            OutMailEventInterface listener = InitialContext.doLookup(str);
             listener.outEvent(outMail, ectx, evnt);
           } catch (NamingException ex) {
             LOG.logError(l, String.format("OutMailEventLisneter '%s' not found!", str),  ex);

@@ -81,6 +81,9 @@ copy "%LAU_BUNDLE%\modules\Laurentius-lce-1.0.jar" "%WILDFLY_HOME%\modules\si\la
 
 rem  copy module descriptor
 copy "%LAU_BUNDLE%\modules\si.laurentius.module.xml" "%WILDFLY_HOME%\modules\si\laurentius\main\module.xml"
+if not exist "%WILDFLY_HOME%\modules\org\" (
+	md "%WILDFLY_HOME%\modules\org"
+)
 xcopy "%LAU_BUNDLE%\modules\org" "%WILDFLY_HOME%\modules\org" /S /E
 
 rem  deploy commons ejbs

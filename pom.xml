@@ -41,6 +41,7 @@
         <module>Laurentius-msh</module>
         <module>Laurentius-tasks</module>
         <module>Laurentius-plugins</module>
+ 	<module>Laurentius-examples</module>
         
     </modules>
 

@@ -60,8 +60,9 @@ Copyright 2015, Supreme Court Republic of Slovenia
                         <xs:attribute name="action" type="ModifyActionCode" use="required">
                             <xs:annotation>
                                 <xs:documentation>Akcije:                         
-                                    - ACCEPT: pošiljka se označi kot uspešno prevzeta -> status pošiljke se spremni v 'Processed'
-                                    - LOCK:     akcija pošiljko, ki še niso prevzete se nastavi v status  "Locked" Takšne pošiljke se ne prikazujejo več v seznamu dohodne pošte. 
+                                    - DELIVERED pošiljka se označi kot uspešno prevzeta -> status pošiljke se spremni v 'DELIVERED'
+                                    - LOCK:     akcija pošiljko, ki še niso prevzete se nastavi v status  "LOCKED". Pošiljka se ne prikazuje več v seznamu dohodne pošte. 
+                                    - DELETE:   akcija pošiljko, ki še niso prevzete se nastavi v status  "DELETED" Pošiljka se ne prikazuje več v seznamu dohodne pošte. 
                                 </xs:documentation>
                             </xs:annotation>                            
                         </xs:attribute>
@@ -73,8 +74,9 @@ Copyright 2015, Supreme Court Republic of Slovenia
     <xs:simpleType name="ModifyActionCode">
         <xs:restriction base="xs:token">
             <xs:maxLength value="20"/>
-            <xs:enumeration value="ACCEPT"/>
+            <xs:enumeration value="DELIVERED"/>
             <xs:enumeration value="LOCK"/>
+            <xs:enumeration value="DELETE"/>
         </xs:restriction>
     </xs:simpleType>
 </xs:schema>

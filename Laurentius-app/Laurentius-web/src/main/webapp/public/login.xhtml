@@ -15,17 +15,12 @@
     </h:head>
     <f:view locale="#{localeManager.locale}" transient="true">
         <h:body class="LoginPage">
-            <!-- h:form>
-                <h:selectOneMenu value="#{localeManager.language}" onchange="submit()">
-                    <f:selectItem itemValue="en" itemLabel="English" />
-                    <f:selectItem itemValue="sl" itemLabel="Slovenščina" />
-                </h:selectOneMenu>
-            </h:form -->
+
 
             <div align='right' style="width: 100%">
                 <div  align='left' class="LoginTitle">
-                    <b style='font-size:70px;line-height:70px;color: whitesmoke;top:90px;left:200px;position: relative'>Laurentius</b><br/>
-                    <b style='font-size:30px;line-height:30px;color: black;top:80px;left:310px;position: relative'>#{msg['ApplTitle']}</b>
+                    <b style='font-size:65px;line-height:65px;color: whitesmoke;top:100px;left:280px;position: relative'>Laurentius</b><br/>
+                    <b style='font-size:30px;line-height:30px;color: black;top:85px;left:365px;position: relative'>#{msg['ApplTitle']}</b>
                 </div>        
             </div>
 
@@ -38,19 +33,30 @@
                                 <p:panelGrid styleClass="panelGridNoBorder">
                                     <p:row>
                                         <p:column><p:outputLabel for="username" value="#{msg['Username']}"/></p:column>
-                                        <p:column><p:inputText id="username" value="#{loginManager.username}" required="true" /></p:column>
+                                        <p:column><p:inputText id="username" value="#{loginManager.username}" 
+                                                               required="true" 
+                                                               requiredMessage="#{msg['EnterUsername']}" 
+                                                               /></p:column>
                                         <p:column><h:message for="username"/></p:column>
                                     </p:row>
                                     <p:row>
                                         <p:column><p:outputLabel for="password" value="#{msg['Password']}"/></p:column>
-                                        <p:column><p:password id="password" value="#{loginManager.password}" required="true" /></p:column>
+                                        <p:column><p:password id="password" value="#{loginManager.password}"
+                                                              required="true"
+                                                              requiredMessage="#{msg['EnterPassword']}" 
+                                                              /></p:column>
                                         <p:column><h:message for="password"/></p:column>
                                     </p:row>
                                     <p:row>
                                         <p:column colspan="3">
-                                            <p:commandButton value="#{msg['Login']}" actionListener="#{loginManager.login()}"
-                                                             class="image-Button" icon="ui-icon-sed-ok"/></p:column>
+                                            <div align='right' style="width: 100%">
+                                                <p:commandButton value="#{msg['Login']}"
+                                                                 actionListener="#{loginManager.login()}"
+                                                                 class="image-Button" icon="ui-icon-size-22 ui-icon-svg-ok"/>
+                                            </div>
+                                        </p:column>
                                     </p:row>
+
                                     <p:row>
                                         <p:column colspan="3"><h:messages globalOnly="true"/></p:column>
                                     </p:row>

@@ -224,6 +224,7 @@ public class SEDTestLookup implements SEDLookupsInterface {
     }
 
     for (SEDCertificate c : cs.getSEDCertificates()) {
+   
       if (c.getAlias().equalsIgnoreCase(alias)) {
         if (!isKey || c.isKeyEntry() == isKey) {
           return c;
@@ -238,6 +239,7 @@ public class SEDTestLookup implements SEDLookupsInterface {
     if (Utils.isEmptyString(alias) || Utils.isEmptyString(storeName)) {
       return null;
     }
+ 
     return getSEDCertificatForAlias(alias, getSEDCertStoreByName(storeName), isKey);
   }
 

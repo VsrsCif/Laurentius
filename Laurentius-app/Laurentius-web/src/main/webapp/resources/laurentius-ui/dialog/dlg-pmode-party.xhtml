@@ -66,8 +66,7 @@
                                                                      value="#{pModePartyView.editableLocalIdentity}" 
                                                                      style="width: 100%"
                                                                      >  
-                                                <p:ajax update=":dlgPModeParty:pModePartyDialogForm:partyTab:domain 
-                                                        :dlgPModeParty:pModePartyDialogForm:partyTab:lockeystore 
+                                                <p:ajax update=":dlgPModeParty:pModePartyDialogForm:partyTab:domain                                                         
                                                         :dlgPModeParty:pModePartyDialogForm:partyTab:locSignAlias 
                                                         :dlgPModeParty:pModePartyDialogForm:partyTab:locDecAlias
                                                         :dlgPModeParty:pModePartyDialogForm:partyTab:exIdentityActive"/>
@@ -82,24 +81,7 @@
                                         </p:column>
                                     </p:row>
                                     <p:row>
-                                        <p:column>                                    
-                                            <h:outputText value="#{msg['Keystore']}:"  />
-                                        </p:column>
-                                        <p:column>
-                                            <p:selectOneMenu id="lockeystore" 
-                                                             value="#{pModePartyView.currrentLocalPartySecurity.keystoreName}"
-                                                             style="width:160px"
-                                                             disabled="#{!pModePartyView.editableLocalIdentity}"
-                                                             >
-                                                <f:selectItem noSelectionOption="true" />
-                                                <f:selectItems value="#{adminSEDKeyStores.list}" var="ks"
-                                                               itemLabel="#{ks.name}" 
-                                                               itemValue="#{ks.name}"
-                                                               /> 
-
-                                                <p:ajax update=":dlgPModeParty:pModePartyDialogForm:partyTab:locSignAlias :dlgPModeParty:pModePartyDialogForm:partyTab:locDecAlias" />
-                                            </p:selectOneMenu>
-                                        </p:column>
+                                 
                                         <p:column>                                    
                                             <h:outputText value="#{msg['SignatureKeyAlias']}:"  />
                                         </p:column>
@@ -110,7 +92,7 @@
                                                              disabled="#{!pModePartyView.editableLocalIdentity}"
                                                              >
                                                 <f:selectItem noSelectionOption="true" />
-                                                <f:selectItems value="#{pModePartyView.currentLocalKeystoreCerts}" var="cs" itemLabel="#{cs.alias}" itemValue="#{cs.alias}" itemDisabled="#{!cs.keyEntry}" /> 
+                                                <f:selectItems value="#{adminSEDKeyStores.keystore.SEDCertificates}" var="cs" itemLabel="#{cs.alias}" itemValue="#{cs.alias}" itemDisabled="#{!cs.keyEntry}" /> 
 
                                             </p:selectOneMenu>
                                         </p:column>
@@ -124,7 +106,7 @@
                                                              disabled="#{!pModePartyView.editableLocalIdentity}"
                                                              >
                                                 <f:selectItem noSelectionOption="true" />
-                                                <f:selectItems value="#{pModePartyView.currentLocalKeystoreCerts}" var="cs" 
+                                                <f:selectItems value="#{adminSEDKeyStores.keystore.SEDCertificates}" var="cs" 
                                                                itemLabel="#{cs.alias}" itemValue="#{cs.alias}" itemDisabled="#{!cs.keyEntry}" />
 
 
@@ -140,18 +122,7 @@
                                         </p:column>
                                     </p:row>
                                     <p:row>
-                                        <p:column>                                    
-                                            <h:outputText value="#{msg['Trustore']}:"  />
-                                        </p:column>
-                                        <p:column>
-                                            <p:selectOneMenu id="exccertstore" 
-                                                             value="#{pModePartyView.currrentExchangePartySecurity.trustoreName}"
-                                                             style="width: 160px" >
-                                                <f:selectItem noSelectionOption="true" />
-                                                <f:selectItems value="#{adminSEDKeyStores.list}" var="ks" itemLabel="#{ks.name}" itemValue="#{ks.name}" />
-                                                <p:ajax update=":dlgPModeParty:pModePartyDialogForm:partyTab:excSignAlias :dlgPModeParty:pModePartyDialogForm:partyTab:excencAlias" />
-                                            </p:selectOneMenu>
-                                        </p:column>
+                                        
                                         <p:column>                                    
                                             <h:outputText value="#{msg['SignatureCertAlias']}:"  />
                                         </p:column>
@@ -160,7 +131,7 @@
                                                              value="#{pModePartyView.currrentExchangePartySecurity.signatureCertAlias}"
                                                              style="width: 160px" >
                                                 <f:selectItem noSelectionOption="true" />
-                                                <f:selectItems value="#{pModePartyView.currentExchangeTruststoreCerts}" 
+                                                <f:selectItems value="#{adminSEDKeyStores.keystore.SEDCertificates}" 
                                                                var="cs" itemLabel="#{cs.alias}" itemValue="#{cs.alias}" /> 
                                             </p:selectOneMenu>
                                         </p:column>
@@ -172,7 +143,7 @@
                                                              value="#{pModePartyView.currrentExchangePartySecurity.encryptionCertAlias}"
                                                              style="width: 160px" >
                                                 <f:selectItem noSelectionOption="true" />
-                                                <f:selectItems value="#{pModePartyView.currentExchangeTruststoreCerts}" 
+                                                <f:selectItems value="#{adminSEDKeyStores.keystore.SEDCertificates}" 
                                                                var="cs" itemLabel="#{cs.alias}" itemValue="#{cs.alias}" /> 
                                             </p:selectOneMenu>
                                         </p:column>
@@ -302,38 +273,12 @@
                                 <p:panelGrid >
                                     <p:row>                                                                                        
                                         <p:column>
-                                            <h:outputText value="#{msg['Trustore']}:" />
+                                            <h:outputText value="#{msg['TrustCert']}:" />
                                         </p:column>
-                                        <p:column>
-                                            <p:selectOneMenu id="tlstruststore" 
-                                                             value="#{pModePartyView.currrentTransportTLS.trustStoreName}"
-                                                             style="width: 160px" >
-
-                                                <f:selectItem noSelectionOption="true" />
-                                                <f:selectItems value="#{adminSEDKeyStores.list}" var="ks"
-                                                               itemLabel="#{ks.name}" 
-                                                               itemValue="#{ks.name}" />                                                
-
-                                            </p:selectOneMenu>
-                                        </p:column>
+                                     
                                     </p:row>
                                     <p:row>
-                                        <p:column>
-                                            <h:outputText value="#{msg['Keystore']}:" />
-                                        </p:column>
-                                        <p:column>
-                                            <p:selectOneMenu id="tlskeystore" 
-                                                             value="#{pModePartyView.currrentTransportTLS.keyStoreName}"
-                                                             style="width: 160px"  >    
-                                                <p:ajax update=":dlgPModeParty:pModePartyDialogForm:partyTab:tlskeyAlias" />
-                                                <f:selectItem noSelectionOption="true" />
-                                                <f:selectItems value="#{adminSEDKeyStores.list}" var="ks"
-                                                               itemLabel="#{ks.name}" 
-                                                               itemValue="#{ks.name}"
-                                                               />                                                
-                                            </p:selectOneMenu>
-                                        </p:column>
-
+                                        
                                         <p:column>
                                             <h:outputText value="#{msg['KeyAlias']}:"  />
                                         </p:column>
@@ -342,7 +287,7 @@
                                                              value="#{pModePartyView.currrentTransportTLS.keyAlias}"
                                                              style="width: 160px" >
                                                 <f:selectItem noSelectionOption="true" />
-                                                <f:selectItems value="#{pModePartyView.currentTLSKeyCerts}" 
+                                                <f:selectItems value="#{adminSEDKeyStores.keystore.SEDCertificates}" 
                                                                var="cs" itemLabel="#{cs.alias}"
                                                                itemValue="#{cs.alias}" 
                                                                itemDisabled="#{!cs.keyEntry}"/> 

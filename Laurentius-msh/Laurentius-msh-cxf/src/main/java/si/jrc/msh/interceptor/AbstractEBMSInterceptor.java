@@ -16,6 +16,9 @@ package si.jrc.msh.interceptor;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.ejb.EJB;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.xml.namespace.QName;
@@ -35,12 +38,14 @@ import si.jrc.msh.exception.EBMSError;
 import si.jrc.msh.exception.EBMSErrorCode;
 import static si.jrc.msh.interceptor.EBMSOutInterceptor.LOG;
 import si.laurentius.commons.SEDJNDI;
+import si.laurentius.commons.exception.SEDSecurityException;
 import si.laurentius.commons.interfaces.DBSettingsInterface;
 import si.laurentius.commons.interfaces.PModeInterface;
 import si.laurentius.commons.interfaces.SEDDaoInterface;
 import si.laurentius.commons.interfaces.SEDLookupsInterface;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.lce.KeystoreUtils;
+import si.laurentius.commons.interfaces.SEDCertStoreInterface;
 
 /**
  * Abstract class extends from AbstractSoapInterceptor with access to apliation EJB resources as: -
@@ -58,6 +63,9 @@ public abstract class AbstractEBMSInterceptor extends AbstractSoapInterceptor {
   protected SEDLookupsInterface mSedLookups;
   // ejb reference to DAO services
   protected SEDDaoInterface mSedDao;
+  
+  
+  SEDCertStoreInterface mCertBean;
 
   // ejb reference to PModeManager services
   protected PModeInterface mPMode;
@@ -121,12 +129,9 @@ public abstract class AbstractEBMSInterceptor extends AbstractSoapInterceptor {
 
     return mSedLookups;
   }
+  
 
-  /**
-   * Methods lookups DBSettingsInterface.
-   *
-   * @return DBSettingsInterface or null if bad application configuration.
-   */
+
   public DBSettingsInterface getSettings() {
     long l = A_LOG.logStart();
     if (mDBSettings == null) {
@@ -137,7 +142,26 @@ public abstract class AbstractEBMSInterceptor extends AbstractSoapInterceptor {
         A_LOG.logError(l, ex);
       }
     }
+
     return mDBSettings;
+  }
+
+  /**
+   * Methods lookups DBSettingsInterface.
+   *
+   * @return DBSettingsInterface or null if bad application configuration.
+   */
+  public SEDCertStoreInterface getCertStore() {
+    long l = A_LOG.logStart();
+    if (mCertBean == null) {
+      try {
+        mCertBean = InitialContext.doLookup(SEDJNDI.JNDI_DBCERTSTORE);
+        A_LOG.logEnd(l);
+      } catch (NamingException ex) {
+        A_LOG.logError(l, ex);
+      }
+    }
+    return mCertBean;
   }
 
   /**
@@ -185,7 +209,15 @@ public abstract class AbstractEBMSInterceptor extends AbstractSoapInterceptor {
     if (sc.getX509().getSignature() != null && sc.getX509().getSignature().getReference() != null) {
       X509.Signature sig = sc.getX509().getSignature();
 
-      SEDCertStore cs = getLookups().getSEDCertStoreByName(lps.getKeystoreName());
+      SEDCertStore cs;
+      try {
+        cs = getCertStore().getCertificateStore();
+      } catch (SEDSecurityException ex) {
+        String msg = "Error opening keystore - check configuration!";
+        LOG.logError(l, msg, null);
+        throw new EBMSError(EBMSErrorCode.PModeConfigurationError, msgId, msg, sv);
+      }
+      
       if (cs == null) {
         String msg = "Keystore for name '" + lps.getKeystoreName() +
             "' do not exists - check configuration!";
@@ -223,7 +255,15 @@ public abstract class AbstractEBMSInterceptor extends AbstractSoapInterceptor {
     if (sc.getX509().getEncryption() != null && sc.getX509().getEncryption().getReference() != null) {
       X509.Encryption enc = sc.getX509().getEncryption();
 
-      SEDCertStore cs = getLookups().getSEDCertStoreByName(epx.getTrustoreName());
+      
+      SEDCertStore cs;
+      try {
+        cs = getCertStore().getCertificateStore();
+      } catch (SEDSecurityException ex) {
+        String msg = "Error opening keystore - check configuration!";
+        LOG.logError(l, msg, null);
+        throw new EBMSError(EBMSErrorCode.PModeConfigurationError, msgId, msg, sv);
+      }
       if (cs == null) {
         String msg = "Trustore for name '" + epx.getTrustoreName() +
             "' do not exists - check configuration!";
@@ -259,11 +299,6 @@ public abstract class AbstractEBMSInterceptor extends AbstractSoapInterceptor {
     }
 
     if (outProps != null) {
-      LOG.log("Set security parameters");
-      for (Iterator<String> it = outProps.keySet().iterator(); it.hasNext();) {
-        String key = it.next();
-        LOG.log(key + ": " + outProps.get(key));
-      }
       sec = new WSS4JOutInterceptor(outProps);
     } else {
       LOG.logWarn(l,
@@ -293,7 +328,14 @@ public abstract class AbstractEBMSInterceptor extends AbstractSoapInterceptor {
       X509.Signature sig = sc.getX509().getSignature();
 
       // create signature priperties
-      SEDCertStore cs = getLookups().getSEDCertStoreByName(eps.getTrustoreName());
+      SEDCertStore cs;
+      try {
+        cs = getCertStore().getCertificateStore();
+      } catch (SEDSecurityException ex) {
+        String msg = "Error opening keystore - check configuration!";
+        LOG.logError(l, msg, null);
+        throw new EBMSError(EBMSErrorCode.PModeConfigurationError, msgId, msg, sv);
+      }
       if (cs == null) {
         String msg = "Truststore for name '" + eps.getTrustoreName() +
             "' do not exists - check configuration!";
@@ -322,7 +364,14 @@ public abstract class AbstractEBMSInterceptor extends AbstractSoapInterceptor {
 
     if (sc.getX509().getEncryption() != null && sc.getX509().getEncryption().getReference() != null) {
       X509.Encryption enc = sc.getX509().getEncryption();
-      SEDCertStore cs = getLookups().getSEDCertStoreByName(lps.getKeystoreName());
+      SEDCertStore cs;
+      try {
+        cs = getCertStore().getCertificateStore();
+      } catch (SEDSecurityException ex) {
+        String msg = "Error opening keystore - check configuration!";
+        LOG.logError(l, msg, null);
+        throw new EBMSError(EBMSErrorCode.PModeConfigurationError, msgId, msg, sv);
+      }
       if (cs == null) {
         String msg = "Keystore for name '" + lps.getKeystoreName() +
             "' do not exists - check configuration!";
@@ -360,10 +409,6 @@ public abstract class AbstractEBMSInterceptor extends AbstractSoapInterceptor {
     }
 
     if (outProps != null) {
-      for (String key : outProps.keySet()) {
-        LOG.formatedlog("Security KEY: %s, val: %s", key, outProps.get(key));
-      };
-
       sec = new WSS4JInInterceptor(outProps);
     } else {
       LOG.logWarn(l,

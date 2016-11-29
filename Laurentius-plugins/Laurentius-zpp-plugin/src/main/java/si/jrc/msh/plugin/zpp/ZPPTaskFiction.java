@@ -67,6 +67,7 @@ import si.laurentius.lce.KeystoreUtils;
 import si.laurentius.msh.inbox.payload.MSHInPart;
 import si.laurentius.msh.inbox.payload.MSHInPayload;
 import si.laurentius.msh.pmode.PartyIdentitySet;
+import si.laurentius.commons.interfaces.SEDCertStoreInterface;
 
 /**
  *
@@ -102,6 +103,8 @@ public class ZPPTaskFiction implements TaskExecutionInterface {
   @EJB(mappedName = SEDJNDI.JNDI_PMODE)
   PModeInterface mpModeManager;
 
+  @EJB(mappedName = SEDJNDI.JNDI_DBCERTSTORE)
+  SEDCertStoreInterface mCertBean;
   /**
    *
    */
@@ -151,7 +154,15 @@ public class ZPPTaskFiction implements TaskExecutionInterface {
       throw new TaskException(TaskException.TaskExceptionCode.InitException,
           "Sedbox:  '" + sedBox + "' does not have certificate for signing!");
     }
-    SEDCertStore sc = msedLookup.getSEDCertStoreByName(keystore);
+    //SEDCertStore sc = msedLookup.getSEDCertStoreByName(keystore);
+      SEDCertStore sc= null;
+      try {
+        sc = mCertBean.getCertificateStore();
+      } catch (SEDSecurityException ex) {
+        String msg = "Error opening keystore - check configuration!";
+        LOG.logError(l, msg, null);
+        throw new TaskException(TaskException.TaskExceptionCode.InitException,msg);
+      }
     SEDCertificate scc = msedLookup.getSEDCertificatForAlias(signKeyAlias, sc, true);
 
     int maxMailProc = 100;

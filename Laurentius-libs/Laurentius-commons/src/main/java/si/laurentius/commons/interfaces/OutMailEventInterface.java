@@ -23,7 +23,7 @@ import si.laurentius.msh.outbox.mail.MSHOutMail;
  * @author Jože Rihtaršič
  */
 @Local
-public interface OutMailEventLisneterInterface {
+public interface OutMailEventInterface {
 
   public enum  PluginOutEvent {
     SEND,

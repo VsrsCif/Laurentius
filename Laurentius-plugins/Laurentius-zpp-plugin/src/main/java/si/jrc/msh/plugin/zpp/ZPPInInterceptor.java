@@ -51,7 +51,6 @@ import si.laurentius.msh.inbox.mail.MSHInMail;
 import si.laurentius.msh.inbox.payload.MSHInPart;
 import si.laurentius.msh.outbox.mail.MSHOutMail;
 import org.oasis_open.docs.ebxml_msg.ebms.v3_0.ns.core._200704.SignalMessage;
-import org.w3c.dom.Document;
 import si.laurentius.ebox.SEDBox;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
@@ -80,6 +79,7 @@ import si.laurentius.commons.utils.StringFormater;
 
 import si.laurentius.commons.utils.xml.XMLUtils;
 import si.laurentius.lce.KeystoreUtils;
+import si.laurentius.commons.interfaces.SEDCertStoreInterface;
 
 /**
  *
@@ -111,6 +111,9 @@ public class ZPPInInterceptor implements SoapInterceptorInterface {
 
   @EJB(mappedName = SEDJNDI.JNDI_SEDLOOKUPS)
   SEDLookupsInterface msedLookup;
+
+  @EJB(mappedName = SEDJNDI.JNDI_DBCERTSTORE)
+  SEDCertStoreInterface mCertBean;
 
   /**
    *
@@ -224,7 +227,8 @@ public class ZPPInInterceptor implements SoapInterceptorInterface {
             }
             return;
           }
-          Key pk = mkeyUtils.getPrivateKeyForX509Cert(msedLookup.getSEDCertStore(), xc);
+
+          Key pk = mkeyUtils.getPrivateKeyForX509Cert(mCertBean.getCertificateStore(), xc);
           if (pk == null) {
             String errmsg =
                 "Could not get private key for cert: " + xc.getSubjectDN() +
@@ -328,7 +332,8 @@ public class ZPPInInterceptor implements SoapInterceptorInterface {
   }
 
   public void processInZPPFictionNotification(MSHInMail inMail)
-      throws FOPException, HashException, SEDSecurityException, IOException, ParserConfigurationException, SAXException, JAXBException {
+      throws FOPException, HashException, SEDSecurityException, IOException,
+      ParserConfigurationException, SAXException, JAXBException {
     long l = LOG.logStart();
     File encKeyFile = null;
     EncryptedKey ek = null;
@@ -355,18 +360,18 @@ public class ZPPInInterceptor implements SoapInterceptorInterface {
 
       return;
     }
-    Key pk = mkeyUtils.getPrivateKeyForX509Cert(msedLookup.getSEDCertStore(), xc);
+    Key pk = mkeyUtils.getPrivateKeyForX509Cert(mCertBean.getCertificateStore(), xc);
     if (pk == null) {
       String errmsg =
           "Could not get private key for cert: " + xc.getSubjectDN() +
           ". Private key is needed to decrypt Encrypted key for " +
           inMail.getConversationId();
       LOG.logError(l, errmsg, null);
-      
 
       return;
     }
-    k = mSedCrypto.decryptEncryptedKey(XMLUtils.deserializeToDom(encKeyFile).getDocumentElement(), pk, SEDCrypto.SymEncAlgorithms.AES128_CBC);
+    k = mSedCrypto.decryptEncryptedKey(XMLUtils.deserializeToDom(encKeyFile).getDocumentElement(),
+        pk, SEDCrypto.SymEncAlgorithms.AES128_CBC);
 
     if (inMail != null && k != null) {
       decryptMail(k, inMail.getConversationId(), null);

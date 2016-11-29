@@ -19,15 +19,12 @@ import javax.ejb.Local;
 import javax.ejb.Stateless;
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.exception.StorageException;
-import si.laurentius.commons.interfaces.JMSManagerInterface;
 import si.laurentius.msh.outbox.mail.MSHOutMail;
-import si.laurentius.commons.interfaces.OutMailEventLisneterInterface;
+import si.laurentius.commons.interfaces.OutMailEventInterface;
 import si.laurentius.commons.interfaces.SEDDaoInterface;
 import si.laurentius.commons.pmode.EBMSMessageContext;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.Utils;
-import si.laurentius.ebox.SEDBox;
-import si.laurentius.msh.inbox.mail.MSHInMail;
 import si.laurentius.msh.outbox.property.MSHOutProperties;
 import si.laurentius.msh.outbox.property.MSHOutProperty;
 
@@ -36,8 +33,8 @@ import si.laurentius.msh.outbox.property.MSHOutProperty;
  * @author Joze Rihtarsic <joze.rihtarsic@sodisce.si>
  */
 @Stateless
-@Local(OutMailEventLisneterInterface.class)
-public class CEFOutMailEventListener implements OutMailEventLisneterInterface {
+@Local(OutMailEventInterface.class)
+public class CEFOutMailEventListener implements OutMailEventInterface {
 
   /**
    *

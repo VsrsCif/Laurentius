@@ -345,17 +345,31 @@ public class KeystoreUtils {
     String alias = null;
     Key k = null;
     for (SEDCertStore cs : lst) {
-      KeyStore ks = getKeystore(cs);
-      // get alias for private key
-      alias = getPrivateKeyAliasForX509Cert(ks, cert);
-      if (alias != null) {
-        // get key password
-        for (SEDCertificate c : cs.getSEDCertificates()) {
-          if (c.getAlias().equals(alias)) {
-            k = getPrivateKeyForAlias(ks, alias, c.getKeyPassword());
-            if (k != null) {
-              break;
-            }
+      k = getPrivateKeyForX509Cert(cs, cert);
+      if (k != null) {
+        break;
+      }
+    }
+    return k;
+  }
+
+  public Key getPrivateKeyForX509Cert(SEDCertStore cs, X509Certificate cert)
+      throws SEDSecurityException {
+
+    // find alias
+    String alias = null;
+    Key k = null;
+
+    KeyStore ks = getKeystore(cs);
+    // get alias for private key
+    alias = getPrivateKeyAliasForX509Cert(ks, cert);
+    if (alias != null) {
+      // get key password
+      for (SEDCertificate c : cs.getSEDCertificates()) {
+        if (c.getAlias().equals(alias)) {
+          k = getPrivateKeyForAlias(ks, alias, c.getKeyPassword());
+          if (k != null) {
+            break;
           }
         }
       }
@@ -438,7 +452,7 @@ public class KeystoreUtils {
       throws SEDSecurityException {
     return getTrustedCertForAlias(getKeystore(sc), alias);
   }
-  
+
   /**
    *
    * @param certStream
@@ -447,14 +461,14 @@ public class KeystoreUtils {
    */
   public X509Certificate getCertFromInputStream(InputStream certStream)
       throws SEDSecurityException {
-    
+
     X509Certificate c = null;
     try {
       CertificateFactory cf = CertificateFactory.getInstance(CF_X509);
-      c = (X509Certificate)cf.generateCertificate(certStream);
+      c = (X509Certificate) cf.generateCertificate(certStream);
       certStream.close();
-    } catch (CertificateException | IOException ex) {      
-       throw new SEDSecurityException(CertificateException, ex, ex.getMessage());
+    } catch (CertificateException | IOException ex) {
+      throw new SEDSecurityException(CertificateException, ex, ex.getMessage());
     }
     return c;
   }
@@ -472,7 +486,6 @@ public class KeystoreUtils {
     try {
 
       cert = (X509Certificate) ks.getCertificate(alias);
-      
 
     } catch (KeyStoreException ex) {
       throw new SEDSecurityException(CertificateException, ex,
@@ -659,16 +672,14 @@ public class KeystoreUtils {
     }
     return ec;
   }
-  
-   public SEDCertificate addCertificateToStore(SEDCertStore sc,Certificate c, String alias,
+
+  public SEDCertificate addCertificateToStore(SEDCertStore sc, Certificate c, String alias,
       boolean overwrite)
       throws SEDSecurityException {
 
     SEDCertificate ec = null;
     KeyStore ks = getKeystore(sc);
     try {
-
-     
 
       SEDCertificate existsCert = null;
       for (SEDCertificate ct : sc.getSEDCertificates()) {
@@ -826,7 +837,8 @@ public class KeystoreUtils {
     return existsCert;
   }
 
-  public void mergeCertStores(SEDCertStore target, SEDCertStore source)
+  public void mergeCertStores(SEDCertStore target, SEDCertStore source, boolean onlyKeys,
+      boolean onlyPublicKeys)
       throws SEDSecurityException, CertificateException {
 
     try {
@@ -834,17 +846,20 @@ public class KeystoreUtils {
       KeyStore ksSrc = getKeystore(source);
 
       for (SEDCertificate c : source.getSEDCertificates()) {
-        String alias  = c.getAlias();
-        String als  = alias;
+        if (onlyKeys && !c.isKeyEntry()) {
+          continue;
+        }
+        String alias = c.getAlias();
+        String als = alias;
         String ind = "_%03d";
-          int i = 0;
-          do {
-            i++;
-            als = alias + String.format(ind, i);
+        int i = 0;
+        while (ksTarget.containsAlias(als)) {
+          i++;
+          als = alias + String.format(ind, i);
 
-          } while (ksTarget.containsAlias(als));
-        
-        if (ksSrc.isKeyEntry(c.getAlias())) {
+        }
+
+        if (!onlyPublicKeys && ksSrc.isKeyEntry(c.getAlias())) {
           Key privateKey = ksSrc.getKey(alias, c.getKeyPassword().toCharArray());
           Certificate[] certs = ksSrc.getCertificateChain(alias);
           ksTarget.setKeyEntry(als, privateKey, c.getKeyPassword().toCharArray(), certs);
@@ -852,7 +867,7 @@ public class KeystoreUtils {
           Certificate cert = ksSrc.getCertificate(alias);
           ksTarget.setCertificateEntry(als, cert);
         }
-        SEDCertificate sc =  XMLUtils.deepCopyJAXB(c);
+        SEDCertificate sc = XMLUtils.deepCopyJAXB(c);
         sc.setAlias(als);
         target.getSEDCertificates().add(sc);
       }
@@ -865,6 +880,50 @@ public class KeystoreUtils {
     } catch (IOException | NoSuchAlgorithmException | KeyStoreException | UnrecoverableKeyException ex) {
       throw new SEDSecurityException(ReadWriteFileException, ex, ex.getMessage());
     }
+  }
 
+  public void refreshCertStore(SEDCertStore keystore)
+      throws SEDSecurityException {
+
+    if (keystore != null) {
+
+      List<SEDCertificate> src = keystore.getSEDCertificates();
+
+      KeyStore ks =
+          openKeyStore(keystore.getFilePath(), keystore.getType(), keystore
+              .getPassword().toCharArray());
+      List<SEDCertificate> lstals = getKeyStoreSEDCertificates(ks);
+
+      lstals.stream().forEach((ksc) -> {
+        SEDCertificate sc = existsCertInList(src, ksc);
+        if (sc != null) {
+          sc.setStatus("OK");
+        } else {
+          ksc.setStatus("NEW");
+          src.add(ksc);
+        }
+      });
+      src.stream().forEach((sc) -> {
+        SEDCertificate ksc = existsCertInList(src, sc);
+        if (ksc == null) {
+          sc.setStatus("DEL");
+        }
+      });
+      keystore.setStatus("SUCCESS");
+
+    }
+
+  }
+
+  public SEDCertificate existsCertInList(List<SEDCertificate> lst, SEDCertificate sc) {
+    for (SEDCertificate c : lst) {
+      if (Objects.equals(c.getAlias(), c.getAlias()) &&
+          Objects.equals(c.getIssuerDN(), sc.getIssuerDN()) &&
+          Objects.equals(c.getSubjectDN(), sc.getSubjectDN()) &&
+          c.getSerialNumber().equals(sc.getSerialNumber())) {
+        return c;
+      }
+    }
+    return null;
   }
 }
