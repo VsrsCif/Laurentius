@@ -1,0 +1,343 @@
+<div class ="sidebar" >    
+    <h2>Kazalo:</h2>
+    <ul>
+        <li><a href="#documentation:webservices">Spletne storitve</a></li> 
+    </ul>
+</div>
+<div class="main">
+    <article class='content'>
+
+        <h1 id="#/api/plugins:content">Programski dodatki</h1>
+        Aplikacija Laurentius omogoča izdelavo in enostavno registracijo javanski programski dodatkov (plugin).
+        Namen dodatkov je avtomatizacija izvajanja poslovnih procesov v katerih se pošiljanja 
+        in sprejema pošto.<br />  Aplikacija Laurentius omogoča registracijo naslednjih 
+        vrst komponent, ki jih dodatek lahko vsebuje:
+        <ul>
+            <li><b>Časovno opravilo</b>: namen dodatka je omogočiti obdelave in generiranje poročil
+                dohodne in izhodne pošte, ki jih proži koledar opravil.</li>
+            <li><b>Prestrezniki pošte</b>: namen dodatka je priprava izhodne pošiljke v trenutnku pošiljanja pošte in 
+                sinhrona obdelava dohodne pošte v trenutku prejema.</li>
+            <li><b>Procesiranje dohodne pošte</b>: namen dodatka je procesiranje in sprejem dohodne pošte v zaledne sisteme.</li>
+            <li><b>Dogodki izhodne pošte</b>: namen dodatka je proženje poslovnih pravil in posodabljanje  statusov izhodne pošte (Pošiljanje, poslano, sprejeto). </li>
+        </ul> 
+        <img src="img/plugins.svg" alt="Plugins" width="680"/>
+
+        <br /><br />
+
+        <h1 id="#/api/plugins:register">Namestitev programskih dodatkov</h1>
+        Programski dodatek je skupek EJB komponenta, ki jo je potrebno namestiti v 
+        v "deploy" mapo aplikacijskega strežnika;
+        <pre><code>[wildfly-home]\standalone\deployments\</code></pre>
+        Namestiveni paket dodatka mora vsebovati implementacijo vmesnika za opis dodatka, ki 
+        omogoča avtomatsko registracijo dodatka. 
+        <br /><br />
+        Primer: 
+        <pre><code>@Singleton
+@Startup
+@Local(PluginDescriptionInterface.class)
+public class ExamplePluginDescription extends  AbstractPluginDescription {
+
+  private static final SEDLogger LOG = new SEDLogger(ExampleluginDescription.class);
+  
+  @PostConstruct
+  private void postConstruct() {    
+    try {
+      // register components to plugin
+      // interceptors
+      registerPluginComponentInterface(ExampleOutInterceptor.class);    
+      registerPluginComponentInterface(ExampleInInterceptor.class);
+      // tasks 
+      registerPluginComponentInterface(ExampleTask.class);
+      // ...  other plugin components
+      // 
+
+      // call method to register plugin to laurentius at startup signleton EJB
+      registerPlugin();
+    } catch (PluginException ex) {
+      LOG.logError("Error occured while registering plugin: " + ex.getMessage(), ex);
+    }
+  }
+  /**
+   * Return description of plugin - it's purpose, settings etc. 
+   *
+   * @return description of plugin 
+   */
+  @Override
+  public String getDesc() {
+    return "Example of test plugin for  e-delivery";
+  }
+
+   /**
+   * Return version of plugin.  If registred and 'used' plugin miss-match, warning is generated.
+   *
+   * @return version of plugin.
+   */
+  @Override
+  public String getVersion() {
+    return "1.0.0";
+  }
+
+  /**
+   * Short name for plugin.
+   * @return  Short plugin name.
+   */
+  @Override
+  public String getName() {
+    return "Example plugin";
+  }
+
+  /**
+   * If plugin has it's own settings this is web context.
+   * @return web context of plugin.
+   */
+  @Override
+  public String getSettingUrlContext() {
+    return "/laurentius-web/example-plugin";
+  }
+
+
+  /**
+   * Type of plugin. Plugin type must be unique.  
+   * @return plugin type (code).
+   */
+  @Override
+  public String getType() {
+    return "ExamplePlugin";
+  }
+
+}</code></pre>
+
+        <h1 id="#/api/plugins:component">Komponente dodatka</h1>
+        Dodatek vsebuje seznam implementacij posamezni vrst komponent. 
+        Osnovni vmesnik vseh vrst komponent je <i>PluginComponentInterface</i>
+        z metodo <i>ComponentBase getDefinition()</i>.
+        <pre><code>public interface  PluginComponentInterface   {
+            ComponentBase getDefinition();
+        }</code></pre>
+        Metoda vrača osnovni opis vsakega komponente, ki vsebuje naslednje lastnosti:
+        <table class="styled-table">
+            <tr><th>Lastnost</th><th>Opis</th></tr>
+            <tr><td>type</td><td>Enolična oznaka tipa komponente dodatku</td></tr>
+            <tr><td>name</td><td>Naziv komponente</td></tr>
+            <tr><td>description</td><td>Opis komponente</td></tr>
+        </table>
+
+
+        <h1 id="#/api/plugins:cronttask">Časovno opravilo</h1>
+        Namen časovnih opravil je izvajanje časovno proženih opravil. Časovno opravilo
+        mora implementirati lokalni EJB vmesnik <b>TaskExecutionInterface</b>, ki vsebuje metodo,
+        ki proži izvajanje opravila.
+        <pre><code>public String executeTask(Properties p)</code></pre>
+
+        ter metodo,ki določa opravilo: 
+        <pre><code>public CronTaskDef getDefinition()</code></pre>
+
+        Parametri metode <b>String executeTask(Properties p)</b>, se določijo 
+        ob nastavitvi izvajanja časovnega opravila 
+        (Glej poglavje <a href="#gui/admin-sed-tasks:cron-add-edit">Dodajanje, urejanje urnika opravil</a>).
+        <br /><br />
+        Metoda <i>CronTaskDef getDefinition()</i>, vrača razširjeni objekt <i>ComponentBase</i>
+        objekt <i>CronTaskDef</i>, ki vsebuje tudi 
+        opis seznam parametrov časovnega opravila. 
+        <br /><br />
+        Primer implementacije časovnega opravila:
+        <pre><code>
+package si.jrc.msh.plugin.example;
+
+import java.io.StringWriter;
+import java.util.Properties;
+import javax.ejb.Local;
+import javax.ejb.Stateless;
+
+import si.laurentius.commons.utils.SEDLogger;
+import si.laurentius.plugin.crontask.CronTaskDef;
+import si.laurentius.plugin.crontask.CronTaskPropertyDef;
+import si.laurentius.plugin.interfaces.TaskExecutionInterface;
+import si.laurentius.plugin.interfaces.exception.TaskException;
+
+/**
+ * This is samople of cron task plugin component.
+ *
+ * @author Jože Rihtaršič
+ */
+@Stateless
+@Local(TaskExecutionInterface.class)
+public class ExampleWebCronTask implements TaskExecutionInterface {
+
+  public static final String KEY_FOLDER = "example.task.folder";
+  public static final String KEY_PARAM_1 = "example.webtask.parameter.001";
+  public static final String KEY_PARAM_2 = "example.webtask.parameter.002";
+  public static final String KEY_PARAM_3 = "example.webtask.parameter.003";
+  private static final SEDLogger LOG = new SEDLogger(ExampleWebCronTask.class);
+
+  /**
+   * execute metod
+   *
+   * @param p - parameters defined at configuration of task instance
+   * @return result description
+   */
+  @Override
+  public String executeTask(Properties p)
+      throws TaskException {
+    long l = LOG.logStart();
+
+    StringWriter sw = new StringWriter();
+    sw.append("Start example task: ");
+    sw.append("\n");
+
+    for (String pKey : p.stringPropertyNames()) {
+      sw.append(String.format("Property key: '%s' value %s\n", pKey, p.getProperty(pKey)));
+    }
+    sw.append("Example task ends in : " + (l - LOG.getTime()) + " ms\n");
+    LOG.logEnd(l, sw.toString());
+    return sw.toString();
+  }
+  
+  /**
+   * Retrun cron task definition: name, unique type, description, parameters.. 
+   * @return Cron task definition
+   */
+
+  @Override
+  public CronTaskDef getDefinition() {
+    CronTaskDef tt = new CronTaskDef();
+    tt.setType("example-web-task");
+    tt.setName("Example web task");
+    tt.setDescription("This is simple example of cron task in web plugin example");
+    tt.getCronTaskPropertyDeves().add(
+        createTTProperty(KEY_FOLDER, "Example folder"));
+    
+    tt.getCronTaskPropertyDeves().add(
+        createTTProperty(KEY_PARAM_1, "First parameter", true, "int", null, null));
+    
+    tt.getCronTaskPropertyDeves().add(
+        createTTProperty(KEY_PARAM_2, "Second parameter (true/false)", true,
+            
+            "boolean", null, null));
+    tt.getCronTaskPropertyDeves().add(
+        createTTProperty(KEY_PARAM_3, "Thrid parameter", false,
+            "string", null, null));
+    return tt;
+  }
+
+  private CronTaskPropertyDef createTTProperty(String key, String desc, boolean mandatory,
+      String type, String valFormat, String valList) {
+    CronTaskPropertyDef ttp = new CronTaskPropertyDef();
+    ttp.setKey(key);
+    ttp.setDescription(desc);
+    ttp.setMandatory(mandatory);
+    ttp.setType(type);
+    ttp.setValueFormat(valFormat);
+    ttp.setValueList(valList);
+    return ttp;
+  }
+
+  private CronTaskPropertyDef createTTProperty(String key, String desc) {
+    return createTTProperty(key, desc, true, "string", null, null);
+  }
+}</code></pre>
+        
+        
+        <h1 id="#/api/plugins:interceptor">Prestrezniki pošte</h1>
+        Namen prestreznikov pošte je oblikovanje, kontrola in 
+        avtomatizacija poslovnih procesov pošiljk v prejemu oz. pošiljanju. S prestrezniki izhodne 
+        pošte lahko pošiljke ob samem pošiljanju dodatno kriptiramo, dodajamo splošna obvestila, ipd.   
+        V času sprejema lahko pošiljke dodatno validiramo, ter v primeru napake pošiljke ne sprejmemo, ter 
+        v odgovoru vračamo napako. Prestrezniki  pošte omogočajo sinhrono 
+        proženje naslednje akcije v poslovni transakciji.
+        <br /><br />
+        Prestreznik pošte implementirati EJB vmesnik <b>SoapInterceptorInterface'</b>, ki vsebuje metodi,
+        za procesiranje SOAP sporočila:
+        <pre><code>public boolean handleMessage(SoapMessage t) throws Fault;</code></pre>
+
+        ter metodo, za procesiranje SOAP napake: 
+        <pre><code>handleFault(SoapMessage t)</code></pre>
+        
+        Komponenta je implementacija apache CXF prestreznika, ki se  za dohodno sporočilo pošto
+        proži v fazi <i>Phase.PRE_INVOKE</i> ter za izhodno pošto v fazi:<i>Phase.USER_LOGICAL</i>
+        (Glej dokumentacijo <a href="">apache-CXF BUS</a>.<br /><br />
+
+        Primer implementacije prestreznika:
+        <pre><code>import javax.ejb.Local;
+import javax.ejb.Stateless;
+import javax.ejb.TransactionManagement;
+import javax.ejb.TransactionManagementType;
+import org.apache.cxf.binding.soap.SoapMessage;
+import si.laurentius.commons.cxf.SoapUtils;
+import si.laurentius.commons.utils.SEDLogger;
+import si.laurentius.msh.inbox.mail.MSHInMail;
+import si.laurentius.msh.outbox.mail.MSHOutMail;
+import si.laurentius.plugin.interceptor.MailInterceptorDef;
+import si.laurentius.plugin.interfaces.SoapInterceptorInterface;
+
+@Stateless
+@Local(SoapInterceptorInterface.class)
+@TransactionManagement(TransactionManagementType.BEAN)
+public class ExampleSoapInterceptor implements SoapInterceptorInterface {
+
+
+  protected final SEDLogger LOG = new SEDLogger(ExampleSoapInterceptor.class);
+
+
+  /**
+   * Definition of interceptor. Purpose of definition is 
+   * automatic registration of component.
+   */
+  @Override
+  public MailInterceptorDef getDefinition() {
+    MailInterceptorDef mid = new MailInterceptorDef();
+    mid.setDescription("Exaple of soap intercepor");
+    mid.setName("Interceptor example");
+    mid.setType("ExampleSoapInterceptor");
+    return mid;
+  }
+
+  /**
+   * apache-CXF interceptor method:  handleMessage for processing SoapMessage
+   * @param msg  - Soap message 
+   * @return 
+   */
+  @Override
+  public boolean handleMessage(SoapMessage msg) {
+    long l = LOG.logStart();
+
+    boolean isBackChannel = SoapUtils.isRequestMessage(msg) && SoapUtils.isInboudMessage(msg);
+    MSHInMail in = SoapUtils.getMSHInMail(msg);
+    MSHOutMail out = SoapUtils.getMSHOutMail(msg);
+
+    LOG.formatedlog("Soap message is '%s' with incomming user mail: '%s' and outgoing user mail: '%s'!", 
+        isBackChannel?"Response":"Request", 
+        (out==null?"NULL": out.getService()+":"+out.getAction()),
+        (in==null?"NULL": in.getService()+":"+in.getAction()) 
+        );
+    
+    LOG.logEnd(l);
+    return true;
+  }
+
+  /**
+   * apache-CXF interceptor method: handleFault for processing Fault.
+   * @param t
+   */
+  @Override
+  public void handleFault(SoapMessage t) {
+   LOG.logWarn("Fault occured - handle soap fault", null);
+  }
+}</code></pre>
+        
+         <h1 id="#/api/plugins:processors">Procesiranje dohodne pošte</h1>
+        Namen komponent za procesiranja dohodne pošte je avtomatski uvoz dohodne pošte
+        v zaledne sisteme oz. avtomatsko procesiranja dohodne pošte. Aplikacija Laurentius 
+        vsebuje tri implementacije procesnih komponent dohodne pošte:
+        <ul>
+            <li>XSLT Transformacija;</li>
+            <li>Izvoz dohodne pošte na lokalni datotečni sistem;</li>
+            <li>Proženje zunanjih procesov.</li>
+        </ul>
+        Zaradi morebitne časovne zahtevnosti procesiranja dohodne pošte  se procesi 
+        prožijo preko vrste za procesiranje dohodne pošte.  
+        
+        
+        <pre><code></code></pre>
+    </article>  
+</div>
