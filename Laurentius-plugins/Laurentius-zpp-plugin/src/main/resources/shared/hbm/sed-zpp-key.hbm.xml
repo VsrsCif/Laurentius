@@ -4,9 +4,6 @@
   <class name="si.laurentius.lce.enc.SEDKey" table="PLUGIN_ZPP_KEY">
     <id name="Id" type="java.math.BigInteger">
       <column name="ID" scale="0"/>
-      <!-- generator class="sequence">
-                <param name="sequence">SEQ_PLUGIN_ZPP_KEY</param>
-            </generator -->
     </id>
     <property column="ALGORITHM" length="512" name="Algorithm" type="java.lang.String"/>
     <property column="FORMAT" length="64" name="Format" type="java.lang.String"/>

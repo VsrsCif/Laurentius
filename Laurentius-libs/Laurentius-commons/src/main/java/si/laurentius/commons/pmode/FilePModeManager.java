@@ -14,6 +14,7 @@
  */
 package si.laurentius.commons.pmode;
 
+import com.sun.javafx.runtime.SystemProperties;
 import java.io.File;
 import static java.io.File.separator;
 import java.io.FileInputStream;
@@ -38,9 +39,6 @@ import si.laurentius.msh.pmode.Security;
 import si.laurentius.msh.pmode.Service;
 import si.laurentius.commons.PModeConstants;
 import si.laurentius.commons.SEDSystemProperties;
-import static si.laurentius.commons.SEDSystemProperties.SYS_PROP_HOME_DIR;
-import static si.laurentius.commons.SEDSystemProperties.SYS_PROP_PMODE;
-import static si.laurentius.commons.SEDSystemProperties.SYS_PROP_PMODE_DEF;
 import si.laurentius.commons.exception.PModeException;
 import si.laurentius.commons.interfaces.PModeInterface;
 import si.laurentius.commons.utils.SEDLogger;
@@ -295,10 +293,7 @@ public class FilePModeManager implements PModeInterface {
    *
    * @return
    */
-  public String getPModeFilePath() {
-    return getProperty(SYS_PROP_HOME_DIR) + separator +
-        getProperty(SYS_PROP_PMODE, SYS_PROP_PMODE_DEF);
-  }
+  
 
   /**
    * Method returs PMODE for given exchange sender Party. If pmode not exists or more than one PMode
@@ -706,7 +701,7 @@ public class FilePModeManager implements PModeInterface {
    */
   public void reload() {
     long l = LOG.logStart();
-    File pModeFile = new File(getPModeFilePath());
+    File pModeFile = SEDSystemProperties.getPModeFile();
     if (pModeFile.lastModified() > mFileLastModifiedDate) {
       try (FileInputStream fis = new FileInputStream(pModeFile)) {
         reload(fis);
@@ -818,9 +813,9 @@ public class FilePModeManager implements PModeInterface {
     long l = LOG.logStart();
     try {
 
-      File pModeFile = new File(getPModeFilePath());
+      File pModeFile = SEDSystemProperties.getPModeFile();
       int i = 1;
-      String fileFormat = getPModeFilePath() + ".%03d";
+      String fileFormat = pModeFile.getAbsolutePath() + ".%03d";
       File pModeFileTarget = new File(format(fileFormat, i++));
 
       while (pModeFileTarget.exists()) {

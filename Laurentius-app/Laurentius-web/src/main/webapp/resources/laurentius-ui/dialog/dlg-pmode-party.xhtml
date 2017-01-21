@@ -18,6 +18,7 @@
 
 
             <h:form id="pModePartyDialogForm" >
+                
 
                 <p:layout id="pModeParty" style="min-width:820px; height:470px; "  >
 
@@ -41,7 +42,8 @@
                                             <h:outputText value="#{msg['Id']}:"   />
                                         </p:column>
                                         <p:column>
-                                            <p:inputText id="partyId" value="#{pModePartyView.editable.id}" disabled="#{!pModePartyView.isEditableNew()}"  style="width: 160px" >
+                                            <p:inputText id="partyId" value="#{pModePartyView.editable.id}" 
+                                                         disabled="#{!pModePartyView.isEditableNew()}"  style="width: 160px" >
                                             </p:inputText>
                                         </p:column>
                                         <p:column>                                    
@@ -58,7 +60,7 @@
                                                                      value="#{pModePartyView.editableIdentityActive}" 
                                                                      style="width: 100%"
                                                                      disabled="#{pModePartyView.editableLocalIdentity}"
-                                               >
+                                                                     >
                                             </p:selectBooleanCheckbox>
                                         </p:column>
                                         <p:column>                                    
@@ -72,7 +74,7 @@
                                                         :dlgPModeParty:pModePartyDialogForm:partyTab:exIdentityActive"/>
                                             </p:selectBooleanCheckbox>
                                         </p:column>
-                                       
+
                                     </p:row>
                                     <p:row>
                                         <p:column colspan="6" >
@@ -81,7 +83,7 @@
                                         </p:column>
                                     </p:row>
                                     <p:row>
-                                 
+
                                         <p:column>                                    
                                             <h:outputText value="#{msg['SignatureKeyAlias']}:"  />
                                         </p:column>
@@ -122,7 +124,7 @@
                                         </p:column>
                                     </p:row>
                                     <p:row>
-                                        
+
                                         <p:column>                                    
                                             <h:outputText value="#{msg['SignatureCertAlias']}:"  />
                                         </p:column>
@@ -170,8 +172,8 @@
                                                          icon="ui-icon-svg-add ui-icon-size-22"  
                                                          update=":dlgPModeParty:pModePartyDialogForm:partyTab:TblIdentity" 
                                                          actionListener="#{pModePartyView.createPartyId()}"
-                                                          />
-                                       
+                                                         />
+
                                         <p:commandButton value="#{msg['Delete']}" styleClass="toolbar-Button" 
                                                          icon="ui-icon-svg-remove ui-icon-size-22"  
                                                          actionListener="#{pModePartyView.removeSelectedPartyId()}"
@@ -200,7 +202,7 @@
                                             </f:facet>
                                         </p:cellEditor>
                                     </p:column>
-                                
+
                                 </p:dataTable>
 
 
@@ -217,7 +219,7 @@
                                 <hr />
                                 <b><h:outputText value="#{msg['Address']}" /></b>
                                 <p:panelGrid   style="width:100%;" >
-                                
+
                                     <p:row>
                                         <p:column>
                                             <h:outputText value="#{msg['Address']}"  />
@@ -273,18 +275,35 @@
                                 <p:panelGrid >
                                     <p:row>                                                                                        
                                         <p:column>
-                                            <h:outputText value="#{msg['TrustCert']}:" />
+                                            <h:outputText value="#{msg['ServerTrustCert']}:" />
                                         </p:column>
-                                     
+                                        <p:column>
+                                            <p:selectOneMenu id="tlsServerCertAlias" 
+                                                             value="#{pModePartyView.currrentTransportTLS.serverTrustCertAlias}"
+                                                             style="width: 160px" >
+                                                <f:selectItem noSelectionOption="true" />
+                                                <f:selectItems value="#{adminSEDKeyStores.keystore.SEDCertificates}" 
+                                                               var="cs" itemLabel="#{cs.alias}"
+                                                               itemValue="#{cs.alias}" 
+                                                               /> 
+
+                                            </p:selectOneMenu>
+                                        </p:column>
+                                        <p:column>
+                                            <h:outputText value="#{msg['DisableCNCheck']}:" />
+                                        </p:column>
+                                        <p:column>
+                                            <p:selectBooleanCheckbox value="#{pModePartyView.currrentTransportTLS.disableCNAndHostnameCheck}" />
+                                        </p:column>
                                     </p:row>
                                     <p:row>
-                                        
+
                                         <p:column>
-                                            <h:outputText value="#{msg['KeyAlias']}:"  />
+                                            <h:outputText value="#{msg['ClientKeyAlias']}:"  />
                                         </p:column>
                                         <p:column>
                                             <p:selectOneMenu id="tlskeyAlias" 
-                                                             value="#{pModePartyView.currrentTransportTLS.keyAlias}"
+                                                             value="#{pModePartyView.currrentTransportTLS.clientKeyAlias}"
                                                              style="width: 160px" >
                                                 <f:selectItem noSelectionOption="true" />
                                                 <f:selectItems value="#{adminSEDKeyStores.keystore.SEDCertificates}" 
@@ -300,7 +319,7 @@
 
 
                             </p:tab>
-                            
+
                         </p:tabView>
 
                     </p:layoutUnit>
@@ -318,7 +337,7 @@
                                 <p:commandButton value="#{msg['Cancel']}" styleClass="toolbar-Button" 
                                                  icon="ui-icon-svg-cancel ui-icon-size-22"                                                 
                                                  onclick="PF('pModePartyDialog').hide();return false;"/>
-                                                 
+
                             </f:facet>
                         </p:toolbar>
                     </p:layoutUnit>

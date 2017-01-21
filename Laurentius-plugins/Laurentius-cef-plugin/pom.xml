@@ -67,7 +67,12 @@
             <version>${project.version}</version>		
             <scope>provided</scope>	
         </dependency>
-    
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>Laurentius-plugin-interfaces</artifactId>
+            <version>${project.version}</version>		
+            <scope>provided</scope>
+        </dependency>
       
         <dependency>
             <groupId>org.apache.santuario</groupId>

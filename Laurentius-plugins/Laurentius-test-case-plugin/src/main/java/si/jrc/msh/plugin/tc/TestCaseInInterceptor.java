@@ -30,9 +30,10 @@ import org.apache.cxf.message.Message;
 import org.apache.cxf.message.MessageImpl;
 import si.jrc.msh.plugin.tc.utils.DisableServiceUtils;
 import si.laurentius.commons.cxf.SoapUtils;
-import si.laurentius.commons.interfaces.SoapInterceptorInterface;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.msh.inbox.mail.MSHInMail;
+import si.laurentius.plugin.interceptor.MailInterceptorDef;
+import si.laurentius.plugin.interfaces.SoapInterceptorInterface;
 
 /**
  *
@@ -47,6 +48,15 @@ public class TestCaseInInterceptor implements SoapInterceptorInterface {
    *
    */
   protected final SEDLogger LOG = new SEDLogger(TestCaseInInterceptor.class);
+
+  @Override
+  public MailInterceptorDef getDefinition() {
+    MailInterceptorDef mid = new MailInterceptorDef();
+    mid.setDescription("TestCaseInInterceptor");
+    mid.setName("TestCaseInInterceptor");
+    mid.setType("TestCaseInInterceptor");
+    return mid;
+  }
 
   /**
    *

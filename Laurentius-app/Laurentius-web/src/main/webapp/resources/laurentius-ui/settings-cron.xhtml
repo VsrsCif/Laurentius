@@ -13,70 +13,8 @@
     <composite:implementation >
         <p:layout   widgetVar="adminTaskDefView" style="min-width:400px;min-height:400px;height: 100%;width: 100%"  >
             
-            <p:layoutUnit  position="north" resizable="true" closable="true" collapsible="true"
-                           size="338" minSize="338" maxSize="400" style="width:100%;height:100%;padding: 0px; margin: 0px"
-                           gutter="0">
-                <p:scrollPanel mode="native" style="width:100%;height:100%"> <!-- p:dataTable scrollable does not resize when toogled south panel -->                
-                <h1><h:outputLink id="growTaskPanelDesc" value="#">
-                        <span class="ui-icon-panel-Header ui-icon ui-icon-svg-scheduler"  />#{msg['TaskDefinitions']}
-                    </h:outputLink>
-                </h1>
-                <p:tooltip id="toolTipTaskGrow" for="growTaskPanelDesc" position="bottom">
-                    <h:outputText value="#{msg['TaskDefDesc']}"></h:outputText>
-                </p:tooltip>           
-                
-                    <p:dataTable id="TblTaskType" 
-                                 var="sp" 
-                                 value="#{adminSEDTaskTypeView.list}"
-                                 selectionMode="single"
-                                 selection="#{adminSEDTaskTypeView.selected}"
-                                 rowKey="#{sp.type}"
-                                 currentPageReportTemplate="#{msg['Showing']} {startRecord}-{endRecord} #{msg['OutOf']} {totalRecords}"
-                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                                 rowsPerPageTemplate="25,50,100,200" 
-                                 paginator="true" 
-                                 style="padding: 0px; margin: 0px"
-                                 scrollable="true" 
-                                 scrollHeight="90%"
-                                 rows="100"  >
-                        <p:ajax event="rowDblselect" listener="#{adminSEDTaskTypeView.startEditSelected()}" 
-                                update=":dlgTaskType:taskTypeDialogForm:taskType"
-                                oncomplete="PF('taskTypeDialog').show()"/>
-
-                        <f:facet name="header">
-                            <p:commandButton value="#{msg['Add']}"  styleClass="toolbar-Button" icon="ui-icon-svg-add ui-icon-size-22"  
-                                             actionListener="#{adminSEDTaskTypeView.createEditable()}"
-                                             oncomplete="PF('taskTypeDialog').show()" 
-                                             update=":dlgTaskType:taskTypeDialogForm:taskType"
-
-                                             />
-                            <p:commandButton value="#{msg['Edit']}"  styleClass="toolbar-Button" icon="ui-icon-svg-edit ui-icon-size-22"  
-                                             oncomplete="PF('taskTypeDialog').show()"                                                                   
-                                             actionListener="#{adminSEDTaskTypeView.startEditSelected()}"
-                                             update=":dlgTaskType:taskTypeDialogForm:taskType"
-                                             />
-                            <p:commandButton value="#{msg['Delete']}" styleClass="toolbar-Button" icon="ui-icon-svg-remove ui-icon-size-22"  
-                                             actionListener="#{adminSEDTaskTypeView.removeSelected()}" update=":forms:SettingsCron:TblTaskType" />
-
-                        </f:facet>
-                        <p:column headerText="#{msg['Type']}" width="120">
-                            <h:outputText value="#{sp.type}" />
-                        </p:column>
-                        <p:column headerText="#{msg['Name']}" width="160">
-                            <h:outputText value="#{sp.name}"></h:outputText>                
-                        </p:column>
-                        <p:column headerText="#{msg['JNDI']}">
-                            <h:outputText value="#{sp.jndi}"></h:outputText>                
-                        </p:column>
-                        <p:column headerText="#{msg['Description']}">
-                            <h:outputText value="#{sp.description}" ></h:outputText>                
-                        </p:column>
-
-                    </p:dataTable>
-                </p:scrollPanel>
-            </p:layoutUnit>
-            <p:layoutUnit  position="center" resizable="true" closable="true" collapsible="true"
-                           size="400" minSize="400" style="width:100%;height:100%;padding: 0px; margin: 0px"
+           
+            <p:layoutUnit  position="center"  style="width:100%;height:100%;padding: 0px; margin: 0px"
                            gutter="0">
                 <p:scrollPanel mode="native" style="width:100%;height:100%"> <!-- p:dataTable scrollable does not resize when toogled south panel -->                
                 <h1><h:outputLink id="growPanelDesc" value="#">
@@ -129,7 +67,7 @@
                             <h:outputText value="#{sp.name}"></h:outputText>                
                         </p:column>
                         <p:column headerText="#{msg['TaskType']}" width="120">
-                            <h:outputText value="#{sp.SEDTask.taskType}" ></h:outputText>                
+                            <h:outputText value="#{sp.SEDTask.type}" ></h:outputText>                
                         </p:column>
 
                         <p:column headerText="#{msg['Active']}" width="60">

@@ -26,6 +26,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
+
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -35,11 +36,24 @@ import org.xml.sax.SAXException;
  */
 public class XSLTUtils {
   
-  public static synchronized void transform(Document source, File xsltFile, File fileResult)
+  public static synchronized void transform(Document source, InputStream xsltSource, File fileResult)
       throws TransformerConfigurationException, JAXBException, TransformerException,
       ParserConfigurationException, SAXException, IOException {
 
     TransformerFactory factory = TransformerFactory.newInstance();
+    //TransformerFactoryImpl factory = new TransformerFactoryImpl();
+    Transformer transformer = factory.newTransformer(new StreamSource(xsltSource));
+    transformer.transform(new DOMSource(source), new StreamResult(fileResult));
+
+  }
+  
+  public static synchronized void transform(Document source, File xsltFile, File fileResult)
+      throws TransformerConfigurationException, JAXBException, TransformerException,
+      ParserConfigurationException, SAXException, IOException {
+
+    
+    TransformerFactory factory = TransformerFactory.newInstance();
+    //TransformerFactoryImpl factory = new TransformerFactoryImpl();
     Transformer transformer = factory.newTransformer(new StreamSource(xsltFile));
     transformer.setURIResolver(new XsltURIResolver(xsltFile.getParentFile()));
     transformer.transform(new DOMSource(source), new StreamResult(fileResult));

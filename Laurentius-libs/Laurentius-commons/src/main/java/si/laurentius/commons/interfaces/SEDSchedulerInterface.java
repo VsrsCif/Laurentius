@@ -26,11 +26,6 @@ import javax.ejb.TimerService;
 @Local
 public interface SEDSchedulerInterface {
 
-  /**
-   *
-   * @return
-   */
-  int getChecks();
 
   /**
    *

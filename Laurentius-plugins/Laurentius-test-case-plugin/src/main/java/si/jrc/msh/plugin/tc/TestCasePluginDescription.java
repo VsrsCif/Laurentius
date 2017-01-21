@@ -14,19 +14,44 @@
  */
 package si.jrc.msh.plugin.tc;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import javax.annotation.PostConstruct;
 import javax.ejb.Local;
-import javax.ejb.Stateless;
-import si.laurentius.commons.interfaces.PluginDescriptionInterface;
+import javax.ejb.Singleton;
+import javax.ejb.Startup;
+import si.laurentius.commons.SEDGUIConstants;
+import si.laurentius.commons.utils.SEDLogger;
+import si.laurentius.plugin.interfaces.AbstractPluginDescription;
+import si.laurentius.plugin.interfaces.PluginDescriptionInterface;
+import si.laurentius.plugin.interfaces.exception.PluginException;
 
 /**
  *
  * @author Jože Rihtaršič
  */
-@Stateless
+@Singleton
+@Startup
 @Local(PluginDescriptionInterface.class)
-public class TestCasePluginDescription implements PluginDescriptionInterface {
+public class TestCasePluginDescription extends AbstractPluginDescription {
+
+  private static final SEDLogger LOG = new SEDLogger(
+          TestCasePluginDescription.class);
+
+  @PostConstruct
+  private void postConstruct() {
+    try {
+      // and log further application specific info
+      registerPluginComponentInterface(TestCaseInInterceptor.class);
+      registerPluginComponentInterface(TestCaseOutInterceptor.class);
+      // register plugin
+      registerPlugin();
+    } catch (PluginException ex) {
+      LOG.logError("Error occured while registering plugin: " + ex.getMessage(),
+              ex);
+    }
+  }
 
   /**
    *
@@ -37,37 +62,10 @@ public class TestCasePluginDescription implements PluginDescriptionInterface {
     return "Test case ";
   }
 
-    @Override
-    public List<String> getJNDIInEventInterceptors() {
-      return Collections.emptyList();
-    }
-
-    @Override
-    public List<String> getJNDIInFaultInterceptors() {
-      return Collections.emptyList();
-    }
-
-    @Override
-    public List<String> getJNDIInInterceptors() {
-       return Collections.emptyList();
-    }
-
-    @Override
-    public List<String> getJNDIOutEventInterceptors() {
-      return Collections.emptyList();
-    }
-
-    @Override
-    public List<String> getJNDIOutFaultInterceptors() {
-      return Collections.emptyList();
-    }
-
-
-
-    @Override
-    public List<String> getJNDIOutInterceptors() {
-      return Collections.singletonList("java:global/plugin-zpp/ZPPOutInterceptor!si.laurentius.commons.interfaces.SoapInterceptorInterface");
-    }
+  @Override
+  public String getVersion() {
+    return "1.0.0";
+  }
 
   /**
    *
@@ -83,18 +81,13 @@ public class TestCasePluginDescription implements PluginDescriptionInterface {
    * @return
    */
   @Override
-  public String getSettingUrlContext() {
+  public String getWebUrlContext() {
     return "/laurentius-web/testcase-plugin";
   }
 
-  /**
-   *
-   * @return
-   */
   @Override
-  public List<String> getTaskJNDIs() {
-    return Collections
-        .singletonList("java:global/plugin-zpp/ZPPTask!si.laurentius.commons.interfaces.TaskExecutionInterface");
+  public List<String> getWebPageRoles() {
+    return Arrays.asList(SEDGUIConstants.ROLE_USER, SEDGUIConstants.ROLE_ADMIN);
   }
 
   /**

@@ -74,12 +74,7 @@
                         <p:toolbar 
                             styleClass="dialogButtonBar" >
                             <f:facet name="right"  >
-                                <p:commandButton value="#{msg['Ok']}"  styleClass="toolbar-Button" 
-                                                 icon="ui-icon-svg-ok ui-icon-size-22" 
-                                                 action="#{adminSEDTaskTypeView.addOrUpdateEditable()}"
-                                                 oncomplete="PF('taskTypeDialog').hide()" 
-                                                 update=":forms:SettingsCron:TblTaskType"
-                                                 />
+                                               
                                 <p:commandButton value="#{msg['Cancel']}" styleClass="toolbar-Button" 
                                                  icon="ui-icon-svg-cancel ui-icon-size-22"
                                                  onclick="PF('taskTypeDialog').hide();return false;"/>

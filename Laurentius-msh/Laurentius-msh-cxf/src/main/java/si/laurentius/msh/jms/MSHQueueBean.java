@@ -31,21 +31,23 @@ import si.laurentius.msh.pmode.ReceptionAwareness;
 import si.jrc.msh.client.MshClient;
 import si.jrc.msh.client.Result;
 import si.jrc.msh.exception.EBMSErrorCode;
+import si.laurentius.cert.SEDCertStore;
 import si.laurentius.commons.MimeValues;
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.SEDOutboxMailStatus;
 import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.SEDValues;
 import si.laurentius.commons.exception.PModeException;
+import si.laurentius.commons.exception.SEDSecurityException;
 import si.laurentius.commons.exception.StorageException;
-import si.laurentius.commons.interfaces.OutMailEventInterface;
 import si.laurentius.commons.interfaces.PModeInterface;
+import si.laurentius.commons.interfaces.SEDCertStoreInterface;
 import si.laurentius.commons.interfaces.SEDDaoInterface;
 import si.laurentius.commons.pmode.EBMSMessageContext;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StorageUtils;
 import si.laurentius.commons.utils.Utils;
-import si.laurentius.commons.interfaces.SEDLookupsInterface;
+import si.laurentius.plugin.interfaces.OutMailEventInterface;
 
 /**
  *
@@ -71,9 +73,9 @@ public class MSHQueueBean implements MessageListener {
   @EJB(mappedName = SEDJNDI.JNDI_SEDDAO)
   SEDDaoInterface mDB;
 
-  @EJB(mappedName = SEDJNDI.JNDI_SEDLOOKUPS)
-  private SEDLookupsInterface mSedLookups;
-  
+  @EJB(mappedName = SEDJNDI.JNDI_DBCERTSTORE)
+  SEDCertStoreInterface mCertBean;
+
   MshClient mmshClient = new MshClient();
 
   @EJB(mappedName = SEDJNDI.JNDI_PMODE)
@@ -93,7 +95,7 @@ public class MSHQueueBean implements MessageListener {
     long jmsMessageId; // 
     int jmsRetryCount = 0;
     long jmsRetryDelay = -1;
-    
+
     // Read property Mail ID
     try {
       jmsMessageId = msg.getLongProperty(SEDValues.EBMS_QUEUE_PARAM_MAIL_ID);
@@ -115,7 +117,8 @@ public class MSHQueueBean implements MessageListener {
       LOG.logError(t, String.format("JMS message for queue: 'MSHQueue' with no property: '%s'",
           SEDValues.EBMS_QUEUE_PARAM_DELAY), ex);
     }
-    LOG.formatedWarning("******************************************** submit mail: %s ",jmsMessageId);
+    LOG.formatedWarning("******************************************** submit mail: %s ",
+        jmsMessageId);
 
     MSHOutMail mail;
     try {
@@ -125,23 +128,22 @@ public class MSHQueueBean implements MessageListener {
       return;
     }
     LOG.formatedlog("Get EBMSMessageContext for message: %s", jmsMessageId);
-    
-    if (SEDOutboxMailStatus.DELIVERED.getValue().equals(mail.getStatus())
-        || SEDOutboxMailStatus.DELETED.getValue().equals(mail.getStatus())
-        || SEDOutboxMailStatus.SENT.getValue().equals(mail.getStatus())        
-        ) {
-        String strMsg = String.format("Out mail '%d' in wrong status: '%s'. Mail sending suppresed! ", jmsMessageId, mail.getStatus());
-        LOG.logError(t, strMsg, null);
-        return;
-    
+
+    if (SEDOutboxMailStatus.DELIVERED.getValue().equals(mail.getStatus()) ||
+         SEDOutboxMailStatus.DELETED.getValue().equals(mail.getStatus()) ||
+         SEDOutboxMailStatus.SENT.getValue().equals(mail.getStatus())) {
+      String strMsg = String.format("Out mail '%d' in wrong status: '%s'. Mail sending suppresed! ",
+          jmsMessageId, mail.getStatus());
+      LOG.logError(t, strMsg, null);
+      return;
+
     }
     // get pmode EBMSMessageContext
-    
-    
+
     EBMSMessageContext sd;
     try {
       sd = mpModeManager.createMessageContextForOutMail(mail);
-    } catch (   PModeException ex) {
+    } catch (PModeException ex) {
       String errDesc = String.format(
           "Error retrieving EBMSMessageContext for message id: '%d'. Error: %s",
           jmsMessageId, ex.getMessage());
@@ -150,8 +152,8 @@ public class MSHQueueBean implements MessageListener {
       mPluginOutEventHandler.outEvent(mail, null,
           OutMailEventInterface.PluginOutEvent.FAILED);
       return;
-    }catch ( EJBException  ex) {
-      Exception exc =   ex.getCausedByException();
+    } catch (EJBException ex) {
+      Exception exc = ex.getCausedByException();
       String errDesc = String.format(
           "Error retrieving EBMSMessageContext for message id: '%d'. Error: %s",
           jmsMessageId, exc.getMessage());
@@ -161,14 +163,15 @@ public class MSHQueueBean implements MessageListener {
           OutMailEventInterface.PluginOutEvent.FAILED);
       return;
     }
-    
-    if (sd.getReceiverPartyIdentitySet().getActive()!= null && !sd.getReceiverPartyIdentitySet().getActive()){
-    String errDesc = String.format(
+
+    if (sd.getReceiverPartyIdentitySet().getActive() != null &&
+        !sd.getReceiverPartyIdentitySet().getActive()) {
+      String errDesc = String.format(
           "Receiver %s is inactive. (Check pmode settings.) Message is set to pending status.",
           sd.getReceiverPartyIdentitySet().getId());
       LOG.logWarn(t, errDesc, null);
       setStatusToOutMail(mail, SEDOutboxMailStatus.PENDING, errDesc, null);
-      
+
       return;
     }
 
@@ -187,7 +190,23 @@ public class MSHQueueBean implements MessageListener {
 
       // set reciept
       sd.setReceptionAwarenessRetry(jmsRetryCount);
-      Result sm = mmshClient.pushMessage(mail, sd, mSedLookups);
+      SEDCertStore scs = null;
+      SEDCertStore rootCA = null;
+      try {
+        scs = mCertBean.getCertificateStore();
+        rootCA= mCertBean.getRootCACertificateStore();
+      } catch (SEDSecurityException ex) {
+
+        String errDesc = ex.getMessage();
+        LOG.logError(t, errDesc, ex);
+        setStatusToOutMail(mail, SEDOutboxMailStatus.FAILED, errDesc, ex);
+        mPluginOutEventHandler.outEvent(mail, null,
+            OutMailEventInterface.PluginOutEvent.FAILED);
+        return;
+
+      }
+
+      Result sm = mmshClient.pushMessage(mail, sd, scs, rootCA);
 
       if (sm.getError() != null) {
 
@@ -196,10 +215,11 @@ public class MSHQueueBean implements MessageListener {
         setStatusToOutMail(mail, SEDOutboxMailStatus.ERROR, sm.getError().getSubMessage(),
             sm.getResultFile(), sm.getMimeType());
 
-        LOG.formatedWarning("********************* ERROR MESSAGE %s", sm.getError().getEbmsErrorCode().getCode());
-        if ((sm.getError().getEbmsErrorCode().equals(EBMSErrorCode.ConnectionFailure) 
-            || sm.getError().getEbmsErrorCode().equals(EBMSErrorCode.DeliveryFailure) 
-            || sm.getError().getEbmsErrorCode().equals(EBMSErrorCode.Other))) {
+        LOG.formatedWarning("********************* ERROR MESSAGE %s",
+            sm.getError().getEbmsErrorCode().getCode());
+        if ((sm.getError().getEbmsErrorCode().equals(EBMSErrorCode.ConnectionFailure) ||
+             sm.getError().getEbmsErrorCode().equals(EBMSErrorCode.DeliveryFailure) ||
+             sm.getError().getEbmsErrorCode().equals(EBMSErrorCode.Other))) {
 
           if (resendMail(mail, sd, jmsRetryCount, jmsRetryDelay)) {
             mPluginOutEventHandler.outEvent(mail, sd,
@@ -258,7 +278,7 @@ public class MSHQueueBean implements MessageListener {
           LOG.formatedWarning("Resend mail: %d retry %d delay %d", mail.getId(), jmsRetryCount,
               jmsRetryDelay);
           mDB.sendOutMessage(mail, jmsRetryCount, jmsRetryDelay, null, null);
-          
+
           bResend = true;
         } catch (StorageException ex1) {
           String errDesc = String.format("Mail resend %d  error occured. Err: %s", mail.getId(),

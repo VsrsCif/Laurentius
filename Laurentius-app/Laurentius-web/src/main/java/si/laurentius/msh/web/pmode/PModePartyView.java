@@ -22,7 +22,6 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import org.primefaces.event.CellEditEvent;
-import si.laurentius.cert.SEDCertStore;
 import si.laurentius.cert.SEDCertificate;
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.exception.SEDSecurityException;
@@ -198,26 +197,25 @@ public class PModePartyView extends AbstractPModeJSFView<PartyIdentitySet> {
   }
 
   public List<SEDCertificate> getCurrentLocalKeystoreCerts() {
-    if (getEditable() != null && getEditable().getLocalPartySecurity() != null &&
-        !Utils.isEmptyString(getEditable().getLocalPartySecurity().getKeystoreName())) {
-      String keystoreName = getEditable().getLocalPartySecurity().getKeystoreName();
-      SEDCertStore cs = mLookUp.getSEDCertStoreByName(keystoreName);
-      if (cs != null) {
-        return cs.getSEDCertificates();
-      }
-    }
-    return Collections.emptyList();
-  }
-
-  public List<SEDCertificate> getCurrentTLSKeyCerts() {
-
-     if (getCurrrentTransportTLS() != null) {
     try {
       return mCertBean.getCertificateStore().getSEDCertificates();
     } catch (SEDSecurityException ex) {
       LOG.logError(ex.getMessage(), ex);
     }
-     }
+
+    return Collections.emptyList();
+
+  }
+
+  public List<SEDCertificate> getCurrentTLSKeyCerts() {
+
+    if (getCurrrentTransportTLS() != null) {
+      try {
+        return mCertBean.getCertificateStore().getSEDCertificates();
+      } catch (SEDSecurityException ex) {
+        LOG.logError(ex.getMessage(), ex);
+      }
+    }
     return Collections.emptyList();
     /*
     if (getCurrrentTransportTLS() != null &&

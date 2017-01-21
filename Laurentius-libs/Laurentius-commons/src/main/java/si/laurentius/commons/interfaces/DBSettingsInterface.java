@@ -28,26 +28,9 @@ import si.laurentius.property.SEDProperty;
 @Local
 public interface DBSettingsInterface {
 
-  /**
-   *
-   * @return
-   */
-  @Lock(value = LockType.READ)
-  String getDomain();
 
-  /**
-   *
-   * @return
-   */
-  @Lock(value = LockType.READ)
-  String getHomeFolderPath();
+  
 
-  /**
-   *
-   * @return
-   */
-  @Lock(value = LockType.READ)
-  String getPModeFileName();
 
   /**
    *
@@ -76,12 +59,6 @@ public interface DBSettingsInterface {
    */
   Properties getProperties();
 
-  /**
-   *
-   * @return
-   */
-  @Lock(value = LockType.READ)
-  String getSecurityFolderPath();
 
   /**
      *

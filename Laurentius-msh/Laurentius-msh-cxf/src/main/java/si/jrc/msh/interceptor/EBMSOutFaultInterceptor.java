@@ -39,6 +39,7 @@ import org.oasis_open.docs.ebxml_msg.ebms.v3_0.ns.core._200704.SignalMessage;
 import org.w3c.dom.Node;
 import si.jrc.msh.exception.EBMSError;
 import si.jrc.msh.utils.EBMSBuilder;
+import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.cxf.SoapUtils;
 import si.laurentius.commons.pmode.EBMSMessageContext;
 import si.laurentius.commons.utils.SEDLogger;
@@ -163,7 +164,7 @@ public class EBMSOutFaultInterceptor extends AbstractEBMSInterceptor {
 
         msgHeader = EBMSBuilder.createMessaging(sv);
         SignalMessage sgnl = EBMSBuilder.createErrorSignal(sf, null, sf.getMessage(),
-            getSettings().getDomain(), Calendar.getInstance()
+                SEDSystemProperties.getLocalDomain(), Calendar.getInstance()
             .getTime());
         msgHeader.getSignalMessages().add(sgnl);
 

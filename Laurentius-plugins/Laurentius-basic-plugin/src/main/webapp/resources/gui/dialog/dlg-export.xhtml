@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      >
+    <composite:interface>
+    </composite:interface>
+
+    <composite:implementation >
+
+        <!-- sed-box ADD/EDIT dialog! -->
+        <p:dialog  header="#{msg['ExportDialog']}" widgetVar="exportDialog" modal="true" hideEffect="fade" resizable="false" 
+                   appendTo="@(body)" width="850">
+            <h:form id="exportDialogForm" >
+                <p:layout id="sedboxDetails" style="min-width:800px;min-height:300px;">
+                    <p:layoutUnit position="center" rendered="#{empty adminIMPExportView.editable}" >
+                        <h:outputText value="#{msg['SelectTableRow']}" />
+                    </p:layoutUnit>
+                    <p:layoutUnit position="center" rendered="#{not empty adminIMPExportView.editable}"  >
+                        
+
+                                <p:panelGrid  columns="2" columnClasses="label,value" style="width: 100%">
+                                    <f:facet name="header">
+                                       
+                                        <h:outputText value="#{msg['Export']}" />
+
+                                    </f:facet>
+                                    <h:outputText value="#{msg['Instance']}:" />
+                                    <p:inputText id="exIntance" 
+                                                 value="#{adminIMPExportView.editable.instance}"      
+                                                 style="width: 100%"/>
+
+                                    <p:selectBooleanCheckbox id="exMetaData" itemLabel="#{msg['ExportMetadata']}" 
+                                                             value="#{adminIMPExportView.editable.exportMetaData}"  
+                                                             style="width: 100%"/>
+                                    <h:outputText value="" />
+                                    
+                                    
+                                    <h:outputText value="#{msg['MetadataFile']}:" />
+                                    <p:inputText id="exMDF" 
+                                                 value="#{adminIMPExportView.editable.metaDataFilename}"      
+                                                 style="width: 100%"/>
+                                    
+                                    <p:selectBooleanCheckbox id="exOverwrite" itemLabel="#{msg['Overwrite']}" 
+                                                             value="#{adminIMPExportView.editable.overwrite}"  
+                                                             style="width: 100%"/>
+                                     <h:outputText value="" />
+
+
+                                    <h:outputText value="#{msg['FileMask']}:" />
+                                    <p:inputText id="exFM" 
+                                                 value="#{adminIMPExportView.editable.fileMask}" 
+                                                 
+                                                 style="width: 100%"/>
+
+                                    <h:outputText value="#{msg['Folder']}:" />
+                                    <p:inputText id="exFld" 
+                                                 value="#{adminIMPExportView.editable.folder}" 
+                                                
+                                                 style="width: 100%"/>
+                                </p:panelGrid>
+                           
+                    </p:layoutUnit>
+                    <p:layoutUnit position="south"  size="40" minSize="40" maxSize="40" >
+                        <p:toolbar 
+                            styleClass="dialogButtonBar" >
+                            <f:facet name="right"  >
+                                <p:commandButton value="#{msg['Ok']}" update=":bscform:PanelExport:TblExport" 
+                                                 styleClass="toolbar-Button" 
+                                                 icon="ui-icon-svg-ok ui-icon-size-22"                                          
+                                                 action="#{adminIMPExportView.addOrUpdateEditable()}"
+                                                 oncomplete="if (args &amp;&amp; args.saved) PF('exportDialog').hide()"   />
+                                <p:commandButton value="#{msg['Cancel']}" styleClass="toolbar-Button" 
+                                                 icon="ui-icon-svg-cancel ui-icon-size-22" 
+                                                 onclick="PF('exportDialog').hide();return false;"/>
+                            </f:facet>
+                        </p:toolbar>
+                    </p:layoutUnit>
+                </p:layout>               
+
+            </h:form>
+        </p:dialog>
+    </composite:implementation>
+</html>

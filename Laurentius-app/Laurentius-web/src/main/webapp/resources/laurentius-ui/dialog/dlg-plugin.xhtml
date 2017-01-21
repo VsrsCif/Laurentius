@@ -13,54 +13,183 @@
     <composite:implementation >
 
         <p:dialog  header="#{msg['SEDPluginDialog']}" widgetVar="pluginDialog" 
-                   modal="true" hideEffect="fade" resizable="false" appendTo="@(body)" height="560" width="650">
+                   modal="true" hideEffect="fade" resizable="false" appendTo="@(body)" height="560" width="800">
 
             <h:form id="pluginDialogForm" >
-                <p:layout id="plugin" style="min-width:600px; min-height:560px; "  >
+                <p:layout id="plugin" style="min-width:780px; min-height:560px; "  >
                     <p:layoutUnit header="#{msg['Plugin']}" position="center"   >
-                        <p:panelGrid rendered="#{not empty adminSEDPluginView.editable}" style="width:100%; " >
-                            <p:row> 
-                                <p:column><h:outputText value="#{msg['JNDI']}:" /></p:column>
-                                <p:column><p:commandButton value="#{msg['UpdatePlugin']}" icon="ui-icon-sed-refresh" 
-                                                           style="width: 100%; height: 28px " 
-                                                           actionListener="#{adminSEDPluginView.refreshDataFromEJB}"
-                                                           update=":dlgPlugin:pluginDialogForm:plugin"/></p:column>
-                            </p:row>
-                            <p:row> 
-                                <p:column colspan="2"><p:inputTextarea  value="#{adminSEDPluginView.editable.jndi}" rows="4" style="width: 95%" />
-                                </p:column>
-                            </p:row>
-                            <p:row> 
-                                <p:column><h:outputText value="#{msg['Type']}:" /></p:column>
-                                <p:column><p:inputText readonly="true" value="#{adminSEDPluginView.editable.type}" style="width: 95%" /></p:column>
-                            </p:row>
-                            <p:row> 
-                                <p:column><h:outputText value="#{msg['Name']}:" /></p:column>
-                                <p:column><p:inputText readonly="true" value="#{adminSEDPluginView.editable.name}" style="width: 95%" /></p:column>
-                            </p:row>
-                            <p:row> 
-                                <p:column><h:outputText value="#{msg['WebContext']}:" /></p:column>
-                                <p:column><p:inputText readonly="true" value="#{adminSEDPluginView.editable.webContext}" style="width: 95%" /></p:column>
-                            </p:row>
-                            <p:row> 
-                                <p:column><h:outputText value="#{msg['IN-JNDI']}:" /></p:column>
-                                <p:column><p:inputText readonly="true" value="#{adminSEDPluginView.editable.jndiInInterceptor}" style="width: 95%" /></p:column>
-                            </p:row>
-                            <p:row> 
-                                <p:column><h:outputText value="#{msg['OUT-JNDI']}:" /></p:column>
-                                <p:column><p:inputText readonly="true" value="#{adminSEDPluginView.editable.jndiOutInterceptor}" style="width: 95%" /></p:column>
-                            </p:row>
-                            <p:row> 
-                                <p:column><h:outputText value="#{msg['TASKS-JNDI']}:" /></p:column>
-                                <p:column><p:inputTextarea  readonly="true" value="#{adminSEDPluginView.editable.tasksJNDIs}" rows="4" style="width: 95%" /></p:column>                               
-                            </p:row>
-                            <p:row> 
-                                <p:column><h:outputText value="#{msg['Description']}:" /></p:column>
-                                <p:column><p:inputTextarea  readonly="true" value="#{adminSEDPluginView.editable.description}" rows="4" style="width: 95%" /></p:column>
-                            </p:row>
-                        </p:panelGrid>
                         <p:outputLabel  rendered="#{empty adminSEDPluginView.editable}">Select plugin</p:outputLabel>
-                    </p:layoutUnit>                    
+                        <p:tabView rendered="#{not empty adminSEDPluginView.editable}" style="width:100%; ">
+                            <p:tab  id="PluginData"  >
+                                <f:facet name="title">
+                                    <h:graphicImage value="#{resource['images:/plugin.svg']}" width="22" height="22" />
+                                    <h:outputText value="#{msg['Plugin']}" />
+                                </f:facet>
+
+                                <p:panelGrid  style="width: 100%; height: 100%" >
+                                    <p:row> 
+                                        <p:column><h:outputText value="#{msg['JNDI']}:" /></p:column>
+                                        <p:column><p:commandButton value="#{msg['UpdatePlugin']}" icon="ui-icon-sed-refresh" 
+                                                                   style="width: 100%; height: 28px " 
+                                                                   actionListener="#{adminSEDPluginView.refreshDataFromEJB}"
+                                                                   update=":dlgPlugin:pluginDialogForm:plugin"/></p:column>
+                                    </p:row>
+                                    <p:row> 
+                                        <p:column colspan="2"><p:inputTextarea  value="#{adminSEDPluginView.editable.jndi}" rows="4" style="width: 95%" />
+                                        </p:column>
+                                    </p:row>
+                                    <p:row> 
+                                        <p:column><h:outputText value="#{msg['Type']}:" /></p:column>
+                                        <p:column><p:inputText readonly="true" value="#{adminSEDPluginView.editable.type}" style="width: 95%" /></p:column>
+                                    </p:row>
+                                    <p:row> 
+                                        <p:column><h:outputText value="#{msg['Name']}:" /></p:column>
+                                        <p:column><p:inputText readonly="true" value="#{adminSEDPluginView.editable.name}" style="width: 95%" /></p:column>
+                                    </p:row>
+                                    <p:row> 
+                                        <p:column><h:outputText value="#{msg['WebContext']}:" /></p:column>
+                                        <p:column><p:inputText readonly="true" value="#{adminSEDPluginView.editable.webContext}" style="width: 95%" /></p:column>
+                                    </p:row>
+
+                                    <p:row> 
+                                        <p:column><h:outputText value="#{msg['Description']}:" /></p:column>
+                                        <p:column><p:inputTextarea  readonly="true" value="#{adminSEDPluginView.editable.description}" rows="4" style="width: 95%" /></p:column>
+                                    </p:row>
+                                </p:panelGrid>
+
+                            </p:tab>
+
+
+
+                            <p:tab  id="TaskTab" >
+                                <f:facet name="title">
+                                    <h:graphicImage value="#{resource['images:/cron-exec.svg']}" width="22" height="22" />
+                                    <h:outputText value="#{msg['CronTask']}" />
+                                </f:facet>
+                                <p:dataTable id="TblTaskType" 
+                                             var="sp" 
+                                             value="#{adminSEDPluginView.currentCronTasks}"
+                                             rowKey="#{sp.type}"
+
+                                             paginator="false" 
+                                             paginatorPosition="none"
+                                             style="padding: 0px; margin: 0px"
+                                             scrollable="true" 
+                                             scrollHeight="240"
+                                             rows="100"  >
+
+                                    <p:column headerText="#{msg['Type']}" width="120">
+                                        <h:outputText value="#{sp.type}" />
+                                    </p:column>
+                                    <p:column headerText="#{msg['Name']}" width="160">
+                                        <h:outputText value="#{sp.name}"></h:outputText>                
+                                    </p:column><p:column headerText="#{msg['Description']}">
+                                        <h:outputText value="#{sp.description}" ></h:outputText>                
+                                    </p:column>
+                                    <p:column headerText="#{msg['JNDI']}">
+                                        <h:outputText value="#{sp.jndi}" ></h:outputText>                
+                                    </p:column>
+
+                                </p:dataTable>
+                            </p:tab>
+                            <p:tab id="InterceptorTab">
+                                <f:facet name="title">
+                                    <h:graphicImage value="#{resource['images:/interceptor.svg']}" width="22" height="22" />                            
+                                    <h:outputText value="#{msg['CXFInterceptorPlugin']}" />
+                                </f:facet>
+                                <p:dataTable id="TblPluginInterceptors" 
+                                             var="sp" 
+                                             value="#{adminSEDPluginView.currentMailInterceptors}"
+                                             rowKey="#{sp.type}"
+
+                                             paginator="false" 
+                                             paginatorPosition="none"
+                                             style="padding: 0px; margin: 0px"
+                                             scrollable="true" 
+                                             scrollHeight="240"
+                                             rows="100"  >
+
+                                    <p:column headerText="#{msg['Type']}" width="120">
+                                        <h:outputText value="#{sp.type}" />
+                                    </p:column>
+                                    <p:column headerText="#{msg['Name']}" width="160">
+                                        <h:outputText value="#{sp.name}"></h:outputText>                
+                                    </p:column><p:column headerText="#{msg['Description']}">
+                                        <h:outputText value="#{sp.description}" ></h:outputText>                
+                                    </p:column>
+                                    <p:column headerText="#{msg['JNDI']}">
+                                        <h:outputText value="#{sp.jndi}" ></h:outputText>                
+                                    </p:column>
+
+                                </p:dataTable>
+                            </p:tab>
+                            <p:tab id="ProcessorTab">
+                                <f:facet name="title">
+                                    <h:graphicImage value="#{resource['images:/process.svg']}" width="22" height="22" />                            
+                                    <h:outputText value="#{msg['InMailProcessors']}" />
+                                </f:facet>
+
+
+                                <p:dataTable id="TblPluginProcessors" 
+                                             var="sp" 
+                                             value="#{adminSEDPluginView.currentInMailProcessors}"
+                                             rowKey="#{sp.type}"
+
+                                             paginator="false" 
+                                             paginatorPosition="none"
+                                             style="padding: 0px; margin: 0px"
+                                             scrollable="true" 
+                                             scrollHeight="240"
+                                             rows="100"  >
+
+                                    <p:column headerText="#{msg['Type']}" width="120">
+                                        <h:outputText value="#{sp.type}" />
+                                    </p:column>
+                                    <p:column headerText="#{msg['Name']}" width="160">
+                                        <h:outputText value="#{sp.name}"></h:outputText>                
+                                    </p:column><p:column headerText="#{msg['Description']}">
+                                        <h:outputText value="#{sp.description}" ></h:outputText>                
+                                    </p:column>
+                                    <p:column headerText="#{msg['JNDI']}">
+                                        <h:outputText value="#{sp.jndi}" ></h:outputText>                
+                                    </p:column>
+
+                                </p:dataTable>
+                            </p:tab>
+                            <p:tab id="OutMailEventListenerTab">
+                                <f:facet name="title">
+                                    <h:graphicImage value="#{resource['images:/event.svg']}" width="22" height="22" />                            
+                                    <h:outputText value="#{msg['OutMailEventListeners']}" />
+                                </f:facet>
+                                <p:dataTable id="TblOutMailEventListeners" 
+                                             var="sp" 
+                                             value="#{adminSEDPluginView.currentOutMailEventListeners}"
+                                             rowKey="#{sp.type}"
+
+                                             paginator="false" 
+                                             paginatorPosition="none"
+                                             style="padding: 0px; margin: 0px"
+                                             scrollable="true" 
+                                             scrollHeight="240"
+                                             rows="100"  >
+
+                                    <p:column headerText="#{msg['Type']}" width="120">
+                                        <h:outputText value="#{sp.type}" />
+                                    </p:column>
+                                    <p:column headerText="#{msg['Name']}" width="160">
+                                        <h:outputText value="#{sp.name}"></h:outputText>                
+                                    </p:column><p:column headerText="#{msg['Description']}">
+                                        <h:outputText value="#{sp.description}" ></h:outputText>                
+                                    </p:column>
+                                    <p:column headerText="#{msg['JNDI']}">
+                                        <h:outputText value="#{sp.jndi}" ></h:outputText>                
+                                    </p:column>
+
+                                </p:dataTable>
+
+                            </p:tab>
+                        </p:tabView>
+                    </p:layoutUnit> 
 
                     <p:layoutUnit position="south"  size="40" minSize="40" maxSize="40" >
                         <p:toolbar 
@@ -75,7 +204,7 @@
                                 <p:commandButton value="#{msg['Cancel']}" styleClass="toolbar-Button" 
                                                  icon="ui-icon-svg-cancel ui-icon-size-22"
                                                  onclick="PF('pluginDialog').hide();return false;"/>
-                                                 
+
                             </f:facet>
                         </p:toolbar>
                     </p:layoutUnit>

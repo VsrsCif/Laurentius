@@ -31,8 +31,7 @@ import si.laurentius.msh.pmode.PMode;
 import si.laurentius.msh.pmode.PartyIdentitySet;
 import si.laurentius.commons.SEDSystemProperties;
 
-import static si.laurentius.commons.SEDSystemProperties.SYS_PROP_HOME_DIR;
-import static si.laurentius.commons.SEDSystemProperties.SYS_PROP_PMODE;
+
 import si.laurentius.commons.exception.PModeException;
 import si.laurentius.commons.utils.SEDLogger;
 
@@ -51,8 +50,8 @@ public class FilePModeManagerTest {
    */
   public FilePModeManagerTest() {
 
-    setProperty(SYS_PROP_HOME_DIR, ".");
-    setProperty(SYS_PROP_PMODE, TEST_PMODE_FILE);
+    setProperty(SEDSystemProperties.SYS_PROP_HOME_DIR, ".");
+    setProperty(SEDSystemProperties.SYS_PROP_PMODE_FILE, TEST_PMODE_FILE);
 
     ConsoleAppender console = new ConsoleAppender(); // create appender
     // configure the appender
@@ -82,8 +81,8 @@ public class FilePModeManagerTest {
 
     System.getProperties().put(SEDSystemProperties.S_PROP_LAU_DOMAIN, "test-sed.si");
     
-    System.getProperties().put(SEDSystemProperties.SYS_PROP_HOME_DIR, "src/test/resources/pmode/");
-    System.getProperties().put(SEDSystemProperties.SYS_PROP_PMODE, TEST_PMODE_FILE);
+    System.getProperties().put(SEDSystemProperties.SYS_PROP_CONF_DIR, "src/test/resources/pmode/");
+    System.getProperties().put(SEDSystemProperties.SYS_PROP_PMODE_FILE, TEST_PMODE_FILE);
   }
 
   /**

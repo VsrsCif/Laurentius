@@ -32,6 +32,7 @@ import si.laurentius.commons.SEDGUIConstants;
 import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.msh.web.abst.AbstractJSFView;
+import si.laurentius.plugin.def.Plugin;
 
 /**
  *
@@ -156,6 +157,12 @@ public class UserSessionData extends AbstractJSFView {
    */
   public void setLoginManager(LoginManager loginManager) {
     this.loginManager = loginManager;
+  }
+  
+  public boolean showPluginForUser(Plugin plg){
+    
+     return getUser().getAdminRole() || plg.getWebRoles().contains(SEDGUIConstants.ROLE_USER);
+
   }
 
 }

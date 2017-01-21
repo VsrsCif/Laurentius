@@ -18,6 +18,7 @@ import java.security.cert.X509Certificate;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,8 +34,7 @@ import si.laurentius.msh.outbox.mail.MSHOutMail;
 import si.laurentius.msh.outbox.payload.MSHOutPart;
 import si.laurentius.msh.outbox.payload.MSHOutPayload;
 import si.laurentius.cert.SEDCertStore;
-import si.laurentius.cron.SEDTaskType;
-import si.laurentius.cron.SEDTaskTypeProperty;
+
 import si.jrc.msh.plugin.zpp.doc.DocumentSodBuilder;
 import si.jrc.msh.plugin.zpp.exception.ZPPException;
 import si.jrc.msh.plugin.zpp.utils.FOPUtils;
@@ -55,9 +55,6 @@ import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.interfaces.JMSManagerInterface;
 import si.laurentius.commons.interfaces.PModeInterface;
 import si.laurentius.commons.interfaces.SEDDaoInterface;
-import si.laurentius.commons.interfaces.SEDLookupsInterface;
-import si.laurentius.commons.interfaces.TaskExecutionInterface;
-import si.laurentius.commons.interfaces.exception.TaskException;
 import si.laurentius.commons.utils.HashUtils;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StorageUtils;
@@ -68,6 +65,10 @@ import si.laurentius.msh.inbox.payload.MSHInPart;
 import si.laurentius.msh.inbox.payload.MSHInPayload;
 import si.laurentius.msh.pmode.PartyIdentitySet;
 import si.laurentius.commons.interfaces.SEDCertStoreInterface;
+import si.laurentius.plugin.crontask.CronTaskDef;
+import si.laurentius.plugin.crontask.CronTaskPropertyDef;
+import si.laurentius.plugin.interfaces.TaskExecutionInterface;
+import si.laurentius.plugin.interfaces.exception.TaskException;
 
 /**
  *
@@ -97,14 +98,13 @@ public class ZPPTaskFiction implements TaskExecutionInterface {
   @EJB(mappedName = SEDJNDI.JNDI_JMSMANAGER)
   JMSManagerInterface mJMS;
 
-  @EJB(mappedName = SEDJNDI.JNDI_SEDLOOKUPS)
-  SEDLookupsInterface msedLookup;
+  @EJB(mappedName = SEDJNDI.JNDI_DBCERTSTORE)
+  SEDCertStoreInterface mCertBean;
 
   @EJB(mappedName = SEDJNDI.JNDI_PMODE)
   PModeInterface mpModeManager;
 
-  @EJB(mappedName = SEDJNDI.JNDI_DBCERTSTORE)
-  SEDCertStoreInterface mCertBean;
+
   /**
    *
    */
@@ -147,7 +147,7 @@ public class ZPPTaskFiction implements TaskExecutionInterface {
       throw new TaskException(TaskException.TaskExceptionCode.InitException,
           "Sedbox:  '" + sedBox + "' does not have defined Local party serurity!");
     }
-    keystore = pis.getLocalPartySecurity().getKeystoreName();
+    
     signKeyAlias = pis.getLocalPartySecurity().getSignatureKeyAlias();
 
     if (Utils.isEmptyString(keystore) || Utils.isEmptyString(signKeyAlias)) {
@@ -156,15 +156,21 @@ public class ZPPTaskFiction implements TaskExecutionInterface {
     }
     //SEDCertStore sc = msedLookup.getSEDCertStoreByName(keystore);
       SEDCertStore sc= null;
+      SEDCertificate scc = null;
       try {
         sc = mCertBean.getCertificateStore();
+        for (SEDCertificate c: sc.getSEDCertificates()){
+          if (Objects.equals(c.getAlias(),signKeyAlias) && c.isKeyEntry()){
+            scc = c;
+            break;
+          }
+        }
       } catch (SEDSecurityException ex) {
         String msg = "Error opening keystore - check configuration!";
         LOG.logError(l, msg, null);
         throw new TaskException(TaskException.TaskExceptionCode.InitException,msg);
       }
-    SEDCertificate scc = msedLookup.getSEDCertificatForAlias(signKeyAlias, sc, true);
-
+   
     int maxMailProc = 100;
     if (p.containsKey(PROCESS_MAIL_COUNT)) {
       String val = p.getProperty(PROCESS_MAIL_COUNT);
@@ -216,24 +222,24 @@ public class ZPPTaskFiction implements TaskExecutionInterface {
    * @return
    */
   @Override
-  public SEDTaskType getTaskDefinition() {
-    SEDTaskType tt = new SEDTaskType();
+  public CronTaskDef getDefinition() {
+    CronTaskDef tt = new CronTaskDef();
     tt.setType("zpp-fiction-plugin");
     tt.setName("zpp fiction plugin");
     tt.setDescription(
         "Create FictionAdviceOfDelivery for outgoing mail and send ficiton notification to " +
         "receiver");
-    tt.getSEDTaskTypeProperties().add(createTTProperty(SEND_SEDBOX, "Sender sedbox."));
-    tt.getSEDTaskTypeProperties().add(createTTProperty(SIGN_ALIAS, "Signature key alias."));
-    tt.getSEDTaskTypeProperties().add(createTTProperty(SIGN_KEYSTORE, "Keystore name."));
-    tt.getSEDTaskTypeProperties().add(createTTProperty(PROCESS_MAIL_COUNT,
+    tt.getCronTaskPropertyDeves().add(createTTProperty(SEND_SEDBOX, "Sender sedbox."));
+    tt.getCronTaskPropertyDeves().add(createTTProperty(SIGN_ALIAS, "Signature key alias."));
+    tt.getCronTaskPropertyDeves().add(createTTProperty(SIGN_KEYSTORE, "Keystore name."));
+    tt.getCronTaskPropertyDeves().add(createTTProperty(PROCESS_MAIL_COUNT,
         "Max mail count proccesed."));
     return tt;
   }
 
-  private SEDTaskTypeProperty createTTProperty(String key, String desc, boolean mandatory,
+  private CronTaskPropertyDef createTTProperty(String key, String desc, boolean mandatory,
       String type, String valFormat, String valList) {
-    SEDTaskTypeProperty ttp = new SEDTaskTypeProperty();
+    CronTaskPropertyDef ttp = new CronTaskPropertyDef();
     ttp.setKey(key);
     ttp.setDescription(desc);
     ttp.setMandatory(mandatory);
@@ -243,7 +249,7 @@ public class ZPPTaskFiction implements TaskExecutionInterface {
     return ttp;
   }
 
-  private SEDTaskTypeProperty createTTProperty(String key, String desc) {
+  private CronTaskPropertyDef createTTProperty(String key, String desc) {
     return createTTProperty(key, desc, true, "string", null, null);
   }
 
@@ -291,14 +297,11 @@ public class ZPPTaskFiction implements TaskExecutionInterface {
       throw new ZPPException("Receiver sedbox: '" + sedBox +
           "' does not have defined party serurity!");
     }
-    String recKeystore = pis.getExchangePartySecurity().getTrustoreName();
+
     String recSignKeyAlias = pis.getExchangePartySecurity().getSignatureCertAlias();
 
-    if (Utils.isEmptyString(recKeystore) || Utils.isEmptyString(recSignKeyAlias)) {
-      throw new ZPPException("Receiver sedbox: '" + sedBox +
-          "' does not have certificate for signing!");
-    }
-    SEDCertStore recSc = msedLookup.getSEDCertStoreByName(recKeystore);
+   
+  //  SEDCertStore recSc = mmsedLookup.getSEDCertStoreByName(recKeystore);
     
     MSHOutMail moFNotification = null;
     File fEncryptedKey = null;
@@ -369,10 +372,9 @@ public class ZPPTaskFiction implements TaskExecutionInterface {
 
     X509Certificate recXc;
     try {
-      recXc = mkeyUtils.getTrustedCertForAlias(recSc, recSignKeyAlias);
+      recXc = mkeyUtils.getTrustedCertForAlias(mCertBean.getCertificateStore(), recSignKeyAlias);
     } catch (SEDSecurityException ex) {
-      String msg = String.format("Key for alias '%s' do not exists store '%s'!", recSignKeyAlias,
-          recKeystore);
+      String msg = String.format("Key for alias '%s' do not exists keystore'!", recSignKeyAlias);
       LOG.logError(l, msg, ex);
       throw new ZPPException(msg);
     }
@@ -393,7 +395,7 @@ public class ZPPTaskFiction implements TaskExecutionInterface {
       String strKey = mSedCrypto.encryptKeyWithReceiverPublicKey(key, recXc, sedBox, convId);
       fos.write(strKey.getBytes());
       fos.flush();
-      //elKey = mSedCrypto.encryptedKeyWithReceiverPublicKey(key, recXc, sedBox, convId);
+     
     } catch (IOException | SEDSecurityException ex) {
       LOG.logError(ex.getMessage(), ex);
       throw new ZPPException(ex);

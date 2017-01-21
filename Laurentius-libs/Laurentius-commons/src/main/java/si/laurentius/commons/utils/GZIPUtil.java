@@ -115,21 +115,4 @@ public class GZIPUtil {
     gis.close();
     os.close();
   }
-  
-  public static void main(String ... args){
-    //File srcFn = new File("/sluzba/data/laurentius-home/storage/2016/09/16/001/out445897291175043066..txt6282629919746861098.gzip");
-    File srcFn = new File("/sluzba/data/laurentius-home/storage/2016/09/16/001/IN_4579432441949220668.txt");
-    
-    File trgFn = new File("unzip2.txt");
-    GZIPUtil gzip = new GZIPUtil();
-    try {
-      gzip.decompressGZIP(srcFn, trgFn);
-    } catch (IOException ex) {
-      ex.printStackTrace();
-    }
-        
-  }
-
-  
-
 }

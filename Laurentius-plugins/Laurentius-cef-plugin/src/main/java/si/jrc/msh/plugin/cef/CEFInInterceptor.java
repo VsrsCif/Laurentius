@@ -36,7 +36,6 @@ import si.laurentius.commons.interfaces.JMSManagerInterface;
 import si.laurentius.commons.interfaces.PModeInterface;
 import si.laurentius.commons.interfaces.SEDDaoInterface;
 import si.laurentius.commons.interfaces.SEDLookupsInterface;
-import si.laurentius.commons.interfaces.SoapInterceptorInterface;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.Utils;
 import si.laurentius.msh.outbox.payload.MSHOutPart;
@@ -44,6 +43,8 @@ import si.laurentius.msh.outbox.payload.MSHOutPayload;
 import si.laurentius.msh.outbox.property.MSHOutProperties;
 import si.laurentius.msh.outbox.property.MSHOutProperty;
 import si.laurentius.msh.pmode.PartyIdentitySet;
+import si.laurentius.plugin.interceptor.MailInterceptorDef;
+import si.laurentius.plugin.interfaces.SoapInterceptorInterface;
 
 /**
  *
@@ -76,6 +77,15 @@ public class CEFInInterceptor implements SoapInterceptorInterface {
    */
   @Resource
   public UserTransaction mutUTransaction;
+
+ @Override
+  public MailInterceptorDef getDefinition() {
+    MailInterceptorDef def = new MailInterceptorDef();
+    def.setType("CEFInInterceptor");
+    def.setName("CEFInInterceptor");
+    def.setDescription("CEF Digital testin module");
+    return def;
+  }
 
   /**
    *

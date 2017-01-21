@@ -15,26 +15,18 @@
 package si.laurentius.msh.web.admin;
 
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import si.laurentius.ebox.Execute;
-import si.laurentius.ebox.Export;
 import si.laurentius.ebox.SEDBox;
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.interfaces.DBSettingsInterface;
 import si.laurentius.commons.interfaces.PModeInterface;
 import si.laurentius.commons.interfaces.SEDLookupsInterface;
 import si.laurentius.commons.utils.SEDLogger;
-import si.laurentius.commons.utils.Utils;
-import si.laurentius.msh.pmode.Service;
 import si.laurentius.msh.web.abst.AbstractAdminJSFView;
-import si.laurentius.xslt.Namespace;
-import si.laurentius.xslt.SEDXslt;
-import si.laurentius.xslt.XPathRule;
+
 
 /**
  *
@@ -55,8 +47,7 @@ public class AdminSEDBoxView extends AbstractAdminJSFView<SEDBox> {
   @EJB(mappedName = SEDJNDI.JNDI_PMODE)
   PModeInterface mPMode;
 
-  Namespace selectedNamespace = null;
-  XPathRule selectedPathRule = null;
+
 
   /**
    *
@@ -82,9 +73,6 @@ public class AdminSEDBoxView extends AbstractAdminJSFView<SEDBox> {
     SEDBox sbx = new SEDBox();
     sbx.setLocalBoxName(String.format(sbname, i));
     sbx.setActiveFromDate(Calendar.getInstance().getTime());
-    sbx.setExport(new Export());
-    sbx.setExecute(new Execute());
-    sbx.setXSLT(new SEDXslt());
     setNew(sbx);
     LOG.logEnd(l);
   }
@@ -104,19 +92,7 @@ public class AdminSEDBoxView extends AbstractAdminJSFView<SEDBox> {
 
   }
 
-  /**
-   *
-   */
-  @Override
-  public void startEditSelected() {
-    if (getSelected() != null && getSelected().getExport() == null) {
-      getSelected().setExport(new Export());
-    }
-    if (getSelected() != null && getSelected().getExecute() == null) {
-      getSelected().setExecute(new Execute());
-    }
-    super.startEditSelected();
-  }
+
 
   /**
    *
@@ -163,116 +139,6 @@ public class AdminSEDBoxView extends AbstractAdminJSFView<SEDBox> {
   @Override
   public List<SEDBox> getList() {
     return mdbLookups.getSEDBoxes();
-  }
-
-  public SEDXslt getCurrentXSLT() {
-    SEDXslt res = null;
-    if (getEditable() != null) {
-      if (getEditable().getXSLT() == null) {
-        getEditable().setXSLT(new SEDXslt());
-      }
-      res = getEditable().getXSLT();
-    }
-    return res;
-  }
-
-  public Execute getCurrentExecution() {
-    Execute res = null;
-    if (getEditable() != null) {
-      if (getEditable().getExecute() == null) {
-        getEditable().setExecute(new Execute());
-      }
-      res = getEditable().getExecute();
-    }
-    return res;
-  }
-
-  public Export getCurrentExport() {
-    Export res = null;
-    if (getEditable() != null) {
-      if (getEditable().getExport() == null) {
-        getEditable().setExport(new Export());
-      }
-      res = getEditable().getExport();
-    }
-    return res;
-  }
-
-  public Namespace getSelectedNamespace() {
-    return selectedNamespace;
-  }
-
-  public void setSelectedNamespace(Namespace selectedNamespace) {
-    this.selectedNamespace = selectedNamespace;
-  }
-
-  public void createNamespace() {
-
-    if (getCurrentXSLT() != null) {
-
-      String sbname = "ns%d";
-      int i = 1;
-      while (namespacePrefixExists(String.format(sbname, i)) ) {
-        i++;
-      }
-      Namespace ns = new Namespace();
-      ns.setPrefix(String.format(sbname, i));
-      getCurrentXSLT().getNamespaces().add(ns);
-    }
-  }
-
-  public boolean namespacePrefixExists(String val) {
-    boolean bExists = false;
-    if (getCurrentXSLT() != null) {
-      for (Namespace ns : getCurrentXSLT().getNamespaces()) {
-        if (Objects.equals(ns.getPrefix(), val)) {
-          bExists = true;
-          break;
-        }
-      }
-    }
-    return bExists;
-
-  }
-
-  public void removeSelectedNamespace() {
-    if (getSelectedNamespace() != null && getCurrentXSLT() != null) {
-      List<Namespace> lst = getCurrentXSLT().getNamespaces();
-      for (Namespace ns : lst) {
-        if (Objects.equals(ns, getSelectedNamespace())) {
-          lst.remove(ns);
-          break;
-        }
-      }
-
-    }
-  }
-
-  public XPathRule getSelectedXPathRule() {
-    return selectedPathRule;
-  }
-
-  public void setSelectedXPathRule(XPathRule selectedPathRule) {
-    this.selectedPathRule = selectedPathRule;
-  }
-
-  public void createXPathRule() {
-    if (getCurrentXSLT() != null) {
-      getCurrentXSLT().getXPathRules().add(new XPathRule());
-    }
-  }
-
-  public void removeSelectedXPathRule() {
-    if (getSelectedXPathRule() != null && getCurrentXSLT() != null) {
-      List<XPathRule> lst = getCurrentXSLT().getXPathRules();
-      for (XPathRule xp : lst) {
-        if (Objects.equals(xp, getSelectedXPathRule())) {
-          lst.remove(xp);
-          break;
-        }
-      }
-
-    }
   }
 
 }

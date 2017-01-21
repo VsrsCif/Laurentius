@@ -24,14 +24,13 @@ import org.apache.cxf.interceptor.Fault;
 import org.apache.cxf.phase.Phase;
 import si.jrc.msh.exception.EBMSError;
 import si.jrc.msh.exception.EBMSErrorCode;
-import static si.jrc.msh.interceptor.MSHPluginInInterceptor.LOG;
 import si.laurentius.msh.pmode.PluginType;
 import si.laurentius.commons.cxf.SoapUtils;
-import si.laurentius.commons.interfaces.SoapInterceptorInterface;
 import si.laurentius.commons.pmode.EBMSMessageContext;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.Utils;
 import si.laurentius.msh.inbox.mail.MSHInMail;
+import si.laurentius.plugin.interfaces.SoapInterceptorInterface;
 
 /**
  *

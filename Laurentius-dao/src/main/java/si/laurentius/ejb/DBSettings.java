@@ -170,59 +170,17 @@ public class DBSettings implements DBSettingsInterface {
 
     if (!mprpProperties.containsKey(SEDSystemProperties.S_PROP_LAU_DOMAIN)) {
       synchronized (mprpProperties) {
-        setData(SEDSystemProperties.S_PROP_LAU_DOMAIN, SEDSystemProperties.S_PROP_LAU_DOMAIN_DEF, LAU_SETTINGS);
+        setData(SEDSystemProperties.S_PROP_LAU_DOMAIN, SEDSystemProperties.getLocalDomain(), LAU_SETTINGS);
       }
     }
 
-    if (!mprpProperties.containsKey(SEDSystemProperties.SYS_PROP_PMODE)) {
-      synchronized (mprpProperties) {
-        setData(SEDSystemProperties.SYS_PROP_PMODE, SEDSystemProperties.SYS_PROP_PMODE_DEF,
-            SYSTEM_SETTINGS);
-      }
-    }
+   
 
   }
 
-  /**
-   *
-   * @return
-   */
-  @Lock(LockType.READ)
-  @Override
-  public String getPModeFileName() {
-    return getData(SEDSystemProperties.SYS_PROP_PMODE);
-  }
 
-  /**
-   *
-   * @return
-   */
-  @Lock(LockType.READ)
-  @Override
-  public String getDomain() {
-    return getData(SEDSystemProperties.S_PROP_LAU_DOMAIN);
-  }
 
-  /**
-   *
-   * @return
-   */
-  @Lock(LockType.READ)
-  @Override
-  public String getHomeFolderPath() {
-    return System.getProperty(SEDSystemProperties.SYS_PROP_HOME_DIR,
-        SEDSystemProperties.SYS_PROP_HOME_DIR_DEF);
-  }
 
-  /**
-   *
-   * @return
-   */
-  @Lock(LockType.READ)
-  @Override
-  public String getSecurityFolderPath() {
-    return getHomeFolderPath() + File.separator + SEDSystemProperties.SYS_PROP_FOLDER_SECURITY_DEF;
-  }
 
   private String getData(String strKey) {
     String strVal = null;

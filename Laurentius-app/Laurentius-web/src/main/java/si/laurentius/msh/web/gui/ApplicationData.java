@@ -42,19 +42,21 @@ public class ApplicationData extends AbstractJSFView {
   private SEDLookupsInterface msedLookups;
 
   /**
-     *
-     */
+   *
+   */
   public void exportLookupsWithNoPasswords() {
-    msedLookups.exportLookups(new File(System.getProperty(SEDSystemProperties.SYS_PROP_HOME_DIR)),
-        false);
+    msedLookups.exportLookups(new File(System.getProperty(
+            SEDSystemProperties.SYS_PROP_HOME_DIR)),
+            false);
   }
 
   /**
-     *
-     */
+   *
+   */
   public void exportLookupsWithPasswords() {
-    msedLookups.exportLookups(new File(System.getProperty(SEDSystemProperties.SYS_PROP_HOME_DIR)),
-        true);
+    msedLookups.exportLookups(new File(System.getProperty(
+            SEDSystemProperties.SYS_PROP_HOME_DIR)),
+            true);
   }
 
   /**
@@ -65,7 +67,8 @@ public class ApplicationData extends AbstractJSFView {
     String strBuildVer = "";
     Manifest p;
     File manifestFile = null;
-    String home = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/");
+    String home = FacesContext.getCurrentInstance().getExternalContext().
+            getRealPath("/");
     manifestFile = new File(home, "META-INF/MANIFEST.MF");
     try (FileInputStream fis = new FileInputStream(manifestFile)) {
       p = new Manifest();
@@ -83,50 +86,7 @@ public class ApplicationData extends AbstractJSFView {
    * @return
    */
   public String getDomain() {
-    return "@" + mdbSettings.getDomain();
-  }
-
-  /**
-   *
-   * @return
-   */
-  public String getHomeFolder() {
-    return System.getProperty(SEDSystemProperties.SYS_PROP_HOME_DIR);
-  }
-
-  /**
-   *
-   * @return
-   */
-  public String getPModeFileName() {
-    return mdbSettings.getPModeFileName();
-  }
-
-  /**
-   *
-   * @return
-   */
-  public List<String> getPlugins() {
-    List<String> plLSt = new ArrayList<>();
-    File fldPlugins =
-        new File(System.getProperty(SEDSystemProperties.SYS_PROP_HOME_DIR) + File.separator
-            + SEDSystemProperties.SYS_PROP_FOLDER_PLUGINS_DEF);
-    if (fldPlugins.exists() && fldPlugins.isDirectory()) {
-      for (File f : fldPlugins.listFiles((File dir, String name) -> name.toLowerCase().endsWith(
-          ".jar"))) {
-        plLSt.add(f.getName());
-      }
-    }
-    return plLSt;
-  }
-
-  /**
-   *
-   * @return
-   */
-  public String getPluginsFolder() {
-    return SEDSystemProperties.SYS_PROP_FOLDER_PLUGINS_DEF;
-
+    return "@" + SEDSystemProperties.getLocalDomain();
   }
 
   /**
@@ -156,16 +116,8 @@ public class ApplicationData extends AbstractJSFView {
    *
    * @return
    */
-  public String getSecurityFileName() {
-    return SEDSystemProperties.SYS_PROP_CERT_DEF;
-  }
-
-  /**
-   *
-   * @return
-   */
   public String getStorageFolder() {
-    return SEDSystemProperties.SYS_PROP_FOLDER_STORAGE_DEF;
+    return SEDSystemProperties.getStorageFolder().getAbsolutePath();
 
   }
 
@@ -211,8 +163,8 @@ public class ApplicationData extends AbstractJSFView {
   }
 
   /**
-     *
-     */
+   *
+   */
   public void refreshMainPanel() {
     FacesContext facesContext = facesContext();
     String refreshpage = "MainPanel";

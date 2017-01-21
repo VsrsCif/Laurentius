@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      >
+    <composite:interface>
+    </composite:interface>
+
+    <composite:implementation >      
+        <!-- Cron ADD/EDIT dialog! -->
+        <p:dialog   header="#{msg['SEDProcessInstanceDialog']}" widgetVar="processInstanceDialog" modal="true" hideEffect="fade" 
+                    resizable="false" appendTo="@(body)" width="250" >
+            <h:form id="processInstanceDialogForm">
+                <p:messages id="processInstanceDialog"
+                            autoUpdate="true"
+                            showDetail="true" />
+
+                <p:layout id="processInstance" style="min-width:200px;height:250px;">
+                    <p:layoutUnit position="center" rendered="#{empty adminSEDInMailProcessSetView.editable and empty adminSEDInMailProcessSetView.selectedSPI}" >
+                        <h:outputText value="#{msg['SelectTableRow']}" />
+                    </p:layoutUnit>
+
+                    <p:layoutUnit  header="Process instance data" position="center"  >
+                        <p:panelGrid  columns="1"  style="width:100%;">
+
+                            <h:outputText value="#{msg['Plugin']}:" />
+                            <p:selectOneMenu id="pluginType" value="#{adminSEDInMailProcessSetView.selectedSPI.plugin}" 
+                                             style="width:150px" 
+
+                                             >
+                                <p:ajax   update=":dlgprocessinstance:processInstanceDialogForm:impInstancetype :dlgprocessinstance:processInstanceDialogForm:impInstance" />    
+
+                                <f:selectItems value="#{adminSEDPluginView.list}"  var="plg" itemLabel="#{plg.name}" 
+                                               itemValue="#{plg.type}" itemDescription="#{plg.description}"
+                                               itemDisabled="#{plg.inMailProcessorDeves.size() eq 0}"
+                                               />
+                            </p:selectOneMenu>
+
+
+                            <h:outputText value="#{msg['Type']}:" />
+
+                            <p:selectOneMenu id="impInstancetype" value="#{adminSEDInMailProcessSetView.selectedSPI.type}" 
+                                             style="width:150px" 
+
+                                             >
+                                <p:ajax   update=":dlgprocessinstance:processInstanceDialogForm:impInstance" />    
+                                <f:selectItems value="#{adminSEDInMailProcessSetView.selectedSPIProcessorList()}"  var="prc" itemLabel="#{prc.name}" 
+                                               itemValue="#{prc.type}" itemDescription="#{prc.description}"
+
+                                               />
+                            </p:selectOneMenu>
+
+
+
+                            <h:outputText value="#{msg['Instance']}:" />
+                            <p:selectOneMenu id="impInstance" value="#{adminSEDInMailProcessSetView.selectedSPI.instance}" 
+                                             style="width:150px" 
+
+                                             >
+
+                                <f:selectItems value="#{adminSEDInMailProcessSetView.selectedSPIProcessorInstanceList()}"  var="inst" itemLabel="#{inst}" 
+                                               itemValue="#{inst}" 
+                                             
+                                               />
+                            </p:selectOneMenu>
+
+                          
+                        </p:panelGrid>
+                    </p:layoutUnit>
+
+
+
+                    <p:layoutUnit position="south"  size="40" minSize="40" maxSize="40" >
+                        <p:toolbar 
+                            styleClass="dialogButtonBar" >
+                            <f:facet name="right"  >
+                                <p:commandButton value="#{msg['Ok']}"  styleClass="toolbar-Button" 
+                                                 icon="ui-icon-svg-ok ui-icon-size-22" 
+                                                 
+                                                 oncomplete=" PF('processInstanceDialog').hide()" 
+                                                 update=":dlgprocessset:processSetDialogForm:TblProcessSetInstaces"
+                                                 />
+                                <p:commandButton value="#{msg['Cancel']}"
+                                                 styleClass="toolbar-Button"
+                                                 icon="ui-icon-svg-cancel ui-icon-size-22" 
+                                                 onclick="PF('processInstanceDialog').hide();return false;"/>                                                 
+                            </f:facet>
+                        </p:toolbar>
+                    </p:layoutUnit>
+                </p:layout>
+            </h:form>
+        </p:dialog>
+    </composite:implementation>
+</html>

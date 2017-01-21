@@ -1,13 +1,13 @@
 ----------------------------------------------------------------
-Thu Sep 08 12:25:58 CEST 2016:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.10.2.0 - (1582446): instance a816c00e-0157-0955-28b4-000005342b48 
-on database directory /sluzba/code/SVEV2.0/Laurentius/Laurentius-app/Laurentius-ws/target/msh/db/msh-as4 with class loader sun.misc.Launcher$AppClassLoader@6bc7c054 
-Loaded from file:/sluzba/m2/repository/org/apache/derby/derby/10.10.2.0/derby-10.10.2.0.jar
+Fri Jan 20 20:58:15 CET 2017:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.10.2.0 - (1582446): instance a816c00e-0159-bd75-41cd-000005542a90 
+on database directory /sluzba/code/SVEV2.0/Laurentius/Laurentius-app/Laurentius-ws/target/msh/db/msh-as4 with class loader sun.misc.Launcher$AppClassLoader@4aa298b7 
+Loaded from file:/home/sluzba/.m2/repository/org/apache/derby/derby/10.10.2.0/derby-10.10.2.0.jar
 java.vendor=Oracle Corporation
-java.runtime.version=1.8.0_74-b02
+java.runtime.version=1.8.0_111-b14
 user.dir=/sluzba/code/SVEV2.0/Laurentius/Laurentius-app/Laurentius-ws
 os.name=Linux
 os.arch=amd64
-os.version=3.16.0-38-generic
+os.version=4.4.0-21-generic
 derby.system.home=null
 Database Class Loader started - derby.database.classpath=''

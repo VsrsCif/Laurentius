@@ -4,98 +4,97 @@
  */
 package si.jrc.msh.plugin.zpp;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import javax.annotation.PostConstruct;
 import javax.ejb.Local;
+import javax.ejb.Singleton;
+import javax.ejb.Startup;
 import javax.ejb.Stateless;
-import si.laurentius.commons.interfaces.PluginDescriptionInterface;
+import si.laurentius.commons.utils.SEDLogger;
+import si.laurentius.plugin.interfaces.AbstractPluginDescription;
+import si.laurentius.plugin.interfaces.PluginDescriptionInterface;
+import si.laurentius.plugin.interfaces.exception.PluginException;
 
 /**
  *
  * @author Jože Rihtaršič
  */
-@Stateless
+@Singleton
+@Startup
 @Local(PluginDescriptionInterface.class)
-public class ZPPPluginDescription implements PluginDescriptionInterface {
+public class ZPPPluginDescription extends AbstractPluginDescription {
 
-  /**
-   *
-   * @return
-   */
-  @Override
-  public String getDesc() {
-    return "ZPP - e-delivery: SVEV 2.0 service implementation";
-  }
+    private static final SEDLogger LOG = new SEDLogger(
+            ZPPPluginDescription.class);
 
+    @PostConstruct
+    private void postConstruct() {
+        try {
+            // and log further application specific info
+            registerPluginComponentInterface(ZPPOutInterceptor.class);
+            registerPluginComponentInterface(ZPPInInterceptor.class);
+
+            registerPluginComponentInterface(ZPPTask.class);
+            registerPluginComponentInterface(ZPPTaskFiction.class);
+
+            // register plugin
+            registerPlugin();
+        } catch (PluginException ex) {
+            LOG.logError("Error occured while registering plugin: " + ex.
+                    getMessage(), ex);
+        }
+    }
+
+    /**
+     *
+     * @return
+     */
     @Override
-    public List<String> getJNDIInEventInterceptors() {
-      throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public String getDesc() {
+        return "ZPP - e-delivery: SVEV 2.0 service implementation";
     }
 
     @Override
-    public List<String> getJNDIInFaultInterceptors() {
-      return Collections.emptyList();
+    public String getVersion() {
+        return "1.0.0";
     }
 
-
-
+    /**
+     *
+     * @return
+     */
     @Override
-    public List<String> getJNDIInInterceptors() {
-      return Collections.singletonList("java:global/plugin-zpp/ZPPOutInterceptor!si.laurentius.commons.interfaces.SoapInterceptorInterface");
+    public String getName() {
+        return "ZPP plugin";
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
-    public List<String> getJNDIOutEventInterceptors() {
-      return Collections.emptyList();
+    public String getWebUrlContext() {
+        return null;
     }
-
+    /**
+     *
+     * @return
+     */
     @Override
-    public List<String> getJNDIOutFaultInterceptors() {
-      return Collections.emptyList();
+    public List<String> getWebPageRoles() {
+        return Collections.emptyList();
     }
 
 
-
+    /**
+     *
+     * @return
+     */
     @Override
-    public List<String> getJNDIOutInterceptors() {
-      return Collections.singletonList("java:global/plugin-zpp/ZPPOutInterceptor!si.laurentius.commons.interfaces.SoapInterceptorInterface");
+    public String getType() {
+        return ZPPConstants.S_ZPP_PLUGIN_TYPE;
     }
-
-  /**
-   *
-   * @return
-   */
-  @Override
-  public String getName() {
-    return "ZPP plugin";
-  }
-
-  /**
-   *
-   * @return
-   */
-  @Override
-  public String getSettingUrlContext() {
-    return "/laurentius-web/zpp-plugin";
-  }
-
-  /**
-   *
-   * @return
-   */
-  @Override
-  public List<String> getTaskJNDIs() {
-    return Collections
-        .singletonList("java:global/plugin-zpp/ZPPTask!si.laurentius.commons.interfaces.TaskExecutionInterface");
-  }
-
-  /**
-   *
-   * @return
-   */
-  @Override
-  public String getType() {
-    return ZPPConstants.S_ZPP_PLUGIN_TYPE;
-  }
 
 }

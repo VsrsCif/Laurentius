@@ -44,6 +44,11 @@ public class SoapUtils {
     Boolean requestor = (Boolean) message.get(Message.REQUESTOR_ROLE);
     return requestor != null && requestor;
   }
+  
+  public static boolean isInboudMessage(Message message) {
+    Boolean imVal = (Boolean) message.get(Message.INBOUND_MESSAGE);
+    return imVal != null && imVal;
+  }
 
   public static String getInLogFilePath(Message message) {
     File f = (File) message.getExchange().get(EBMSConstants.EBMS_CP_IN_LOG_SOAP_MESSAGE_FILE);

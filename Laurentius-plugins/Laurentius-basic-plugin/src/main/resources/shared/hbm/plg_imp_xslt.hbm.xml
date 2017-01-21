@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="si.laurentius.plugin.imp.IMPXslt" table="PLG_BSC_XSLT">
+        <id column="Instance" name="Instance" type="java.lang.String" />
+        <bag name="namespaces"  access="field" cascade="all" lazy="false"  >
+                <key not-null="true">
+                    <column name="XSLT_INSTANCE"  />
+                </key>
+                <one-to-many class="si.laurentius.plugin.imp.Namespace" />
+            </bag>
+             <bag name="xPathRules"  access="field" cascade="all" lazy="false"  >
+                <key not-null="true">
+                    <column name="XSLT_INSTANCE"  />
+                </key>
+                <one-to-many class="si.laurentius.plugin.imp.XPathRule" />
+            </bag>
+    </class>
+     <class name="si.laurentius.plugin.imp.Namespace"
+           table="PLG_BSC_XSLT_NAMESPACE">
+        <id name="Id" type="java.math.BigInteger">
+            <column name="ID" scale="0" />
+            <generator class="sequence">
+                <param name="sequence">SEQ_PLG_BSC_XSLT_NS</param>                
+            </generator>
+        </id>	
+        <property column="PREFIX" name="Prefix"  length="32" type="java.lang.String" />       
+        <property column="NAMESPACE" name="Namespace"  length="1024" type="java.lang.String" />        
+    </class>    
+    
+    <class name="si.laurentius.plugin.imp.XPathRule"
+           table="PLG_BSC_XSLT_RULE">
+        <id name="Id" type="java.math.BigInteger">
+            <column name="ID" scale="0" />
+            <generator class="sequence">
+                <param name="sequence">SEQ_PLG_BSC_XSLT_RULE</param>                
+            </generator>
+        </id>	
+        
+        <property column="TRANSFORMATION" name="Transformation"  length="512" type="java.lang.String" />        
+        <property column="XPATH" name="XPath"  length="1024" type="java.lang.String" />        
+        <property column="VALUE" name="value"  length="512" type="java.lang.String" />        
+        <property column="SCHEMA" name="schema"  length="512" type="java.lang.String" />        
+    </class>  
+    
+    <query name="si.laurentius.plugin.imp.IMPXslt.getByInstance">SELECT p FROM IMPXslt p WHERE p.Instance = :instance</query>
+    <query name="si.laurentius.plugin.imp.IMPXslt.getAll">SELECT p FROM IMPXslt p</query>
+</hibernate-mapping>

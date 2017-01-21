@@ -14,22 +14,24 @@
  */
 package si.laurentius.msh.web.admin;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.event.ActionEvent;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import si.laurentius.cron.SEDTaskType;
-import si.laurentius.cron.SEDTaskTypeProperty;
-import si.laurentius.plugin.SEDPlugin;
 import si.laurentius.commons.SEDJNDI;
-import si.laurentius.commons.interfaces.PluginDescriptionInterface;
 import si.laurentius.commons.interfaces.SEDLookupsInterface;
-import si.laurentius.commons.interfaces.TaskExecutionInterface;
+import si.laurentius.commons.interfaces.SEDPluginManagerInterface;
 import si.laurentius.commons.utils.SEDLogger;
+import si.laurentius.commons.utils.Utils;
 import si.laurentius.msh.web.abst.AbstractAdminJSFView;
+import si.laurentius.plugin.crontask.CronTaskDef;
+import si.laurentius.plugin.def.Plugin;
+import si.laurentius.plugin.eventlistener.OutMailEventListenerDef;
+import si.laurentius.plugin.interceptor.MailInterceptorDef;
+import si.laurentius.plugin.processor.InMailProcessorDef;
 
 /**
  *
@@ -37,182 +39,149 @@ import si.laurentius.msh.web.abst.AbstractAdminJSFView;
  */
 @SessionScoped
 @ManagedBean(name = "adminSEDPluginView")
-public class AdminSEDPluginView extends AbstractAdminJSFView<SEDPlugin> {
+public class AdminSEDPluginView extends AbstractAdminJSFView<Plugin> {
 
   private static final SEDLogger LOG = new SEDLogger(AdminSEDPluginView.class);
 
   @EJB(mappedName = SEDJNDI.JNDI_SEDLOOKUPS)
   private SEDLookupsInterface mdbLookups;
 
-  SEDPlugin selectedViewPlugin;
+  @EJB(mappedName = SEDJNDI.JNDI_PLUGIN)
+  private SEDPluginManagerInterface mPluginManager;
+
+  Plugin selectedViewPlugin;
+  boolean adminView = false;
+
+
+
+  public List<Plugin> getPluginWitGUI() {
+    List<Plugin> lst = new ArrayList<>();
+    for (Plugin p : mPluginManager.getRegistredPlugins()) {
+      if (!Utils.isEmptyString(p.getWebContext())) {
+        lst.add(p);
+      }
+    }
+    if (selectedViewPlugin == null && !lst.isEmpty()) {
+      selectedViewPlugin = lst.get(0);
+    }
+    return lst;
+
+  }
+  
+  public List<CronTaskDef> getCronTaskListForPlugin(String plugin){
+    return mPluginManager.getCronTasksForPlugin(plugin);
+  
+  }
 
   /**
-     *
-     */
+   *
+   */
   @Override
   public void createEditable() {
-    SEDPlugin ecj = new SEDPlugin();
-
-    ecj.setJndi("java:global[/application name]/module name/enterprise bean name[/interface name]");
-    ecj.setType("unique-type");
-    ecj.setName("name");
-    ecj.setDescription("Enter JNDI and refresh data from EJB task!");
-
-    setNew(ecj);
-  }
-
-  /**
-     *
-     */
-  public void refreshDataFromEJB() {
-    if (getEditable() == null || getEditable().getJndi() == null
-        || getEditable().getJndi().isEmpty()) {
-      return;
-    }
-    try {
-      PluginDescriptionInterface pdi = InitialContext.doLookup(getEditable().getJndi());
-      getEditable().setDescription(pdi.getDesc());
-      getEditable().setName(pdi.getName());
-      getEditable().setType(pdi.getType());
-      getEditable().setJndiInInterceptor(String.join(",", pdi.getJNDIInInterceptors()));
-      getEditable().setJndiOutInterceptor(String.join(",",pdi.getJNDIOutInterceptors() ));
-      getEditable().setWebContext(pdi.getSettingUrlContext());
-      getEditable().setTasksJNDIs(String.join(",", pdi.getTaskJNDIs()));
-
-    } catch (NamingException ex) {
-
-    }
 
   }
 
-   @Override
+  @Override
   public boolean validateData() {
-    
+
     return true;
   }
+
   /**
-     *
-     */
+   *
+   */
   @Override
   public void removeSelected() {
-    if (getSelected() != null) {
-      mdbLookups.removeSEDPlugin(getSelected());
-      setSelected(null);
-    }
-
   }
 
   /**
-     *
-     */
+   *
+   */
   @Override
   public boolean persistEditable() {
-    SEDPlugin ecj = getEditable();
-    boolean bsuc = false;
-    if (ecj != null) {
-      String tjndis = ecj.getTasksJNDIs();
-      if (tjndis != null && !tjndis.trim().isEmpty()) {
-        String[] lst = tjndis.split(",");
-        for (String jndi : lst) {
-          SEDTaskType td = getSEDTaskType(jndi);
-          if (td != null) {
-            mdbLookups.addSEDTaskType(td);
-          }
-
-        }
-      }
-      bsuc = true;
-      mdbLookups.addSEDPlugin(ecj);
-
-    }
-    return bsuc;
-  }
-
-  private SEDTaskType getSEDTaskType(String jndi) {
-    try {
-      SEDTaskType td = new SEDTaskType();
-      TaskExecutionInterface tproc = InitialContext.doLookup(jndi);
-      td.setJndi(jndi);
-
-      td.setDescription(tproc.getTaskDefinition().getDescription());
-      td.setName(tproc.getTaskDefinition().getName());
-      td.setType(tproc.getTaskDefinition().getType());
-      td.getSEDTaskTypeProperties().clear();
-      if (!tproc.getTaskDefinition().getSEDTaskTypeProperties().isEmpty()) {
-        td.getSEDTaskTypeProperties().addAll(tproc.getTaskDefinition().getSEDTaskTypeProperties());
-      }
-      return td;
-    } catch (NamingException ex) {
-
-      return null;
-    }
-
+    return false;
   }
 
   /**
    *
-   * @param key
-   * @param name
-   * @param mandatory
-   * @return
    */
-  public SEDTaskTypeProperty createTypeProperty(String key, String name, boolean mandatory) {
-    SEDTaskTypeProperty sp = new SEDTaskTypeProperty();
-    sp.setKey(key);
-    sp.setDescription(name);
-    sp.setMandatory(mandatory);
-    return sp;
-  }
-
-  /**
-     *
-     */
   @Override
   public boolean updateEditable() {
-    SEDPlugin ecj = getEditable();
-    boolean bsuc = false;
-    if (ecj != null) {
-      mdbLookups.updateSEDPlugin(ecj);
-      bsuc = true;
-    }
-    return bsuc;
+    return false;
   }
+
+  public List<CronTaskDef> getCurrentCronTasks() {
+    Plugin ecj = getSelected();
+    if (ecj != null) {
+      return ecj.getCronTaskDeves();
+    }
+    return Collections.emptyList();
+  }
+
+  ;
+  
+  public List<MailInterceptorDef> getCurrentMailInterceptors() {
+    Plugin ecj = getSelected();
+    if (ecj != null) {
+      return ecj.getMailInterceptorDeves();
+    }
+    return Collections.emptyList();
+
+  }
+
+  ;
+  public List<OutMailEventListenerDef> getCurrentOutMailEventListeners() {
+    Plugin ecj = getSelected();
+    if (ecj != null) {
+      return ecj.getOutMailEventListenerDeves();
+    }
+    return Collections.emptyList();
+  }
+
+  ;
+  
+  public List<InMailProcessorDef> getCurrentInMailProcessors() {
+    Plugin ecj = getSelected();
+    if (ecj != null) {
+      return ecj.getInMailProcessorDeves();
+    } 
+    return Collections.emptyList();
+
+  }
+  
 
   /**
    *
    * @return
    */
   @Override
-  public List<SEDPlugin> getList() {
-    long l = LOG.logStart();
-    List<SEDPlugin> lst = mdbLookups.getSEDPlugin();
-    LOG.logEnd(l, lst != null ? lst.size() : "null");
-    return lst;
+  public List<Plugin> getList() {
+    return mPluginManager.getRegistredPlugins();
   }
+  
+  
+ 
 
   /**
    *
    * @return
    */
   public String getSelectedWebContext() {
-    return selectedViewPlugin != null ? selectedViewPlugin.getWebContext() : "";
+    return selectedViewPlugin != null ?
+            selectedViewPlugin.getWebContext() 
+            : "";
   }
 
   /**
-   *
+   * Onn selected view in Plugin widget tool
    * @param event
    */
   public void onSelectedViewPluginAction(ActionEvent event) {
     long l = LOG.logStart();
     if (event != null) {
-
-      LOG.log("set selected plugin");
-      SEDPlugin res = (SEDPlugin) event.getComponent().getAttributes().get("pluginItem");
-
+      Plugin res = (Plugin) event.getComponent().getAttributes().get("pluginItem");
       selectedViewPlugin = res;
-      LOG.log("set selected plugin setted: " + selectedViewPlugin);
     } else {
-      LOG.log("set selected plugin setted to null");
       selectedViewPlugin = null;
     }
     LOG.logEnd(l);

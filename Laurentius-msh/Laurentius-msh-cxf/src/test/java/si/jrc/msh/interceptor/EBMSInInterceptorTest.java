@@ -365,5 +365,10 @@ logStart();
         currentThread().getStackTrace()[miMethodStack]
         .getMethodName() : "NULL METHOD";
   }
+  
+  @Test
+  public void testMimeMessage(){
+
+  }
 
 }

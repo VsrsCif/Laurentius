@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:sui="http://java.sun.com/jsf/composite/gui"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:dlg="http://java.sun.com/jsf/composite/gui/dialog"     
+      >
+
+    <h:head>
+        <title>Test cases</title>
+        <h:outputStylesheet name="css/main.css" />
+        <h:outputStylesheet name="css/icons.css" />
+    </h:head>
+
+    <h:body>
+        <h:form id="bscform" >
+            <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
+            <!-- main window -->    
+            <p:layout  style="min-width:400px;min-height:400px;"  fullPage="true" >
+                
+                <p:layoutUnit position="west"  size="200" resizable="true" closable="true" collapsible="true" >        
+                     <p:accordionPanel id="toolbars" >
+                          
+                            <p:tab id="PANEL_INBOX"  >
+                                <f:facet name="title">
+
+                                    <h:graphicImage value="#{resource['images:/process.svg']}" width="22" height="22" />
+                                    <h:outputText value="#{msg['InMailProcess']}" />                                 
+                                    
+                                </f:facet>
+                                
+                                <p:menu class="ui-accordion-button" style="width: 100%">
+                                    
+                                    
+                                    <p:menuitem value="#{msg['Export']}" 
+                                                icon="ui-icon-svg-export ui-icon-size-22" 
+                                                actionListener="#{basicWebPluginData.onToolbarButtonAction}" 
+                                                update=":bscform:MainPanel">
+                                        <f:attribute name="panel" value="PANEL_IMP_EXPORT" />
+                                    </p:menuitem>
+                                    <p:menuitem value="#{msg['Execute']}" 
+                                                icon="ui-icon-svg-execute ui-icon-size-22" 
+                                                actionListener="#{basicWebPluginData.onToolbarButtonAction}" 
+                                                update=":bscform:MainPanel">
+                                        <f:attribute name="panel" value="PANEL_IMP_EXECUTE" />
+                                    </p:menuitem>  
+                                    <p:menuitem value="#{msg['XSLT']}" 
+                                                icon="ui-icon-svg-xslt ui-icon-size-22" 
+                                                actionListener="#{basicWebPluginData.onToolbarButtonAction}" 
+                                                update=":bscform:MainPanel"
+                                                >
+                                        <f:attribute name="panel" value="PANEL_IMP_XSLT" />
+                                    </p:menuitem>
+                                </p:menu>
+                               
+                            </p:tab>
+                     </p:accordionPanel>
+
+                </p:layoutUnit>    
+
+                <p:layoutUnit position="center"  >        
+                    <h:panelGroup id="MainPanel">
+                        <sui:panel-execute id="PanelExecute" rendered="#{basicWebPluginData.currentPanel.equalsIgnoreCase(AppConstant.s_PANEL_IMP_EXECUTE)}"  />
+                        <sui:panel-export id="PanelExport" rendered="#{basicWebPluginData.currentPanel.equalsIgnoreCase(AppConstant.s_PANEL_IMP_EXPORT)}"  />
+                        <sui:panel-xslt id="PanelXslt" rendered="#{basicWebPluginData.currentPanel.equalsIgnoreCase(AppConstant.s_PANEL_IMP_XSLT)}"  />
+
+                    
+                    </h:panelGroup>
+                </p:layoutUnit>     
+               </p:layout>
+        </h:form>
+        <dlg:dlg-export id="dlgExport" />
+        <dlg:dlg-execute id="dlgExecute" />
+        <dlg:dlg-xslt id="dlgXslt" />
+
+    </h:body>
+</html>

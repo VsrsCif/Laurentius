@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import javax.xml.namespace.NamespaceContext;
-import si.laurentius.xslt.Namespace;
+
 
 /**
  *
@@ -21,13 +21,13 @@ import si.laurentius.xslt.Namespace;
 public class XSLTNamespaceContext implements NamespaceContext{
   
   Map<String, String> mpNS= new HashMap<>();
-
+/*
   public XSLTNamespaceContext(List<Namespace> lst) {
     for (Namespace n: lst){
       mpNS.put(n.getPrefix(),n.getNamespace());
     }
   }
-
+*/
   
   
   @Override

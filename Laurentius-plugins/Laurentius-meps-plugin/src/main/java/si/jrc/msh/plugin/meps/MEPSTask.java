@@ -8,16 +8,18 @@ import java.util.Properties;
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
-import si.laurentius.cron.SEDTaskType;
-import si.laurentius.cron.SEDTaskTypeProperty;
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.interfaces.JMSManagerInterface;
 import si.laurentius.commons.interfaces.SEDDaoInterface;
 import si.laurentius.commons.interfaces.SEDLookupsInterface;
-import si.laurentius.commons.interfaces.TaskExecutionInterface;
-import si.laurentius.commons.interfaces.exception.TaskException;
+
+
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StringFormater;
+import si.laurentius.plugin.crontask.CronTaskDef;
+import si.laurentius.plugin.crontask.CronTaskPropertyDef;
+import si.laurentius.plugin.interfaces.TaskExecutionInterface;
+import si.laurentius.plugin.interfaces.exception.TaskException;
 
 /**
  *
@@ -40,9 +42,9 @@ public class MEPSTask implements TaskExecutionInterface {
 
   StringFormater msfFormat = new StringFormater();
 
-  private SEDTaskTypeProperty createTTProperty(String key, String desc, boolean mandatory,
+  private CronTaskPropertyDef createTTProperty(String key, String desc, boolean mandatory,
       String type, String valFormat, String valList) {
-    SEDTaskTypeProperty ttp = new SEDTaskTypeProperty();
+    CronTaskPropertyDef ttp = new CronTaskPropertyDef();
     ttp.setKey(key);
     ttp.setDescription(desc);
     ttp.setMandatory(mandatory);
@@ -52,7 +54,7 @@ public class MEPSTask implements TaskExecutionInterface {
     return ttp;
   }
 
-  private SEDTaskTypeProperty createTTProperty(String key, String desc) {
+  private CronTaskPropertyDef createTTProperty(String key, String desc) {
     return createTTProperty(key, desc, true, "string", null, null);
   }
 
@@ -68,13 +70,14 @@ public class MEPSTask implements TaskExecutionInterface {
     return null;
   }
 
+
   /**
    *
    * @return
    */
   @Override
-  public SEDTaskType getTaskDefinition() {
-    SEDTaskType tt = new SEDTaskType();
+  public CronTaskDef getDefinition() {
+    CronTaskDef tt = new CronTaskDef();
     tt.setType("meps-plugin");
     tt.setName("MEPS plugin");
     tt.setDescription("Machine printing and enveloping task");

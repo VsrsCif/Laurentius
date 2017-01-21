@@ -9,7 +9,9 @@ import javax.ejb.Stateless;
 import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
 import org.apache.cxf.binding.soap.SoapMessage;
-import si.laurentius.commons.interfaces.SoapInterceptorInterface;
+import si.laurentius.plugin.MailInterceptorDef;
+import si.laurentius.plugin.interfaces.SoapInterceptorInterface;
+
 
 /**
  *
@@ -25,6 +27,11 @@ public class MEPSInInterceptor implements SoapInterceptorInterface {
      */
   public MEPSInInterceptor() {
 
+  }
+
+  @Override
+  public MailInterceptorDef getInterceptorDefinition() {
+    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
   }
 
   /**

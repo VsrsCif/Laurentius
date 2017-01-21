@@ -50,6 +50,8 @@ public class AppConstant {
      */
   public static final String S_PANEL_CRON_EXEC = "PANEL_CRON_EXEC";
 
+  
+   public static final String S_PANEL_INMAIL_PROCESS = "PANEL_INMAIL_PROCESS";
   /**
      *
      */
@@ -159,7 +161,12 @@ public class AppConstant {
   public String getS_PANEL_PLUGIN() {
     return S_PANEL_PLUGIN;
   }
+  public String getS_PANEL_INMAIL_PROCESS() {
+    return S_PANEL_INMAIL_PROCESS;
+  }
 
+  
+  
   /**
    *
    * @return

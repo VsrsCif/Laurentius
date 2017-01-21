@@ -43,6 +43,7 @@ import org.primefaces.model.UploadedFile;
 import si.laurentius.commons.MimeValues;
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.SEDOutboxMailStatus;
+import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.exception.HashException;
 import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.interfaces.DBSettingsInterface;
@@ -81,8 +82,6 @@ public class OutMailDataView extends AbstractMailView<MSHOutMail, MSHOutEvent> i
   @EJB(mappedName = SEDJNDI.JNDI_PMODE)
   PModeInterface mPMode;
 
-  @EJB(mappedName = SEDJNDI.JNDI_DBSETTINGS)
-  DBSettingsInterface mdbSettings;
   HashUtils mpHU = new HashUtils();
   StorageUtils msuStorageUtils = new StorageUtils();
   String newMailBody;
@@ -102,7 +101,7 @@ public class OutMailDataView extends AbstractMailView<MSHOutMail, MSHOutEvent> i
 
     if (!lstUB.isEmpty()) {
       m.setSenderEBox(lstUB.get(0));
-      m.setReceiverEBox(lstUB.get(lstUB.size() - 1) + "@" + mdbSettings.getDomain());
+      m.setReceiverEBox(lstUB.get(lstUB.size() - 1) + "@" + SEDSystemProperties.getLocalDomain());
     } else {
       m.setSenderEBox("");
       m.setReceiverEBox("");
@@ -400,7 +399,7 @@ public class OutMailDataView extends AbstractMailView<MSHOutMail, MSHOutEvent> i
         String pmodeId = Utils.getPModeIdFromOutMail(newOutMail);
         newOutMail.setReceiverName(newOutMail.getReceiverEBox());
         newOutMail.setSenderName(newOutMail.getSenderEBox());
-        newOutMail.setSenderEBox(newOutMail.getSenderEBox() + "@" + mdbSettings.getDomain());
+        newOutMail.setSenderEBox(newOutMail.getSenderEBox() + "@" + SEDSystemProperties.getLocalDomain());
 
         MSHOutPart p = new MSHOutPart();
         p.setEncoding("UTF-8");

@@ -39,9 +39,8 @@
         <module>Laurentius-dao</module>
         <module>Laurentius-app</module>                
         <module>Laurentius-msh</module>
-        <module>Laurentius-tasks</module>
         <module>Laurentius-plugins</module>
- 	<module>Laurentius-examples</module>
+        <module>Laurentius-examples</module>
         
     </modules>
 
@@ -70,6 +69,7 @@
         <sonar.maven.version>3.0.2</sonar.maven.version>
         <!-- DEPENDENCIES -->
         <cxf-rt.version>3.1.4</cxf-rt.version>        
+        <net.sf.saxon.version>9.7.0-14</net.sf.saxon.version>
         <javax.javaee-api.version>7.0</javax.javaee-api.version>
         <log4j.version>1.2.17</log4j.version>
         <org.apache.derby.version>10.10.2.0</org.apache.derby.version>
@@ -80,7 +80,7 @@
         <org.apache.santuario.xmlsec.version>2.0.6</org.apache.santuario.xmlsec.version>
         <org.bouncycastle.version>1.52</org.bouncycastle.version>
         <maven.war.plugin.version>2.6</maven.war.plugin.version>     
-          
+        
         <!-- GUI -->
         <org.primefaces.version>6.0</org.primefaces.version>
         <org.primefaces.extensions.version>6.0.0</org.primefaces.extensions.version>        
@@ -135,19 +135,23 @@
                 <artifactId>pdfbox</artifactId>
                 <version>${org.apache.pdfbox.version}</version>                            
             </dependency>
-             <dependency>
-            <groupId>org.bouncycastle</groupId>
-            <artifactId>bcprov-jdk15on</artifactId>
-            <version>${org.bouncycastle.version}</version>        
-        </dependency>
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcprov-jdk15on</artifactId>
+                <version>${org.bouncycastle.version}</version>        
+            </dependency>
  
-        <dependency>
-            <groupId>org.bouncycastle</groupId>
-            <artifactId>bcpkix-jdk15on</artifactId>
-            <version>${org.bouncycastle.version}</version>        
-        </dependency>
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcpkix-jdk15on</artifactId>
+                <version>${org.bouncycastle.version}</version>        
+            </dependency>
         
-            
+            <dependency>
+                <groupId>net.sf.saxon</groupId>
+                <artifactId>Saxon-HE</artifactId>
+                <version>${net.sf.saxon.version}</version> 
+            </dependency>
             <!--  GUI -->
             <dependency>
                 <groupId>org.primefaces</groupId>

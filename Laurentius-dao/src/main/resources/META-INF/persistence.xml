@@ -16,8 +16,6 @@
         <mapping-file>shared/hbm/sed-box.hbm.xml</mapping-file>
         <mapping-file>shared/hbm/sed-user.hbm.xml</mapping-file>
         <mapping-file>shared/hbm/sed-cron.hbm.xml</mapping-file>
-        <mapping-file>shared/hbm/sed-tasktype.hbm.xml</mapping-file>
-        <mapping-file>shared/hbm/sed-plugin.hbm.xml</mapping-file>
         <mapping-file>shared/hbm/report-status.hbm.xml</mapping-file>
         <properties>
             <property name="jboss.entity.manager.jndi.name" value="java:/ebMS_MSH_PU"/> 

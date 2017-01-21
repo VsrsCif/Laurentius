@@ -78,7 +78,6 @@ import si.laurentius.commons.exception.SEDSecurityException;
 import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.interfaces.SEDDaoInterface;
 import si.laurentius.commons.interfaces.SEDLookupsInterface;
-import si.laurentius.commons.interfaces.SoapInterceptorInterface;
 import si.laurentius.commons.pmode.EBMSMessageContext;
 import si.laurentius.commons.utils.HashUtils;
 import si.laurentius.commons.utils.SEDLogger;
@@ -87,6 +86,8 @@ import si.laurentius.commons.utils.StorageUtils;
 import si.laurentius.lce.KeystoreUtils;
 import si.laurentius.msh.inbox.mail.MSHInMail;
 import si.laurentius.commons.interfaces.SEDCertStoreInterface;
+import si.laurentius.plugin.interceptor.MailInterceptorDef;
+import si.laurentius.plugin.interfaces.SoapInterceptorInterface;
 
 /**
  *
@@ -201,6 +202,15 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
               ZPPConstants.XSLT_FOLDER);
     }
     return mfpFop;
+  }
+
+  @Override
+  public MailInterceptorDef getDefinition() {
+    MailInterceptorDef mid = new MailInterceptorDef();
+    mid.setDescription("Sets ZPP out mail with delivery notification");
+    mid.setName("ZPP out intercepror");
+    mid.setType("ZPPOutInterceptor");
+    return mid;
   }
 
   private SEDKey getSecretKeyForId(BigInteger bi) {
@@ -324,8 +334,7 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
       getFOP().generateVisualization(outMail, fDNViz,
           FOPUtils.FopTransformations.DeliveryNotification, MimeValues.MIME_PDF.getMimeType());
 
-      String keyStore =
-          eoutCtx.getSenderPartyIdentitySet().getLocalPartySecurity().getKeystoreName();
+     
       String alias =
           eoutCtx.getSenderPartyIdentitySet().getLocalPartySecurity().getSignatureKeyAlias();
       
@@ -387,8 +396,7 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
       List<X509Certificate> cslst = vsu.getSignatureCerts(fda);
       // is 
       if (cslst.size() < 2) {
-        String keyStore =
-            eoutCtx.getSenderPartyIdentitySet().getLocalPartySecurity().getKeystoreName();
+        
         String alias =
             eoutCtx.getSenderPartyIdentitySet().getLocalPartySecurity().getSignatureKeyAlias();
         SEDCertStore sc = mCertBean.getCertificateStore();

@@ -1,0 +1,57 @@
+
+
+.ui-icon-size-16 {
+    width:  16px !important;
+    height:  16px !important;
+    background-size: 16px 16px !important;
+}
+.ui-icon-size-22 {
+    width:  22px !important;
+    height:  22px !important;
+    background-size: 22px 22px !important;
+}
+.ui-icon-size-32 {
+       
+    width:  32px !important;
+    height:  32px !important;
+    background-size: 32px 32px !important;
+}
+
+.ui-icon-panel-Header {
+    border-radius: 0;
+    width:  32px !important;
+    height:  32px !important;
+    background-size: 32px 32px !important;
+    float: left;
+}
+
+
+
+.ui-icon-svg-export {
+    background-image: url("#{resource['images:/export.svg']}") !important;    
+}
+
+.ui-icon-svg-xslt {
+    background-image: url("#{resource['images:/xslt.svg']}") !important;    
+}
+
+.ui-icon-svg-execute {
+    background-image: url("#{resource['images:/execute.svg']}") !important;    
+}
+
+.ui-icon-svg-add {
+    background-image: url("#{resource['images:/add.svg']}") !important;    
+}
+.ui-icon-svg-remove {
+    background-image: url("#{resource['images:/remove.svg']}") !important;    
+}
+.ui-icon-svg-edit {
+    background-image: url("#{resource['images:/edit.svg']}") !important;    
+}
+
+.ui-icon-svg-ok {
+    background-image: url("#{resource['images:/ok.svg']}") !important;    
+}
+.ui-icon-svg-cancel {
+    background-image: url("#{resource['images:/cancel.svg']}") !important;    
+}

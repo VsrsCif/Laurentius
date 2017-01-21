@@ -111,6 +111,9 @@
 .ui-icon-svg-plugin {
     background-image: url("#{resource['images:/plugin.svg']}") !important;    
 }
+.ui-icon-svg-plugin-admin {
+    background-image: url("#{resource['images:/pluginAdmin.svg']}") !important;    
+}
 .ui-icon-svg-settings {
     background-image: url("#{resource['images:/settings.svg']}") !important;    
 }
@@ -168,4 +171,22 @@
     background-image: url("#{resource['images:/payload.svg']}") !important;    
 }
 
+.ui-icon-svg-process {
+    background-image: url("#{resource['images:/process.svg']}") !important;    
+}
 
+.ui-icon-svg-up {
+    background-image: url("#{resource['images:/up.svg']}") !important;    
+}
+
+.ui-icon-svg-down {
+    background-image: url("#{resource['images:/down.svg']}") !important;    
+}
+
+.ui-icon-svg-top {
+    background-image: url("#{resource['images:/top.svg']}") !important;    
+}
+
+.ui-icon-svg-bottom {
+    background-image: url("#{resource['images:/bottom.svg']}") !important;    
+}

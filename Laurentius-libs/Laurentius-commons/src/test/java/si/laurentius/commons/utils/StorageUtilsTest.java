@@ -27,8 +27,7 @@ import java.time.LocalDate;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
-import static si.laurentius.commons.SEDSystemProperties.SYS_PROP_FOLDER_STORAGE_DEF;
-import static si.laurentius.commons.SEDSystemProperties.SYS_PROP_HOME_DIR;
+import si.laurentius.commons.SEDSystemProperties;
 
 /**
  *
@@ -40,29 +39,29 @@ public class StorageUtilsTest {
 
   @Before
   public void setUp()
-      throws IOException {
-    // reset property
-    System.setProperty(SYS_PROP_HOME_DIR, System.getProperty("java.io.tmpdir"));
+          throws IOException {
+    System.setProperty(SEDSystemProperties.SYS_PROP_HOME_DIR, System.
+            getProperty("java.io.tmpdir"));
 
     Path directory = StorageUtils.getStorageFolder().toPath();
     if (Files.exists(directory)) {
       Path p = Files.walkFileTree(directory, new SimpleFileVisitor<Path>() {
         @Override
         public FileVisitResult visitFile(Path file, BasicFileAttributes attrs)
-            throws IOException {
+                throws IOException {
           Files.deleteIfExists(file);
           return FileVisitResult.CONTINUE;
         }
 
         @Override
         public FileVisitResult postVisitDirectory(Path dir, IOException exc)
-            throws IOException {
+                throws IOException {
           Files.delete(dir);
           return FileVisitResult.CONTINUE;
         }
 
       });
-      if (p== null){
+      if (p == null) {
         fail();
       }
     }
@@ -75,7 +74,7 @@ public class StorageUtilsTest {
    */
   @Test
   public void testDateStorageFolder()
-      throws Exception {
+          throws Exception {
     LocalDate cld = LocalDate.of(2010, 5, 6);
     Path p = StorageUtils.dateStorageFolder(cld);
     Path root = StorageUtils.getStorageFolder().toPath();
@@ -98,7 +97,7 @@ public class StorageUtilsTest {
    */
   @Test
   public void testGetMaxSubFolderNumber()
-      throws Exception {
+          throws Exception {
     LocalDate cld = LocalDate.now();
     Path p = StorageUtils.dateStorageFolder(cld);
 
@@ -146,7 +145,7 @@ public class StorageUtilsTest {
    */
   @Test
   public void testCurrentStorageFolder()
-      throws Exception {
+          throws Exception {
     LocalDate cld = LocalDate.now();
     Path p = StorageUtils.dateStorageFolder(cld);
     File expResult = new File(p.toFile(), "001");
@@ -155,7 +154,7 @@ public class StorageUtilsTest {
     assertEquals(expResult, result);
 
     StorageUtils siInstance = new StorageUtils();
-    for (int i = 0; i < StorageUtils.MAX_FILES_IN_FOLDER+10; i++) {
+    for (int i = 0; i < StorageUtils.MAX_FILES_IN_FOLDER + 10; i++) {
       siInstance.storeOutFile("application/bin", tuUtils.getTestByteArray());
     }
 
@@ -173,21 +172,27 @@ public class StorageUtilsTest {
    */
   @Test
   public void testGetFile()
-      throws IOException {
+          throws IOException {
 
+    // create file in storage
     LocalDate cld = LocalDate.now();
     Path p = StorageUtils.dateStorageFolder(cld);
+    
     File fsub = new File(p.toAbsolutePath().toFile(), "001");
     if (!fsub.exists() && !fsub.mkdirs()) {
       fail("Fail creating folder: " + fsub.getAbsolutePath());
     }
-    tuUtils.createFile(fsub, "test");
-    String strRoot = StorageUtils.getSEDHomeFolder().getAbsolutePath();
+    File newFile = tuUtils.createFile(fsub, "test");
+   
+    String strRoot = SEDSystemProperties.getStorageFolder().getAbsolutePath();
+    // test if file is under storage file
     assertTrue(fsub.getAbsolutePath().startsWith(strRoot));
-    String storagePath = fsub.getAbsolutePath().substring(strRoot.length());
 
+    // get relative storage path
+    String storagePath = newFile.getAbsolutePath().substring(strRoot.length());
+    // get file from storage with relative path
     File result = StorageUtils.getFile(storagePath);
-    assertEquals(fsub, result);
+    assertEquals(newFile, result);
   }
 
   /**
@@ -197,14 +202,15 @@ public class StorageUtilsTest {
    */
   @Test
   public void testGetNewStorageFile()
-      throws Exception {
+          throws Exception {
     String suffix = "test";
     String prefix = ".pdf";
     File result = StorageUtils.getNewStorageFile(suffix, prefix);
     assertNotNull(result);
 
     assertTrue(
-        result.getAbsolutePath().startsWith(StorageUtils.getStorageFolder().getAbsolutePath()));
+            result.getAbsolutePath().startsWith(StorageUtils.getStorageFolder().
+                    getAbsolutePath()));
 
   }
 
@@ -214,14 +220,18 @@ public class StorageUtilsTest {
   @Test
   public void testGetSEDHomeFolder() {
     File expResultTmp = new File(System.getProperty("java.io.tmpdir"));
-    File expResult = new File(System.getProperty("user.dir"));
-    File result = StorageUtils.getSEDHomeFolder();
+    File expResult = new File(System.getProperty("user.dir") + File.separator
+            + "laurentius-home");
+    File result = SEDSystemProperties.getHomeFolder();
     assertEquals(expResultTmp, result);
 
-    System.getProperties().remove(SYS_PROP_HOME_DIR);
-    result = StorageUtils.getSEDHomeFolder();
-    assertEquals("If propery ${laurentius.home} is not setted home is working dir: ${user.dir}", expResult,
-        result);
+     System.getProperties().remove(SEDSystemProperties.SYS_PROP_HOME_DIR);
+    SEDSystemProperties.clear();
+    result = SEDSystemProperties.getHomeFolder();
+    assertEquals(
+            "If propery ${laurentius.home} is not setted home is working dir: ${user.dir}",
+            expResult,
+            result);
   }
 
   /**
@@ -229,17 +239,21 @@ public class StorageUtilsTest {
    */
   @Test
   public void testGetStorageFolder() {
-    File expResultTmp = new File(System.getProperty("java.io.tmpdir") + File.separator +
-        SYS_PROP_FOLDER_STORAGE_DEF);
-    File expResult = new File(System.getProperty("user.dir") + File.separator +
-        SYS_PROP_FOLDER_STORAGE_DEF);
-    File result = StorageUtils.getStorageFolder();
-    assertEquals(expResultTmp, result);
+    
 
-    System.getProperties().remove(SYS_PROP_HOME_DIR);
-    result = StorageUtils.getStorageFolder();
-    assertEquals("If propery ${laurentius.home} is not setted home is working dir: ${user.dir}", expResult,
-        result);
+   
+    File expResult = new File(System.getProperty("user.dir") + File.separator
+            + "laurentius-home"+File.separator+"storage");
+    
+    System.getProperties().remove(SEDSystemProperties.SYS_PROP_HOME_DIR);
+    SEDSystemProperties.clear();
+    
+    File result = StorageUtils.getStorageFolder();
+    
+    assertEquals(
+            "If propery ${laurentius.home} is not setted home is working dir: ${user.dir}",
+            expResult,
+            result);
   }
 
   /**
@@ -249,10 +263,11 @@ public class StorageUtilsTest {
    */
   @Test
   public void testRemoveFile()
-      throws Exception {
+          throws Exception {
 
     StorageUtils instance = new StorageUtils();
-    File f = instance.storeOutFile("application/pdf", tuUtils.getTestByteArray());
+    File f = instance.
+            storeOutFile("application/pdf", tuUtils.getTestByteArray());
     assertTrue(f.exists());
     StorageUtils.removeFile(StorageUtils.getRelativePath(f));
     assertTrue(!f.exists());
@@ -265,7 +280,7 @@ public class StorageUtilsTest {
    */
   @Test
   public void testCopyFile()
-      throws Exception {
+          throws Exception {
     File sourceFile = tuUtils.createFile("test data");
     File destFile = tuUtils.createEmptyFile();
 
@@ -276,7 +291,7 @@ public class StorageUtilsTest {
     instance.copyFile(sourceFile, destFile, true);
     assertTrue(sourceFile.length() == destFile.length());
 
-    if (!sourceFile.delete() || !destFile.delete()){
+    if (!sourceFile.delete() || !destFile.delete()) {
       fail();
     }
 
@@ -289,25 +304,24 @@ public class StorageUtilsTest {
    */
   @Test
   public void testCopyFileToFolder()
-      throws Exception {
+          throws Exception {
 
-    File destFolder = StorageUtils.getSEDHomeFolder();
+    File destFolder = SEDSystemProperties.getHomeFolder();
     StorageUtils instance = new StorageUtils();
-    File f = instance.storeOutFile("application/bin",tuUtils.getTestByteArray());
+    File f = instance.
+            storeOutFile("application/bin", tuUtils.getTestByteArray());
     String relPath = StorageUtils.getRelativePath(f);
 
-    
-    
     File fNew = instance.copyFileToFolder(relPath, destFolder);
     assertNotNull(fNew);
 
-    assertEquals(f.length(),  fNew.length());
-    assertEquals(destFolder.getAbsolutePath(), fNew.getParentFile().getAbsolutePath());
+    assertEquals(f.length(), fNew.length());
+    assertEquals(destFolder.getAbsolutePath(), fNew.getParentFile().
+            getAbsolutePath());
 
-    if (!fNew.delete()){
+    if (!fNew.delete()) {
       fail();
     }
-   
 
   }
 
@@ -318,7 +332,7 @@ public class StorageUtilsTest {
    */
   @Test
   public void testGetByteArray()
-      throws Exception {
+          throws Exception {
 
     byte[] expResult = tuUtils.getTestByteArray();
 
@@ -340,9 +354,10 @@ public class StorageUtilsTest {
    */
   @Test
   public void testStoreFileIS()
-      throws Exception {
+          throws Exception {
 
-    ByteArrayInputStream bis = new ByteArrayInputStream(tuUtils.getTestByteArray());
+    ByteArrayInputStream bis = new ByteArrayInputStream(tuUtils.
+            getTestByteArray());
     long size = bis.available();
 
     StorageUtils instance = new StorageUtils();
@@ -350,7 +365,8 @@ public class StorageUtilsTest {
     assertEquals(size, (int) result.length());
 
     assertTrue(
-        result.getAbsolutePath().startsWith(StorageUtils.getStorageFolder().getAbsolutePath()));
+            result.getAbsolutePath().startsWith(StorageUtils.getStorageFolder().
+                    getAbsolutePath()));
 
   }
 
@@ -359,7 +375,7 @@ public class StorageUtilsTest {
    */
   @Test
   public void testStoreFileBuff()
-      throws Exception {
+          throws Exception {
     byte[] buff = tuUtils.getTestByteArray();
 
     StorageUtils instance = new StorageUtils();
@@ -367,7 +383,8 @@ public class StorageUtilsTest {
     assertEquals(buff.length, (int) result.length());
 
     assertTrue(
-        result.getAbsolutePath().startsWith(StorageUtils.getStorageFolder().getAbsolutePath()));
+            result.getAbsolutePath().startsWith(StorageUtils.getStorageFolder().
+                    getAbsolutePath()));
 
   }
 
@@ -378,7 +395,7 @@ public class StorageUtilsTest {
    */
   @Test
   public void testStoreInFile_File()
-      throws Exception {
+          throws Exception {
     System.out.println("storeInFile");
     String mimeType = "application/bin";
     File fIn = tuUtils.createFile("test data");
@@ -386,15 +403,17 @@ public class StorageUtilsTest {
     File result = instance.storeInFile(mimeType, fIn);
     assertEquals(fIn.length(), result.length());
     assertTrue(
-        result.getAbsolutePath().startsWith(StorageUtils.getStorageFolder().getAbsolutePath()));
+            result.getAbsolutePath().startsWith(StorageUtils.getStorageFolder().
+                    getAbsolutePath()));
   }
 
   /**
-   * @throws java.lang.Exception Test of storeInFile method, of class StorageUtils.
+   * @throws java.lang.Exception Test of storeInFile method, of class
+   * StorageUtils.
    */
   @Test
   public void testStoreInFile_String_InputStream()
-      throws Exception {
+          throws Exception {
 
     String mimeType = "application/bin";
     InputStream is = new ByteArrayInputStream(tuUtils.getTestByteArray());
@@ -404,7 +423,8 @@ public class StorageUtilsTest {
 
     assertEquals(isL, result.length());
     assertTrue(
-        result.getAbsolutePath().startsWith(StorageUtils.getStorageFolder().getAbsolutePath()));
+            result.getAbsolutePath().startsWith(StorageUtils.getStorageFolder().
+                    getAbsolutePath()));
 
   }
 
@@ -415,14 +435,15 @@ public class StorageUtilsTest {
    */
   @Test
   public void testStoreOutFile_String_byteArr()
-      throws Exception {
+          throws Exception {
     String mimeType = "application/bin";
     byte[] buffer = tuUtils.getTestByteArray();
     StorageUtils instance = new StorageUtils();
     File result = instance.storeOutFile(mimeType, buffer);
     assertEquals(buffer.length, result.length());
     assertTrue(
-        result.getAbsolutePath().startsWith(StorageUtils.getStorageFolder().getAbsolutePath()));
+            result.getAbsolutePath().startsWith(StorageUtils.getStorageFolder().
+                    getAbsolutePath()));
   }
 
   /**
@@ -432,7 +453,7 @@ public class StorageUtilsTest {
    */
   @Test
   public void testStoreOutFile_String_File()
-      throws Exception {
+          throws Exception {
     String mimeType = "application/bin";
     File fOut = tuUtils.createFile("test data");
     StorageUtils instance = new StorageUtils();
@@ -440,7 +461,8 @@ public class StorageUtilsTest {
     File result = instance.storeOutFile(mimeType, fOut);
     assertEquals(fOut.length(), result.length());
     assertTrue(
-        result.getAbsolutePath().startsWith(StorageUtils.getStorageFolder().getAbsolutePath()));
+            result.getAbsolutePath().startsWith(StorageUtils.getStorageFolder().
+                    getAbsolutePath()));
   }
 
 }

@@ -66,6 +66,12 @@
             <scope>provided</scope>	        
         </dependency>
         <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>Laurentius-plugin-interfaces</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>	        
+        </dependency>
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.12</version>
@@ -92,7 +98,11 @@
             <artifactId>cxf-rt-transports-http</artifactId>
             <scope>provided</scope>
         </dependency>
-        
+        <dependency>
+            <groupId>net.sf.saxon</groupId>
+            <artifactId>Saxon-HE</artifactId>
+            <version>9.7.0-14</version>
+        </dependency>
         
         
     </dependencies>

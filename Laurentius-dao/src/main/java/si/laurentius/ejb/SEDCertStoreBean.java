@@ -58,6 +58,22 @@ import si.laurentius.commons.interfaces.SEDCertStoreInterface;
 @Local(SEDCertStoreInterface.class)
 @TransactionManagement(TransactionManagementType.BEAN)
 public class SEDCertStoreBean implements SEDCertStoreInterface {
+  
+  public enum CertStatus {
+    OK (0),
+    NEW (1),
+    DELETED(2),
+    MISSING_PASSWD(4),
+    INVALID_DATE(8),
+    INVALID_ROOT(16),
+    INVALID_CRL (32); 
+    
+    int iCode;
+    private CertStatus(int iCd){
+      iCode=iCd;
+    };
+    
+  }
 
   public static final String KEYSTORE_NAME = "keystore";
   public static final String ROOTCA_NAME = "rootCA";
@@ -83,7 +99,48 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
     mdLookups.updateSEDCertStore(cs);
     return cs;
   }
+  /*
+  public void refreshCertificateStore(SEDCertStore keystore) throws SEDSecurityException{
+    if (keystore != null) {
+      // open keystore
+      KeyStore ks  = mku.getKeystore(keystore);
+      
+      
+      // get stored certificates
+      List<SEDCertificate> srcCerts = keystore.getSEDCertificates();
+      // get  certificates in keystore
+      List<SEDCertificate> stCerts = mku.getKeyStoreSEDCertificates(ks);
 
+      
+      stCerts.stream().forEach((ksc) -> {
+        
+        if (Objectg)
+        SEDCertificate sc = mku.existsCertInList(srcCerts, ksc);
+        if (sc == null) {
+          
+          ksc.setStatus("NEW");
+          srcCerts.add(ksc);
+        }
+      });
+      src.stream().forEach((sc) -> {
+        SEDCertificate ksc = existsCertInList(src, sc);
+        if (ksc == null) {
+          sc.setStatus("DEL");
+        }
+      });
+      keystore.setStatus("SUCCESS");
+
+    }
+  
+  }
+
+  public void validateCertificate() {
+
+    // validate by date
+    // validate by root cert
+    // validate by CRL list
+  }
+*/
   @Override
   public SEDCertStore getRootCACertificateStore()
       throws SEDSecurityException {
@@ -103,40 +160,46 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
         KeyStore ks = mku.getKeystore(cs);
 
         for (SEDCertificate c : cs.getSEDCertificates()) {
-          X509Certificate x509 = (X509Certificate) ks.getCertificate(c.getAlias());
-          SEDCertCRL crl = CRLVerifier.getCrlData(x509);
-          SEDCertCRL crlExists = mdLookups.getSEDCertCRLByIssuerDNAndUrl(crl.getIssuerDN(),
-              crl.getHttp(), crl.getLdap());
+          if (c.getClrId() == null) {
+            X509Certificate x509 = (X509Certificate) ks.getCertificate(c.getAlias());
+            SEDCertCRL crl = CRLVerifier.getCrlData(x509);
+            SEDCertCRL crlExists = mdLookups.getSEDCertCRLByIssuerDNAndUrl(crl.getIssuerDN(),
+                crl.getHttp(), crl.getLdap());
 
-          if (crlExists != null) {
-            crl = crlExists;
-          }
-
-          X509CRL cres = null;
-          if (!Utils.isEmptyString(crl.getHttp())) {
-            cres = CRLVerifier.downloadCRL(crl.getHttp());
-          } else if (!Utils.isEmptyString(crl.getLdap())) {
-            cres = CRLVerifier.downloadCRL(crl.getLdap());
-          }
-          if (cres != null) {
-
-            File froot = getCRLFolder();
-
-            File f = File.createTempFile("CRL_", ".crl", froot);
-            try (FileOutputStream fos = new FileOutputStream(f)) {
-              fos.write(cres.getEncoded());
+            if (crlExists != null) {
+              crl = crlExists;
             }
-            crl.setNextUpdateDate(cres.getNextUpdate());
-            crl.setEffectiveDate(cres.getThisUpdate());
-            crl.setRetrievedDate(Calendar.getInstance().getTime());
-            crl.setFilePath(f.getName());
-          }
-          if (crl.getId() == null) {
-            mdLookups.addSEDCertCRL(crl);
-          } else {
-            mdLookups.updateSEDCertCRL(crl);
+
+            X509CRL cres = null;
+            if (!Utils.isEmptyString(crl.getHttp())) {
+              cres = CRLVerifier.downloadCRL(crl.getHttp());
+            } else if (!Utils.isEmptyString(crl.getLdap())) {
+              cres = CRLVerifier.downloadCRL(crl.getLdap());
+            }
+            if (cres != null) {
+
+              File froot = SEDSystemProperties.getCRLFolder();
+
+              File f = File.createTempFile("CRL_", ".crl", froot);
+              try (FileOutputStream fos = new FileOutputStream(f)) {
+                fos.write(cres.getEncoded());
+              }
+              crl.setNextUpdateDate(cres.getNextUpdate());
+              crl.setEffectiveDate(cres.getThisUpdate());
+              crl.setRetrievedDate(Calendar.getInstance().getTime());
+              crl.setFilePath(f.getName());
+            }
+            if (crl.getId() == null) {
+              mdLookups.addSEDCertCRL(crl);
+            } else {
+              mdLookups.updateSEDCertCRL(crl);
+            }
+            
+            c.setClrId(crl.getId());
+            
           }
         }
+
       } catch (SEDSecurityException | KeyStoreException | CertificateException | IOException
           | CRLException | NamingException ex) {
         LOG.logError(ex.getMessage(), ex);
@@ -146,17 +209,6 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
 
   }
 
-  public File getCRLFolder() {
 
-    String folder = getProperty(SYS_PROP_HOME_DIR) + separator +
-        SEDSystemProperties.SYS_PROP_FOLDER_SECURITY_DEF + separator +
-        SEDSystemProperties.SYS_PROP_FOLDER_CRL_DEF;
-
-    File f = new File(folder);
-    if (!f.exists()) {
-      f.mkdirs();
-    }
-    return f;
-  }
 
 }

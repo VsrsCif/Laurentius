@@ -298,7 +298,7 @@
 					</xs:attribute>
 					<xs:attribute name="valueSource" use="required">
 						<xs:annotation>
-							<xs:documentation>source of value for party ID. Address is filled from MSHMail address field, Name is filled from MSHMail mail  name attribute, If identifier - valie must be one from identifier list. If ignore - partyID is not intend for sending over ebms.  PartyID intendet to target identitySet </xs:documentation>
+							<xs:documentation>source of value for party ID. Address is filled from MSHMail address field, Name is filled from MSHMail mail  name attribute, If value is identifier than PartyId value must be  from identifier list. If value is "ignore" - partyID is not sending over ebms it is used only to target identitySet </xs:documentation>
 						</xs:annotation>
 						<xs:simpleType>
 							<xs:restriction base="xs:token">
@@ -343,7 +343,6 @@
 				<xs:complexType>
 					<xs:attribute name="signatureKeyAlias" type="xs:string"/>
 					<xs:attribute name="decryptionKeyAlias" type="xs:string"/>
-					<xs:attribute name="keystoreName" type="xs:string"/>
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="ExchangePartySecurity" minOccurs="0">
@@ -361,7 +360,6 @@
 							<xs:documentation>certificate for encryption messages fkey when sending data to Party</xs:documentation>
 						</xs:annotation>
 					</xs:attribute>
-					<xs:attribute name="trustoreName" type="xs:string"/>
 				</xs:complexType>
 			</xs:element>
 		</xs:sequence>
@@ -597,12 +595,7 @@
 			</xs:element>
 			<xs:element name="TLS" minOccurs="0">
 				<xs:complexType>
-					<xs:attribute name="keyStoreName" type="xs:string" use="optional">
-						<xs:annotation>
-							<xs:documentation>Client keystore id</xs:documentation>
-						</xs:annotation>
-					</xs:attribute>
-					<xs:attribute name="keyAlias" use="optional">
+					<xs:attribute name="clientKeyAlias" use="optional">
 						<xs:annotation>
 							<xs:documentation>"Local" client key  alias in keystore</xs:documentation>
 						</xs:annotation>
@@ -612,7 +605,16 @@
 							</xs:restriction>
 						</xs:simpleType>
 					</xs:attribute>
-					<xs:attribute name="trustStoreName" type="xs:string"/>
+					<xs:attribute name="serverTrustCertAlias" type="xs:string">
+						<xs:annotation>
+							<xs:documentation>Server trust certificate alias</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
+					<xs:attribute name="disableCNAndHostnameCheck" type="xs:boolean" use="optional">
+						<xs:annotation>
+							<xs:documentation>ttest server hostname with cert CN </xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="Proxy" minOccurs="0">
@@ -642,6 +644,11 @@
 					</xs:restriction>
 				</xs:simpleType>
 			</xs:element>
+			<xs:element name="SMTP" minOccurs="0">
+				<xs:complexType>
+					<xs:attribute name="jndiSession" use="required"/>
+				</xs:complexType>
+			</xs:element>
 		</xs:sequence>
 		<xs:attribute name="isTwoWayProtocol" type="xs:boolean">
 			<xs:annotation>
@@ -651,6 +658,11 @@
 		<xs:attribute name="gzipCompress" type="xs:boolean" default="false">
 			<xs:annotation>
 				<xs:documentation>if true attachmets are gzip compressed“</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="base64Encoded" type="xs:boolean" default="false">
+			<xs:annotation>
+				<xs:documentation>if true attachmets are base64Encoded for transport . (For use of SMTP protocol)</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
 	</xs:complexType>

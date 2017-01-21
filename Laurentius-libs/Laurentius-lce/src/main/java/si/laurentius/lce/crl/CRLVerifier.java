@@ -1,7 +1,16 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright 2016, Supreme Court Republic of Slovenia
+ * 
+ * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by the European
+ * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work except in
+ * compliance with the Licence. You may obtain a copy of the Licence at:
+ * 
+ * https://joinup.ec.europa.eu/software/page/eupl
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence
+ * is distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the Licence for the specific language governing permissions and limitations under
+ * the Licence.
  */
 package si.laurentius.lce.crl;
 
@@ -15,7 +24,7 @@ import java.security.cert.CertificateFactory;
 import java.security.cert.CertificateParsingException;
 import java.security.cert.X509CRL;
 import java.security.cert.X509Certificate;
-import java.util.Hashtable;
+import java.util.Properties;
 
 import javax.naming.Context;
 import javax.naming.NamingException;
@@ -33,43 +42,69 @@ import org.bouncycastle.asn1.x509.GeneralName;
 import org.bouncycastle.asn1.x509.GeneralNames;
 import org.bouncycastle.cert.jcajce.JcaX509ExtensionUtils;
 import si.laurentius.cert.crl.SEDCertCRL;
+import si.laurentius.commons.utils.SEDLogger;
+import si.laurentius.commons.utils.Utils;
 
 /**
- * Class that verifies CRLs for given X509 certificate. Extracts the CRL distribution points from
- * the certificate (if available) and checks the certificate revocation status against the CRLs
- * coming from the distribution points. Supports HTTP, HTTPS, FTP and LDAP based URLs.
- *
- * @author Svetlin Nakov
+ * Class helper for handling CRLs for given X509 certificate.
+ * Class was heavily inspired by Svetlin Nakov
+ * http://www.nakov.com/blog/2009/12/01/x509-certificate-validation-in-java-build-and-verify-chain-and-verify-clr-with-bouncy-castle/
+ * @author Jože Rihtaršič
  */
 public class CRLVerifier {
 
-  public static final String CF_X509 = "X.509";
+  final public static String CF_X509 = "X.509";
   final public static String S_CRL_DEST_POINTS = "2.5.29.31";
+  final public static String S_INITIAL_CONTEXT_FACTORY_NAME ="com.sun.jndi.ldap.LdapCtxFactory";
+  final public static String S_PROTOCOL_LDAP = "ldap://";
+  final public static String S_PROTOCOL_HTTP = "http://";
+  final public static String S_PROTOCOL_HTTPS = "https://";
+  final public static String S_PROTOCOL_FTP = "ftp://";
+  
+  protected static final SEDLogger LOG = new SEDLogger(CRLVerifier.class);
 
 
   /**
    * Downloads CRL from given URL. Supports http, https, ftp and ldap based URLs.
+   * 
+   * @param crlURL
+   * @return
+   * @throws IOException
+   * @throws CertificateException
+   * @throws CRLException
+   * @throws NamingException 
    */
-  public static X509CRL downloadCRL(String crlURL)
+  public static X509CRL downloadCRL(final String crlURL)
       throws IOException,
       CertificateException, CRLException,
        NamingException {
 
+    if (Utils.isEmptyString(crlURL)){
+      throw new NullPointerException("CRL URL should not be null or empty string");
+    }
+    String crlprv = crlURL.trim();
+    
+    
+    
     X509CRL crl = null;
 
-    if (crlURL.startsWith("http://") || crlURL.startsWith("https://") ||
-        crlURL.startsWith("ftp://")) {
-      URL url = new URL(crlURL);
+    if (crlURL.startsWith(S_PROTOCOL_HTTP) 
+        || crlURL.startsWith(S_PROTOCOL_HTTP.toUpperCase()) 
+        || crlURL.startsWith(S_PROTOCOL_HTTPS) 
+        || crlURL.startsWith(S_PROTOCOL_HTTPS.toUpperCase()) 
+        ) {
+      URL url = new URL(crlprv);
       try (InputStream crlStream = url.openStream()) {
-        CertificateFactory cf = CertificateFactory.getInstance("X.509");
+        CertificateFactory cf = CertificateFactory.getInstance(CF_X509);
         crl = (X509CRL) cf.generateCRL(crlStream);
       }
 
-    } else if (crlURL.startsWith("ldap://")) {
+    } else if (crlURL.startsWith(S_PROTOCOL_LDAP) 
+        || crlURL.startsWith(S_PROTOCOL_LDAP.toUpperCase()) ) {
 
-      Hashtable<String, String> env = new Hashtable<>();
+      Properties env = new Properties();
       env.put(Context.INITIAL_CONTEXT_FACTORY,
-          "com.sun.jndi.ldap.LdapCtxFactory");
+          S_INITIAL_CONTEXT_FACTORY_NAME);
       env.put(Context.PROVIDER_URL, crlURL);
 
       DirContext ctx = new InitialDirContext(env);
@@ -78,7 +113,7 @@ public class CRLVerifier {
       byte[] val = (byte[]) aval.get();
       if (val != null && val.length != 0) {
         InputStream inStream = new ByteArrayInputStream(val);
-        CertificateFactory cf = CertificateFactory.getInstance("X.509");
+        CertificateFactory cf = CertificateFactory.getInstance(CF_X509);
         crl = (X509CRL) cf.generateCRL(inStream);
       }
     }
@@ -117,13 +152,15 @@ public class CRLVerifier {
                   DERIA5String.getInstance((ASN1TaggedObject) name.toASN1Primitive(), false);
               String val = derStr.getString().toLowerCase();
 
-              if (val.startsWith("http://") && scrl.getHttp() == null) {
+              if (scrl.getHttp() == null && (
+                  val.startsWith(S_PROTOCOL_HTTPS) 
+                  || val.startsWith(S_PROTOCOL_HTTP)) ) {
                 scrl.setHttp(derStr.getString());
-              } else if (val.startsWith("ldap://") && scrl.getLdap() == null) {
+              }
+              else if (val.startsWith(S_PROTOCOL_LDAP) && scrl.getLdap() == null) {
                 scrl.setLdap(derStr.getString());
               } else {
-                // "warning unknown protocol"
-
+                LOG.formatedWarning("Unsupported crl protocol '%s'!", derStr.getString());
               }
             }
 

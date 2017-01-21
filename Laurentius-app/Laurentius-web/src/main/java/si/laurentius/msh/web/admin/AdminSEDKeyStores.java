@@ -310,20 +310,20 @@ public class AdminSEDKeyStores {
             mku.openKeyStore(keystore.getFilePath(), keystore.getType(), keystore
                 .getPassword().toCharArray());
         List<SEDCertificate> lstals = mku.getKeyStoreSEDCertificates(ks);
-
+        
         lstals.stream().forEach((ksc) -> {
           SEDCertificate sc = existsCertInList(src, ksc);
           if (sc != null) {
-            sc.setStatus("OK");
+            sc.setStatus(0);
           } else {
-            ksc.setStatus("NEW");
+            ksc.setStatus(0);
             src.add(ksc);
           }
         });
         src.stream().forEach((sc) -> {
           SEDCertificate ksc = existsCertInList(src, sc);
           if (ksc == null) {
-            sc.setStatus("DEL");
+            sc.setStatus(0);
           }
         });
         keystore.setStatus("SUCCESS");

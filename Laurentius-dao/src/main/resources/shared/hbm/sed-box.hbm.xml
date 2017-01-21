@@ -8,72 +8,11 @@
         </id>        
         <property column="Active_Date_From" name="ActiveFromDate"  length="1024" type="java.util.Date" />       
         <property column="Active_Date_To" name="ActiveToDate"  length="32" type="java.util.Date" />    
-        <component name="Export" class="si.laurentius.ebox.Export">
-            <property column="EXPORT_ACTIVE" name="Active"  type="java.lang.Boolean" />    
-            <property column="EXPORT_OVERWRITE" name="Overwrite"  type="java.lang.Boolean" />                
-            <property column="EXPORT_METADATA" name="ExportMetaData"  type="java.lang.Boolean" />                
-            <property column="EXPORT_FOLDER" name="Folder" type="java.lang.String" length="512"  />    
-            <property column="EXPORT_FILE_MASK" name="FileMask" type="java.lang.String" length="512"  />    
-        </component>
-        <component name="Execute" class="si.laurentius.ebox.Execute">
-            <property column="EXECUTE_ACTIVE" name="Active"  type="java.lang.Boolean" />    
-            <property column="EXECUTE_COMMAND" name="Command"  type="java.lang.String" length="512"  /> 
-            <property column="EXECUTE_PARAMETERS" name="Parameters" type="java.lang.String" length="512"  />    
-       
-        </component>
-        <component name="XSLT" class="si.laurentius.xslt.SEDXslt">
-            <property column="XSLT_ACTIVE" name="Active"  type="java.lang.Boolean" />    
-            <bag name="namespaces"  access="field" cascade="all" lazy="false"  >
-                <key not-null="true">
-                    <column name="laubox"  />
-                </key>
-                <one-to-many class="si.laurentius.xslt.Namespace" />
-            </bag>
-             <bag name="xPathRules"  access="field" cascade="all" lazy="false"  >
-                <key not-null="true">
-                    <column name="laubox"  />
-                </key>
-                <one-to-many class="si.laurentius.xslt.XPathRule" />
-            </bag>
-        </component>
-        <!-- bag name="sedUsers"  access="field" table="lau_user_sedbox" 
-                inverse="true"  fetch="select" lazy="false"    >        
-            <key>
-                <column name="lau_box" not-null="true" />        
-            </key>
-            <many-to-many entity-name="si.laurentius.user.SEDUser" >
-                <column name="userid" not-null="true" />
-            </many-to-many>
-        </bag -->  
+        
+     
     </class>    
     
-    <class name="si.laurentius.xslt.Namespace"
-           table="LAU_XSLT_NAMESPACE">
-        <id name="Id" type="java.math.BigInteger">
-            <column name="ID" scale="0" />
-            <generator class="sequence">
-                <param name="sequence">SEQ_LAU_XSLT_NS</param>                
-            </generator>
-        </id>	
-        <property column="PREFIX" name="prefix"  length="32" type="java.lang.String" />       
-        <property column="NAMESPACE" name="namespace"  length="1024" type="java.lang.String" />        
-    </class>    
     
-    <class name="si.laurentius.xslt.XPathRule"
-           table="LAU_XSLT_RULE">
-        <id name="Id" type="java.math.BigInteger">
-            <column name="ID" scale="0" />
-            <generator class="sequence">
-                <param name="sequence">SEQ_LAU_XSLT_RULE</param>                
-            </generator>
-        </id>	
-        <property column="SERVICE" name="Service"  length="512" type="java.lang.String" />       
-        <property column="ACTION" name="Action"  length="512" type="java.lang.String" />        
-        <property column="TRANSFORMATION" name="Transformation"  length="512" type="java.lang.String" />        
-        <property column="XPATH" name="XPath"  length="1024" type="java.lang.String" />        
-        <property column="VALUE" name="value"  length="512" type="java.lang.String" />        
-        <property column="SCHEMA" name="schema"  length="512" type="java.lang.String" />        
-    </class>  
     
     <query name="si.laurentius.ebox.SEDBox.getAll" ><![CDATA[SELECT p FROM SEDBox p order by p.LocalBoxName asc]]></query>
     <query name="si.laurentius.ebox.SEDBox.getByName" ><![CDATA[SELECT p FROM SEDBox p where p.LocalBoxName=:BoxName]]></query>

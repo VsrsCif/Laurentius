@@ -20,13 +20,18 @@ import javax.ejb.Stateless;
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.exception.StorageException;
 import si.laurentius.msh.outbox.mail.MSHOutMail;
-import si.laurentius.commons.interfaces.OutMailEventInterface;
+
 import si.laurentius.commons.interfaces.SEDDaoInterface;
 import si.laurentius.commons.pmode.EBMSMessageContext;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.Utils;
 import si.laurentius.msh.outbox.property.MSHOutProperties;
 import si.laurentius.msh.outbox.property.MSHOutProperty;
+import si.laurentius.plugin.eventlistener.OutMailEventListenerDef;
+import si.laurentius.plugin.interceptor.MailInterceptorDef;
+
+import si.laurentius.plugin.interfaces.OutMailEventInterface;
+import si.laurentius.plugin.interfaces.OutMailEventInterface.PluginOutEvent;
 
 /**
  *
@@ -43,6 +48,16 @@ public class CEFOutMailEventListener implements OutMailEventInterface {
 
   @EJB(mappedName = SEDJNDI.JNDI_SEDDAO)
   SEDDaoInterface mDB;
+
+  @Override
+  public OutMailEventListenerDef getDefinition() {
+    OutMailEventListenerDef def = new OutMailEventListenerDef();
+    def.setType("CEFOutMailEventListener");
+    def.setName("CEFOutMailEventListener");
+    def.setDescription("CEF Digital testin module");
+    return def;
+  }
+  
 
   @Override
   public void outEvent(MSHOutMail mi, EBMSMessageContext ctx, PluginOutEvent evnt) {

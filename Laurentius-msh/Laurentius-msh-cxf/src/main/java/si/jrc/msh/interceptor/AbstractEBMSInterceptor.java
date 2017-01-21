@@ -14,11 +14,7 @@
  */
 package si.jrc.msh.interceptor;
 
-import java.util.Iterator;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.ejb.EJB;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.xml.namespace.QName;
@@ -219,8 +215,7 @@ public abstract class AbstractEBMSInterceptor extends AbstractSoapInterceptor {
       }
       
       if (cs == null) {
-        String msg = "Keystore for name '" + lps.getKeystoreName() +
-            "' do not exists - check configuration!";
+        String msg = "Keystore do not exists - check configuration!";
         LOG.logError(l, msg, null);
         throw new EBMSError(EBMSErrorCode.PModeConfigurationError, msgId, msg, sv);
       }
@@ -265,8 +260,7 @@ public abstract class AbstractEBMSInterceptor extends AbstractSoapInterceptor {
         throw new EBMSError(EBMSErrorCode.PModeConfigurationError, msgId, msg, sv);
       }
       if (cs == null) {
-        String msg = "Trustore for name '" + epx.getTrustoreName() +
-            "' do not exists - check configuration!";
+        String msg = "Trustore  do not exists - check configuration!";
         LOG.logError(l, msg, null);
         throw new EBMSError(EBMSErrorCode.PModeConfigurationError, msgId, msg, sv);
       }
@@ -337,8 +331,7 @@ public abstract class AbstractEBMSInterceptor extends AbstractSoapInterceptor {
         throw new EBMSError(EBMSErrorCode.PModeConfigurationError, msgId, msg, sv);
       }
       if (cs == null) {
-        String msg = "Truststore for name '" + eps.getTrustoreName() +
-            "' do not exists - check configuration!";
+        String msg = "Truststore for name  do not exists - check configuration!";
         LOG.logError(l, msg, null);
         throw new EBMSError(EBMSErrorCode.PModeConfigurationError, msgId, msg, sv);
       }
@@ -346,7 +339,7 @@ public abstract class AbstractEBMSInterceptor extends AbstractSoapInterceptor {
           cs, false);
       if (aliasCrt == null) {
         String msg = "Certificate for alias '" + eps.getSignatureCertAlias() +
-            "' do not exists in keystore:" + eps.getTrustoreName();
+            "' do not exists in keystore.";
         LOG.logError(l, msg, null);
         throw new EBMSError(EBMSErrorCode.PModeConfigurationError, msgId, msg, sv);
       }
@@ -373,8 +366,7 @@ public abstract class AbstractEBMSInterceptor extends AbstractSoapInterceptor {
         throw new EBMSError(EBMSErrorCode.PModeConfigurationError, msgId, msg, sv);
       }
       if (cs == null) {
-        String msg = "Keystore for name '" + lps.getKeystoreName() +
-            "' do not exists - check configuration!";
+        String msg = "Keystore for name  do not exists - check configuration!";
         LOG.logError(l, msg, null);
         throw new EBMSError(EBMSErrorCode.PModeConfigurationError, msgId, msg, sv);
       }
@@ -382,8 +374,7 @@ public abstract class AbstractEBMSInterceptor extends AbstractSoapInterceptor {
           cs, true);
       if (aliasCrt == null) {
         String msg = "Decryptiong key for alias '" + lps.getDecryptionKeyAlias() +
-            "' do not exist in keystore '" +
-            lps.getKeystoreName() + "' !";
+            "' do not exist in keystore.";
         LOG.logError(l, msg, null);
         throw new EBMSError(EBMSErrorCode.PModeConfigurationError, msgId, msg, sv);
       }

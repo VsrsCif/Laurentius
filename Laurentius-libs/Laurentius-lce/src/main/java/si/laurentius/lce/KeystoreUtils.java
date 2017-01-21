@@ -53,9 +53,9 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Objects;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.net.ssl.X509TrustManager;
 import si.laurentius.commons.utils.xml.XMLUtils;
+import si.laurentius.lce.tls.X509TrustManagerForAlias;
 
 /**
  *
@@ -184,6 +184,7 @@ public class KeystoreUtils {
    * Get key managers for SEDCertStore.
    *
    * @param sc
+   * @param alias
    * @return
    * @throws SEDSecurityException
    */
@@ -197,13 +198,13 @@ public class KeystoreUtils {
         break;
       }
     }
-    if (cert == null) {
+    if (cert == null || !cert.isKeyEntry()) {
       throw new SEDSecurityException(
           SEDSecurityException.SEDSecurityExceptionCode.KeyForAliasNotExists, alias);
     }
 
     KeyStore keyStore = getKeystore(sc);
-    String keyStorePassword = sc.getPassword();
+
 
     char[] keyStorePass = cert.getKeyPassword() != null ? cert.getKeyPassword().toCharArray() : null;
 
@@ -216,7 +217,7 @@ public class KeystoreUtils {
     }
 
     try {
-      fac.init(keyStore, "key1234".toCharArray());
+      fac.init(keyStore, keyStorePass);
     } catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException ex) {
       throw new SEDSecurityException(KeyStoreException, ex,
           "Error init KeyManagerFactory for keystore: " + sc.getFilePath() + " Error: " +
@@ -229,6 +230,7 @@ public class KeystoreUtils {
    * Get key managers for SEDCertStore and alias.
    *
    * @param sc
+   * @param alias
    * @return
    * @throws SEDSecurityException
    */
@@ -247,6 +249,10 @@ public class KeystoreUtils {
       kmsres = kmarr.toArray(new KeyManager[0]);
     }
     return kmsres;
+  }
+  public TrustManager[] getTrustManagersForAlias(X509Certificate expectedCA, List<X509Certificate> listRootCA)
+      throws SEDSecurityException {
+    return new TrustManager[]{new X509TrustManagerForAlias(expectedCA, listRootCA)};
   }
 
   /**
@@ -452,6 +458,29 @@ public class KeystoreUtils {
       throws SEDSecurityException {
     return getTrustedCertForAlias(getKeystore(sc), alias);
   }
+  
+  public List<X509Certificate> getTrustedCertsFromKeystore(SEDCertStore sc)
+      throws SEDSecurityException {
+    return getTrustedCertsFromKeystore(getKeystore(sc));
+  }
+  public List<X509Certificate> getTrustedCertsFromKeystore(KeyStore ks)
+      throws SEDSecurityException {
+    
+    List<X509Certificate> lstCr = new ArrayList<>();
+    try {
+      Enumeration<String> e = ks.aliases();
+      while (e.hasMoreElements()) {
+        String alias = e.nextElement();
+        Certificate c = ks.getCertificate(alias);
+        if (c instanceof X509Certificate) {
+          lstCr.add((X509Certificate)c);          
+        }
+      }
+    } catch (KeyStoreException ex) {
+      throw new SEDSecurityException(ReadWriteFileException, ex, "Read keystore aliased: !");
+    }
+    return lstCr;
+  }
 
   /**
    *
@@ -484,9 +513,7 @@ public class KeystoreUtils {
       throws SEDSecurityException {
     X509Certificate cert = null;
     try {
-
       cert = (X509Certificate) ks.getCertificate(alias);
-
     } catch (KeyStoreException ex) {
       throw new SEDSecurityException(CertificateException, ex,
           "Exception occured when retrieving: '" + alias + "' cert!");
@@ -897,16 +924,16 @@ public class KeystoreUtils {
       lstals.stream().forEach((ksc) -> {
         SEDCertificate sc = existsCertInList(src, ksc);
         if (sc != null) {
-          sc.setStatus("OK");
+          sc.setStatus(0);
         } else {
-          ksc.setStatus("NEW");
+          ksc.setStatus(0);
           src.add(ksc);
         }
       });
       src.stream().forEach((sc) -> {
         SEDCertificate ksc = existsCertInList(src, sc);
         if (ksc == null) {
-          sc.setStatus("DEL");
+          sc.setStatus(0);
         }
       });
       keystore.setStatus("SUCCESS");

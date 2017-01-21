@@ -21,7 +21,9 @@
 
         
         <component name="SEDTask" class="si.laurentius.cron.SEDTask">
-            <property column="TASK_TYPE" name="TaskType"  length="64" type="java.lang.String"/>
+            <property column="TASK_TYPE" name="Type"  length="64" type="java.lang.String"/>
+            <property column="TASK_PLUGIN" name="Plugin"  length="64" type="java.lang.String"/>
+            <property column="TASK_PLUGIN_VERSION" name="PluginVersion"  length="32" type="java.lang.String"/>
             <bag name="sedTaskProperties"  access="field" cascade="all, delete-orphan" lazy="false" order-by="Id asc" >
                 <key not-null="true">
                     <column name="CRON_ID" scale="0" />

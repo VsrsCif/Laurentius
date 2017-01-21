@@ -4,18 +4,12 @@
  */
 package si.jrc.msh.plugin.meps;
 
-import java.util.Collections;
-import java.util.List;
-import javax.ejb.Local;
-import javax.ejb.Stateless;
-import si.laurentius.commons.interfaces.PluginDescriptionInterface;
-
 /**
  *
  * @author Jože Rihtaršič
  */
-@Stateless
-public class MEPSPluginDescription implements OutMailEventLisneterInterface {
+
+public class MEPSPluginDescription {
 
 
 }

@@ -18,43 +18,38 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import si.laurentius.cron.SEDTaskType;
-import si.laurentius.cron.SEDTaskTypeProperty;
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.interfaces.SEDLookupsInterface;
-import si.laurentius.commons.interfaces.TaskExecutionInterface;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.msh.web.abst.AbstractAdminJSFView;
+import si.laurentius.plugin.crontask.CronTaskDef;
+import si.laurentius.plugin.crontask.CronTaskPropertyDef;
 
 /**
  *
  * @author Jože Rihtaršič
  */
 @SessionScoped
-@ManagedBean(name = "adminSEDTaskTypeView")
-public class AdminSEDTaskTypeView extends AbstractAdminJSFView<SEDTaskType> {
+@ManagedBean(name = "adminCronTaskDefView")
+public class AdminSEDTaskTypeView extends AbstractAdminJSFView<CronTaskDef> {
 
   private static final SEDLogger LOG = new SEDLogger(AdminSEDTaskTypeView.class);
 
   @EJB(mappedName = SEDJNDI.JNDI_SEDLOOKUPS)
   private SEDLookupsInterface mdbLookups;
 
-  SEDTaskTypeProperty mSelTaksProp;
+  CronTaskPropertyDef mSelTaksProp;
 
   /**
      *
      */
   @Override
   public void createEditable() {
-    SEDTaskType ecj = new SEDTaskType();
+    CronTaskDef ecj = new CronTaskDef();
 
     String type = "type_%03d";
     int i = 1;
-    while (mdbLookups.getSEDTaskTypeByType(String.format(type, i)) != null) {
-      i++;
-    }
+    
     ecj.setJndi("java:global[/application name]/module name/enterprise bean name[/interface name]");
     ecj.setType(String.format(type, i));
     ecj.setName("");
@@ -76,20 +71,20 @@ public class AdminSEDTaskTypeView extends AbstractAdminJSFView<SEDTaskType> {
         || getEditable().getJndi().isEmpty()) {
       return;
     }
-
+/*
     try {
       TaskExecutionInterface tproc = InitialContext.doLookup(getEditable().getJndi());
       getEditable().setDescription(tproc.getTaskDefinition().getDescription());
       getEditable().setName(tproc.getTaskDefinition().getName());
       getEditable().setType(tproc.getTaskDefinition().getType());
-      getEditable().getSEDTaskTypeProperties().clear();
-      if (!tproc.getTaskDefinition().getSEDTaskTypeProperties().isEmpty()) {
-        getEditable().getSEDTaskTypeProperties().addAll(
-            tproc.getTaskDefinition().getSEDTaskTypeProperties());
+      getEditable().getCronTaskProperties().clear();
+      if (!tproc.getTaskDefinition().getCronTaskDefProperties().isEmpty()) {
+        getEditable().getCronTaskDefProperties().addAll(
+            tproc.getTaskDefinition().getCronTaskDefProperties());
       }
     } catch (NamingException ex) {
 
-    }
+    }*/
 
   }
 
@@ -99,7 +94,7 @@ public class AdminSEDTaskTypeView extends AbstractAdminJSFView<SEDTaskType> {
   @Override
   public void removeSelected() {
     if (getSelected() != null) {
-      mdbLookups.removeSEDTaskType(getSelected());
+      //mdbLookups.removeCronTaskDef(getSelected());
       setSelected(null);
     }
 
@@ -110,10 +105,10 @@ public class AdminSEDTaskTypeView extends AbstractAdminJSFView<SEDTaskType> {
      */
   @Override
   public boolean persistEditable() {
-    SEDTaskType ecj = getEditable();
+    CronTaskDef ecj = getEditable();
     boolean bsuc = false;
     if (ecj != null) {
-      mdbLookups.addSEDTaskType(ecj);
+      //mdbLookups.addCronTaskDef(ecj);
       bsuc = true;
     }
     return bsuc;
@@ -124,10 +119,10 @@ public class AdminSEDTaskTypeView extends AbstractAdminJSFView<SEDTaskType> {
      */
   @Override
   public boolean updateEditable() {
-    SEDTaskType ecj = getEditable();
+    CronTaskDef ecj = getEditable();
     boolean bsuc = false;
     if (ecj != null) {
-      mdbLookups.updateSEDTaskType(ecj);
+      //mdbLookups.updateCronTaskDef(ecj);
       bsuc = true;
     }
     return bsuc;
@@ -138,65 +133,14 @@ public class AdminSEDTaskTypeView extends AbstractAdminJSFView<SEDTaskType> {
    * @return
    */
   @Override
-  public List<SEDTaskType> getList() {
+  public List<CronTaskDef> getList() {
     long l = LOG.logStart();
-    List<SEDTaskType> lst = mdbLookups.getSEDTaskTypes();
-    LOG.logEnd(l, lst != null ? lst.size() : "null");
-    return lst;
+    //List<CronTaskDef> lst = mdbLookups.getCronTaskDefs();
+    //LOG.logEnd(l, lst != null ? lst.size() : "null");
+    //return lst;
+    return null;
   }
 
-  /**
-   *
-   * @param key
-   * @param name
-   * @param mandatory
-   * @return
-   */
-  public SEDTaskTypeProperty createTypeProperty(String key, String name, boolean mandatory) {
-    SEDTaskTypeProperty sp = new SEDTaskTypeProperty();
-    sp.setKey(key);
-    sp.setDescription(name);
-    sp.setMandatory(mandatory);
-    return sp;
-  }
 
-  /**
-     *
-     */
-  public void addTypeProperty() {
-
-    if (getEditable() != null) {
-
-      SEDTaskTypeProperty sp = createTypeProperty("newProp", "", true);
-      getEditable().getSEDTaskTypeProperties().add(sp);
-      setSelectedTaskProperty(sp);
-    }
-
-  }
-
-  /**
-     *
-     */
-  public void removeSelectedTypeProperty() {
-    if (getEditable() != null && getSelectedTaskProperty() != null) {
-      getEditable().getSEDTaskTypeProperties().remove(getSelectedTaskProperty());
-    }
-  }
-
-  /**
-   *
-   * @return
-   */
-  public SEDTaskTypeProperty getSelectedTaskProperty() {
-    return mSelTaksProp;
-  }
-
-  /**
-   *
-   * @param prop
-   */
-  public void setSelectedTaskProperty(SEDTaskTypeProperty prop) {
-    this.mSelTaksProp = prop;
-  }
 
 }

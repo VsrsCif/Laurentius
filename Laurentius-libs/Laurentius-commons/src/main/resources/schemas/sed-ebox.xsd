@@ -27,18 +27,11 @@ Copyright 2016, Supreme Court Republic of Slovenia
 -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://laurentius.si/ebox" xmlns:usr="http://laurentius.si/user" xmlns:xslt="http://laurentius.si/xslt" targetNamespace="http://laurentius.si/ebox" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xs:import namespace="http://laurentius.si/user" schemaLocation="./sed-user.xsd"/>
-	<xs:import namespace="http://laurentius.si/xslt" schemaLocation="./sed-xslt.xsd"/>
 	<xs:element name="SEDBox" type="ns1:SEDBox"/>
 	<xs:complexType name="SEDBox">
 		<xs:annotation>
 			<xs:documentation xml:lang="sl">EBox data</xs:documentation>
 		</xs:annotation>
-		<xs:sequence>
-			<!-- xs:element ref="usr:SEDUser" maxOccurs="unbounded"/ -->
-			<xs:element name="Export" type="ns1:Export" minOccurs="0"/>
-			<xs:element name="Execute" type="ns1:Execute" minOccurs="0"/>
-			<xs:element name="XSLT" type="xslt:SEDXslt" minOccurs="0"/>
-		</xs:sequence>
 		<xs:attribute name="localBoxName" type="xs:string" use="required">
 			<xs:annotation>
 				<xs:documentation xml:lang="sl">Naslov e-predala</xs:documentation>
@@ -47,16 +40,5 @@ Copyright 2016, Supreme Court Republic of Slovenia
 		<xs:attribute name="activeFromDate" type="xs:date" use="required"/>
 		<xs:attribute name="activeToDate" type="xs:date" use="required"/>
 	</xs:complexType>
-	<xs:complexType name="Export">
-		<xs:attribute name="active" type="xs:boolean"/>
-		<xs:attribute name="exportMetaData" type="xs:boolean"/>
-		<xs:attribute name="folder" type="xs:string" use="required"/>
-		<xs:attribute name="fileMask" type="xs:string" use="required"/>
-		<xs:attribute name="overwrite" type="xs:boolean"/>
-	</xs:complexType>
-	<xs:complexType name="Execute">
-		<xs:attribute name="active" type="xs:boolean"/>
-		<xs:attribute name="command" type="xs:string"/>
-		<xs:attribute name="parameters" type="xs:string"/>
-	</xs:complexType>
+	
 </xs:schema>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <composite:interface>
+    </composite:interface>
+
+    <composite:implementation >
+        <p:layout   widgetVar="ImpExecute" style="min-width:400px;min-height:400px;height: 100%;width: 100%"  >
+            <p:layoutUnit  position="north" resizable="true" closable="true" collapsible="true"
+                           size="38" minSize="38" maxSize="400" style="width:100%;height:100%;padding: 0px; margin: 0px"
+                           gutter="0">
+                <h1><h:outputLink id="growPanelDesc" value="#">
+                        <span class="ui-icon-panel-Header ui-icon ui-icon-svg-process"  />#{msg['InMailProcessView']}
+                    </h:outputLink>
+                </h1>
+                <p:tooltip id="toolTipGrow" for="growPanelDesc" position="bottom">
+                    <h:outputText value="#{msg['InMailProcessDesc']}"></h:outputText>
+                </p:tooltip>                
+            </p:layoutUnit>
+
+              <p:layoutUnit position="center" style="width:100%;height:100%;padding: 0px; margin: 0px" gutter="0" >
+                <p:scrollPanel mode="native" style="width:100%;height:100%"> <!-- p:dataTable scrollable does not resize when toogled suth panel -->                
+
+                    <p:dataTable id="TblExecute" 
+                                 var="sp" 
+                                 value="#{adminIMPExecuteView.list}"
+                                 selectionMode="single"
+                                 selection="#{adminIMPExecuteView.selected}"
+                                 rowKey="#{sp.instance}"
+                                 style="padding: 0px; margin: 0px"
+                                 scrollable="true" 
+                                 scrollHeight="100%"
+                                 rows="100"  >
+
+
+                        <f:facet name="header">
+                            <p:commandButton value="#{msg['Add']}" styleClass="toolbar-Button" icon="ui-icon-svg-add ui-icon-size-22"  
+                                             update=":dlgExecute:executeDialogForm:sedboxDetails" 
+                                             actionListener="#{adminIMPExecuteView.createEditable()}"
+                                             oncomplete="PF('executeDialog').show()"  />
+                            <p:commandButton value="#{msg['Edit']}" styleClass="toolbar-Button" icon="ui-icon-svg-edit ui-icon-size-22"  
+                                             update=":dlgExecute:executeDialogForm:sedboxDetails" 
+                                             actionListener="#{adminIMPExecuteView.startEditSelected()}"
+                                             oncomplete="PF('executeDialog').show()" />
+                            <p:commandButton value="#{msg['Delete']}" styleClass="toolbar-Button" icon="ui-icon-svg-remove ui-icon-size-22"  
+                                             actionListener="#{adminIMPExecuteView.removeSelected()}"
+                                             update=":bscform:PanelExecute:TblExecute" />
+
+                        </f:facet>
+                        <p:ajax event="rowDblselect" update=":dlgExecute:executeDialogForm:sedboxDetails" 
+                                             listener="#{adminIMPExecuteView.startEditSelected()}"
+                                             oncomplete="PF('executeDialog').show()"/>
+
+                        <p:column headerText="#{msg['Instance']}" width="120">
+                            <h:outputText value="#{sp.instance}"  />                
+                        </p:column>
+                        <p:column headerText="#{msg['Command']}" >
+                            <h:outputText value="#{sp.command}"  />
+                        </p:column>
+                        <p:column headerText="#{msg['Parameteres']}">
+                            <h:outputText value="#{sp.parameters}"  />
+                        </p:column>
+                    </p:dataTable>
+                </p:scrollPanel>
+            </p:layoutUnit> 
+
+        </p:layout>
+    </composite:implementation>
+
+</html>

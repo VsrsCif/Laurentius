@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.UUID;
 import javax.activation.DataHandler;
-import javax.activation.FileDataSource;
+import javax.activation.DataSource;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -46,6 +46,8 @@ import org.oasis_open.docs.ebxml_msg.ebms.v3_0.ns.core._200704.UserMessage;
 import si.jrc.msh.exception.EBMSError;
 import si.jrc.msh.exception.EBMSErrorCode;
 import si.jrc.msh.utils.EBMSBuilder;
+import si.jrc.msh.utils.MSHOutPartDataSource;
+import si.jrc.msh.utils.MimeHeaderConstants;
 import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.cxf.SoapUtils;
 import si.laurentius.commons.exception.StorageException;
@@ -75,8 +77,6 @@ public class EBMSOutInterceptor extends AbstractEBMSInterceptor {
    */
   protected final GZIPUtil mGZIPUtils = new GZIPUtil();
 
-
-
   /**
    * Contstructor EBMSOutInterceptor for setting instance in a phase Phase.PRE_PROTOCOL
    */
@@ -97,8 +97,7 @@ public class EBMSOutInterceptor extends AbstractEBMSInterceptor {
     // is out mail request or response
     boolean isRequest = MessageUtils.isRequestor(msg);
     QName qnFault = (isRequest ? SoapFault.FAULT_CODE_CLIENT : SoapFault.FAULT_CODE_SERVER);
-    
-    
+
     if (msg.getContent(SOAPMessage.class) == null) {
       String errmsg = "Internal error missing SOAPMessage!";
       LOG.logError(l, errmsg, null);
@@ -107,7 +106,7 @@ public class EBMSOutInterceptor extends AbstractEBMSInterceptor {
 
     // get context variables
     EBMSMessageContext ectx = SoapUtils.getEBMSMessageOutContext(msg);
-     if (ectx== null) {
+    if (ectx == null) {
       String errmsg = "Internal error missing EBMSMessageContext!";
       LOG.logError(l, errmsg, null);
       throw new EBMSError(EBMSErrorCode.ApplicationError, null, errmsg, qnFault);
@@ -128,7 +127,7 @@ public class EBMSOutInterceptor extends AbstractEBMSInterceptor {
     if (outMail != null) {
       // add user message
       outMail.setSentDate(Calendar.getInstance().getTime()); // reset sent  to new value 
-      
+
       UserMessage um;
       try {
 
@@ -136,7 +135,7 @@ public class EBMSOutInterceptor extends AbstractEBMSInterceptor {
         try {
           // set attachment for wss signature!
           LOG.log("Set attachmetns for message: " + msgId);
-          setAttachments(msg, outMail, ectx.getTransportProtocol().getGzipCompress());
+          setAttachments(msg, outMail, ectx.getTransportProtocol().getGzipCompress(), ectx.getTransportProtocol().getBase64Encoded());
         } catch (StorageException ex) {
           String msgError = "Error adding attachments to soap" + ex.getMessage();
           LOG.logError(l, msgError, ex);
@@ -146,7 +145,7 @@ public class EBMSOutInterceptor extends AbstractEBMSInterceptor {
         }
         // create user message
         LOG.log("Create userMessage unit for  message: " + msgId);
-        um = EBMSBuilder.createUserMessage(ectx, outMail,  outMail.getSentDate(), qnFault);
+        um = EBMSBuilder.createUserMessage(ectx, outMail, outMail.getSentDate(), qnFault);
         msgHeader.getUserMessages().add(um);
       } catch (EBMSError ex) {
 
@@ -167,7 +166,7 @@ public class EBMSOutInterceptor extends AbstractEBMSInterceptor {
     if (err != null) {
       LOG.log("Add error message: " + msgId);
       SignalMessage sm =
-          EBMSBuilder.createErrorSignal(err,  Calendar.getInstance()
+          EBMSBuilder.createErrorSignal(err, Calendar.getInstance()
               .getTime());
 
       msgHeader.getSignalMessages().add(sm);
@@ -201,8 +200,6 @@ public class EBMSOutInterceptor extends AbstractEBMSInterceptor {
     LOG.logEnd(l);
   }
 
-  
-
   /**
    * Method sets attachments to outgoing ebmsUserMessage.
    *
@@ -210,39 +207,34 @@ public class EBMSOutInterceptor extends AbstractEBMSInterceptor {
    * @param mail - MSH out mail
    * @throws StorageException
    */
-  private void setAttachments(SoapMessage msg, MSHOutMail mail, boolean compress)
+  private void setAttachments(SoapMessage msg, MSHOutMail mail, boolean compress, boolean bBase64)
       throws StorageException {
     long l = LOG.logStart();
     if (mail != null && mail.getMSHOutPayload() != null &&
         !mail.getMSHOutPayload().getMSHOutParts().isEmpty()) {
 
       msg.setAttachments(new ArrayList<>(mail.getMSHOutPayload().getMSHOutParts().size()));
+
       for (MSHOutPart p : mail.getMSHOutPayload().getMSHOutParts()) {
         if (Utils.isEmptyString(p.getEbmsId())) {
           String id = UUID.randomUUID().toString() + "@" + SEDSystemProperties.getLocalDomain();
           p.setEbmsId(id);
         }
+      
 
         AttachmentImpl att = new AttachmentImpl(p.getEbmsId());
-        att.setHeader("id", p.getEbmsId());
-        File fatt = StorageUtils.getFile(p.getFilepath());
-        if (compress) {
-          File fattCmp = StorageUtils.getNewStorageFile("gzip", fatt.getName());
-          try {
-            mGZIPUtils.compressGZIP(fatt, fattCmp);
-            fatt = fattCmp;
-          } catch (IOException ex) {
-            String msgErr =
-                "Error compressing attachment: " + fatt.getAbsolutePath() + " for mail: " +
-                p.getId();
-            LOG.logError(l, msgErr, ex);
-            throw new StorageException(msgErr, ex);
-          }
-        }
-
-        DataHandler dh = new DataHandler(new FileDataSource(fatt));
-
+        DataSource fds = new MSHOutPartDataSource(p, compress, bBase64);
+        DataHandler dh = new DataHandler(fds);
         att.setDataHandler(dh);
+        
+        att.setHeader(MimeHeaderConstants.KEY_ID, p.getEbmsId());
+        att.setHeader(MimeHeaderConstants.KEY_CONTENT_DISPOSITION, 
+            String.format(MimeHeaderConstants.VAL_CONTENT_DISPOSITION_ATT_NAME, p.getFilename()) );
+        // apache CXF 3.1.4 bug overwrites this header  problems at SMTP conduit! 
+        att.setHeader(MimeHeaderConstants.KEY_CONTENT_ENCODING, bBase64 ?
+            MimeHeaderConstants.VAL_CONTENT_ENCODING_BASE64 :
+            MimeHeaderConstants.VAL_CONTENT_ENCODING_BINARY);
+
         msg.getAttachments().add(att);
       }
     }

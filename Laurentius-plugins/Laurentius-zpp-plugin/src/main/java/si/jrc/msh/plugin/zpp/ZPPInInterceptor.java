@@ -35,8 +35,6 @@ import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
-import javax.jms.JMSException;
-import javax.naming.NamingException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
@@ -71,7 +69,6 @@ import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.interfaces.JMSManagerInterface;
 import si.laurentius.commons.interfaces.SEDDaoInterface;
 import si.laurentius.commons.interfaces.SEDLookupsInterface;
-import si.laurentius.commons.interfaces.SoapInterceptorInterface;
 import si.laurentius.commons.utils.HashUtils;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StorageUtils;
@@ -80,6 +77,8 @@ import si.laurentius.commons.utils.StringFormater;
 import si.laurentius.commons.utils.xml.XMLUtils;
 import si.laurentius.lce.KeystoreUtils;
 import si.laurentius.commons.interfaces.SEDCertStoreInterface;
+import si.laurentius.plugin.interceptor.MailInterceptorDef;
+import si.laurentius.plugin.interfaces.SoapInterceptorInterface;
 
 /**
  *
@@ -126,6 +125,15 @@ public class ZPPInInterceptor implements SoapInterceptorInterface {
    */
   @PersistenceContext(unitName = "ebMS_ZPP_PU", name = "ebMS_ZPP_PU")
   public EntityManager memEManager;
+
+  @Override
+  public MailInterceptorDef getDefinition() {
+    MailInterceptorDef mid = new MailInterceptorDef();
+    mid.setDescription("Sets ZPP in to locked status");
+    mid.setName("ZPP in intercepror");
+    mid.setType("ZPPInInterceptor");
+    return mid;
+  }
 
   /**
    *
@@ -489,7 +497,7 @@ public class ZPPInInterceptor implements SoapInterceptorInterface {
         } catch (StorageException ex) {
           LOG.logError(l, "Error updating mail :'" + mi.getId() + "'!", ex);
         }
-
+/*
         if (sb.getExport() != null && sb.getExport().getActive() != null &&
             sb.getExport().getActive()) {
           try {
@@ -498,7 +506,7 @@ public class ZPPInInterceptor implements SoapInterceptorInterface {
             LOG.logError(l, "Error occured while submitting mail to export queue:'" + mi.getId() +
                 "'!", ex);
           }
-        }
+        }*/
 
       }
     } finally {

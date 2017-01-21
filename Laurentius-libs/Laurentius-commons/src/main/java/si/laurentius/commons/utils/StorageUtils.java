@@ -35,12 +35,9 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import si.laurentius.commons.MimeValues;
 import static si.laurentius.commons.MimeValues.getSuffixBYMimeType;
-import static si.laurentius.commons.SEDSystemProperties.SYS_PROP_FOLDER_STORAGE_DEF;
-import static si.laurentius.commons.SEDSystemProperties.SYS_PROP_HOME_DIR;
+import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.exception.StorageException;
 
 /**
@@ -134,8 +131,7 @@ public class StorageUtils {
    * @return returs path
    */
   protected static synchronized Path dateStorageFolder(LocalDate ld) {
-    return Paths.get(getProperty(SYS_PROP_HOME_DIR),
-        SYS_PROP_FOLDER_STORAGE_DEF,
+    return Paths.get(SEDSystemProperties.getStorageFolder().getAbsolutePath(),
         ld.getYear() + "",
         format("%02d", ld.getMonthValue()),
         format("%02d", ld.getDayOfMonth()));
@@ -148,7 +144,7 @@ public class StorageUtils {
    * @return File to to relative storage path
    */
   public static synchronized File getFile(String storagePath) {
-    return new File(getProperty(SYS_PROP_HOME_DIR) + separator + storagePath);
+    return new File(SEDSystemProperties.getStorageFolder(),  storagePath);
   }
 
   /**
@@ -215,7 +211,7 @@ public class StorageUtils {
   public static String getRelativePath(File path)
       throws StorageException {
 
-    File hdir = new File(getProperty(SYS_PROP_HOME_DIR));
+    File hdir = SEDSystemProperties.getStorageFolder();
 
     if (path.getAbsolutePath().startsWith(hdir.getAbsolutePath())) {
       String rp = path.getAbsolutePath().substring(hdir.getAbsolutePath().length());
@@ -227,14 +223,7 @@ public class StorageUtils {
     }
   }
 
-  /**
-   * Mehotd return ${laurentius.home} folder as File object. Folder is given as system property
-   *
-   * @return return laurentius.home folder as File object
-   */
-  public static File getSEDHomeFolder() {
-    return new File(getProperty(SYS_PROP_HOME_DIR, System.getProperty("user.dir")));
-  }
+
 
   /**
    * Mehotd return ${laurentius.home}/storage folder as File object.
@@ -242,7 +231,7 @@ public class StorageUtils {
    * @return return storage folder
    */
   public static File getStorageFolder() {
-    return new File(getSEDHomeFolder(), SYS_PROP_FOLDER_STORAGE_DEF);
+    return SEDSystemProperties.getStorageFolder();
   }
 
   /**

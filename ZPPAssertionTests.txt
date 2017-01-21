@@ -1,0 +1,23 @@
+assertion tests ZPP - pošiljke
+ - Pošiljanje 
+ - 	kontrola certifikata
+ - 	kontrola domene
+ - 	
+ - sprejem potrdila
+ - AS4 povratnica hashi se ujemajo
+ - podpisana pošiljka
+ - prepoznava pokvarjenega podpisa
+ - prepoznava pošiljke podpisane z napačnim certifikatom
+ 
+ - ponovno pošiljanje neuspešno oddane pošiljke
+ - prepoznava poslanega duplikata in vrnjeni predvideni odgovor za duplikat
+------------------------------------------------
+- vročilnica - podpisana s strani naslovnika (laurentius prepoznava naslovnikovega certifikata ? ) in msh sistema
+- vrnjena dekriptirna vsebina
+--------------------------------------------------
+fikcija	
+    
+ - ponovno pošiljanje povratnice -> vrnjen ključ
+ - nova povratnica - sprejem pošiljke in vrnjen ključ
+ 
+

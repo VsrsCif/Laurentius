@@ -12,7 +12,7 @@ import si.laurentius.msh.pmode.PluginType;
 import si.laurentius.commons.pmode.EBMSMessageContext;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.Utils;
-import si.laurentius.commons.interfaces.OutMailEventInterface;
+import si.laurentius.plugin.interfaces.OutMailEventInterface;
 
 /**
  *

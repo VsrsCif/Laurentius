@@ -151,7 +151,7 @@ public class EBMSEndpoint implements Provider<SOAPMessage> {
     } catch (StorageException ex) {
       LOG.logError(l, "Error setting status ERROR to MSHInMail :'" + mail.getId() + "'!", ex);
     }
-
+/*
     if (sb.getExport() != null && sb.getExport().getActive() != null 
         && sb.getExport().getActive()
         || sb.getXSLT()!= null        ) {
@@ -161,7 +161,7 @@ public class EBMSEndpoint implements Provider<SOAPMessage> {
         LOG.logError(l, "Error occured while submitting mail to export queue:'" + mail.getId() + "'!",
             ex);
       }
-    }
+    }*/
     LOG.logEnd(l);
   }
 

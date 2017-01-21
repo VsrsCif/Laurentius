@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 (http://www.altova.com) by XMLSpy 2007 Professional Ed., Installed for 5 users (with SMP from 2007-02-06 to 2008-02-07) (CIF VSRS) -->
+<!--Metadata: 
+Owner: Supreme Court Republic of Slovenia 
+Product: SVEV-MSH
+Product Version: 1.0.0
+Artifact Type: Schema
+Descriptive Name: Payload part of user mail message
+Date: 20150612 (12 June 2015)
+Author: Joze Rihtarsic
+-->
+<!-- 
+Copyright 2015, Supreme Court Republic of Slovenia 
+
+ Licensed under the EUPL, Version 1.1 or – as soon they will be approved by 
+ the European Commission - subsequent versions of the EUPL (the "Licence");
+ You may not use this work except in compliance with the Licence.
+ You may obtain a copy of the Licence at:
+
+ https://joinup.ec.europa.eu/software/page/eupl
+
+ Unless required by applicable law or agreed to in writing, software 
+ distributed under the Licence is distributed on an "AS IS" basis, WITHOUT 
+ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the Licence for the specific language governing permissions and  
+ limitations under the Licence.
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://laurentius.si/process" targetNamespace="http://laurentius.si/process" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:complexType name="SEDProcessorInstance">
+		<xs:attribute name="id" type="xs:integer" use="required"/>
+		<xs:attribute name="instance" use="required"/>
+		<xs:attribute name="type" use="required"/>
+		<xs:attribute name="plugin" use="required"/>
+		<xs:attribute name="pluginVersion" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="SEDProcessorSet">
+		<xs:sequence>
+			<xs:element name="SEDProcessorInstance" type="ns1:SEDProcessorInstance" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:integer" use="required"/>
+		<xs:attribute name="name"/>
+		<xs:attribute name="description"/>
+	</xs:complexType>
+	<xs:complexType name="SEDProcessorRule">
+		<xs:attribute name="id" type="xs:integer" use="required"/>
+		<xs:attribute name="procSetId" type="xs:integer" use="required">
+			<xs:annotation>
+				<xs:documentation>id to process set </xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="service" use="required">
+			<xs:annotation>
+				<xs:documentation xml:lang="sl">Storitve odpreme, ki jo določena v PMode parametrih </xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="64"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="action" use="required">
+			<xs:annotation>
+				<xs:documentation xml:lang="sl">Akcija v storitvi odpreme, ki jo določena v PMode parametrih  (npr: RegistredMail, LegalZPP, LegalZKP in LegalZUP, SMTPDelivery) </xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="64"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="receiverEBox" use="required">
+			<xs:annotation>
+				<xs:documentation xml:lang="sl">Naslovnikov eBox naslov (email oblika). domena določa PMode konfiguracijo naslovnikovega strežnika</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="64"/>
+					<xs:pattern value="[_\-a-zA-Z0-9\.\+]+@[a-zA-Z0-9](\.?[\-a-zA-Z0-9]*[a-zA-Z0-9])*"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="senderEBox" use="required">
+			<xs:annotation>
+				<xs:documentation xml:lang="sl">Pošiljateljev  elektronski naslov (email oblika). domena določa PMode konfiguracijo naslovnikovega strežnika</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="64"/>
+					<xs:pattern value="[_\-a-zA-Z0-9\.\+]+@[a-zA-Z0-9](\.?[\-a-zA-Z0-9]*[a-zA-Z0-9])*"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:element name="SEDProcessorSet" type="ns1:SEDProcessorSet"/>
+	<xs:element name="SEDProcessorRule" type="ns1:SEDProcessorRule"/>
+</xs:schema>

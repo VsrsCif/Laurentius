@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="si.laurentius.plugin.imp.IMPExport" table="PLG_BSC_EXPORT">
+        <id column="Instance" name="Instance" type="java.lang.String" />
+        <property column="EXPORT_METADATA" name="ExportMetaData" type="java.lang.Boolean"/>
+        <property column="METADATA_FILENAME" length="512" name="MetaDataFilename" type="java.lang.String"/>
+        <property column="FOLDER" length="512" name="Folder" type="java.lang.String"/>
+        <property column="FILEMASK" length="512" name="FileMask" type="java.lang.String"/>
+        <property column="OVERWRITE" name="Overwrite" type="java.lang.Boolean"/>
+    </class>
+    <query name="si.laurentius.plugin.imp.IMPExport.getByInstance">SELECT p FROM IMPExport p WHERE p.Instance = :instance</query>
+    <query name="si.laurentius.plugin.imp.IMPExport.getAll">SELECT p FROM IMPExport p</query>
+</hibernate-mapping>

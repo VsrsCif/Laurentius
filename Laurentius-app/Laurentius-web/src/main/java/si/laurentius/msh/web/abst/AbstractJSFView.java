@@ -4,6 +4,7 @@
  */
 package si.laurentius.msh.web.abst;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
@@ -14,28 +15,35 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class AbstractJSFView {
 
-  /**
-   *
-   * @return
-   */
-  protected ExternalContext externalContext() {
-    return facesContext().getExternalContext();
-  }
+    /**
+     *
+     * @return
+     */
+    protected ExternalContext externalContext() {
+        return facesContext().getExternalContext();
+    }
 
-  /**
-   *
-   * @return
-   */
-  protected FacesContext facesContext() {
-    return FacesContext.getCurrentInstance();
-  }
+    /**
+     *
+     * @return
+     */
+    protected FacesContext facesContext() {
+        return FacesContext.getCurrentInstance();
+    }
 
-  /**
-   *
-   * @return
-   */
-  public String getClientIP() {
-    return ((HttpServletRequest) externalContext().getRequest()).getRemoteAddr();
-  }
+    protected void addError(String desc) {
+        facesContext().addMessage(null,
+                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error",
+                        desc));
+    }
+
+    /**
+     *
+     * @return
+     */
+    public String getClientIP() {
+        return ((HttpServletRequest) externalContext().getRequest()).
+                getRemoteAddr();
+    }
 
 }

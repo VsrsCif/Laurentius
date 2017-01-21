@@ -165,7 +165,7 @@ public class LoginManager {
         return;
       }
 
-      if (!request.isUserInRole("ADMIN") && !request.isUserInRole("USER")) {
+      if (!request.isUserInRole(SEDGUIConstants.ROLE_ADMIN) && !request.isUserInRole(SEDGUIConstants.ROLE_USER)) {
         String msg = "User '" + userName + "' does not have roles: USER or ADMIN";
         mLog.logWarn(l, getClientIP() + " msg: " + msg, null);
         facesContext().addMessage(null, new FacesMessage(msg));
@@ -173,7 +173,7 @@ public class LoginManager {
         return;
       }
 
-      user.setAdminRole(request.isUserInRole("ADMIN"));
+      user.setAdminRole(request.isUserInRole(SEDGUIConstants.ROLE_ADMIN));
 
       externalContext.getSessionMap().put(SEDGUIConstants.SESSION_USER_VARIABLE_NAME, user);
       externalContext.redirect(mstrForwardUrl);

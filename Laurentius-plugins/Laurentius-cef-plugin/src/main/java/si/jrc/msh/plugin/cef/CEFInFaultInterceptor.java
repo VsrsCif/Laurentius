@@ -22,21 +22,15 @@ import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
 import javax.transaction.UserTransaction;
 import org.apache.cxf.binding.soap.SoapMessage;
-import si.laurentius.msh.inbox.mail.MSHInMail;
-import si.laurentius.msh.outbox.mail.MSHOutMail;
-import si.laurentius.ebox.SEDBox;
 import si.laurentius.commons.SEDJNDI;
-import si.laurentius.commons.cxf.SoapUtils;
-import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.interfaces.JMSManagerInterface;
 import si.laurentius.commons.interfaces.PModeInterface;
 import si.laurentius.commons.interfaces.SEDDaoInterface;
 import si.laurentius.commons.interfaces.SEDLookupsInterface;
-import si.laurentius.commons.interfaces.SoapInterceptorInterface;
+
 import si.laurentius.commons.utils.SEDLogger;
-import si.laurentius.commons.utils.Utils;
-import si.laurentius.msh.outbox.property.MSHOutProperties;
-import si.laurentius.msh.outbox.property.MSHOutProperty;
+import si.laurentius.plugin.interceptor.MailInterceptorDef;
+import si.laurentius.plugin.interfaces.SoapInterceptorInterface;
 
 /**
  *
@@ -69,6 +63,16 @@ public class CEFInFaultInterceptor implements SoapInterceptorInterface {
    */
   @Resource
   public UserTransaction mutUTransaction;
+
+ @Override
+  public MailInterceptorDef getDefinition() {
+    MailInterceptorDef def = new MailInterceptorDef();
+    def.setType("CEFInFaultInterceptor");
+    def.setName("CEFInFaultInterceptor");
+    def.setDescription("CEF Digital testin module");
+    return def;
+  }
+  
 
   /**
    *

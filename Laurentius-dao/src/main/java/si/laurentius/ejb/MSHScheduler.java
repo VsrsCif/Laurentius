@@ -18,7 +18,6 @@ import java.math.BigInteger;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Properties;
-import java.util.concurrent.atomic.AtomicInteger;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
@@ -37,16 +36,18 @@ import javax.naming.NamingException;
 import si.laurentius.cron.SEDCronJob;
 import si.laurentius.cron.SEDTaskExecution;
 import si.laurentius.cron.SEDTaskProperty;
-import si.laurentius.cron.SEDTaskType;
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.SEDTaskStatus;
 import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.interfaces.SEDDaoInterface;
 import si.laurentius.commons.interfaces.SEDLookupsInterface;
+import si.laurentius.commons.interfaces.SEDPluginManagerInterface;
 import si.laurentius.commons.interfaces.SEDSchedulerInterface;
-import si.laurentius.commons.interfaces.TaskExecutionInterface;
-import si.laurentius.commons.interfaces.exception.TaskException;
 import si.laurentius.commons.utils.SEDLogger;
+import si.laurentius.plugin.crontask.CronTaskDef;
+
+import si.laurentius.plugin.interfaces.TaskExecutionInterface;
+import si.laurentius.plugin.interfaces.exception.TaskException;
 
 /**
  *
@@ -55,15 +56,16 @@ import si.laurentius.commons.utils.SEDLogger;
 @Singleton
 @Local(SEDSchedulerInterface.class)
 @Lock(LockType.READ)
-// allows timers to execute in parallel
 @Startup
 public class MSHScheduler implements SEDSchedulerInterface {
 
   private static final SEDLogger LOG = new SEDLogger(MSHScheduler.class);
-  private final AtomicInteger checks = new AtomicInteger();
 
   @EJB(mappedName = SEDJNDI.JNDI_SEDLOOKUPS)
   private SEDLookupsInterface mdbLookups;
+  
+  @EJB(mappedName = SEDJNDI.JNDI_PLUGIN)
+  private SEDPluginManagerInterface mpmPluginManager;
 
   @EJB(mappedName = SEDJNDI.JNDI_SEDDAO)
   private SEDDaoInterface mdbDao;
@@ -107,12 +109,15 @@ public class MSHScheduler implements SEDSchedulerInterface {
       LOG.logEnd(l, "Error storing task: '" + te.getType() + "' ", ex);
       return;
     }
+    
 
     // get cron job
     SEDCronJob mj = mdbLookups.getSEDCronJobById(bi);
+    
+    CronTaskDef ct = mpmPluginManager.getCronTaskDef(mj.getSEDTask().getPlugin(), mj.getSEDTask().getType());
 
-    te.setName(mj.getSEDTask().getTaskType());
-    te.setType(mj.getSEDTask().getTaskType());
+    te.setName(ct.getName());
+    te.setType(mj.getSEDTask().getType());
     if (!mj.getActive()) {
       te.setStatus(SEDTaskStatus.ERROR.getValue());
       te.setResult(String.format("Task cron id:  %d  not active!", bi));
@@ -124,14 +129,14 @@ public class MSHScheduler implements SEDSchedulerInterface {
       }
       return;
     }
-    SEDTaskType tt = mdbLookups.getSEDTaskTypeByType(mj.getSEDTask().getTaskType());
-
+    
+    // plugin  and task type
     TaskExecutionInterface tproc = null;
     try {
-      tproc = InitialContext.doLookup(tt.getJndi());
+      tproc = InitialContext.doLookup(ct.getJndi());
     } catch (NamingException ex) {
       te.setStatus(SEDTaskStatus.ERROR.getValue());
-      te.setResult(String.format("Error getting taskexecutor: %s. ERROR: %s", tt.getJndi(),
+      te.setResult(String.format("Error getting taskexecutor: %s. ERROR: %s", ct.getJndi(),
           ex.getMessage()));
       te.setEndTimestamp(Calendar.getInstance().getTime());
       try {
@@ -171,7 +176,7 @@ public class MSHScheduler implements SEDSchedulerInterface {
     } catch (TaskException ex) {
 
       te.setStatus(SEDTaskStatus.ERROR.getValue());
-      te.setResult(String.format("TASK ERROR: %s. Err. desc: %s", tt.getJndi(), ex.getMessage()));
+      te.setResult(String.format("TASK ERROR: %s. Err. desc: %s", ct.getJndi(), ex.getMessage()));
       te.setEndTimestamp(Calendar.getInstance().getTime());
       LOG.logEnd(l, "Error updating task: '" + te.getType() + "' ", ex);
       try {
@@ -182,20 +187,6 @@ public class MSHScheduler implements SEDSchedulerInterface {
       }
     }
     LOG.logEnd(l);
-  }
-
-  private void checkTest() {
-    int i = checks.incrementAndGet();
-    LOG.log("checkTest: " + i);
-  }
-
-  /**
-   *
-   * @return
-   */
-  @Override
-  public int getChecks() {
-    return checks.get();
   }
 
   /**

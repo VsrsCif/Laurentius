@@ -15,6 +15,10 @@
         <p:dialog   header="#{msg['SEDCronDialog']}" widgetVar="cronDialog" modal="true" hideEffect="fade" 
                     resizable="false" appendTo="@(body)" width="750" >
             <h:form id="cronDialogForm">
+                <p:messages id="messagesCronDialog"
+                    autoUpdate="true"
+                   showDetail="true" />
+                
                 <p:layout id="cronJob" style="min-width:650px;height:380px;">
                     <p:layoutUnit position="center" rendered="#{empty adminSEDCronJobView.editable}" >
                         <h:outputText value="#{msg['SelectTableRow']}" />
@@ -23,7 +27,10 @@
                         <p:panelGrid  columns="2" columnClasses="label,value" style="width:100%; height: 220px ">
 
                             <h:outputText value="#{msg['Name']}:" />
-                            <p:inputText id="cname" value="#{adminSEDCronJobView.editable.name}" style="width: 120px"  />
+                            <p:inputText id="cname" value="#{adminSEDCronJobView.editable.name}" 
+                                         disabled="#{!adminSEDCronJobView.isEditableNew()}"
+                                         style="width: 120px"  
+                                         />
 
 
                             <h:outputText value="#{msg['Active']}:" />
@@ -49,43 +56,68 @@
                         </p:panelGrid>
                     </p:layoutUnit>
                     <p:layoutUnit header="task data" position="east" rendered="#{not empty adminSEDCronJobView.editable}" 
-                                  size="350" minSize="350" maxSize="350"  >
+                                  size="450" minSize="450" maxSize="450"  >
 
-                        <p:panelGrid  columns="2" columnClasses="label,value" style="width: 100%" >
+                        <p:panelGrid  columns="4" columnClasses="label,value,label,value" style="width: 100%" >
+                            <h:outputText value="#{msg['Plugin']}" />
+                            <p:selectOneMenu id="pluginType" value="#{adminSEDCronJobView.editableTaskPluginType}" 
+                                             style="width:150px" 
+                                             disabled="#{!adminSEDCronJobView.isEditableNew()}"
+                                             >
+                                <p:ajax   update=":dlgcron:cronDialogForm:taskType :dlgcron:cronDialogForm:TblTaskTypeProp" />    
+
+                                <f:selectItems value="#{adminSEDPluginView.list}"  var="plg" itemLabel="#{plg.name}" 
+                                               itemValue="#{plg.type}" itemDescription="#{plg.description}"
+                                               itemDisabled="#{plg.cronTaskDeves.size() eq 0}"
+                                               />
+                            </p:selectOneMenu>
 
                             <h:outputText value="#{msg['Task']}" />
-                            <p:selectOneMenu id="taskType" value="#{adminSEDCronJobView.editableTask}" style="width:150px" >
+                            <p:selectOneMenu id="taskType" value="#{adminSEDCronJobView.editableTaskType}" 
+                                             style="width:150px"
+                                             disabled="#{!adminSEDCronJobView.isEditableNew()}"
+                                             >
                                 <p:ajax update=":dlgcron:cronDialogForm:TblTaskTypeProp" />                               
-                                <f:selectItems value="#{adminSEDCronJobView.taskTypeList}" />
+                                <f:selectItems value="#{adminSEDCronJobView.editablePluginCronTaskDeves}"
+                                               var="tskDef" itemLabel="#{tskDef.name}" 
+                                               itemValue="#{tskDef.type}" itemDescription="#{tskDef.description}"/>
+
                             </p:selectOneMenu>
 
                         </p:panelGrid>
                         <h:outputText value="#{msg['TaskProperties']}" />
                         <p:dataTable id="TblTaskTypeProp" 
                                      var="sp" 
-                                     value="#{adminSEDCronJobView.editable.SEDTask.SEDTaskProperties}"                                     
-                                     rowKey="#{sp.key}"                                     
+                                     value="#{adminSEDCronJobView.taskItems}"                                     
+                                     rowKey="#{sp.key}"   
+                                     rowIndexVar="rowIndex"
                                      scrollable="true" 
                                      scrollHeight="170"
                                      editable="true"
                                      editMode="cell"
 
                                      >
-                            <p:column headerText="#{msg['Key']}">
-                                <h:outputText value="#{sp.key}" />
+                            <p:column headerText="#{msg['Key']}"  width="150">
+                                <h:outputText id="TblTaskTypePropKey" value="#{sp.taskDef.key}" />
+                                <p:tooltip for=":dlgcron:cronDialogForm:TblTaskTypeProp:#{rowIndex}:TblTaskTypePropKey"
+                                            value="#{sp.taskDef.description}"/>
                             </p:column>
+                            <p:column headerText="#{msg['Mnd.']}" width="20">
+                                <p:selectBooleanCheckbox value="#{sp.taskDef.mandatory}" disabled="true" />
+                            </p:column>
+
                             <p:column headerText="#{msg['Value']}">
-                                <p:cellEditor>
-                                    <f:facet name="output"><h:outputText value="#{sp.value}" /></f:facet>
-                                    <f:facet name="input">
-                                        <p:inputText  value="#{sp.value}" />
-                                        <!-- p:inputText rendered="#{adminSEDCronJobView.getTypeForEditableTaskProperty(sp.key)  eq 'string' }" value="#{sp.value}" />
-                                        <p:selectBooleanCheckbox rendered="#{adminSEDCronJobView.getTypeForEditableTaskProperty(sp.key)  eq 'boolean' }" value="#{sp.value}" />
-                                        <p:spinner rendered="#{adminSEDCronJobView.getTypeForEditableTaskProperty(sp.key)  eq 'int' }" value="#{sp.value}" / -->
+                                <p:inputText rendered="#{sp.taskDef.type  eq 'string' }" value="#{sp.value}" />
+                                <p:selectBooleanCheckbox rendered="#{sp.taskDef.type  eq 'boolean' }" value="#{sp.booleanValue}" />
+                                <p:spinner rendered="#{sp.taskDef.type  eq 'int' }" value="#{sp.intValue}"  />
+                                <p:selectOneMenu rendered="#{sp.taskDef.type  eq 'list' }"  
+                                                 value="#{sp.value}" 
+                                                 >             
+                                    <f:selectItems value="#{sp.listValues}"
+                                                   var="tskDef" itemLabel="#{lv}" 
+                                                   itemValue="#{lv}" />
+                                </p:selectOneMenu>
 
-
-                                    </f:facet>
-                                </p:cellEditor>
 
                             </p:column>
                         </p:dataTable>                        
@@ -98,7 +130,7 @@
                                 <p:commandButton value="#{msg['Ok']}"  styleClass="toolbar-Button" 
                                                  icon="ui-icon-svg-ok ui-icon-size-22" 
                                                  action="#{adminSEDCronJobView.addOrUpdateEditable()}"
-                                                 oncomplete="PF('cronDialog').hide()" 
+                                                 oncomplete="if (args &amp;&amp; args.saved) PF('cronDialog').hide()" 
                                                  update=":forms:SettingsCron:TblCron"
                                                  />
                                 <p:commandButton value="#{msg['Cancel']}"

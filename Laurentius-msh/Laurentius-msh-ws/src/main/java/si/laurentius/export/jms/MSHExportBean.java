@@ -21,8 +21,6 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ejb.ActivationConfigProperty;
 import javax.ejb.EJB;
 import javax.ejb.MessageDriven;
@@ -49,19 +47,17 @@ import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StorageUtils;
 import si.laurentius.commons.utils.Utils;
 import si.laurentius.commons.interfaces.SEDLookupsInterface;
-import si.laurentius.commons.interfaces.exception.InMailProcessException;
+
 import si.laurentius.commons.utils.StringFormater;
 import si.laurentius.commons.utils.xml.XMLUtils;
-import si.laurentius.ebox.Execute;
-import si.laurentius.ebox.Export;
+
 import si.laurentius.ebox.SEDBox;
 import si.laurentius.msh.inbox.mail.MSHInMail;
 import si.laurentius.msh.inbox.payload.MSHInPart;
-import si.laurentius.msh.xslt.XSLTNamespaceContext;
-import si.laurentius.msh.xslt.XPathUtils;
-import si.laurentius.msh.xslt.XSLTUtils;
-import si.laurentius.xslt.SEDXslt;
-import si.laurentius.xslt.XPathRule;
+
+import si.laurentius.plugin.interfaces.exception.InMailProcessException;
+
+
 
 /**
  *
@@ -93,7 +89,7 @@ public class MSHExportBean implements MessageListener {
   StorageUtils msStorageUtils = new StorageUtils();
   StringFormater msfFormat = new StringFormater();
 
-  XPathUtils mxsltUtils = new XPathUtils();
+//  XPathUtils mxsltUtils = new XPathUtils();
 
   @Override
   public void onMessage(Message msg) {
@@ -128,7 +124,7 @@ public class MSHExportBean implements MessageListener {
     }
 
     List lstExportFiles = null;
-    if (sb.getXSLT() != null) {
+/*    if (sb.getXSLT() != null) {
       try {
         tranformPayloads(sb.getXSLT(), mail);
       } catch (InMailProcessException ex) {
@@ -168,11 +164,11 @@ public class MSHExportBean implements MessageListener {
       }
 
     }
-    
+    */
 
     LOG.logEnd(t, jmsMessageId);
   }
-
+/*
   public long executeProcessForMail(Execute e, MSHInMail mail, List<String> lstExportFiles)
       throws InMailProcessException {
     if (!Utils.isEmptyString(e.getCommand())) {
@@ -289,7 +285,7 @@ public class MSHExportBean implements MessageListener {
     }
     LOG.logEnd(t);
     return procRes;
-  }
+  }*/
 
   public void setStatusToInMail(MSHInMail mail, SEDInboxMailStatus status, String msg) {
     try {
@@ -298,7 +294,7 @@ public class MSHExportBean implements MessageListener {
       LOG.logError("Failed to set status to message with id: '" + mail.getId() + "'!", ex);
     }
   }
-
+/*
   public void tranformPayloads(SEDXslt xslt, MSHInMail mim)
       throws InMailProcessException {
     LOG.formatedlog("XSLT for box");
@@ -379,6 +375,6 @@ public class MSHExportBean implements MessageListener {
       }
     }
 
-  }
+  }*/
 
 }

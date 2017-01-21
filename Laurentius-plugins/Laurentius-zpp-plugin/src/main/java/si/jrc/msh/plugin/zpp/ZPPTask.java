@@ -28,8 +28,6 @@ import si.laurentius.msh.outbox.mail.MSHOutMail;
 import si.laurentius.msh.outbox.payload.MSHOutPart;
 import si.laurentius.msh.outbox.payload.MSHOutPayload;
 import si.laurentius.cert.SEDCertStore;
-import si.laurentius.cron.SEDTaskType;
-import si.laurentius.cron.SEDTaskTypeProperty;
 import si.jrc.msh.plugin.zpp.doc.DocumentSodBuilder;
 import si.jrc.msh.plugin.zpp.exception.ZPPException;
 import si.jrc.msh.plugin.zpp.utils.FOPUtils;
@@ -48,8 +46,6 @@ import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.interfaces.JMSManagerInterface;
 import si.laurentius.commons.interfaces.SEDDaoInterface;
 import si.laurentius.commons.interfaces.SEDLookupsInterface;
-import si.laurentius.commons.interfaces.TaskExecutionInterface;
-import si.laurentius.commons.interfaces.exception.TaskException;
 import si.laurentius.commons.utils.HashUtils;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StorageUtils;
@@ -57,6 +53,11 @@ import si.laurentius.commons.utils.StringFormater;
 import si.laurentius.commons.utils.Utils;
 import si.laurentius.lce.KeystoreUtils;
 import si.laurentius.commons.interfaces.SEDCertStoreInterface;
+import si.laurentius.plugin.crontask.CronTaskDef;
+import si.laurentius.plugin.crontask.CronTaskPropertyDef;
+
+import si.laurentius.plugin.interfaces.TaskExecutionInterface;
+import si.laurentius.plugin.interfaces.exception.TaskException;
 
 
 /**
@@ -189,22 +190,22 @@ public class ZPPTask implements TaskExecutionInterface {
    * @return
    */
   @Override
-  public SEDTaskType getTaskDefinition() {
-    SEDTaskType tt = new SEDTaskType();
+  public CronTaskDef getDefinition() {
+    CronTaskDef tt = new CronTaskDef();
     tt.setType("zpp-plugin");
     tt.setName("ZPP plugin");
     tt.setDescription("Create and Sign adviceOfDelivery for incomming mail");
-    tt.getSEDTaskTypeProperties().add(createTTProperty(REC_SEDBOX, "Receiver sedbox."));
-    tt.getSEDTaskTypeProperties().add(createTTProperty(SIGN_ALIAS, "Signature key alias."));
-    tt.getSEDTaskTypeProperties().add(createTTProperty(SIGN_KEYSTORE, "Keystore name."));
-    tt.getSEDTaskTypeProperties().add(createTTProperty(PROCESS_MAIL_COUNT,
+    tt.getCronTaskPropertyDeves().add(createTTProperty(REC_SEDBOX, "Receiver sedbox."));
+    tt.getCronTaskPropertyDeves().add(createTTProperty(SIGN_ALIAS, "Signature key alias."));
+    tt.getCronTaskPropertyDeves().add(createTTProperty(SIGN_KEYSTORE, "Keystore name."));
+    tt.getCronTaskPropertyDeves().add(createTTProperty(PROCESS_MAIL_COUNT,
         "Max mail count proccesed."));
     return tt;
   }
 
-  private SEDTaskTypeProperty createTTProperty(String key, String desc, boolean mandatory,
+  private CronTaskPropertyDef createTTProperty(String key, String desc, boolean mandatory,
       String type, String valFormat, String valList) {
-    SEDTaskTypeProperty ttp = new SEDTaskTypeProperty();
+    CronTaskPropertyDef ttp = new CronTaskPropertyDef();
     ttp.setKey(key);
     ttp.setDescription(desc);
     ttp.setMandatory(mandatory);
@@ -214,7 +215,7 @@ public class ZPPTask implements TaskExecutionInterface {
     return ttp;
   }
 
-  private SEDTaskTypeProperty createTTProperty(String key, String desc) {
+  private CronTaskPropertyDef createTTProperty(String key, String desc) {
     return createTTProperty(key, desc, true, "string", null, null);
   }
 

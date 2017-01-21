@@ -14,8 +14,11 @@
  */
 package si.laurentius.commons;
 
+import java.io.File;
 import static java.lang.System.getProperty;
 import static java.lang.System.setProperty;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -23,144 +26,123 @@ import static java.lang.System.setProperty;
  */
 public class SEDSystemProperties {
 
-  /**
-   * Default value for keystore and trustore configuration file name.
-   *
-   * <p>
-   * If system property is not given, absolute file to pmode file
-   * ${SYS_PROP_HOME_DIR}/pmode-conf.xml
-   * </p>
-   */
-  public static final String SYS_PROP_CERT_DEF = "security-conf.properties";
-  /**
-   * System property for database dialect
-   *
-   * <p>
-   * If system property is not given, max 5 outgoing workers are initiated. Workers handle outbox
-   * messages.
-   * </p>
-   */
-  public static final String SYS_PROP_DB_DIALECT = "si.laurentius.msh.hibernate.dialect";
-  /**
-   * System property for database dialect
-   *
-   * <p>
-   * If system property is not given, max 5 outgoing workers are initiated. Workers handle outbox
-   * messages.
-   * </p>
-   */
-  public static final String SYS_PROP_DB_HBM2DLL = "si.laurentius.msh.hibernate.hbm2ddl";
-  /**
-   * System property for out qeue workers.
-   *
-   * <p>
-   * If system property is not given, max 5 outgoing workers are initiated. Workers handle outbox
-   * messages.
-   * </p>
-   */
-  public static final String SYS_PROP_EXECUTION_WORKERS =
-      "si.laurentius.msh.execution.workers.count";
-  /**
-   * Default value for plugin folder name.
-   *
-   * <p>
-   * Def plugin folder name form plugins; ${SYS_PROP_HOME_DIR}/plugins
-   * </p>
-   */
-  public static final String SYS_PROP_FOLDER_PLUGINS_DEF = "plugins";
-  /**
-   * Default value for plugin folder name.
-   *
-   * <p>
-   * Def security folder name for trunstore and keystore ; ${SYS_PROP_HOME_DIR}/security
-   * </p>
-   */
-  public static final String SYS_PROP_FOLDER_SECURITY_DEF = "security";
-  
-  public static final String SYS_PROP_FOLDER_CRL_DEF = "crl";
-  /**
-   * Default value for plugin folder name.
-   *
-   * <p>
-   * Def plugin folder name for plugins; ${SYS_PROP_HOME_DIR}/plugins
-   * </p>
-   */
-  public static final String SYS_PROP_FOLDER_STORAGE_DEF = "storage";
+  private static final int IN_BRACKET = 2;
+  private static final int NORMAL = 0;
+  private static final int SEEN_DOLLAR = 1;
+
+  private static final Map<String, File> mInitFilesFoders = new HashMap<>();
+  private static final Map<String, String> mDefValues = new HashMap<>();
 
   /**
    * System property for SED home directory.
-   *
-   * <p>
-   * System property define home directory which contains pmode.configuration
-   * </p>
    */
   public static final String SYS_PROP_HOME_DIR = "laurentius.home";
 
   /**
-   *
+   * System property for set security folder (keystor, crl list, root ca ).
    */
-  public static final String SYS_PROP_HOME_DIR_DEF = "laurentius-home";
+  public static final String SYS_PROP_SECURITY_DIR = "laurentius.security.dir";
+  /**
+   * Crl list folders
+   */
+    public static final String SYS_PROP_CRL_DIR = "laurentius.crl.dir";
 
   /**
-   * System property for init lookups file.
-   *
-   * <p>
-   * System property define init lookups file. File is absolute path to init file home directory.
-   * </p>
+   * System property initialization folder .
    */
-  public static final String SYS_PROP_INIT_LOOKUPS = "si.laurentius.init.lookups";
+  public static final String SYS_PROP_INIT_DIR = "laurentius.init.dir";
+  /**
+   * System property configuration folder .
+   */
+  public static final String SYS_PROP_CONF_DIR = "laurentius.conf.dir";
 
   /**
-   *
+   * System property storage folder .
    */
-  public static final String SYS_PROP_JNDI_JMS_PREFIX = "si.laurentius.jndi.jms.prefix";
+  public static final String SYS_PROP_STORAGE_DIR = "laurentius.storage.dir";
+
   /**
-   * System property for JNID prefix: wildfly: java:/jms/ jetty: java:comp/env/ junit test: ''
-   *
-   * <p>
-   * If system property is not given, max 5 outgoing workers are initiated. Workers handle outbox
-   * messages.
-   * </p>
+   * System property log folder .
    */
-  public static final String SYS_PROP_JNDI_PREFIX = "si.laurentius.jndi.prefix";
+  public static final String SYS_PROP_LOG_DIR = "laurentius.log.dir";
+
+  /**
+   * System property log folder .
+   */
+  public static final String SYS_PROP_PLUGINS_DIR = "laurentius.plugins.dir";
 
   /**
    * System property for pmode configuration file.
    *
    * <p>
-   * System property define pmode configuration file. File is relative to SED home directory.
+   * System property define pmode configuration file. File is relative to SED
+   * home directory.
    * </p>
    */
-  public static final String SYS_PROP_PMODE = "si.laurentius.pmode";
+  public static final String SYS_PROP_PMODE_FILE = "laurentius.pmode";
+
   /**
-   * Default value for pmode configuration file name.
-   *
-   * <p>
-   * If system property is not given, absolute file to pmode file
-   * ${SYS_PROP_HOME_DIR}/pmode-conf.xml
-   * </p>
+   * System property for domain.
    */
-  public static final String SYS_PROP_PMODE_DEF = "pmode-conf.xml";
+  public static final String S_PROP_LAU_DOMAIN = "laurentius.domain";
+
+  /**
+   * System property for database dialect
+   */
+  public static final String SYS_PROP_DB_DIALECT = "laurentius.hibernate.dialect";
+  /**
+   * System property for creating/updating database objects
+   *
+   */
+  public static final String SYS_PROP_DB_HBM2DLL = "laurentius.hibernate.hbm2ddl";
+  /**
+   * System property for initialize data from init folder
+   *
+   */
+  public static final String SYS_PROP_INITIALIZE = "laurentius.init";
 
   /**
    * System property for out qeue workers.
    *
-   * <p>
-   * If system property is not given, max 5 outgoing workers are initiated. Workers handle outbox
-   * messages.
-   * </p>
    */
-  public static final String S_PROP_LAU_DOMAIN = "si.laurentius.domain";
+  public static final String SYS_PROP_EXECUTION_WORKERS
+          = "si.laurentius.msh.execution.workers.count";
 
   /**
    *
    */
-  public static final String S_PROP_LAU_DOMAIN_DEF = "test-laurentius.org";
+  public static final String SYS_PROP_JNDI_JMS_PREFIX = "laurentius.jndi.jms.prefix";
+  /**
+   * System property for JNID prefix: wildfly: java:/jms/ jetty: java:comp/env/
+   * junit test: ''
+   *
+   * <p>
+   * If system property is not given, max 5 outgoing workers are initiated.
+   * Workers handle outbox messages.
+   * </p>
+   */
+  public static final String SYS_PROP_JNDI_PREFIX = "laurentius.jndi.prefix";
 
-  public static final String SYS_PROP_QUEUE_SENDER_WORKERS =
-      "si.laurentius.msh.sender.workers.count";
+  /**
+   *
+   */
+  public static final String SYS_PROP_QUEUE_SENDER_WORKERS
+          = "si.laurentius.msh.sender.workers.count";
 
   static {
+    mDefValues.put(SYS_PROP_HOME_DIR, System.getProperty(
+            "user.dir") + File.separator + "laurentius-home");
+    mDefValues.put(SYS_PROP_CONF_DIR, "${laurentius.home}/conf");
+    mDefValues.put(SYS_PROP_SECURITY_DIR, "${laurentius.conf.dir}/security");
+    mDefValues.put(SYS_PROP_CRL_DIR, "${laurentius.security.dir}/crl");
+    mDefValues.put(SYS_PROP_INIT_DIR, "${laurentius.conf.dir}/init");
+    mDefValues.put(SYS_PROP_LOG_DIR, "${laurentius.home}/log");
+    mDefValues.put(SYS_PROP_STORAGE_DIR, "${laurentius.home}/storage");
+    mDefValues.put(SYS_PROP_PLUGINS_DIR, "${laurentius.home}/plugins");
+
+    mDefValues.put(SYS_PROP_PMODE_FILE, "pmode-conf.xml");
+    mDefValues.put(S_PROP_LAU_DOMAIN, "test-laurentius.org");
+
     if (getProperty(SYS_PROP_QUEUE_SENDER_WORKERS) == null) {
       setProperty(SYS_PROP_QUEUE_SENDER_WORKERS, "5");
     }
@@ -169,9 +151,169 @@ public class SEDSystemProperties {
     }
 
   }
-  
-   public  static String getLocalDomain() {
-    return System.getProperty(SEDSystemProperties.S_PROP_LAU_DOMAIN);
+
+  public static String getLocalDomain() {
+    return System.getProperty(S_PROP_LAU_DOMAIN, 
+            mDefValues.get(S_PROP_LAU_DOMAIN));
   }
 
+  public static File getHomeFolder() {
+    return getFile(SYS_PROP_HOME_DIR, true);
+
+  }
+
+  public static File getConfFolder() {
+    return getFile(SYS_PROP_CONF_DIR, true);
+
+  }
+  public static File getCRLFolder() {
+    return getFile(SYS_PROP_CRL_DIR, true);
+
+  }
+
+  public static File getSecurityFolder() {
+    return getFile(SYS_PROP_SECURITY_DIR, true);
+
+  }
+
+  public static File getSecurityCRLFolder() {
+    return getFile(SYS_PROP_CRL_DIR, true);
+
+  }
+
+  public static File getStorageFolder() {
+    return getFile(SYS_PROP_STORAGE_DIR, true);
+  }
+
+  public static File getInitFolder() {
+    return getFile(SYS_PROP_INIT_DIR, true);
+
+  }
+
+  public static File getPluginsFolder() {
+    return getFile(SYS_PROP_PLUGINS_DIR, true);
+
+  }
+
+  public static File getPModeFile() {
+    return getFile(getConfFolder(), SYS_PROP_PMODE_FILE,
+            false);
+
+  }
+
+  private static synchronized File getFile(String property,
+          boolean isFolder) {
+    return getFile(null, property, isFolder);
+  }
+
+  private static synchronized File getFile(File parent, String property,
+          boolean isFolder) {
+
+    if (!mInitFilesFoders.containsKey(property)) {
+      String val = System.getProperty(property, mDefValues.getOrDefault(property,
+              ""));
+      int iTry = 10;
+      while (val.contains("${")) {
+        val = replaceProperties(val);
+        if (--iTry < 0) {
+          throw new IllegalArgumentException(
+                  String.format(
+                          "System property '%s' value '%s' could not be normalized!",
+                          property, val));
+        }
+
+      }
+      File f = new File(parent, val);
+      if (isFolder && !f.exists()) {
+        if (!f.mkdirs()) {
+          throw new IllegalArgumentException(
+                  String.format(
+                          "Could not create folder '%s' for system property '%s'!",
+                          val, property));
+        };
+      }
+      // replace system property
+      System.setProperty(property, val);
+      // cache file
+      mInitFilesFoders.put(property, f);
+
+    }
+    return mInitFilesFoders.get(property);
+  }
+
+  public static synchronized void clear() {
+
+    System.getProperties().remove(SYS_PROP_CONF_DIR);
+    System.getProperties().remove(SYS_PROP_HOME_DIR);
+    System.getProperties().remove(SYS_PROP_INIT_DIR);
+    System.getProperties().remove(SYS_PROP_LOG_DIR);
+    System.getProperties().remove(SYS_PROP_SECURITY_DIR);
+    System.getProperties().remove(SYS_PROP_STORAGE_DIR);
+    mInitFilesFoders.clear();
+  }
+  
+  public static boolean isInitData(){
+    return System.getProperty(SYS_PROP_INITIALIZE, "false").equalsIgnoreCase(
+            "true");
+  }
+
+  /**
+   * Method is "borrowed" from org.jboss.util.StringPropertyReplacer; Go through
+   * the input string and replace any occurance of ${p} with the
+   * System.getProperty(p) value. If there is no such property p defined, then
+   * the ${p} is replaced with "".
+   *
+   *
+   * @param string - the string with possible ${} references
+   * @return the input string with all property references replaced if any. If
+   * there are no valid references the input string will be returned.
+   */
+  public static String replaceProperties(final String string) {
+    final char[] chars = string.toCharArray();
+    StringBuilder buffer = new StringBuilder();
+    boolean properties = false;
+    int state = NORMAL;
+    int start = 0;
+    for (int i = 0; i < chars.length; ++i) {
+      char c = chars[i];
+
+      // Dollar sign outside brackets
+      if (c == '$' && state != IN_BRACKET) {
+        state = SEEN_DOLLAR;
+      } // Open bracket immediatley after dollar
+      else if (c == '{' && state == SEEN_DOLLAR) {
+        buffer.append(string.substring(start, i - 1));
+        state = IN_BRACKET;
+        start = i - 1;
+      } // No open bracket after dollar
+      else if (state == SEEN_DOLLAR) {
+        state = NORMAL;
+      } // Closed bracket after open bracket
+      else if (c == '}' && state == IN_BRACKET) {
+        // No content
+        if (start + 2 == i) {
+          buffer.append("${}"); // REVIEW: Correct?
+        } else // Collect the system property
+        {
+          String key = string.substring(start + 2, i);
+          properties = true;
+          buffer.append(getProperty(key, mDefValues.getOrDefault(key,"")));
+        }
+        start = i + 1;
+        state = NORMAL;
+      }
+    }
+
+    // No properties
+    if (properties == false) {
+      return string;
+    }
+
+    // Collect the trailing characters
+    if (start != chars.length) {
+      buffer.append(string.substring(start, chars.length));
+    }
+    // Done
+    return buffer.toString();
+  }
 }

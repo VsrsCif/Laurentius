@@ -199,7 +199,7 @@ public class StringFormater {
         {
           String key = string.substring(start + 2, i);
           properties = true;
-          buffer.append(getProperty(key, ""));
+          buffer.append(getProperty(key,  ""));
         }
         start = i + 1;
         state = NORMAL;

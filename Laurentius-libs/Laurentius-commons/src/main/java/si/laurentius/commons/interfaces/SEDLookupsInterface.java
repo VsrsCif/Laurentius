@@ -22,9 +22,9 @@ import si.laurentius.cert.crl.SEDCertCRL;
 import si.laurentius.cert.SEDCertStore;
 import si.laurentius.cert.SEDCertificate;
 import si.laurentius.cron.SEDCronJob;
-import si.laurentius.cron.SEDTaskType;
 import si.laurentius.ebox.SEDBox;
-import si.laurentius.plugin.SEDPlugin;
+import si.laurentius.process.SEDProcessorRule;
+import si.laurentius.process.SEDProcessorSet;
 import si.laurentius.user.SEDUser;
 
 /**
@@ -47,14 +47,13 @@ public interface SEDLookupsInterface {
    * @return
    */
   boolean addSEDCertStore(SEDCertStore sb);
-  
-    /**
+
+  /**
    *
    * @param sb
    * @return
    */
-  boolean addSEDCertCRL(SEDCertCRL  sb);
-
+  boolean addSEDCertCRL(SEDCertCRL sb);
 
   /**
    *
@@ -68,21 +67,21 @@ public interface SEDLookupsInterface {
    * @param sb
    * @return
    */
-  boolean addSEDPlugin(SEDPlugin sb);
-
-  /**
-   *
-   * @param sb
-   * @return
-   */
-  boolean addSEDTaskType(SEDTaskType sb);
-
-  /**
-   *
-   * @param sb
-   * @return
-   */
   boolean addSEDUser(SEDUser sb);
+  
+  /**
+   *
+   * @param sb
+   * @return
+   */
+  boolean addSEDProcessorSet(SEDProcessorSet sb);
+  
+   /**
+   *
+   * @param sb
+   * @return
+   */
+  boolean addSEDProcessorRule(SEDProcessorRule sb);
 
   /**
    *
@@ -98,25 +97,42 @@ public interface SEDLookupsInterface {
    */
   SEDBox getSEDBoxByAddressName(String strname);
 
-   /**
+  /**
    *
    * @param strname
    * @return
    */
   SEDBox getSEDBoxByLocalName(String strname);
+
   /**
    *
    * @param id
    * @return
    */
   SEDCronJob getSEDCronJobById(BigInteger id);
+  
+  
+  /**
+   *
+   * @param id
+   * @return
+   */
+  SEDProcessorSet getSEDProcessorSet(BigInteger id);
+  
+    /**
+   *
+   * @param id
+   * @return
+   */
+  SEDProcessorRule getSEDProcessorRule(BigInteger id);
+  
 
   /**
    *
-   * @param type
+   * @param id
    * @return
    */
-  SEDTaskType getSEDTaskTypeByType(String type);
+  SEDCronJob getSEDCronJobByName(String name);
 
   /**
    *
@@ -127,50 +143,46 @@ public interface SEDLookupsInterface {
 
   /**
    *
-   * @param type
-   * @return
-   */
-  SEDPlugin getSEDPluginByType(String type);
-
-  /**
-   *
    * @return
    */
   List<SEDBox> getSEDBoxes();
 
   /**
    * Return list of registred key/trust stores
+   *
    * @return List of SEDCertStores
    */
   List<SEDCertStore> getSEDCertStore();
-  
+
   /**
    * Return list of registred key/trust stores
+   *
    * @return List of SEDCertCRL
    */
   List<SEDCertCRL> getSEDCertCRLs();
   
   
-  
+   List<SEDProcessorSet> getSEDProcessorSets();
+   
+    List<SEDProcessorRule> getSEDProcessorRules();
+
   /**
    * Method return SEDCertStore by sed id.
+   *
    * @param id Certificate store name
    * @throw IllegalArgumentException if storname is null or empty
    * @return SEDCertStore if not found return null
    */
   public SEDCertStore getSEDCertStoreById(BigInteger id);
-  
-   
-  
+
   /**
    * Method return SEDCertStore by name.
+   *
    * @param storeName Certificate store name
    * @throw IllegalArgumentException if storname is null or empty
    * @return SEDCertStore if not found return null
    */
   public SEDCertStore getSEDCertStoreByName(String storeName);
-
-  
 
   /**
    * MEthod resturs SEDCertificat object for alias
@@ -178,52 +190,41 @@ public interface SEDLookupsInterface {
    * @param alias - alias of certificate
    * @param cs - key/trustostre
    * @param isKey - returned SEDCertificate must be a key
-   * @throw IllegalArgumentException if alias or  keystore are null
+   * @throw IllegalArgumentException if alias or keystore are null
    * @return SEDCertificate or null in SEDCertificate is found givem store.
    */
-   SEDCertificate getSEDCertificatForAlias(String alias,
-      SEDCertStore cs, boolean isKey);
-   
-   /**
+  SEDCertificate getSEDCertificatForAlias(String alias,
+          SEDCertStore cs, boolean isKey);
+
+  /**
    * MEthod resturs SEDCertificat object for alias
    *
    * @param alias - alias of certificate
    * @param storeName - trustore or keystore name
    * @param isKey - returned SEDCertificate must be a key
-   * @throw IllegalArgumentException if alias or  keystore are null
+   * @throw IllegalArgumentException if alias or keystore are null
    * @return SEDCertificate or null in SEDCertificate is found givem store.
    */
-   SEDCertificate getSEDCertificatForAlias(String alias,
-      String storeName, boolean isKey);
-   
-   
-    /**
+  SEDCertificate getSEDCertificatForAlias(String alias,
+          String storeName, boolean isKey);
+
+  /**
    * Method return SEDCertCRL by sed id.
+   *
    * @param id of crl
    * @throw IllegalArgumentException if storname is null or empty
    * @return SEDCertCRL if not found return null
    */
   public SEDCertCRL getSEDCertCRLById(BigInteger id);
-  
-  public SEDCertCRL getSEDCertCRLByIssuerDNAndUrl(String issuerDn, String http, String ldap);
-  
+
+  public SEDCertCRL getSEDCertCRLByIssuerDNAndUrl(String issuerDn, String http,
+          String ldap);
+
   /**
    *
    * @return
    */
   List<SEDCronJob> getSEDCronJobs();
-
-  /**
-   *
-   * @return
-   */
-  List<SEDPlugin> getSEDPlugin();
-
-  /**
-   *
-   * @return
-   */
-  List<SEDTaskType> getSEDTaskTypes();
 
   /**
    *
@@ -244,8 +245,8 @@ public interface SEDLookupsInterface {
    * @return
    */
   boolean removeSEDCertStore(SEDCertStore sb);
-  
-    /**
+
+  /**
    *
    * @param sb
    * @return
@@ -264,21 +265,21 @@ public interface SEDLookupsInterface {
    * @param sb
    * @return
    */
-  boolean removeSEDPlugin(SEDPlugin sb);
-
-  /**
-   *
-   * @param sb
-   * @return
-   */
-  boolean removeSEDTaskType(SEDTaskType sb);
-
-  /**
-   *
-   * @param sb
-   * @return
-   */
   boolean removeSEDUser(SEDUser sb);
+  
+  /**
+   *
+   * @param sb
+   * @return
+   */
+  boolean removeSEDProcessorSet(SEDProcessorSet sb);
+  
+  /**
+   *
+   * @param sb
+   * @return
+   */
+  boolean removeSEDProcessorRule(SEDProcessorRule sb);
 
   /**
    *
@@ -294,13 +295,13 @@ public interface SEDLookupsInterface {
    */
   boolean updateSEDCertStore(SEDCertStore sb);
 
-  
-    /**
+  /**
    *
    * @param sb
    * @return
    */
-  boolean updateSEDCertCRL(SEDCertCRL sb); 
+  boolean updateSEDCertCRL(SEDCertCRL sb);
+
   /**
    *
    * @param sb
@@ -313,19 +314,19 @@ public interface SEDLookupsInterface {
    * @param sb
    * @return
    */
-  boolean updateSEDPlugin(SEDPlugin sb);
-
-  /**
-   *
-   * @param sb
-   * @return
-   */
-  boolean updateSEDTaskType(SEDTaskType sb);
-
-  /**
-   *
-   * @param sb
-   * @return
-   */
   boolean updateSEDUser(SEDUser sb);
+  
+  /**
+   *
+   * @param sb
+   * @return
+   */
+  boolean updateSEDProcessorSet(SEDProcessorSet sb);
+  
+  /**
+   *
+   * @param sb
+   * @return
+   */
+  boolean updateSEDProcessorRule(SEDProcessorRule sb);
 }

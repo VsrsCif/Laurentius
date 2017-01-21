@@ -70,8 +70,8 @@
         <ns4:SEDPlugin webContext="/zpp-plugin" type="LegalZPP" name="ZPP plugin" description="ZPP - e-delivery: SVEV 2.0 service implementation" jndiInInterceptor="java:global/plugin-zpp/ZPPOutInterceptor!si.laurentius.commons.interfaces.SoapInterceptorInterface" jndiOutInterceptor="java:global/plugin-zpp/ZPPOutInterceptor!si.laurentius.commons.interfaces.SoapInterceptorInterface" tasksJNDIs="java:global/plugin-zpp/ZPPTask!si.laurentius.commons.interfaces.TaskExecutionInterface" jndi="java:global/plugin-zpp/ZPPPluginDescription!si.laurentius.commons.interfaces.PluginDescriptionInterface"/>
     </SEDPlugins>
     <SEDProperties>
-        <ns5:SEDProperty key="si.laurentius.domain" value="test-sed.si" group="SYSTEM"/>
-        <ns5:SEDProperty key="si.laurentius.pmode" value="pmode-conf.xml" group="SYSTEM"/>
+        <ns5:SEDProperty key="laurentius.domain" value="test-sed.si" group="SYSTEM"/>
+        <ns5:SEDProperty key="laurentius.pmode" value="pmode-conf.xml" group="SYSTEM"/>
     </SEDProperties>
     <SEDUsers>
         <ns6:SEDUser userId="sed" activeFromDate="2016-04-20+02:00">

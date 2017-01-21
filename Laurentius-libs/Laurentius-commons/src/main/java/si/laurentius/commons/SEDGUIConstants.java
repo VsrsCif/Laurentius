@@ -14,4 +14,8 @@ public class SEDGUIConstants {
     *
     */
   public static final String SESSION_USER_VARIABLE_NAME = "sed-user";
+  
+  public static final String ROLE_ADMIN = "ADMIN";
+  
+  public static final String ROLE_USER = "USER";
 }
