@@ -15,7 +15,8 @@ import si.laurentius.commons.utils.xml.XMLUtils;
  * @param <T>
  */
 abstract public class AbstractAdminJSFView<T> extends AbstractJSFView {
-private static final SEDLogger LOG = new SEDLogger(AbstractAdminJSFView.class);
+
+  private static final SEDLogger LOG = new SEDLogger(AbstractAdminJSFView.class);
   private T mtEditable;
   private T mtNew;
   private T mtSelected;
@@ -26,14 +27,18 @@ private static final SEDLogger LOG = new SEDLogger(AbstractAdminJSFView.class);
   public void addOrUpdateEditable() {
     long l = LOG.logStart();
     boolean bsuc = false;
-    
+
     if (validateData()) {
       if (isEditableNew()) {
-        bsuc = persistEditable();
+        if(persistEditable()){
         setNew(null);
+        bsuc =true;
+        }
       } else {
-        bsuc = updateEditable();
-        setEditable(null);
+        if (updateEditable()) {
+          setEditable(null);
+          bsuc =true;
+        }
       }
     }
     RequestContext.getCurrentInstance().addCallbackParam("saved", bsuc);
@@ -100,9 +105,9 @@ private static final SEDLogger LOG = new SEDLogger(AbstractAdminJSFView.class);
    * @param edtbl
    */
   public void setEditable(T edtbl) {
-    if (edtbl!= null) {
+    if (edtbl != null) {
       // create a copy
-      this.mtEditable =  XMLUtils.deepCopyJAXB(edtbl);    
+      this.mtEditable = XMLUtils.deepCopyJAXB(edtbl);
     } else {
       this.mtEditable = null;
     }
@@ -114,7 +119,7 @@ private static final SEDLogger LOG = new SEDLogger(AbstractAdminJSFView.class);
    */
   public void setNew(T edtbl) {
     this.mtNew = edtbl;
-    this.mtEditable =edtbl;
+    this.mtEditable = edtbl;
   }
 
   /**
@@ -136,7 +141,7 @@ private static final SEDLogger LOG = new SEDLogger(AbstractAdminJSFView.class);
 
   /**
    *
-   * @return 
+   * @return
    */
   abstract public boolean updateEditable();
 

@@ -19,8 +19,8 @@
         <mapping-file>shared/hbm/report-status.hbm.xml</mapping-file>
         <properties>
             <property name="jboss.entity.manager.jndi.name" value="java:/ebMS_MSH_PU"/> 
-            <property name="hibernate.dialect" value="${si.laurentius.msh.hibernate.dialect}" />
-            <property name="hibernate.hbm2ddl.auto" value="${si.laurentius.msh.hibernate.hbm2ddl.auto}" />
+            <property name="hibernate.dialect" value="${laurentius.hibernate.dialect}" />
+            <property name="hibernate.hbm2ddl.auto" value="${laurentius.hibernate.hbm2ddl.auto}" />
             <!-- property name = "hibernate.show_sql" value = "true" / -->
         </properties>
     </persistence-unit>

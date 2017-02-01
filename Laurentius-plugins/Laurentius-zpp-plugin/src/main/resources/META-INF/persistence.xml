@@ -9,8 +9,8 @@
         
         <properties>
             <property name="jboss.entity.manager.jndi.name" value="java:/ebMS_ZPP_PU"/> 
-            <property name="hibernate.dialect" value="${si.laurentius.msh.hibernate.dialect}" />
-            <property name="hibernate.hbm2ddl.auto" value="${si.laurentius.msh.hibernate.hbm2ddl.auto}" />
+            <property name="hibernate.dialect" value="${laurentius.hibernate.dialect}" />
+            <property name="hibernate.hbm2ddl.auto" value="${laurentius.hibernate.hbm2ddl.auto}" />
         </properties>
     </persistence-unit>
    

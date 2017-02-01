@@ -62,7 +62,7 @@ Copyright 2016, Supreme Court Republic of Slovenia
                 <xs:documentation>Certificate id</xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="storeId"  type="xs:integer" use="required"/>
+        
         <xs:attribute name="clrId"  type="xs:integer" use="required"/>
         <xs:attribute name="lastCRLCheck" type="xs:dateTime" />
         
@@ -76,15 +76,17 @@ Copyright 2016, Supreme Court Republic of Slovenia
         <xs:attribute name="type" type="xs:string" use="required"/>
         <xs:attribute name="keyEntry" type="xs:boolean" use="required"/>
         <xs:attribute name="keyPassword" type="xs:string"/>
-        <xs:attribute name="status" type="xs:int"  >
+        <xs:attribute name="hexSHA1Digest" type="xs:string"/>
+        <xs:attribute name="status" type="xs:int" >
             <xs:annotation>
-                <xs:documentation>OK (0),
-                    NEW (1),
-                    DELETED(2),
-                    MISSING_PASSWD(4),
-                    INVALID_DATE(8),
-                    INVALID_ROOT(16),
-                    INVALID_CRL (32); </xs:documentation>
+                <xs:documentation>
+  enum: si.laurentius.commons.CertStatus                  
+  OK(0),
+  MISSING_PASSWD(2),
+  INVALID_PASSWD(4),
+  INVALID_DATE(8),
+  INVALID_ROOT(16),
+  INVALID_CRL(32);; </xs:documentation>
             </xs:annotation>
         </xs:attribute>
         <xs:attribute name="statusMessage" use="optional" type="xs:string"/>

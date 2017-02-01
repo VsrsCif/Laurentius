@@ -94,7 +94,10 @@
                                                              disabled="#{!pModePartyView.editableLocalIdentity}"
                                                              >
                                                 <f:selectItem noSelectionOption="true" />
-                                                <f:selectItems value="#{adminSEDKeyStores.keystore.SEDCertificates}" var="cs" itemLabel="#{cs.alias}" itemValue="#{cs.alias}" itemDisabled="#{!cs.keyEntry}" /> 
+                                                <f:selectItems value="#{adminSEDKeystoreView.list}" var="cs" 
+                                                               class="#{adminSEDKeystoreView.getRowClass(cs)}"
+                                                               itemLabel="#{cs.alias}" itemValue="#{cs.alias}" 
+                                                               itemDisabled="#{!cs.keyEntry}" /> 
 
                                             </p:selectOneMenu>
                                         </p:column>
@@ -108,8 +111,10 @@
                                                              disabled="#{!pModePartyView.editableLocalIdentity}"
                                                              >
                                                 <f:selectItem noSelectionOption="true" />
-                                                <f:selectItems value="#{adminSEDKeyStores.keystore.SEDCertificates}" var="cs" 
-                                                               itemLabel="#{cs.alias}" itemValue="#{cs.alias}" itemDisabled="#{!cs.keyEntry}" />
+                                                <f:selectItems value="#{adminSEDKeystoreView.list}" var="cs"  
+                                                               itemLabel="#{cs.alias}" itemValue="#{cs.alias}"
+                                                               class="#{adminSEDKeystoreView.getRowClass(cs)}"
+                                                               itemDisabled="#{!cs.keyEntry}" />
 
 
                                             </p:selectOneMenu>
@@ -133,8 +138,10 @@
                                                              value="#{pModePartyView.currrentExchangePartySecurity.signatureCertAlias}"
                                                              style="width: 160px" >
                                                 <f:selectItem noSelectionOption="true" />
-                                                <f:selectItems value="#{adminSEDKeyStores.keystore.SEDCertificates}" 
-                                                               var="cs" itemLabel="#{cs.alias}" itemValue="#{cs.alias}" /> 
+                                                <f:selectItems value="#{adminSEDKeystoreView.list}" 
+                                                               var="cs" itemLabel="#{cs.alias}" 
+                                                               class="#{adminSEDKeystoreView.getRowClass(cs)}"
+                                                               itemValue="#{cs.alias}" /> 
                                             </p:selectOneMenu>
                                         </p:column>
                                         <p:column>                                    
@@ -145,8 +152,10 @@
                                                              value="#{pModePartyView.currrentExchangePartySecurity.encryptionCertAlias}"
                                                              style="width: 160px" >
                                                 <f:selectItem noSelectionOption="true" />
-                                                <f:selectItems value="#{adminSEDKeyStores.keystore.SEDCertificates}" 
-                                                               var="cs" itemLabel="#{cs.alias}" itemValue="#{cs.alias}" /> 
+                                                <f:selectItems value="#{adminSEDKeystoreView.list}" 
+                                                               var="cs" itemLabel="#{cs.alias}"
+                                                               class="#{adminSEDKeystoreView.getRowClass(cs)}"
+                                                               itemValue="#{cs.alias}" /> 
                                             </p:selectOneMenu>
                                         </p:column>
                                     </p:row>
@@ -282,8 +291,9 @@
                                                              value="#{pModePartyView.currrentTransportTLS.serverTrustCertAlias}"
                                                              style="width: 160px" >
                                                 <f:selectItem noSelectionOption="true" />
-                                                <f:selectItems value="#{adminSEDKeyStores.keystore.SEDCertificates}" 
+                                                <f:selectItems value="#{adminSEDKeystoreView.list}" 
                                                                var="cs" itemLabel="#{cs.alias}"
+                                                               class="#{adminSEDKeystoreView.getRowClass(cs)}"
                                                                itemValue="#{cs.alias}" 
                                                                /> 
 
@@ -306,9 +316,10 @@
                                                              value="#{pModePartyView.currrentTransportTLS.clientKeyAlias}"
                                                              style="width: 160px" >
                                                 <f:selectItem noSelectionOption="true" />
-                                                <f:selectItems value="#{adminSEDKeyStores.keystore.SEDCertificates}" 
+                                                <f:selectItems value="#{adminSEDKeystoreView.list}" 
                                                                var="cs" itemLabel="#{cs.alias}"
                                                                itemValue="#{cs.alias}" 
+                                                               class="#{adminSEDKeystoreView.getRowClass(cs)}"
                                                                itemDisabled="#{!cs.keyEntry}"/> 
 
                                             </p:selectOneMenu>

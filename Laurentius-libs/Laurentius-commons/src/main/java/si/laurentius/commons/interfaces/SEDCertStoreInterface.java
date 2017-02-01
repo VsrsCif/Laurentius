@@ -16,6 +16,7 @@ package si.laurentius.commons.interfaces;
 
 import javax.ejb.Local;
 import si.laurentius.cert.SEDCertStore;
+import si.laurentius.cert.SEDCertificate;
 import si.laurentius.commons.exception.SEDSecurityException;
 
 /**
@@ -27,5 +28,6 @@ public interface SEDCertStoreInterface {
 
   void refreshCrlLists();
   SEDCertStore getCertificateStore() throws SEDSecurityException ;
+  void updateKeystoreCertificate(SEDCertificate crt) throws SEDSecurityException ;
   SEDCertStore getRootCACertificateStore() throws SEDSecurityException ;
 }

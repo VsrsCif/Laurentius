@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      xmlns:pnl="http://java.sun.com/jsf/composite/laurentius-ui/panel"
+      >
+    <composite:interface>
+    </composite:interface>
+    <composite:implementation >
+
+
+        <p:layout  id="CRLView"  widgetVar="adminKeystoredView" style="min-width:400px;min-height:400px;height: 100%;width: 100%"  >
+
+            <p:layoutUnit id="CRLTab"  position="center" resizable="true" closable="true" collapsible="true"
+                          size="400" minSize="400" style="width:100%;height:100%;padding: 0px; margin: 0px"
+                          gutter="0"
+                          >         
+                <p:scrollPanel mode="native" style="width:100%;height:100%"> <!-- p:dataTable scrollable does not resize when toogled south panel -->                
+
+
+                    <h:outputText value="#{msg['RootCA']}"></h:outputText>
+
+
+                    <p:dataTable id="TblCRL" 
+                                 var="sp" 
+                                 value="#{adminSEDKeyStores.CRLList}"
+
+                                 rowKey="#{sp.id}"
+                                 currentPageReportTemplate="#{msg['Showing']} {startRecord}-{endRecord} #{msg['OutOf']} {totalRecords}"
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="25,50,100,200" 
+                                 paginator="true" 
+                                 style="padding: 0px; margin: 0px"
+                                 scrollable="true" 
+                                 scrollHeight="90%"
+                                 rows="100"  >
+                        <f:facet name="header">
+                            <p:commandButton value="#{msg['Refresh']}"  styleClass="toolbar-Button" 
+                                             icon="ui-icon-svg-refresh ui-icon-size-22"  
+                                             actionListener="#{adminSEDKeyStores.refreshCRLList()}"
+                                             update="TblCRL"  
+                                             />
+
+                        </f:facet>
+                        <p:column headerText="#{msg['Id']}" width="60">
+                            <h:outputText value="#{sp.id}" /></p:column>
+
+
+                        <p:column headerText="#{msg['IssuerDN']}" >
+                            <h:outputText value="#{sp.issuerDN}"></h:outputText>                
+                        </p:column>
+                        <p:column headerText="#{msg['Http']}" width="120">
+                            <h:outputText value="#{sp.http}" ></h:outputText>                
+                        </p:column>
+                        <p:column headerText="#{msg['Ldap']}" width="120">
+                            <h:outputText value="#{sp.ldap}" ></h:outputText>                
+                        </p:column>
+
+                        <p:column headerText="#{msg['effectiveDate']}" width="60">
+                            <h:outputText value="#{sp.effectiveDate}"><f:convertDateTime pattern="dd.MM.yyyy HH:mm" timeZone="CET" /></h:outputText>                
+                        </p:column>
+                        <p:column headerText="#{msg['nextUpdateDate']}" width="60">
+                            <h:outputText value="#{sp.nextUpdateDate}"><f:convertDateTime pattern="dd.MM.yyyy HH:mm" timeZone="CET" /></h:outputText>                
+                        </p:column>
+                        <p:column headerText="#{msg['retrievedDate']}" width="60">
+                            <h:outputText value="#{sp.retrievedDate}"><f:convertDateTime pattern="dd.MM.yyyy HH:mm" timeZone="CET" /></h:outputText>
+                        </p:column>
+                        <p:column headerText="#{msg['filePath']}" width="80">
+                            <h:outputText value="#{sp.filePath}" ></h:outputText>                
+                        </p:column>
+
+                    </p:dataTable>
+
+                </p:scrollPanel>
+
+
+            </p:layoutUnit>
+        </p:layout>
+
+    </composite:implementation>
+
+
+</html>

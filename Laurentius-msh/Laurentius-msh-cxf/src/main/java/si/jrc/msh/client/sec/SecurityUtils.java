@@ -80,7 +80,11 @@ public class SecurityUtils {
     if (enc.getKeyIdentifierType() != null && !enc.getKeyIdentifierType().isEmpty()) {
       prps.put(WSHandlerConstants.ENC_KEY_ID, enc.getKeyIdentifierType());
     }
-
+    LOG.log("***********************************************");
+    for (String keyp: prps.keySet()) {
+      LOG.formatedlog("KEY: %s, value %s",keyp, prps.get(keyp));
+    }
+     
     return prps;
   }
   /**

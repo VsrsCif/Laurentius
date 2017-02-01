@@ -135,6 +135,15 @@ h1 {
     color: black;
 }
 
+.ui-datatable-cell-orange {
+    background-color: orange;
+    color: black;
+}
+.ui-selectonemenu-label-orange {
+    background-color: orange;
+    color: black;
+}
+
 .panelGridNoBorder .ui-panelgrid-even, .panelGridNoBorder .ui-panelgrid-odd, .panelGridNoBorder .ui-panelgrid-cell {
     border-style: none;
     padding: 1px;

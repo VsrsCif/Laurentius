@@ -294,6 +294,8 @@ public interface SEDLookupsInterface {
    * @return
    */
   boolean updateSEDCertStore(SEDCertStore sb);
+  
+  boolean updateSEDCertificate(SEDCertificate sb);
 
   /**
    *

@@ -193,11 +193,11 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
   public FOPUtils getFOP() {
     if (mfpFop == null) {
       File fconf =
-          new File(System.getProperty(SEDSystemProperties.SYS_PROP_HOME_DIR) + File.separator +
+          new File(SEDSystemProperties.getPluginsFolder(), 
               ZPPConstants.SVEV_FOLDER + File.separator + ZPPConstants.FOP_CONFIG_FILENAME);
 
       mfpFop =
-          new FOPUtils(fconf, System.getProperty(SEDSystemProperties.SYS_PROP_HOME_DIR) +
+          new FOPUtils(fconf, SEDSystemProperties.getPluginsFolder().getAbsolutePath() +
               File.separator + ZPPConstants.SVEV_FOLDER + File.separator +
               ZPPConstants.XSLT_FOLDER);
     }

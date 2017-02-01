@@ -35,8 +35,6 @@ public class AdminSEDTaskTypeView extends AbstractAdminJSFView<CronTaskDef> {
 
   private static final SEDLogger LOG = new SEDLogger(AdminSEDTaskTypeView.class);
 
-  @EJB(mappedName = SEDJNDI.JNDI_SEDLOOKUPS)
-  private SEDLookupsInterface mdbLookups;
 
   CronTaskPropertyDef mSelTaksProp;
 

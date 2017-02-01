@@ -73,11 +73,6 @@ public class SEDSystemProperties {
 
   /**
    * System property for pmode configuration file.
-   *
-   * <p>
-   * System property define pmode configuration file. File is relative to SED
-   * home directory.
-   * </p>
    */
   public static final String SYS_PROP_PMODE_FILE = "laurentius.pmode";
 
@@ -94,7 +89,7 @@ public class SEDSystemProperties {
    * System property for creating/updating database objects
    *
    */
-  public static final String SYS_PROP_DB_HBM2DLL = "laurentius.hibernate.hbm2ddl";
+  public static final String SYS_PROP_DB_HBM2DLL = "laurentius.hibernate.hbm2ddl.auto";
   /**
    * System property for initialize data from init folder
    *
@@ -150,6 +145,10 @@ public class SEDSystemProperties {
       setProperty(SYS_PROP_EXECUTION_WORKERS, "5");
     }
 
+  }
+  
+  public static String getDefValue(String key){
+    return mDefValues.get(key);
   }
 
   public static String getLocalDomain() {

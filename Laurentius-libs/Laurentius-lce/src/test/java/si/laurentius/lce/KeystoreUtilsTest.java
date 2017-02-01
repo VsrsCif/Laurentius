@@ -22,6 +22,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import si.laurentius.cert.SEDCertStore;
 import si.laurentius.cert.SEDCertificate;
+import si.laurentius.commons.utils.xml.XMLUtils;
 
 /**
  *
@@ -33,22 +34,22 @@ public class KeystoreUtilsTest {
   public static final String KEYSTORE_TYPE = "JKS";
   public static final String KEYSTORE_PASSWD = "test1234";
   public static final String KEYSTORE_KEY1_ALIAS = "msh.e-box-a.si";
-  public static final String KEYSTORE_KEY1_ISSUER =
-      "CN=msh.e-box-a.si, OU=test, OU=msh, OU=jrc, OU=si";
-  public static final String KEYSTORE_KEY1_SUBJECT =
-      "CN=msh.e-box-a.si, OU=test, OU=msh, OU=jrc, OU=si";
+  public static final String KEYSTORE_KEY1_ISSUER
+          = "CN=msh.e-box-a.si, OU=test, OU=msh, OU=jrc, OU=si";
+  public static final String KEYSTORE_KEY1_SUBJECT
+          = "CN=msh.e-box-a.si, OU=test, OU=msh, OU=jrc, OU=si";
   public static final String KEYSTORE_KEY1_SERIAL = "1725505630";
   public static final String KEYSTORE_KEY1_PASS = "key1234";
 
-  public static final String TRUSTSTORE_FILEPATH =
-      "src/test/resources/certs/msh.e-box-a-truststore.jks";
+  public static final String TRUSTSTORE_FILEPATH
+          = "src/test/resources/certs/msh.e-box-a-truststore.jks";
   public static final String TRUSTSTORE_TYPE = "JKS";
   public static final String TRUSTSTORE_PASSWD = "test1234";
   public static final String TRUSTSTORE_CERT1_ALIAS = "msh.e-box-a.si";
-  public static final String TRUSTSTORE_CERT1_ISSUER =
-      "CN=msh.e-box-a.si, OU=test, OU=msh, OU=jrc, OU=si";
-  public static final String TRUSTSTORE_CERT1_SUBJECT =
-      "CN=msh.e-box-a.si, OU=test, OU=msh, OU=jrc, OU=si";
+  public static final String TRUSTSTORE_CERT1_ISSUER
+          = "CN=msh.e-box-a.si, OU=test, OU=msh, OU=jrc, OU=si";
+  public static final String TRUSTSTORE_CERT1_SUBJECT
+          = "CN=msh.e-box-a.si, OU=test, OU=msh, OU=jrc, OU=si";
   public static final String TRUSTSTORE_CERT1_SERIAL = "1725505630";
 
   public static final String TARGET_FOLDER = "target";
@@ -121,7 +122,7 @@ public class KeystoreUtilsTest {
    */
   @Test
   public void testGetKeystore_SEDCertStore()
-      throws Exception {
+          throws Exception {
     SEDCertStore sc = createKeystore();
     KeystoreUtils instance = new KeystoreUtils();
     KeyStore result = instance.getKeystore(sc);
@@ -135,7 +136,7 @@ public class KeystoreUtilsTest {
    */
   @Test
   public void testGetTrustManagers()
-      throws Exception {
+          throws Exception {
     System.out.println("getTrustManagers");
     SEDCertStore sc = createTruststore();
     KeystoreUtils instance = new KeystoreUtils();
@@ -151,7 +152,7 @@ public class KeystoreUtilsTest {
    */
   @Test
   public void testGetKeyManagers()
-      throws Exception {
+          throws Exception {
     System.out.println("getKeyManagers");
     SEDCertStore sc = createKeystore();
     KeystoreUtils instance = new KeystoreUtils();
@@ -165,7 +166,7 @@ public class KeystoreUtilsTest {
    */
   @Test
   public void testGetKeyManagersForAlias()
-      throws Exception {
+          throws Exception {
     System.out.println("getKeyManagersForAlias");
     SEDCertStore sc = createKeystore();
     String alias = KEYSTORE_KEY1_ALIAS;
@@ -181,13 +182,14 @@ public class KeystoreUtilsTest {
    */
   @Test
   public void testGetKeystore_3args()
-      throws Exception {
+          throws Exception {
 
     try (InputStream isTrustStore = new FileInputStream(KEYSTORE_FILEPATH)) {
       String trustStoreType = KEYSTORE_TYPE;
       char[] password = KEYSTORE_PASSWD.toCharArray();
       KeystoreUtils instance = new KeystoreUtils();
-      KeyStore result = instance.getKeystore(isTrustStore, trustStoreType, password);
+      KeyStore result = instance.getKeystore(isTrustStore, trustStoreType,
+              password);
       assertNotNull(result);
 
     }
@@ -198,7 +200,7 @@ public class KeystoreUtilsTest {
    */
   @Test
   public void testGetPrivateKeyEntryForAlias_3args()
-      throws Exception {
+          throws Exception {
     String alias = KEYSTORE_KEY1_ALIAS;
     String passwd = KEYSTORE_KEY1_PASS;
 
@@ -209,7 +211,8 @@ public class KeystoreUtilsTest {
       KeystoreUtils instance = new KeystoreUtils();
       ks = instance.getKeystore(isTrustStore, trustStoreType, password);
       assertNotNull(ks);
-      KeyStore.PrivateKeyEntry result = instance.getPrivateKeyEntryForAlias(ks, alias, passwd);
+      KeyStore.PrivateKeyEntry result = instance.getPrivateKeyEntryForAlias(ks,
+              alias, passwd);
       assertNotNull(result);
     }
   }
@@ -219,7 +222,7 @@ public class KeystoreUtilsTest {
    */
   @Test
   public void testGetPrivateKeyForAlias()
-      throws Exception {
+          throws Exception {
 
     String alias = KEYSTORE_KEY1_ALIAS;
     String psswd = KEYSTORE_KEY1_PASS;
@@ -236,123 +239,181 @@ public class KeystoreUtilsTest {
     }
   }
 
- 
   @Test
   public void testAddCertificateToStore()
-      throws Exception {
+          throws Exception {
 
     String newAlias = "test-alias";
     File fsrc = new File(TRUSTSTORE_FILEPATH);
     File ftrg = new File(TARGET_FOLDER + File.separator + fsrc.getName());
 
-    Files.copy(fsrc.toPath(), ftrg.toPath(), StandardCopyOption.REPLACE_EXISTING);
+    Files.
+            copy(fsrc.toPath(), ftrg.toPath(),
+                    StandardCopyOption.REPLACE_EXISTING);
 
     KeystoreUtils instance = new KeystoreUtils();
-    SEDCertStore scs = instance.getSEDCertstore(ftrg, TRUSTSTORE_TYPE, TRUSTSTORE_PASSWD);
+    SEDCertStore scs = instance.getSEDCertstore(ftrg, TRUSTSTORE_TYPE,
+            TRUSTSTORE_PASSWD);
     assertNotNull(scs);
     int iCertCount = scs.getSEDCertificates().size();
 
     SEDCertificate scert = instance.addCertificateToStore(scs,
-        KeystoreUtilsTest.class.getResourceAsStream("/certs/sample/sigov-ca.crt"), newAlias, false);    
+            KeystoreUtilsTest.class.getResourceAsStream(
+                    "/certs/sample/sigov-ca.crt"), newAlias, false);
     assertNotNull(scs);
-    assertEquals(iCertCount+1, scs.getSEDCertificates().size());
-    X509Certificate c =  instance.getTrustedCertForAlias(scs, newAlias);
-    assertNotNull(c);    
-    
+    assertEquals(iCertCount + 1, scs.getSEDCertificates().size());
+    X509Certificate c = instance.getTrustedCertForAlias(scs, newAlias);
+    assertNotNull(c);
+
     // add again 
     scert = instance.addCertificateToStore(scs,
-        KeystoreUtilsTest.class.getResourceAsStream("/certs/sample/sigov-ca.crt"), newAlias, false);    
-    assertEquals(iCertCount+2, scs.getSEDCertificates().size());
-    assertEquals(scert.getAlias(), newAlias+"_001");
-    c =  instance.getTrustedCertForAlias(scs, newAlias+"_001");
-    assertNotNull(c);    
+            KeystoreUtilsTest.class.getResourceAsStream(
+                    "/certs/sample/sigov-ca.crt"), newAlias, false);
+    assertEquals(iCertCount + 2, scs.getSEDCertificates().size());
+    assertEquals(scert.getAlias(), newAlias + "_001");
+    c = instance.getTrustedCertForAlias(scs, newAlias + "_001");
+    assertNotNull(c);
     // add overwrite
     scert = instance.addCertificateToStore(scs,
-        KeystoreUtilsTest.class.getResourceAsStream("/certs/sample/sigov-ca.crt"), newAlias, true);    
-  
-    assertEquals(iCertCount+2, scs.getSEDCertificates().size());
+            KeystoreUtilsTest.class.getResourceAsStream(
+                    "/certs/sample/sigov-ca.crt"), newAlias, true);
+
+    assertEquals(iCertCount + 2, scs.getSEDCertificates().size());
     assertEquals(scert.getAlias(), newAlias);
   }
-  
+
   @Test
-  public void testRemoveCertificateFromStore()
-      throws Exception {
+  public void testRefreshCertStore()
+          throws Exception {
 
     String newAlias = "test-alias";
     File fsrc = new File(TRUSTSTORE_FILEPATH);
     File ftrg = new File(TARGET_FOLDER + File.separator + fsrc.getName());
 
-    Files.copy(fsrc.toPath(), ftrg.toPath(), StandardCopyOption.REPLACE_EXISTING);
+    Files.copy(fsrc.toPath(), ftrg.toPath(),
+            StandardCopyOption.REPLACE_EXISTING);
 
     KeystoreUtils instance = new KeystoreUtils();
-    SEDCertStore scs = instance.getSEDCertstore(ftrg, TRUSTSTORE_TYPE, TRUSTSTORE_PASSWD);
+
+    SEDCertStore scs = instance.getSEDCertstore(ftrg, TRUSTSTORE_TYPE,
+            TRUSTSTORE_PASSWD);
     assertNotNull(scs);
     int iCertCount = scs.getSEDCertificates().size();
 
     SEDCertificate scert = instance.addCertificateToStore(scs,
-        KeystoreUtilsTest.class.getResourceAsStream("/certs/sample/sigov-ca.crt"), newAlias, false);    
+            KeystoreUtilsTest.class.getResourceAsStream(
+                    "/certs/sample/sigov-ca.crt"), newAlias, false);
     assertNotNull(scs);
-    assertEquals(iCertCount+1, scs.getSEDCertificates().size());
-    X509Certificate c =  instance.getTrustedCertForAlias(scs, newAlias);
-    assertNotNull(c);   
+    assertEquals(iCertCount + 1, scs.getSEDCertificates().size());
+    X509Certificate c = instance.getTrustedCertForAlias(scs, newAlias);
+    assertNotNull(c);
+    // replace keystore
+    Files.copy(fsrc.toPath(), ftrg.toPath(),
+            StandardCopyOption.REPLACE_EXISTING);
+    instance.refreshCertStore(scs);
     
+     assertEquals(iCertCount, scs.getSEDCertificates().size());
+     c = instance.getTrustedCertForAlias(scs, newAlias);
+     assertNull(c);
+ 
     
+
+  }
+
+  @Test
+  public void testRemoveCertificateFromStore()
+          throws Exception {
+
+    String newAlias = "test-alias";
+    File fsrc = new File(TRUSTSTORE_FILEPATH);
+    File ftrg = new File(TARGET_FOLDER + File.separator + fsrc.getName());
+
+    Files.
+            copy(fsrc.toPath(), ftrg.toPath(),
+                    StandardCopyOption.REPLACE_EXISTING);
+
+    KeystoreUtils instance = new KeystoreUtils();
+    SEDCertStore scs = instance.getSEDCertstore(ftrg, TRUSTSTORE_TYPE,
+            TRUSTSTORE_PASSWD);
+    assertNotNull(scs);
+    int iCertCount = scs.getSEDCertificates().size();
+
+    SEDCertificate scert = instance.addCertificateToStore(scs,
+            KeystoreUtilsTest.class.getResourceAsStream(
+                    "/certs/sample/sigov-ca.crt"), newAlias, false);
+    assertNotNull(scs);
+    assertEquals(iCertCount + 1, scs.getSEDCertificates().size());
+    X509Certificate c = instance.getTrustedCertForAlias(scs, newAlias);
+    assertNotNull(c);
+
     SEDCertificate removed = instance.removeCertificateFromStore(scs, newAlias);
-    c =  instance.getTrustedCertForAlias(scs, newAlias);
-    assertNull(c);   
-    
+    c = instance.getTrustedCertForAlias(scs, newAlias);
+    assertNull(c);
+
     assertEquals(iCertCount, scs.getSEDCertificates().size());
     assertEquals(removed.getAlias(), newAlias);
     assertEquals(removed, scert);
   }
-  
+
   @Test
   public void testchangeAlias()
-      throws Exception {
+          throws Exception {
 
     String oldAlias = "test-alias";
     String newAlias = "new-alias";
     File fsrc = new File(TRUSTSTORE_FILEPATH);
     File ftrg = new File(TARGET_FOLDER + File.separator + fsrc.getName());
 
-    Files.copy(fsrc.toPath(), ftrg.toPath(), StandardCopyOption.REPLACE_EXISTING);
+    Files.
+            copy(fsrc.toPath(), ftrg.toPath(),
+                    StandardCopyOption.REPLACE_EXISTING);
 
     KeystoreUtils instance = new KeystoreUtils();
-    SEDCertStore scs = instance.getSEDCertstore(ftrg, TRUSTSTORE_TYPE, TRUSTSTORE_PASSWD);
+    SEDCertStore scs = instance.getSEDCertstore(ftrg, TRUSTSTORE_TYPE,
+            TRUSTSTORE_PASSWD);
     assertNotNull(scs);
     int iCertCount = scs.getSEDCertificates().size();
 
     SEDCertificate scert = instance.addCertificateToStore(scs,
-        KeystoreUtilsTest.class.getResourceAsStream("/certs/sample/sigov-ca.crt"), oldAlias, false);    
+            KeystoreUtilsTest.class.getResourceAsStream(
+                    "/certs/sample/sigov-ca.crt"), oldAlias, false);
     assertNotNull(scs);
-    assertEquals(iCertCount+1, scs.getSEDCertificates().size());
-    
-    X509Certificate c =  instance.getTrustedCertForAlias(scs, oldAlias);
-    assertNotNull(c);    
-    instance.changeAlias(scs, oldAlias, newAlias);
-    X509Certificate cNew =  instance.getTrustedCertForAlias(scs, newAlias);
+    assertEquals(iCertCount + 1, scs.getSEDCertificates().size());
+
+    X509Certificate c = instance.getTrustedCertForAlias(scs, oldAlias);
+    assertNotNull(c);
+    SEDCertificate scertNew =  XMLUtils.deepCopyJAXB(scert);
+    scertNew.setAlias(newAlias);
+    instance.changeAlias(scs, oldAlias, scertNew);
+    X509Certificate cNew = instance.getTrustedCertForAlias(scs, newAlias);
     assertEquals(c, cNew);
   }
-  
+
   @Test
-   public void testMergeCertStores()
-      throws Exception {
+  public void testMergeCertStores()
+          throws Exception {
 
     File fsrc = new File(TRUSTSTORE_FILEPATH);
-    File ftrg = new File(TARGET_FOLDER + File.separator + "mrg_"+fsrc.getName());
-    Files.copy(fsrc.toPath(), ftrg.toPath(), StandardCopyOption.REPLACE_EXISTING);
+    File ftrg = new File(TARGET_FOLDER + File.separator + "mrg_" + fsrc.
+            getName());
+    Files.
+            copy(fsrc.toPath(), ftrg.toPath(),
+                    StandardCopyOption.REPLACE_EXISTING);
     KeystoreUtils instance = new KeystoreUtils();
-    SEDCertStore sctarget = instance.getSEDCertstore(ftrg, TRUSTSTORE_TYPE, TRUSTSTORE_PASSWD);
-    SEDCertStore scSource = instance.getSEDCertstore(new File(KEYSTORE_FILEPATH), KEYSTORE_TYPE, KEYSTORE_PASSWD);
-    for (SEDCertificate c: scSource.getSEDCertificates()){
+    SEDCertStore sctarget = instance.getSEDCertstore(ftrg, TRUSTSTORE_TYPE,
+            TRUSTSTORE_PASSWD);
+    SEDCertStore scSource = instance.
+            getSEDCertstore(new File(KEYSTORE_FILEPATH), KEYSTORE_TYPE,
+                    KEYSTORE_PASSWD);
+    for (SEDCertificate c : scSource.getSEDCertificates()) {
       c.setKeyPassword(KEYSTORE_KEY1_PASS);
     }
-    
-    
+
     int iTrgCertCount = sctarget.getSEDCertificates().size();
     int iSrcCertCount = scSource.getSEDCertificates().size();
     instance.mergeCertStores(sctarget, scSource, false, true);
-    
-    assertEquals(iTrgCertCount+iSrcCertCount, sctarget.getSEDCertificates().size());
+
+    assertEquals(iTrgCertCount + iSrcCertCount, sctarget.getSEDCertificates().
+            size());
   }
 }

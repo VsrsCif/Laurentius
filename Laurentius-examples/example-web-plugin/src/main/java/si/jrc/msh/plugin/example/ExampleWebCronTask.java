@@ -22,6 +22,7 @@ import javax.ejb.Stateless;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.plugin.crontask.CronTaskDef;
 import si.laurentius.plugin.crontask.CronTaskPropertyDef;
+import si.laurentius.plugin.interfaces.PropertyType;
 import si.laurentius.plugin.interfaces.TaskExecutionInterface;
 import si.laurentius.plugin.interfaces.exception.TaskException;
 
@@ -38,6 +39,7 @@ public class ExampleWebCronTask implements TaskExecutionInterface {
   public static final String KEY_PARAM_1 = "example.webtask.parameter.001";
   public static final String KEY_PARAM_2 = "example.webtask.parameter.002";
   public static final String KEY_PARAM_3 = "example.webtask.parameter.003";
+  public static final String KEY_PARAM_4 = "example.webtask.parameter.004";
   private static final SEDLogger LOG = new SEDLogger(ExampleWebCronTask.class);
 
   /**
@@ -78,15 +80,19 @@ public class ExampleWebCronTask implements TaskExecutionInterface {
         createTTProperty(KEY_FOLDER, "Example folder"));
     
     tt.getCronTaskPropertyDeves().add(
-        createTTProperty(KEY_PARAM_1, "First parameter", true, "int", null, null));
+        createTTProperty(KEY_PARAM_1, "First parameter", true, PropertyType.String.getType(), null, null));
     
     tt.getCronTaskPropertyDeves().add(
-        createTTProperty(KEY_PARAM_2, "Second parameter (true/false)", true,
+        createTTProperty(KEY_PARAM_2, "Boolean (true/false)", true,
             
-            "boolean", null, null));
+            PropertyType.Boolean.getType(), null, null));
     tt.getCronTaskPropertyDeves().add(
-        createTTProperty(KEY_PARAM_3, "Thrid parameter", false,
-            "string", null, null));
+        createTTProperty(KEY_PARAM_3, "Integer parameter", false,
+            PropertyType.Integer.getType(), null, null));
+    
+    tt.getCronTaskPropertyDeves().add(
+        createTTProperty(KEY_PARAM_4, "List parameter", false,
+            PropertyType.List.getType(), null, "Value1,value2,value3"));
     return tt;
   }
 

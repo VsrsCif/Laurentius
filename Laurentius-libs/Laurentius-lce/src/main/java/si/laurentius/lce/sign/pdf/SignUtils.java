@@ -77,6 +77,8 @@ public class SignUtils implements SignatureInterface {
 
   private PrivateKey privateKey;
   private X509Certificate certificate;
+  
+  SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm");
 
   /**
    *
@@ -149,7 +151,7 @@ public class SignUtils implements SignatureInterface {
     try (InputStream imageStream = SignUtils.class.getResourceAsStream(S_TEMPLATE_IMAGE);
         InputStream isFile = new FileInputStream(pdfFile)) {
 
-      SimpleDateFormat sdf = new SimpleDateFormat("dd.mm.yyyy HH:MM");
+      
       int page = 1;
       String name = xc.getSubjectDN().toString();
       String issuer = xc.getIssuerDN().toString();

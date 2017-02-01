@@ -12,6 +12,7 @@ import java.nio.file.StandardCopyOption;
 import java.security.KeyStore;
 import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
@@ -45,7 +46,6 @@ import si.laurentius.commons.exception.SEDSecurityException;
 import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.interfaces.JMSManagerInterface;
 import si.laurentius.commons.interfaces.SEDDaoInterface;
-import si.laurentius.commons.interfaces.SEDLookupsInterface;
 import si.laurentius.commons.utils.HashUtils;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StorageUtils;
@@ -55,10 +55,10 @@ import si.laurentius.lce.KeystoreUtils;
 import si.laurentius.commons.interfaces.SEDCertStoreInterface;
 import si.laurentius.plugin.crontask.CronTaskDef;
 import si.laurentius.plugin.crontask.CronTaskPropertyDef;
+import si.laurentius.plugin.interfaces.PropertyType;
 
 import si.laurentius.plugin.interfaces.TaskExecutionInterface;
 import si.laurentius.plugin.interfaces.exception.TaskException;
-
 
 /**
  *
@@ -71,7 +71,6 @@ public class ZPPTask implements TaskExecutionInterface {
 
   private static final SEDLogger LOG = new SEDLogger(ZPPTask.class);
   private static final String SIGN_ALIAS = "zpp.sign.key.alias";
-  private static final String SIGN_KEYSTORE = "zpp.sign.keystore";
   private static final String REC_SEDBOX = "zpp.sedbox";
   private static final String PROCESS_MAIL_COUNT = "zpp.max.mail.count";
 
@@ -89,14 +88,9 @@ public class ZPPTask implements TaskExecutionInterface {
   @EJB(mappedName = SEDJNDI.JNDI_JMSMANAGER)
   JMSManagerInterface mJMS;
 
-  @EJB(mappedName = SEDJNDI.JNDI_SEDLOOKUPS)
-  SEDLookupsInterface msedLookup;
-  
-  
   @EJB(mappedName = SEDJNDI.JNDI_DBCERTSTORE)
   SEDCertStoreInterface mCertBean;
 
-  // TODO externalize
   /**
    *
    * @param p
@@ -105,31 +99,24 @@ public class ZPPTask implements TaskExecutionInterface {
    */
   @Override
   public String executeTask(Properties p)
-      throws TaskException {
+          throws TaskException {
 
     long l = LOG.logStart();
     StringWriter sw = new StringWriter();
     sw.append("Start zpp plugin task: \n");
 
     String signKeyAlias = "";
-    String keystore = "";
     if (!p.containsKey(SIGN_ALIAS)) {
       throw new TaskException(TaskException.TaskExceptionCode.InitException,
-          "Missing parameter:  '" + SIGN_ALIAS + "'!");
+              "Missing parameter:  '" + SIGN_ALIAS + "'!");
     } else {
       signKeyAlias = p.getProperty(SIGN_ALIAS);
-    }
-    if (!p.containsKey(SIGN_KEYSTORE)) {
-      throw new TaskException(TaskException.TaskExceptionCode.InitException,
-          "Missing parameter:  '" + SIGN_KEYSTORE + "'!");
-    } else {
-      keystore = p.getProperty(SIGN_KEYSTORE);
     }
 
     String sedBox = "";
     if (!p.containsKey(REC_SEDBOX)) {
       throw new TaskException(TaskException.TaskExceptionCode.InitException,
-          "Missing parameter:  '" + REC_SEDBOX + "'!");
+              "Missing parameter:  '" + REC_SEDBOX + "'!");
     } else {
       sedBox = p.getProperty(REC_SEDBOX);
     }
@@ -141,8 +128,8 @@ public class ZPPTask implements TaskExecutionInterface {
           maxMailProc = Integer.parseInt(val);
         } catch (NumberFormatException nfe) {
           LOG.logError(String.format(
-              "Error parameter '%s'. Value '%s' is not a number Mail count 100 is setted!",
-              PROCESS_MAIL_COUNT, val), nfe);
+                  "Error parameter '%s'. Value '%s' is not a number Mail count 100 is setted!",
+                  PROCESS_MAIL_COUNT, val), nfe);
         }
       }
 
@@ -154,16 +141,19 @@ public class ZPPTask implements TaskExecutionInterface {
     mi.setAction(ZPPConstants.S_ZPP_ACTION_DELIVERY_NOTIFICATION);
     mi.setReceiverEBox(sedBox + "@" + SEDSystemProperties.getLocalDomain());
 
-    List<MSHInMail> lst = mDB.getDataList(MSHInMail.class, -1, maxMailProc, "Id", "ASC", mi);
+    List<MSHInMail> lst = mDB.
+            getDataList(MSHInMail.class, -1, maxMailProc, "Id", "ASC", mi);
     sw.append("got " + lst.size() + " mails for sedbox: '" + sedBox + "'!");
 
     // set status to proccess
     lst.stream().forEach((m) -> {
       try {
-        mDB.setStatusToInMail(m, SEDInboxMailStatus.PROCESS, "Add message to zpp deliver proccess");
+        mDB.setStatusToInMail(m, SEDInboxMailStatus.PROCESS,
+                "Add message to zpp deliver proccess");
       } catch (StorageException ex) {
-        String msg = String.format("Error occurred processing mail: '%s'. Err: %s.", m.getId(),
-            ex.getMessage());
+        String msg = String.format(
+                "Error occurred processing mail: '%s'. Err: %s.", m.getId(),
+                ex.getMessage());
         LOG.logError(l, msg, ex);
         sw.append(msg);
       }
@@ -171,17 +161,18 @@ public class ZPPTask implements TaskExecutionInterface {
 
     for (MSHInMail m : lst) {
       try {
-        processInZPPDelivery(m, signKeyAlias, keystore);
+        processInZPPDelivery(m, signKeyAlias);
       } catch (FOPException | HashException | ZPPException ex) {
-        String msg = String.format("Error occurred processing mail: '%s'. Err: %s.", m.getId(),
-            ex.getMessage());
+        String msg = String.format(
+                "Error occurred processing mail: '%s'. Err: %s.", m.getId(),
+                ex.getMessage());
         LOG.logError(l, msg, ex);
 
         sw.append(msg);
       }
     }
 
-    sw.append("Endzpp plugin task");
+    sw.append("End zpp plugin task");
     return sw.toString();
   }
 
@@ -191,20 +182,36 @@ public class ZPPTask implements TaskExecutionInterface {
    */
   @Override
   public CronTaskDef getDefinition() {
+    List<String> lst = new ArrayList<>();
+
+    try {
+      mCertBean.getCertificateStore().getSEDCertificates().forEach(crt -> {
+        if (crt.isKeyEntry()) {
+          lst.add(crt.getAlias());
+        }
+      });
+    } catch (SEDSecurityException ex) {
+      Logger.getLogger(ZPPTask.class.getName()).log(Level.SEVERE, null, ex);
+    }
+
     CronTaskDef tt = new CronTaskDef();
     tt.setType("zpp-plugin");
     tt.setName("ZPP plugin");
     tt.setDescription("Create and Sign adviceOfDelivery for incomming mail");
-    tt.getCronTaskPropertyDeves().add(createTTProperty(REC_SEDBOX, "Receiver sedbox."));
-    tt.getCronTaskPropertyDeves().add(createTTProperty(SIGN_ALIAS, "Signature key alias."));
-    tt.getCronTaskPropertyDeves().add(createTTProperty(SIGN_KEYSTORE, "Keystore name."));
+    tt.getCronTaskPropertyDeves().add(createTTProperty(REC_SEDBOX,
+            "Receiver sedbox (without domain)."));
+    tt.getCronTaskPropertyDeves().add(createTTProperty(SIGN_ALIAS,
+            "Signature key alias defined in keystore.", true, PropertyType.List.
+                    getType(), null, null));
     tt.getCronTaskPropertyDeves().add(createTTProperty(PROCESS_MAIL_COUNT,
-        "Max mail count proccesed."));
+            "Max mail count proccesed.", true, PropertyType.Integer.getType(),
+            null, null));
     return tt;
   }
 
-  private CronTaskPropertyDef createTTProperty(String key, String desc, boolean mandatory,
-      String type, String valFormat, String valList) {
+  private CronTaskPropertyDef createTTProperty(String key, String desc,
+          boolean mandatory,
+          String type, String valFormat, String valList) {
     CronTaskPropertyDef ttp = new CronTaskPropertyDef();
     ttp.setKey(key);
     ttp.setDescription(desc);
@@ -228,10 +235,10 @@ public class ZPPTask implements TaskExecutionInterface {
    * @throws HashException
    * @throws si.jrc.msh.plugin.zpp.exception.ZPPException
    */
-  public void processInZPPDelivery(MSHInMail mInMail, String signAlias, String keystore)
-      throws FOPException,
-      HashException,
-      ZPPException {
+  public void processInZPPDelivery(MSHInMail mInMail, String signAlias)
+          throws FOPException,
+          HashException,
+          ZPPException {
     long l = LOG.logStart();
     // create delivery advice
 
@@ -257,11 +264,11 @@ public class ZPPTask implements TaskExecutionInterface {
     try {
       fDNViz = StorageUtils.getNewStorageFile("pdf", "AdviceOfDelivery");
 
-      getFOP().generateVisualization(mInMail, fDNViz, FOPUtils.FopTransformations.AdviceOfDelivery,
-          MimeConstants.MIME_PDF);
+      getFOP().generateVisualization(mInMail, fDNViz,
+              FOPUtils.FopTransformations.AdviceOfDelivery,
+              MimeConstants.MIME_PDF);
 
       // sign with receiver certificate 
-      
       SEDCertStore cs;
       try {
         cs = mCertBean.getCertificateStore();
@@ -270,11 +277,27 @@ public class ZPPTask implements TaskExecutionInterface {
         LOG.logError(l, msg, null);
         throw new ZPPException(msg);
       }
-      SEDCertificate aliasCrt =
-          msedLookup.getSEDCertificatForAlias(signAlias, cs, true);
+      SEDCertificate aliasCrt = null;
+
+      if (cs == null) {
+        String msg = "Error opening keystore - Keystore is null!";
+        LOG.logError(l, msg, null);
+        throw new ZPPException(msg);
+      }
+
+      for (SEDCertificate c : cs.getSEDCertificates()) {
+        if (c.getAlias().equalsIgnoreCase(signAlias)) {
+          if (c.isKeyEntry()) {
+            aliasCrt = c;
+            break;
+          }
+        }
+      }
+
       if (aliasCrt == null) {
-        String msg = String.format("Key for alias '%s' do not exists store '%s'!", signAlias,
-            keystore);
+        String msg = String.format(
+                "Key for alias '%s' do not exists keystore! Check settings!",
+                signAlias);
         LOG.logError(l, msg, null);
         throw new ZPPException(msg);
       }
@@ -295,11 +318,12 @@ public class ZPPTask implements TaskExecutionInterface {
       mp.setMd5(mpHU.getMD5Hash(fDNViz));
       mp.setFilename(fDNViz.getName());
       mp.setFilepath(StorageUtils.getRelativePath(fDNViz));
-      mp.setName(mp.getFilename().substring(0, mp.getFilename().lastIndexOf(".")));
+      mp.setName(mp.getFilename().
+              substring(0, mp.getFilename().lastIndexOf(".")));
 
       mDB.serializeOutMail(mout, "", "ZPPDeliveryPlugin", "");
       mDB.setStatusToInMail(mInMail, SEDInboxMailStatus.PREADY,
-          "AdviceOfDelivery created and submitted to out queue");
+              "AdviceOfDelivery created and submitted to out queue");
     } catch (StorageException ex) {
       String msg = ex.getMessage();
       LOG.logError(l, msg, ex);
@@ -315,14 +339,16 @@ public class ZPPTask implements TaskExecutionInterface {
    */
   public FOPUtils getFOP() {
     if (mfpFop == null) {
-      File fconf =
-          new File(System.getProperty(SEDSystemProperties.SYS_PROP_HOME_DIR) + File.separator +
-              ZPPConstants.SVEV_FOLDER + File.separator + ZPPConstants.FOP_CONFIG_FILENAME);
+      File fconf
+              = new File(System.getProperty(
+                      SEDSystemProperties.SYS_PROP_HOME_DIR) + File.separator
+                      + ZPPConstants.SVEV_FOLDER + File.separator + ZPPConstants.FOP_CONFIG_FILENAME);
 
-      mfpFop =
-          new FOPUtils(fconf, System.getProperty(SEDSystemProperties.SYS_PROP_HOME_DIR) +
-              File.separator + ZPPConstants.SVEV_FOLDER + File.separator +
-              ZPPConstants.XSLT_FOLDER);
+      mfpFop
+              = new FOPUtils(fconf, System.getProperty(
+                      SEDSystemProperties.SYS_PROP_HOME_DIR)
+                      + File.separator + ZPPConstants.SVEV_FOLDER + File.separator
+                      + ZPPConstants.XSLT_FOLDER);
     }
     return mfpFop;
   }
@@ -332,14 +358,19 @@ public class ZPPTask implements TaskExecutionInterface {
       File ftmp = File.createTempFile("tmp_sign", ".pdf");
 
       KeyStore ks = mkeyUtils.getKeystore(sc);
-      PrivateKey pk = (PrivateKey) mkeyUtils.getPrivateKeyForAlias(ks, scc.getAlias(),
-          scc.getKeyPassword());
-      X509Certificate xcert = mkeyUtils.getTrustedCertForAlias(ks, scc.getAlias());
+      PrivateKey pk = (PrivateKey) mkeyUtils.getPrivateKeyForAlias(ks, scc.
+              getAlias(),
+              scc.getKeyPassword());
+      X509Certificate xcert = mkeyUtils.getTrustedCertForAlias(ks, scc.
+              getAlias());
       SignUtils su = new SignUtils(pk, xcert);
       su.signPDF(f, ftmp, true);
       Files.move(ftmp.toPath(), f.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
     } catch (IOException | SEDSecurityException ex) {
-      Logger.getLogger(ZPPOutInterceptor.class.getName()).log(Level.SEVERE, null, ex);
+      Logger.getLogger(ZPPOutInterceptor.class
+              .getName()).
+              log(Level.SEVERE, null, ex);
     }
   }
 }

@@ -760,6 +760,7 @@ public class SEDLookups implements SEDLookupsInterface {
       mutUTransaction.begin();
       // remove linked list
       for (Object lnkObj : linkedDelList) {
+        
         memEManager.remove(memEManager.contains(lnkObj) ? lnkObj : memEManager.
                 merge(lnkObj));
       }
@@ -803,7 +804,30 @@ public class SEDLookups implements SEDLookupsInterface {
    */
   @Override
   public boolean updateSEDCertStore(SEDCertStore sb) {
+    
     return update(sb);
+  }
+
+  @Override
+  public boolean updateSEDCertificate(SEDCertificate sb) {
+    long l = LOG.logStart();
+    boolean suc = false;
+    try {
+      mutUTransaction.begin();
+      memEManager.merge(sb);
+      mutUTransaction.commit();
+      mlstTimeOut.remove(SEDCertStore.class); // remove timeout to refresh lookup at next call
+      suc = true;
+    } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException
+            | HeuristicRollbackException | SecurityException | IllegalStateException ex) {
+      try {
+        LOG.logError(l, ex.getMessage(), ex);
+        mutUTransaction.rollback();
+      } catch (IllegalStateException | SecurityException | SystemException ex1) {
+        LOG.logWarn(l, "Rollback failed", ex1);
+      }
+    }
+    return suc;
   }
 
   /**
@@ -816,10 +840,6 @@ public class SEDLookups implements SEDLookupsInterface {
     SEDCronJob st = getSEDCronJobById(sb.getId());
     if (st.getSEDTask() != null) {
       return update(sb, st.getSEDTask().getSEDTaskProperties());
-      /*  // remove exiting task properties.
-      for (SEDTaskProperty tp : st.getSEDTask().getSEDTaskProperties()) {
-        remove(tp);
-      }*/
     } else {
       return update(sb);
     }

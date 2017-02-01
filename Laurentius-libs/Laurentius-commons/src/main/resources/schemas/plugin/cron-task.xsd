@@ -64,6 +64,7 @@ Copyright 2015, Supreme Court Republic of Slovenia
                     <xs:enumeration value="boolean"/>
                     <xs:enumeration value="string"/>
                     <xs:enumeration value="list"/>
+                    <xs:enumeration value="multiList"/>
                     <xs:enumeration value="int"/>
                     <xs:enumeration value="date"/>
                 </xs:restriction>

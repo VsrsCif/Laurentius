@@ -7,6 +7,7 @@ package si.jrc.msh.test;
 
 import si.jrc.msh.interceptor.EBMSInInterceptorTest;
 import si.laurentius.cert.SEDCertStore;
+import si.laurentius.cert.SEDCertificate;
 import si.laurentius.commons.exception.SEDSecurityException;
 import si.laurentius.lce.KeystoreUtils;
 import si.laurentius.commons.interfaces.SEDCertStoreInterface;
@@ -46,6 +47,11 @@ public class SEDTestCertBean implements SEDCertStoreInterface {
 
   @Override
   public void refreshCrlLists() {
+    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+  }
+
+  @Override
+  public void updateKeystoreCertificate(SEDCertificate crt) throws SEDSecurityException {
     throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
   }
 

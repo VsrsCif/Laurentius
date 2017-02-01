@@ -21,8 +21,6 @@ import java.nio.file.StandardCopyOption;
 import java.security.KeyStore;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
@@ -56,7 +54,7 @@ public class AdminSEDKeyStores {
 
   private static final SEDLogger LOG = new SEDLogger(AdminSEDKeyStores.class);
 
-  X509Certificate currentCert;
+  //X509Certificate currentCert;
   List<SEDCertStore> mCertStoreList = null;
   SEDCertStore mImportStore = new SEDCertStore();
 
@@ -84,14 +82,14 @@ public class AdminSEDKeyStores {
   boolean yesNoOption;
   String newAlias;
 
-  public void addCurrentCertToKeystore() {
+  public void addCurrentCertToKeystore() {/*
     try {
       mku.addCertificateToStore(getKeystore(), currentCert, "test", true);
       setCurrentCert(null);
     } catch (SEDSecurityException ex) {
       String errMsg = "Error loading certificate" + currentCert;
       LOG.logError(errMsg, ex);
-    }
+    }*/
   }
 
   public void clearImportStore() {
@@ -109,7 +107,7 @@ public class AdminSEDKeyStores {
     mImportStore.setStatus(null);
     mImportStore.setType("JKS");
 
-    currentCert = null;
+//    currentCert = null;
 
   }
 
@@ -119,12 +117,13 @@ public class AdminSEDKeyStores {
    * @param sc
    * @return
    */
-  public SEDCertificate existsCertInList(List<SEDCertificate> lst, SEDCertificate sc) {
+  public SEDCertificate existsCertInList(List<SEDCertificate> lst,
+          SEDCertificate sc) {
     for (SEDCertificate c : lst) {
-      if (Objects.equals(c.getAlias(), c.getAlias()) &&
-          Objects.equals(c.getIssuerDN(), sc.getIssuerDN()) &&
-          Objects.equals(c.getSubjectDN(), sc.getSubjectDN()) &&
-          c.getSerialNumber().equals(sc.getSerialNumber())) {
+      if (Objects.equals(c.getAlias(), c.getAlias())
+              && Objects.equals(c.getIssuerDN(), sc.getIssuerDN())
+              && Objects.equals(c.getSubjectDN(), sc.getSubjectDN())
+              && c.getSerialNumber().equals(sc.getSerialNumber())) {
         return c;
       }
     }
@@ -138,8 +137,22 @@ public class AdminSEDKeyStores {
     return lst;
   }
 
-  public X509Certificate getCurrentCert() {
-    return currentCert;
+  public X509Certificate getSelectedX509Cert() {
+    X509Certificate crt = null;
+    if (selectedCertificate != null) {
+
+      try {
+        crt = mku.getTrustedCertForAlias(mkeystore,
+                selectedCertificate.getAlias());
+      } catch (SEDSecurityException ex) {
+        String msg = "Error retrieving selected X509 certificate. Err: " + ex.
+                getMessage();
+        showAlert("Certfificate error", msg, false);
+        LOG.logError(msg, ex);
+      }
+    }
+
+    return crt;
   }
 
   public SEDCertStore getImportStore() {
@@ -151,7 +164,8 @@ public class AdminSEDKeyStores {
       try {
         mkeystore = mCertStore.getCertificateStore();
       } catch (SEDSecurityException ex) {
-        Logger.getLogger(AdminSEDKeyStores.class.getName()).log(Level.SEVERE, null, ex);
+        Logger.getLogger(AdminSEDKeyStores.class.getName()).log(Level.SEVERE,
+                null, ex);
       }
     }
     return mkeystore;
@@ -162,7 +176,8 @@ public class AdminSEDKeyStores {
       try {
         mRootCAStore = mCertStore.getRootCACertificateStore();
       } catch (SEDSecurityException ex) {
-        Logger.getLogger(AdminSEDKeyStores.class.getName()).log(Level.SEVERE, null, ex);
+        Logger.getLogger(AdminSEDKeyStores.class.getName()).log(Level.SEVERE,
+                null, ex);
       }
     }
     return mRootCAStore;
@@ -184,13 +199,15 @@ public class AdminSEDKeyStores {
     long l = LOG.logStart();
     UploadedFile uf = event.getFile();
     String fileName = uf.getFileName();
-    LOG.formatedWarning("Uploaded file: %s, content type : %s ", fileName, uf.getContentType());
+    LOG.formatedWarning("Uploaded file: %s, content type : %s ", fileName, uf.
+            getContentType());
 
     clearImportStore();
     try {
 
       File f = File.createTempFile("certstore", ".ks");
-      Files.copy(uf.getInputstream(), f.toPath(), StandardCopyOption.REPLACE_EXISTING);
+      Files.copy(uf.getInputstream(), f.toPath(),
+              StandardCopyOption.REPLACE_EXISTING);
       mImportStore.setFilePath(f.getAbsolutePath());
       mImportStore.setName(uf.getFileName());
 
@@ -228,25 +245,16 @@ public class AdminSEDKeyStores {
 
   }
 
-  public boolean hasInvalidCerts(SEDCertStore keyStore) {
-    if (keyStore != null) {
-      for (SEDCertificate crt : keyStore.getSEDCertificates()) {
-        if (isCertInvalid(crt)) {
-          return true;
-        }
-      }
-    }
-    return false;
-
-  }
+  
 
   public void importSelectedCertificates() {
     boolean suc = true;
     for (SEDCertificate sc : mImportStore.getSEDCertificates()) {
       if (sc.isKeyEntry() && Utils.isEmptyString(sc.getKeyPassword())) {
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
-            FacesMessage.SEVERITY_ERROR, "Empty password", "Enter password for key: '" +
-            sc.getAlias() + "'."));
+                FacesMessage.SEVERITY_ERROR, "Empty password",
+                "Enter password for key: '"
+                + sc.getAlias() + "'."));
         suc = false;
       }
     }
@@ -260,33 +268,28 @@ public class AdminSEDKeyStores {
       RequestContext.getCurrentInstance().execute("PF('certDialog').hide();");
     } catch (SEDSecurityException | CertificateException ex) {
       FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
-          FacesMessage.SEVERITY_ERROR, "Import error", ex.getMessage()));
+              FacesMessage.SEVERITY_ERROR, "Import error", ex.getMessage()));
 
     }
   }
 
   public void importStoreRowSelectionChanged() {
-
+/*
     if (this.selectedImportCertificate != null) {
       try {
-        currentCert = mku.getTrustedCertForAlias(mImportStore, selectedImportCertificate.getAlias());
+        currentCert = mku.getTrustedCertForAlias(mImportStore,
+                selectedImportCertificate.getAlias());
       } catch (SEDSecurityException ex) {
-        Logger.getLogger(AdminSEDKeyStores.class.getName()).log(Level.SEVERE, null, ex);
+        Logger.getLogger(AdminSEDKeyStores.class.getName()).log(Level.SEVERE,
+                null, ex);
       }
     } else {
       currentCert = null;
     }
-
+*/
   }
 
-  public boolean isCertInvalid(SEDCertificate crt) {
-
-    Date currDate = Calendar.getInstance().getTime();
-    return crt != null && (crt.getValidTo() == null ||
-        crt.getValidFrom() == null ||
-        currDate.before(crt.getValidFrom()) ||
-        currDate.after(crt.getValidTo()));
-  }
+  
 
   public void refreshCRLList() {
 
@@ -306,11 +309,12 @@ public class AdminSEDKeyStores {
       List<SEDCertificate> src = keystore.getSEDCertificates();
 
       try {
-        KeyStore ks =
-            mku.openKeyStore(keystore.getFilePath(), keystore.getType(), keystore
-                .getPassword().toCharArray());
+        KeyStore ks
+                = mku.openKeyStore(keystore.getFilePath(), keystore.getType(),
+                        keystore
+                                .getPassword().toCharArray());
         List<SEDCertificate> lstals = mku.getKeyStoreSEDCertificates(ks);
-        
+
         lstals.stream().forEach((ksc) -> {
           SEDCertificate sc = existsCertInList(src, ksc);
           if (sc != null) {
@@ -331,7 +335,7 @@ public class AdminSEDKeyStores {
         keystore.setStatus("ERROR");
 
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
-            FacesMessage.SEVERITY_ERROR, "Error", ex.getMessage()));
+                FacesMessage.SEVERITY_ERROR, "Error", ex.getMessage()));
         LOG.logWarn(l, keystore.getFilePath(), ex);
       }
     }
@@ -342,22 +346,10 @@ public class AdminSEDKeyStores {
     if (getSelectedCertificate() == null) {
       showAlert("Brisanje", "Za brisanje izberite certifikat", false);
     } else {
-      showAlert("Izberite certifikat", "Ali želite izbrisati certifikat: " +
-          getSelectedCertificate().getAlias(), true);
+      showAlert("Izberite certifikat", "Ali želite izbrisati certifikat: "
+              + getSelectedCertificate().getAlias(), true);
     }
 
-  }
-
-  public void renameSelectedCertificateAlias() {
-    if (getSelectedCertificate() == null) {
-      showAlert("Rename", "Za spremembo oznake izberite certifikat", false);
-    } else {
-
-      RequestContext context = RequestContext.getCurrentInstance();
-      context.execute("PF('DlgCertRenameAlias').show();");
-      context.update("forms:SettingsCertPanel:DlgCertRenameAlias");
-
-    }
   }
 
   public void removeSelectedKey(SEDCertificate sc) {
@@ -373,32 +365,11 @@ public class AdminSEDKeyStores {
       LOG.formatedWarning("NULL SC");
     }
   }
+  
 
-  public void renameSelectedKey(SEDCertificate sc) {
-    if (sc != null) {
-      LOG.formatedWarning("Selected old alias: %s ", sc.getAlias());
-      LOG.formatedWarning("Selected new  alias: %s", newAlias);
-      
-      if (Utils.isEmptyString(getNewAlias())){
-        showAlert("Certificate", "Vnesite novi", false);
-      } else {
-
-      try {
-
-        mku.changeAlias(mkeystore, sc.getAlias(), newAlias);
-        mdbLookups.updateSEDCertStore(mkeystore);
-      } catch (SEDSecurityException ex) {
-        LOG.logError(ex.getMessage(), ex);
-      } catch (CertificateException ex) {
-        Logger.getLogger(AdminSEDKeyStores.class.getName()).log(Level.SEVERE, null, ex);
-      }
-      RequestContext context = RequestContext.getCurrentInstance();
-      context.execute("PF('DlgCertRenameAlias').hide();");
-      }
-       
-    } else {
-      LOG.formatedWarning("NULL SC");
-    }
+  public void saveSelectedCertificates() {
+    
+   
   }
 
   public void removeSelectedRootCA(SEDCertificate sc) {
@@ -416,7 +387,7 @@ public class AdminSEDKeyStores {
   }
 
   public void setCurrentCert(X509Certificate cert) {
-    this.currentCert = cert;
+//    this.currentCert = cert;
   }
 
   public void setImportStore(SEDCertStore mImportStore) {
@@ -427,23 +398,27 @@ public class AdminSEDKeyStores {
     this.rootCAStore = rootCAStore;
   }
 
-  public void setSelectedImportCertificate(SEDCertificate selecedImportCertificate) {
+  public void setSelectedImportCertificate(
+          SEDCertificate selecedImportCertificate) {
     this.selectedImportCertificate = selecedImportCertificate;
-    if (this.selectedImportCertificate != null) {
+    /*if (this.selectedImportCertificate != null) {
       try {
-        currentCert = mku.getTrustedCertForAlias(mImportStore, selecedImportCertificate.getAlias());
+        currentCert = mku.getTrustedCertForAlias(mImportStore,
+                selecedImportCertificate.getAlias());
       } catch (SEDSecurityException ex) {
-        Logger.getLogger(AdminSEDKeyStores.class.getName()).log(Level.SEVERE, null, ex);
+        Logger.getLogger(AdminSEDKeyStores.class.getName()).log(Level.SEVERE,
+                null, ex);
       }
     } else {
       currentCert = null;
     }
     RequestContext context = RequestContext.getCurrentInstance();
-    context.update(":dlgcertificate:certDialogForm:certData");
+    context.update(":dlgcertificate:certDialogForm:certData");*/
   }
 
   public void setSelectedCertificate(SEDCertificate sc) {
     this.selectedCertificate = sc;
+    
   }
 
   public String getSelectedTab() {
