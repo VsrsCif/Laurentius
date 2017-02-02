@@ -5,7 +5,7 @@
         <groupId>si.vsrs.cif.sed</groupId>
         <artifactId>Laurentius</artifactId>
         <version>1.0</version>
-        <relativePath>../pom.xml</relativePath>
+        <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <artifactId>ws-client</artifactId>

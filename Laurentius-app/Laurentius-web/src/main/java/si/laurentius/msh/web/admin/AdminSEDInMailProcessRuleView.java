@@ -18,6 +18,7 @@ import java.util.Collections;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 
 import si.laurentius.commons.SEDJNDI;
@@ -28,6 +29,7 @@ import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.Utils;
 import si.laurentius.msh.pmode.Service;
 import si.laurentius.msh.web.abst.AbstractAdminJSFView;
+import si.laurentius.msh.web.gui.DialogDelete;
 import si.laurentius.process.SEDProcessorRule;
 
 /**
@@ -46,7 +48,17 @@ public class AdminSEDInMailProcessRuleView extends AbstractAdminJSFView<SEDProce
 @EJB(mappedName = SEDJNDI.JNDI_PMODE)
   private PModeInterface mPMode;
 
+   @ManagedProperty(value = "#{dialogDelete}")
+  private DialogDelete dlgDelete;
 
+  @Override
+  public DialogDelete getDlgDelete() {
+    return dlgDelete;
+  }
+  @Override
+  public  void setDlgDelete(DialogDelete dlg){
+    dlgDelete = dlg;
+  }
   @Override
   public boolean validateData() {
 

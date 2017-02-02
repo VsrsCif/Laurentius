@@ -14,10 +14,6 @@
  */
 package si.laurentius.msh.web.admin;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
 import java.security.cert.CertificateException;
 import java.util.Calendar;
 import java.util.Date;
@@ -27,7 +23,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import java.security.cert.X509Certificate;
 import java.util.Objects;
-import javax.servlet.http.Part;
+import javax.faces.bean.ManagedProperty;
 import si.laurentius.cert.SEDCertStore;
 import si.laurentius.cert.SEDCertificate;
 import si.laurentius.commons.CertStatus;
@@ -38,6 +34,7 @@ import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.Utils;
 import si.laurentius.lce.KeystoreUtils;
 import si.laurentius.msh.web.abst.AbstractAdminJSFView;
+import si.laurentius.msh.web.gui.DialogDelete;
 
 /**
  *
@@ -55,8 +52,17 @@ public class AdminSEDKeystoreView extends AbstractAdminJSFView<SEDCertificate> {
   KeystoreUtils mku = new KeystoreUtils();
 
   X509Certificate editableCert;
-   private Part file; // +getter+setter
+   @ManagedProperty(value = "#{dialogDelete}")
+  private DialogDelete dlgDelete;
 
+  @Override
+  public DialogDelete getDlgDelete() {
+    return dlgDelete;
+  }
+  @Override
+  public  void setDlgDelete(DialogDelete dlg){
+    dlgDelete = dlg;
+  }
   /**
    *
    */
@@ -165,6 +171,8 @@ public class AdminSEDKeystoreView extends AbstractAdminJSFView<SEDCertificate> {
     }
   }
 
+
+
   /**
    *
    */
@@ -260,25 +268,6 @@ public class AdminSEDKeystoreView extends AbstractAdminJSFView<SEDCertificate> {
             || crt.getValidFrom() == null
             || currDate.before(crt.getValidFrom())
             || currDate.after(crt.getValidTo()));
-  }
-
- 
-
-public void save() {
-    try (InputStream input = file.getInputStream()) {
-      //  Files.copy(input, new File(uploads, filename).toPath());
-    }
-    catch (IOException e) {
-        // Show faces message?
-    }
-}
-
-  public Part getFile() {
-    return file;
-  }
-
-  public void setFile(Part file) {
-    this.file = file;
   }
 
 }

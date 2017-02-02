@@ -83,7 +83,7 @@ if [ "$INIT" = "TRUE" ]; then
 		quit;
 	fi
 
-	LAU_OPTS="$LAU_OPTS -Dsi.laurentius.msh.hibernate.hbm2ddl.auto=create -Dsi.laurentius.msh.hibernate.dialect=org.hibernate.dialect.H2Dialect -Dsi.laurentius.init.lookups=$LAU_HOME/init-data.xml -Dsi.laurentius.domain=$LAU_DOMAIN";
+	LAU_OPTS="$LAU_OPTS -Dlaurentius.hibernate.hbm2ddl.auto=create -Dlaurentius.hibernate.dialect=org.hibernate.dialect.H2Dialect -Dlaurentius.init=true -Dsi.laurentius.domain=$LAU_DOMAIN";
 fi
 
 echo "*********************************************************************************************************************************"

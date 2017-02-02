@@ -1,6 +1,6 @@
 ----------------------------------------------------------------
-Wed Feb 01 11:03:32 CET 2017:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.10.2.0 - (1582446): instance a816c00e-0159-f921-16f2-000005543cc0 
+Thu Feb 02 05:31:01 CET 2017:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.10.2.0 - (1582446): instance a816c00e-0159-fd17-06b9-000005727170 
 on database directory /sluzba/code/SVEV2.0/Laurentius/Laurentius-app/Laurentius-ws/target/msh/db/msh-as4 with class loader sun.misc.Launcher$AppClassLoader@4aa298b7 
 Loaded from file:/home/sluzba/.m2/repository/org/apache/derby/derby/10.10.2.0/derby-10.10.2.0.jar
 java.vendor=Oracle Corporation

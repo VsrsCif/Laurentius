@@ -12,7 +12,7 @@
 
     <composite:implementation >      
         <!-- Cert ADD/EDIT dialog! -->
-        <p:dialog   header="#{msg['SEDCertDialog']}" widgetVar="certDialog" modal="true" hideEffect="fade" 
+        <p:dialog   header="#{msg['SEDCertDialog']}" widgetVar="certImportDialog" modal="true" hideEffect="fade" 
                     resizable="false" appendTo="@(body)" width="900" >
             <h:form id="certImportDialogForm">
                 <p:messages id="dlgImportCertMessage" showDetail="true" autoUpdate="true" closable="true" />
@@ -33,8 +33,7 @@
                                 <f:selectItem itemLabel="Digitalno potrdilo" itemValue="CERT" />
                                 <f:selectItem itemLabel="Shrabma JKS" itemValue="JKS" />
                                 <f:selectItem itemLabel="Shrabma PKCS12" itemValue="PKCS12" />
-                                <p:ajax update=":dlgcertificate:certDialogForm:storePasswd 
-                                        :dlgcertificate:certDialogForm:certData" /> 
+                                
                             </p:selectOneMenu>  
                         </p:column>
                         <p:column><h:outputText value="#{msg['Password']}" /></p:column>
@@ -50,7 +49,7 @@
                                              style="width: 100%"
                                              icon="ui-icon-svg-ok ui-icon-size-22" 
                                              actionListener="#{adminSEDKeyStores.refreshCurrentKeystore(adminSEDKeyStores.importStore)}"
-                                             update=":dlgcertificate:certDialogForm:TblCertficates :dlgcertificate:certDialogForm:dlgCertMessage"
+                                             
                                              />
                         </p:column>
                     </p:row>
@@ -74,7 +73,7 @@
                                      >
                             <p:ajax event="rowSelect"
                                     listener="#{adminSEDKeyStores.importStoreRowSelectionChanged()}"
-                                    update=":dlgcertificate:certDialogForm:certData" />  
+                                  />  
 
                             <p:column headerText="#{msg['IsKey']}">
                                 <h:outputText value="#{crt.keyEntry}" />
@@ -106,36 +105,32 @@
                             <h:inputText  rendered="#{adminSEDKeyStores.selectedImportCertificate.keyEntry}" value="#{adminSEDKeyStores.selectedImportCertificate.keyPassword}" style="width: 260px"  />
 
                             <h:outputText value="#{msg['Version']}:" />
-                            <h:outputText  value="#{adminSEDKeyStores.currentCert.version}" style="width: 260px"  />
+                            <h:outputText  value="#{adminSEDKeyStores.selectedImportCertificate.version}" style="width: 260px"  />
 
                             <h:outputText value="#{msg['SubjectDN']}:" />
-                            <h:outputText  value="#{adminSEDKeyStores.currentCert.subjectX500Principal.name}" style="width: 260px"  />
+                            <h:outputText  value="#{adminSEDKeyStores.selectedImportCertificate.subjectDN}" style="width: 260px"  />
 
                             <h:outputText value="#{msg['IssuerDN']}:" />
-                            <h:outputText  value="#{adminSEDKeyStores.currentCert.issuerDN.name}" style="width: 260px"  />
+                            <h:outputText  value="#{adminSEDKeyStores.selectedImportCertificate.issuerDN.name}" style="width: 260px"  />
 
 
                             <h:outputText value="#{msg['ValidFrom']}:" />
 
-                            <h:outputText  value="#{adminSEDKeyStores.currentCert.notBefore}" style="width: 100%">
+                            <h:outputText  value="#{adminSEDKeyStores.selectedImportCertificate.validFrom}" style="width: 100%">
                                 <f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
                             </h:outputText>
 
                             <h:outputText value="#{msg['ValidTo']}:" />                            
-                            <h:outputText  value="#{adminSEDKeyStores.currentCert.notAfter}" style="width: 100%">
+                            <h:outputText  value="#{adminSEDKeyStores.selectedImportCertificate.validTo}" style="width: 100%">
                                 <f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
                             </h:outputText>
 
 
 
                             <h:outputText value="#{msg['SerialNumber']}:" />
-                            <h:outputText  value="#{adminSEDKeyStores.currentCert.serialNumber}" style="width: 260px"  />
+                            <h:outputText  value="#{adminSEDKeyStores.selectedImportCertificate.serialNumber}" style="width: 260px"  />
 
-                            <h:outputText value="#{msg['SignAlg']}:" />
-                            <h:outputText value="#{adminSEDKeyStores.currentCert.sigAlgName}" style="width: 260px"  />
-                            <h:outputText value="#{msg['KeyAlg']}:" />
-                            <h:outputText value="#{adminSEDKeyStores.currentCert.publicKey.algorithm}" style="width: 260px"  />
-                        </p:panelGrid>
+                             </p:panelGrid>
                     </p:layoutUnit>
 
 
@@ -147,7 +142,7 @@
                                 <p:commandButton value="#{msg['Import']}"  styleClass="toolbar-Button" 
                                                  icon="ui-icon-svg-ok ui-icon-size-22" 
                                                  actionListener="#{adminSEDKeyStores.importSelectedCertificates()}"
-                                                 update=":forms:SettingsCertPanel:keylist"
+                                                 
                                                  />
 
                                 <p:commandButton value="#{msg['Cancel']}"
@@ -181,7 +176,7 @@
                     <p:commandButton value="Yes" 
                                      action="#{adminSEDKeyStores.renameSelectedKey(adminSEDKeyStores.selectedCertificate)}" 
                                      oncomplete="PF('DlgCertRenameAlias').hide();" 
-                                     update=":forms:SettingsCertPanel:keylist"
+                                     
                                      />
                     <p:commandButton value="No"  oncomplete="PF('DlgCertRenameAlias').hide();" />
                 </h:panelGroup>

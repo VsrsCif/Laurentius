@@ -18,11 +18,13 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.interfaces.PModeInterface;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.msh.pmode.PMode;
+import si.laurentius.msh.web.gui.DialogDelete;
 
 /**
  *
@@ -40,7 +42,18 @@ public class PModeView extends AbstractPModeJSFView<PMode> {
   @EJB(mappedName = SEDJNDI.JNDI_PMODE)
   PModeInterface mPModeInteface;
 
+  @ManagedProperty(value = "#{dialogDelete}")
+  private DialogDelete dlgDelete;
 
+  @Override
+  public DialogDelete getDlgDelete() {
+    return dlgDelete;
+  }
+
+  @Override
+  public  void setDlgDelete(DialogDelete dlg){
+    dlgDelete = dlg;
+  }
   /**
    *
    */
@@ -49,11 +62,12 @@ public class PModeView extends AbstractPModeJSFView<PMode> {
 
   }
 
-   @Override
+  @Override
   public boolean validateData() {
-    
+
     return true;
   }
+
   /**
    *
    */
@@ -84,11 +98,11 @@ public class PModeView extends AbstractPModeJSFView<PMode> {
    */
   @Override
   public boolean persistEditable() {
-    
+
     long l = LOG.logStart();
     boolean bsuc = false;
     PMode sv = getEditable();
-    if (sv != null) {      
+    if (sv != null) {
       mPModeInteface.addPMode(sv);
       setEditable(null);
       bsuc = true;
@@ -104,7 +118,7 @@ public class PModeView extends AbstractPModeJSFView<PMode> {
     long l = LOG.logStart();
     boolean bsuc = false;
     PMode sv = getEditable();
-    if (sv != null) {      
+    if (sv != null) {
       mPModeInteface.updatePMode(sv);
       setEditable(null);
       bsuc = true;
@@ -124,6 +138,5 @@ public class PModeView extends AbstractPModeJSFView<PMode> {
     return lst;
 
   }
-
 
 }

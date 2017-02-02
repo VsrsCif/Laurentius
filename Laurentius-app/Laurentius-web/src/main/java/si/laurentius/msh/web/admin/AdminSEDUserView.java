@@ -19,6 +19,7 @@ import java.util.Calendar;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import org.primefaces.model.DualListModel;
 import si.laurentius.ebox.SEDBox;
@@ -27,6 +28,7 @@ import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.interfaces.SEDLookupsInterface;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.msh.web.abst.AbstractAdminJSFView;
+import si.laurentius.msh.web.gui.DialogDelete;
 
 /**
  *
@@ -42,6 +44,17 @@ public class AdminSEDUserView extends AbstractAdminJSFView<SEDUser> {
   private SEDLookupsInterface mdbLookups;
 
   private DualListModel<SEDBox> msbCBDualList = new DualListModel<>();
+  @ManagedProperty(value = "#{dialogDelete}")
+  private DialogDelete dlgDelete;
+
+  @Override
+  public DialogDelete getDlgDelete() {
+    return dlgDelete;
+  }
+  @Override
+  public  void setDlgDelete(DialogDelete dlg){
+    dlgDelete = dlg;
+  }
 
   /**
    *
@@ -68,11 +81,12 @@ public class AdminSEDUserView extends AbstractAdminJSFView<SEDUser> {
     return msbCBDualList = new DualListModel<>(src, trg);
   }
 
-   @Override
+  @Override
   public boolean validateData() {
-    
+
     return true;
   }
+
   /**
    *
    * @param dl
@@ -98,8 +112,8 @@ public class AdminSEDUserView extends AbstractAdminJSFView<SEDUser> {
   }
 
   /**
-     *
-     */
+   *
+   */
   @Override
   public void createEditable() {
     long l = LOG.logStart();
@@ -119,8 +133,8 @@ public class AdminSEDUserView extends AbstractAdminJSFView<SEDUser> {
   }
 
   /**
-     *
-     */
+   *
+   */
   @Override
   public void removeSelected() {
     SEDUser sb = getSelected();
@@ -131,35 +145,37 @@ public class AdminSEDUserView extends AbstractAdminJSFView<SEDUser> {
   }
 
   /**
-     *
-     */
+   *
+   */
   @Override
   public boolean persistEditable() {
     SEDUser sb = getEditable();
     boolean bsuc = false;
     if (sb != null) {
       sb.getSEDBoxes().clear();
-      if (msbCBDualList.getTarget() != null && !msbCBDualList.getTarget().isEmpty()) {
+      if (msbCBDualList.getTarget() != null && !msbCBDualList.getTarget().
+              isEmpty()) {
         sb.getSEDBoxes().addAll(msbCBDualList.getTarget());
       }
       mdbLookups.addSEDUser(sb);
       bsuc = true;
-          
+
       setEditable(null);
     }
     return bsuc;
   }
 
   /**
-     *
-     */
+   *
+   */
   @Override
   public boolean updateEditable() {
     SEDUser sb = getEditable();
     boolean bsuc = false;
     if (sb != null) {
       sb.getSEDBoxes().clear();
-      if (msbCBDualList.getTarget() != null && !msbCBDualList.getTarget().isEmpty()) {
+      if (msbCBDualList.getTarget() != null && !msbCBDualList.getTarget().
+              isEmpty()) {
         sb.getSEDBoxes().addAll(msbCBDualList.getTarget());
       }
       bsuc = true;

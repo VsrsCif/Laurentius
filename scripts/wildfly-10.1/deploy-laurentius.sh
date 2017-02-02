@@ -93,21 +93,26 @@ cp "$LAU_BUNDLE/modules/Laurentius-msh-xsd-1.0.jar" "$WILDFLY_HOME/modules/si/la
 cp "$LAU_BUNDLE/modules/Laurentius-wsdl-1.0.jar" "$WILDFLY_HOME/modules/si/laurentius/main/"
 cp "$LAU_BUNDLE/modules/Laurentius-commons-1.0.jar" "$WILDFLY_HOME/modules/si/laurentius/main/"
 cp "$LAU_BUNDLE/modules/Laurentius-lce-1.0.jar" "$WILDFLY_HOME/modules/si/laurentius/main/"
+cp "$LAU_BUNDLE/modules/Laurentius-plugin-interfaces-1.0.jar" "$WILDFLY_HOME/modules/si/laurentius/main/"
+
 # copy module descriptor
 cp "$LAU_BUNDLE/modules/si.laurentius.module.xml" "$WILDFLY_HOME/modules/si/laurentius/main/module.xml"
 cp -r "$LAU_BUNDLE/modules/org" "$WILDFLY_HOME/modules/"
 
 
 
-# deploy commons ejbs
+# application modules
 cp "$LAU_BUNDLE/deployments/Laurentius-dao.jar"  "$WILDFLY_HOME/standalone/deployments/"
-cp "$LAU_BUNDLE/deployments/Laurentius-basic-tasks.jar"  "$WILDFLY_HOME/standalone/deployments/"
-# deploy modules 
 cp "$LAU_BUNDLE/deployments/Laurentius-msh.ear"  "$WILDFLY_HOME/standalone/deployments/"
 cp "$LAU_BUNDLE/deployments/laurentius-ws.war"  "$WILDFLY_HOME/standalone/deployments/"
 cp "$LAU_BUNDLE/deployments/laurentius-web.war"  "$WILDFLY_HOME/standalone/deployments/"
+
+# application plugins
 cp "$LAU_BUNDLE/deployments/plugin-zpp.war"  "$WILDFLY_HOME/standalone/deployments/"
+cp "$LAU_BUNDLE/deployments/plugin-basic.war"  "$WILDFLY_HOME/standalone/deployments/"
 cp "$LAU_BUNDLE/deployments/plugin-testcase.war"  "$WILDFLY_HOME/standalone/deployments/"
+cp "$LAU_BUNDLE/deployments/example-web-plugin.war"  "$WILDFLY_HOME/standalone/deployments/"
+
 
 if [ "$INIT" = "TRUE" ]; then
 

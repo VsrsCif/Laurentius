@@ -13,6 +13,7 @@ import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.Utils;
 import static java.lang.String.format;
 import static java.lang.System.getProperty;
+import si.laurentius.commons.SEDSystemProperties;
 
 /**
  *
@@ -46,7 +47,7 @@ public class EBMSLogUtils {
    *
    */
   public static final String S_RESPONSE_SUFFIX = "response.soap";
-  private static final String S_ROOT_FOLDER = "ebms_log";
+  private static final String S_ROOT_FOLDER = "ebms";
 
   /**
    *
@@ -60,7 +61,7 @@ public class EBMSLogUtils {
    * @return returs path
    */
   protected static synchronized Path dateStorageFolder(LocalDate ld) {
-    return Paths.get(getProperty(SYS_PROP_HOME_DIR),
+    return Paths.get(SEDSystemProperties.getLogFolder().getAbsolutePath(),
         S_ROOT_FOLDER,
         ld.getYear() + "",
         format("%02d", ld.getMonthValue()),

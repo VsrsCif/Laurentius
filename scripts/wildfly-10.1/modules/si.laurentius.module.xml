@@ -5,6 +5,7 @@
         <resource-root path="Laurentius-wsdl-1.0.jar"/>
         <resource-root path="Laurentius-commons-1.0.jar"/>
         <resource-root path="Laurentius-lce-1.0.jar"/>
+        <resource-root path="Laurentius-plugin-interfaces-1.0.jar"/>
     </resources>
     <dependencies>
         <module name="javax.annotation.api"/>
@@ -17,7 +18,7 @@
         <module name="javax.xml.ws.api"/>
         <module name="org.apache.cxf"/>
         <module name="org.apache.cxf.impl"/> 
-	<module name="org.apache.pdfbox"/>
+		<module name="org.apache.pdfbox"/>
         <module name="org.apache.commons.io"/> 
         <module name="org.apache.log4j"/>
         <module name="org.apache.santuario.xmlsec"/>

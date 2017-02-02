@@ -64,7 +64,6 @@ public class AdminSEDKeyStores {
   @EJB(mappedName = SEDJNDI.JNDI_SEDLOOKUPS)
   private SEDLookupsInterface mdbLookups;
 
-  SEDCertStore mkeystore = null;
   SEDCertStore mRootCAStore = null;
 
   KeystoreUtils mku = new KeystoreUtils();
@@ -137,39 +136,13 @@ public class AdminSEDKeyStores {
     return lst;
   }
 
-  public X509Certificate getSelectedX509Cert() {
-    X509Certificate crt = null;
-    if (selectedCertificate != null) {
-
-      try {
-        crt = mku.getTrustedCertForAlias(mkeystore,
-                selectedCertificate.getAlias());
-      } catch (SEDSecurityException ex) {
-        String msg = "Error retrieving selected X509 certificate. Err: " + ex.
-                getMessage();
-        showAlert("Certfificate error", msg, false);
-        LOG.logError(msg, ex);
-      }
-    }
-
-    return crt;
-  }
+ 
 
   public SEDCertStore getImportStore() {
     return mImportStore;
   }
 
-  public SEDCertStore getKeystore() {
-    if (mkeystore == null) {
-      try {
-        mkeystore = mCertStore.getCertificateStore();
-      } catch (SEDSecurityException ex) {
-        Logger.getLogger(AdminSEDKeyStores.class.getName()).log(Level.SEVERE,
-                null, ex);
-      }
-    }
-    return mkeystore;
-  }
+
 
   public SEDCertStore getRootCAStore() {
     if (mRootCAStore == null) {
@@ -263,8 +236,9 @@ public class AdminSEDKeyStores {
     }
 
     try {
-      mku.mergeCertStores(mkeystore, mImportStore, false, false);
-      mdbLookups.updateSEDCertStore(mkeystore);
+      SEDCertStore scs = mCertStore.getCertificateStore();
+      mku.mergeCertStores(scs, mImportStore, false, false);
+      mdbLookups.updateSEDCertStore(scs);
       RequestContext.getCurrentInstance().execute("PF('certDialog').hide();");
     } catch (SEDSecurityException | CertificateException ex) {
       FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
@@ -342,18 +316,9 @@ public class AdminSEDKeyStores {
 
   }
 
-  public void deleteSelectedCertificate() {
-    if (getSelectedCertificate() == null) {
-      showAlert("Brisanje", "Za brisanje izberite certifikat", false);
-    } else {
-      showAlert("Izberite certifikat", "Ali želite izbrisati certifikat: "
-              + getSelectedCertificate().getAlias(), true);
-    }
-
-  }
-
+  
   public void removeSelectedKey(SEDCertificate sc) {
-    if (sc != null) {
+   /* if (sc != null) {
       try {
 
         mku.removeCertificateFromStore(mkeystore, sc.getAlias());
@@ -363,7 +328,7 @@ public class AdminSEDKeyStores {
       }
     } else {
       LOG.formatedWarning("NULL SC");
-    }
+    }*/
   }
   
 

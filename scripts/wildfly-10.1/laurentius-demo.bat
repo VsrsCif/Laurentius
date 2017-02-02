@@ -58,7 +58,7 @@ set "LAU_OPTS=%LAU_OPTS% -Dlaurentius.home=%LAU_HOME%"
 
 if "%INIT%" == "true" (
 	
-	set "LAU_OPTS=%LAU_OPTS% -Dsi.laurentius.msh.hibernate.hbm2ddl.auto=create -Dsi.laurentius.msh.hibernate.dialect=org.hibernate.dialect.H2Dialect -Dsi.laurentius.init.lookups=%LAU_HOME%\init-data.xml -Dsi.laurentius.domain=%LAU_DOMAIN%"
+	set "LAU_OPTS=%LAU_OPTS% -Dlaurentius.hibernate.hbm2ddl.auto=create -Dlaurentius.hibernate.dialect=org.hibernate.dialect.H2Dialect -Dlaurentius.init=true  -Dlaurentius.domain=%LAU_DOMAIN%"
 )
 
 

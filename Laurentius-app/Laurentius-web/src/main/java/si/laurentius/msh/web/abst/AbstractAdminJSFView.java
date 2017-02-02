@@ -8,6 +8,7 @@ import java.util.List;
 import org.primefaces.context.RequestContext;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.xml.XMLUtils;
+import si.laurentius.msh.web.gui.DialogDelete;
 
 /**
  *
@@ -20,6 +21,7 @@ abstract public class AbstractAdminJSFView<T> extends AbstractJSFView {
   private T mtEditable;
   private T mtNew;
   private T mtSelected;
+  
 
   /**
    *
@@ -99,6 +101,29 @@ abstract public class AbstractAdminJSFView<T> extends AbstractJSFView {
    *
    */
   abstract public void removeSelected();
+  
+  /**
+   *
+   */
+  public void removeSelectedWithWarning(){
+    if( getSelected() == null) {
+      DialogDelete dlg = getDlgDelete();
+      dlg.setCurrentJSFView(this);
+      dlg.setYesNoOption(false);
+      dlg.setDlgTitle("Delete selected row");
+      dlg.setDlgMessage("Select row to delete!");
+      RequestContext context = RequestContext.getCurrentInstance();
+      context.execute("PF('DlgDelete').show();");
+      context.update(":DeleteDialogForm:deleteDialog");
+      // set warning 
+    } else {
+      //setwarning what will ne deleted
+    }
+  };
+  
+  abstract public  DialogDelete getDlgDelete();
+  
+  abstract public  void setDlgDelete(DialogDelete dlg);
 
   /**
    *

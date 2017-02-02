@@ -20,24 +20,28 @@ mkdir "$ZIP_FILENAME/modules"
 mkdir "$ZIP_FILENAME/deployments"
 mkdir "$ZIP_FILENAME/wildfly-10.1"
 mkdir $FOLDER_DEPLOY
-
+# si.laurentius module libralies
 cp "$LAU_PROJECT/Laurentius-libs/Laurentius-msh-xsd/target/Laurentius-msh-xsd-1.0.jar" "$ZIP_FILENAME/modules/" 	
 cp "$LAU_PROJECT/Laurentius-libs/Laurentius-wsdl/target/Laurentius-wsdl-1.0.jar" "$ZIP_FILENAME/modules/"
 cp "$LAU_PROJECT/Laurentius-libs/Laurentius-commons/target/Laurentius-commons-1.0.jar" "$ZIP_FILENAME/modules/"
 cp "$LAU_PROJECT/Laurentius-libs/Laurentius-lce/target/Laurentius-lce-1.0.jar" "$ZIP_FILENAME/modules/"
+cp "$LAU_PROJECT/Laurentius-libs/Laurentius-plugin-interfaces/target/Laurentius-plugin-interfaces-1.0.jar" "$ZIP_FILENAME/modules/"
+
 cp "$LAU_PROJECT/scripts/wildfly-10.1/modules/si.laurentius.module.xml" "$ZIP_FILENAME/modules/"
 cp "$LAU_PROJECT/scripts/wildfly-10.1/modules/org.apache.ws.securitymodule.xml" "$ZIP_FILENAME/modules/"
 cp -r "$LAU_PROJECT/scripts/wildfly-10.1/modules/org"  "$ZIP_FILENAME/modules/"
 
-# commons ejbs
+# application modules
 cp "$LAU_PROJECT/Laurentius-dao/target/Laurentius-dao.jar" "$ZIP_FILENAME/deployments/"
-cp "$LAU_PROJECT/Laurentius-tasks/Laurentius-basic-tasks/target/Laurentius-basic-tasks.jar" "$ZIP_FILENAME/deployments/"
-# modules
 cp "$LAU_PROJECT/Laurentius-msh/Laurentius-msh-ear/target/Laurentius-msh.ear" "$ZIP_FILENAME/deployments/"
 cp "$LAU_PROJECT/Laurentius-app/Laurentius-ws/target/laurentius-ws.war"  "$ZIP_FILENAME/deployments/"
 cp "$LAU_PROJECT/Laurentius-app/Laurentius-web/target/laurentius-web.war"  "$ZIP_FILENAME/deployments/"
+# application plugins
 cp "$LAU_PROJECT/Laurentius-plugins/Laurentius-zpp-plugin/target/plugin-zpp.war"  "$ZIP_FILENAME/deployments/"
+cp "$LAU_PROJECT/Laurentius-plugins/Laurentius-basic-plugin/target/plugin-basic.war"  "$ZIP_FILENAME/deployments/"
 cp "$LAU_PROJECT/Laurentius-plugins/Laurentius-test-case-plugin/target/plugin-testcase.war"  "$ZIP_FILENAME/deployments/"
+cp "$LAU_PROJECT/Laurentius-examples/example-web-plugin/target/example-web-plugin.war" "$ZIP_FILENAME/deployments/"
+
 
 # configuration file
 cp -r "$LAU_PROJECT/scripts/wildfly-10.1/config"  "$ZIP_FILENAME/wildfly-10.1"

@@ -13,9 +13,7 @@ public enum PropertyType {
   String("string"),
   Integer("int"),
   List("list"),
-  MultiList("list"),
-  KeystoreKeys("keystoreKeys"),
-  KeystoreAll("keystoreAll"),
+  MultiList("multiList"),
   Boolean ("boolean"),
   Date ("date");
   

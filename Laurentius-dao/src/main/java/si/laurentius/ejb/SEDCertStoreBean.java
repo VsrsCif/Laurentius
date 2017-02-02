@@ -17,7 +17,6 @@ package si.laurentius.ejb;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.math.BigInteger;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.cert.CRLException;
@@ -28,7 +27,6 @@ import java.util.Calendar;
 import java.util.HashMap;
 
 import java.util.List;
-import java.util.Objects;
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Singleton;
@@ -80,9 +78,8 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
 
   }
 
-  public static final String KEYSTORE_NAME = "keystore";
   public static final String KEYSTORE_INIT_FILE = "${laurentius.home}/conf/security/%s.jks";
-  public static final String ROOTCA_NAME = "rootCA";
+
 
   public static final String KS_INIT_KEYSTORE_PASSWD = "passwd1234";
 
@@ -181,6 +178,12 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
           throws SEDSecurityException {
 
     SEDCertStore cs = mdLookups.getSEDCertStoreByName(name);
+    if (cs == null) {
+        cs = mku.createNewKeyStore(KS_INIT_KEYSTORE_PASSWD, String.format(
+                KEYSTORE_INIT_FILE, name));
+        cs.setName(name);
+
+      }
 
     File f = new File(StringFormater.replaceProperties(cs.getFilePath()));
     // init if file modified with keytool
@@ -188,12 +191,7 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
             || mlstModifiedTime.get(name) < f.lastModified()) {
       LOG.formatedlog("Init certificates for keystore %s from file %s", name, f.getAbsolutePath());
               
-      if (cs == null) {
-        cs = mku.createNewKeyStore(KS_INIT_KEYSTORE_PASSWD, String.format(
-                KEYSTORE_INIT_FILE, name));
-        cs.setName(name);
-
-      }
+      
       mku.refreshCertStore(cs); // refresh from keystore
       
       mdLookups.updateSEDCertStore(cs); // update data to  db

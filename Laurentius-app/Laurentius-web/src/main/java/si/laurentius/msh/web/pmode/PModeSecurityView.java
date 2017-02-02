@@ -18,11 +18,13 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.interfaces.PModeInterface;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.msh.pmode.Security;
+import si.laurentius.msh.web.gui.DialogDelete;
 
 /**
  *
@@ -40,7 +42,17 @@ public class PModeSecurityView extends AbstractPModeJSFView<Security> {
   @EJB(mappedName = SEDJNDI.JNDI_PMODE)
   PModeInterface mPModeInteface;
 
+   @ManagedProperty(value = "#{dialogDelete}")
+  private DialogDelete dlgDelete;
 
+  @Override
+  public DialogDelete getDlgDelete() {
+    return dlgDelete;
+  }
+  @Override
+  public  void setDlgDelete(DialogDelete dlg){
+    dlgDelete = dlg;
+  }
   /**
    *
    */

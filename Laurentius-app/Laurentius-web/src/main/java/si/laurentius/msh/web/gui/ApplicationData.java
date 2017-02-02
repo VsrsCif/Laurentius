@@ -17,11 +17,9 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 import javax.xml.ws.WebServiceContext;
-import org.primefaces.event.RowEditEvent;
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.interfaces.DBSettingsInterface;
-import si.laurentius.commons.interfaces.SEDLookupsInterface;
 import si.laurentius.msh.web.abst.AbstractJSFView;
 
 /**
@@ -37,26 +35,10 @@ public class ApplicationData extends AbstractJSFView {
 
   @EJB(mappedName = SEDJNDI.JNDI_DBSETTINGS)
   private DBSettingsInterface mdbSettings;
+    
 
-  @EJB(mappedName = SEDJNDI.JNDI_SEDLOOKUPS)
-  private SEDLookupsInterface msedLookups;
-
-  /**
-   *
-   */
-  public void exportLookupsWithNoPasswords() {
-    msedLookups.exportLookups(new File(System.getProperty(
-            SEDSystemProperties.SYS_PROP_HOME_DIR)),
-            false);
-  }
-
-  /**
-   *
-   */
-  public void exportLookupsWithPasswords() {
-    msedLookups.exportLookups(new File(System.getProperty(
-            SEDSystemProperties.SYS_PROP_HOME_DIR)),
-            true);
+  public String getExportDataFolder() {
+    return SEDSystemProperties.getInitFolder().getAbsolutePath();
   }
 
   /**
@@ -143,24 +125,8 @@ public class ApplicationData extends AbstractJSFView {
 
   }
 
-  /**
-   *
-   * @param event
-   */
-  public void onCancel(RowEditEvent event) {
-    // FacesMessage msg = new FacesMessage("Item Cancelled");
-    // FacesContext.getCurrentInstance().addMessage(null, msg);
-    // orderList.remove((OrderBean) event.getObject());
-  }
 
-  /**
-   *
-   * @param event
-   */
-  public void onEdit(RowEditEvent event) {
-    // FacesMessage msg = new FacesMessage("Item Edited",((OrderBean) event.getObject()).getItem());
-    // FacesContext.getCurrentInstance().addMessage(null, msg);
-  }
+
 
   /**
    *

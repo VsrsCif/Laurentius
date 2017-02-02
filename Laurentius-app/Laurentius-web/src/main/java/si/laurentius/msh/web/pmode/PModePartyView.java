@@ -20,6 +20,7 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import org.primefaces.event.CellEditEvent;
 import si.laurentius.cert.SEDCertificate;
@@ -33,6 +34,7 @@ import si.laurentius.msh.pmode.PartyIdentitySet;
 import si.laurentius.msh.pmode.PartyIdentitySetType;
 import si.laurentius.msh.pmode.Protocol;
 import si.laurentius.commons.interfaces.SEDCertStoreInterface;
+import si.laurentius.msh.web.gui.DialogDelete;
 
 /**
  *
@@ -57,7 +59,17 @@ public class PModePartyView extends AbstractPModeJSFView<PartyIdentitySet> {
   SEDCertStoreInterface mCertBean;
 
   PartyIdentitySetType.PartyId selectedPartyId;
+   @ManagedProperty(value = "#{dialogDelete}")
+  private DialogDelete dlgDelete;
 
+  @Override
+  public DialogDelete getDlgDelete() {
+    return dlgDelete;
+  }
+  @Override
+  public  void setDlgDelete(DialogDelete dlg){
+    dlgDelete = dlg;
+  }
   /**
    *
    */

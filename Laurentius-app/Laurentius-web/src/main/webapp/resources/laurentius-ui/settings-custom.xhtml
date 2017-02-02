@@ -11,23 +11,28 @@
     </composite:interface>
 
     <composite:implementation >
+        <h1>Laurentius  #{msg['Version']}: <p:outputLabel value="#{ApplicationData.buildVersion}" /> </h1>
+        
+        <h2>#{msg['ExportBackup']}</h2>
 
-        <h:outputText value="#{msg['ExportLookupsToFile']}: {laurentius.home}/sed-settings.xml:" />
-        <p:panelGrid  >
-
-            <p:row> 
-                <p:column><h:outputText value="#{msg['ExportWithPasswords']}:" /></p:column>
-                <p:column><p:commandButton value="#{msg['Export']}" styleClass="toolbar-Button" icon="ui-icon-sed-save"                                 
-                                           actionListener="#{ApplicationData.exportLookupsWithPasswords()}" /></p:column>
+       
+        <p:panelGrid  class="width:100%" >
+            <p:row > 
+                <p:column colspan="2" ><h:outputText value="#{msg['ExportLookupsToFile']}: #{ApplicationData.exportDataFolder}" /></p:column>
             </p:row>
             <p:row> 
-                <p:column><h:outputText value="#{msg['ExportWithNoPasswords']}:" /></p:column>
-                <p:column><p:commandButton value="#{msg['Export']}" styleClass="toolbar-Button" icon="ui-icon-sed-save"                                 
-                                           actionListener="#{ApplicationData.exportLookupsWithNoPasswords()}"/></p:column>
+                <p:column><p:selectBooleanCheckbox value="#{mainWindow.exportLookupsWithPasswords}"
+                                                   itemLabel="#{msg['BackupLookups']}" /></p:column>
+                <p:column><p:commandButton value="#{msg['Export']}" styleClass="toolbar-Button"
+                                           icon="ui-icon-size-22 ui-icon-svg-csv"                                 
+                                           actionListener="#{mainWindow.exportLookups()}" /></p:column>
             </p:row>
         </p:panelGrid>
 
-        <h1>#{msg['EnvironmentProperties']}</h1>
+        <hr />
+
+
+        <h2>#{msg['EnvironmentProperties']}</h2>
         <p:dataTable var="sp" 
                      value="#{ApplicationData.systemPropertyKeys}"
                      rowKey="sp"
@@ -43,7 +48,8 @@
                 <h:outputText value="#{ApplicationData.getSystemPropertyValue(sp)}" />
             </p:column>
         </p:dataTable>
-        <h1>#{msg['LaurentiusSettings']}</h1>
+        <hr />
+        <h2>#{msg['LaurentiusSettings']}</h2>
         <p:dataTable var="sp" 
                      value="#{ApplicationData.SEDPropertyKeys}"
                      rowKey="sp"

@@ -1,0 +1,61 @@
+
+<SedLookups xmlns:ns2="http://laurentius.si/cron/" xmlns:ns3="http://laurentius.si/ebox" xmlns:ns4="http://laurentius.si/xslt" xmlns:ns5="http://laurentius.si/plugin" xmlns:ns6="http://laurentius.si/property" xmlns:ns7="http://laurentius.si/user" xmlns:ns8="http://laurentius.si/cert" xmlns:ns9="http://laurentius.si/cert/crl" exportDate="2016-11-25T10:50:42.446+01:00">
+    <SEDCronJobs>
+        
+    </SEDCronJobs>
+   
+    <SEDBoxes>
+        <ns3:SEDBox localBoxName="a.department" activeFromDate="2016-04-20+02:00">
+            <ns3:Export active="true" exportMetaData="true" folder="${laurentius.home}/export/a" fileMask="${Service}_${Id}" overwrite="false"/>
+            <ns3:Execute active="false" command="" parameters=""/>
+            <ns3:XSLT>
+                <ns4:Namespace id="130" prefix="izv" namespace="http://sodisce.si/izvrsba"/>
+                <ns4:XPathRule id="131" service="DeliveryWithReceipt" action="Delivery" transformation="${laurentius.home}/xslt/c2b_eizvrsba-demo_v01.xsl" xPath="//izv:OpisPosiljke/@schemaVersion" value="1.1"/>
+            </ns3:XSLT>
+        </ns3:SEDBox>
+        <ns3:SEDBox localBoxName="b.department" activeFromDate="2016-04-20+02:00">
+            <ns3:Export active="true" exportMetaData="true" folder="${laurentius.home}/export/b" fileMask="${Id}_${SenderEBox}_${Service}" overwrite="false"/>
+            <ns3:Execute active="false" command="" parameters=""/>
+            <ns3:XSLT>
+                <ns4:Namespace id="136" prefix="izv" namespace="http://sodisce.si/izvrsba"/>
+                <ns4:XPathRule id="137" service="DeliveryWithReceipt" action="Delivery" transformation="${laurentius.home}/xslt/c2b_eizvrsba-demo_v01.xsl" xPath="//izv:OpisPosiljke/@schemaVersion" value="1.1"/>
+            </ns3:XSLT>
+        </ns3:SEDBox>
+    </SEDBoxes>
+    
+    <SEDProperties>
+        <ns6:SEDProperty key="si.laurentius.pmode" value="pmode-conf.xml" group="SYSTEM"/>
+        <ns6:SEDProperty key="si.laurentius.domain" value="mb-laurentius.si" group="SYSTEM"/>
+    </SEDProperties>
+    <SEDUsers>
+        <ns7:SEDUser userId="user" activeFromDate="2016-04-20+02:00">
+            <ns3:SEDBox localBoxName="a.department" activeFromDate="2016-04-20+02:00">
+                <ns3:Export active="false" exportMetaData="true" folder="${laurentius.home}/export/a" fileMask="${Service}_${Id}"/>
+                <ns3:Execute active="false" command="" parameters=""/>
+                <ns3:XSLT/>
+            </ns3:SEDBox>
+            <ns3:SEDBox localBoxName="b.department" activeFromDate="2016-04-20+02:00">
+                <ns3:Export active="false" exportMetaData="true" folder="${laurentius.home}/export/b" fileMask="${Id}_${SenderEBox}_${Service}"/>
+                <ns3:Execute active="false" command="" parameters=""/>
+                <ns3:XSLT/>
+            </ns3:SEDBox>
+        </ns7:SEDUser>
+        <ns7:SEDUser userId="admin" adminRole="true" activeFromDate="2016-04-20+02:00">
+            <ns3:SEDBox localBoxName="a.department" activeFromDate="2016-04-20+02:00">
+                <ns3:Export active="false" exportMetaData="true" folder="${laurentius.home}/export/a" fileMask="${Service}_${Id}"/>
+                <ns3:Execute active="false" command="" parameters=""/>
+                <ns3:XSLT/>
+            </ns3:SEDBox>
+            <ns3:SEDBox localBoxName="b.department" activeFromDate="2016-04-20+02:00">
+                <ns3:Export active="false" exportMetaData="true" folder="${laurentius.home}/export/b" fileMask="${Id}_${SenderEBox}_${Service}"/>
+                <ns3:Execute active="false" command="" parameters=""/>
+                <ns3:XSLT/>
+            </ns3:SEDBox>
+        </ns7:SEDUser>
+    </SEDUsers>
+    <SEDCertStores>
+
+
+    </SEDCertStores>
+    <SEDCertCRLs/>
+</SedLookups>

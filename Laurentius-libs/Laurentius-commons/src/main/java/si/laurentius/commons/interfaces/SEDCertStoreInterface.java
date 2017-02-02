@@ -26,8 +26,14 @@ import si.laurentius.commons.exception.SEDSecurityException;
 @Local
 public interface SEDCertStoreInterface {
 
+  public static final String KEYSTORE_NAME = "keystore";
+  public static final String ROOTCA_NAME = "rootCA";
+
   void refreshCrlLists();
-  SEDCertStore getCertificateStore() throws SEDSecurityException ;
-  void updateKeystoreCertificate(SEDCertificate crt) throws SEDSecurityException ;
-  SEDCertStore getRootCACertificateStore() throws SEDSecurityException ;
+
+  SEDCertStore getCertificateStore() throws SEDSecurityException;
+
+  void updateKeystoreCertificate(SEDCertificate crt) throws SEDSecurityException;
+
+  SEDCertStore getRootCACertificateStore() throws SEDSecurityException;
 }

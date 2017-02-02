@@ -34,13 +34,10 @@ public interface SEDPluginManagerInterface {
   void  registerPlugin(Plugin pdi);
   Plugin getPluginByType(String type);  
   List<Plugin> getRegistredPlugins();
-  
-  
-  
+    
   
   CronTaskDef getCronTaskDef(String plugin, String task);
   InMailProcessorDef getInMailProcessor(String plugin, String task);
-
   
   List<CronTaskDef> getCronTasksForPlugin(String plugin);
   List<MailInterceptorDef> getMailInterceptorForPlugin(String plugin);

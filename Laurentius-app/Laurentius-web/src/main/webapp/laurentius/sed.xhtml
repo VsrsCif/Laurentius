@@ -50,7 +50,7 @@
                                     <span class="ui-icon ui-icon-grip-dotted-vertical " />
                                 </span>
                                 <p:commandButton value="#{msg['ExportCSV']}" styleClass="toolbar-Button"  
-                                                 rendered="#{MainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_OUTBOX)}" 
+                                                 rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_OUTBOX)}" 
                                                  icon="ui-icon-size-22 ui-icon-svg-csv"
 
                                                  update=":dlgExportOutData:exportOutDataDialogForm"
@@ -58,7 +58,7 @@
                                                  />
 
                                 <p:commandButton value="#{msg['ExportCSV']}" styleClass="toolbar-Button"  
-                                                 rendered="#{MainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_INBOX)}" 
+                                                 rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_INBOX)}" 
                                                  icon="ui-icon-size-22 ui-icon-svg-csv"
                                                  update=":dlgExportInData:exportInDataDialogForm"
                                                  oncomplete="PF('exportInDataDialog').show()"
@@ -68,14 +68,14 @@
                                     <span class="ui-icon ui-icon-grip-dotted-vertical " />
                                 </span>
                                 <p:commandButton value="#{msg['New']}" styleClass="toolbar-Button"  
-                                                 rendered="#{MainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_OUTBOX)}" 
+                                                 rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_OUTBOX)}" 
                                                  icon="ui-icon-size-22 ui-icon-svg-mail-send"
                                                  actionListener="#{OutMailDataView.composeNewMail()}"
                                                  update=":dlgCompose:mailComposeForm"
                                                  oncomplete="PF('mailComposeDialog').show()"/>
 
                                 <p:commandButton value="#{msg['Resend selected']}" styleClass="toolbar-Button" 
-                                                 rendered="#{MainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_OUTBOX)}"
+                                                 rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_OUTBOX)}"
                                                  actionListener="#{OutMailDataView.resendSelectedMail()}" 
                                                  icon="ui-icon-size-22 ui-icon-svg-mail-resend"
                                                  update=":forms:MainPanel :forms:messages"
@@ -84,7 +84,7 @@
                                                  />
                                 <p:commandButton value="#{msg['Delete selected']}" styleClass="toolbar-Button"  
                                                  icon="ui-icon-svg-remove ui-icon-size-22" 
-                                                 rendered="#{MainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_OUTBOX)}" 
+                                                 rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_OUTBOX)}" 
                                                  actionListener="#{OutMailDataView.deleteSelectedMail()}" 
                                                  update=":forms:MainPanel"
                                                  ajax="true"
@@ -93,19 +93,19 @@
 
                                 <p:commandButton value="#{msg['Save']}" styleClass="toolbar-Button"  
                                                  icon="ui-icon-size-22 ui-icon-svg-csv"
-                                                 rendered="#{MainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_SETT_PMODE)}" 
+                                                 rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_SETT_PMODE)}" 
                                                  actionListener="#{pModeView.savePMode()}" 
                                                  update=":forms:MainPanel :forms:messages"
                                                  ajax="true"/>
                                 <p:commandButton value="#{msg['Format']}" styleClass="toolbar-Button"                                               
-                                                 rendered="#{MainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_SETT_PMODE)}" 
+                                                 rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_SETT_PMODE)}" 
                                                  actionListener="#{pModeView.formatPMode()}" 
                                                  update=":forms:MainPanel :forms:messages"
                                                  ajax="true"/>
 
                                 <p:menuButton value="#{msg['ChangeStatus']}" 
 
-                                              rendered="#{MainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_INBOX)}" 
+                                              rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_INBOX)}" 
                                               >
 
                                     <p:menuitem value="PLOCKED" 
@@ -131,7 +131,7 @@
                                 </p:menuButton >
 
                                 <p:commandButton value="#{msg['Export']}" styleClass="toolbar-Button"  
-                                                 rendered="#{MainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_INBOX)}" 
+                                                 rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_INBOX)}" 
                                                  actionListener="#{InMailDataView.exportSelectedMail()}"
                                                  icon="ui-icon-size-22 ui-icon-svg-export"
                                                  update=":forms:MainPanel :forms:messages"
@@ -161,27 +161,27 @@
                     </p:layoutUnit>
                     <p:layoutUnit id="MainPanelUnit" position="center"  gutter="0" >
                         <h:panelGroup id="MainPanel">
-                            <sui:mail-table-in id="InMailPanel" rendered="#{MainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_INBOX)  }"  />
-                            <sui:mail-table-out id="OutMailPanel" rendered="#{MainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_OUTBOX)}"  />
-                            <sui:settings-keystore id="SettingsCertPanel" rendered="#{MainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_SETT_CERTS)}"  />
-                            <sui:settings-custom id="SettingsCustomPanel" rendered="#{MainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_SETT_CUSTOM)}"  />
+                            <sui:mail-table-in id="InMailPanel" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_INBOX)  }"  />
+                            <sui:mail-table-out id="OutMailPanel" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_OUTBOX)}"  />
+                            <sui:settings-keystore id="SettingsCertPanel" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_SETT_CERTS)}"  />
+                            <sui:settings-custom id="SettingsCustomPanel" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_SETT_CUSTOM)}"  />
 
-                            <sui:settings-pmode-services id="SettingsPModesServices" rendered="#{MainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_SETT_PMODE_SERVICES)}"  />
-                            <sui:settings-pmode-parties id="SettingsPModesParties" rendered="#{MainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_SETT_PMODE_PARTIES)}"  />
-                            <sui:settings-pmode-securities id="SettingsPModesSecurities" rendered="#{MainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_SETT_PMODE_SECURITIES)}"  />
-                            <sui:settings-pmode-ra id="SettingsPModeReceptionAwarenesses" rendered="#{MainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_SETT_PMODE_AS4_RA)}"  />
-                            <sui:settings-pmode id="SettingsPModes" rendered="#{MainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_SETT_PMODE)}"  />
+                            <sui:settings-pmode-services id="SettingsPModesServices" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_SETT_PMODE_SERVICES)}"  />
+                            <sui:settings-pmode-parties id="SettingsPModesParties" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_SETT_PMODE_PARTIES)}"  />
+                            <sui:settings-pmode-securities id="SettingsPModesSecurities" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_SETT_PMODE_SECURITIES)}"  />
+                            <sui:settings-pmode-ra id="SettingsPModeReceptionAwarenesses" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_SETT_PMODE_AS4_RA)}"  />
+                            <sui:settings-pmode id="SettingsPModes" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_SETT_PMODE)}"  />
 
-                            <sui:settings-users id="SettingsUsers" rendered="#{MainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_ADMIN_USERS)}"  />
-                            <sui:settings-eboxes id="SettingsSEDBoxes" rendered="#{MainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_ADMIN_EBOXES)}"  />
-                            <sui:settings-cron id="SettingsCron" rendered="#{MainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_ADMIN_CRON)}"  />
-                            <sui:settings-plugins id="SettingsPlugin" rendered="#{MainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_ADMIN_PLUGIN)}"  />
-                            <sui:settings-inmail-process id="InMailProcess" rendered="#{MainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_INMAIL_PROCESS)}"  />
+                            <sui:settings-users id="SettingsUsers" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_ADMIN_USERS)}"  />
+                            <sui:settings-eboxes id="SettingsSEDBoxes" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_ADMIN_EBOXES)}"  />
+                            <sui:settings-cron id="SettingsCron" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_ADMIN_CRON)}"  />
+                            <sui:settings-plugins id="SettingsPlugin" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_ADMIN_PLUGIN)}"  />
+                            <sui:settings-inmail-process id="InMailProcess" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_INMAIL_PROCESS)}"  />
 
-                            <sui:cron-execution-table id="CronExecutions" rendered="#{MainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_CRON_EXEC)}"  />
+                            <sui:cron-execution-table id="CronExecutions" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_CRON_EXEC)}"  />
 
 
-                            <p:outputPanel id="PluginFrame" rendered="#{MainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_PLUGIN)}" 
+                            <p:outputPanel id="PluginFrame" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_PLUGIN)}" 
                                            style="width: 100%;height: 100%">  
                                 <iframe id="iframeCenter" src="#{adminSEDPluginView.selectedWebContext}" width="100%"  
                                         height="100%" frameborder="0" crolling="auto">  
@@ -225,7 +225,7 @@
                     </p:layoutUnit>
                     <p:layoutUnit position="west" resizable="false" size="320" minSize="320" maxSize="320">
                         <p:accordionPanel id="toolbars" >
-                            <p:ajax event="tabChange" listener="#{MainWindow.onToolbarTabChange}" update="forms:MainPanel forms:toolbar" />
+                            <p:ajax event="tabChange" listener="#{mainWindow.onToolbarTabChange}" update="forms:MainPanel forms:toolbar" />
                             <p:tab id="PANEL_INBOX"  >
                                 <f:facet name="title">
 
@@ -405,7 +405,7 @@
                                             </p:menuitem>
                                         </c:if>
 
-                                       
+
                                     </c:forEach>   
                                 </p:menu>
                             </p:tab>
@@ -417,32 +417,32 @@
                                 <p:menu class="ui-accordion-button" style="width: 100%">
                                     <p:menuitem value="#{msg['Services']}" 
                                                 icon="ui-icon-svg-service ui-icon-size-22" 
-                                                actionListener="#{MainWindow.onToolbarButtonAction}" 
+                                                actionListener="#{mainWindow.onToolbarButtonAction}" 
                                                 update="forms:MainPanel"
                                                 >
                                         <f:attribute name="panel" value="PANEL_SETT_PMODE_SERVICES" />
                                     </p:menuitem>
                                     <p:menuitem value="#{msg['Parties']}" 
                                                 icon="ui-icon-svg-party ui-icon-size-22" 
-                                                actionListener="#{MainWindow.onToolbarButtonAction}" 
+                                                actionListener="#{mainWindow.onToolbarButtonAction}" 
                                                 update="forms:MainPanel">
                                         <f:attribute name="panel" value="PANEL_SETT_PMODE_PARTIES" />
                                     </p:menuitem>
                                     <p:menuitem value="#{msg['SecurityPolicies']}" 
                                                 icon="ui-icon-svg-security ui-icon-size-22" 
-                                                actionListener="#{MainWindow.onToolbarButtonAction}" 
+                                                actionListener="#{mainWindow.onToolbarButtonAction}" 
                                                 update="forms:MainPanel">
                                         <f:attribute name="panel" value="PANEL_SETT_PMODE_SECURITIES" />
                                     </p:menuitem>
                                     <p:menuitem value="#{msg['ReceptionAwarenessPatterns']}" 
                                                 icon="ui-icon-svg-reliability ui-icon-size-22" 
-                                                actionListener="#{MainWindow.onToolbarButtonAction}" 
+                                                actionListener="#{mainWindow.onToolbarButtonAction}" 
                                                 update="forms:MainPanel">
                                         <f:attribute name="panel" value="PANEL_SETT_PMODE_AS4_RA" />
                                     </p:menuitem>
                                     <p:menuitem value="#{msg['PModes']}" 
                                                 icon="ui-icon-svg-pmode ui-icon-size-22" 
-                                                actionListener="#{MainWindow.onToolbarButtonAction}" 
+                                                actionListener="#{mainWindow.onToolbarButtonAction}" 
                                                 update="forms:MainPanel">
                                         <f:attribute name="panel" value="PANEL_SETT_PMODE" />
                                     </p:menuitem>
@@ -461,45 +461,45 @@
                                 <p:menu class="ui-accordion-button" style="width: 100%">
                                     <p:menuitem value="#{msg['Custom']}" 
                                                 icon="ui-icon-svg-settings ui-icon-size-22" 
-                                                actionListener="#{MainWindow.onToolbarButtonAction}" 
+                                                actionListener="#{mainWindow.onToolbarButtonAction}" 
                                                 update="forms:MainPanel">
                                         <f:attribute name="panel" value="PANEL_SETT_CUSTOM" />
                                     </p:menuitem>
 
                                     <p:menuitem value="#{msg['SED-Boxes']}"
                                                 icon="ui-icon-svg-box ui-icon-size-22"
-                                                actionListener="#{MainWindow.onToolbarButtonAction}" 
+                                                actionListener="#{mainWindow.onToolbarButtonAction}" 
                                                 update="forms:MainPanel">
                                         <f:attribute name="panel" value="PANEL_ADMIN_EBOXES" />
                                     </p:menuitem>
                                     <p:menuitem icon="ui-icon-svg-users ui-icon-size-22" 
                                                 value="#{msg['Users']}"  
-                                                actionListener="#{MainWindow.onToolbarButtonAction}"  
+                                                actionListener="#{mainWindow.onToolbarButtonAction}"  
                                                 update="forms:MainPanel">
                                         <f:attribute name="panel" value="PANEL_ADMIN_USERS" />                                        
                                     </p:menuitem>
                                     <p:menuitem value="#{msg['Certificates']}"  
                                                 icon="ui-icon-svg-certificate ui-icon-size-22" 
-                                                actionListener="#{MainWindow.onToolbarButtonAction}"  
+                                                actionListener="#{mainWindow.onToolbarButtonAction}"  
                                                 update="forms:MainPanel">
                                         <f:attribute name="panel" value="PANEL_SETT_CERTS" />
                                     </p:menuitem>
                                     <p:separator />
                                     <p:menuitem value="#{msg['Plugins']}" 
                                                 icon="ui-icon-svg-plugin ui-icon-size-22" 
-                                                actionListener="#{MainWindow.onToolbarButtonAction}"  
+                                                actionListener="#{mainWindow.onToolbarButtonAction}"  
                                                 update="forms:MainPanel">
                                         <f:attribute name="panel" value="PANEL_ADMIN_PLUGIN" />
                                     </p:menuitem>
                                     <p:menuitem value="#{msg['InMailRules']}" 
                                                 icon="ui-icon-svg-process ui-icon-size-22" 
-                                                actionListener="#{MainWindow.onToolbarButtonAction}"  
+                                                actionListener="#{mainWindow.onToolbarButtonAction}"  
                                                 update="forms:MainPanel">
                                         <f:attribute name="panel" value="PANEL_INMAIL_PROCESS" />
                                     </p:menuitem>
                                     <p:menuitem value="#{msg['Scheduler']}" 
                                                 icon="ui-icon-svg-scheduler ui-icon-size-22" 
-                                                actionListener="#{MainWindow.onToolbarButtonAction}"  
+                                                actionListener="#{mainWindow.onToolbarButtonAction}"  
                                                 update="forms:MainPanel">
                                         <f:attribute name="panel" value="PANEL_ADMIN_CRON" />
                                     </p:menuitem>
@@ -517,7 +517,7 @@
 
                                     <p:menuitem value="#{msg['CronExecutions']}" 
                                                 icon="ui-icon-svg-cron-exec ui-icon-size-22" 
-                                                actionListener="#{MainWindow.onToolbarButtonAction}"  
+                                                actionListener="#{mainWindow.onToolbarButtonAction}"  
                                                 update="forms:MainPanel">
                                         <f:attribute name="panel" value="PANEL_CRON_EXEC" />
                                     </p:menuitem>
@@ -536,9 +536,25 @@
                     </p:layoutUnit>
                 </p:layout>
             </h:form>
+            <h:form id="DeleteDialogForm" >
+                <p:confirmDialog widgetVar="DlgDelete" id="deleteDialog" 
+                                 header="#{dialogDelete.title}" 
+                                 message="#{dialogDelete.message}"
+                                 width="400" showEffect="bounce"  closable="false" severity="alert" 
+                                 appendTo="@(body)" >
+                    <h:panelGroup layout="block" style="text-align: right">
+                        <p:commandButton value="Yes" rendered="#{dialogDelete.yesNoOption}" 
+                                         action="#{dialogDelete.removeSelected()}" 
+                                         oncomplete="PF('DlgDelete').hide();" 
+                                         />
+                        <p:commandButton value="No"  oncomplete="PF('DlgDelete').hide();" />
+                    </h:panelGroup>
+                </p:confirmDialog>
+            </h:form>
 
             <dlg:dlg-compose id="dlgCompose" />
             <dlg:dlg-certificate id="dlgcertificate" />
+            <dlg:dlg-cert-import id="dlgcertimport" />
             <dlg:dlg-tasktype id="dlgTaskType" />
 
             <dlg:dlg-sedbox id="dlgsedbox" />

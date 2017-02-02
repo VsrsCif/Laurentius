@@ -55,6 +55,7 @@ import si.laurentius.lce.KeystoreUtils;
 import si.laurentius.commons.interfaces.SEDCertStoreInterface;
 import si.laurentius.plugin.crontask.CronTaskDef;
 import si.laurentius.plugin.crontask.CronTaskPropertyDef;
+import si.laurentius.plugin.interfaces.PropertyListType;
 import si.laurentius.plugin.interfaces.PropertyType;
 
 import si.laurentius.plugin.interfaces.TaskExecutionInterface;
@@ -182,27 +183,18 @@ public class ZPPTask implements TaskExecutionInterface {
    */
   @Override
   public CronTaskDef getDefinition() {
-    List<String> lst = new ArrayList<>();
-
-    try {
-      mCertBean.getCertificateStore().getSEDCertificates().forEach(crt -> {
-        if (crt.isKeyEntry()) {
-          lst.add(crt.getAlias());
-        }
-      });
-    } catch (SEDSecurityException ex) {
-      Logger.getLogger(ZPPTask.class.getName()).log(Level.SEVERE, null, ex);
-    }
+    
 
     CronTaskDef tt = new CronTaskDef();
     tt.setType("zpp-plugin");
     tt.setName("ZPP plugin");
     tt.setDescription("Create and Sign adviceOfDelivery for incomming mail");
     tt.getCronTaskPropertyDeves().add(createTTProperty(REC_SEDBOX,
-            "Receiver sedbox (without domain)."));
+            "Receiver sedbox (without domain).", true, PropertyType.List.
+                    getType(), null, PropertyListType.LocalBoxes.getType()));
     tt.getCronTaskPropertyDeves().add(createTTProperty(SIGN_ALIAS,
             "Signature key alias defined in keystore.", true, PropertyType.List.
-                    getType(), null, null));
+                    getType(), null, PropertyListType.KeystoreCertKeys.getType()));
     tt.getCronTaskPropertyDeves().add(createTTProperty(PROCESS_MAIL_COUNT,
             "Max mail count proccesed.", true, PropertyType.Integer.getType(),
             null, null));
@@ -222,9 +214,7 @@ public class ZPPTask implements TaskExecutionInterface {
     return ttp;
   }
 
-  private CronTaskPropertyDef createTTProperty(String key, String desc) {
-    return createTTProperty(key, desc, true, "string", null, null);
-  }
+  
 
   /**
    *

@@ -1,23 +1,44 @@
 package si.laurentius.msh.web.gui;
 
+import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import org.primefaces.event.TabChangeEvent;
+import si.laurentius.commons.SEDJNDI;
+import si.laurentius.commons.SEDSystemProperties;
+import si.laurentius.commons.interfaces.SEDLookupsInterface;
 
 /**
  *
  * @author Jože Rihtaršič
  */
 @SessionScoped
-@ManagedBean(name = "MainWindow")
+@ManagedBean(name = "mainWindow")
 public class MainWindow {
 
   String mstrWindowShow = AppConstant.S_PANEL_INBOX;
   int currentProgressVal =0;
   String currentProgressLabel ="";
+  private boolean exportLookupsWithPasswords = true;
+  
+  @EJB(mappedName = SEDJNDI.JNDI_SEDLOOKUPS)
+  private SEDLookupsInterface msedLookups;
+
+  public boolean isExportLookupsWithPasswords() {
+    return exportLookupsWithPasswords;
+  }
+
+  public void setExportLookupsWithPasswords(boolean exportLookupsWithPasswords) {
+    this.exportLookupsWithPasswords = exportLookupsWithPasswords;
+  }
+  
+  public void exportLookups() {
+    msedLookups.exportLookups(SEDSystemProperties.getInitFolder(),
+            isExportLookupsWithPasswords());
+  }
   /**
    *
    * @param summary

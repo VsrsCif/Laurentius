@@ -183,7 +183,9 @@ public class SEDSystemProperties {
   public static File getStorageFolder() {
     return getFile(SYS_PROP_STORAGE_DIR, true);
   }
-
+public static File getLogFolder() {
+    return getFile(SYS_PROP_LOG_DIR, true);
+  }
   public static File getInitFolder() {
     return getFile(SYS_PROP_INIT_DIR, true);
 

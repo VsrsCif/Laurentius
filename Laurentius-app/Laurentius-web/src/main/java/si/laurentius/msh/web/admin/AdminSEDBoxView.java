@@ -18,6 +18,7 @@ import java.util.Calendar;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import si.laurentius.ebox.SEDBox;
 import si.laurentius.commons.SEDJNDI;
@@ -26,6 +27,8 @@ import si.laurentius.commons.interfaces.PModeInterface;
 import si.laurentius.commons.interfaces.SEDLookupsInterface;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.msh.web.abst.AbstractAdminJSFView;
+import si.laurentius.msh.web.gui.DialogDelete;
+import si.laurentius.msh.web.gui.UserSessionData;
 
 
 /**
@@ -37,6 +40,20 @@ import si.laurentius.msh.web.abst.AbstractAdminJSFView;
 public class AdminSEDBoxView extends AbstractAdminJSFView<SEDBox> {
 
   private static final SEDLogger LOG = new SEDLogger(AdminSEDBoxView.class);
+  
+  @ManagedProperty(value = "#{dialogDelete}")
+  private DialogDelete dlgDelete;
+
+  @Override
+  public DialogDelete getDlgDelete() {
+    return dlgDelete;
+  }
+  @Override
+  public  void setDlgDelete(DialogDelete dlg){
+    dlgDelete = dlg;
+  }
+   
+   
 
   @EJB(mappedName = SEDJNDI.JNDI_DBSETTINGS)
   private DBSettingsInterface mdbSettings;
@@ -83,11 +100,12 @@ public class AdminSEDBoxView extends AbstractAdminJSFView<SEDBox> {
   @Override
   public void removeSelected() {
     SEDBox sb = getSelected();
-    if (sb != null) {
-
-      mdbLookups.removeSEDBox(sb);
-      setSelected(null);
-
+    if (sb == null) {
+      dlgDelete.setCurrentJSFView(this);
+      
+      
+      //mdbLookups.removeSEDBox(sb);
+      //setSelected(null);
     }
 
   }
