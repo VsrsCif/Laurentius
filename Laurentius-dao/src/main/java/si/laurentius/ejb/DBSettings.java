@@ -14,7 +14,6 @@
  */
 package si.laurentius.ejb;
 
-import java.io.File;
 import java.util.List;
 import java.util.Properties;
 import java.util.Timer;
@@ -55,12 +54,27 @@ import static si.laurentius.commons.utils.abst.ASettings.newProperties;
 @AccessTimeout(value = 60000)
 @TransactionManagement(TransactionManagementType.BEAN)
 public class DBSettings implements DBSettingsInterface {
-
+  protected static final String LAU_SETTINGS = "SED";
   /**
-     *
-     */
-  @Resource
-  public UserTransaction mutUTransaction;
+   *
+   */
+  protected static final SEDLogger LOG = new SEDLogger(DBSettings.class);
+  /**
+   *
+   */
+  protected static final String SYSTEM_SETTINGS = "SYSTEM";
+  /**
+   *
+   */
+  protected TimerTask mRefreshTask;
+  /**
+   *
+   */
+  protected long m_iLastRefreshTime = 0;
+  /**
+   *
+   */
+  protected long m_iRefreshInterval = 1800 * 1000; // 30 min
 
   /**
      *
@@ -68,45 +82,23 @@ public class DBSettings implements DBSettingsInterface {
   @PersistenceContext(unitName = "ebMS_LAU_PU", name = "ebMS_LAU_PU")
   public EntityManager memEManager;
 
-  /**
-     *
-     */
-  protected static final SEDLogger LOG = new SEDLogger(DBSettings.class);
 
   /**
      *
      */
   final protected Properties mprpProperties = newProperties();
 
-  /**
-     *
-     */
-  protected TimerTask mRefreshTask;
 
   /**
      *
      */
   protected Timer mtTimer = new Timer(true);
-
   /**
-     *
-     */
-  protected long m_iLastRefreshTime = 0;
+   *
+   */
+  @Resource
+  public UserTransaction mutUTransaction;
 
-  /**
-     *
-     */
-  protected long m_iRefreshInterval = 1800 * 1000; // 30 min
-
-  /**
-     *
-     */
-  protected static final String SYSTEM_SETTINGS = "SYSTEM";
-
-  /**
-     *
-     */
-  protected static final String LAU_SETTINGS = "SED";
 
  
 
@@ -121,18 +113,54 @@ public class DBSettings implements DBSettingsInterface {
       }
     };
   }
-
-  @PostConstruct
-  private void startup() {
-    refreshData();
-    initialize();
-    // mtTimer.scheduleAtFixedRate(mRefreshTask, m_iRefreshInterval, m_iRefreshInterval);
-
+  private String getData(String strKey) {
+    String strVal = null;
+    if (mprpProperties != null) {
+      strVal = mprpProperties.getProperty(strKey);
+    }
+    return strVal;
+  }
+  /**
+   *
+   * @return
+   */
+  @Override
+  public Properties getProperties() {
+    return mprpProperties;
+  }
+  /**
+   *
+   * @return
+   */
+  @Override
+  public List<SEDProperty> getSEDProperties() {
+    TypedQuery<SEDProperty> q =
+            memEManager.createNamedQuery("SEDProperty.getAll", SEDProperty.class);
+    return q.getResultList();
   }
 
   /**
      *
      */
+  @Override
+  public void initialize() {
+    if (!mprpProperties.containsKey(SEDSystemProperties.SYS_PROP_LAU_DOMAIN)) {
+      synchronized (mprpProperties) {
+        setData(SEDSystemProperties.SYS_PROP_LAU_DOMAIN, SEDSystemProperties.getLocalDomain(), SYSTEM_SETTINGS);
+      }
+    }
+    if (!mprpProperties.containsKey(SEDSystemProperties.SYS_PROP_HOME_DIR)) {
+      synchronized (mprpProperties) {
+        setData(SEDSystemProperties.SYS_PROP_HOME_DIR, SEDSystemProperties.getHomeFolder().getAbsolutePath(), SYSTEM_SETTINGS);
+      }
+    }
+
+   
+
+  }
+  /**
+   *
+   */
   final protected void refreshData() {
     long l = LOG.logStart();
     // ----------------------------------
@@ -149,8 +177,10 @@ public class DBSettings implements DBSettingsInterface {
      
           continue;
         }
-     
+        
+        
         mprpProperties.put(key, val);
+        // set system settings
         if (SYSTEM_SETTINGS.equals(part)) {
           System.setProperty(key, val);
         }
@@ -159,62 +189,6 @@ public class DBSettings implements DBSettingsInterface {
     LOG.logEnd(l);
   }
 
-  /**
-     *
-     */
-  @Override
-  public void initialize() {
-    // set system properties
-    // System.setProperty(SEDSystemProperties.SYS_PROP_JNDI_PREFIX, JNDI_PREFIX);
-    // System.setProperty(SEDSystemProperties.SYS_PROP_JNDI_JMS_PREFIX, JNDI_PREFIX);
-
-    if (!mprpProperties.containsKey(SEDSystemProperties.S_PROP_LAU_DOMAIN)) {
-      synchronized (mprpProperties) {
-        setData(SEDSystemProperties.S_PROP_LAU_DOMAIN, SEDSystemProperties.getLocalDomain(), LAU_SETTINGS);
-      }
-    }
-
-   
-
-  }
-
-
-
-
-
-  private String getData(String strKey) {
-    String strVal = null;
-    if (mprpProperties != null) {
-      strVal = mprpProperties.getProperty(strKey);
-    }
-    return strVal;
-  }
-
-  private void setData(String key, String value) {
-    setData(key, value, null);
-  }
-
-  @Lock(LockType.WRITE)
-  private void setData(String key, String value, String group) {
-    if (key == null || key.trim().isEmpty()) {
-      return;
-    }
-    String strKey = key.trim();
-    String strValue = value != null ? value.trim() : null;
-
-    if (mprpProperties.containsKey(key)) {
-      if (strValue == null) {
-        mprpProperties.remove(key);
-        removeProperty(key);
-      } else if (mprpProperties.get(strKey) != null && !mprpProperties.get(strKey).equals(strValue)) {
-        mprpProperties.setProperty(strKey, strValue);
-        replaceProperty(strKey, strValue, group);
-      }
-    } else if (strValue != null) {
-      mprpProperties.setProperty(strKey, strValue);
-      storeProperty(strKey, strValue, group);
-    }
-  }
 
   /**
    *
@@ -284,61 +258,31 @@ public class DBSettings implements DBSettingsInterface {
     }
     LOG.logEnd(l, key);
   }
-
-  /**
-   *
-   * @param key
-   * @param value
-   * @param group
-   */
-  protected void storeProperty(String key, String value, String group) {
-    long l = LOG.logStart(key);
-    try {
-      SEDProperty sp = new SEDProperty();
-      sp.setKey(key);
-      sp.setValue(value);
-      sp.setGroup(group);
-
-      mutUTransaction.begin();
-      memEManager.persist(sp);
-      mutUTransaction.commit();
-
-    } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException
-        | HeuristicRollbackException | SecurityException | IllegalStateException ex) {
-      String msg =
-          "Error storing property: '" + key + "', Value: '" + value + "', group: '" + group + "' ";
-      LOG.logError(l, msg, ex);
-      try {
-        if (mutUTransaction.getStatus() == Status.STATUS_ACTIVE) {
-          mutUTransaction.rollback();
-        }
-      } catch (SystemException ex1) {
-        LOG.logWarn(l, "Error rollback transaction", ex1);
-      }
+  private void setData(String key, String value) {
+    setData(key, value, null);
+  }
+  @Lock(LockType.WRITE)
+  private void setData(String key, String value, String group) {
+    if (key == null || key.trim().isEmpty()) {
+      return;
     }
-    LOG.logEnd(l, key);
+    String strKey = key.trim();
+    String strValue = value != null ? value.trim() : null;
+    
+    if (mprpProperties.containsKey(key)) {
+      if (strValue == null) {
+        mprpProperties.remove(key);
+        removeProperty(key);
+      } else if (mprpProperties.get(strKey) != null && !mprpProperties.get(strKey).equals(strValue)) {
+        mprpProperties.setProperty(strKey, strValue);
+        replaceProperty(strKey, strValue, group);
+      }
+    } else if (strValue != null) {
+      mprpProperties.setProperty(strKey, strValue);
+      storeProperty(strKey, strValue, group);
+    }
   }
 
- 
-  /**
-   *
-   * @return
-   */
-  @Override
-  public Properties getProperties() {
-    return mprpProperties;
-  }
-
-  /**
-   *
-   * @return
-   */
-  @Override
-  public List<SEDProperty> getSEDProperties() {
-    TypedQuery<SEDProperty> q =
-        memEManager.createNamedQuery("SEDProperty.getAll", SEDProperty.class);
-    return q.getResultList();
-  }
 
   /**
    *
@@ -363,5 +307,44 @@ public class DBSettings implements DBSettingsInterface {
   public void setSEDProperty(String key, String value, String group) {    
         setData(key, value, group);    
   }
+  @PostConstruct
+  private void startup() {
+    refreshData();
+    initialize();
+  }
+  /**
+   *
+   * @param key
+   * @param value
+   * @param group
+   */
+  protected void storeProperty(String key, String value, String group) {
+    long l = LOG.logStart(key);
+    try {
+      SEDProperty sp = new SEDProperty();
+      sp.setKey(key);
+      sp.setValue(value);
+      sp.setGroup(group);
+
+      mutUTransaction.begin();
+      memEManager.persist(sp);
+      mutUTransaction.commit();
+
+    } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException
+            | HeuristicRollbackException | SecurityException | IllegalStateException ex) {
+      String msg =
+              "Error storing property: '" + key + "', Value: '" + value + "', group: '" + group + "' ";
+      LOG.logError(l, msg, ex);
+      try {
+        if (mutUTransaction.getStatus() == Status.STATUS_ACTIVE) {
+          mutUTransaction.rollback();
+        }
+      } catch (SystemException ex1) {
+        LOG.logWarn(l, "Error rollback transaction", ex1);
+      }
+    }
+    LOG.logEnd(l, key);
+  }
+
 
 }

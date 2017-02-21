@@ -79,7 +79,7 @@ public class FilePModeManagerTest {
   public void setUp()
       throws Exception {
 
-    System.getProperties().put(SEDSystemProperties.S_PROP_LAU_DOMAIN, "test-sed.si");
+    System.getProperties().put(SEDSystemProperties.SYS_PROP_LAU_DOMAIN, "test-sed.si");
     
     System.getProperties().put(SEDSystemProperties.SYS_PROP_CONF_DIR, "src/test/resources/pmode/");
     System.getProperties().put(SEDSystemProperties.SYS_PROP_PMODE_FILE, TEST_PMODE_FILE);

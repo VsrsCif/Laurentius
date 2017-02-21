@@ -4,6 +4,7 @@
  */
 package si.laurentius.plugin.interfaces;
 
+import java.io.File;
 import javax.ejb.EJB;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -13,6 +14,7 @@ import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.Utils;
 import si.laurentius.plugin.component.ComponentBase;
 import si.laurentius.plugin.crontask.CronTaskDef;
+import si.laurentius.plugin.def.MenuItem;
 import si.laurentius.plugin.def.Plugin;
 import si.laurentius.plugin.eventlistener.OutMailEventListenerDef;
 import si.laurentius.plugin.interceptor.MailInterceptorDef;
@@ -45,16 +47,35 @@ public abstract class AbstractPluginDescription implements
       mPlgDef.setVersion(getVersion());
       mPlgDef.setDescription(getDesc());
       mPlgDef.setWebContext(getWebUrlContext());
-      if (getWebPageRoles()!= null && !getWebPageRoles().isEmpty()) {
+      mPlgDef.setMainMenu(getMenu());
+      mPlgDef.setProcessMenu(getProcessMenu());
+      if (getWebPageRoles() != null && !getWebPageRoles().isEmpty()) {
         mPlgDef.getWebRoles().addAll(getWebPageRoles());
       }
-
       mPlgDef.setJndi(String.format(JNDI_INTERFACE_TEMPLATE,
               getApplicationName(),
               getClass().getSimpleName(), PluginDescriptionInterface.class.
               getName()));
     }
+
     return mPlgDef;
+  }
+
+  @Override
+  public MenuItem getMenu() {
+
+    MenuItem mi = new MenuItem();
+    mi.setName(getName());
+
+    return mi;
+  }
+
+  public MenuItem getProcessMenu() {
+
+    MenuItem mi = new MenuItem();
+    mi.setName(getName());
+
+    return mi;
   }
 
   @EJB(mappedName = SEDJNDI.JNDI_PLUGIN)
@@ -188,6 +209,16 @@ public abstract class AbstractPluginDescription implements
       }
     }
     return applicationName;
+  }
+
+
+  /**
+   *
+   * @param initFolder
+   * @param savePasswds
+   */
+  @Override
+  public void exportData(File initFolder, boolean  savePasswds) {
   }
 
 }

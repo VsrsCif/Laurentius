@@ -37,17 +37,17 @@ import si.laurentius.commons.interfaces.SEDReportInterface;
 @TransactionManagement(TransactionManagementType.BEAN)
 public class SEDReportBean implements SEDReportInterface {
 
-  /**
-     *
-     */
-  @Resource
-  public UserTransaction mutUTransaction;
 
   /**
      *
      */
   @PersistenceContext(unitName = "ebMS_LAU_PU", name = "ebMS_LAU_PU")
   public EntityManager memEManager;
+  /**
+   *
+   */
+  @Resource
+  public UserTransaction mutUTransaction;
 
   /**
    *

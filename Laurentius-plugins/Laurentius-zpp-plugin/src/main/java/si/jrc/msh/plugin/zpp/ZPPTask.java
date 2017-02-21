@@ -12,7 +12,6 @@ import java.nio.file.StandardCopyOption;
 import java.security.KeyStore;
 import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
@@ -28,7 +27,6 @@ import si.laurentius.msh.inbox.mail.MSHInMail;
 import si.laurentius.msh.outbox.mail.MSHOutMail;
 import si.laurentius.msh.outbox.payload.MSHOutPart;
 import si.laurentius.msh.outbox.payload.MSHOutPayload;
-import si.laurentius.cert.SEDCertStore;
 import si.jrc.msh.plugin.zpp.doc.DocumentSodBuilder;
 import si.jrc.msh.plugin.zpp.exception.ZPPException;
 import si.jrc.msh.plugin.zpp.utils.FOPUtils;
@@ -259,45 +257,11 @@ public class ZPPTask implements TaskExecutionInterface {
               MimeConstants.MIME_PDF);
 
       // sign with receiver certificate 
-      SEDCertStore cs;
-      try {
-        cs = mCertBean.getCertificateStore();
-      } catch (SEDSecurityException ex) {
-        String msg = "Error opening keystore - check configuration!";
-        LOG.logError(l, msg, null);
-        throw new ZPPException(msg);
-      }
-      SEDCertificate aliasCrt = null;
-
-      if (cs == null) {
-        String msg = "Error opening keystore - Keystore is null!";
-        LOG.logError(l, msg, null);
-        throw new ZPPException(msg);
-      }
-
-      for (SEDCertificate c : cs.getSEDCertificates()) {
-        if (c.getAlias().equalsIgnoreCase(signAlias)) {
-          if (c.isKeyEntry()) {
-            aliasCrt = c;
-            break;
-          }
-        }
-      }
-
-      if (aliasCrt == null) {
-        String msg = String.format(
-                "Key for alias '%s' do not exists keystore! Check settings!",
-                signAlias);
-        LOG.logError(l, msg, null);
-        throw new ZPPException(msg);
-      }
-
-      if (!KeystoreUtils.isCertValid(aliasCrt)) {
-        String msg = "Key for alias '" + signAlias + " is not valid!";
-        LOG.logError(l, msg, null);
-        throw new ZPPException(msg);
-      }
-      signPDFDocument(cs, aliasCrt, fDNViz);
+     
+      PrivateKey pk = mCertBean.getPrivateKeyForAlias(signAlias);
+        X509Certificate xcert = mCertBean.getX509CertForAlias(signAlias);
+      
+      signPDFDocument(pk,xcert, fDNViz);
       // sign with systemCertificate
 
       mout.setMSHOutPayload(new MSHOutPayload());
@@ -314,7 +278,7 @@ public class ZPPTask implements TaskExecutionInterface {
       mDB.serializeOutMail(mout, "", "ZPPDeliveryPlugin", "");
       mDB.setStatusToInMail(mInMail, SEDInboxMailStatus.PREADY,
               "AdviceOfDelivery created and submitted to out queue");
-    } catch (StorageException ex) {
+    } catch (SEDSecurityException | StorageException ex) {
       String msg = ex.getMessage();
       LOG.logError(l, msg, ex);
       throw new ZPPException(msg);
@@ -330,34 +294,27 @@ public class ZPPTask implements TaskExecutionInterface {
   public FOPUtils getFOP() {
     if (mfpFop == null) {
       File fconf
-              = new File(System.getProperty(
-                      SEDSystemProperties.SYS_PROP_HOME_DIR) + File.separator
-                      + ZPPConstants.SVEV_FOLDER + File.separator + ZPPConstants.FOP_CONFIG_FILENAME);
+              = new File(SEDSystemProperties.getPluginsFolder(), 
+                      ZPPConstants.SVEV_FOLDER + File.separator + ZPPConstants.FOP_CONFIG_FILENAME);
 
       mfpFop
-              = new FOPUtils(fconf, System.getProperty(
-                      SEDSystemProperties.SYS_PROP_HOME_DIR)
+              = new FOPUtils(fconf, SEDSystemProperties.getPluginsFolder()
                       + File.separator + ZPPConstants.SVEV_FOLDER + File.separator
                       + ZPPConstants.XSLT_FOLDER);
     }
     return mfpFop;
   }
 
-  private void signPDFDocument(SEDCertStore sc, SEDCertificate scc, File f) {
+  private void signPDFDocument(PrivateKey pk, X509Certificate xcert, File f) {
     try {
       File ftmp = File.createTempFile("tmp_sign", ".pdf");
 
-      KeyStore ks = mkeyUtils.getKeystore(sc);
-      PrivateKey pk = (PrivateKey) mkeyUtils.getPrivateKeyForAlias(ks, scc.
-              getAlias(),
-              scc.getKeyPassword());
-      X509Certificate xcert = mkeyUtils.getTrustedCertForAlias(ks, scc.
-              getAlias());
+      
       SignUtils su = new SignUtils(pk, xcert);
       su.signPDF(f, ftmp, true);
       Files.move(ftmp.toPath(), f.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
-    } catch (IOException | SEDSecurityException ex) {
+    } catch (IOException ex) {
       Logger.getLogger(ZPPOutInterceptor.class
               .getName()).
               log(Level.SEVERE, null, ex);

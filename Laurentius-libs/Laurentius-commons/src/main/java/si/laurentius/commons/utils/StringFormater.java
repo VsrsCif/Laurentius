@@ -39,6 +39,64 @@ public class StringFormater {
 
   private static final int NORMAL = 0;
   private static final int SEEN_DOLLAR = 1;
+  /**
+   * Method is "borrowed" from org.jboss.util.StringPropertyReplacer; Go through the input string
+   * and replace any occurance of ${p} with the System.getProperty(p) value. If there is no such
+   * property p defined, then the ${p} is replaced with "".
+   *
+   *
+   * @param string - the string with possible ${} references
+   * @return the input string with all property references replaced if any. If there are no valid
+   * references the input string will be returned.
+   */
+  public static String replaceProperties(final String string) {
+    final char[] chars = string.toCharArray();
+    StringBuilder buffer = new StringBuilder();
+    boolean properties = false;
+    int state = NORMAL;
+    int start = 0;
+    for (int i = 0; i < chars.length; ++i) {
+      char c = chars[i];
+      
+      // Dollar sign outside brackets
+      if (c == '$' && state != IN_BRACKET) {
+        state = SEEN_DOLLAR;
+      } // Open bracket immediatley after dollar
+      else if (c == '{' && state == SEEN_DOLLAR) {
+        buffer.append(string.substring(start, i - 1));
+        state = IN_BRACKET;
+        start = i - 1;
+      } // No open bracket after dollar
+      else if (state == SEEN_DOLLAR) {
+        state = NORMAL;
+      } // Closed bracket after open bracket
+      else if (c == '}' && state == IN_BRACKET) {
+        // No content
+        if (start + 2 == i) {
+          buffer.append("${}"); // REVIEW: Correct?
+        } else // Collect the system property
+        {
+          String key = string.substring(start + 2, i);
+          properties = true;
+          buffer.append(getProperty(key,  ""));
+        }
+        start = i + 1;
+        state = NORMAL;
+      }
+    }
+    
+    // No properties
+    if (properties == false) {
+      return string;
+    }
+    
+    // Collect the trailing characters
+    if (start != chars.length) {
+      buffer.append(string.substring(start, chars.length));
+    }
+    // Done
+    return buffer.toString();
+  }
 
   
   /**
@@ -160,62 +218,4 @@ public class StringFormater {
 
   }
 
-  /**
-   * Method is "borrowed" from org.jboss.util.StringPropertyReplacer; Go through the input string
-   * and replace any occurance of ${p} with the System.getProperty(p) value. If there is no such
-   * property p defined, then the ${p} is replaced with "".
-   *
-   *
-   * @param string - the string with possible ${} references
-   * @return the input string with all property references replaced if any. If there are no valid
-   * references the input string will be returned.
-   */
-  public static String replaceProperties(final String string) {
-    final char[] chars = string.toCharArray();
-    StringBuilder buffer = new StringBuilder();
-    boolean properties = false;
-    int state = NORMAL;
-    int start = 0;
-    for (int i = 0; i < chars.length; ++i) {
-      char c = chars[i];
-
-      // Dollar sign outside brackets
-      if (c == '$' && state != IN_BRACKET) {
-        state = SEEN_DOLLAR;
-      } // Open bracket immediatley after dollar
-      else if (c == '{' && state == SEEN_DOLLAR) {
-        buffer.append(string.substring(start, i - 1));
-        state = IN_BRACKET;
-        start = i - 1;
-      } // No open bracket after dollar
-      else if (state == SEEN_DOLLAR) {
-        state = NORMAL;
-      } // Closed bracket after open bracket
-      else if (c == '}' && state == IN_BRACKET) {
-        // No content
-        if (start + 2 == i) {
-          buffer.append("${}"); // REVIEW: Correct?
-        } else // Collect the system property
-        {
-          String key = string.substring(start + 2, i);
-          properties = true;
-          buffer.append(getProperty(key,  ""));
-        }
-        start = i + 1;
-        state = NORMAL;
-      }
-    }
-
-    // No properties
-    if (properties == false) {
-      return string;
-    }
-
-    // Collect the trailing characters
-    if (start != chars.length) {
-      buffer.append(string.substring(start, chars.length));
-    }
-    // Done
-    return buffer.toString();
-  }
 }

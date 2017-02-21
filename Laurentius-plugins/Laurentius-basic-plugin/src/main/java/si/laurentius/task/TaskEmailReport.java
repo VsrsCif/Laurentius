@@ -33,33 +33,33 @@ public abstract class TaskEmailReport implements TaskExecutionInterface
   /**
      *
      */
-  public static String KEY_EMAIL_FROM = "email.from";
+  public static final String KEY_EMAIL_FROM = "email.from";
 
   /**
      *
      */
-  public static String KEY_EMAIL_SUBJECT = "email.subject";
+  public static final  String KEY_EMAIL_SUBJECT = "email.subject";
 
   /**
      *
      */
-  public static String KEY_EMAIL_TO = "email.to";
+  public static final  String KEY_EMAIL_TO = "email.to";
 
   /**
      *
      */
-  public static String KEY_MAIL_CONFIG_JNDI = "mail.config.jndi";
+  public static final  String KEY_MAIL_CONFIG_JNDI = "mail.config.jndi";
 
   /**
      *
      */
-  public static String KEY_SEDBOX = "sedbox";
+  public static final  String KEY_SEDBOX = "sedbox";
 
   /**
      *
      */
   protected static final SEDLogger LOG = new SEDLogger(TaskEmailStatusReport.class);
-  static final SimpleDateFormat SDF_DD_MM_YYY_HH_MI = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+  final SimpleDateFormat SDF_DD_MM_YYY_HH_MI = new SimpleDateFormat("dd.MM.yyyy HH:mm");
   @EJB(mappedName = SEDJNDI.JNDI_SEDDAO)
   SEDDaoInterface mdao;
   @EJB(mappedName = SEDJNDI.JNDI_SEDREPORTS)

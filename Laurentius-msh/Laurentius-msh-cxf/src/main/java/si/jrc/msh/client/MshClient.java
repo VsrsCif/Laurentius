@@ -21,7 +21,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.security.cert.X509Certificate;
 import java.util.List;
-import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.TrustManager;
 import javax.xml.namespace.QName;
@@ -47,8 +48,6 @@ import si.laurentius.msh.outbox.mail.MSHOutMail;
 import si.laurentius.msh.pmode.PartyIdentitySet;
 import si.laurentius.msh.pmode.Protocol;
 
-import si.laurentius.cert.SEDCertStore;
-import si.laurentius.cert.SEDCertificate;
 import si.jrc.msh.exception.EBMSError;
 import si.jrc.msh.exception.EBMSErrorCode;
 import si.jrc.msh.interceptor.EBMSInFaultInterceptor;
@@ -67,6 +66,7 @@ import si.laurentius.commons.MimeValues;
 import si.laurentius.commons.cxf.SoapUtils;
 import si.laurentius.commons.exception.SEDSecurityException;
 import si.laurentius.commons.exception.StorageException;
+import si.laurentius.commons.interfaces.SEDCertStoreInterface;
 import si.laurentius.commons.pmode.EBMSMessageContext;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StorageUtils;
@@ -102,27 +102,29 @@ public class MshClient {
    *
    * @param messageId
    * @param protocol: transport definition object frompmode
-   * @param scs
+   * @param sec
    * @return Dispatch client for submitting message
    * @throws si.jrc.msh.exception.EBMSError (Error creating client)
    */
   public Dispatch<SOAPMessage> createClient(final String messageId,
-      final PartyIdentitySet.TransportProtocol protocol, SEDCertStore scs, SEDCertStore rootCerts)
-      throws EBMSError {
+          final PartyIdentitySet.TransportProtocol protocol,
+          SEDCertStoreInterface sec)
+          throws EBMSError {
 
     if (protocol == null) {
       throw new EBMSError(EBMSErrorCode.PModeConfigurationError, messageId,
-          "Missing protocol!", SoapFault.FAULT_CODE_CLIENT);
+              "Missing protocol!", SoapFault.FAULT_CODE_CLIENT);
     }
 
     if (protocol.getAddress() == null) {
       throw new EBMSError(EBMSErrorCode.PModeConfigurationError, messageId,
-          "Missing Address element!", SoapFault.FAULT_CODE_CLIENT);
+              "Missing Address element!", SoapFault.FAULT_CODE_CLIENT);
     }
-    if (protocol.getAddress().getValue() == null ||
-        protocol.getAddress().getValue().trim().isEmpty()) {
-      throw new EBMSError(EBMSErrorCode.PModeConfigurationError, messageId, "Empty address!",
-          SoapFault.FAULT_CODE_CLIENT);
+    if (protocol.getAddress().getValue() == null
+            || protocol.getAddress().getValue().trim().isEmpty()) {
+      throw new EBMSError(EBMSErrorCode.PModeConfigurationError, messageId,
+              "Empty address!",
+              SoapFault.FAULT_CODE_CLIENT);
     }
 
     // --------------------------------------------------------------------
@@ -134,13 +136,12 @@ public class MshClient {
     s.addPort(portName1, SOAPBinding.SOAP12HTTP_MTOM_BINDING, url);
     MTOMFeature mtomFt = new MTOMFeature(true);
 
-    Dispatch<SOAPMessage> dispSOAPMsg =
-        s.createDispatch(portName1, SOAPMessage.class, Service.Mode.MESSAGE, mtomFt);
+    Dispatch<SOAPMessage> dispSOAPMsg
+            = s.createDispatch(portName1, SOAPMessage.class,
+                    Service.Mode.MESSAGE, mtomFt);
     DispatchImpl dimpl = (org.apache.cxf.jaxws.DispatchImpl) dispSOAPMsg;
     SOAPBinding sb = (SOAPBinding) dispSOAPMsg.getBinding();
     sb.setMTOMEnabled(true);
-    
-    
 
     // --------------------------------------------------------------------
     // configure interceptors (log, ebms and plugin interceptors)
@@ -160,40 +161,48 @@ public class MshClient {
     cxfClient.getOutFaultInterceptors().add(new EBMSOutFaultInterceptor());
     cxfClient.getOutFaultInterceptors().add(new MSHPluginOutFaultInterceptor());
 
+    // test smtp
     if (url.startsWith("smtp://")) {
       Bus bus = dimpl.getClient().getBus();
-      ConduitInitiatorManager extension = bus.getExtension(ConduitInitiatorManager.class);
-      extension.registerConduitInitiator("http://schemas.xmlsoap.org/soap/http", new SMTPTransportFactory());
-      SMTPConduit smtp = (SMTPConduit) cxfClient.getConduit();    
+      ConduitInitiatorManager extension = bus.getExtension(
+              ConduitInitiatorManager.class);
+      extension.registerConduitInitiator("http://schemas.xmlsoap.org/soap/http",
+              new SMTPTransportFactory());
+      SMTPConduit smtp = (SMTPConduit) cxfClient.getConduit();
       smtp.setSetJNDISession("java:jboss/mail/Default");
-      
     } else {
       HTTPConduit http = (HTTPConduit) cxfClient.getConduit();
       // --------------------------------------------------------------------
       // set TLS
       if (protocol.getTLS() != null) {
-        setupTLS(messageId, http, protocol.getTLS(), scs, rootCerts);
+        setupTLS(messageId, http, protocol.getTLS(), sec);
       }
       // --------------------------------------------------------------------
       // set http client policy
       HTTPClientPolicy httpClientPolicy = new HTTPClientPolicy();
-      if (protocol.getProxy() != null && !Utils.isEmptyString(protocol.getProxy().getHost())) {
+      if (protocol.getProxy() != null && !Utils.isEmptyString(protocol.
+              getProxy().getHost())) {
         httpClientPolicy.setProxyServer(protocol.getProxy().getHost());
         if (protocol.getProxy().getPort() != null) {
           httpClientPolicy.setProxyServerPort(protocol.getProxy().getPort());
         }
-        httpClientPolicy.setProxyServerType(Utils.isEmptyString(protocol.getProxy().getType()) ?
-            ProxyServerType.HTTP :
-            protocol.getProxy().getType().equalsIgnoreCase("SOCKS") ?
-            ProxyServerType.SOCKS : ProxyServerType.HTTP);
+        httpClientPolicy.setProxyServerType(Utils.isEmptyString(protocol.
+                getProxy().getType())
+                        ? ProxyServerType.HTTP
+                        : protocol.getProxy().getType().
+                                equalsIgnoreCase("SOCKS")
+                        ? ProxyServerType.SOCKS : ProxyServerType.HTTP);
       }
 
-      httpClientPolicy.setConnectionTimeout(protocol.getAddress().getConnectionTimeout() != null ?
-          protocol.getAddress().getConnectionTimeout() : 120000);
-      httpClientPolicy.setReceiveTimeout(protocol.getAddress().getReceiveTimeout() != null ?
-          protocol.getAddress().getReceiveTimeout() : 120000);
-      httpClientPolicy.setAllowChunking(protocol.getAddress().getChunked() != null ?
-          protocol.getAddress().getChunked() : false);
+      httpClientPolicy.setConnectionTimeout(protocol.getAddress().
+              getConnectionTimeout() != null
+                      ? protocol.getAddress().getConnectionTimeout() : 120000);
+      httpClientPolicy.setReceiveTimeout(protocol.getAddress().
+              getReceiveTimeout() != null
+                      ? protocol.getAddress().getReceiveTimeout() : 120000);
+      httpClientPolicy.setAllowChunking(
+              protocol.getAddress().getChunked() != null
+              ? protocol.getAddress().getChunked() : false);
 
       // set http Policy
       http.setClient(httpClientPolicy);
@@ -206,11 +215,11 @@ public class MshClient {
    *
    * @param mail
    * @param ebms
-   * @param scs
+   * @param sec
    * @return
    */
-  public Result pushMessage(MSHOutMail mail, EBMSMessageContext ebms, SEDCertStore scs,
-      SEDCertStore rootCACerts) {
+  public Result pushMessage(MSHOutMail mail, EBMSMessageContext ebms,
+          SEDCertStoreInterface sec) {
 
     long l = LOG.logStart(mail);
     Result r = new Result();
@@ -218,27 +227,31 @@ public class MshClient {
     Dispatch<SOAPMessage> client = null;
     try {
 
-      client = createClient(mail.getMessageId(), ebms.getTransportProtocol(), scs, rootCACerts);
+      client = createClient(mail.getMessageId(), ebms.getTransportProtocol(),
+              sec);
 
       // set context parameters!
       SoapUtils.setEBMSMessageOutContext(ebms, client);
       SoapUtils.setMSHOutnMail(mail, client);
 
       // create empty soap mesage
-      MessageFactory mf = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
+      MessageFactory mf = MessageFactory.newInstance(
+              SOAPConstants.SOAP_1_2_PROTOCOL);
       SOAPMessage soapReq = mf.createMessage();
 
       long st = LOG.getTime();
       LOG.formatedlog("Start submiting mail %s", mail.getMessageId());
       SOAPMessage soapRes = client.invoke(soapReq);
-      
+
       r.setResult(soapRes);
-      LOG.formatedlog("Submit mail %s in ( %d ms).", mail.getMessageId(), (LOG.getTime() - st));
+      LOG.formatedlog("Submit mail %s in ( %d ms).", mail.getMessageId(), (LOG.
+              getTime() - st));
 
       if (soapRes != null) {
         File file;
         try {
-          file = StorageUtils.getNewStorageFile(MimeValues.MIME_XML.getSuffix(), "RSP_");
+          file = StorageUtils.getNewStorageFile(MimeValues.MIME_XML.getSuffix(),
+                  "RSP_");
           try (FileOutputStream fos = new FileOutputStream(file)) {
             soapRes.writeTo(fos);
             String respFilePath = StorageUtils.getRelativePath(file);
@@ -258,13 +271,17 @@ public class MshClient {
       Throwable initCause = Utils.getInitCause(ex);
 
       if (client != null && client.getResponseContext().containsKey(key)) {
-        r.setError(new EBMSError(EBMSErrorCode.ApplicationError, mail.getMessageId(),
-            "Soap fault error: " + ex.getMessage(), ex, SoapFault.FAULT_CODE_CLIENT));
+        r.setError(new EBMSError(EBMSErrorCode.ApplicationError, mail.
+                getMessageId(),
+                "Soap fault error: " + ex.getMessage(), ex,
+                SoapFault.FAULT_CODE_CLIENT));
 
-        W3CDOMStreamWriter wr = (W3CDOMStreamWriter) client.getResponseContext().get(key);
+        W3CDOMStreamWriter wr = (W3CDOMStreamWriter) client.getResponseContext().
+                get(key);
 
         try {
-          File file = StorageUtils.getNewStorageFile(MimeValues.MIME_XML.getSuffix(), "ERR_");
+          File file = StorageUtils.getNewStorageFile(MimeValues.MIME_XML.
+                  getSuffix(), "ERR_");
           try (FileWriter fileWriter = new FileWriter(file)) {
             fileWriter.write(wr.toString());
             //  wr.getDocument().
@@ -280,8 +297,10 @@ public class MshClient {
       } else if (initCause instanceof EBMSError) {
         r.setError((EBMSError) initCause);
       } else {
-        r.setError(new EBMSError(EBMSErrorCode.DeliveryFailure, mail.getMessageId(),
-            "HTTP error: " + Utils.getInitCauseMessage(ex), ex, SoapFault.FAULT_CODE_CLIENT));
+        r.setError(new EBMSError(EBMSErrorCode.DeliveryFailure, mail.
+                getMessageId(),
+                "HTTP error: " + Utils.getInitCauseMessage(ex), ex,
+                SoapFault.FAULT_CODE_CLIENT));
         try {
           String res = msStorageUtils.storeThrowableAndGetRelativePath(ex);
           r.setMimeType(MimeValues.MIME_TXT.getMimeType());
@@ -298,8 +317,10 @@ public class MshClient {
       } catch (StorageException ex1) {
         LOG.logError(l, "ERROR saving saop fault to file!", ex);
       }
-      r.setError(new EBMSError(EBMSErrorCode.ApplicationError, mail.getMessageId(),
-          "Error occured while creating soap message!", ex, SoapFault.FAULT_CODE_CLIENT));
+      r.setError(new EBMSError(EBMSErrorCode.ApplicationError, mail.
+              getMessageId(),
+              "Error occured while creating soap message!", ex,
+              SoapFault.FAULT_CODE_CLIENT));
     } catch (EBMSError ex) {
       try {
         String res = msStorageUtils.storeThrowableAndGetRelativePath(ex);
@@ -317,8 +338,9 @@ public class MshClient {
       } catch (StorageException ex1) {
         LOG.logError(l, "Unexpected error!", ex);
       }
-      r.setError(new EBMSError(EBMSErrorCode.ApplicationError, mail.getMessageId(),
-          "Unexpected error!", ex, SoapFault.FAULT_CODE_CLIENT));
+      r.setError(new EBMSError(EBMSErrorCode.ApplicationError, mail.
+              getMessageId(),
+              "Unexpected error!", ex, SoapFault.FAULT_CODE_CLIENT));
     }
 
     LOG.logEnd(l);
@@ -334,80 +356,55 @@ public class MshClient {
    * @throws IOException
    * @throws SEDSecurityException
    */
-  private void setupTLS(String messageId, HTTPConduit httpConduit, Protocol.TLS tls,
-      SEDCertStore scs, SEDCertStore rootCACerts) {
+  private void setupTLS(String messageId, HTTPConduit httpConduit,
+          Protocol.TLS tls, SEDCertStoreInterface sec) {
     TLSClientParameters tlsCP = null;
-
+    // create 
     String serverTrustAlias = tls.getServerTrustCertAlias();
     String keyAlias = tls.getClientKeyAlias();
-    LOG.formatedWarning("SET TLS : keyalias %s , cert alias %s", keyAlias, serverTrustAlias);
-    List<X509Certificate> lstRootCAS = null;
-
-    // set client's key cert for mutual identification
-    if (!Utils.isEmptyString(keyAlias)) {
-      keyAlias = keyAlias.trim();
-      if (scs == null) {
-        String msg = String.format("(Message: %s) Keystore for alias '%s' not exists!", messageId,
-            keyAlias);
-        throw new EBMSError(EBMSErrorCode.PModeConfigurationError, messageId,
-            msg, SoapFault.FAULT_CODE_CLIENT);
-      }
-      SEDCertificate aliasKey = null;
-      for (SEDCertificate c : scs.getSEDCertificates()) {
-        if (Objects.equals(c.getAlias(), keyAlias) && c.isKeyEntry()) {
-          aliasKey = c;
-          break;
-
-        }
-      }
-
-      if (aliasKey == null) {
-        String msg = String.format(
-            "(Message: %s) Key for alias: '%s' do not exist in keystore!", messageId, keyAlias);
-        throw new EBMSError(EBMSErrorCode.PModeConfigurationError, messageId,
-            msg, SoapFault.FAULT_CODE_CLIENT);
-      }
-
-      //get key managers
-      KeyManager[] myKeyManagers;
-      try {
-        myKeyManagers = mKSUtis.getKeyManagersForAlias(scs, keyAlias);
-      } catch (SEDSecurityException ex) {
-        String msg = String.format("(Message: %s) Error occured while creating KeyManagers for " +
-            "alias: '%s'! Error: ", messageId, keyAlias, ex.getMessage());
-        throw new EBMSError(EBMSErrorCode.PModeConfigurationError, messageId,
-            msg, ex, SoapFault.FAULT_CODE_CLIENT);
-      }
-      tlsCP = new TLSClientParameters();
-      tlsCP.setKeyManagers(myKeyManagers);
-    }
+    LOG.formatedWarning("SET TLS : keyalias %s , cert alias %s", keyAlias,
+            serverTrustAlias);
 
     // set trustore cert
     if (!Utils.isEmptyString(serverTrustAlias)) {
+      tlsCP = new TLSClientParameters();
       serverTrustAlias = serverTrustAlias.trim();
       try {
-        if (lstRootCAS == null) {
-          lstRootCAS = mKSUtis.getTrustedCertsFromKeystore(rootCACerts);
-        }
-        LOG.formatedWarning("Get certiticate: %s from keystore", serverTrustAlias, scs.getName());
-        X509Certificate expectedCert = mKSUtis.getTrustedCertForAlias(scs, serverTrustAlias);
-        TrustManager[] trustStoreManagers = new TrustManager[]{new X509TrustManagerForAlias(
-          expectedCert, lstRootCAS)};
-        tlsCP = tlsCP == null ? new TLSClientParameters() : tlsCP;
+        TrustManager[] trustStoreManagers = new TrustManager[]{sec.
+          getTrustManagerForAlias(serverTrustAlias, true)};
+
         tlsCP.setTrustManagers(trustStoreManagers);
-        tlsCP.setDisableCNCheck(tls.getDisableCNAndHostnameCheck() != null &&
-            tls.getDisableCNAndHostnameCheck());
+        tlsCP.setDisableCNCheck(tls.getDisableCNAndHostnameCheck() != null
+                && tls.getDisableCNAndHostnameCheck());
+
       } catch (SEDSecurityException ex) {
-        String msg = String.format("(Message: %s) Error occured while creating TrustManagers for " +
-            "truststore '%s'! Error: ", messageId, serverTrustAlias, ex.getMessage());
+        String msg = String.format(
+                "(Message: %s) Error occured while creating TrustManagers for "
+                + "truststore '%s'! Error: ", messageId, serverTrustAlias, ex.
+                        getMessage());
         throw new EBMSError(EBMSErrorCode.PModeConfigurationError, messageId,
-            msg, ex, SoapFault.FAULT_CODE_CLIENT);
+                msg, ex, SoapFault.FAULT_CODE_CLIENT);
       }
 
-    }
+      // set client's key cert for mutual identification
+      if (!Utils.isEmptyString(keyAlias)) {
+        keyAlias = keyAlias.trim();
 
-    if (tlsCP != null) {
-      LOG.log("\t TLS is setted:");
+        //get key managers
+        KeyManager[] myKeyManagers;
+        try {
+          myKeyManagers = sec.getKeyManagerForAlias(keyAlias);
+        } catch (SEDSecurityException ex) {
+          String msg = String.format(
+                  "(Message: %s) Error occured while creating KeyManagers for "
+                  + "truststore '%s'! Error: ", messageId, serverTrustAlias, ex.
+                          getMessage());
+          throw new EBMSError(EBMSErrorCode.PModeConfigurationError, messageId,
+                  msg, ex, SoapFault.FAULT_CODE_CLIENT);
+        }
+
+        tlsCP.setKeyManagers(myKeyManagers);
+      }
       httpConduit.setTlsClientParameters(tlsCP);
     }
   }

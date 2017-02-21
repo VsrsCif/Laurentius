@@ -28,7 +28,7 @@ import si.laurentius.commons.interfaces.SEDPluginManagerInterface;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.Utils;
 import si.laurentius.msh.web.abst.AbstractAdminJSFView;
-import si.laurentius.msh.web.gui.DialogDelete;
+import si.laurentius.msh.web.gui.dlg.DialogDelete;
 import si.laurentius.plugin.def.Plugin;
 import si.laurentius.plugin.processor.InMailProcessorDef;
 import si.laurentius.process.SEDProcessorInstance;
@@ -52,17 +52,7 @@ public class AdminSEDInMailProcessSetView extends AbstractAdminJSFView<SEDProces
   private SEDPluginManagerInterface mPlgManager;
 
   SEDProcessorInstance selectedSPI = null;
-   @ManagedProperty(value = "#{dialogDelete}")
-  private DialogDelete dlgDelete;
 
-  @Override
-  public DialogDelete getDlgDelete() {
-    return dlgDelete;
-  }
-  @Override
-  public  void setDlgDelete(DialogDelete dlg){
-    dlgDelete = dlg;
-  }
   @Override
   public boolean validateData() {
 

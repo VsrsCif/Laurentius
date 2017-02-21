@@ -28,9 +28,9 @@ import javax.faces.context.FacesContext;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import si.laurentius.user.SEDUser;
 import si.laurentius.commons.SEDGUIConstants;
 import si.laurentius.commons.utils.SEDLogger;
+import si.laurentius.user.SEDUser;
 
 /**
  *

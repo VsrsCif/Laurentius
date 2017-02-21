@@ -48,30 +48,23 @@ public class SEDPluginManager implements SEDPluginManagerInterface {
   /**
    *
    */
-  protected static SEDLogger LOG = new SEDLogger(SEDPluginManager.class);
+  protected static final SEDLogger LOG = new SEDLogger(SEDPluginManager.class);
 
   List<Plugin> mlstRegistredPlugins = new ArrayList<>();
-
   @Override
-  public List<Plugin> getRegistredPlugins() {
-    return mlstRegistredPlugins;
-  }
-
-  @Override
-  @Lock(LockType.WRITE)
-  public void registerPlugin(Plugin pdi) {
-    mlstRegistredPlugins.add(pdi);
-  }
-
-  @Override
-  public Plugin getPluginByType(String type) {
-    for (Plugin plg : mlstRegistredPlugins) {
-      if (Objects.equals(plg.getType(), type)) {
-        return plg;
+  public CronTaskDef getCronTaskDef(String plugin, String task) {
+    Plugin plg = getPluginByType(plugin);
+    if (plg != null && !plg.getCronTaskDeves().isEmpty()) {
+      for (CronTaskDef ctd : plg.getCronTaskDeves()) {
+        if (Objects.equals(ctd.getType(), task)) {
+          return ctd;
+        }
       }
     }
     return null;
+    
   }
+
 
   @Override
   public List<CronTaskDef> getCronTasksForPlugin(String plugin) {
@@ -82,6 +75,19 @@ public class SEDPluginManager implements SEDPluginManagerInterface {
       }
     }
     return Collections.emptyList();
+  }
+  @Override
+  public InMailProcessorDef getInMailProcessor(String plugin, String task) {
+    Plugin plg = getPluginByType(plugin);
+    if (plg != null && !plg.getInMailProcessorDeves().isEmpty()) {
+      for (InMailProcessorDef ctd : plg.getInMailProcessorDeves()) {
+        if (Objects.equals(ctd.getType(), task)) {
+          return ctd;
+        }
+      }
+    }
+    return null;
+    
   }
 
   @Override
@@ -136,33 +142,25 @@ public class SEDPluginManager implements SEDPluginManagerInterface {
     }
     return Collections.emptyList();
   }
-
   @Override
-  public CronTaskDef getCronTaskDef(String plugin, String task) {
-    Plugin plg = getPluginByType(plugin);
-    if (plg != null && !plg.getCronTaskDeves().isEmpty()) {
-      for (CronTaskDef ctd : plg.getCronTaskDeves()) {
-        if (Objects.equals(ctd.getType(), task)) {
-          return ctd;
-        }
+  public Plugin getPluginByType(String type) {
+    for (Plugin plg : mlstRegistredPlugins) {
+      if (Objects.equals(plg.getType(), type)) {
+        return plg;
       }
     }
     return null;
-
   }
-
   @Override
-  public InMailProcessorDef getInMailProcessor(String plugin, String task) {
-    Plugin plg = getPluginByType(plugin);
-    if (plg != null && !plg.getInMailProcessorDeves().isEmpty()) {
-      for (InMailProcessorDef ctd : plg.getInMailProcessorDeves()) {
-        if (Objects.equals(ctd.getType(), task)) {
-          return ctd;
-        }
-      }
-    }
-    return null;
-
+  public List<Plugin> getRegistredPlugins() {
+    return mlstRegistredPlugins;
+  }
+  
+  
+  @Override
+  @Lock(LockType.WRITE)
+  public void registerPlugin(Plugin pdi) {
+    mlstRegistredPlugins.add(pdi);
   }
 
 }

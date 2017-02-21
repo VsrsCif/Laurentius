@@ -51,6 +51,7 @@ public class BasicWebPluginData {
 
   @Resource
   WebServiceContext context;
+  String currentPanel  =AppConstant.S_PANEL_IMP_EXPORT;
 
   @ManagedProperty(value = "#{loginManager}")
   private LoginManager loginManager;
@@ -59,7 +60,8 @@ public class BasicWebPluginData {
   SEDLookupsInterface mDBLookUp;
   
  
-  String currentPanel  =AppConstant.S_PANEL_IMP_EXPORT;
+  
+  boolean showNavigator  =true;
   /**
    *
    * @return
@@ -68,48 +70,6 @@ public class BasicWebPluginData {
     return facesContext().getExternalContext();
   }
 
-  /**
-   *
-   * @return
-   */
-  public SEDUser getUser() {
-    long l = LOG.logStart();
-
-    ExternalContext externalContext = facesContext().getExternalContext();
-    SEDUser su =
-        (SEDUser) externalContext.getSessionMap().get(SEDGUIConstants.SESSION_USER_VARIABLE_NAME);
-    if (su == null) {
-      Principal principal = facesContext().getExternalContext().getUserPrincipal();
-      if (principal != null) {
-        LOG.formatedlog("User principal is %s", principal.getName());
-        su = mDBLookUp.getSEDUserByUserId(principal.getName());
-        externalContext.getSessionMap().put(SEDGUIConstants.SESSION_USER_VARIABLE_NAME, su);
-
-      } else {
-        LOG.log("Principal is NULL");
-      }
-    }
-    return su;
-  }
-
-  public List<String> getUserEBoxes() {
-    List<String> lst = new ArrayList<>();
-    SEDUser usr = getUser();
-    if (usr != null) {
-      getUser().getSEDBoxes().stream().forEach((sb) -> {
-        lst.add(sb.getLocalBoxName());
-      });
-    }
-    return lst;
-  }
-
-  /**
-   *
-   * @return
-   */
-  public String getLocalDomain() {
-    return System.getProperty(SEDSystemProperties.S_PROP_LAU_DOMAIN);
-  }
 
   /**
    *
@@ -147,13 +107,56 @@ public class BasicWebPluginData {
   public String getClientIP() {
     return ((HttpServletRequest) externalContext().getRequest()).getRemoteAddr();
   }
+  public String getCurrentPanel() {
+    return currentPanel;
+  }
+  /**
+   *
+   * @return
+   */
+  public String getLocalDomain() {
+    return System.getProperty(SEDSystemProperties.SYS_PROP_LAU_DOMAIN);
+  }
 
   public LoginManager getLoginManager() {
     return loginManager;
   }
-
-  public void setLoginManager(LoginManager loginManager) {
-    this.loginManager = loginManager;
+  /**
+   *
+   * @return
+   */
+  public SEDUser getUser() {
+    long l = LOG.logStart();
+    
+    ExternalContext externalContext = facesContext().getExternalContext();
+    SEDUser su =
+            (SEDUser) externalContext.getSessionMap().get(SEDGUIConstants.SESSION_USER_VARIABLE_NAME);
+    if (su == null) {
+      Principal principal = facesContext().getExternalContext().getUserPrincipal();
+      if (principal != null) {
+        LOG.formatedlog("User principal is %s", principal.getName());
+        su = mDBLookUp.getSEDUserByUserId(principal.getName());
+        externalContext.getSessionMap().put(SEDGUIConstants.SESSION_USER_VARIABLE_NAME, su);
+        
+      } else {
+        LOG.log("Principal is NULL");
+      }
+    }
+    LOG.logEnd(l, su);
+    return su;
+  }
+  public List<String> getUserEBoxes() {
+    List<String> lst = new ArrayList<>();
+    SEDUser usr = getUser();
+    if (usr != null) {
+      getUser().getSEDBoxes().stream().forEach((sb) -> {
+        lst.add(sb.getLocalBoxName());
+      });
+    }
+    return lst;
+  }
+  public boolean isShowNavigator() {
+    return showNavigator;
   }
 
   public boolean isUserLocalBox(String locbox) {
@@ -178,12 +181,15 @@ public class BasicWebPluginData {
   }
 
   
-  public String getCurrentPanel() {
-    return currentPanel;
-  }
 
   public void setCurrentPanel(String currentPanel) {
     this.currentPanel = currentPanel;
+  }
+  public void setLoginManager(LoginManager loginManager) {
+    this.loginManager = loginManager;
+  }
+  public void setShowNavigator(boolean showNavigator) {
+    this.showNavigator = showNavigator;
   }
 
 

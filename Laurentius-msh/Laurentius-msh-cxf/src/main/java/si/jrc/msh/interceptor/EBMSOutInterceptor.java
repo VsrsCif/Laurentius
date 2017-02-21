@@ -14,8 +14,6 @@
  */
 package si.jrc.msh.interceptor;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.UUID;
@@ -53,7 +51,6 @@ import si.laurentius.commons.cxf.SoapUtils;
 import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.utils.GZIPUtil;
 import si.laurentius.commons.utils.SEDLogger;
-import si.laurentius.commons.utils.StorageUtils;
 import si.laurentius.commons.pmode.EBMSMessageContext;
 import si.laurentius.commons.utils.Utils;
 

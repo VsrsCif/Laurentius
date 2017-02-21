@@ -25,21 +25,6 @@ private static final SEDLogger LOG = new SEDLogger(AbstractAdminJSFView.class);
   private T mtSelected;
 
   
-    /**
-     *
-     * @return
-     */
-    protected ExternalContext externalContext() {
-        return facesContext().getExternalContext();
-    }
-
-    /**
-     *
-     * @return
-     */
-    protected FacesContext facesContext() {
-        return FacesContext.getCurrentInstance();
-    }
 
     protected void addError(String desc) {
         facesContext().addMessage(null,
@@ -47,14 +32,6 @@ private static final SEDLogger LOG = new SEDLogger(AbstractAdminJSFView.class);
                         desc));
     }
 
-    /**
-     *
-     * @return
-     */
-    public String getClientIP() {
-        return ((HttpServletRequest) externalContext().getRequest()).
-                getRemoteAddr();
-    }
 
   /**
    *
@@ -76,12 +53,33 @@ private static final SEDLogger LOG = new SEDLogger(AbstractAdminJSFView.class);
     LOG.logEnd(l);
   }
 
-  abstract public boolean validateData();
 
   /**
    *
    */
   abstract public void createEditable();
+  /**
+   *
+   * @return
+   */
+  protected ExternalContext externalContext() {
+    return facesContext().getExternalContext();
+  }
+  /**
+   *
+   * @return
+   */
+  protected FacesContext facesContext() {
+    return FacesContext.getCurrentInstance();
+  }
+  /**
+   *
+   * @return
+   */
+  public String getClientIP() {
+    return ((HttpServletRequest) externalContext().getRequest()).
+            getRemoteAddr();
+  }
 
   /**
    *
@@ -175,5 +173,6 @@ private static final SEDLogger LOG = new SEDLogger(AbstractAdminJSFView.class);
    * @return 
    */
   abstract public boolean updateEditable();
+  abstract public boolean validateData();
 
 }

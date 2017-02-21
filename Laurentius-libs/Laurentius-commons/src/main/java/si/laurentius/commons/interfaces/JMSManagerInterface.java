@@ -47,4 +47,6 @@ public interface JMSManagerInterface {
    */
   boolean exportInMail(long biInMailId)
       throws NamingException, JMSException;
+  
+   int getMessageCountInQueue() throws NamingException, JMSException;
 }

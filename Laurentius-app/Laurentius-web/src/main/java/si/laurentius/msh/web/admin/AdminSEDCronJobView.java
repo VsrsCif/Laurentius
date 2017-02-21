@@ -27,9 +27,7 @@ import javax.ejb.ScheduleExpression;
 import javax.ejb.Timer;
 import javax.ejb.TimerConfig;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
-import si.laurentius.cert.SEDCertStore;
 import si.laurentius.commons.SEDInboxMailStatus;
 import si.laurentius.cron.SEDCronJob;
 import si.laurentius.cron.SEDTask;
@@ -45,7 +43,6 @@ import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.Utils;
 import si.laurentius.ebox.SEDBox;
 import si.laurentius.msh.web.abst.AbstractAdminJSFView;
-import si.laurentius.msh.web.gui.DialogDelete;
 import si.laurentius.plugin.crontask.CronTaskDef;
 import si.laurentius.plugin.crontask.CronTaskPropertyDef;
 import si.laurentius.plugin.def.Plugin;
@@ -64,6 +61,9 @@ public class AdminSEDCronJobView extends AbstractAdminJSFView<SEDCronJob> {
   @EJB(mappedName = SEDJNDI.JNDI_SEDLOOKUPS)
   private SEDLookupsInterface mdbLookups;
 
+  @EJB(mappedName = SEDJNDI.JNDI_DBCERTSTORE)
+  private SEDCertStoreInterface mdbCertStore;
+
   @EJB(mappedName = SEDJNDI.JNDI_SEDSCHEDLER)
   private SEDSchedulerInterface mshScheduler;
 
@@ -71,17 +71,8 @@ public class AdminSEDCronJobView extends AbstractAdminJSFView<SEDCronJob> {
   private SEDPluginManagerInterface mPlgManager;
 
   TaskPropertyModel mtpmPropertyModel = new TaskPropertyModel();
-   @ManagedProperty(value = "#{dialogDelete}")
-  private DialogDelete dlgDelete;
 
-  @Override
-  public DialogDelete getDlgDelete() {
-    return dlgDelete;
-  }
-  @Override
-  public  void setDlgDelete(DialogDelete dlg){
-    dlgDelete = dlg;
-  }
+
   /**
    *
    * @param id
@@ -439,20 +430,11 @@ public class AdminSEDCronJobView extends AbstractAdminJSFView<SEDCronJob> {
         });
       } else if (lst.
               equalsIgnoreCase(PropertyListType.KeystoreCertAll.getType())) {
-        SEDCertStore scs = mdbLookups.getSEDCertStoreByName(
-                SEDCertStoreInterface.KEYSTORE_NAME);
-        scs.getSEDCertificates().forEach(sb -> {
-          lstArr.add(sb.getAlias());
-        });
+        lstArr.addAll(mdbCertStore.getKeystoreAliases(false));
       } else if (lst.equalsIgnoreCase(PropertyListType.KeystoreCertKeys.
               getType())) {
-        SEDCertStore scs = mdbLookups.getSEDCertStoreByName(
-                SEDCertStoreInterface.KEYSTORE_NAME);
-        scs.getSEDCertificates().forEach(sb -> {
-          if (sb.isKeyEntry()) {
-            lstArr.add(sb.getAlias());
-          }
-        });
+        lstArr.addAll(mdbCertStore.getKeystoreAliases(true));
+
       } else if (lst.equalsIgnoreCase(PropertyListType.InMailStatus.getType())) {
         for (SEDInboxMailStatus st : SEDInboxMailStatus.values()) {
           lstArr.add(st.getValue());

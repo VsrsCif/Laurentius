@@ -56,11 +56,11 @@ public class XMLSignatureUtils {
   public static final String XML_SIGNATURE_PROVIDER_VALUE_2 =
       "org.apache.jcp.xml.dsig.internal.dom.XMLDSigRI";
 
-  private final XAdESignatureBuilder mXAdESBuilder = new XAdESignatureBuilder();
   /**
    * Logger
    */
   private static final SEDLogger LOG = new SEDLogger(XMLSignatureUtils.class);
+  private final XAdESignatureBuilder mXAdESBuilder = new XAdESignatureBuilder();
 
   XMLTimeStamp mTimeStampServer = null;
   // String mstrTimeStampServerUrl = "http://ts.si-tsa.sigov.si:80/verificationserver/timestamp";

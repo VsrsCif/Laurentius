@@ -19,7 +19,6 @@ import java.util.Calendar;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import org.primefaces.model.DualListModel;
 import si.laurentius.ebox.SEDBox;
@@ -27,8 +26,8 @@ import si.laurentius.user.SEDUser;
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.interfaces.SEDLookupsInterface;
 import si.laurentius.commons.utils.SEDLogger;
+import si.laurentius.commons.utils.Utils;
 import si.laurentius.msh.web.abst.AbstractAdminJSFView;
-import si.laurentius.msh.web.gui.DialogDelete;
 
 /**
  *
@@ -44,17 +43,6 @@ public class AdminSEDUserView extends AbstractAdminJSFView<SEDUser> {
   private SEDLookupsInterface mdbLookups;
 
   private DualListModel<SEDBox> msbCBDualList = new DualListModel<>();
-  @ManagedProperty(value = "#{dialogDelete}")
-  private DialogDelete dlgDelete;
-
-  @Override
-  public DialogDelete getDlgDelete() {
-    return dlgDelete;
-  }
-  @Override
-  public  void setDlgDelete(DialogDelete dlg){
-    dlgDelete = dlg;
-  }
 
   /**
    *
@@ -83,8 +71,48 @@ public class AdminSEDUserView extends AbstractAdminJSFView<SEDUser> {
 
   @Override
   public boolean validateData() {
+    SEDUser su = getEditable();
+    // test alias.
+    if (Utils.isEmptyString(su.getUserId())) {
+      addError("Username must not be empty!");
+      return false;
+    }
 
+    if (isEditableNew() && mdbLookups.getSEDUserByUserId(su.getUserId()) != null) {
+      addError(String.format("User with id %s already exists!", su.getUserId()));
+      return false;
+    }
+
+    if (!Utils.isEmptyString(su.getEmail()) && !Utils.isValidEmailAddress(su.
+            getEmail())) {
+      addError(String.format("Email '%s ' is invalid!", su.getEmail()));
+      return false;
+    }
+
+    if (su.getActiveFromDate() == null) {
+      addError("Active From Date must not be null!");
+      return false;
+    }
+
+    if (su.getActiveToDate() != null && su.getActiveToDate().before(su.
+            getActiveFromDate())) {
+      addError("Active From Date must be before Active to date!");
+      return false;
+    }
     return true;
+  }
+
+  @Override
+  public String getSelectedDesc() {
+    if (getSelected() != null) {
+      return getSelected().getUserId();
+    }
+    return null;
+  }
+
+  @Override
+  public String getUpdateTargetTable() {
+    return ":forms:SettingsUsers:TblSedUser";
   }
 
   /**
@@ -141,6 +169,11 @@ public class AdminSEDUserView extends AbstractAdminJSFView<SEDUser> {
     if (sb != null) {
       mdbLookups.removeSEDUser(sb);
       setSelected(null);
+      setSelected(null);
+      addCallbackParam(CB_PARA_REMOVED, true);
+    } else {
+      addError("No item selected");
+      addCallbackParam(CB_PARA_REMOVED, false);
     }
   }
 

@@ -84,7 +84,7 @@ public class SEDDaoBean implements SEDDaoInterface {
   /**
    *
    */
-  protected static SEDLogger LOG = new SEDLogger(SEDDaoBean.class);
+  protected static final SEDLogger LOG = new SEDLogger(SEDDaoBean.class);
 
   @EJB(mappedName = SEDJNDI.JNDI_JMSMANAGER)
   JMSManagerInterface mJMS;
@@ -300,6 +300,13 @@ public class SEDDaoBean implements SEDDaoInterface {
     LOG.logEnd(l);
     return lst;
   }
+  private String getJNDIPrefix() {
+    
+    return System.getProperty(SYS_PROP_JNDI_PREFIX, "java:/jboss/");
+  }
+  private String getJNDI_JMSPrefix() {
+    return System.getProperty(SYS_PROP_JNDI_JMS_PREFIX, "java:/jms/");
+  }
 
   /**
    *
@@ -486,6 +493,117 @@ public class SEDDaoBean implements SEDDaoInterface {
   public void removeOutMail(BigInteger bi)
       throws StorageException {
     removeMail(MSHOutMail.class, MSHOutEvent.class, bi);
+  }
+  public void sendOutMessage(MSHOutMail mail, int retry, long delay, String userId,
+          String applicationId)
+          throws StorageException {
+    long l = LOG.logStart();
+    
+    // prepare mail to persist
+    Date dt = Calendar.getInstance().getTime();
+    // set current status
+    mail.setStatus(SEDOutboxMailStatus.SCHEDULE.getValue());
+    mail.setStatusDate(dt);
+    
+    // --------------------
+    // serialize data and submit message
+    String msgFactoryJndiName = getJNDIPrefix() + SEDValues.EBMS_JMS_CONNECTION_FACTORY_JNDI;
+    String msgQueueJndiName = getJNDI_JMSPrefix() + SEDValues.JNDI_QUEUE_EBMS;
+    Connection connection = null;
+    Session session = null;
+    String msgDesc = String.format("Add mail to submit queue. Retry %d, delay %d ms", retry, delay);
+    try {
+      // create JMS session
+      
+      ConnectionFactory cf = (ConnectionFactory) InitialContext.doLookup(msgFactoryJndiName);
+      if (mqMSHQueue == null) {
+        mqMSHQueue = (Queue) InitialContext.doLookup(msgQueueJndiName);
+      }
+      connection = cf.createConnection();
+      session = connection.createSession(true, Session.SESSION_TRANSACTED);
+      
+      Query updq = memEManager.createNamedQuery(SEDNamedQueries.UPDATE_OUTMAIL);
+      updq.setParameter("id", mail.getId());
+      updq.setParameter("statusDate", mail.getStatusDate());
+      updq.setParameter("status", mail.getStatus());
+      
+      MSHOutEvent me = new MSHOutEvent();
+      me.setMailId(mail.getId());
+      me.setDescription(msgDesc);
+      me.setStatus(mail.getStatus());
+      me.setDate(mail.getStatusDate());
+      
+      me.setUserId(userId);
+      me.setApplicationId(applicationId);
+      // create message
+      MessageProducer sender = session.createProducer(mqMSHQueue);
+      Message message = session.createMessage();
+      message.setLongProperty(SEDValues.EBMS_QUEUE_PARAM_MAIL_ID, mail.getId().longValue());
+      message.setIntProperty(SEDValues.EBMS_QUEUE_PARAM_RETRY, retry);
+      message.setLongProperty(SEDValues.EBMS_QUEUE_PARAM_DELAY, delay);
+      message.setLongProperty(SEDValues.EBMS_QUEUE_DELAY_AMQ, delay);
+      message.setLongProperty(SEDValues.EBMS_QUEUE_DELAY_Artemis, delay + System.currentTimeMillis());
+      
+      mutUTransaction.begin();
+      int iVal = updq.executeUpdate();
+      if (iVal != 1) {
+        try {
+          mutUTransaction.rollback();
+        } catch (IllegalStateException | SecurityException | SystemException ex1) {
+          LOG.logWarn(l, ex1.getMessage(), ex1);
+        }
+        String msg =
+                "Status not setted to MSHOutMail:" + mail.getId() + " result: '" + iVal +
+                "'. Mail not exists or id duplicates?";
+        LOG.logError(l, msg, null);
+        throw new StorageException(msg, null);
+      }
+      
+      memEManager.persist(me);
+      
+      sender.send(message);
+      
+      mutUTransaction.commit();
+      session.commit();
+      
+      LOG.formatedlog("Message %d added to send queue with params: retry %d, delay %d",
+              mail.getId().longValue(), retry, delay);
+      
+    } catch (JMSException | NamingException | NotSupportedException | SystemException | RollbackException | HeuristicMixedException |
+            HeuristicRollbackException | SecurityException | IllegalStateException ex) {
+      
+      try {
+        mutUTransaction.rollback();
+        
+      } catch (IllegalStateException | SecurityException | SystemException ex1) {
+        LOG.logWarn(l, "Error rollback transaction", ex1);
+      }
+      
+      try {
+        if (session != null) {
+          session.rollback();
+        }
+      } catch (JMSException ex1) {
+        LOG.logWarn(l, "Error rollback JSM session", ex1);
+      }
+      
+      String msg =
+              "Error sending mail : '" + mail.getId() + "'! Err:" + ex.getMessage();
+      LOG.logError(l, msg, ex);
+      throw new StorageException(msg, ex);
+      
+    }  finally {
+      
+      try {
+        if (connection != null) {
+          connection.close();
+        }
+      } catch (JMSException jmse) {
+        LOG.logWarn(l, "Error closing connection JSM session", jmse);
+        
+      }
+    }
+    
   }
 
   /**
@@ -957,125 +1075,5 @@ public class SEDDaoBean implements SEDDaoInterface {
     LOG.logEnd(l);
   }
 
-  public void sendOutMessage(MSHOutMail mail, int retry, long delay, String userId,
-      String applicationId)
-      throws StorageException {
-    long l = LOG.logStart();
-
-    // prepare mail to persist
-    Date dt = Calendar.getInstance().getTime();
-    // set current status
-    mail.setStatus(SEDOutboxMailStatus.SCHEDULE.getValue());
-    mail.setStatusDate(dt);
-
-    // --------------------
-    // serialize data and submit message
-    String msgFactoryJndiName = getJNDIPrefix() + SEDValues.EBMS_JMS_CONNECTION_FACTORY_JNDI;
-    String msgQueueJndiName = getJNDI_JMSPrefix() + SEDValues.JNDI_QUEUE_EBMS;
-    Connection connection = null;
-    Session session = null;
-    String msgDesc = String.format("Add mail to submit queue. Retry %d, delay %d ms", retry, delay);
-    try {
-      // create JMS session
-
-      ConnectionFactory cf = (ConnectionFactory) InitialContext.doLookup(msgFactoryJndiName);
-      if (mqMSHQueue == null) {
-        mqMSHQueue = (Queue) InitialContext.doLookup(msgQueueJndiName);
-      }
-      connection = cf.createConnection();
-      session = connection.createSession(true, Session.SESSION_TRANSACTED);
-
-      Query updq = memEManager.createNamedQuery(SEDNamedQueries.UPDATE_OUTMAIL);
-      updq.setParameter("id", mail.getId());
-      updq.setParameter("statusDate", mail.getStatusDate());
-      updq.setParameter("status", mail.getStatus());
-
-      MSHOutEvent me = new MSHOutEvent();
-      me.setMailId(mail.getId());
-      me.setDescription(msgDesc);
-      me.setStatus(mail.getStatus());
-      me.setDate(mail.getStatusDate());
-
-      me.setUserId(userId);
-      me.setApplicationId(applicationId);
-      // create message
-      MessageProducer sender = session.createProducer(mqMSHQueue);
-      Message message = session.createMessage();
-      message.setLongProperty(SEDValues.EBMS_QUEUE_PARAM_MAIL_ID, mail.getId().longValue());
-      message.setIntProperty(SEDValues.EBMS_QUEUE_PARAM_RETRY, retry);
-      message.setLongProperty(SEDValues.EBMS_QUEUE_PARAM_DELAY, delay);
-      message.setLongProperty(SEDValues.EBMS_QUEUE_DELAY_AMQ, delay);
-      message.setLongProperty(SEDValues.EBMS_QUEUE_DELAY_Artemis, delay + System.currentTimeMillis());
-
-      mutUTransaction.begin();
-      int iVal = updq.executeUpdate();
-      if (iVal != 1) {
-        try {
-          mutUTransaction.rollback();
-        } catch (IllegalStateException | SecurityException | SystemException ex1) {
-          LOG.logWarn(l, ex1.getMessage(), ex1);
-        }
-        String msg =
-            "Status not setted to MSHOutMail:" + mail.getId() + " result: '" + iVal +
-            "'. Mail not exists or id duplicates?";
-        LOG.logError(l, msg, null);
-        throw new StorageException(msg, null);
-      }
-
-      memEManager.persist(me);
-      
-      sender.send(message);
-
-      mutUTransaction.commit();
-      session.commit();
-      
-      LOG.formatedlog("Message %d added to send queue with params: retry %d, delay %d",
-          mail.getId().longValue(), retry, delay);
-
-    } catch (JMSException | NamingException | NotSupportedException | SystemException | RollbackException | HeuristicMixedException |
-        HeuristicRollbackException | SecurityException | IllegalStateException ex) {
-
-      try {
-        mutUTransaction.rollback();
-
-      } catch (IllegalStateException | SecurityException | SystemException ex1) {
-        LOG.logWarn(l, "Error rollback transaction", ex1);
-      }
-
-      try {
-        if (session != null) {
-          session.rollback();
-        }
-      } catch (JMSException ex1) {
-        LOG.logWarn(l, "Error rollback JSM session", ex1);
-      }
-      
-       String msg =
-            "Error sending mail : '" + mail.getId() + "'! Err:" + ex.getMessage();
-        LOG.logError(l, msg, ex);
-        throw new StorageException(msg, ex);
-      
-    }  finally {
-
-      try {
-        if (connection != null) {
-          connection.close();
-        }
-      } catch (JMSException jmse) {
-        LOG.logWarn(l, "Error closing connection JSM session", jmse);
-
-      }
-    }
-
-  }
-  
-   private String getJNDIPrefix() {
-
-    return System.getProperty(SYS_PROP_JNDI_PREFIX, "java:/jboss/");
-  }
-
-  private String getJNDI_JMSPrefix() {
-    return System.getProperty(SYS_PROP_JNDI_JMS_PREFIX, "java:/jms/");
-  }
 
 }

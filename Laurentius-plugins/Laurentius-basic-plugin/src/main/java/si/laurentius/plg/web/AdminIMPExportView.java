@@ -36,19 +36,6 @@ public class AdminIMPExportView extends AbstractAdminJSFView<IMPExport> {
   @EJB
   private IMPDBInterface mDB;
   
-  @Override
-  public boolean validateData() {
-    if (Utils.isEmptyString(getEditable().getInstance())) {
-      addError("Instance parametere must not be null!");
-      return false;
-    }
-    
-    if (isEditableNew() && mDB.getExport(getEditable().getInstance()) != null) {
-      addError("Instance parametere must not be unique!");
-      return false;
-    }
-    return true;
-  }
   
   @Override
   public void createEditable() {
@@ -88,6 +75,19 @@ public class AdminIMPExportView extends AbstractAdminJSFView<IMPExport> {
   @Override
   public boolean updateEditable() {
     return mDB.updateExport(getEditable());
+  }
+  @Override
+  public boolean validateData() {
+    if (Utils.isEmptyString(getEditable().getInstance())) {
+      addError("Instance parametere must not be null!");
+      return false;
+    }
+    
+    if (isEditableNew() && mDB.getExport(getEditable().getInstance()) != null) {
+      addError("Instance parametere must not be unique!");
+      return false;
+    }
+    return true;
   }
   
 }

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root xmlns="http://www.test.org/unit/test/"  
+      version="1.0">
+    <row rowindex="1">
+        <data01>1.123</data01>
+        <data02>test1</data02>
+        <data03>2001-01-26T19:32:52Z</data03>
+    </row>
+    <row rowindex="2">
+        <data01>2.123</data01>
+        <data02>test2</data02>
+        <data03>2002-02-26T19:32:52Z</data03>
+    </row>  
+</root>

@@ -26,16 +26,55 @@ Copyright 2016, Supreme Court Republic of Slovenia
  limitations under the Licence.
 -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://laurentius.si/user" xmlns:box="http://laurentius.si/ebox" targetNamespace="http://laurentius.si/user" elementFormDefault="qualified" attributeFormDefault="unqualified">
-    <xs:import namespace="http://laurentius.si/ebox" schemaLocation="./sed-ebox.xsd"/>
-    <xs:element name="SEDUser" type="ns1:SEDUser"/>
-    <xs:complexType name="SEDUser">
-        <xs:sequence>
-            <xs:element ref="box:SEDBox" maxOccurs="unbounded"/>
-        </xs:sequence>
-        <xs:attribute name="userId" use="required"/>
-        <xs:attribute name="adminRole"  type="xs:boolean"  />
-        <xs:attribute name="activeFromDate" type="xs:date" use="required"/>
-        <xs:attribute name="activeToDate" type="xs:date" use="required"/>
-    </xs:complexType>
-    <xs:complexType name="SEDRole"/>
+	<xs:import namespace="http://laurentius.si/ebox" schemaLocation="./sed-ebox.xsd"/>
+	<xs:element name="SEDUser" type="ns1:SEDUser"/>
+	<xs:complexType name="SEDUser">
+		<xs:sequence>
+			<xs:element ref="box:SEDBox" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="userId" use="required">
+			<xs:annotation>
+				<xs:documentation>User id must match  user name</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="512"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="name" use="required">
+			<xs:annotation>
+				<xs:documentation>User name</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="512"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="desc">
+			<xs:annotation>
+				<xs:documentation>User description</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="1024"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="email">
+			<xs:annotation>
+				<xs:documentation>user email for notification</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="512"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="adminRole" type="xs:boolean"/>
+		<xs:attribute name="activeFromDate" type="xs:date" use="required"/>
+		<xs:attribute name="activeToDate" type="xs:date" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="SEDRole"/>
 </xs:schema>

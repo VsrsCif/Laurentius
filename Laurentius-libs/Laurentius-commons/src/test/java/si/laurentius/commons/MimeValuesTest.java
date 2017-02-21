@@ -25,6 +25,9 @@ public class MimeValuesTest {
     String testMultiple = "text/plain";
     String testNotExists = "NotExists/CCC";
     String testNull = null;
+    
+    
+    System.out.println("******************************************** int numMsgs = 0;" + Integer.parseInt("M7MGR", 32));
 
     assertEquals(MimeValues.getSuffixBYMimeType(testExists1), MimeValues.MIME_PDF.getSuffix());
     assertEquals(MimeValues.getSuffixBYMimeType(testExists2), MimeValues.MIME_PDF.getSuffix());

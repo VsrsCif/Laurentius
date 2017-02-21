@@ -37,13 +37,13 @@ Copyright 2015, Supreme Court Republic of Slovenia
 		<xs:sequence>
 			<xs:element name="SEDProcessorInstance" type="ns1:SEDProcessorInstance" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
-		<xs:attribute name="id" type="xs:integer" use="required"/>
+		<xs:attribute name="code" type="xs:token" use="required"/>
 		<xs:attribute name="name"/>
 		<xs:attribute name="description"/>
 	</xs:complexType>
 	<xs:complexType name="SEDProcessorRule">
 		<xs:attribute name="id" type="xs:integer" use="required"/>
-		<xs:attribute name="procSetId" type="xs:integer" use="required">
+		<xs:attribute name="procSetCode" type="xs:token" use="required">
 			<xs:annotation>
 				<xs:documentation>id to process set </xs:documentation>
 			</xs:annotation>

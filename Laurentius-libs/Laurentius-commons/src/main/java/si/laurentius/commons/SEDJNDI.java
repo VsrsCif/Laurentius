@@ -53,6 +53,10 @@ public class SEDJNDI {
 
   public static final String JNDI_PLUGIN =
       "java:global/Laurentius-dao/SEDPluginManager!si.laurentius.commons.interfaces.SEDPluginManagerInterface";
+  
+  
+  public static final String JNDI_DATA_INIT =
+      "java:global/Laurentius-dao/SEDInitData!si.laurentius.commons.interfaces.SEDInitDataInterface";
 
   /**
    *

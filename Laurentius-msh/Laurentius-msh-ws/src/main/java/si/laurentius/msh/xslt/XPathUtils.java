@@ -12,7 +12,7 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
-import static si.laurentius.export.jms.MSHExportBean.LOG;
+import static si.laurentius.export.jms.JMSInMailProcessBean.LOG;
 
 /**
  *

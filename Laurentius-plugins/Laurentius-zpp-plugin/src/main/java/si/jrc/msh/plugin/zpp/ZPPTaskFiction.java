@@ -33,7 +33,7 @@ import si.laurentius.msh.inbox.mail.MSHInMail;
 import si.laurentius.msh.outbox.mail.MSHOutMail;
 import si.laurentius.msh.outbox.payload.MSHOutPart;
 import si.laurentius.msh.outbox.payload.MSHOutPayload;
-import si.laurentius.cert.SEDCertStore;
+
 
 import si.jrc.msh.plugin.zpp.doc.DocumentSodBuilder;
 import si.jrc.msh.plugin.zpp.exception.ZPPException;
@@ -155,21 +155,9 @@ public class ZPPTaskFiction implements TaskExecutionInterface {
           "Sedbox:  '" + sedBox + "' does not have certificate for signing!");
     }
     //SEDCertStore sc = msedLookup.getSEDCertStoreByName(keystore);
-      SEDCertStore sc= null;
-      SEDCertificate scc = null;
-      try {
-        sc = mCertBean.getCertificateStore();
-        for (SEDCertificate c: sc.getSEDCertificates()){
-          if (Objects.equals(c.getAlias(),signKeyAlias) && c.isKeyEntry()){
-            scc = c;
-            break;
-          }
-        }
-      } catch (SEDSecurityException ex) {
-        String msg = "Error opening keystore - check configuration!";
-        LOG.logError(l, msg, null);
-        throw new TaskException(TaskException.TaskExceptionCode.InitException,msg);
-      }
+     // SEDCertStore sc= null;
+    //  SEDCertificate scc = mCertBean.getSEDCertificatForAlias(signKeyAlias, true);
+     
    
     int maxMailProc = 100;
     if (p.containsKey(PROCESS_MAIL_COUNT)) {
@@ -203,14 +191,14 @@ public class ZPPTaskFiction implements TaskExecutionInterface {
 
     for (MSHOutMail m : lst) {
       try {
-        processZPPFictionDelivery(m, scc, sc);
-      } catch (StorageException | FOPException | HashException | ZPPException ex) {
+        processZPPFictionDelivery(m, signKeyAlias);
+      } catch (SEDSecurityException | StorageException | FOPException | HashException | ZPPException ex) {
         String msg = String.format("Error occurred processing mail: '%s'. Err: %s.", m.getId(),
             ex.getMessage());
         LOG.logError(l, msg, ex);
 
         sw.append(msg);
-      }
+      } 
     }
 
     sw.append("End zpp fiction plugin task");
@@ -262,16 +250,16 @@ public class ZPPTaskFiction implements TaskExecutionInterface {
    * @throws HashException
    * @throws si.jrc.msh.plugin.zpp.exception.ZPPException
    */
-  private void processZPPFictionDelivery(MSHOutMail mOutMail, SEDCertificate signCert,
-      SEDCertStore keystore)
+  private void processZPPFictionDelivery(MSHOutMail mOutMail, String sigAlias)
       throws FOPException,
       HashException,
       ZPPException,
-      StorageException {
+      StorageException,
+      SEDSecurityException {
     long l = LOG.logStart();
 
-    MSHOutMail fn = createZPPFictionNotification(mOutMail, signCert, keystore);
-    MSHInMail fi = createZPPAdviceOfDeliveryFiction(mOutMail, signCert, keystore);
+    MSHOutMail fn = createZPPFictionNotification(mOutMail, sigAlias);
+    MSHInMail fi = createZPPAdviceOfDeliveryFiction(mOutMail, sigAlias);
 
     // do it in transaction!
     mDB.serializeInMail(fi, "ZPP-plugin");
@@ -281,9 +269,8 @@ public class ZPPTaskFiction implements TaskExecutionInterface {
 
   }
 
-  private MSHOutMail createZPPFictionNotification(MSHOutMail mOutMail, SEDCertificate scc,
-      SEDCertStore sc)
-      throws ZPPException, FOPException {
+  private MSHOutMail createZPPFictionNotification(MSHOutMail mOutMail,String sigAlias)
+      throws ZPPException, FOPException, SEDSecurityException {
 
     long l = LOG.logStart();
 
@@ -322,7 +309,10 @@ public class ZPPTaskFiction implements TaskExecutionInterface {
           FOPUtils.FopTransformations.AdviceOfDeliveryFiction,
           MimeConstants.MIME_PDF);
 
-      signPDFDocument(sc, scc, fDNViz, true);
+      
+      PrivateKey pk = mCertBean.getPrivateKeyForAlias(recSignKeyAlias);
+        X509Certificate xcert = mCertBean.getX509CertForAlias(recSignKeyAlias);
+      signPDFDocument(pk, xcert, fDNViz, true);
 
       moFNotification = new MSHOutMail();
       moFNotification.setMessageId(Utils.getInstance().getGuidString());
@@ -371,13 +361,16 @@ public class ZPPTaskFiction implements TaskExecutionInterface {
     mom.setDeliveredDate(mOutMail.getSentDate());
 
     X509Certificate recXc;
+     recXc = mCertBean.getX509CertForAlias(recSignKeyAlias);
+     /*
     try {
-      recXc = mkeyUtils.getTrustedCertForAlias(mCertBean.getCertificateStore(), recSignKeyAlias);
+      //recXc = mkeyUtils.getTrustedCertForAlias(mCertBean.getCertificateStore(), recSignKeyAlias);
+      recXc = mCertBean.getX509CertForAlias(recSignKeyAlias);
     } catch (SEDSecurityException ex) {
       String msg = String.format("Key for alias '%s' do not exists keystore'!", recSignKeyAlias);
       LOG.logError(l, msg, ex);
       throw new ZPPException(msg);
-    }
+    }*/
 
     LOG.formatedlog("Get key for conversation : '%s'", convId);
 
@@ -424,9 +417,8 @@ public class ZPPTaskFiction implements TaskExecutionInterface {
 
   }
 
-  private MSHInMail createZPPAdviceOfDeliveryFiction(MSHOutMail mOutMail, SEDCertificate signCert,
-      SEDCertStore keystore)
-      throws ZPPException, FOPException {
+  private MSHInMail createZPPAdviceOfDeliveryFiction(MSHOutMail mOutMail, String signAlias)
+      throws ZPPException, FOPException, SEDSecurityException {
     long l = LOG.logStart();
     MSHInMail moADF = null;
 
@@ -470,7 +462,10 @@ public class ZPPTaskFiction implements TaskExecutionInterface {
     moADF.setMSHInPayload(new MSHInPayload());
 
     try {
-      signPDFDocument(keystore, signCert, fDNViz, true);
+      
+      PrivateKey pk = mCertBean.getPrivateKeyForAlias(signAlias);
+        X509Certificate xcert = mCertBean.getX509CertForAlias(signAlias);
+      signPDFDocument(pk, xcert, fDNViz, true);
       MSHInPart mp = new MSHInPart();
       mp.setDescription(ZPPConstants.S_ZPP_ACTION_FICTION_NOTIFICATION);
       mp.setFilepath(StorageUtils.getRelativePath(fDNViz));
@@ -511,22 +506,19 @@ public class ZPPTaskFiction implements TaskExecutionInterface {
     return mfpFop;
   }
 
-  private File signPDFDocument(SEDCertStore sc, SEDCertificate scc, File f, boolean replace) {
+  private File signPDFDocument(PrivateKey pk, X509Certificate xcert, File f, boolean replace) {
     long l = LOG.logStart();
     File ftmp = null;
     try {
       ftmp = StorageUtils.getNewStorageFile("pdf", "zpp-signed");
-      KeyStore ks = mkeyUtils.getKeystore(sc);
-      PrivateKey pk = (PrivateKey) mkeyUtils.getPrivateKeyForAlias(ks, scc.getAlias(),
-          scc.getKeyPassword());
-      X509Certificate xcert = mkeyUtils.getTrustedCertForAlias(ks, scc.getAlias());
+      
       SignUtils su = new SignUtils(pk, xcert);
       su.signPDF(f, ftmp, true);
       if (replace) {
         Files.move(ftmp.toPath(), f.toPath(), StandardCopyOption.REPLACE_EXISTING);
         ftmp = f;
       }
-    } catch (IOException | SEDSecurityException ex) {
+    } catch (IOException  ex) {
       LOG.logError(l, ex);
     } catch (StorageException ex) {
       Logger.getLogger(ZPPOutInterceptor.class.getName()).log(Level.SEVERE, null, ex);

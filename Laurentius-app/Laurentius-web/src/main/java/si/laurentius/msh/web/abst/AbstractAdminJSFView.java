@@ -5,10 +5,11 @@
 package si.laurentius.msh.web.abst;
 
 import java.util.List;
+import javax.faces.bean.ManagedProperty;
 import org.primefaces.context.RequestContext;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.xml.XMLUtils;
-import si.laurentius.msh.web.gui.DialogDelete;
+import si.laurentius.msh.web.gui.dlg.DialogDelete;
 
 /**
  *
@@ -16,12 +17,16 @@ import si.laurentius.msh.web.gui.DialogDelete;
  * @param <T>
  */
 abstract public class AbstractAdminJSFView<T> extends AbstractJSFView {
+  
+
+
+  public static final String CB_PARA_SAVED = "saved";
+  public static final String CB_PARA_REMOVED = "removed";
 
   private static final SEDLogger LOG = new SEDLogger(AbstractAdminJSFView.class);
   private T mtEditable;
   private T mtNew;
   private T mtSelected;
-  
 
   /**
    *
@@ -32,14 +37,14 @@ abstract public class AbstractAdminJSFView<T> extends AbstractJSFView {
 
     if (validateData()) {
       if (isEditableNew()) {
-        if(persistEditable()){
-        setNew(null);
-        bsuc =true;
+        if (persistEditable()) {
+          setNew(null);
+          bsuc = true;
         }
       } else {
         if (updateEditable()) {
           setEditable(null);
-          bsuc =true;
+          bsuc = true;
         }
       }
     }
@@ -84,6 +89,13 @@ abstract public class AbstractAdminJSFView<T> extends AbstractJSFView {
     return mtSelected;
   }
 
+  public String getSelectedDesc() {
+    if (mtSelected != null) {
+      return mtSelected.toString();
+    }
+    return null;
+  }
+
   /**
    *
    * @return
@@ -101,29 +113,35 @@ abstract public class AbstractAdminJSFView<T> extends AbstractJSFView {
    *
    */
   abstract public void removeSelected();
-  
+
   /**
    *
    */
-  public void removeSelectedWithWarning(){
-    if( getSelected() == null) {
-      DialogDelete dlg = getDlgDelete();
-      dlg.setCurrentJSFView(this);
-      dlg.setYesNoOption(false);
-      dlg.setDlgTitle("Delete selected row");
-      dlg.setDlgMessage("Select row to delete!");
-      RequestContext context = RequestContext.getCurrentInstance();
-      context.execute("PF('DlgDelete').show();");
-      context.update(":DeleteDialogForm:deleteDialog");
-      // set warning 
-    } else {
-      //setwarning what will ne deleted
+  public void removeSelectedWithWarning() {
+    DialogDelete dlg = getDlgDelete();
+    dlg.setCurrentJSFView(this);
+    RequestContext context = RequestContext.getCurrentInstance();
+    context.execute("PF('DlgDelete').show();");
+    context.update("dlgalert:deleteDialog");
+
+  }
+
+  ;
+  
+ public  Object getBean(final String beanName) {
+    final Object returnObject = facesContext().getELContext().getELResolver().
+            getValue( facesContext().getELContext(), null, beanName);    
+    if (returnObject == null) {
+      LOG.formatedWarning("Bean with name %s was not found!", beanName);
     }
-  };
-  
-  abstract public  DialogDelete getDlgDelete();
-  
-  abstract public  void setDlgDelete(DialogDelete dlg);
+    return returnObject;
+  }
+
+
+  public DialogDelete getDlgDelete() {
+    return (DialogDelete)getBean("dialogDelete");
+  }
+
 
   /**
    *
@@ -169,5 +187,15 @@ abstract public class AbstractAdminJSFView<T> extends AbstractJSFView {
    * @return
    */
   abstract public boolean updateEditable();
+
+  public String getUpdateTargetTable() {
+    return null;
+  }
+
+  ;
+   
+   public void addCallbackParam(String val, boolean bval) {
+    RequestContext.getCurrentInstance().addCallbackParam(val, bval);
+  }
 
 }

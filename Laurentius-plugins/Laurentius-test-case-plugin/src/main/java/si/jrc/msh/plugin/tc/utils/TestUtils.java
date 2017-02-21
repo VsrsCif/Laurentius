@@ -28,6 +28,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import si.laurentius.commons.MimeValues;
+import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StorageUtils;
@@ -47,7 +48,7 @@ import si.laurentius.testcase.MailTestCases;
 public class TestUtils {
 
   private static final SEDLogger LOG = new SEDLogger(TestUtils.class);
-  public static String ROOT_FOLDER = "${laurentius.home}/test-case/";
+  public static String ROOT_FOLDER = "/test-case/";
   public static String BLOB_FOLDER = ROOT_FOLDER + "/test-pdf/";
   public static String GENERIC_FOLDER = ROOT_FOLDER + "/generic-cases/";
   
@@ -170,7 +171,7 @@ public class TestUtils {
   public static File[] getTestFiles() {
     if (mTstFiles == null) {
       
-      File f = new File(StringFormater.replaceProperties(BLOB_FOLDER));
+      File f = new File(SEDSystemProperties.getPluginsFolder(),  StringFormater.replaceProperties(BLOB_FOLDER));
       mTstFiles = f.listFiles((File pathname) -> {
         return pathname.isFile() &&
             pathname.getName().toLowerCase().endsWith(".pdf");
@@ -182,7 +183,7 @@ public class TestUtils {
   
   public static MailTestCases getGenericTestCases(){
     MailTestCases mtc = null;
-    File f = new File(StringFormater.replaceProperties(GENERIC_METADATA));
+    File f = new File(SEDSystemProperties.getPluginsFolder(), GENERIC_METADATA);
     try {
       mtc = (MailTestCases) XMLUtils.deserialize(f, MailTestCases.class);
     } catch (JAXBException ex) {

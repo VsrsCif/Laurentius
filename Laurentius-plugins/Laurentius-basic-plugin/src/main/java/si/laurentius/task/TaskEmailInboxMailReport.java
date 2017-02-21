@@ -11,10 +11,10 @@ import java.util.List;
 import java.util.Properties;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
-import si.laurentius.msh.inbox.mail.MSHInMail;
-import si.laurentius.cron.SEDTaskExecution;
 import si.laurentius.commons.SEDInboxMailStatus;
 import si.laurentius.commons.exception.StorageException;
+import si.laurentius.cron.SEDTaskExecution;
+import si.laurentius.msh.inbox.mail.MSHInMail;
 import si.laurentius.plugin.crontask.CronTaskDef;
 import si.laurentius.plugin.interfaces.TaskExecutionInterface;
 import si.laurentius.plugin.interfaces.exception.TaskException;
@@ -32,17 +32,17 @@ public class TaskEmailInboxMailReport extends TaskEmailReport {
   /**
      *
      */
-  public static String KEY_MAIL_STATUS = "mail.status";
+  public static final String KEY_MAIL_STATUS = "mail.status";
 
   /**
      *
      */
-  public static String KEY_NoMail = "skip.on.NoMail";
+  public static final String KEY_NoMail = "skip.on.NoMail";
 
   /**
      *
      */
-  public static String KEY_OnlyNew = "new.only";
+  public static final String KEY_OnlyNew = "new.only";
 
   /**
    *

@@ -55,7 +55,7 @@
                                              actionListener="#{adminSEDBoxView.startEditSelected()}"
                                              oncomplete="PF('sedboxDialog').show()" />
                             <p:commandButton value="#{msg['Delete']}" styleClass="toolbar-Button" icon="ui-icon-svg-remove ui-icon-size-22"  
-                                             actionListener="#{adminSEDBoxView.removeSelected()}"
+                                             actionListener="#{adminSEDBoxView.removeSelectedWithWarning()}"
                                              update=":forms:SettingsSEDBoxes:TblSedBox" />
 
                         </f:facet>
@@ -70,22 +70,7 @@
                         <p:column headerText="#{msg['ActiveToDate']}" width="80">
                             <h:outputText value="#{sp.activeToDate}"  ><f:convertDateTime pattern="dd.MM.yyyy" timeZone="CET" /></h:outputText>                
                         </p:column>
-                        <p:column headerText="#{msg['Export']}" width="60">
-                            <h:selectBooleanCheckbox value="#{sp.export.active}" disabled="true" />
-                        </p:column>
-                        <p:column headerText="#{msg['MetaData']}" width="60">
-                            <h:selectBooleanCheckbox value="#{sp.export.exportMetaData}" disabled="true" />
-                        </p:column>
-
-                        <p:column headerText="#{msg['Folder']}">
-                            <h:outputText value="#{sp.export.folder}" />
-                        </p:column>
-                        <p:column headerText="#{msg['Execution']}" width="60">
-                            <h:selectBooleanCheckbox value="#{sp.execute.active}" disabled="true" />
-                        </p:column>
-                        <p:column headerText="#{msg['Command']}" >
-                            <h:outputText value="#{sp.execute.command}" />               
-                        </p:column>
+                       
 
                     </p:dataTable>
                 </p:scrollPanel>

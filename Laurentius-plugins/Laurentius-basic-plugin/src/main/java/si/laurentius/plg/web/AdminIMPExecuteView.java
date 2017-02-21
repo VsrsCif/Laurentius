@@ -22,7 +22,6 @@ import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.Utils;
 import si.laurentius.plg.db.IMPDBInterface;
 import si.laurentius.plugin.imp.IMPExecute;
-import si.laurentius.plugin.imp.IMPExecute;
 
 /**
  *
@@ -37,19 +36,6 @@ public class AdminIMPExecuteView extends AbstractAdminJSFView<IMPExecute> {
   @EJB
   private IMPDBInterface mDB;
   
-  @Override
-  public boolean validateData() {
-    if (Utils.isEmptyString(getEditable().getInstance())) {
-      addError("Instance parametere must not be null!");
-      return false;
-    }
-    
-    if (isEditableNew() && mDB.getExecute(getEditable().getInstance()) != null) {
-      addError("Instance parametere must not be unique!");
-      return false;
-    }
-    return true;
-  }
   
   @Override
   public void createEditable() {
@@ -85,6 +71,19 @@ public class AdminIMPExecuteView extends AbstractAdminJSFView<IMPExecute> {
   @Override
   public boolean updateEditable() {
     return mDB.updateExecute(getEditable());
+  }
+  @Override
+  public boolean validateData() {
+    if (Utils.isEmptyString(getEditable().getInstance())) {
+      addError("Instance parametere must not be null!");
+      return false;
+    }
+    
+    if (isEditableNew() && mDB.getExecute(getEditable().getInstance()) != null) {
+      addError("Instance parametere must not be unique!");
+      return false;
+    }
+    return true;
   }
   
 }

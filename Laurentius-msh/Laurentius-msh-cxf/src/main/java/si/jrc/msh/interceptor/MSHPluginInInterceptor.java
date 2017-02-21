@@ -57,7 +57,7 @@ public class MSHPluginInInterceptor extends AbstractSoapInterceptor {
   @Override
   public void handleMessage(SoapMessage msg)
       throws Fault {
-    long l = LOG.logStart();
+      long l = LOG.logStart();
     EBMSMessageContext ectx = SoapUtils.getEBMSMessageInContext(msg);
     MSHInMail inMail = SoapUtils.getMSHInMail(msg);
     String strInMsgId = inMail!=null? inMail.getMessageId(): "No-msg-id";

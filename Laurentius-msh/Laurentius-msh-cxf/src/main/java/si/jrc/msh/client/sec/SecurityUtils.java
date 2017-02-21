@@ -27,10 +27,10 @@ import org.apache.wss4j.dom.handler.WSHandlerConstants;
 import si.laurentius.msh.pmode.References;
 import si.laurentius.msh.pmode.Security;
 import si.laurentius.msh.pmode.X509;
-import si.laurentius.cert.SEDCertStore;
 import si.laurentius.cert.SEDCertificate;
 import si.jrc.msh.exception.EBMSError;
 import si.jrc.msh.interceptor.EBMSOutInterceptor;
+import si.laurentius.cert.SEDCertPassword;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.lce.KeystoreUtils;
 
@@ -48,12 +48,11 @@ public class SecurityUtils {
    * Method creates encryption property configuration for WSS4JOutInterceptor inteceptor
    *
    * @param enc
-   * @param key
-   * @param keystore
+   * @param ksProp
    * @return
    */
   public static Map<String, Object> createDecryptionConfiguration(X509.Encryption enc,
-      SEDCertStore keystore, SEDCertificate key)
+          Properties ksProp, SEDCertPassword keyPasswd)
       throws EBMSError {
 
     Map<String, Object> prps = null;
@@ -64,14 +63,12 @@ public class SecurityUtils {
     // create signature priperties
     String cpropname = "DEC." + UUID.randomUUID().toString();
 
-    Properties cp = KeystoreUtils.getKeystoreProperties(key.getAlias(), keystore);
-
     prps = new HashMap<>();
-    prps.put(cpropname, cp);
+    prps.put(cpropname, ksProp);
     // set wss properties
     prps.put(WSHandlerConstants.ACTION, WSHandlerConstants.ENCRYPT);
     prps.put(WSHandlerConstants.PW_CALLBACK_REF,
-        new MSHKeyPasswordCallback(key));
+        new MSHKeyPasswordCallback(keyPasswd));
     prps.put(WSHandlerConstants.DEC_PROP_REF_ID, cpropname);
 
     if (enc.getAlgorithm() != null || !enc.getAlgorithm().isEmpty()) {
@@ -80,11 +77,7 @@ public class SecurityUtils {
     if (enc.getKeyIdentifierType() != null && !enc.getKeyIdentifierType().isEmpty()) {
       prps.put(WSHandlerConstants.ENC_KEY_ID, enc.getKeyIdentifierType());
     }
-    LOG.log("***********************************************");
-    for (String keyp: prps.keySet()) {
-      LOG.formatedlog("KEY: %s, value %s",keyp, prps.get(keyp));
-    }
-     
+        
     return prps;
   }
   /**
@@ -96,7 +89,7 @@ public class SecurityUtils {
    * @return
    */
   public static Map<String, Object> createEncryptionConfiguration(X509.Encryption enc,
-      SEDCertStore trustore, SEDCertificate cert)
+     Properties cpTrust, String alias)
       throws EBMSError {
     Map<String, Object> prps = null;
     
@@ -107,15 +100,15 @@ public class SecurityUtils {
     // create signature priperties
     String cpropname = "ENC." + UUID.randomUUID().toString();
     
-    Properties cp = KeystoreUtils.getTruststoreProperties(cert.getAlias(), trustore);
+  
     
     prps = new HashMap<>();
-    prps.put(cpropname, cp);
+    prps.put(cpropname, cpTrust);
     // set wss properties
     prps.put(WSHandlerConstants.ACTION, WSHandlerConstants.ENCRYPT);
     prps.put(WSHandlerConstants.ENCRYPTION_PARTS,
         SecurityUtils.createReferenceString(ref));
-    prps.put(WSHandlerConstants.ENCRYPTION_USER, cert.getAlias());
+    prps.put(WSHandlerConstants.ENCRYPTION_USER,alias);
     prps.put(WSHandlerConstants.ENC_PROP_REF_ID, cpropname);
     
     if (enc.getAlgorithm() != null || !enc.getAlgorithm().isEmpty()) {
@@ -185,8 +178,7 @@ public class SecurityUtils {
    * @return
    */
   public static Map<String, Object> createSignatureConfiguration(X509.Signature sig,
-      SEDCertStore keystore,
-      SEDCertificate key)
+       Properties cpKeyStore, SEDCertPassword keyPasswd)
       throws EBMSError {
 
     Map<String, Object> prps = null;
@@ -199,18 +191,18 @@ public class SecurityUtils {
     // create signature priperties
     String cpropname = "SIG." + UUID.randomUUID().toString();
 
-    Properties cp = KeystoreUtils.getKeystoreProperties(key.getAlias(), keystore);
+    
 
     prps = new HashMap<>();
-    prps.put(cpropname, cp);
+    prps.put(cpropname, cpKeyStore);
     // set wss properties
     
     prps.put(WSHandlerConstants.ACTION, WSHandlerConstants.SIGNATURE  );
     prps.put(WSHandlerConstants.SIGNATURE_PARTS,
         SecurityUtils.createReferenceString(ref));
-    prps.put(WSHandlerConstants.SIGNATURE_USER, key.getAlias());
+    prps.put(WSHandlerConstants.SIGNATURE_USER,keyPasswd.getAlias());
     prps.put(WSHandlerConstants.PW_CALLBACK_REF,
-        new MSHKeyPasswordCallback(key));
+        new MSHKeyPasswordCallback(keyPasswd));
     prps.put(WSHandlerConstants.SIG_PROP_REF_ID, cpropname);
 
     if (sig.getAlgorithm() != null || !sig.getAlgorithm().isEmpty()) {
@@ -233,7 +225,7 @@ public class SecurityUtils {
    * @return
    */
   public static Map<String, Object> createSignatureValidationConfiguration(X509.Signature sig,
-      SEDCertStore truststore, SEDCertificate crt)
+  Properties tstCP )
       throws EBMSError {
     Map<String, Object> prps = null;
     
@@ -243,10 +235,10 @@ public class SecurityUtils {
     // create signature priperties
     String cpropname = "SIG-VAL." + UUID.randomUUID().toString();
     
-    Properties cp = KeystoreUtils.getTruststoreProperties(crt.getAlias(), truststore);
+   // Properties cp = KeystoreUtils.getTruststoreProperties(crt.getAlias(), truststore);
     
     prps = new HashMap<>();
-    prps.put(cpropname, cp);
+    prps.put(cpropname, tstCP);
     // set wss properties
     prps.put(WSHandlerConstants.ACTION, WSHandlerConstants.SIGNATURE);
     // prps.put(WSHandlerConstants.SIGNATURE_PARTS, strReference);

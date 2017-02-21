@@ -30,6 +30,10 @@ import static java.lang.System.getProperty;
  * @author Joze Rihtarsic <joze.rihtarsic@sodisce.si>
  */
 public abstract class ASettings {
+  /**
+   * Logger
+   */
+  protected static final SEDLogger LOG = new SEDLogger(ASettings.class);
 
   /**
    * Retruns Creates sorted properties by keys.
@@ -50,10 +54,6 @@ public abstract class ASettings {
    */
   protected long mlLastChagedTime = 0;
 
-  /**
-   * Logger
-   */
-  protected static final SEDLogger LOG = new SEDLogger(ASettings.class);
 
   /**
    * SED Properties

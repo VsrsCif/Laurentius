@@ -839,7 +839,7 @@ public class FilePModeManager implements PModeInterface {
   }
 
   public String getLocalDomain() {
-    return System.getProperty(SEDSystemProperties.S_PROP_LAU_DOMAIN);
+    return System.getProperty(SEDSystemProperties.SYS_PROP_LAU_DOMAIN);
   }
 
   @Override

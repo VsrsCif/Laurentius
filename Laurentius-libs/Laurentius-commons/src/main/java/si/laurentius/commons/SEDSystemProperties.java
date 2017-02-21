@@ -75,11 +75,19 @@ public class SEDSystemProperties {
    * System property for pmode configuration file.
    */
   public static final String SYS_PROP_PMODE_FILE = "laurentius.pmode";
+  
+
+  public static final String SYS_PROP_KEYSTORE_FILE = "laurentius.certstore.file";
+  
+
+  public static final String SYS_PROP_ROOT_CA_FILE = "laurentius.root_ca.file";
+  
+  
 
   /**
    * System property for domain.
    */
-  public static final String S_PROP_LAU_DOMAIN = "laurentius.domain";
+  public static final String SYS_PROP_LAU_DOMAIN = "laurentius.domain";
 
   /**
    * System property for database dialect
@@ -136,7 +144,10 @@ public class SEDSystemProperties {
     mDefValues.put(SYS_PROP_PLUGINS_DIR, "${laurentius.home}/plugins");
 
     mDefValues.put(SYS_PROP_PMODE_FILE, "pmode-conf.xml");
-    mDefValues.put(S_PROP_LAU_DOMAIN, "test-laurentius.org");
+    mDefValues.put(SYS_PROP_KEYSTORE_FILE, "laurentius.jks");
+    mDefValues.put(SYS_PROP_ROOT_CA_FILE, "root-ca.jks");
+    
+    mDefValues.put(SYS_PROP_LAU_DOMAIN, "test-laurentius.org");
 
     if (getProperty(SYS_PROP_QUEUE_SENDER_WORKERS) == null) {
       setProperty(SYS_PROP_QUEUE_SENDER_WORKERS, "5");
@@ -152,8 +163,8 @@ public class SEDSystemProperties {
   }
 
   public static String getLocalDomain() {
-    return System.getProperty(S_PROP_LAU_DOMAIN, 
-            mDefValues.get(S_PROP_LAU_DOMAIN));
+    return System.getProperty(SYS_PROP_LAU_DOMAIN, 
+            mDefValues.get(SYS_PROP_LAU_DOMAIN));
   }
 
   public static File getHomeFolder() {
@@ -199,7 +210,16 @@ public static File getLogFolder() {
   public static File getPModeFile() {
     return getFile(getConfFolder(), SYS_PROP_PMODE_FILE,
             false);
-
+  }
+  
+   public static File getCertstoreFile() {
+    return getFile(getSecurityFolder(), SYS_PROP_KEYSTORE_FILE,
+            false);
+  }
+   
+   public static File getRootCAStoreFile() {
+    return getFile(getSecurityFolder(), SYS_PROP_ROOT_CA_FILE,
+            false);
   }
 
   private static synchronized File getFile(String property,

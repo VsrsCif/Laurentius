@@ -97,29 +97,34 @@ public class TCStressTest implements Serializable {
     if (Utils.isEmptyString(getTestSenderEBox())) {
       stressTestMessage = "Izberite naslov pošiljatelja!";
       stressTestProgress = 100;
+      LOG.formatedWarning("RETURN NAslovnik ");
       return;
     }
     if (Utils.isEmptyString(getTestReceiverEBox())) {
       stressTestMessage = "Vnesite naslov prejemnika!";
       stressTestProgress = 100;
+      LOG.formatedWarning("RETURN prejemnik ");
       return;
     }
     String sndBox = getTestSenderEBox() + "@" + getLocalDomain();
     String rcvBox = getTestReceiverEBox();
-
+    LOG.formatedWarning("executeStressTest 1");
     int icnt = Integer.parseInt(getStressTestCnt());
     if (!rcvBox.contains("@")) {
-      stressTestMessage = String.format("Neveljaven naslov prejemnika %s!", rcvBox);
+      stressTestMessage = String.format("Neveljaven naslov prejemnika %s!",
+              rcvBox);
       stressTestProgress = 100;
+      LOG.formatedWarning("NEveljaven naslov");
+
       return;
     }
     String rcName = rcvBox.substring(0, rcvBox.indexOf("@"));
-
+    LOG.formatedWarning("executeStressTest 3");
     if (mSTExecutor != null) {
       mSTExecutor.shutdown();
       mSTExecutor = null;
     }
-
+    LOG.formatedWarning("executeStressTest 3");
     String service;
     String action;
     if (Objects.equals(stressTestService, ZPP_SERVICE)) {
@@ -130,24 +135,30 @@ public class TCStressTest implements Serializable {
       action = DWR_ACTION;
     }
     stopStressTest = false;
-
+    LOG.formatedWarning("executeStressTest 4");
     mSTExecutor = Executors.newSingleThreadExecutor();
     mSTExecutor.submit(() -> {
       try {
-
+        LOG.formatedWarning("executeStressTest 5 cnt %d", icnt);
         for (int i = 0; i < icnt; i++) {
+          LOG.formatedWarning("executeStressTest 6 indx %d  cnt %d", i, icnt);
           if (stopStressTest) {
+            LOG.formatedWarning("executeStressTest break");
             break;
+
           }
-          MSHOutMail mout = mTestUtils.createOutMail(i, sndBox, rcName, rcvBox, service,
-              action);
+          LOG.formatedWarning("add mail %d" , i);
+          MSHOutMail mout = mTestUtils.createOutMail(i, sndBox, rcName, rcvBox,
+                  service,
+                  action);
           mDB.serializeOutMail(mout, "test", "test-plugin", "");
           stressTestProgress = i * 98 / icnt + 2;
 
         }
         stressTestProgress = 100;
-        stressTestMessage = String.format("V pošiljanje  po storitvi %s poslanih %s pošiljk.",
-            stressTestService, stressTestCnt);
+        stressTestMessage = String.format(
+                "V pošiljanje  po storitvi %s poslanih %s pošiljk.",
+                stressTestService, stressTestCnt);
       } catch (StorageException ex) {
         LOG.logError(ex.getMessage(), ex);
       }
@@ -166,7 +177,8 @@ public class TCStressTest implements Serializable {
   }
 
   public void onStressTestComplete() {
-    facesContext().addMessage(null, new FacesMessage("Obremenitveni test: ", stressTestMessage));
+    facesContext().addMessage(null, new FacesMessage("Obremenitveni test: ",
+            stressTestMessage));
     stressTestProgress = 0;
   }
 
@@ -204,7 +216,8 @@ public class TCStressTest implements Serializable {
     String rcvBox = getTestReceiverEBox();
 
     if (!rcvBox.contains("@")) {
-      payloadSizeTestMessage = String.format("Neveljaven naslov prejemnika %s!", rcvBox);
+      payloadSizeTestMessage = String.format("Neveljaven naslov prejemnika %s!",
+              rcvBox);
       payloadSizeTestProgress = 100;
       return;
     }
@@ -264,14 +277,16 @@ public class TCStressTest implements Serializable {
       try {
         payloadSizeTestProgress = 50;
 
-        MSHOutMail mout = mTestUtils.createOutMail(sndBox, rcName, rcvBox, service,
-            action, f);
+        MSHOutMail mout = mTestUtils.createOutMail(sndBox, rcName, rcvBox,
+                service,
+                action, f);
 
         mDB.serializeOutMail(mout, "test", "test-plugin", "");
         payloadSizeTestProgress = 100;
         payloadSizeTestMessage = String.format(
-            "V pošiljanje po storitvi %s poslana pošiljka velikosti %s KB.", payloadSizeTestService,
-            payloadSizeTest);
+                "V pošiljanje po storitvi %s poslana pošiljka velikosti %s KB.",
+                payloadSizeTestService,
+                payloadSizeTest);
 
       } catch (StorageException ex) {
         LOG.logError(ex.getMessage(), ex);
@@ -280,7 +295,8 @@ public class TCStressTest implements Serializable {
   }
 
   public void onPayloadSizeTestComplete() {
-    facesContext().addMessage(null, new FacesMessage("Test končan", payloadSizeTestMessage));
+    facesContext().addMessage(null, new FacesMessage("Test končan",
+            payloadSizeTestMessage));
     payloadSizeTestProgress = 0;
 
   }
@@ -356,20 +372,20 @@ public class TCStressTest implements Serializable {
    * @return
    */
   public String getLocalDomain() {
-    return System.getProperty(SEDSystemProperties.S_PROP_LAU_DOMAIN);
+    return System.getProperty(SEDSystemProperties.SYS_PROP_LAU_DOMAIN);
   }
 
   public List<String> getRegistredDisableServicePlugin() {
     List<String> mlst = new ArrayList<>();
     for (PMode pmd : mPMode.getPModes()) {
-      if (pmd.getPlugins() != null &&
-          pmd.getPlugins().getInPlugins() != null &&
-          !pmd.getPlugins().getInPlugins().getPlugins().isEmpty()) {
+      if (pmd.getPlugins() != null
+              && pmd.getPlugins().getInPlugins() != null
+              && !pmd.getPlugins().getInPlugins().getPlugins().isEmpty()) {
         PMode.Plugins.InPlugins op = pmd.getPlugins().getInPlugins();
         for (PluginType pt : op.getPlugins()) {
-          if (!Utils.isEmptyString(pt.getValue()) &&
-              pt.getValue().equals(
-                  "java:global/plugin-testcase/TestCaseInInterceptor!si.laurentius.commons.interfaces.SoapInterceptorInterface")) {
+          if (!Utils.isEmptyString(pt.getValue())
+                  && pt.getValue().equals(
+                          "java:global/plugin-testcase/TestCaseInInterceptor!si.laurentius.commons.interfaces.SoapInterceptorInterface")) {
             mlst.add(pmd.getServiceIdRef());
             break;
           }
@@ -389,15 +405,18 @@ public class TCStressTest implements Serializable {
 
   public void addNewDisableService() {
 
-    if (!Utils.isEmptyString(getDisableService()) &&
-        !Utils.isEmptyString(getTestSenderEBox()) &&
-        !Utils.isEmptyString(getTestReceiverEBox())) {
-      String rb = getTestSenderEBox() + "@" + SEDSystemProperties.getLocalDomain();
+    if (!Utils.isEmptyString(getDisableService())
+            && !Utils.isEmptyString(getTestSenderEBox())
+            && !Utils.isEmptyString(getTestReceiverEBox())) {
+      String rb = getTestSenderEBox() + "@" + SEDSystemProperties.
+              getLocalDomain();
       DisableServiceUtils.addNewDisableService(getDisableService(),
-          getTestReceiverEBox(), rb);
+              getTestReceiverEBox(), rb);
     } else {
-      facesContext().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
-          "Manjkajoči podatki", "Vnesite posiljatelja, naslovnika in storitev!"));
+      facesContext().addMessage(null, new FacesMessage(
+              FacesMessage.SEVERITY_WARN,
+              "Manjkajoči podatki",
+              "Vnesite posiljatelja, naslovnika in storitev!"));
     }
   }
 
@@ -407,7 +426,8 @@ public class TCStressTest implements Serializable {
 
   public void removeSelectedService(ActionEvent event) {
 
-    DisableService sr = (DisableService) event.getComponent().getAttributes().get("disabledService");
+    DisableService sr = (DisableService) event.getComponent().getAttributes().
+            get("disabledService");
     LOG.formatedlog("Remove selected list %s", sr);
     if (sr != null && DisableServiceUtils.STDisableList.contains(sr)) {
       DisableServiceUtils.STDisableList.remove(sr);
@@ -425,21 +445,26 @@ public class TCStressTest implements Serializable {
 
   public void changeSentDateAction() {
     if (fictionMailId == null) {
-      facesContext().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
-          "Manjkajoči podatki", "Vnesite Id pošiljke!"));
+      facesContext().addMessage(null, new FacesMessage(
+              FacesMessage.SEVERITY_WARN,
+              "Manjkajoči podatki", "Vnesite Id pošiljke!"));
       return;
     }
     LOG.formatedlog("get mail by id %d", fictionMailId);
     MSHOutMail mo = mDB.getMailById(MSHOutMail.class, fictionMailId);
     if (mo == null) {
-      facesContext().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
-          "Napačni podatki", String.format("Izhodna pošiljka za id '%d' ne obstaja!", fictionMailId)));
+      facesContext().addMessage(null, new FacesMessage(
+              FacesMessage.SEVERITY_WARN,
+              "Napačni podatki", String.format(
+                      "Izhodna pošiljka za id '%d' ne obstaja!", fictionMailId)));
       return;
     }
     if (!Objects.equals(mo.getStatus(), SEDOutboxMailStatus.SENT.getValue())) {
-      facesContext().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
-          "Neveljavna pošiljka", String.format(
-              "Izhodna pošiljka za id '%d' je v napačnem statusu %s!", fictionMailId, mo.getStatus())));
+      facesContext().addMessage(null, new FacesMessage(
+              FacesMessage.SEVERITY_WARN,
+              "Neveljavna pošiljka", String.format(
+                      "Izhodna pošiljka za id '%d' je v napačnem statusu %s!",
+                      fictionMailId, mo.getStatus())));
       return;
     }
     Calendar c = Calendar.getInstance();
@@ -449,8 +474,9 @@ public class TCStressTest implements Serializable {
     try {
       mDB.updateOutMail(mo, "Test Fikcija", "");
     } catch (StorageException ex) {
-      facesContext().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
-          "Programska napaka", ex.getMessage()) );
+      facesContext().addMessage(null, new FacesMessage(
+              FacesMessage.SEVERITY_WARN,
+              "Programska napaka", ex.getMessage()));
     }
 
   }

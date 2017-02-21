@@ -4,16 +4,12 @@
     
     <class name="si.laurentius.process.SEDProcessorSet"
            table="LAU_PROCESS_SET">
-        <id name="Id" type="java.math.BigInteger" >
-            <column name="ID" scale="0" />
-            <generator class="sequence">
-                <param name="sequence">SEQ_LAU_PROCESS_SET</param>
-            </generator>
-        </id>
+        <id name="Code" column="CODE" length="64" type="java.lang.String"  />
+            
         <property column="NAME" name="Name"  length="128" type="java.lang.String"/>
         <property column="DESCRIPTION" name="Description"  length="512" type="java.lang.String"   />
         <list name="sedProcessorInstances" access="field" cascade="all, delete-orphan" lazy="false" >
-            <key column="PROCESS_SET_ID" />
+            <key column="PROCESS_SET_CODE" />
             <list-index column="IDX"/>
             <one-to-many class="si.laurentius.process.SEDProcessorInstance"/>
         </list>
@@ -44,11 +40,11 @@
         <property column="ACTION" name="Action"  length="256" type="java.lang.String" />
         <property column="RECEIVER_EBOX" name="ReceiverEBox"  length="128" type="java.lang.String" />
         <property column="SENDER_EBOX" name="SenderEBox"  length="128" type="java.lang.String" />
-        <property column="PROC_SET_ID" name="ProcSetId"  type="java.math.BigInteger" />
+        <property column="PROC_SET_CODE" name="ProcSetCode"  length="64" type="java.lang.String" />
     </class>   
    
-    <query name="si.laurentius.process.SEDProcessorSet.getById" ><![CDATA[SELECT p FROM SEDProcessorSet p WHERE p.Id = :id]]></query>     
-    <query name="si.laurentius.process.SEDProcessorSet.getAll" ><![CDATA[SELECT p FROM SEDProcessorSet p order by id asc]]></query>
+    <query name="si.laurentius.process.SEDProcessorSet.getByCode" ><![CDATA[SELECT p FROM SEDProcessorSet p WHERE p.Code= :code]]></query>     
+    <query name="si.laurentius.process.SEDProcessorSet.getAll" ><![CDATA[SELECT p FROM SEDProcessorSet p order by p.Code asc]]></query>
     
     <query name="si.laurentius.process.SEDProcessorRule.getById" ><![CDATA[SELECT p FROM SEDProcessorRule p WHERE p.Id = :id]]></query>     
     <query name="si.laurentius.process.SEDProcessorRule.getAll" ><![CDATA[SELECT p FROM SEDProcessorRule p order by id asc]]></query>

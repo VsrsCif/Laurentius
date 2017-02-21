@@ -23,7 +23,7 @@ import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.interfaces.SEDLookupsInterface;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.msh.web.abst.AbstractAdminJSFView;
-import si.laurentius.msh.web.gui.DialogDelete;
+import si.laurentius.msh.web.gui.dlg.DialogDelete;
 import si.laurentius.plugin.crontask.CronTaskDef;
 import si.laurentius.plugin.crontask.CronTaskPropertyDef;
 
@@ -39,17 +39,7 @@ public class AdminSEDTaskTypeView extends AbstractAdminJSFView<CronTaskDef> {
 
 
   CronTaskPropertyDef mSelTaksProp;
-   @ManagedProperty(value = "#{dialogDelete}")
-  private DialogDelete dlgDelete;
 
-  @Override
-  public DialogDelete getDlgDelete() {
-    return dlgDelete;
-  }
-  @Override
-  public  void setDlgDelete(DialogDelete dlg){
-    dlgDelete = dlg;
-  }
   /**
      *
      */

@@ -15,6 +15,9 @@
 package si.jrc.msh.interceptor;
 
 import java.util.Map;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.xml.namespace.QName;
@@ -27,12 +30,12 @@ import org.apache.wss4j.dom.handler.WSHandlerConstants;
 import si.laurentius.msh.pmode.PartyIdentitySetType;
 import si.laurentius.msh.pmode.Security;
 import si.laurentius.msh.pmode.X509;
-import si.laurentius.cert.SEDCertStore;
 import si.laurentius.cert.SEDCertificate;
 import si.jrc.msh.client.sec.SecurityUtils;
 import si.jrc.msh.exception.EBMSError;
 import si.jrc.msh.exception.EBMSErrorCode;
 import static si.jrc.msh.interceptor.EBMSOutInterceptor.LOG;
+import si.laurentius.cert.SEDCertPassword;
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.exception.SEDSecurityException;
 import si.laurentius.commons.interfaces.DBSettingsInterface;
@@ -59,8 +62,7 @@ public abstract class AbstractEBMSInterceptor extends AbstractSoapInterceptor {
   protected SEDLookupsInterface mSedLookups;
   // ejb reference to DAO services
   protected SEDDaoInterface mSedDao;
-  
-  
+  // ejb reference to cert store 
   SEDCertStoreInterface mCertBean;
 
   // ejb reference to PModeManager services
@@ -204,24 +206,12 @@ public abstract class AbstractEBMSInterceptor extends AbstractSoapInterceptor {
 
     if (sc.getX509().getSignature() != null && sc.getX509().getSignature().getReference() != null) {
       X509.Signature sig = sc.getX509().getSignature();
-
-      SEDCertStore cs;
-      try {
-        cs = getCertStore().getCertificateStore();
-      } catch (SEDSecurityException ex) {
-        String msg = "Error opening keystore - check configuration!";
-        LOG.logError(l, msg, null);
-        throw new EBMSError(EBMSErrorCode.PModeConfigurationError, msgId, msg, sv);
-      }
       
-      if (cs == null) {
-        String msg = "Keystore do not exists - check configuration!";
-        LOG.logError(l, msg, null);
-        throw new EBMSError(EBMSErrorCode.PModeConfigurationError, msgId, msg, sv);
-      }
-
+      String sigAlias = lps.getSignatureKeyAlias();
+     
+/*
       SEDCertificate aliasCrt =
-          getLookups().getSEDCertificatForAlias(lps.getSignatureKeyAlias(), cs, true);
+          getCertStore().getSEDCertificatForAlias(lps.getSignatureKeyAlias());
       if (aliasCrt == null) {
         String msg = "Key for alias '" + lps.getSignatureKeyAlias() + "' do not exists!";
         LOG.logError(l, msg, null);
@@ -232,10 +222,18 @@ public abstract class AbstractEBMSInterceptor extends AbstractSoapInterceptor {
         String msg = "Key for alias '" + lps.getSignatureKeyAlias() + " is not valid!";
         LOG.logError(l, msg, null);
         throw new EBMSError(EBMSErrorCode.PModeConfigurationError, msgId, msg, sv);
+      }*/
+      
+      Properties keyProp;
+      try {
+        keyProp = getCertStore().getCXFKeystoreProperties(sigAlias);
+      } catch (SEDSecurityException ex) {
+         throw new EBMSError(EBMSErrorCode.Other, msgId, ex.getMessage(), sv);       
       }
-
-      outProps =
-          SecurityUtils.createSignatureConfiguration(sig, cs, aliasCrt);
+      
+      SEDCertPassword cp = getCertStore().getKeyPassword(sigAlias);
+     
+      outProps = SecurityUtils.createSignatureConfiguration(sig, keyProp, cp);
       if (outProps == null) {
         LOG.logWarn(l,
             "Sending not signed message. Incomplete configuration: X509/Signature for message:  " +
@@ -250,30 +248,27 @@ public abstract class AbstractEBMSInterceptor extends AbstractSoapInterceptor {
     if (sc.getX509().getEncryption() != null && sc.getX509().getEncryption().getReference() != null) {
       X509.Encryption enc = sc.getX509().getEncryption();
 
-      
-      SEDCertStore cs;
+      String encAlias = lps.getSignatureKeyAlias();
+      Properties encProp;
       try {
-        cs = getCertStore().getCertificateStore();
+        encProp = getCertStore().getCXFTruststoreProperties(encAlias);
       } catch (SEDSecurityException ex) {
-        String msg = "Error opening keystore - check configuration!";
-        LOG.logError(l, msg, null);
-        throw new EBMSError(EBMSErrorCode.PModeConfigurationError, msgId, msg, sv);
+         throw new EBMSError(EBMSErrorCode.Other, msgId, ex.getMessage(), sv);       
       }
-      if (cs == null) {
-        String msg = "Trustore  do not exists - check configuration!";
-        LOG.logError(l, msg, null);
-        throw new EBMSError(EBMSErrorCode.PModeConfigurationError, msgId, msg, sv);
-      }
-      SEDCertificate aliasCrt = getLookups().getSEDCertificatForAlias(epx.getEncryptionCertAlias(),
-          cs, false);
+      /*
+      SEDCertificate aliasCrt = getCertStore().getSEDCertificatForAlias(epx.getEncryptionCertAlias(),
+          false);
       if (aliasCrt == null) {
         String msg = "Ecryptiong cert for alias '" + epx.getEncryptionCertAlias() +
             "' do not exists!";
         LOG.logError(l, msg, null);
         throw new EBMSError(EBMSErrorCode.PModeConfigurationError, msgId, msg, sv);
-      }
+      }*/
 
-      Map<String, Object> penc = SecurityUtils.createEncryptionConfiguration(enc, cs, aliasCrt);
+      Map<String, Object> penc = SecurityUtils.createEncryptionConfiguration(enc, 
+              encProp, encAlias);
+      
+      
       if (enc == null) {
         LOG.logWarn(l,
             "Sending not encrypted message. Incomplete configuration: X509/Encryption/Encryp for message:  " +
@@ -320,30 +315,27 @@ public abstract class AbstractEBMSInterceptor extends AbstractSoapInterceptor {
     }
     if (sc.getX509().getSignature() != null && sc.getX509().getSignature().getReference() != null) {
       X509.Signature sig = sc.getX509().getSignature();
-
-      // create signature priperties
-      SEDCertStore cs;
+      String sigAliasProp = eps.getSignatureCertAlias();
+      
+      Properties ptst;
       try {
-        cs = getCertStore().getCertificateStore();
+        ptst = getCertStore().getCXFTruststoreProperties(sigAliasProp);
       } catch (SEDSecurityException ex) {
-        String msg = "Error opening keystore - check configuration!";
-        LOG.logError(l, msg, null);
-        throw new EBMSError(EBMSErrorCode.PModeConfigurationError, msgId, msg, sv);
+       
+        LOG.logError(l,  ex);
+        throw new EBMSError(EBMSErrorCode.PModeConfigurationError, msgId, ex.getMessage(), sv);
       }
-      if (cs == null) {
-        String msg = "Truststore for name  do not exists - check configuration!";
-        LOG.logError(l, msg, null);
-        throw new EBMSError(EBMSErrorCode.PModeConfigurationError, msgId, msg, sv);
-      }
-      SEDCertificate aliasCrt = getLookups().getSEDCertificatForAlias(eps.getSignatureCertAlias(),
-          cs, false);
+
+      /*
+      SEDCertificate aliasCrt = getCertStore().getSEDCertificatForAlias(eps.getSignatureCertAlias(),
+           false);
       if (aliasCrt == null) {
         String msg = "Certificate for alias '" + eps.getSignatureCertAlias() +
             "' do not exists in keystore.";
         LOG.logError(l, msg, null);
         throw new EBMSError(EBMSErrorCode.PModeConfigurationError, msgId, msg, sv);
-      }
-      outProps = SecurityUtils.createSignatureValidationConfiguration(sig, cs, aliasCrt);
+      }*/
+      outProps = SecurityUtils.createSignatureValidationConfiguration(sig, ptst);
       if (outProps == null) {
         LOG.logWarn(l,
             "Sending not signed message. Incomplete configuration: X509/Signature for message:  " +
@@ -357,30 +349,31 @@ public abstract class AbstractEBMSInterceptor extends AbstractSoapInterceptor {
 
     if (sc.getX509().getEncryption() != null && sc.getX509().getEncryption().getReference() != null) {
       X509.Encryption enc = sc.getX509().getEncryption();
-      SEDCertStore cs;
+      String decAlias =lps.getDecryptionKeyAlias();
+      
+      
+      Properties ksProp;
       try {
-        cs = getCertStore().getCertificateStore();
+        ksProp = getCertStore().getCXFKeystoreProperties(decAlias);
       } catch (SEDSecurityException ex) {
-        String msg = "Error opening keystore - check configuration!";
-        LOG.logError(l, msg, null);
-        throw new EBMSError(EBMSErrorCode.PModeConfigurationError, msgId, msg, sv);
-      }
-      if (cs == null) {
-        String msg = "Keystore for name  do not exists - check configuration!";
-        LOG.logError(l, msg, null);
-        throw new EBMSError(EBMSErrorCode.PModeConfigurationError, msgId, msg, sv);
-      }
-      SEDCertificate aliasCrt = getLookups().getSEDCertificatForAlias(lps.getDecryptionKeyAlias(),
-          cs, true);
-      if (aliasCrt == null) {
         String msg = "Decryptiong key for alias '" + lps.getDecryptionKeyAlias() +
             "' do not exist in keystore.";
         LOG.logError(l, msg, null);
         throw new EBMSError(EBMSErrorCode.PModeConfigurationError, msgId, msg, sv);
       }
+     
+   /*   SEDCertificate aliasCrt = getCertStore().getSEDCertificatForAlias(lps.getDecryptionKeyAlias(),
+          true);
+      if (aliasCrt == null) {
+        String msg = "Decryptiong key for alias '" + lps.getDecryptionKeyAlias() +
+            "' do not exist in keystore.";
+        LOG.logError(l, msg, null);
+        throw new EBMSError(EBMSErrorCode.PModeConfigurationError, msgId, msg, sv);
+      }*/
 
+   SEDCertPassword cp = getCertStore().getKeyPassword(decAlias);
       Map<String, Object> penc =
-          SecurityUtils.createDecryptionConfiguration(enc, cs, aliasCrt);
+          SecurityUtils.createDecryptionConfiguration(enc, ksProp, cp);
       if (enc == null) {
         LOG.logWarn(l,
             "Sending not encrypted message. Incomplete configuration: X509/Encryption/Encryp for message:  " +
@@ -406,6 +399,7 @@ public abstract class AbstractEBMSInterceptor extends AbstractSoapInterceptor {
           "Sending not message with not security policy. Bad/incomplete security configuration (pmode) for message:" +
           msgId, null);
     }
+
     LOG.logEnd(l);
     return sec;
   }

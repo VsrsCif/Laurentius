@@ -5,24 +5,14 @@
  */
 package si.laurentius.lce;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import java.security.Key;
 import java.security.KeyStore;
-import java.security.cert.X509Certificate;
-import java.util.Calendar;
-import javax.net.ssl.KeyManager;
-import javax.net.ssl.TrustManager;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import si.laurentius.cert.SEDCertStore;
-import si.laurentius.cert.SEDCertificate;
-import si.laurentius.commons.utils.xml.XMLUtils;
 
 /**
  *
@@ -54,17 +44,17 @@ public class KeystoreUtilsTest {
 
   public static final String TARGET_FOLDER = "target";
 
-  public KeystoreUtilsTest() {
-  }
 
   @BeforeClass
   public static void setUpClass() {
+  }
+  public KeystoreUtilsTest() {
   }
 
   @Before
   public void setUp() {
   }
-
+/*
   private SEDCertStore createKeystore() {
 
     SEDCertStore cs = new SEDCertStore();
@@ -115,11 +105,11 @@ public class KeystoreUtilsTest {
 
     cs.getSEDCertificates().add(c);
     return cs;
-  }
+  }*/
 
   /**
    * Test of getKeystore method, of class KeystoreUtils.
-   */
+   * /
   @Test
   public void testGetKeystore_SEDCertStore()
           throws Exception {
@@ -133,7 +123,7 @@ public class KeystoreUtilsTest {
 
   /**
    * Test of getTrustManagers method, of class KeystoreUtils.
-   */
+   * /
   @Test
   public void testGetTrustManagers()
           throws Exception {
@@ -149,7 +139,7 @@ public class KeystoreUtilsTest {
 
   /**
    * Test of getKeyManagers method, of class KeystoreUtils.
-   */
+   * /
   @Test
   public void testGetKeyManagers()
           throws Exception {
@@ -163,7 +153,7 @@ public class KeystoreUtilsTest {
 
   /**
    * Test of getKeyManagersForAlias method, of class KeystoreUtils.
-   */
+   * /
   @Test
   public void testGetKeyManagersForAlias()
           throws Exception {
@@ -238,7 +228,7 @@ public class KeystoreUtilsTest {
       assertNotNull(result);
     }
   }
-
+/*
   @Test
   public void testAddCertificateToStore()
           throws Exception {
@@ -415,5 +405,5 @@ public class KeystoreUtilsTest {
 
     assertEquals(iTrgCertCount + iSrcCertCount, sctarget.getSEDCertificates().
             size());
-  }
+  }*/
 }

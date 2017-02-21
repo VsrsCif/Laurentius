@@ -66,6 +66,8 @@ public class AppConstant {
      *
      */
   public static final String S_PANEL_PLUGIN = "PANEL_PLUGIN";
+  
+  public static final String S_SETTINGS_PLUGIN = "SETTINGS_PLUGIN";
 
   /**
      *
@@ -76,6 +78,12 @@ public class AppConstant {
      *
      */
   public static final String S_PANEL_SETT_CERTS = "PANEL_SETT_CERTS";
+  
+  /**
+     *
+     */
+  public static final String S_PANEL_SETT_CERT_ROOT_CA = "PANEL_SETT_CERT_ROOT_CA";
+  public static final String S_PANEL_SETT_CERT_CRL = "S_PANEL_SETT_CERT_CRL";
 
   /**
      *
@@ -94,6 +102,9 @@ public class AppConstant {
   
   
   public static final String S_APPLICATION_CODE = "laurentius-web";
+  public static String getS_APPLICATION_CODE() {
+    return S_APPLICATION_CODE;
+  }
   
   
 
@@ -161,6 +172,9 @@ public class AppConstant {
   public String getS_PANEL_PLUGIN() {
     return S_PANEL_PLUGIN;
   }
+  public String getS_SETTINGS_PLUGIN() {
+    return S_SETTINGS_PLUGIN;
+  }
   public String getS_PANEL_INMAIL_PROCESS() {
     return S_PANEL_INMAIL_PROCESS;
   }
@@ -214,5 +228,15 @@ public class AppConstant {
   public String getS_PANEL_SETT_PMODE_AS4_RA() {
     return S_PANEL_SETT_PMODE_AS4_RA;
   }
+
+  public String getS_PANEL_SETT_CERT_ROOT_CA() {
+    return S_PANEL_SETT_CERT_ROOT_CA;
+  }
+
+  public String getS_PANEL_SETT_CERT_CRL() {
+    return S_PANEL_SETT_CERT_CRL;
+  }
+
+
 
 }

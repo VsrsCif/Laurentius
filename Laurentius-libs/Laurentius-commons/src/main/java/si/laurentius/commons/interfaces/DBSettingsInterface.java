@@ -28,10 +28,6 @@ import si.laurentius.property.SEDProperty;
 @Local
 public interface DBSettingsInterface {
 
-
-  
-
-
   /**
    *
    * @param prps
@@ -62,7 +58,8 @@ public interface DBSettingsInterface {
 
   /**
      *
-     */
+    */
   void initialize();
+
 
 }

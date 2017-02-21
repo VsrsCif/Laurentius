@@ -14,61 +14,66 @@
     </h:head>
 
     <h:body>
+        <f:metadata>
+            <f:viewParam name="page" value="#{basicWebPluginData.currentPanel}" />
+            <f:viewParam name="navigator" value="#{basicWebPluginData.showNavigator}" />
+        </f:metadata>
         <h:form id="bscform" >
             <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
             <!-- main window -->    
             <p:layout  style="min-width:400px;min-height:400px;"  fullPage="true" >
-                
-                <p:layoutUnit position="west"  size="200" resizable="true" closable="true" collapsible="true" >        
-                     <p:accordionPanel id="toolbars" >
-                          
-                            <p:tab id="PANEL_INBOX"  >
-                                <f:facet name="title">
 
-                                    <h:graphicImage value="#{resource['images:/process.svg']}" width="22" height="22" />
-                                    <h:outputText value="#{msg['InMailProcess']}" />                                 
-                                    
-                                </f:facet>
-                                
-                                <p:menu class="ui-accordion-button" style="width: 100%">
-                                    
-                                    
-                                    <p:menuitem value="#{msg['Export']}" 
-                                                icon="ui-icon-svg-export ui-icon-size-22" 
-                                                actionListener="#{basicWebPluginData.onToolbarButtonAction}" 
-                                                update=":bscform:MainPanel">
-                                        <f:attribute name="panel" value="PANEL_IMP_EXPORT" />
-                                    </p:menuitem>
-                                    <p:menuitem value="#{msg['Execute']}" 
-                                                icon="ui-icon-svg-execute ui-icon-size-22" 
-                                                actionListener="#{basicWebPluginData.onToolbarButtonAction}" 
-                                                update=":bscform:MainPanel">
-                                        <f:attribute name="panel" value="PANEL_IMP_EXECUTE" />
-                                    </p:menuitem>  
-                                    <p:menuitem value="#{msg['XSLT']}" 
-                                                icon="ui-icon-svg-xslt ui-icon-size-22" 
-                                                actionListener="#{basicWebPluginData.onToolbarButtonAction}" 
-                                                update=":bscform:MainPanel"
-                                                >
-                                        <f:attribute name="panel" value="PANEL_IMP_XSLT" />
-                                    </p:menuitem>
-                                </p:menu>
-                               
-                            </p:tab>
-                     </p:accordionPanel>
+                <p:layoutUnit  rendered="#{basicWebPluginData.showNavigator}" position="west"  size="200" resizable="true" closable="true" collapsible="true" >        
+                    <p:accordionPanel id="toolbars" >
+
+                        <p:tab id="PANEL_INBOX"  >
+                            <f:facet name="title">
+
+                                <h:graphicImage value="#{resource['images:/process.svg']}" width="22" height="22" />
+                                <h:outputText value="#{msg['InMailProcess']}" />                                 
+
+                            </f:facet>
+
+                            <p:menu class="ui-accordion-button" style="width: 100%">
+
+
+                                <p:menuitem value="#{msg['Export']}" 
+                                            icon="ui-icon-svg-export ui-icon-size-22" 
+                                            actionListener="#{basicWebPluginData.onToolbarButtonAction}" 
+                                            update=":bscform:MainPanel">
+                                    <f:attribute name="panel" value="PANEL_IMP_EXPORT" />
+                                </p:menuitem>
+                                <p:menuitem value="#{msg['Execute']}" 
+                                            icon="ui-icon-svg-execute ui-icon-size-22" 
+                                            actionListener="#{basicWebPluginData.onToolbarButtonAction}" 
+                                            update=":bscform:MainPanel">
+                                    <f:attribute name="panel" value="PANEL_IMP_EXECUTE" />
+                                </p:menuitem>  
+                                <p:menuitem value="#{msg['XSLT']}" 
+                                            icon="ui-icon-svg-xslt ui-icon-size-22" 
+                                            actionListener="#{basicWebPluginData.onToolbarButtonAction}" 
+                                            update=":bscform:MainPanel"
+                                            >
+                                    <f:attribute name="panel" value="PANEL_IMP_XSLT" />
+                                </p:menuitem>
+                            </p:menu>
+
+                        </p:tab>
+                    </p:accordionPanel>
 
                 </p:layoutUnit>    
 
-                <p:layoutUnit position="center"  >        
+                <p:layoutUnit position="center"  >
+                    <h:outputText value="#{param['id']}" />
                     <h:panelGroup id="MainPanel">
                         <sui:panel-execute id="PanelExecute" rendered="#{basicWebPluginData.currentPanel.equalsIgnoreCase(AppConstant.s_PANEL_IMP_EXECUTE)}"  />
                         <sui:panel-export id="PanelExport" rendered="#{basicWebPluginData.currentPanel.equalsIgnoreCase(AppConstant.s_PANEL_IMP_EXPORT)}"  />
                         <sui:panel-xslt id="PanelXslt" rendered="#{basicWebPluginData.currentPanel.equalsIgnoreCase(AppConstant.s_PANEL_IMP_XSLT)}"  />
 
-                    
+
                     </h:panelGroup>
                 </p:layoutUnit>     
-               </p:layout>
+            </p:layout>
         </h:form>
         <dlg:dlg-export id="dlgExport" />
         <dlg:dlg-execute id="dlgExecute" />

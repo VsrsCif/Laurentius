@@ -34,7 +34,7 @@
                                  value="#{adminSEDInMailProcessSetView.list}"
                                  selectionMode="single"
                                  selection="#{adminSEDInMailProcessSetView.selected}"
-                                 rowKey="#{sp.id}"
+                                 rowKey="#{sp.code}"
                                  rowIndexVar="rowIndex"
                                  style="padding: 0px; margin: 0px"
                                  scrollable="true" 
@@ -59,6 +59,11 @@
                                              actionListener="#{adminSEDInMailProcessSetView.removeSelected()}" update=":forms:InMailProcess:TblInMailProcessSet" />
 
                         </f:facet>
+                         <p:column headerText="#{msg['Code']}" width="160">
+                             <h:outputText id="tblCode" value="#{sp.code}"></h:outputText>                
+                            
+                        </p:column>
+                        
                         <p:column headerText="#{msg['Name']}" width="160">
                             <h:outputText id="tblimp" value="#{sp.name}"></h:outputText>                
                             <p:tooltip for=":forms:InMailProcess:TblInMailProcessSet:#{rowIndex}:tblimp"
@@ -129,7 +134,7 @@
                             <h:outputText value="#{sp.action}"></h:outputText>                
                         </p:column>
                         <p:column headerText="#{msg['ProcessSet']}" width="160">
-                            <h:outputText value="#{sp.procSetId}"></h:outputText>                
+                            <h:outputText value="#{sp.procSetCode}"></h:outputText>                
                         </p:column>
                     </p:dataTable>
                 </p:scrollPanel>

@@ -33,7 +33,7 @@ public class SEDValues {
   /**
      * Artemis value for delay!
      */
-  public static final String EBMS_QUEUE_DELAY_Artemis = "_AMQ_SCHED_DELIVERY"; // artemis value for delay!
+    public static final String EBMS_QUEUE_DELAY_Artemis = "_AMQ_SCHED_DELIVERY"; // artemis value for delay!
 
   /**
      *
@@ -80,7 +80,7 @@ public class SEDValues {
   /**
      * queue name for executing 
      */
-  public static final String JNDI_QUEUE_EXPORT= "queue/MSHExportQueue";
+  public static final String JNDI_QUEUE_IN_MAIL_PROCESS= "queue/MSHInMailProcessQueue";
 
   
 

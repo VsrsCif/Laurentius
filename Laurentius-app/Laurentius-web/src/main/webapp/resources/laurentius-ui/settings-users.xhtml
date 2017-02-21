@@ -55,7 +55,7 @@
                                              update=":dlguser:userDialogForm:userDetails" 
                                              oncomplete="PF('userDialog').show()" />
                             <p:commandButton value="#{msg['Delete']}" styleClass="toolbar-Button" icon="ui-icon-svg-remove ui-icon-size-22"  
-                                             actionListener="#{adminSEDUserView.removeSelected()}" update=":forms:SettingsUsers:TblSedUser" />
+                                             actionListener="#{adminSEDUserView.removeSelectedWithWarning()}" update=":forms:SettingsUsers:TblSedUser" />
 
                         </f:facet>
 

@@ -26,33 +26,7 @@ Copyright 2016, Supreme Court Republic of Slovenia
  limitations under the Licence.
 -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://laurentius.si/cert" targetNamespace="http://laurentius.si/cert" elementFormDefault="qualified" attributeFormDefault="unqualified">
-    <xs:element name="SEDCertStore" type="ns1:SEDCertStore"/>
-    <xs:complexType name="SEDCertStore">
-        <xs:annotation>
-            <xs:documentation xml:lang="sl">x509 Certificate data</xs:documentation>
-        </xs:annotation>
-        <xs:sequence minOccurs="0">
-            <xs:element name="SEDCertificate" type="ns1:SEDCertificate" minOccurs="0" maxOccurs="unbounded"/>
-        </xs:sequence>
-        <xs:attribute name="id" type="xs:integer" use="required">
-            <xs:annotation>
-                <xs:documentation>Store  id</xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
-        <xs:attribute name="name" type="xs:token" use="required">
-            <xs:annotation>
-                <xs:documentation>Unique store code/name</xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
-        <xs:attribute name="filePath" type="xs:string" use="required">
-            <xs:annotation>
-                <xs:documentation xml:lang="sl">Pod do shrame</xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
-        <xs:attribute name="type" use="required"/>
-        <xs:attribute name="password" use="required"/>
-        <xs:attribute name="status" use="optional"/>
-    </xs:complexType>
+    <xs:element name="SEDCertificate" type="ns1:SEDCertificate"/>
     <xs:complexType name="SEDCertificate">
         <xs:annotation>
             <xs:documentation xml:lang="sl">x509 Certificate data</xs:documentation>
@@ -62,34 +36,39 @@ Copyright 2016, Supreme Court Republic of Slovenia
                 <xs:documentation>Certificate id</xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        
-        <xs:attribute name="clrId"  type="xs:integer" use="required"/>
-        <xs:attribute name="lastCRLCheck" type="xs:dateTime" />
-        
-                
+        <xs:attribute name="clrId" type="xs:integer" use="required"/>
+        <xs:attribute name="lastCRLCheck" type="xs:dateTime"/>
         <xs:attribute name="alias" type="xs:string" use="required"/>
-        <xs:attribute name="issuerDN" type="xs:string" />
+        <xs:attribute name="issuerDN" type="xs:string"/>
         <xs:attribute name="subjectDN" type="xs:string"/>
-        <xs:attribute name="validFrom" type="xs:dateTime" />
-        <xs:attribute name="validTo" type="xs:dateTime" />                
-        <xs:attribute name="serialNumber" type="xs:string" />  
+        <xs:attribute name="validFrom" type="xs:dateTime"/>
+        <xs:attribute name="validTo" type="xs:dateTime"/>
+        <xs:attribute name="serialNumber" type="xs:string"/>
         <xs:attribute name="type" type="xs:string" use="required"/>
         <xs:attribute name="keyEntry" type="xs:boolean" use="required"/>
-        <xs:attribute name="keyPassword" type="xs:string"/>
         <xs:attribute name="hexSHA1Digest" type="xs:string"/>
-        <xs:attribute name="status" type="xs:int" >
+        <xs:attribute name="password"  type="xs:string"/>
+        <xs:attribute name="import" type="xs:boolean" use="required"/>
+        <xs:attribute name="status" type="xs:int">
+            
             <xs:annotation>
                 <xs:documentation>
-  enum: si.laurentius.commons.CertStatus                  
-  OK(0),
-  MISSING_PASSWD(2),
-  INVALID_PASSWD(4),
-  INVALID_DATE(8),
-  INVALID_ROOT(16),
-  INVALID_CRL(32);; </xs:documentation>
+                    enum: si.laurentius.commons.CertStatus                  
+                    OK(0),
+                    MISSING_PASSWD(2),
+                    INVALID_PASSWD(4),
+                    INVALID_DATE(8),
+                    INVALID_ROOT(16),
+                    INVALID_CRL(32);; </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="statusMessage" use="optional" type="xs:string"/>
-        
+        <xs:attribute name="statusMessage" type="xs:string" use="optional"/>
     </xs:complexType>
+    <xs:element name="SEDCertPassword">
+        <xs:complexType>
+            <xs:attribute name="alias" use="required" type="xs:string"/>
+            <xs:attribute name="password" use="required" type="xs:string"/>
+            <xs:attribute name="keyPassword" use="required" type="xs:boolean"/>
+        </xs:complexType>
+    </xs:element>
 </xs:schema>

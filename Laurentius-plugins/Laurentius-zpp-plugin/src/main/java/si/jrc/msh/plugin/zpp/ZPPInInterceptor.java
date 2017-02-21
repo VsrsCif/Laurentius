@@ -236,7 +236,7 @@ public class ZPPInInterceptor implements SoapInterceptorInterface {
             return;
           }
 
-          Key pk = mkeyUtils.getPrivateKeyForX509Cert(mCertBean.getCertificateStore(), xc);
+          Key pk = mCertBean.getPrivateKeyForX509Cert(xc);
           if (pk == null) {
             String errmsg =
                 "Could not get private key for cert: " + xc.getSubjectDN() +
@@ -368,7 +368,8 @@ public class ZPPInInterceptor implements SoapInterceptorInterface {
 
       return;
     }
-    Key pk = mkeyUtils.getPrivateKeyForX509Cert(mCertBean.getCertificateStore(), xc);
+    //Key pk = mkeyUtils.getPrivateKeyForX509Cert(mCertBean.getCertificateStore(), xc);
+    Key pk =  mCertBean.getPrivateKeyForX509Cert(xc);
     if (pk == null) {
       String errmsg =
           "Could not get private key for cert: " + xc.getSubjectDN() +

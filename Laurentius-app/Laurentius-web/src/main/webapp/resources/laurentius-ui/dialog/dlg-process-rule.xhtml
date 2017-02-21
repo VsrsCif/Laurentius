@@ -56,11 +56,11 @@
                             </p:selectOneMenu>
                             
                             <h:outputText value="#{msg['ProcessSet']}:" />
-                            <p:selectOneMenu id="ProcessSet" value="#{adminSEDInMailProcessRuleView.editable.procSetId}"
+                            <p:selectOneMenu id="ProcessSet" value="#{adminSEDInMailProcessRuleView.editable.procSetCode}"
                                              style="width: 100% !important;min-width: 100% !important" >
                                 <f:selectItem noSelectionOption="false"  />
                                 <f:selectItems value="#{adminSEDInMailProcessSetView.list}" var="ps" 
-                                               itemLabel="#{ps.name}" itemValue="#{ps.id}" itemDescription="#{ps.description}"/>
+                                               itemLabel="#{ps.name}" itemValue="#{ps.code}" itemDescription="#{ps.description}"/>
                             </p:selectOneMenu>
 
 

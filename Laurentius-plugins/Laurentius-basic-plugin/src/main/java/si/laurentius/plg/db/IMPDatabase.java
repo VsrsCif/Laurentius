@@ -40,7 +40,6 @@ import javax.transaction.UserTransaction;
 import javax.xml.bind.JAXBException;
 import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.utils.SEDLogger;
-import si.laurentius.commons.utils.StringFormater;
 import si.laurentius.commons.utils.Utils;
 import si.laurentius.commons.utils.xml.XMLUtils;
 import si.laurentius.plugin.imp.IMPExecute;
@@ -59,13 +58,12 @@ import si.laurentius.plugin.imp.XPathRule;
 @TransactionManagement(TransactionManagementType.BEAN)
 public class IMPDatabase implements IMPDBInterface {
 
+  public static final String FILE_INIT_DATA = "plg-basic-init.xml";
   /**
    *
    */
-  protected static SEDLogger LOG = new SEDLogger(IMPDatabase.class);
+  protected static final SEDLogger LOG = new SEDLogger(IMPDatabase.class);
   // min, sec, milis.
-
-  public static final String FILE_INIT_DATA = "plg-basic-init.xml";
   public static final long S_UPDATE_TIMEOUT = 10 * 60 * 1000; // 10 minutes
   /**
    *
@@ -108,6 +106,36 @@ public class IMPDatabase implements IMPDBInterface {
     return suc;
   }
 
+  /**
+   *
+   * @param sb
+   * @return
+   */
+  @Override
+  public boolean addExecute(IMPExecute sb) {
+    return add(sb);
+  }
+
+  /**
+   *
+   * @param sb
+   * @return
+   */
+  @Override
+  public boolean addExport(IMPExport sb) {
+    return add(sb);
+  }
+
+  /**
+   *
+   * @param sb
+   * @return
+   */
+  @Override
+  public boolean addXSLT(IMPXslt sb) {
+    return add(sb);
+  }
+
   private <T> void cacheLookup(List<T> lst, Class<T> c) {
     if (mlstCacheLookup.containsKey(c)) {
       mlstCacheLookup.get(c).clear();
@@ -136,29 +164,76 @@ public class IMPDatabase implements IMPDBInterface {
     slps.setIMPExports(new PlgBasicInit.IMPExports());
     slps.setIMPExecutes(new PlgBasicInit.IMPExecutes());
     slps.setIMPXslts(new PlgBasicInit.IMPXslts());
-    
 
     slps.getIMPExports().getIMPExports().addAll(getExports());
     slps.getIMPExecutes().getIMPExecutes().addAll(getExecutes());
     slps.getIMPXslts().getIMPXslts().addAll(getXSLTs());
-    
 
     try {
 
       File fdata = new File(f, FILE_INIT_DATA);
-      int i = 1;
-      String fileFormat = fdata.getAbsolutePath() + ".%03d";
-      File fileTarget = new File(String.format(fileFormat, i++));
+      if (fdata.exists()) {
+        int i = 1;
+        String fileFormat = fdata.getAbsolutePath() + ".%03d";
+        File fileTarget = new File(String.format(fileFormat, i++));
 
-      while (fileTarget.exists()) {
-        fileTarget = new File(String.format(fileFormat, i++));
+        while (fileTarget.exists()) {
+          fileTarget = new File(String.format(fileFormat, i++));
+        }
+        Files.move(fdata.toPath(), fileTarget.toPath(),
+                StandardCopyOption.REPLACE_EXISTING);
       }
-      Files.move(fdata.toPath(), fileTarget.toPath(), StandardCopyOption.REPLACE_EXISTING);
       XMLUtils.serialize(slps, fdata);
     } catch (JAXBException | IOException ex) {
       LOG.logError(l, ex.getMessage(), ex);
     }
     LOG.logEnd(l);
+  }
+
+  @Override
+  public IMPExecute getExecute(String instance) {
+    if (!Utils.isEmptyString(instance)) {
+
+      List<IMPExecute> lst = getExecutes();
+      for (IMPExecute sb : lst) {
+        if (instance.equalsIgnoreCase(sb.getInstance())) {
+          return sb;
+        }
+      }
+    }
+    return null;
+  }
+
+  /**
+   *
+   * @return
+   */
+  @Override
+  public List<IMPExecute> getExecutes() {
+    return getLookup(IMPExecute.class);
+  }
+
+  @Override
+  public IMPExport getExport(String instance) {
+    if (!Utils.isEmptyString(instance)) {
+
+      List<IMPExport> lst = getExports();
+      for (IMPExport sb : lst) {
+        if (instance.equalsIgnoreCase(sb.getInstance())) {
+          return sb;
+        }
+      }
+    }
+    return null;
+  }
+
+  /**
+   *
+   * @return
+   */
+  @Override
+  public List<IMPExport> getExports() {
+    return getLookup(IMPExport.class);
   }
 
   private <T> List<T> getFromCache(Class<T> c) {
@@ -178,122 +253,6 @@ public class IMPDatabase implements IMPDBInterface {
     return t;
   }
 
-  /**
-   *
-   * @param sb
-   * @return
-   */
-  @Override
-  public boolean addExport(IMPExport sb) {
-    return add(sb);
-  }
-
-  @Override
-  public IMPExport getExport(String instance) {
-    if (!Utils.isEmptyString(instance)) {
-
-      List<IMPExport> lst = getExports();
-      for (IMPExport sb : lst) {
-        if (instance.equalsIgnoreCase(sb.getInstance())) {
-          return sb;
-        }
-      }
-    }
-    return null;
-  }
-
-  /**
-   *
-   * @param sb
-   * @return
-   */
-  @Override
-  public boolean removeExport(IMPExport sb) {
-    return remove(sb);
-  }
-
-  /**
-   *
-   * @param sb
-   * @return
-   */
-  @Override
-  public boolean updateExport(IMPExport sb) {
-    return update(sb);
-  }
-
-  /**
-   *
-   * @return
-   */
-  @Override
-  public List<IMPExport> getExports() {
-    return getLookup(IMPExport.class);
-  }
-
-  /**
-   *
-   * @param sb
-   * @return
-   */
-  @Override
-  public boolean addExecute(IMPExecute sb) {
-    return add(sb);
-  }
-
-  @Override
-  public IMPExecute getExecute(String instance) {
-    if (!Utils.isEmptyString(instance)) {
-
-      List<IMPExecute> lst = getExecutes();
-      for (IMPExecute sb : lst) {
-        if (instance.equalsIgnoreCase(sb.getInstance())) {
-          return sb;
-        }
-      }
-    }
-    return null;
-  }
-
-  /**
-   *
-   * @param sb
-   * @return
-   */
-  @Override
-  public boolean removeExecute(IMPExecute sb) {
-    return remove(sb);
-  }
-
-  /**
-   *
-   * @param sb
-   * @return
-   */
-  @Override
-  public boolean updateExecute(IMPExecute sb) {
-    return update(sb);
-  }
-
-  /**
-   *
-   * @return
-   */
-  @Override
-  public List<IMPExecute> getExecutes() {
-    return getLookup(IMPExecute.class);
-  }
-
-  /**
-   *
-   * @param sb
-   * @return
-   */
-  @Override
-  public boolean addXSLT(IMPXslt sb) {
-    return add(sb);
-  }
-
   @Override
   public IMPXslt getXSLT(String instance) {
     if (!Utils.isEmptyString(instance)) {
@@ -310,26 +269,6 @@ public class IMPDatabase implements IMPDBInterface {
 
   /**
    *
-   * @param sb
-   * @return
-   */
-  @Override
-  public boolean removeXSLT(IMPXslt sb) {
-    return remove(sb);
-  }
-
-  /**
-   *
-   * @param sb
-   * @return
-   */
-  @Override
-  public boolean updateXSLT(IMPXslt sb) {
-    return update(sb);
-  }
-
-  /**
-   *
    * @return
    */
   @Override
@@ -341,10 +280,9 @@ public class IMPDatabase implements IMPDBInterface {
   void init() {
     long l = LOG.logStart();
 
-    if (System.getProperties().containsKey(
-            SEDSystemProperties.isInitData())) {
+    if (SEDSystemProperties.isInitData())  {
 
-      File f = new File(SEDSystemProperties.getInitFolder(), 
+      File f = new File(SEDSystemProperties.getInitFolder(),
               FILE_INIT_DATA);
       LOG.log("Update data from database: " + f.getAbsolutePath());
       try {
@@ -421,6 +359,36 @@ public class IMPDatabase implements IMPDBInterface {
 
   /**
    *
+   * @param sb
+   * @return
+   */
+  @Override
+  public boolean removeExecute(IMPExecute sb) {
+    return remove(sb);
+  }
+
+  /**
+   *
+   * @param sb
+   * @return
+   */
+  @Override
+  public boolean removeExport(IMPExport sb) {
+    return remove(sb);
+  }
+
+  /**
+   *
+   * @param sb
+   * @return
+   */
+  @Override
+  public boolean removeXSLT(IMPXslt sb) {
+    return remove(sb);
+  }
+
+  /**
+   *
    * @param <T>
    * @param o
    * @return
@@ -473,10 +441,40 @@ public class IMPDatabase implements IMPDBInterface {
     return suc;
   }
 
+  /**
+   *
+   * @param sb
+   * @return
+   */
+  @Override
+  public boolean updateExecute(IMPExecute sb) {
+    return update(sb);
+  }
+
+  /**
+   *
+   * @param sb
+   * @return
+   */
+  @Override
+  public boolean updateExport(IMPExport sb) {
+    return update(sb);
+  }
+
   private <T> boolean updateLookup(Class<T> c) {
     return !mlstTimeOut.containsKey(c)
             || (Calendar.getInstance().getTimeInMillis() - mlstTimeOut.
             get(c)) > S_UPDATE_TIMEOUT;
+  }
+
+  /**
+   *
+   * @param sb
+   * @return
+   */
+  @Override
+  public boolean updateXSLT(IMPXslt sb) {
+    return update(sb);
   }
 
 }

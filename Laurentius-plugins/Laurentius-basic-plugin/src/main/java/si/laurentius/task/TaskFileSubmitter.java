@@ -27,14 +27,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
-import java.util.regex.Pattern;
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
-import si.laurentius.msh.outbox.mail.MSHOutMail;
-import si.laurentius.msh.outbox.payload.MSHOutPart;
-import si.laurentius.msh.outbox.payload.MSHOutPayload;
-//import org.msh.svev.pmode.PMode;
 import si.laurentius.commons.MimeValues;
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.SEDOutboxMailStatus;
@@ -45,11 +40,13 @@ import si.laurentius.commons.interfaces.PModeInterface;
 import si.laurentius.commons.interfaces.SEDDaoInterface;
 import si.laurentius.commons.interfaces.SEDLookupsInterface;
 import si.laurentius.commons.pmode.EBMSMessageContext;
-//import si.laurentius.commons.utils.PModeManager;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StorageUtils;
 import si.laurentius.commons.utils.StringFormater;
 import si.laurentius.commons.utils.Utils;
+import si.laurentius.msh.outbox.mail.MSHOutMail;
+import si.laurentius.msh.outbox.payload.MSHOutPart;
+import si.laurentius.msh.outbox.payload.MSHOutPayload;
 import si.laurentius.plugin.crontask.CronTaskDef;
 import si.laurentius.plugin.crontask.CronTaskPropertyDef;
 import si.laurentius.plugin.interfaces.TaskExecutionInterface;
@@ -63,45 +60,54 @@ import si.laurentius.task.exception.FSException;
 @Stateless
 @Local(TaskExecutionInterface.class)
 public class TaskFileSubmitter implements TaskExecutionInterface {
-
-
-  
-  
-  private static final DateFormat SDF = SimpleDateFormat.getDateTimeInstance(
-      SimpleDateFormat.DEFAULT, SimpleDateFormat.DEFAULT);
-
-  private static final Pattern EMAIL_PATTEREN = Pattern.compile("^.+@.+(\\\\.[^\\\\.]+)+$");
-  private static final String OUTMAIL_FILENAME = "outmail";
-  private static final String OUTMAIL_SUFFIX = ".txt";
-  private static final String OUTMAIL_SUFFIX_PROCESS = ".process";
-  private static final String OUTMAIL_SUFFIX_ERROR = ".error";
-  private static final String OUTMAIL_SUFFIX_SUBMITTED = ".submitted";
-
-  private static final String PROP_SENDER_MSG_ID = "senderMessageId";
-  private static final String PROP_SERVICE = "service";
-  private static final String PROP_ACTION = "action";
-  private static final String PROP_SENDER_EBOX = "senderEBox";
-  private static final String PROP_RECEIVER_EBOX = "receiverEBox";
-  private static final String PROP_PAYLOAD = "payload";
-
   /**
    *
    */
-  public static String KEY_EXPORT_FOLDER = "file.submit.folder";
+  public static  final String KEY_EXPORT_FOLDER = "file.submit.folder";
+  private static final SEDLogger LOG = new SEDLogger(TaskFileSubmitter.class);
+
+    
+  private static final String OUTMAIL_FILENAME = "outmail";
+  private static final String OUTMAIL_SUFFIX = ".txt";
+  private static final String OUTMAIL_SUFFIX_ERROR = ".error";
+  private static final String OUTMAIL_SUFFIX_PROCESS = ".process";
+  private static final String OUTMAIL_SUFFIX_SUBMITTED = ".submitted";
+
+  private static final String PROP_ACTION = "action";
+  private static final String PROP_PAYLOAD = "payload";
+  private static final String PROP_RECEIVER_EBOX = "receiverEBox";
+  private static final String PROP_SENDER_EBOX = "senderEBox";
+  private static final String PROP_SENDER_MSG_ID = "senderMessageId";
+  private static final String PROP_SERVICE = "service";
+  private final DateFormat SDF = SimpleDateFormat.getDateTimeInstance(
+          SimpleDateFormat.DEFAULT, SimpleDateFormat.DEFAULT);
+  @EJB(mappedName = SEDJNDI.JNDI_SEDLOOKUPS)
+          SEDLookupsInterface mLookups;
 
   StorageUtils mSU = new StorageUtils();
 
 
-  private static final SEDLogger LOG = new SEDLogger(TaskFileSubmitter.class);
 
   @EJB(mappedName = SEDJNDI.JNDI_SEDDAO)
   SEDDaoInterface mdao;
 
-  @EJB(mappedName = SEDJNDI.JNDI_SEDLOOKUPS)
-  SEDLookupsInterface mLookups;
   
   @EJB (mappedName = SEDJNDI.JNDI_PMODE)
   protected PModeInterface mpModeManager;
+  private CronTaskPropertyDef createTTProperty(String key, String desc, boolean mandatory,
+          String type, String valFormat, String valList) {
+    CronTaskPropertyDef ttp = new CronTaskPropertyDef();
+    ttp.setKey(key);
+    ttp.setDescription(desc);
+    ttp.setMandatory(mandatory);
+    ttp.setType(type);
+    ttp.setValueFormat(valFormat);
+    ttp.setValueList(valList);
+    return ttp;
+  }
+  private CronTaskPropertyDef createTTProperty(String key, String desc) {
+    return createTTProperty(key, desc, true, "string", null, null);
+  }
 
   /**
    *
@@ -180,8 +186,9 @@ public class TaskFileSubmitter implements TaskExecutionInterface {
               if (fMetaData.renameTo(fewFMetaData)) {
                 fMetaData = fewFMetaData;
                 iVal++;
-                try (FileOutputStream fos = new FileOutputStream(fMetaData, true)) {
-                  PrintStream ps = new PrintStream(fos);
+                try (FileOutputStream fos = new FileOutputStream(fMetaData, true);
+                        PrintStream ps = new PrintStream(fos)) {
+                
                   if (bi != null) {
                     ps.append("Laurentius.id=");
                     ps.append(bi.toString());
@@ -230,6 +237,25 @@ public class TaskFileSubmitter implements TaskExecutionInterface {
     LOG.logEnd(l);
     return sw.toString();
   }
+  /**
+   *
+   * @return
+   */
+  @Override
+  public CronTaskDef getDefinition() {
+    CronTaskDef tt = new CronTaskDef();
+    tt.setType("filesubmitter");
+    tt.setName("File subbmiter");
+    tt.setDescription(
+            "Task submits mail in given folder. '");
+    tt.getCronTaskPropertyDeves().add(createTTProperty(KEY_EXPORT_FOLDER, "Submit folder"));
+    tt.getCronTaskPropertyDeves().add(createTTProperty(PROP_SERVICE, "Service"));
+    tt.getCronTaskPropertyDeves().add(createTTProperty(PROP_ACTION, "Action"));
+    tt.getCronTaskPropertyDeves().add(createTTProperty(PROP_RECEIVER_EBOX, "Receiver box"));
+    tt.getCronTaskPropertyDeves().add(createTTProperty(PROP_SENDER_EBOX, "Sender box"));
+    
+    return tt;
+  }
 
   private boolean isFileLocked(File f)
       throws IOException {
@@ -265,7 +291,7 @@ public class TaskFileSubmitter implements TaskExecutionInterface {
     String[] lst = payload.split(";");
     
     if (senderBox.contains("@")){
-      senderName = senderBox.substring(0,senderBox.indexOf("@") );
+      senderName = senderBox.substring(0,senderBox.indexOf('@') );
       if (senderBox.endsWith("@"+SEDSystemProperties.getLocalDomain())){
          throw new FSException(String.format("Sender box '%s' do not match local domain '%s'", senderBox, SEDSystemProperties.getLocalDomain()));
       }
@@ -277,7 +303,7 @@ public class TaskFileSubmitter implements TaskExecutionInterface {
       senderBox +="@"+SEDSystemProperties.getLocalDomain();
     }
     if (receiverBox.contains("@")){
-      senderName = receiverBox.substring(0,receiverBox.indexOf("@") );
+      senderName = receiverBox.substring(0,receiverBox.indexOf('@') );
     }else {
       receiverName = receiverBox;
       receiverBox +="@"+SEDSystemProperties.getLocalDomain();
@@ -288,7 +314,7 @@ public class TaskFileSubmitter implements TaskExecutionInterface {
     }
     
 
-    if (lst == null || lst.length == 0) {
+    if (lst.length == 0) {
       throw new FSException("No payload to submit");
     }
     
@@ -389,40 +415,5 @@ public class TaskFileSubmitter implements TaskExecutionInterface {
 
   }
 
-  /**
-   *
-   * @return
-   */
-  @Override
-  public CronTaskDef getDefinition() {
-    CronTaskDef tt = new CronTaskDef();
-    tt.setType("filesubmitter");
-    tt.setName("File subbmiter");
-    tt.setDescription(
-        "Task submits mail in given folder. '");
-    tt.getCronTaskPropertyDeves().add(createTTProperty(KEY_EXPORT_FOLDER, "Submit folder"));
-    tt.getCronTaskPropertyDeves().add(createTTProperty(PROP_SERVICE, "Service"));
-    tt.getCronTaskPropertyDeves().add(createTTProperty(PROP_ACTION, "Action"));
-    tt.getCronTaskPropertyDeves().add(createTTProperty(PROP_RECEIVER_EBOX, "Receiver box"));
-    tt.getCronTaskPropertyDeves().add(createTTProperty(PROP_SENDER_EBOX, "Sender box"));
-
-    return tt;
-  }
-
-  private CronTaskPropertyDef createTTProperty(String key, String desc, boolean mandatory,
-      String type, String valFormat, String valList) {
-    CronTaskPropertyDef ttp = new CronTaskPropertyDef();
-    ttp.setKey(key);
-    ttp.setDescription(desc);
-    ttp.setMandatory(mandatory);
-    ttp.setType(type);
-    ttp.setValueFormat(valFormat);
-    ttp.setValueList(valList);
-    return ttp;
-  }
-
-  private CronTaskPropertyDef createTTProperty(String key, String desc) {
-    return createTTProperty(key, desc, true, "string", null, null);
-  }
 
 }

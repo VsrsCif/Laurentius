@@ -8,13 +8,7 @@
         </id>        
         <property column="Active_Date_From" name="ActiveFromDate"  length="1024" type="java.util.Date" />       
         <property column="Active_Date_To" name="ActiveToDate"  length="32" type="java.util.Date" />    
-        
-     
     </class>    
-    
-    
-    
     <query name="si.laurentius.ebox.SEDBox.getAll" ><![CDATA[SELECT p FROM SEDBox p order by p.LocalBoxName asc]]></query>
     <query name="si.laurentius.ebox.SEDBox.getByName" ><![CDATA[SELECT p FROM SEDBox p where p.LocalBoxName=:BoxName]]></query>
-
 </hibernate-mapping>

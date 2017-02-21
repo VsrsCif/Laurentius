@@ -20,34 +20,12 @@ package si.laurentius.ejb;
  */
 public class SEDNamedQueries {
 
-  /**
-     *
-     */
-  public static String SEDBOX_ALL = "laurentius.si/ebox.SEDBox.getAll";
+  public static final String GET_CERTSTORE_BY_NAME = "si.laurentius.cert.SEDCertStore.getByName";
 
-  /**
-     *
-     */
-  public static String SEDBOX_BY_ID = "laurentius.si/ebox.SEDBox.getByName";
+  public static final String UPDATE_INMAIL = "si.laurentius.msh.inbox.mail.MSHInMail.updateStatus";
+  public static final String UPDATE_OUTMAIL = "si.laurentius.msh.outbox.mail.MSHOutMail.updateStatus";
+  public static final String UPDATE_OUTMAIL_DELIVERED_DATE = "si.laurentius.msh.outbox.mail.MSHOutMail.updateDeliveredDate";
+  public static final String UPDATE_OUTMAIL_RECEIVED_DATE = "si.laurentius.msh.outbox.mail.MSHOutMail.updateReceivedDate";
+  public static final String UPDATE_OUTMAIL_SENT_DATE = "si.laurentius.msh.outbox.mail.MSHOutMail.updateSentDate";
 
-  /**
-     *
-     */
-  public static String SEDUSER_BY_ID = "laurentius.si/user.SEDUser.getByUserId";
-
-  /**
-     *
-     */
-  public static String UPDATE_INMAIL = "si.laurentius.msh.inbox.mail.MSHInMail.updateStatus";
-
-  /**
-     *
-     */
-  public static String UPDATE_OUTMAIL = "si.laurentius.msh.outbox.mail.MSHOutMail.updateStatus";
-  
-  public static String UPDATE_OUTMAIL_SENT_DATE = "si.laurentius.msh.outbox.mail.MSHOutMail.updateSentDate";
-  public static String UPDATE_OUTMAIL_RECEIVED_DATE = "si.laurentius.msh.outbox.mail.MSHOutMail.updateReceivedDate";
-  public static String UPDATE_OUTMAIL_DELIVERED_DATE = "si.laurentius.msh.outbox.mail.MSHOutMail.updateDeliveredDate";
-  
-  
 }

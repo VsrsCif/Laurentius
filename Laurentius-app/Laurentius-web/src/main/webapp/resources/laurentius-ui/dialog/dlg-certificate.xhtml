@@ -27,13 +27,10 @@
                             <h:graphicImage rendered="#{not adminSEDKeystoreView.editable.keyEntry}" value="#{resource['images:/certificateLong.svg']}" width="40" height="18" />
                             <h:outputText value="#{msg['Certificate']}" />                                 
                         </f:facet>
-                        <p:panelGrid  columns="2" columnClasses="label, value"  style="width:100%; height: 100% ">
+                        <p:panelGrid  columns="2" columnClasses="grid-label, value"  style="width:100%; height: 100% ">
 
                             <h:outputText value="#{msg['Alias']}:" />
                             <h:inputText  value="#{adminSEDKeystoreView.editable.alias}" style="width: 260px"  />
-
-                            <h:outputText rendered="#{adminSEDKeystoreView.editable.keyEntry}" value="#{msg['Password']}:" />
-                            <h:inputText  rendered="#{adminSEDKeystoreView.editable.keyEntry}" value="#{adminSEDKeystoreView.editable.keyPassword}" style="width: 260px"  />
 
                             <h:outputText value="#{msg['SubjectDN']}:" />
                             <h:outputText  value="#{adminSEDKeystoreView.editable.subjectDN}" style="width: 260px"  />
@@ -71,7 +68,7 @@
                                                  icon="ui-icon-svg-ok ui-icon-size-22" 
                                                  action="#{adminSEDKeystoreView.addOrUpdateEditable()}"
                                                  oncomplete="if (args &amp;&amp; args.saved) PF('certDialog').hide()" 
-                                                 update=":forms:SettingsCertPanel:PanelKeystore:keylist"
+                                                 update=":forms:PanelKeystore:keylist"
                                                  />
                                 <p:commandButton value="#{msg['Cancel']}"
                                                  styleClass="toolbar-Button"

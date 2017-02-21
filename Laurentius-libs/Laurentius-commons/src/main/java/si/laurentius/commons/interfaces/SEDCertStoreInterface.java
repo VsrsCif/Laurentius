@@ -14,9 +14,19 @@
  */
 package si.laurentius.commons.interfaces;
 
+import java.security.Key;
+import java.security.KeyStore;
+import java.security.PrivateKey;
+import java.security.cert.Certificate;
+import java.security.cert.X509Certificate;
+import java.util.List;
+import java.util.Properties;
 import javax.ejb.Local;
-import si.laurentius.cert.SEDCertStore;
+import javax.net.ssl.X509KeyManager;
+import javax.net.ssl.X509TrustManager;
+import si.laurentius.cert.SEDCertPassword;
 import si.laurentius.cert.SEDCertificate;
+import si.laurentius.cert.crl.SEDCertCRL;
 import si.laurentius.commons.exception.SEDSecurityException;
 
 /**
@@ -29,11 +39,43 @@ public interface SEDCertStoreInterface {
   public static final String KEYSTORE_NAME = "keystore";
   public static final String ROOTCA_NAME = "rootCA";
 
+  public void addCertToCertStore(X509Certificate crt, String alias) throws SEDSecurityException;
+  public void addCertToRootCA(X509Certificate crt, String alias) throws SEDSecurityException;
+  public void addKeyToToCertStore(String alias, Key privateKey, Certificate[] certs, String passwd)
+          throws SEDSecurityException;
+  public void addPassword(String alias, String pswd) throws SEDSecurityException;
+  
+  void changeKeystorePassword(String newPasswd) throws SEDSecurityException;
+  void changeRootCAPassword(String newPasswd) throws SEDSecurityException;
+  
   void refreshCrlLists();
+  
+  
 
-  SEDCertStore getCertificateStore() throws SEDSecurityException;
+  List<String> getKeystoreAliases(boolean onlyKeys);
+  List<SEDCertificate> getCertificates();
+  List<SEDCertificate> getRootCACertificates();
+  List<X509Certificate> getRootCA509Certs()  throws SEDSecurityException;;
+  
+  void removeCertificateFromStore(SEDCertificate crt) throws SEDSecurityException;
+  void changeAlias(String oldAlias, String newAlias) throws SEDSecurityException;
+  void changeRootCAAlias(String oldAlias, String newAlias) throws SEDSecurityException;
+  void removeCertificateFromRootCAStore(SEDCertificate crt) throws SEDSecurityException;
+  
 
-  void updateKeystoreCertificate(SEDCertificate crt) throws SEDSecurityException;
+  List<SEDCertCRL> getSEDCertCRLs();
 
-  SEDCertStore getRootCACertificateStore() throws SEDSecurityException;
+  SEDCertificate getSEDCertificatForAlias(String alias);
+  PrivateKey getPrivateKeyForAlias(String alias) throws SEDSecurityException ;
+  X509Certificate getX509CertForAlias(String alias) throws SEDSecurityException;
+  PrivateKey getPrivateKeyForX509Cert(X509Certificate xrc) throws SEDSecurityException ;
+  
+
+   public X509TrustManager getTrustManagerForAlias(String alias, boolean validateRootCA) throws SEDSecurityException;
+   public X509KeyManager[] getKeyManagerForAlias(String alias) throws SEDSecurityException;
+    public Properties getCXFKeystoreProperties(String alias) throws SEDSecurityException;
+    public Properties getCXFTruststoreProperties(String alias) throws SEDSecurityException;
+    
+    public SEDCertPassword getKeyPassword(String alias);
+    
 }

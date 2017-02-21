@@ -41,6 +41,8 @@ Copyright 2016, Supreme Court Republic of Slovenia
 			<xs:element ref="ns4:MailInterceptorDef" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element ref="ns5:OutMailEventListenerDef" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="WebRole" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="MainMenu"  type="ns1:MenuItem" minOccurs="0"/>
+                        <xs:element name="ProcessMenu"  type="ns1:MenuItem"  minOccurs="0"/>
 		</xs:sequence>
 		<xs:attribute name="webContext" type="xs:string" use="required">
 			<xs:annotation>
@@ -54,4 +56,13 @@ Copyright 2016, Supreme Court Republic of Slovenia
 		<xs:attribute name="description" type="xs:string" use="required"/>
 		<xs:attribute name="jndi" type="xs:string" use="required"/>
 	</xs:complexType>
+	<xs:complexType name="MenuItem">
+			<xs:sequence>
+				<xs:element name="MenuItem" type="ns1:MenuItem" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attribute name="name" use="required" type="xs:string"/>
+			<xs:attribute name="pageId" use="required" type="xs:string"/>
+                        <xs:attribute name="role" use="required" type="xs:string"/>
+		</xs:complexType>
+
 </xs:schema>

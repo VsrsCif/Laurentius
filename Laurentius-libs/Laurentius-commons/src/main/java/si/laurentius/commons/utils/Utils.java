@@ -15,6 +15,8 @@
 package si.laurentius.commons.utils;
 
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import si.laurentius.msh.inbox.mail.MSHInMail;
 import si.laurentius.msh.outbox.mail.MSHOutMail;
 
@@ -24,6 +26,13 @@ import si.laurentius.msh.outbox.mail.MSHOutMail;
  * @author Joze Rihtarsic <joze.rihtarsic@sodisce.si>
  */
 public class Utils {
+  
+  /**
+   * Thanks to:
+   * https://www.mkyong.com/regular-expressions/how-to-validate-email-address-with-regular-expression/
+   */
+  private static final Pattern EMAIL_PATTEREN = Pattern.compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+		+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
 
   /**
    *
@@ -88,18 +97,6 @@ public class Utils {
   }
 
  
-  private Utils() {
-
-  }
-
-  /**
-   * Returns java.util.UUID.randomUUID() as string.
-   *
-   * @return uuid string representation.
-   */
-  public String getGuidString() {
-    return UUID.randomUUID().toString();
-  }
   
   public static String getUUID(String prefix) {
     return prefix + "-"+ UUID.randomUUID().toString();
@@ -124,6 +121,27 @@ public class Utils {
       tst = tst.getCause();
     }
     return tst;
+  }
+  private Utils() {
+    
+  }
+  /**
+   * Returns java.util.UUID.randomUUID() as string.
+   *
+   * @return uuid string representation.
+   */
+  public String getGuidString() {
+    return UUID.randomUUID().toString();
+  }
+  
+  public static boolean isValidEmailAddress(String strVal){
+    if (isEmptyString(strVal)){
+      return false;
+    }else {
+     
+      Matcher m = EMAIL_PATTEREN.matcher(strVal);
+      return m.matches();
+    }
   }
 
 }

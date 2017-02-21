@@ -14,8 +14,10 @@
  */
 package si.laurentius.plugin.interfaces;
 
+import java.io.File;
 import java.util.List;
 import javax.ejb.Local;
+import si.laurentius.plugin.def.MenuItem;
 import si.laurentius.plugin.def.Plugin;
 
 /**
@@ -25,39 +27,39 @@ import si.laurentius.plugin.def.Plugin;
 @Local
 public interface PluginDescriptionInterface {
 
-  /**
-   *
-   * @return
-   */
-  String getWebUrlContext();
-  
-  List<String> getWebPageRoles();
-
-
-  /**
-   *
-   * @return
-   */
-  String getType();
-
-  /**
-   *
-   * @return
-   */
-  String getName();
-
-  /**
-   *
-   * @return
-   */
-  String getVersion();
 
   /**
    *
    * @return
    */
   String getDesc();
-
+  
+  public MenuItem getMenu();
+  /**
+   *
+   * @return
+   */
+  String getName();
   Plugin getPluginDescription();
+  public MenuItem getProcessMenu();
+  /**
+   *
+   * @return
+   */
+  String getType();
+  /**
+   *
+   * @return
+   */
+  String getVersion();
+  List<String> getWebPageRoles();
+  /**
+   *
+   * @return
+   */
+  String getWebUrlContext();
+  
+
+  void exportData(File initFolder, boolean savePasswords);
 
 }

@@ -24,7 +24,7 @@ import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.interfaces.PModeInterface;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.msh.pmode.PMode;
-import si.laurentius.msh.web.gui.DialogDelete;
+import si.laurentius.msh.web.gui.dlg.DialogDelete;
 
 /**
  *
@@ -42,18 +42,6 @@ public class PModeView extends AbstractPModeJSFView<PMode> {
   @EJB(mappedName = SEDJNDI.JNDI_PMODE)
   PModeInterface mPModeInteface;
 
-  @ManagedProperty(value = "#{dialogDelete}")
-  private DialogDelete dlgDelete;
-
-  @Override
-  public DialogDelete getDlgDelete() {
-    return dlgDelete;
-  }
-
-  @Override
-  public  void setDlgDelete(DialogDelete dlg){
-    dlgDelete = dlg;
-  }
   /**
    *
    */

@@ -60,6 +60,8 @@ import si.laurentius.plugin.interfaces.exception.TaskException;
 public class MSHScheduler implements SEDSchedulerInterface {
 
   private static final SEDLogger LOG = new SEDLogger(MSHScheduler.class);
+  @EJB(mappedName = SEDJNDI.JNDI_SEDDAO)
+  private SEDDaoInterface mdbDao;
 
   @EJB(mappedName = SEDJNDI.JNDI_SEDLOOKUPS)
   private SEDLookupsInterface mdbLookups;
@@ -67,8 +69,6 @@ public class MSHScheduler implements SEDSchedulerInterface {
   @EJB(mappedName = SEDJNDI.JNDI_PLUGIN)
   private SEDPluginManagerInterface mpmPluginManager;
 
-  @EJB(mappedName = SEDJNDI.JNDI_SEDDAO)
-  private SEDDaoInterface mdbDao;
 
   @Resource
   private TimerService timerService;
@@ -88,6 +88,15 @@ public class MSHScheduler implements SEDSchedulerInterface {
     }
   }
 
+
+  /**
+   *
+   * @return
+   */
+  @Override
+  public TimerService getServices() {
+    return timerService;
+  }
   /**
    *
    * @param timer
@@ -137,7 +146,7 @@ public class MSHScheduler implements SEDSchedulerInterface {
     } catch (NamingException ex) {
       te.setStatus(SEDTaskStatus.ERROR.getValue());
       te.setResult(String.format("Error getting taskexecutor: %s. ERROR: %s", ct.getJndi(),
-          ex.getMessage()));
+              ex.getMessage()));
       te.setEndTimestamp(Calendar.getInstance().getTime());
       try {
         mdbDao.updateExecutionTask(te);
@@ -187,15 +196,6 @@ public class MSHScheduler implements SEDSchedulerInterface {
       }
     }
     LOG.logEnd(l);
-  }
-
-  /**
-   *
-   * @return
-   */
-  @Override
-  public TimerService getServices() {
-    return timerService;
   }
 
 }

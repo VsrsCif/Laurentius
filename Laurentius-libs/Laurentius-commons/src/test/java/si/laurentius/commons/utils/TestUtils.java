@@ -18,6 +18,11 @@ import java.util.Calendar;
  * @author Jože Rihtaršič
  */
 public class TestUtils {
+  static public String readFileToString(File f, String charset)
+          throws IOException {
+    byte[] encoded = Files.readAllBytes(f.toPath());
+    return new String(encoded, charset);
+  }
 
 
 
@@ -41,11 +46,6 @@ public class TestUtils {
     return f;
   }
 
-  static public String readFileToString(File f, String charset)
-      throws IOException {
-    byte[] encoded = Files.readAllBytes(f.toPath());
-    return new String(encoded, charset);
-  }
 
   protected File createFile(File parent, String content)
       throws IOException {

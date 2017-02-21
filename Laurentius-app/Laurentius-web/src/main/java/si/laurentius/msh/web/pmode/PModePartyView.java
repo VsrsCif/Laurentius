@@ -20,12 +20,10 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import org.primefaces.event.CellEditEvent;
 import si.laurentius.cert.SEDCertificate;
 import si.laurentius.commons.SEDJNDI;
-import si.laurentius.commons.exception.SEDSecurityException;
 import si.laurentius.commons.interfaces.PModeInterface;
 import si.laurentius.commons.interfaces.SEDLookupsInterface;
 import si.laurentius.commons.utils.SEDLogger;
@@ -34,7 +32,6 @@ import si.laurentius.msh.pmode.PartyIdentitySet;
 import si.laurentius.msh.pmode.PartyIdentitySetType;
 import si.laurentius.msh.pmode.Protocol;
 import si.laurentius.commons.interfaces.SEDCertStoreInterface;
-import si.laurentius.msh.web.gui.DialogDelete;
 
 /**
  *
@@ -59,17 +56,7 @@ public class PModePartyView extends AbstractPModeJSFView<PartyIdentitySet> {
   SEDCertStoreInterface mCertBean;
 
   PartyIdentitySetType.PartyId selectedPartyId;
-   @ManagedProperty(value = "#{dialogDelete}")
-  private DialogDelete dlgDelete;
 
-  @Override
-  public DialogDelete getDlgDelete() {
-    return dlgDelete;
-  }
-  @Override
-  public  void setDlgDelete(DialogDelete dlg){
-    dlgDelete = dlg;
-  }
   /**
    *
    */
@@ -209,24 +196,16 @@ public class PModePartyView extends AbstractPModeJSFView<PartyIdentitySet> {
   }
 
   public List<SEDCertificate> getCurrentLocalKeystoreCerts() {
-    try {
-      return mCertBean.getCertificateStore().getSEDCertificates();
-    } catch (SEDSecurityException ex) {
-      LOG.logError(ex.getMessage(), ex);
-    }
 
-    return Collections.emptyList();
+      return mCertBean.getCertificates();
+   
 
   }
 
   public List<SEDCertificate> getCurrentTLSKeyCerts() {
 
     if (getCurrrentTransportTLS() != null) {
-      try {
-        return mCertBean.getCertificateStore().getSEDCertificates();
-      } catch (SEDSecurityException ex) {
-        LOG.logError(ex.getMessage(), ex);
-      }
+        return  mCertBean.getCertificates();   
     }
     return Collections.emptyList();
     /*
@@ -242,12 +221,8 @@ public class PModePartyView extends AbstractPModeJSFView<PartyIdentitySet> {
   }
 
   public List<SEDCertificate> getCurrentExchangeTruststoreCerts() {
-    if (getEditable() != null && getEditable().getExchangePartySecurity() != null) {
-      try {
-        return mCertBean.getCertificateStore().getSEDCertificates();
-      } catch (SEDSecurityException ex) {
-        LOG.logError(ex.getMessage(), ex);
-      }
+    if (getEditable() != null && getEditable().getExchangePartySecurity() != null) {    
+        return  mCertBean.getCertificates();
     }
 
     return Collections.emptyList();

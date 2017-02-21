@@ -114,7 +114,7 @@ public class TestCasePluginData {
    * @return
    */
   public String getLocalDomain() {
-    return System.getProperty(SEDSystemProperties.S_PROP_LAU_DOMAIN);
+    return System.getProperty(SEDSystemProperties.SYS_PROP_LAU_DOMAIN);
   }
 
   /**

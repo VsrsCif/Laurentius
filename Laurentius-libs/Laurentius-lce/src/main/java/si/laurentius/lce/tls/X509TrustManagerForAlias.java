@@ -23,6 +23,8 @@ public class X509TrustManagerForAlias implements X509TrustManager {
   
   private final X509Certificate msTrustedCert;
   private final List<X509Certificate> mlstAcceptedIssuers;
+  
+  private static final X509Certificate[] DUMMY_ISSUER_LIST = new X509Certificate[]{};
 
   public X509TrustManagerForAlias( X509Certificate crt, List<X509Certificate> aisLst) {
     this.msTrustedCert = crt;
@@ -70,11 +72,8 @@ public class X509TrustManagerForAlias implements X509TrustManager {
 
   @Override
   public X509Certificate[] getAcceptedIssuers() {    
-    LOG.formatedWarning("GET ROOT CERTIICATES: **************************************: " + mlstAcceptedIssuers.size());
-    for (X509Certificate c: mlstAcceptedIssuers){
-     LOG.formatedWarning("Certificate: %s", c.getSubjectX500Principal().getName());
-    }
-    return mlstAcceptedIssuers.toArray(new X509Certificate[0]);
+    
+    return mlstAcceptedIssuers!= null?mlstAcceptedIssuers.toArray(new X509Certificate[0]):DUMMY_ISSUER_LIST;
   }
 
 }

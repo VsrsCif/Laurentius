@@ -9,7 +9,9 @@ import javax.faces.event.ActionEvent;
 import org.primefaces.event.TabChangeEvent;
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.SEDSystemProperties;
+import si.laurentius.commons.interfaces.SEDInitDataInterface;
 import si.laurentius.commons.interfaces.SEDLookupsInterface;
+import si.laurentius.commons.utils.SEDLogger;
 
 /**
  *
@@ -18,14 +20,16 @@ import si.laurentius.commons.interfaces.SEDLookupsInterface;
 @SessionScoped
 @ManagedBean(name = "mainWindow")
 public class MainWindow {
+  
+  private static final SEDLogger LOG = new SEDLogger(MainWindow.class);
 
   String mstrWindowShow = AppConstant.S_PANEL_INBOX;
   int currentProgressVal =0;
   String currentProgressLabel ="";
   private boolean exportLookupsWithPasswords = true;
   
-  @EJB(mappedName = SEDJNDI.JNDI_SEDLOOKUPS)
-  private SEDLookupsInterface msedLookups;
+  @EJB(mappedName = SEDJNDI.JNDI_DATA_INIT)
+  private SEDInitDataInterface msedLookups;
 
   public boolean isExportLookupsWithPasswords() {
     return exportLookupsWithPasswords;
@@ -55,6 +59,10 @@ public class MainWindow {
    */
   public String currentPanel() {
     return mstrWindowShow;
+  }
+  
+  public void setCurrentPanel(String strVal) {
+    this.mstrWindowShow = strVal;
   }
 
   /**

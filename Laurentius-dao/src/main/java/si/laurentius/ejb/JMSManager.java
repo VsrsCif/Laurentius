@@ -14,6 +14,7 @@
  */
 package si.laurentius.ejb;
 
+import java.util.Enumeration;
 import javax.ejb.AccessTimeout;
 import javax.ejb.Local;
 import javax.ejb.Singleton;
@@ -24,6 +25,7 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageProducer;
 import javax.jms.Queue;
+import javax.jms.QueueBrowser;
 import javax.jms.Session;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -37,7 +39,6 @@ import si.laurentius.commons.utils.SEDLogger;
  *
  * @author Jože Rihtaršič
  */
-
 @Startup
 @Singleton
 @Local(JMSManagerInterface.class)
@@ -56,6 +57,7 @@ public class JMSManager implements JMSManagerInterface {
         con.close();
       }
     } catch (JMSException jmse) {
+      LOG.formatedWarning("Error closing JMS session: %s", jmse.getMessage());
 
     }
   }
@@ -63,26 +65,27 @@ public class JMSManager implements JMSManagerInterface {
   /**
    *
    * @param inId
-
+   *
    * @return
    * @throws NamingException
    * @throws javax.jms.JMSException
    */
   @Override
   public boolean exportInMail(long inId)
-      throws NamingException, JMSException {
+          throws NamingException, JMSException {
 
     boolean suc = false;
     InitialContext ic = null;
     Connection connection = null;
     String msgFactoryJndiName = getJNDIPrefix() + SEDValues.EBMS_JMS_CONNECTION_FACTORY_JNDI;
-    String msgQueueJndiName = getJNDI_JMSPrefix() + SEDValues.JNDI_QUEUE_EXPORT;
+    String msgQueueJndiName = getJNDI_JMSPrefix() + SEDValues.JNDI_QUEUE_IN_MAIL_PROCESS;
     try {
       ic = new InitialContext();
       ConnectionFactory cf = (ConnectionFactory) ic.lookup(msgFactoryJndiName);
       Queue queue = (Queue) ic.lookup(msgQueueJndiName);
       connection = cf.createConnection();
-      Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+      Session session = connection.
+              createSession(false, Session.AUTO_ACKNOWLEDGE);
       MessageProducer sender = session.createProducer(queue);
       Message message = session.createMessage();
 
@@ -94,6 +97,8 @@ public class JMSManager implements JMSManagerInterface {
         try {
           ic.close();
         } catch (Exception ignore) {
+          LOG.formatedWarning("Error closing JMS session: %s", ignore.
+                  getMessage());
         }
       }
       closeConnection(connection);
@@ -117,7 +122,7 @@ public class JMSManager implements JMSManagerInterface {
 
   /**
    *
-   * @param biPosiljkaId   
+   * @param biPosiljkaId
    * @param retry
    * @param delay
    * @param transacted
@@ -127,8 +132,8 @@ public class JMSManager implements JMSManagerInterface {
    */
   @Override
   public boolean sendMessage(long biPosiljkaId, int retry, long delay,
-      boolean transacted) throws NamingException, JMSException {
-    
+          boolean transacted) throws NamingException, JMSException {
+
     boolean suc = false;
     InitialContext ic = null;
     Connection connection = null;
@@ -139,7 +144,8 @@ public class JMSManager implements JMSManagerInterface {
       ConnectionFactory cf = (ConnectionFactory) ic.lookup(msgFactoryJndiName);
       Queue queue = (Queue) ic.lookup(msgQueueJndiName);
       connection = cf.createConnection();
-      Session session = connection.createSession(transacted, Session.AUTO_ACKNOWLEDGE);
+      Session session = connection.createSession(transacted,
+              Session.AUTO_ACKNOWLEDGE);
       MessageProducer sender = session.createProducer(queue);
       Message message = session.createMessage();
 
@@ -147,10 +153,12 @@ public class JMSManager implements JMSManagerInterface {
       message.setIntProperty(SEDValues.EBMS_QUEUE_PARAM_RETRY, retry);
       message.setLongProperty(SEDValues.EBMS_QUEUE_PARAM_DELAY, delay);
       message.setLongProperty(SEDValues.EBMS_QUEUE_DELAY_AMQ, delay);
-      message.setLongProperty(SEDValues.EBMS_QUEUE_DELAY_Artemis, System.currentTimeMillis()
-          + delay);
+      message.setLongProperty(SEDValues.EBMS_QUEUE_DELAY_Artemis, System.
+              currentTimeMillis()
+              + delay);
 
-      LOG.formatedWarning("******************************************** submit mail: %d ",biPosiljkaId);
+      LOG.formatedDebug("Submit mail to queue: %d, retry %d, delay %d ",
+              biPosiljkaId, retry, delay);
       sender.send(message);
       suc = true;
     } finally {
@@ -158,11 +166,73 @@ public class JMSManager implements JMSManagerInterface {
         try {
           ic.close();
         } catch (Exception ignore) {
+          LOG.formatedWarning("Error closing JMS session: %s", ignore.
+                  getMessage());
         }
       }
       closeConnection(connection);
     }
 
     return suc;
+  }
+
+  /**
+   *
+   * @return @throws NamingException
+   * @throws JMSException
+   */
+  @Override
+  public int getMessageCountInQueue() throws NamingException, JMSException {
+
+    boolean suc = false;
+    InitialContext ic = null;
+    Connection connection = null;
+    String msgFactoryJndiName = getJNDIPrefix() + SEDValues.EBMS_JMS_CONNECTION_FACTORY_JNDI;
+    String msgQueueJndiName = getJNDI_JMSPrefix() + SEDValues.JNDI_QUEUE_EBMS;
+    int numMsgs = 0;
+    try {
+      ic = new InitialContext();
+      ConnectionFactory cf = (ConnectionFactory) ic.lookup(msgFactoryJndiName);
+      Queue queue = (Queue) ic.lookup(msgQueueJndiName);
+      connection = cf.createConnection();
+
+      Session session = connection.
+              createSession(false, Session.AUTO_ACKNOWLEDGE);
+
+      // create a queue browser
+      QueueBrowser queueBrowser = session.createBrowser(queue);
+
+      // start the connection
+      connection.start();
+
+      // browse the messages
+      Enumeration e = queueBrowser.getEnumeration();
+      
+
+      // count number of messages
+      while (e.hasMoreElements()) {
+        Message message = (Message) e.nextElement();
+
+        numMsgs++;
+      }
+
+      System.out.println(queue + " has " + numMsgs + " messages");
+
+      // close the queue connection
+      connection.close();
+
+    } finally {
+      if (ic != null) {
+        try {
+          ic.close();
+        } catch (Exception ignore) {
+          LOG.formatedWarning("Error closing JMS session: %s", ignore.
+                  getMessage());
+        }
+      }
+      closeConnection(connection);
+    }
+
+    return numMsgs;
   }
 }

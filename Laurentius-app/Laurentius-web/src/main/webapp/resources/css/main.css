@@ -22,6 +22,13 @@ h1 {
 }
 
 
+.grid-label {
+     width: 120px !important; 
+     background: lightsteelblue;
+     text-align: right !important;
+}
+
+
 
 .ui-widget .ui-layout-unit, 
 .ui-widget .ui-layout-unit-content,
@@ -40,9 +47,6 @@ h1 {
 
 }
 
-.ui-picklist-list-wrapper {
-    width: 45%
-}
 
 .ui-accordion-content {
     height: 500px;
@@ -259,9 +263,6 @@ td.ui-panelgrid-cell.label {
     box-sizing: border-box;   
 }
 
-.ui-picklist.ui-picklist-responsive .ui-picklist-list-wrapper {
-    width: 45%;
-}
 
 
 

@@ -25,10 +25,16 @@
                     </p:layoutUnit>
                     <p:layoutUnit  header="Process set data" position="center" rendered="#{not empty adminSEDInMailProcessSetView.editable}"  size="200">
                         <p:panelGrid  columns="1"  style="width:200px;">
+                            
+                             <h:outputText value="#{msg['Code']}:" />
+                             <p:inputText id="code" value="#{adminSEDInMailProcessSetView.editable.code}" 
+                                         disabled="#{!adminSEDInMailProcessSetView.isEditableNew()}"
+                                         style="width:100%"  
+                                         />
 
                             <h:outputText value="#{msg['Name']}:" />
                             <p:inputText id="cname" value="#{adminSEDInMailProcessSetView.editable.name}" 
-                                         disabled="#{!adminSEDInMailProcessSetView.isEditableNew()}"
+                                       
                                          style="width:100%"  
                                          />
 

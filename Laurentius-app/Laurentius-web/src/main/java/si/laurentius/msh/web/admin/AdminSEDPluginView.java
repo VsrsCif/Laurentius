@@ -19,7 +19,6 @@ import java.util.Collections;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.event.ActionEvent;
 import si.laurentius.commons.SEDJNDI;
@@ -28,7 +27,6 @@ import si.laurentius.commons.interfaces.SEDPluginManagerInterface;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.Utils;
 import si.laurentius.msh.web.abst.AbstractAdminJSFView;
-import si.laurentius.msh.web.gui.DialogDelete;
 import si.laurentius.plugin.crontask.CronTaskDef;
 import si.laurentius.plugin.def.Plugin;
 import si.laurentius.plugin.eventlistener.OutMailEventListenerDef;
@@ -54,17 +52,7 @@ public class AdminSEDPluginView extends AbstractAdminJSFView<Plugin> {
   Plugin selectedViewPlugin;
   boolean adminView = false;
   
-  @ManagedProperty(value = "#{dialogDelete}")
-  private DialogDelete dlgDelete;
 
-  @Override
-  public DialogDelete getDlgDelete() {
-    return dlgDelete;
-  }
-  @Override
-  public  void setDlgDelete(DialogDelete dlg){
-    dlgDelete = dlg;
-  }
 
   public List<Plugin> getPluginWitGUI() {
     List<Plugin> lst = new ArrayList<>();

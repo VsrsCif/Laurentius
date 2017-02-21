@@ -54,11 +54,11 @@ public class CRLVerifierTest {
       "http://crl3.digicert.com/sha2-ev-server-g1.crl",
       null},};
 
-  public CRLVerifierTest() {
-  }
 
   @BeforeClass
   public static void setUpClass() {
+  }
+  public CRLVerifierTest() {
   }
 
   @Before

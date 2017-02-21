@@ -40,11 +40,10 @@ import si.laurentius.commons.utils.SEDLogger;
 @AccessTimeout(value = 60000)
 public class PModeManagerBean implements PModeInterface {
 
-  protected static SEDLogger LOG = new SEDLogger(PModeManagerBean.class);
+  protected final static SEDLogger LOG = new SEDLogger(PModeManagerBean.class);
+  FilePModeManager mPModeManager = new FilePModeManager();
   protected long m_iLastRefreshTime = 0;
   protected long m_iRefreshInterval = 1800 * 1000; // 30 min
-
-  FilePModeManager mPModeManager = new FilePModeManager();
 
   @Override
   public void addPMode(PMode val) {
@@ -70,23 +69,15 @@ public class PModeManagerBean implements PModeInterface {
   public void addService(Service val) {
     getPModeManager().addService(val);
   }
-
   @Override
-  public PMode getPModeForLocalPartyAsSender(String senderRefId, String actionSendingRole,
-      String receiverRefId, String serviceId)
-      throws PModeException {
-    return getPModeManager().getPModeForLocalPartyAsSender(senderRefId, actionSendingRole,
-        receiverRefId,
-        serviceId);
-
+  public EBMSMessageContext createMessageContextForOutMail(MSHOutMail mail)
+          throws PModeException {
+    return getPModeManager().createMessageContextForOutMail(mail);
   }
-
   @Override
-  public PMode getPModeForExchangePartyAsSender(String senderRefId, String actionSendingRole,
-      String receiverRefId, String serviceId)
-      throws PModeException {
-    return getPModeManager().getPModeForExchangePartyAsSender(senderRefId, actionSendingRole,
-        receiverRefId, serviceId);
+  public PMode getByAgreementRef(String agrRef, String agrRefType, String agrPMode)
+          throws PModeException {
+    return getPModeManager().getByAgreementRef(agrRef, agrRefType, agrPMode);
   }
 
   @Override
@@ -94,11 +85,36 @@ public class PModeManagerBean implements PModeInterface {
       throws PModeException {
     return getPModeManager().getPModeById(pmodeId);
   }
-
   @Override
-  public PMode getByAgreementRef(String agrRef, String agrRefType, String agrPMode)
-      throws PModeException {
-    return getPModeManager().getByAgreementRef(agrRef, agrRefType, agrPMode);
+  public PMode getPModeForExchangePartyAsSender(String senderRefId, String actionSendingRole,
+          String receiverRefId, String serviceId)
+          throws PModeException {
+    return getPModeManager().getPModeForExchangePartyAsSender(senderRefId, actionSendingRole,
+            receiverRefId, serviceId);
+  }
+  @Override
+  public PMode getPModeForLocalPartyAsSender(String senderRefId, String actionSendingRole,
+          String receiverRefId, String serviceId)
+          throws PModeException {
+    return getPModeManager().getPModeForLocalPartyAsSender(senderRefId, actionSendingRole,
+            receiverRefId,
+            serviceId);
+    
+  }
+  private FilePModeManager getPModeManager() {
+    
+    if (m_iLastRefreshTime + m_iRefreshInterval < Calendar.getInstance().getTimeInMillis()) {
+      long l = LOG.logStart();
+      try {
+        
+        mPModeManager.reload();
+      } catch (PModeException ex) {
+        LOG.logError(l, ex);
+      }
+      LOG.logEnd(l);
+      m_iLastRefreshTime = Calendar.getInstance().getTimeInMillis();
+    }
+    return mPModeManager;
   }
 
   @Override
@@ -107,11 +123,6 @@ public class PModeManagerBean implements PModeInterface {
     return getPModeManager().getPModes();
   }
 
-  @Override
-  public PartyIdentitySet getPartyIdentitySetForSEDAddress(String address)
-      throws PModeException {
-    return getPModeManager().getPartyIdentitySetForSEDAddress(address);
-  }
 
   @Override
   public PartyIdentitySet getPartyIdentitySetById(String partyIdentiySetId)
@@ -124,11 +135,21 @@ public class PModeManagerBean implements PModeInterface {
       throws PModeException {
     return getPModeManager().getPartyIdentitySetForPartyId(partyType, partyIdValue);
   }
+  @Override
+  public PartyIdentitySet getPartyIdentitySetForSEDAddress(String address)
+          throws PModeException {
+    return getPModeManager().getPartyIdentitySetForSEDAddress(address);
+  }
 
   @Override
   public List<PartyIdentitySet> getPartyIdentitySets()
       throws PModeException {
     return getPModeManager().getPartyIdentitySets();
+  }
+  @Override
+  public ReceptionAwareness getReceptionAwarenessById(String raId)
+          throws PModeException {
+    return getPModeManager().getReceptionAwarenessById(raId);
   }
 
   @Override
@@ -142,13 +163,10 @@ public class PModeManagerBean implements PModeInterface {
       throws PModeException {
     return getPModeManager().getSecurities();
   }
-
   @Override
-  public Service getServiceByNameAndTypeAndAction(String serviceName, String serviceType,
-      String action)
-      throws PModeException {
-    return getPModeManager().getServiceByNameAndTypeAndAction(serviceName, serviceType,
-        action);
+  public Security getSecurityById(String securityId)
+          throws PModeException {
+    return getPModeManager().getSecurityById(securityId);
   }
 
   @Override
@@ -156,45 +174,23 @@ public class PModeManagerBean implements PModeInterface {
       throws PModeException {
     return getPModeManager().getServiceById(serviceId);
   }
-
   @Override
-  public ReceptionAwareness getReceptionAwarenessById(String raId)
-      throws PModeException {
-    return getPModeManager().getReceptionAwarenessById(raId);
+  public Service getServiceByNameAndTypeAndAction(String serviceName, String serviceType,
+          String action)
+          throws PModeException {
+    return getPModeManager().getServiceByNameAndTypeAndAction(serviceName, serviceType,
+            action);
   }
 
-  @Override
-  public Security getSecurityById(String securityId)
-      throws PModeException {
-    return getPModeManager().getSecurityById(securityId);
-  }
-
-  private FilePModeManager getPModeManager() {
-
-    if (m_iLastRefreshTime + m_iRefreshInterval < Calendar.getInstance().getTimeInMillis()) {
-      long l = LOG.logStart();
-      try {
-
-        mPModeManager.reload();
-      } catch (PModeException ex) {
-        LOG.logError(l, ex);
-      }
-      LOG.logEnd(l);
-      m_iLastRefreshTime = Calendar.getInstance().getTimeInMillis();
-    }
-    return mPModeManager;
-  }
-
-  @Override
-  public EBMSMessageContext createMessageContextForOutMail(MSHOutMail mail)
-      throws PModeException {
-    return getPModeManager().createMessageContextForOutMail(mail);
-  }
 
   @Override
   public List<Service> getServices()
       throws PModeException {
     return getPModeManager().getServices();
+  }
+  @Override
+  public boolean partyIdentitySetExists(String id) {
+    return getPModeManager().partyIdentitySetExists(id);
   }
 
   @Override
@@ -247,9 +243,5 @@ public class PModeManagerBean implements PModeInterface {
     getPModeManager().updateService(val);
   }
 
-  @Override
-  public boolean partyIdentitySetExists(String id) {
-    return getPModeManager().partyIdentitySetExists(id);
-  }
   
 }

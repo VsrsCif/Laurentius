@@ -85,7 +85,8 @@ public class EBMSEndpoint implements Provider<SOAPMessage> {
 
   private String getJNDIPrefix() {
 
-    return System.getProperty(SEDSystemProperties.SYS_PROP_JNDI_PREFIX, "java:/jboss/");
+    return System.getProperty(SEDSystemProperties.SYS_PROP_JNDI_PREFIX,
+            "java:/jboss/");
   }
 
   @Override
@@ -94,11 +95,13 @@ public class EBMSEndpoint implements Provider<SOAPMessage> {
     SOAPMessage response = null;
     try {
       // create empty response
-      MessageFactory mf = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
+      MessageFactory mf = MessageFactory.newInstance(
+              SOAPConstants.SOAP_1_2_PROTOCOL);
       response = mf.createMessage();
 
       // Using this cxf specific code you can access the CXF Message and Exchange objects
-      WrappedMessageContext wmc = (WrappedMessageContext) wsContext.getMessageContext();
+      WrappedMessageContext wmc = (WrappedMessageContext) wsContext.
+              getMessageContext();
       Message msg = wmc.getWrappedMessage();
       MSHInMail inmail = SoapUtils.getMSHInMail(msg);
       if (inmail == null) {
@@ -111,8 +114,10 @@ public class EBMSEndpoint implements Provider<SOAPMessage> {
       SEDBox sb = SoapUtils.getMSHInMailReceiverBox(msg);
 
       if (sb == null) {
-        LOG.formatedWarning("Inbox message %s but no inbox found  for message: %s", inmail.getId(),
-            inmail.getReceiverEBox());
+        LOG.formatedWarning(
+                "Inbox message %s but no inbox found  for message: %s", inmail.
+                        getId(),
+                inmail.getReceiverEBox());
         // return error
       } else if (Utils.isEmptyString(inmail.getStatus())) {
         serializeMail(inmail, msg.getAttachments(), sb);
@@ -125,7 +130,8 @@ public class EBMSEndpoint implements Provider<SOAPMessage> {
     return response;
   }
 
-  private void serializeMail(MSHInMail mail, Collection<Attachment> lstAttch, SEDBox sb) {
+  private void serializeMail(MSHInMail mail, Collection<Attachment> lstAttch,
+          SEDBox sb) {
     long l = LOG.logStart();
     // prepare mail to persist
     Date dt = new Date();
@@ -139,8 +145,9 @@ public class EBMSEndpoint implements Provider<SOAPMessage> {
     } catch (StorageException ex) {
       String errmsg = "Internal error occured while serializing incomming mail.";
       LOG.logError(l, errmsg, ex);
-      throw new EBMSError(EBMSErrorCode.ExternalPayloadError, mail.getMessageId(), errmsg,
-          SoapFault.FAULT_CODE_CLIENT);
+      throw new EBMSError(EBMSErrorCode.ExternalPayloadError, mail.
+              getMessageId(), errmsg,
+              SoapFault.FAULT_CODE_CLIENT);
     }
 
     try {
@@ -149,19 +156,20 @@ public class EBMSEndpoint implements Provider<SOAPMessage> {
 
       mDB.setStatusToInMail(mail, SEDInboxMailStatus.RECEIVED, null);
     } catch (StorageException ex) {
-      LOG.logError(l, "Error setting status ERROR to MSHInMail :'" + mail.getId() + "'!", ex);
+      LOG.logError(l, "Error setting status ERROR to MSHInMail :'" + mail.
+              getId() + "'!", ex);
     }
-/*
-    if (sb.getExport() != null && sb.getExport().getActive() != null 
-        && sb.getExport().getActive()
-        || sb.getXSLT()!= null        ) {
-      try {
-        mJMS.exportInMail(mail.getId().longValue());
-      } catch (NamingException | JMSException ex) {
-        LOG.logError(l, "Error occured while submitting mail to export queue:'" + mail.getId() + "'!",
-            ex);
-      }
-    }*/
+
+    try {
+      LOG.formatedlog("EXPORT MAIL %d", mail.getId().longValue());
+      mJMS.exportInMail(mail.getId().longValue());
+    } catch (NamingException | JMSException ex) {
+      LOG.logError(l,
+              "Error occured while submitting mail to export queue:'" + mail.
+                      getId() + "'!",
+              ex);
+    }
+
     LOG.logEnd(l);
   }
 

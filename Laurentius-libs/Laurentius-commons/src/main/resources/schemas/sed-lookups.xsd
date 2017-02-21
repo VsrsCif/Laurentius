@@ -1,85 +1,78 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSpy v2008 (http://www.altova.com) by XMLSpy 2007 Professional Ed., Installed for 5 users (with SMP from 2007-02-06 to 2008-02-07) (CIF VSRS) -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://laurentius.si/cron" 
-           xmlns:ns2="http://laurentius.si/ebox" xmlns:ns3="http://laurentius.si/plugin" 
-           xmlns:ns4="http://laurentius.si/property" xmlns:ns5="http://laurentius.si/user"
-           xmlns:ns6="http://laurentius.si/cert"   xmlns:ns7="http://laurentius.si/cert/crl"
-           xmlns:ns8="http://laurentius.si/process"
-           elementFormDefault="qualified" attributeFormDefault="unqualified">
-    <xs:import namespace="http://laurentius.si/cert" schemaLocation="sed-cert-store.xsd"/>
-    <xs:import namespace="http://laurentius.si/cert/crl" schemaLocation="sed-cert-crl.xsd"/>
-    <xs:import namespace="http://laurentius.si/user" schemaLocation="sed-user.xsd"/>
-    <xs:import namespace="http://laurentius.si/property" schemaLocation="sed-property.xsd"/>
-    <xs:import namespace="http://laurentius.si/ebox" schemaLocation="sed-ebox.xsd"/>
-    <xs:import namespace="http://laurentius.si/cron" schemaLocation="sed-cron.xsd"/>
-    <xs:import namespace="http://laurentius.si/process" schemaLocation="sed-processor.xsd"/>
-    
-    <xs:element name="SedLookups">
-        <xs:annotation>
-            <xs:documentation/>
-        </xs:annotation>
-        <xs:complexType>
-            <xs:all>
-                <xs:element name="SEDCronJobs" minOccurs="0">
-                    <xs:complexType>
-                        <xs:sequence>
-                            <xs:element ref="ns1:SEDCronJob" minOccurs="0" maxOccurs="unbounded"/>
-                        </xs:sequence>
-                    </xs:complexType>
-                </xs:element>
-                <xs:element name="SEDProcessorSets" minOccurs="0">
-                    <xs:complexType>
-                        <xs:sequence>
-                            <xs:element ref="ns8:SEDProcessorSet" minOccurs="0" maxOccurs="unbounded"/>
-                        </xs:sequence>
-                    </xs:complexType>
-                </xs:element>
-                 <xs:element name="SEDProcessorRules" minOccurs="0">
-                    <xs:complexType>
-                        <xs:sequence>
-                            <xs:element ref="ns8:SEDProcessorRule" minOccurs="0" maxOccurs="unbounded"/>
-                        </xs:sequence>
-                    </xs:complexType>
-                </xs:element>
-              
-                <xs:element name="SEDBoxes" minOccurs="0">
-                    <xs:complexType>
-                        <xs:sequence>
-                            <xs:element ref="ns2:SEDBox" minOccurs="0" maxOccurs="unbounded"/>
-                        </xs:sequence>
-                    </xs:complexType>
-                </xs:element>
-                <xs:element name="SEDProperties" minOccurs="0">
-                    <xs:complexType>
-                        <xs:sequence>
-                            <xs:element ref="ns4:SEDProperty" minOccurs="0" maxOccurs="unbounded"/>
-                        </xs:sequence>
-                    </xs:complexType>
-                </xs:element>
-                <xs:element name="SEDUsers" minOccurs="0">
-                    <xs:complexType>
-                        <xs:sequence>
-                            <xs:element ref="ns5:SEDUser" minOccurs="0" maxOccurs="unbounded"/>
-                        </xs:sequence>
-                    </xs:complexType>
-                </xs:element>
-                <xs:element name="SEDCertStores" minOccurs="0">
-                    <xs:complexType>
-                        <xs:sequence>
-                            <xs:element ref="ns6:SEDCertStore" minOccurs="0" maxOccurs="unbounded"/>
-                        </xs:sequence>
-                    </xs:complexType>
-                </xs:element>
-                 <xs:element name="SEDCertCRLs" minOccurs="0">
-                    <xs:complexType>
-                        <xs:sequence>
-                            <xs:element ref="ns7:SEDCertCRL" minOccurs="0" maxOccurs="unbounded"/>
-                        </xs:sequence>
-                    </xs:complexType>
-                </xs:element>
-            </xs:all>
-            <xs:attribute name="name"/>
-            <xs:attribute name="exportDate" type="xs:dateTime"/>
-        </xs:complexType>
-    </xs:element>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://laurentius.si/cron" xmlns:ns2="http://laurentius.si/ebox" xmlns:ns3="http://laurentius.si/plugin" xmlns:ns4="http://laurentius.si/property" xmlns:ns5="http://laurentius.si/user" xmlns:ns6="http://laurentius.si/cert" xmlns:ns7="http://laurentius.si/cert/crl" xmlns:ns8="http://laurentius.si/process" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:import namespace="http://laurentius.si/cert" schemaLocation="sed-cert-store.xsd"/>
+	<xs:import namespace="http://laurentius.si/cert/crl" schemaLocation="sed-cert-crl.xsd"/>
+	<xs:import namespace="http://laurentius.si/user" schemaLocation="sed-user.xsd"/>
+	<xs:import namespace="http://laurentius.si/property" schemaLocation="sed-property.xsd"/>
+	<xs:import namespace="http://laurentius.si/ebox" schemaLocation="sed-ebox.xsd"/>
+	<xs:import namespace="http://laurentius.si/cron" schemaLocation="sed-cron.xsd"/>
+	<xs:import namespace="http://laurentius.si/process" schemaLocation="sed-processor.xsd"/>
+	<xs:element name="SedLookups">
+		<xs:annotation>
+			<xs:documentation/>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:all>
+				<xs:element name="SEDCronJobs" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="ns1:SEDCronJob" minOccurs="0" maxOccurs="unbounded"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="SEDProcessorSets" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="ns8:SEDProcessorSet" minOccurs="0" maxOccurs="unbounded"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="SEDProcessorRules" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="ns8:SEDProcessorRule" minOccurs="0" maxOccurs="unbounded"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="SEDBoxes" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="ns2:SEDBox" minOccurs="0" maxOccurs="unbounded"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="SEDProperties" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="ns4:SEDProperty" minOccurs="0" maxOccurs="unbounded"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="SEDUsers" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="ns5:SEDUser" minOccurs="0" maxOccurs="unbounded"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="SEDCertPassword" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="ns6:SEDCertPassword" minOccurs="0" maxOccurs="unbounded"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="SEDCertCRLs" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="ns7:SEDCertCRL" minOccurs="0" maxOccurs="unbounded"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:all>
+			<xs:attribute name="name"/>
+			<xs:attribute name="exportDate" type="xs:dateTime"/>
+		</xs:complexType>
+	</xs:element>
 </xs:schema>

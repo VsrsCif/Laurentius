@@ -4,7 +4,8 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:p="http://primefaces.org/ui"      
       xmlns:sui="http://java.sun.com/jsf/composite/laurentius-ui"
-      xmlns:dlg="http://java.sun.com/jsf/composite/laurentius-ui/dialog"     
+      xmlns:dlg="http://java.sun.com/jsf/composite/laurentius-ui/dialog"
+      xmlns:pnl="http://java.sun.com/jsf/composite/laurentius-ui/panel"
       lang="#{localeManager.language}"
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <h:head>
@@ -163,7 +164,11 @@
                         <h:panelGroup id="MainPanel">
                             <sui:mail-table-in id="InMailPanel" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_INBOX)  }"  />
                             <sui:mail-table-out id="OutMailPanel" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_OUTBOX)}"  />
-                            <sui:settings-keystore id="SettingsCertPanel" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_SETT_CERTS)}"  />
+                           <!-- Digital certificates -->
+                           <pnl:pnl-keystore id="PanelKeystore" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_SETT_CERTS)}"  />
+                            <pnl:pnl-rootca id="PanelRootCA" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_SETT_CERT_ROOT_CA)}"  />
+                            <pnl:pnl-crl id="PanelCRL" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_SETT_CERT_CRL)}"  />
+
                             <sui:settings-custom id="SettingsCustomPanel" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_SETT_CUSTOM)}"  />
 
                             <sui:settings-pmode-services id="SettingsPModesServices" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_SETT_PMODE_SERVICES)}"  />
@@ -181,9 +186,16 @@
                             <sui:cron-execution-table id="CronExecutions" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_CRON_EXEC)}"  />
 
 
-                            <p:outputPanel id="PluginFrame" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_PLUGIN)}" 
+                            <p:outputPanel id="PluginFrame" rendered="#{mainWindow.currentPanel().
+                                                                        equalsIgnoreCase(AppConstant.s_PANEL_PLUGIN) 
+                                                                        or 
+                                                                        mainWindow.currentPanel().
+                                                                        equalsIgnoreCase(AppConstant.s_SETTINGS_PLUGIN)}" 
                                            style="width: 100%;height: 100%">  
-                                <iframe id="iframeCenter" src="#{adminSEDPluginView.selectedWebContext}" width="100%"  
+                                <iframe id="iframeCenter" src="#{mainWindow.currentPanel().
+                                                                        equalsIgnoreCase(AppConstant.s_PANEL_PLUGIN)?
+                                                                        pluginMenuView.selectedWebContext:
+                                                                        settingsMenuView.selectedWebContext}" width="100%"  
                                         height="100%" frameborder="0" crolling="auto">  
                                 </iframe>  
                             </p:outputPanel>  
@@ -393,118 +405,51 @@
                                     <h:graphicImage value="#{resource['images:/plugin.svg']}" width="22" height="22" />
                                     <h:outputText value="#{msg['Plugins']}" />                                 
                                 </f:facet>
-                                <p:menu class="ui-accordion-button" id="pluginmenu" style="width: 100%">
-                                    <c:forEach items="#{adminSEDPluginView.list}" var="plg">
-                                        <c:if test="#{not empty plg.webContext and userSessionData.showPluginForUser(plg) }">
-                                            <p:menuitem value="#{plg.name}" 
-                                                        actionListener="#{adminSEDPluginView.onSelectedViewPluginAction}" 
+                                  <p:tree id="PluginMenu" value="#{pluginMenuView.root}" var="mnitem" selectionMode="single"
+                                        selection="#{pluginMenuView.selectedNode}" 
+                                        dynamic="true"
+                                        >
+                                    <p:ajax event="select" listener="#{pluginMenuView.onSelection()}" 
+                                            update=":forms:MainPanel" />
+                                    <p:treeNode icon="#{mnitem.icon}"  >
+                                        <h:outputText value="#{mnitem.name}"/>
+                                    </p:treeNode>
+
+                                </p:tree>
+                                <!-- p:menu class="ui-accordion-button" id="pluginmenu" style="width: 100%">
+                                    <c:forEach items="# {adminSEDPluginView.list}" var="plg">
+                                        <c:if test="# {not empty plg.webContext and userSessionData.showPluginForUser(plg) }">
+                                            <p:menuitem value="# {plg.name}" 
+                                                        actionListener="# {adminSEDPluginView.onSelectedViewPluginAction}" 
                                                         icon="ui-icon-svg-plugin ui-icon-size-22"
                                                         update="forms:MainPanel" >
                                                 <f:attribute name="panel" value="PANEL_PLUGIN" />
-                                                <f:attribute name="pluginItem" value="#{plg}" />
+                                                <f:attribute name="pluginItem" value="# {plg}" />
                                             </p:menuitem>
                                         </c:if>
 
 
                                     </c:forEach>   
-                                </p:menu>
+                                </p:menu -->
                             </p:tab>
-                            <p:tab id="PANEL_SETT_PMODE_SERVICES" rendered="#{userSessionData.user.adminRole}">
-                                <f:facet name="title">
-                                    <h:graphicImage value="#{resource['images:/pmode.svg']}" width="22" height="22" />
-                                    <h:outputText value="#{msg['SettingsPMode']}" />                                 
-                                </f:facet>
-                                <p:menu class="ui-accordion-button" style="width: 100%">
-                                    <p:menuitem value="#{msg['Services']}" 
-                                                icon="ui-icon-svg-service ui-icon-size-22" 
-                                                actionListener="#{mainWindow.onToolbarButtonAction}" 
-                                                update="forms:MainPanel"
-                                                >
-                                        <f:attribute name="panel" value="PANEL_SETT_PMODE_SERVICES" />
-                                    </p:menuitem>
-                                    <p:menuitem value="#{msg['Parties']}" 
-                                                icon="ui-icon-svg-party ui-icon-size-22" 
-                                                actionListener="#{mainWindow.onToolbarButtonAction}" 
-                                                update="forms:MainPanel">
-                                        <f:attribute name="panel" value="PANEL_SETT_PMODE_PARTIES" />
-                                    </p:menuitem>
-                                    <p:menuitem value="#{msg['SecurityPolicies']}" 
-                                                icon="ui-icon-svg-security ui-icon-size-22" 
-                                                actionListener="#{mainWindow.onToolbarButtonAction}" 
-                                                update="forms:MainPanel">
-                                        <f:attribute name="panel" value="PANEL_SETT_PMODE_SECURITIES" />
-                                    </p:menuitem>
-                                    <p:menuitem value="#{msg['ReceptionAwarenessPatterns']}" 
-                                                icon="ui-icon-svg-reliability ui-icon-size-22" 
-                                                actionListener="#{mainWindow.onToolbarButtonAction}" 
-                                                update="forms:MainPanel">
-                                        <f:attribute name="panel" value="PANEL_SETT_PMODE_AS4_RA" />
-                                    </p:menuitem>
-                                    <p:menuitem value="#{msg['PModes']}" 
-                                                icon="ui-icon-svg-pmode ui-icon-size-22" 
-                                                actionListener="#{mainWindow.onToolbarButtonAction}" 
-                                                update="forms:MainPanel">
-                                        <f:attribute name="panel" value="PANEL_SETT_PMODE" />
-                                    </p:menuitem>
-
-                                </p:menu>
-                            </p:tab>
-
-
-
                             <p:tab id="PANEL_SETT_CUSTOM" rendered="#{userSessionData.user.adminRole}">
 
                                 <f:facet name="title">
                                     <h:graphicImage value="#{resource['images:/settings.svg']}" width="22" height="22" />
                                     <h:outputText value="#{msg['SettingsCustom']}" />                                 
                                 </f:facet>
-                                <p:menu class="ui-accordion-button" style="width: 100%">
-                                    <p:menuitem value="#{msg['Custom']}" 
-                                                icon="ui-icon-svg-settings ui-icon-size-22" 
-                                                actionListener="#{mainWindow.onToolbarButtonAction}" 
-                                                update="forms:MainPanel">
-                                        <f:attribute name="panel" value="PANEL_SETT_CUSTOM" />
-                                    </p:menuitem>
+                                <p:tree id="SettPanel" value="#{settingsMenuView.root}" var="mnitem" selectionMode="single"
+                                        selection="#{settingsMenuView.selectedNode}" 
+                                        dynamic="true"
+                                        >
+                                    <p:ajax event="select" listener="#{settingsMenuView.onSelection()}" 
+                                            update=":forms:MainPanel" />
+                                    <p:treeNode icon="#{mnitem.icon}" >
+                                        <h:outputText value="#{msg[mnitem.name]}"/>
+                                    </p:treeNode>
 
-                                    <p:menuitem value="#{msg['SED-Boxes']}"
-                                                icon="ui-icon-svg-box ui-icon-size-22"
-                                                actionListener="#{mainWindow.onToolbarButtonAction}" 
-                                                update="forms:MainPanel">
-                                        <f:attribute name="panel" value="PANEL_ADMIN_EBOXES" />
-                                    </p:menuitem>
-                                    <p:menuitem icon="ui-icon-svg-users ui-icon-size-22" 
-                                                value="#{msg['Users']}"  
-                                                actionListener="#{mainWindow.onToolbarButtonAction}"  
-                                                update="forms:MainPanel">
-                                        <f:attribute name="panel" value="PANEL_ADMIN_USERS" />                                        
-                                    </p:menuitem>
-                                    <p:menuitem value="#{msg['Certificates']}"  
-                                                icon="ui-icon-svg-certificate ui-icon-size-22" 
-                                                actionListener="#{mainWindow.onToolbarButtonAction}"  
-                                                update="forms:MainPanel">
-                                        <f:attribute name="panel" value="PANEL_SETT_CERTS" />
-                                    </p:menuitem>
-                                    <p:separator />
-                                    <p:menuitem value="#{msg['Plugins']}" 
-                                                icon="ui-icon-svg-plugin ui-icon-size-22" 
-                                                actionListener="#{mainWindow.onToolbarButtonAction}"  
-                                                update="forms:MainPanel">
-                                        <f:attribute name="panel" value="PANEL_ADMIN_PLUGIN" />
-                                    </p:menuitem>
-                                    <p:menuitem value="#{msg['InMailRules']}" 
-                                                icon="ui-icon-svg-process ui-icon-size-22" 
-                                                actionListener="#{mainWindow.onToolbarButtonAction}"  
-                                                update="forms:MainPanel">
-                                        <f:attribute name="panel" value="PANEL_INMAIL_PROCESS" />
-                                    </p:menuitem>
-                                    <p:menuitem value="#{msg['Scheduler']}" 
-                                                icon="ui-icon-svg-scheduler ui-icon-size-22" 
-                                                actionListener="#{mainWindow.onToolbarButtonAction}"  
-                                                update="forms:MainPanel">
-                                        <f:attribute name="panel" value="PANEL_ADMIN_CRON" />
-                                    </p:menuitem>
+                                </p:tree>
 
-                                </p:menu>
 
                             </p:tab>
                             <p:tab id="PANEL_MONITOR" rendered="#{userSessionData.user.adminRole}">
@@ -521,14 +466,9 @@
                                                 update="forms:MainPanel">
                                         <f:attribute name="panel" value="PANEL_CRON_EXEC" />
                                     </p:menuitem>
-
-
-
-
-
-
-
                                 </p:menu>
+
+
 
                             </p:tab>
 
@@ -536,21 +476,8 @@
                     </p:layoutUnit>
                 </p:layout>
             </h:form>
-            <h:form id="DeleteDialogForm" >
-                <p:confirmDialog widgetVar="DlgDelete" id="deleteDialog" 
-                                 header="#{dialogDelete.title}" 
-                                 message="#{dialogDelete.message}"
-                                 width="400" showEffect="bounce"  closable="false" severity="alert" 
-                                 appendTo="@(body)" >
-                    <h:panelGroup layout="block" style="text-align: right">
-                        <p:commandButton value="Yes" rendered="#{dialogDelete.yesNoOption}" 
-                                         action="#{dialogDelete.removeSelected()}" 
-                                         oncomplete="PF('DlgDelete').hide();" 
-                                         />
-                        <p:commandButton value="No"  oncomplete="PF('DlgDelete').hide();" />
-                    </h:panelGroup>
-                </p:confirmDialog>
-            </h:form>
+
+            <dlg:dlg-alert id="dlgalert" />
 
             <dlg:dlg-compose id="dlgCompose" />
             <dlg:dlg-certificate id="dlgcertificate" />

@@ -26,6 +26,23 @@ import org.apache.log4j.Logger;
  * @author Joze Rihtarsic <joze.rihtarsic@sodisce.si>
  */
 public class SEDLogger {
+  /**
+   * Method returs first cause message in throwable stack. If Throwable is null, null is returned.
+   *
+   * @param tw throwable
+   * @return
+   */
+  public static String getFirstCauseMessage(Throwable tw) {
+    if (tw == null || tw.getCause() == null) {
+      return null;
+    }
+    Throwable twCause = tw.getCause();
+    while (twCause.getCause() != null) {
+      twCause = twCause.getCause();
+    }
+    return twCause.getMessage();
+    
+  }
 
   int miMethodStack = 3;
   private final Logger mlgLogger;
@@ -102,6 +119,12 @@ public class SEDLogger {
     mlgLogger.info(getCurrentMethodName() + ":" + String.format(format, param));
     return mlTime;
   }
+  
+  public long formatedDebug(final String format, final Object... param) {
+    long mlTime = getTime();
+    mlgLogger.debug(getCurrentMethodName() + ":" + String.format(format, param));
+    return mlTime;
+  }
 
   public long formatedWarning(final String format, final Object... param) {
     long mlTime = getTime();
@@ -126,7 +149,8 @@ public class SEDLogger {
       strParams = sw.toString();
     }
     long logTime = (getTime() - lTime);
-      mlgLogger.log(logTime > 1000?Level.DEBUG:logTime > 60000?Level.WARN:Level.INFO,  
+    
+      mlgLogger.log(logTime < 30000? Level.DEBUG:Level.WARN,  
           getCurrentMethodName() + ": - END ( " + (getTime() - lTime) + " ms) " +
            strParams);
 
@@ -182,7 +206,7 @@ public class SEDLogger {
       strParams = sw.toString();
     }
 
-    mlgLogger.debug(getCurrentMethodName() + ": - BEGIN' " +
+    mlgLogger.trace(getCurrentMethodName() + ": - BEGIN' " +
          (strParams != null ? " params: " + strParams : ""));
     return mlTime;
   }
@@ -210,23 +234,6 @@ public class SEDLogger {
         getFirstCauseMessage(ex) + "'.", ex);
   }
 
-  /**
-   * Method returs first cause message in throwable stack. If Throwable is null, null is returned.
-   *
-   * @param tw throwable
-   * @return
-   */
-  public static String getFirstCauseMessage(Throwable tw) {
-    if (tw == null || tw.getCause() == null) {
-      return null;
-    }
-    Throwable twCause = tw.getCause();
-    while (twCause.getCause() != null) {
-      twCause = twCause.getCause();
-    }
-    return twCause.getMessage();
-
-  }
 
   public Logger getLogger() {
     return mlgLogger;

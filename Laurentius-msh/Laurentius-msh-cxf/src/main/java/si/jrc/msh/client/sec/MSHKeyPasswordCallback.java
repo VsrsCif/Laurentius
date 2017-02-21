@@ -18,7 +18,7 @@ import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.UnsupportedCallbackException;
 import org.apache.wss4j.common.ext.WSPasswordCallback;
-import si.laurentius.cert.SEDCertificate;
+import si.laurentius.cert.SEDCertPassword;
 import si.laurentius.commons.utils.SEDLogger;
 
 /**
@@ -32,15 +32,16 @@ public class MSHKeyPasswordCallback implements CallbackHandler {
    */
   protected final SEDLogger LOG = new SEDLogger(MSHKeyPasswordCallback.class);
 
-  SEDCertificate mKey;
+  SEDCertPassword  certPasswd;
 
   /**
    * Method sets Callback for expected key
    *
-   * @param key
+   * @param cp
    */
-  public MSHKeyPasswordCallback(SEDCertificate key) {
-    this.mKey = key;
+  public MSHKeyPasswordCallback(SEDCertPassword cp) {
+    this.certPasswd =cp;
+
   }
 
   @Override
@@ -49,17 +50,18 @@ public class MSHKeyPasswordCallback implements CallbackHandler {
     long l = LOG.logStart();
 
     for (Callback cb : callbacks) {
+      
       if (cb instanceof WSPasswordCallback) {
         WSPasswordCallback pc = (WSPasswordCallback) cb;
         if (pc.getIdentifier() == null) {
           String msg = "Missing key identifier, check ws-securiy configuration";
           throw new UnsupportedCallbackException(cb, msg);
         }
-        if (!pc.getIdentifier().equals(mKey.getAlias()) ) {
-          String msg = "Key identifier: '"+pc.getIdentifier()+"' not match expected alias '"+mKey.getAlias()+"'";
+        if (!pc.getIdentifier().equals(certPasswd.getAlias()) ) {
+          String msg = "Key identifier: '"+pc.getIdentifier()+"' not match expected alias '"+certPasswd.getAlias()+"'";
           throw new UnsupportedCallbackException(cb, msg);
         }
-        pc.setPassword(mKey.getKeyPassword());
+        pc.setPassword(certPasswd.getPassword());
       } else {
         String msg = "UnsupportedCallback for class: " + cb.getClass();
         throw new UnsupportedCallbackException(cb, msg);

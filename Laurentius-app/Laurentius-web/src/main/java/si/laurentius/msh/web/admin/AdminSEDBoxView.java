@@ -14,22 +14,24 @@
  */
 package si.laurentius.msh.web.admin;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import si.laurentius.ebox.SEDBox;
 import si.laurentius.commons.SEDJNDI;
-import si.laurentius.commons.interfaces.DBSettingsInterface;
-import si.laurentius.commons.interfaces.PModeInterface;
+import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.interfaces.SEDLookupsInterface;
 import si.laurentius.commons.utils.SEDLogger;
+import si.laurentius.commons.utils.Utils;
 import si.laurentius.msh.web.abst.AbstractAdminJSFView;
-import si.laurentius.msh.web.gui.DialogDelete;
-import si.laurentius.msh.web.gui.UserSessionData;
-
+import si.laurentius.user.SEDUser;
 
 /**
  *
@@ -40,31 +42,11 @@ import si.laurentius.msh.web.gui.UserSessionData;
 public class AdminSEDBoxView extends AbstractAdminJSFView<SEDBox> {
 
   private static final SEDLogger LOG = new SEDLogger(AdminSEDBoxView.class);
-  
-  @ManagedProperty(value = "#{dialogDelete}")
-  private DialogDelete dlgDelete;
-
-  @Override
-  public DialogDelete getDlgDelete() {
-    return dlgDelete;
-  }
-  @Override
-  public  void setDlgDelete(DialogDelete dlg){
-    dlgDelete = dlg;
-  }
-   
-   
-
-  @EJB(mappedName = SEDJNDI.JNDI_DBSETTINGS)
-  private DBSettingsInterface mdbSettings;
+  String ePattern = "^(?:[a-z0-9!#$%&'*+\\/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+\\/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")$";
+  Pattern regExpPattern = Pattern.compile(ePattern);
 
   @EJB(mappedName = SEDJNDI.JNDI_SEDLOOKUPS)
   private SEDLookupsInterface mdbLookups;
-
-  @EJB(mappedName = SEDJNDI.JNDI_PMODE)
-  PModeInterface mPMode;
-
-
 
   /**
    *
@@ -72,7 +54,7 @@ public class AdminSEDBoxView extends AbstractAdminJSFView<SEDBox> {
    * @return
    */
   public SEDBox getSEDBoxByLocalName(String sedBox) {
-    return mdbLookups.getSEDBoxByAddressName(sedBox);
+    return mdbLookups.getSEDBoxByLocalName(sedBox);
   }
 
   /**
@@ -100,17 +82,33 @@ public class AdminSEDBoxView extends AbstractAdminJSFView<SEDBox> {
   @Override
   public void removeSelected() {
     SEDBox sb = getSelected();
-    if (sb == null) {
-      dlgDelete.setCurrentJSFView(this);
-      
-      
-      //mdbLookups.removeSEDBox(sb);
-      //setSelected(null);
+    if (sb != null) {
+      List<String> lstusr = new ArrayList<>();
+      List<SEDUser> lst = mdbLookups.getSEDUsers();
+      for (SEDUser u : lst) {
+        for (SEDBox s : u.getSEDBoxes()) {
+          if (Objects.equals(s.getLocalBoxName(), sb.getLocalBoxName())) {
+            lstusr.add(u.getUserId());
+            break;
+          }
+        }
+      }
+      if (!lstusr.isEmpty()) {
+        addError("To delete, remove box from users: "
+                + String.join(",", lstusr));
+        addCallbackParam(CB_PARA_REMOVED, false);
+      } else {
+
+        mdbLookups.removeSEDBox(sb);
+        setSelected(null);
+        addCallbackParam(CB_PARA_REMOVED, true);
+      }
+    } else {
+      addError("No item selected");
+      addCallbackParam(CB_PARA_REMOVED, false);
     }
 
   }
-
-
 
   /**
    *
@@ -137,15 +135,48 @@ public class AdminSEDBoxView extends AbstractAdminJSFView<SEDBox> {
     boolean bsuc = false;
     if (sb != null) {
       mdbLookups.updateSEDBox(sb);
-      setEditable(null);
-      return bsuc;
-
+      bsuc = true;
     }
     return bsuc;
   }
 
   @Override
   public boolean validateData() {
+
+    SEDBox sb = getEditable();
+    // test alias.
+    if (sb==null) {
+      addError("No editable selected!");
+      return false;
+    }
+
+    // test alias.
+    if (Utils.isEmptyString(sb.getLocalBoxName())) {
+      addError("Name must not be empty!");
+      return false;
+    }
+
+    if (isEditableNew() && mdbLookups.getSEDBoxByLocalName(sb.getLocalBoxName()) != null) {
+      addError(String.format("Sedbox %s already exists!", sb.getLocalBoxName()));
+      return false;
+    }
+
+    Matcher m = regExpPattern.matcher(sb.getLocalBoxName());
+    if (!m.matches()) {
+      addError("Local part box name is not valid!");
+      return false;
+    }
+
+    if (sb.getActiveFromDate() == null) {
+      addError("Active From Date must not be null!");
+      return false;
+    }
+
+    if (sb.getActiveToDate() != null && sb.getActiveToDate().before(sb.
+            getActiveFromDate())) {
+      addError("Active From Date must be before Active to date!");
+      return false;
+    }
 
     return true;
   }
@@ -158,5 +189,40 @@ public class AdminSEDBoxView extends AbstractAdminJSFView<SEDBox> {
   public List<SEDBox> getList() {
     return mdbLookups.getSEDBoxes();
   }
+
+  @Override
+  public String getSelectedDesc() {
+    if (getSelected() != null) {
+      return String.format("%s@%s", getSelected().getLocalBoxName(),
+              SEDSystemProperties.getLocalDomain());
+    }
+    return null;
+  }
+
+  @Override
+  public String getUpdateTargetTable() {
+    return ":forms:SettingsSEDBoxes:TblSedBox";
+  }
+
+  public List<SEDUser> getEditableUsers() {
+    SEDBox ed = getEditable();
+    if (ed != null) {
+      List<SEDUser> lstusr = new ArrayList<>();
+      List<SEDUser> lst = mdbLookups.getSEDUsers();
+      for (SEDUser u : lst) {
+        for (SEDBox s : u.getSEDBoxes()) {
+          if (Objects.equals(s.getLocalBoxName(), ed.getLocalBoxName())) {
+            lstusr.add(u);
+            break;
+          }
+        }
+      }
+      return lstusr;
+    } else {
+      return Collections.emptyList();
+    }
+
+  }
+;
 
 }
