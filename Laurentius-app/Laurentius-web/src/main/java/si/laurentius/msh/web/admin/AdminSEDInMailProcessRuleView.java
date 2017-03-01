@@ -42,7 +42,7 @@ public class AdminSEDInMailProcessRuleView extends AbstractAdminJSFView<SEDProce
   @EJB(mappedName = SEDJNDI.JNDI_SEDLOOKUPS)
   private SEDLookupsInterface mdbLookups;
 
-@EJB(mappedName = SEDJNDI.JNDI_PMODE)
+  @EJB(mappedName = SEDJNDI.JNDI_PMODE)
   private PModeInterface mPMode;
 
 

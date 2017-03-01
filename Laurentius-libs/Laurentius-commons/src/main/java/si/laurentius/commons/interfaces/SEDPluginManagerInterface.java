@@ -37,6 +37,7 @@ public interface SEDPluginManagerInterface {
     
   
   CronTaskDef getCronTaskDef(String plugin, String task);
+  MailInterceptorDef getMailInterceptoDef(String plugin, String task);
   InMailProcessorDef getInMailProcessor(String plugin, String task);
   
   List<CronTaskDef> getCronTasksForPlugin(String plugin);

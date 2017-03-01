@@ -449,6 +449,5 @@ public class AdminSEDCronJobView extends AbstractAdminJSFView<SEDCronJob> {
 
       return lstArr;
     }
-
   }
 }

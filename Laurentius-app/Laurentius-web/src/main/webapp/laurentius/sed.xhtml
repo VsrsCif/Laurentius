@@ -164,8 +164,8 @@
                         <h:panelGroup id="MainPanel">
                             <sui:mail-table-in id="InMailPanel" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_INBOX)  }"  />
                             <sui:mail-table-out id="OutMailPanel" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_OUTBOX)}"  />
-                           <!-- Digital certificates -->
-                           <pnl:pnl-keystore id="PanelKeystore" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_SETT_CERTS)}"  />
+                            <!-- Digital certificates -->
+                            <pnl:pnl-keystore id="PanelKeystore" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_SETT_CERTS)}"  />
                             <pnl:pnl-rootca id="PanelRootCA" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_SETT_CERT_ROOT_CA)}"  />
                             <pnl:pnl-crl id="PanelCRL" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_SETT_CERT_CRL)}"  />
 
@@ -182,8 +182,10 @@
                             <sui:settings-cron id="SettingsCron" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_ADMIN_CRON)}"  />
                             <sui:settings-plugins id="SettingsPlugin" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_ADMIN_PLUGIN)}"  />
                             <sui:settings-inmail-process id="InMailProcess" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_INMAIL_PROCESS)}"  />
+                            <sui:settings-interceptor id="SettingsInterceptor" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_INTERCEPTOR)}"  />
 
                             <sui:cron-execution-table id="CronExecutions" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_CRON_EXEC)}"  />
+
 
 
                             <p:outputPanel id="PluginFrame" rendered="#{mainWindow.currentPanel().
@@ -193,9 +195,9 @@
                                                                         equalsIgnoreCase(AppConstant.s_SETTINGS_PLUGIN)}" 
                                            style="width: 100%;height: 100%">  
                                 <iframe id="iframeCenter" src="#{mainWindow.currentPanel().
-                                                                        equalsIgnoreCase(AppConstant.s_PANEL_PLUGIN)?
-                                                                        pluginMenuView.selectedWebContext:
-                                                                        settingsMenuView.selectedWebContext}" width="100%"  
+                                                                 equalsIgnoreCase(AppConstant.s_PANEL_PLUGIN)?
+                                                                 pluginMenuView.selectedWebContext:
+                                                                 settingsMenuView.selectedWebContext}" width="100%"  
                                         height="100%" frameborder="0" crolling="auto">  
                                 </iframe>  
                             </p:outputPanel>  
@@ -405,7 +407,7 @@
                                     <h:graphicImage value="#{resource['images:/plugin.svg']}" width="22" height="22" />
                                     <h:outputText value="#{msg['Plugins']}" />                                 
                                 </f:facet>
-                                  <p:tree id="PluginMenu" value="#{pluginMenuView.root}" var="mnitem" selectionMode="single"
+                                <p:tree id="PluginMenu" value="#{pluginMenuView.root}" var="mnitem" selectionMode="single"
                                         selection="#{pluginMenuView.selectedNode}" 
                                         dynamic="true"
                                         >
@@ -487,6 +489,7 @@
             <dlg:dlg-sedbox id="dlgsedbox" />
             <dlg:dlg-user id="dlguser" />
             <dlg:dlg-cron id="dlgcron" />
+            <dlg:dlg-interceptor id="dlgintc" />
             <dlg:dlg-process-set id="dlgprocessset" />
             <dlg:dlg-process-instance id="dlgprocessinstance" />
             <dlg:dlg-process-rule id="dlgprocessrule" />

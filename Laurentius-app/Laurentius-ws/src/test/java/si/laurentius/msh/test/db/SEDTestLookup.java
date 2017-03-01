@@ -20,6 +20,7 @@ import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.interfaces.SEDLookupsInterface;
 import si.laurentius.commons.utils.Utils;
 import si.laurentius.commons.utils.xml.XMLUtils;
+import si.laurentius.interceptor.SEDInterceptorRule;
 import si.laurentius.process.SEDProcessorRule;
 import si.laurentius.process.SEDProcessorSet;
 import si.laurentius.property.SEDProperty;
@@ -37,6 +38,36 @@ public class SEDTestLookup implements SEDLookupsInterface {
   public SEDTestLookup(InputStream is)
           throws IOException, JAXBException {
     init(is);
+  }
+
+  @Override
+  public boolean addSEDInterceptorRule(SEDInterceptorRule sb) {
+    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+  }
+
+  @Override
+  public void clearAllCache() {
+    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+  }
+
+  @Override
+  public void clearCache(Class cls) {
+    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+  }
+
+  @Override
+  public SEDInterceptorRule getSEDInterceptorRuleById(BigInteger id) {
+    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+  }
+
+  @Override
+  public SEDInterceptorRule getSEDInterceptorRuleByName(String name) {
+    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+  }
+
+  @Override
+  public List<SEDInterceptorRule> getSEDInterceptorRules() {
+    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
   }
 
   @Override
@@ -193,6 +224,11 @@ public class SEDTestLookup implements SEDLookupsInterface {
   }
 
   @Override
+  public boolean removeSEDInterceptorRule(SEDInterceptorRule sb) {
+    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+  }
+
+  @Override
   public boolean removeSEDUser(SEDUser sb) {
     return remove(sb);
   }
@@ -204,6 +240,11 @@ public class SEDTestLookup implements SEDLookupsInterface {
 
   @Override
   public boolean updateSEDCronJob(SEDCronJob sb) {
+    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+  }
+
+  @Override
+  public boolean updateSEDInterceptorRule(SEDInterceptorRule sb) {
     throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
   }
 

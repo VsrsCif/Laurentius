@@ -7,36 +7,83 @@ package si.laurentius.process.xslt;
 
 import java.io.File;
 import java.io.InputStream;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 import org.w3c.dom.Document;
+import si.laurentius.commons.utils.xml.XMLUtils;
 
 /**
  *
  * @author sluzba
  */
 public class XSLTUtilsTest {
+
+  public static final String S_XML_TEST_FILE_V01 = "/xml-sample/court-eizvrsba.xml";
+  public static final String S_XSLT_FILE_V01 = "/xslt/c2b_eizvrsba-demo_v01.xsl";
+  public static final String S_XSLT_FILE_ZBS_V01 = "/xslt/Sodisce2ZbsIzvrsbeXml_v1.00.xslt";
   
+  
+
+  public static final String S_TARGET_FOLDER = "target";
+
+  public static File fTarget = new File(S_TARGET_FOLDER);
+
   public XSLTUtilsTest() {
+    if (!fTarget.exists()) {
+      fTarget.mkdir();
+    }
   }
 
- 
+  @BeforeClass
+  public static void setUpClass() {
+    System.out.println("********************************");
+    System.out.println("GOT: " + System.getProperty(
+            "javax.xml.transform.TransformerFactory"));
+    // System.setProperty("javax.xml.transform.TransformerFactory",
+    //                        "net.sf.saxon.TransformerFactoryImpl");
+  }
+
+  @Before
+  public void setUp() {
+  }
+
+  /**
+   * Test of transform method, of class XSLTUtils.
+   */
+  @Test
+  public void testTransform()
+          throws Exception {
+    System.out.println("transform");
+
+    Document source = XMLUtils.deserializeToDom(XSLTUtilsTest.class.
+            getResourceAsStream(S_XML_TEST_FILE_V01));
+    File fxstl = new File("src/test/resources/" + S_XSLT_FILE_V01);
+
+    InputStream xsltSource = XSLTUtilsTest.class.getResourceAsStream(
+            S_XSLT_FILE_V01);
+    File fileResult = File.createTempFile("xslt", ".xml", new File(
+            S_TARGET_FOLDER));
+    XSLTUtils.transform(source, xsltSource, fileResult);
+
+  }
 
   @Test
-  public void testTransform_3args_2() throws Exception {
-    
-    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+  public void testZBSTransform()
+          throws Exception {
+    System.out.println("transform");
 
-    factory.setNamespaceAware(true);
-    DocumentBuilder builder = factory.newDocumentBuilder();
+    Document source = XMLUtils.deserializeToDom(XSLTUtilsTest.class.
+            getResourceAsStream(S_XML_TEST_FILE_V01));
 
-    Document source =  builder.parse(XSLTUtilsTest.class.getResourceAsStream("/xml/IVPN_001.xml"));
-    InputStream xslt = XSLTUtilsTest.class.getResourceAsStream("/xslt/zbs_001.xslt");
-    File fileResult = new File("target/test.xml");
-    XSLTUtils.transform(source, xslt, fileResult);
+    InputStream xsltSource = XSLTUtilsTest.class.getResourceAsStream(
+            S_XSLT_FILE_ZBS_V01);
+    File fileResult = File.createTempFile("xslt", ".xml", new File(
+            S_TARGET_FOLDER));
+    XSLTUtils.transform(source, xsltSource, fileResult);
 
   }
   
+  
+
 }

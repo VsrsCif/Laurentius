@@ -51,6 +51,7 @@ public class SEDPluginManager implements SEDPluginManagerInterface {
   protected static final SEDLogger LOG = new SEDLogger(SEDPluginManager.class);
 
   List<Plugin> mlstRegistredPlugins = new ArrayList<>();
+
   @Override
   public CronTaskDef getCronTaskDef(String plugin, String task) {
     Plugin plg = getPluginByType(plugin);
@@ -62,9 +63,8 @@ public class SEDPluginManager implements SEDPluginManagerInterface {
       }
     }
     return null;
-    
-  }
 
+  }
 
   @Override
   public List<CronTaskDef> getCronTasksForPlugin(String plugin) {
@@ -76,6 +76,7 @@ public class SEDPluginManager implements SEDPluginManagerInterface {
     }
     return Collections.emptyList();
   }
+
   @Override
   public InMailProcessorDef getInMailProcessor(String plugin, String task) {
     Plugin plg = getPluginByType(plugin);
@@ -87,7 +88,20 @@ public class SEDPluginManager implements SEDPluginManagerInterface {
       }
     }
     return null;
-    
+
+  }
+
+  @Override
+  public MailInterceptorDef getMailInterceptoDef(String plugin, String task) {
+    Plugin plg = getPluginByType(plugin);
+    if (plg != null && !plg.getMailInterceptorDeves().isEmpty()) {
+      for (MailInterceptorDef ctd : plg.getMailInterceptorDeves()) {
+        if (Objects.equals(ctd.getType(), task)) {
+          return ctd;
+        }
+      }
+    }
+    return null;
   }
 
   @Override
@@ -142,6 +156,7 @@ public class SEDPluginManager implements SEDPluginManagerInterface {
     }
     return Collections.emptyList();
   }
+
   @Override
   public Plugin getPluginByType(String type) {
     for (Plugin plg : mlstRegistredPlugins) {
@@ -151,12 +166,12 @@ public class SEDPluginManager implements SEDPluginManagerInterface {
     }
     return null;
   }
+
   @Override
   public List<Plugin> getRegistredPlugins() {
     return mlstRegistredPlugins;
   }
-  
-  
+
   @Override
   @Lock(LockType.WRITE)
   public void registerPlugin(Plugin pdi) {

@@ -42,7 +42,7 @@ Copyright 2016, Supreme Court Republic of Slovenia
 			<xs:element ref="ns5:OutMailEventListenerDef" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="WebRole" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="MainMenu"  type="ns1:MenuItem" minOccurs="0"/>
-                        <xs:element name="ProcessMenu"  type="ns1:MenuItem"  minOccurs="0"/>
+                        <xs:element name="ProcessMenu"  type="ns1:MenuItem"  minOccurs="0"/>                        
 		</xs:sequence>
 		<xs:attribute name="webContext" type="xs:string" use="required">
 			<xs:annotation>

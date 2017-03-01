@@ -52,6 +52,8 @@ public class AppConstant {
 
   
    public static final String S_PANEL_INMAIL_PROCESS = "PANEL_INMAIL_PROCESS";
+   
+     public static final String S_PANEL_INTERCEPTOR = "PANEL_INTERCEPTOR";
   /**
      *
      */
@@ -177,6 +179,9 @@ public class AppConstant {
   }
   public String getS_PANEL_INMAIL_PROCESS() {
     return S_PANEL_INMAIL_PROCESS;
+  }
+  public String getS_PANEL_INTERCEPTOR() {
+    return S_PANEL_INTERCEPTOR;
   }
 
   

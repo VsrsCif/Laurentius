@@ -129,9 +129,15 @@ public class SettingsMenuView implements Serializable {
             AppConstant.S_PANEL_ADMIN_PLUGIN,
             "ui-icon-svg-plugin ui-icon-size-22"), root);
     addons.setExpanded(true);
+    TreeNode interceptors = new DefaultTreeNode(new MenuItem("Interceptors",
+            AppConstant.S_PANEL_INTERCEPTOR,
+            "ui-icon-svg-interceptor ui-icon-size-22"), addons);
+    interceptors.setExpanded(true);
+    
     TreeNode inmail = new DefaultTreeNode(new MenuItem("InMailRules",
             AppConstant.S_PANEL_INMAIL_PROCESS,
             "ui-icon-svg-process ui-icon-size-22"), addons);
+     inmail.setExpanded(true);
     TreeNode crontask = new DefaultTreeNode(new MenuItem("Scheduler",
             AppConstant.S_PANEL_ADMIN_CRON,
             "ui-icon-svg-cron-exec ui-icon-size-22"), addons);
@@ -147,6 +153,8 @@ public class SettingsMenuView implements Serializable {
                                           getWebContext(), pmi.getPageId())),
                   inmail);
         }
+        
+       
       }
     }
 

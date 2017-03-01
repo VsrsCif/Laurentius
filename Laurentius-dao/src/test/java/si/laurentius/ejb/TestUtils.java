@@ -5,11 +5,15 @@
 package si.laurentius.ejb;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.FileAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
+import si.laurentius.commons.SEDSystemProperties;
 
 /**
  *
@@ -30,7 +34,18 @@ public class TestUtils {
      *
      */
   protected static final String LAU_HOME = "target/TEST-LAU_HOME";
+  public static final String LAU_TEST_DOMAIN = "test.com";
 
+  static {
+    try {
+      Files.createDirectory(Paths.get(LAU_HOME));
+    } catch (IOException ex) {
+      java.util.logging.Logger.getLogger(TestUtils.class.getName()).
+              log(java.util.logging.Level.SEVERE, null, ex);
+    }
+    System.setProperty(SEDSystemProperties.SYS_PROP_HOME_DIR, LAU_HOME);
+    System.setProperty(SEDSystemProperties.SYS_PROP_LAU_DOMAIN, LAU_TEST_DOMAIN);
+  }
 
 
   /**

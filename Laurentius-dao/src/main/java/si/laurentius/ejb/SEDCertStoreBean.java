@@ -390,8 +390,7 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
   public SEDCertPassword getKeyPassword(String alias) {
 
     if (Utils.isEmptyString(alias)) {
-      throw new IllegalArgumentException(String.
-              format("Alias must not be null!", alias));
+      throw new IllegalArgumentException("Alias must not be null!");
     }
 
     if (!mhmPswd.containsKey(alias)) {
@@ -530,7 +529,7 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
         }
       }
 
-      kmsres = kmarr.toArray(new X509KeyManager[0]);
+      kmsres = kmarr.toArray(new X509KeyManager[kmarr.size()]);
     }
     return kmsres;
 

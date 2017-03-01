@@ -26,6 +26,7 @@ import javax.ejb.Startup;
 import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.transaction.HeuristicMixedException;
@@ -41,6 +42,7 @@ import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.interfaces.SEDLookupsInterface;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.Utils;
+import si.laurentius.interceptor.SEDInterceptorRule;
 import si.laurentius.process.SEDProcessorRule;
 import si.laurentius.process.SEDProcessorSet;
 
@@ -124,6 +126,12 @@ public class SEDLookups implements SEDLookupsInterface {
   public boolean addSEDCronJob(SEDCronJob sb) {
     return add(sb);
   }
+
+  @Override
+  public boolean addSEDInterceptorRule(SEDInterceptorRule sb) {
+    return add(sb);
+  }
+
   @Override
   public boolean addSEDProcessorRule(SEDProcessorRule sb) {
     return add(sb);
@@ -133,6 +141,7 @@ public class SEDLookups implements SEDLookupsInterface {
   public boolean addSEDProcessorSet(SEDProcessorSet sb) {
     return add(sb);
   }
+
   /**
    *
    * @param sb
@@ -158,6 +167,26 @@ public class SEDLookups implements SEDLookupsInterface {
     }
   }
 
+  @Override
+  public void clearAllCache() {
+    for (Class c : mlstCacheLookup.keySet()) {
+      mlstCacheLookup.get(c).clear();
+    }
+    mlstCacheLookup.clear();
+    mlstTimeOut.clear();
+
+  }
+
+  @Override
+  public void clearCache(Class c) {
+    if (mlstCacheLookup.containsKey(c)) {
+      mlstCacheLookup.get(c).clear();
+      mlstCacheLookup.remove(c);
+      mlstTimeOut.remove(c);
+    }
+
+  }
+
   private <T> List<T> getFromCache(Class<T> c) {
     return mlstCacheLookup.containsKey(c) ? (List<T>) mlstCacheLookup.get(c) : null;
   }
@@ -174,7 +203,6 @@ public class SEDLookups implements SEDLookupsInterface {
     }
     return t;
   }
-
 
   /**
    *
@@ -193,7 +221,7 @@ public class SEDLookups implements SEDLookupsInterface {
         throw new RuntimeException(msg);
       }
       domain = "@" + domain;
-      
+
       if (!sedBox.toLowerCase().endsWith(domain.toLowerCase())) {
         LOG.formatedWarning(
                 "Local sedbox %s has wrong domain. Local domain is %s",
@@ -209,11 +237,12 @@ public class SEDLookups implements SEDLookupsInterface {
     }
     return null;
   }
+
   @Override
   public SEDBox getSEDBoxByLocalName(String strname) {
     if (strname != null && !strname.trim().isEmpty()) {
       String localName = strname.trim();
-      
+
       List<SEDBox> lst = getSEDBoxes();
       for (SEDBox sb : lst) {
         if (localName.equalsIgnoreCase(sb.getLocalBoxName())) {
@@ -253,11 +282,39 @@ public class SEDLookups implements SEDLookupsInterface {
   }
 
   @Override
+  public SEDInterceptorRule getSEDInterceptorRuleById(BigInteger id) {
+    if (id != null) {
+
+      List<SEDInterceptorRule> lst = getSEDInterceptorRules();
+      for (SEDInterceptorRule sb : lst) {
+        if (id.equals(sb.getId())) {
+          return sb;
+        }
+      }
+    }
+    return null;
+  }
+
+  @Override
   public SEDCronJob getSEDCronJobByName(String name) {
     if (name != null) {
 
       List<SEDCronJob> lst = getSEDCronJobs();
       for (SEDCronJob sb : lst) {
+        if (Objects.equals(name, sb.getName())) {
+          return sb;
+        }
+      }
+    }
+    return null;
+  }
+
+  @Override
+  public SEDInterceptorRule getSEDInterceptorRuleByName(String name) {
+    if (name != null) {
+
+      List<SEDInterceptorRule> lst = getSEDInterceptorRules();
+      for (SEDInterceptorRule sb : lst) {
         if (Objects.equals(name, sb.getName())) {
           return sb;
         }
@@ -274,6 +331,16 @@ public class SEDLookups implements SEDLookupsInterface {
   public List<SEDCronJob> getSEDCronJobs() {
     return getLookup(SEDCronJob.class);
   }
+
+  /**
+   *
+   * @return
+   */
+  @Override
+  public List<SEDInterceptorRule> getSEDInterceptorRules() {
+    return getLookup(SEDInterceptorRule.class);
+  }
+
   @Override
   public SEDProcessorRule getSEDProcessorRule(BigInteger id) {
     if (id != null) {
@@ -286,6 +353,7 @@ public class SEDLookups implements SEDLookupsInterface {
     }
     return null;
   }
+
   @Override
   public List<SEDProcessorRule> getSEDProcessorRules() {
     return getLookup(SEDProcessorRule.class);
@@ -304,11 +372,11 @@ public class SEDLookups implements SEDLookupsInterface {
     return null;
   }
 
-
   @Override
   public List<SEDProcessorSet> getSEDProcessorSets() {
     return getLookup(SEDProcessorSet.class);
   }
+
   /**
    *
    * @param userId
@@ -327,6 +395,7 @@ public class SEDLookups implements SEDLookupsInterface {
     }
     return null;
   }
+
   /**
    *
    * @return
@@ -371,8 +440,7 @@ public class SEDLookups implements SEDLookupsInterface {
    */
   @Override
   public boolean removeSEDBox(SEDBox sb) {
-   
-    
+
     return remove(sb);
   }
 
@@ -385,6 +453,17 @@ public class SEDLookups implements SEDLookupsInterface {
   public boolean removeSEDCronJob(SEDCronJob sb) {
     return remove(sb);
   }
+
+  /**
+   *
+   * @param sb
+   * @return
+   */
+  @Override
+  public boolean removeSEDInterceptorRule(SEDInterceptorRule sb) {
+    return remove(sb);
+  }
+
   @Override
   public boolean removeSEDProcessorRule(SEDProcessorRule sb) {
     return remove(sb);
@@ -394,6 +473,7 @@ public class SEDLookups implements SEDLookupsInterface {
   public boolean removeSEDProcessorSet(SEDProcessorSet sb) {
     return remove(sb);
   }
+
   /**
    *
    * @param sb
@@ -447,8 +527,9 @@ public class SEDLookups implements SEDLookupsInterface {
       mutUTransaction.commit();
       mlstTimeOut.remove(o.getClass()); // remove timeout to refresh lookup at next call
       suc = true;
-    } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException
+    } catch (IllegalArgumentException | NotSupportedException | SystemException | RollbackException | HeuristicMixedException
             | HeuristicRollbackException | SecurityException | IllegalStateException ex) {
+
       try {
         LOG.logError(l, ex.getMessage(), ex);
         mutUTransaction.rollback();
@@ -482,13 +563,36 @@ public class SEDLookups implements SEDLookupsInterface {
    */
   @Override
   public boolean updateSEDCronJob(SEDCronJob sb) {
-    SEDCronJob st = getSEDCronJobById(sb.getId());
-    if (st.getSEDTask() != null) {
+    
+    SEDCronJob st = getById(SEDCronJob.class,sb.getId());
+    if (!Objects.deepEquals(st, sb) && st.getSEDTask() != null) {
+      // delete connected property list and insert new rows
+      sb.getSEDTask().getSEDTaskProperties().forEach(tp -> {
+        tp.setId(null);
+      });
+
       return update(sb, st.getSEDTask().getSEDTaskProperties());
     } else {
       return update(sb);
     }
   }
+
+  @Override
+  public boolean updateSEDInterceptorRule(SEDInterceptorRule sb) {
+    SEDInterceptorRule st = getById(SEDInterceptorRule.class, sb.getId());
+    if (!Objects.deepEquals(st, sb) &&  st.getSEDInterceptorInstance() != null) {
+      // delete connected property list and insert new rows
+      sb.getSEDInterceptorInstance().getSEDInterceptorProperties().forEach(tp -> {
+        tp.setId(null);
+      });
+      
+      return update(sb, st.getSEDInterceptorInstance().
+              getSEDInterceptorProperties());
+    } else {
+      return update(sb);
+    }
+  }
+
   @Override
   public boolean updateSEDProcessorRule(SEDProcessorRule sb) {
     return update(sb);
@@ -498,6 +602,7 @@ public class SEDLookups implements SEDLookupsInterface {
   public boolean updateSEDProcessorSet(SEDProcessorSet sb) {
     return update(sb);
   }
+
   /**
    *
    * @param sb
@@ -506,6 +611,21 @@ public class SEDLookups implements SEDLookupsInterface {
   @Override
   public boolean updateSEDUser(SEDUser sb) {
     return update(sb);
+  }
+
+  private <T> T getById(Class c, BigInteger id) {
+
+    TypedQuery<T> q = memEManager.createNamedQuery(
+            c.getName() + ".getById", c);
+    q.setParameter("id", id);
+    T res = null;
+    try {
+      res = q.getSingleResult();
+    } catch (NoResultException nr) {
+      LOG.formatedWarning("Class: %s for id: %d not exists", c.getName(), id);
+      res = null;
+    }
+    return res;
   }
 
 }

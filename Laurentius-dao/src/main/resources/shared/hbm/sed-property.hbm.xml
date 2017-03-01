@@ -4,9 +4,9 @@
     <class name="si.laurentius.property.SEDProperty"
            table="LAU_SETTINGS">
         <id name="key" type="java.lang.String" >
-            <column name="KEY" length="512" />            
+            <column name="PROP_KEY" length="512" />            
         </id>        
-        <property column="VALUE" name="Value"  length="1024" type="java.lang.String" />       
+        <property column="PROP_VALUE" name="Value"  length="1024" type="java.lang.String" />       
         <property column="LAU_GROUP" name="Group"  length="32" type="java.lang.String" />        
     </class>    
     <query name="SEDProperty.getAll" ><![CDATA[SELECT p FROM SEDProperty p]]></query>

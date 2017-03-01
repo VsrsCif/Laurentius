@@ -113,6 +113,7 @@ public class DBSettings implements DBSettingsInterface {
       }
     };
   }
+  
   private String getData(String strKey) {
     String strVal = null;
     if (mprpProperties != null) {

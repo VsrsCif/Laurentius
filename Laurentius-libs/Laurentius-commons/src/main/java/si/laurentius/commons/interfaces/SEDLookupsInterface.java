@@ -19,6 +19,7 @@ import java.util.List;
 import javax.ejb.Local;
 import si.laurentius.cron.SEDCronJob;
 import si.laurentius.ebox.SEDBox;
+import si.laurentius.interceptor.SEDInterceptorRule;
 import si.laurentius.process.SEDProcessorRule;
 import si.laurentius.process.SEDProcessorSet;
 import si.laurentius.user.SEDUser;
@@ -65,7 +66,12 @@ public interface SEDLookupsInterface {
    */
   boolean addSEDProcessorRule(SEDProcessorRule sb);
 
-
+  /**
+   *
+   * @param sb
+   * @return
+   */
+  boolean addSEDInterceptorRule(SEDInterceptorRule sb);
 
   /**
    *
@@ -102,6 +108,8 @@ public interface SEDLookupsInterface {
    */
   SEDProcessorRule getSEDProcessorRule(BigInteger id);
 
+  SEDInterceptorRule getSEDInterceptorRuleById(BigInteger id);
+
   /**
    *
    * @param name
@@ -109,6 +117,15 @@ public interface SEDLookupsInterface {
    */
   SEDCronJob getSEDCronJobByName(String name);
 
+  
+  /**
+   *
+   * @param name
+   * @return
+   */
+  SEDInterceptorRule getSEDInterceptorRuleByName(String name);
+  
+  
   /**
    *
    * @param userId
@@ -125,6 +142,8 @@ public interface SEDLookupsInterface {
   List<SEDProcessorSet> getSEDProcessorSets();
 
   List<SEDProcessorRule> getSEDProcessorRules();
+
+  List<SEDInterceptorRule> getSEDInterceptorRules();
 
   /**
    *
@@ -178,6 +197,13 @@ public interface SEDLookupsInterface {
    * @param sb
    * @return
    */
+  boolean removeSEDInterceptorRule(SEDInterceptorRule sb);
+
+  /**
+   *
+   * @param sb
+   * @return
+   */
   boolean updateSEDBox(SEDBox sb);
 
   /**
@@ -207,4 +233,15 @@ public interface SEDLookupsInterface {
    * @return
    */
   boolean updateSEDProcessorRule(SEDProcessorRule sb);
+
+  /**
+   *
+   * @param sb
+   * @return
+   */
+  boolean updateSEDInterceptorRule(SEDInterceptorRule sb);
+  
+  void clearAllCache();
+  void clearCache(Class cls);
+
 }

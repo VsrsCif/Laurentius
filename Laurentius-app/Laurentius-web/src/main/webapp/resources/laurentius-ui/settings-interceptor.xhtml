@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      >
+    <composite:interface>
+    </composite:interface>
+
+    <composite:implementation >
+        <p:layout   widgetVar="adminInterceptorView" style="min-width:400px;min-height:400px;height: 100%;width: 100%"  >
+            
+           
+            <p:layoutUnit  position="center"  style="width:100%;height:100%;padding: 0px; margin: 0px"
+                           gutter="0">
+                <p:scrollPanel mode="native" style="width:100%;height:100%"> <!-- p:dataTable scrollable does not resize when toogled south panel -->                
+                <h1><h:outputLink id="growPanelDesc" value="#">
+                        <span class="ui-icon-panel-Header ui-icon ui-icon-svg-cron-exec"  />#{msg['Interceptors']}
+                    </h:outputLink>
+                </h1>
+                <p:tooltip id="toolTipGrow" for="growPanelDesc" position="bottom">
+                    <h:outputText value="#{msg['InterceptorDefDesc']}"></h:outputText>
+                </p:tooltip>                
+                
+                    <p:dataTable id="TblInterceptor" 
+                                 var="sp" 
+                                 value="#{adminSEDInterceptorView.list}"
+                                 selectionMode="single"
+                                 selection="#{adminSEDInterceptorView.selected}"
+                                 rowKey="#{sp.id}"
+                                 currentPageReportTemplate="#{msg['Showing']} {startRecord}-{endRecord} #{msg['OutOf']} {totalRecords}"
+                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="25,50,100,200" 
+                                 paginator="true" 
+                                 style="padding: 0px; margin: 0px"
+                                 scrollable="true" 
+                                 scrollHeight="100%"
+                                 rows="100"  >
+                        <p:ajax event="rowDblselect" listener="#{adminSEDInterceptorView.startEditSelected()}" 
+                                update=":dlgintc:intcDialogForm:"
+                                oncomplete="PF('interceptorDialog').show()"/>
+
+                        <f:facet name="header">
+                            <p:commandButton value="#{msg['Add']}"  styleClass="toolbar-Button" icon="ui-icon-svg-add ui-icon-size-22"  
+                                             actionListener="#{adminSEDInterceptorView.createEditable()}"
+                                             oncomplete="PF('interceptorDialog').show()" 
+                                             update=":dlgintc:intcDialogForm"
+
+                                             />
+                            <p:commandButton value="#{msg['Edit']}"  styleClass="toolbar-Button" icon="ui-icon-svg-edit ui-icon-size-22"  
+                                             oncomplete="PF('interceptorDialog').show()"                                                                   
+                                             actionListener="#{adminSEDInterceptorView.startEditSelected()}"
+                                             update=":dlgintc:intcDialogForm"
+                                             />
+                            <p:commandButton value="#{msg['Delete']}" styleClass="toolbar-Button" icon="ui-icon-svg-remove ui-icon-size-22"  
+                                             actionListener="#{adminSEDInterceptorView.removeSelectedWithWarning()}" update=":forms:SettingsInterceptor:TblInterceptor" />
+
+                        </f:facet>
+                        <p:column headerText="#{msg['Id']}" width="60">
+                            <h:outputText value="#{sp.id}" /></p:column>
+
+
+                        <p:column headerText="#{msg['Active']}" >
+                            <h:outputText value="#{sp.active}"></h:outputText>                
+                        </p:column>
+                         <p:column headerText="#{msg['Name']}" >
+                             <h:outputText value="#{sp.name}"></h:outputText>                
+                        </p:column>
+                        <p:column headerText="#{msg['Plugin']}">
+                            <h:outputText value="#{sp.SEDInterceptorInstance.plugin}" ></h:outputText>                
+                        </p:column>
+                        <p:column headerText="#{msg['Type']}" width="120">
+                            <h:outputText value="#{sp.SEDInterceptorInstance.type}" ></h:outputText>                
+                        </p:column>
+
+                        <p:column headerText="#{msg['ReceiverBox']}" width="120">
+                            <h:outputText value="#{sp.receiverEBox}" />
+                        </p:column>
+                        <p:column headerText="#{msg['SenderBox']}" width="120">
+                            <h:outputText value="#{sp.senderEBox}" />
+                        </p:column>
+                        <p:column headerText="#{msg['Service']}" width="120">
+                            <h:outputText value="#{sp.service}" />
+                        </p:column>
+                        <p:column headerText="#{msg['Action']}" width="160">
+                            <h:outputText value="#{sp.action}"></h:outputText>                
+                        </p:column>
+
+                    </p:dataTable>
+
+                </p:scrollPanel>
+            </p:layoutUnit>                        
+        </p:layout>
+
+
+
+
+    </composite:implementation>
+
+</html>

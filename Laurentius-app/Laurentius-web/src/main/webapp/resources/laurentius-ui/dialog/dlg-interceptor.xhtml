@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      >
+    <composite:interface>
+    </composite:interface>
+
+    <composite:implementation >      
+        <!-- Interceptor ADD/EDIT dialog! -->
+        <p:dialog   header="#{msg['SEDInterceptorDialog']}" widgetVar="interceptorDialog" modal="true" hideEffect="fade" 
+                    resizable="false" appendTo="@(body)" width="750" >
+            <h:form id="intcDialogForm">
+                <p:messages id="messagesIntDialog"
+                            autoUpdate="true"
+                            showDetail="true" />
+
+                <p:layout  style="min-width:650px;height:380px;">
+                    <p:layoutUnit position="center" rendered="#{empty adminSEDInterceptorView.editable}" >
+                        <h:outputText value="#{msg['SelectTableRow']}" />
+                    </p:layoutUnit>
+                    <p:layoutUnit  header="Intc data" position="center" rendered="#{not empty adminSEDInterceptorView.editable}"  >
+                        <p:panelGrid  columns="2" columnClasses="label,value" style="width:100%; height: 220px ">
+
+                            <h:outputText value="#{msg['Name']}:" />
+                            <p:inputText id="cname" value="#{adminSEDInterceptorView.editable.name}" 
+                                         disabled="#{!adminSEDInterceptorView.isEditableNew()}"
+                                         style="width: 120px"  
+                                         />
+
+                             <h:outputText value="#{msg['InterceptEvent']}:" />
+                            <p:selectOneMenu value="#{adminSEDInterceptorView.editable.interceptEvent}" 
+                                             style="width:100%"  >
+                                <f:selectItems value="#{adminSEDInterceptorView.interceptEvents}" itemLabel="#{intEvnt}" 
+                                               itemValue="#{intEvnt}" />
+                            </p:selectOneMenu>
+                            
+                            <h:outputText value="#{msg['ReceiverBox']}:" />
+                            <p:selectOneMenu value="#{adminSEDInterceptorView.editable.receiverEBox}" 
+                                             style="width:100%"  >
+                                <f:selectItems value="#{userSessionData.userEBoxes}"  var="usrBox" itemLabel="#{usrBox}" 
+                                               itemValue="#{usrBox}" />
+                            </p:selectOneMenu>
+
+
+                            <h:outputText value="#{msg['SenderBox']}:" />
+                            <p:inputText value="#{adminSEDInterceptorView.editable.senderEBox}" />
+
+                            <h:outputText value="#{msg['Service']}:" />
+                            <p:selectOneMenu id="RuleService" value="#{adminSEDInterceptorView.editable.service}" 
+                                             style="width: 100% !important;min-width: 100% !important">
+                                <p:ajax update=":dlgprocessrule:processRuleDialogForm:RuleAction"/>
+                                <f:selectItem noSelectionOption="true"  />
+                                <f:selectItems value="#{pModeServiceView.list}" var="srv" itemLabel="#{srv.id}" 
+                                               itemValue="#{srv.id}"/>
+                            </p:selectOneMenu>
+
+                            <h:outputText value="#{msg['Action']}:" />
+                            <p:selectOneMenu id="RuleAction" value="#{adminSEDInterceptorView.editable.action}"
+                                             style="width: 100% !important;min-width: 100% !important" >
+                                <f:selectItem noSelectionOption="false"  />
+                                <f:selectItems value="#{adminSEDInterceptorView.editableServiceActionList}" var="act" 
+                                               itemLabel="#{act.name}" itemValue="#{act.name}"/>
+                            </p:selectOneMenu>
+                        </p:panelGrid>
+                    </p:layoutUnit>
+                    <p:layoutUnit header="Intc data" position="east" rendered="#{not empty adminSEDInterceptorView.editable}" 
+                                  size="450" minSize="450" maxSize="450"  >
+
+                        <p:panelGrid  columns="4" columnClasses="label,value,label,value" style="width: 100%" >
+                            <h:outputText value="#{msg['Plugin']}" />
+                            <p:selectOneMenu id="pluginType" value="#{adminSEDInterceptorView.editableInterceptorPluginType}" 
+                                             style="width:150px" 
+                                             disabled="#{!adminSEDInterceptorView.isEditableNew()}"
+                                             >
+                                <p:ajax   update=":dlgintc:intcDialogForm:intcType :dlgintc:intcDialogForm:TblIntcTypeProp" />    
+
+                                <f:selectItems value="#{adminSEDPluginView.list}"  var="plg" itemLabel="#{plg.name}" 
+                                               itemValue="#{plg.type}" itemDescription="#{plg.description}"
+                                               itemDisabled="#{plg.mailInterceptorDeves.size() eq 0}"
+                                               />
+                            </p:selectOneMenu>
+
+                            <h:outputText value="#{msg['Intc']}" />
+                            <p:selectOneMenu id="intcType" value="#{adminSEDInterceptorView.editableInterceptorType}" 
+                                             style="width:150px"
+                                             disabled="#{!adminSEDInterceptorView.isEditableNew()}"
+                                             >
+                                <p:ajax update=":dlgintc:intcDialogForm:TblIntcTypeProp" />                               
+                                <f:selectItems value="#{adminSEDInterceptorView.editablePluginInterceptorDeves}"
+                                               var="intDef" itemLabel="#{intDef.name}" 
+                                               itemValue="#{intDef.type}" itemDescription="#{intDef.description}"/>
+
+                            </p:selectOneMenu>
+
+                        </p:panelGrid>
+                        <h:outputText value="#{msg['IntcProperties']}" />
+                        <p:dataTable id="TblIntcTypeProp" 
+                                     var="sp" 
+                                     value="#{adminSEDInterceptorView.interceptorItems}"                                     
+                                     rowKey="#{sp.interceptorDef.key}"   
+                                     rowIndexVar="rowIndex"
+                                     scrollable="true" 
+                                     scrollHeight="170"
+                                     editable="true"
+                                     editMode="cell"
+
+                                     >
+                            <p:column headerText="#{msg['Key']}"  width="150">
+                                <h:outputText id="TblIntcTypePropKey" value="#{sp.interceptorDef.key}" />
+                                <p:tooltip for=":dlgintc:intcDialogForm:TblIntcTypeProp:#{rowIndex}:TblIntcTypePropKey"
+                                           value="#{sp.interceptorDef.description}"/>
+                            </p:column>
+                            <p:column headerText="#{msg['Mnd.']}" width="20">
+                                <p:selectBooleanCheckbox value="#{sp.interceptorDef.mandatory}" disabled="true" />
+                            </p:column>
+
+                            <p:column headerText="#{msg['Value']}">
+                                <p:inputText rendered="#{sp.interceptorDef.type  eq 'string' }" value="#{sp.value}" />
+                                <p:selectBooleanCheckbox rendered="#{sp.interceptorDef.type  eq 'boolean' }" value="#{sp.booleanValue}" />
+                                <p:spinner rendered="#{sp.interceptorDef.type  eq 'int' }" value="#{sp.intValue}"  />
+                                <p:selectOneMenu rendered="#{sp.interceptorDef.type  eq 'list' }"  
+                                                 value="#{sp.value}" 
+                                                 >             
+                                    <f:selectItems value="#{sp.listValues}"
+                                                   var="tskDef" itemLabel="#{lv}" 
+                                                   itemValue="#{lv}" />
+                                </p:selectOneMenu>
+
+
+                            </p:column>
+                        </p:dataTable>                        
+                    </p:layoutUnit>  
+
+                    <p:layoutUnit position="south"  size="40" minSize="40" maxSize="40" >
+                        <p:toolbar 
+                            styleClass="dialogButtonBar" >
+                            <f:facet name="right"  >
+                                <p:commandButton value="#{msg['Ok']}"  styleClass="toolbar-Button" 
+                                                 icon="ui-icon-svg-ok ui-icon-size-22" 
+                                                 action="#{adminSEDInterceptorView.addOrUpdateEditable()}"
+                                                 oncomplete="if (args &amp;&amp; args.saved) PF('interceptorDialog').hide()" 
+                                                 update=":forms:SettingsInterceptor:TblInterceptor"
+                                                 />
+                                <p:commandButton value="#{msg['Cancel']}"
+                                                 styleClass="toolbar-Button"
+                                                 icon="ui-icon-svg-cancel ui-icon-size-22" 
+                                                 onclick="PF('interceptorDialog').hide();return false;"/>                                                 
+                            </f:facet>
+                        </p:toolbar>
+                    </p:layoutUnit>
+                </p:layout>
+            </h:form>
+        </p:dialog>
+    </composite:implementation>
+</html>

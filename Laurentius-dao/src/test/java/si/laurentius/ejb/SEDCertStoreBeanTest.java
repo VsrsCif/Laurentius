@@ -7,8 +7,6 @@ package si.laurentius.ejb;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.security.Key;
 import java.security.KeyStore;
 import java.security.cert.Certificate;
@@ -45,8 +43,6 @@ public class SEDCertStoreBeanTest extends TestUtils {
   @BeforeClass
   public static void setUpClass() throws IOException {
 
-    Files.createDirectory(Paths.get(LAU_HOME));
-    System.setProperty(SEDSystemProperties.SYS_PROP_HOME_DIR, LAU_HOME);
 
     // ---------------------------------
     // set logger

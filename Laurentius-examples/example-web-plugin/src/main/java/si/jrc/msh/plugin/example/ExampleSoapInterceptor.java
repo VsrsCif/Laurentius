@@ -24,6 +24,9 @@ import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.msh.inbox.mail.MSHInMail;
 import si.laurentius.msh.outbox.mail.MSHOutMail;
 import si.laurentius.plugin.interceptor.MailInterceptorDef;
+import si.laurentius.plugin.interceptor.MailInterceptorPropertyDef;
+import si.laurentius.plugin.interfaces.PropertyListType;
+import si.laurentius.plugin.interfaces.PropertyType;
 import si.laurentius.plugin.interfaces.SoapInterceptorInterface;
 
 /**
@@ -46,7 +49,32 @@ public class ExampleSoapInterceptor implements SoapInterceptorInterface {
     mid.setDescription("Exaple of soap intercepor");
     mid.setName("Interceptor example");
     mid.setType("ExampleSoapInterceptor");
+    mid.getMailInterceptorPropertyDeves().add(createTTProperty("key.one.list",
+            "First list of sedboxes (without domain).", true, PropertyType.List.
+                    getType(), null, PropertyListType.LocalBoxes.getType()));
+    mid.getMailInterceptorPropertyDeves().add(createTTProperty("key.two.list",
+            "Second list of keystores .", true, PropertyType.List.
+                    getType(), null, PropertyListType.KeystoreCertKeys.getType()));
+    mid.getMailInterceptorPropertyDeves().add(createTTProperty("key.three.int",
+            "Insert integer.", true, PropertyType.Integer.getType(),
+            null, null));
+     mid.getMailInterceptorPropertyDeves().add(createTTProperty("key.four.string",
+            "Insert string.", true, PropertyType.String.getType(),
+            null, null));
     return mid;
+  }
+  
+  private MailInterceptorPropertyDef createTTProperty(String key, String desc,
+          boolean mandatory,
+          String type, String valFormat, String valList) {
+    MailInterceptorPropertyDef ttp = new MailInterceptorPropertyDef();
+    ttp.setKey(key);
+    ttp.setDescription(desc);
+    ttp.setMandatory(mandatory);
+    ttp.setType(type);
+    ttp.setValueFormat(valFormat);
+    ttp.setValueList(valList);
+    return ttp;
   }
 
   /**

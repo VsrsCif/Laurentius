@@ -14,6 +14,8 @@
         <mapping-file>shared/hbm/sed-box.hbm.xml</mapping-file>
         <mapping-file>shared/hbm/sed-user.hbm.xml</mapping-file>
         <mapping-file>shared/hbm/sed-cron.hbm.xml</mapping-file>
+        <mapping-file>shared/hbm/sed-interceptor.hbm.xml</mapping-file>
+        <mapping-file>shared/hbm/sed-process.hbm.xml</mapping-file>
         <mapping-file>shared/hbm/report-status.hbm.xml</mapping-file>
         <properties>
             <property name="javax.persistence.jdbc.url" value="jdbc:derby:target/msh/db/msh-as4;create=true"/>

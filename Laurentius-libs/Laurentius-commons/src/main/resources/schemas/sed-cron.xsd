@@ -138,74 +138,7 @@ Copyright 2015, Supreme Court Republic of Slovenia
 				<xs:documentation xml:lang="en">  </xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
-	</xs:complexType>
-	<!-- xs:complexType name="SEDTaskType">
-		<xs:annotation>
-			<xs:documentation xml:lang="sl">Definicija opravil</xs:documentation>
-		</xs:annotation>
-		<xs:sequence>
-			<xs:element name="SEDTaskTypeProperty" type="ns1:SEDTaskTypeProperty" minOccurs="0" maxOccurs="unbounded"/>
-		</xs:sequence>
-		<xs:attribute name="type" type="xs:token" use="required"/>
-		<xs:attribute name="name" use="required">
-			<xs:annotation>
-				<xs:documentation xml:lang="sl">Naziv lastnosti </xs:documentation>
-			</xs:annotation>
-			<xs:simpleType>
-				<xs:restriction base="xs:string">
-					<xs:minLength value="1"/>
-					<xs:maxLength value="64"/>
-				</xs:restriction>
-			</xs:simpleType>
-		</xs:attribute>
-		<xs:attribute name="jndi" use="required"/>
-		<xs:attribute name="description" use="required"/>
-	</xs:complexType>
-	<xs:complexType name="SEDTaskTypeProperty">
-		<xs:annotation>
-			<xs:documentation/>
-		</xs:annotation>
-		<xs:attribute name="id" type="xs:integer"/>
-		<xs:attribute name="key" use="required">
-			<xs:annotation>
-				<xs:documentation xml:lang="sl">Naziv lastnosti </xs:documentation>
-			</xs:annotation>
-			<xs:simpleType>
-				<xs:restriction base="xs:string">
-					<xs:minLength value="1"/>
-					<xs:maxLength value="64"/>
-				</xs:restriction>
-			</xs:simpleType>
-		</xs:attribute>
-		<xs:attribute name="description"/>
-		<xs:attribute name="mandatory" type="xs:boolean" default="false"/>
-		<xs:attribute name="type" default="string">
-			<xs:simpleType>
-				<xs:restriction base="xs:token">
-					<xs:maxLength value="16"/>
-					<xs:enumeration value="boolean"/>
-					<xs:enumeration value="string"/>
-					<xs:enumeration value="list"/>
-					<xs:enumeration value="int"/>
-					<xs:enumeration value="date"/>
-				</xs:restriction>
-			</xs:simpleType>
-		</xs:attribute>
-		<xs:attribute name="valueList">
-			<xs:simpleType>
-				<xs:restriction base="xs:string">
-					<xs:maxLength value="1024"/>
-				</xs:restriction>
-			</xs:simpleType>
-		</xs:attribute>
-		<xs:attribute name="valueFormat">
-			<xs:simpleType>
-				<xs:restriction base="xs:string">
-					<xs:maxLength value="512"/>
-				</xs:restriction>
-			</xs:simpleType>
-		</xs:attribute>
-	</xs:complexType -->
+	</xs:complexType>	
 	<xs:complexType name="SEDTaskExecution">
 		<xs:annotation>
 			<xs:documentation xml:lang="sl"/>

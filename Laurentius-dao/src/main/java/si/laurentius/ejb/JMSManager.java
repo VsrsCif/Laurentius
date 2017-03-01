@@ -211,7 +211,7 @@ public class JMSManager implements JMSManagerInterface {
 
       // count number of messages
       while (e.hasMoreElements()) {
-        Message message = (Message) e.nextElement();
+         e.nextElement();
 
         numMsgs++;
       }

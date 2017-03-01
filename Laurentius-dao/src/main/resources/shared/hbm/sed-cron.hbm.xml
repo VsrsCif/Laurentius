@@ -12,12 +12,12 @@
         </id>
         <property column="NAME" name="name"  length="128" type="java.lang.String"/>
         <property column="ACTIVE" name="Active"   type="java.lang.Boolean"/>
-        <property column="SECOND" name="Second"  length="64" type="java.lang.String"/>
-        <property column="MINUTE" name="Minute"  length="64" type="java.lang.String"/>
-        <property column="HOUR" name="Hour"  length="64" type="java.lang.String"/>
-        <property column="DAY_OF_MONTH" name="DayOfMonth"  length="64" type="java.lang.String"/>
-        <property column="MONTH" name="Month"  length="64" type="java.lang.String"/>
-        <property column="DAY_OF_WEEK" name="DayOfWeek"  length="64" type="java.lang.String"/>
+        <property column="CRON_SECOND" name="Second"  length="64" type="java.lang.String"/>
+        <property column="CRON_MINUTE" name="Minute"  length="64" type="java.lang.String"/>
+        <property column="CRON_HOUR" name="Hour"  length="64" type="java.lang.String"/>
+        <property column="CRON_DAY_OF_MONTH" name="DayOfMonth"  length="64" type="java.lang.String"/>
+        <property column="CRON_MONTH" name="Month"  length="64" type="java.lang.String"/>
+        <property column="CRON_DAY_OF_WEEK" name="DayOfWeek"  length="64" type="java.lang.String"/>
 
         
         <component name="SEDTask" class="si.laurentius.cron.SEDTask">
@@ -41,8 +41,8 @@
                 <param name="sequence">SEQ_LAU_TASK_PROP</param>                
             </generator>
         </id>		
-        <property column="KEY" name="Key" type="java.lang.String"  length="64" /> 
-        <property column="VALUE" name="Value" type="java.lang.String" length="512" />         
+        <property column="TASK_PROP_KEY" name="Key" type="java.lang.String"  length="64" /> 
+        <property column="TASK_PROP_VALUE" name="Value" type="java.lang.String" length="512" />         
     </class>
     
     <query name="si.laurentius.cron.SEDCronJob.getById" ><![CDATA[SELECT p FROM SEDCronJob p WHERE p.Id = :id]]></query>     

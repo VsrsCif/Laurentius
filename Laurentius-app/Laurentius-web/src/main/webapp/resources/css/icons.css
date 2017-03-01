@@ -61,6 +61,11 @@
 .ui-icon-svg-execute {
     background-image: url("#{resource['images:/execute.svg']}") !important;    
 }
+
+.ui-icon-svg-interceptor {
+    background-image: url("#{resource['images:/interceptor.svg']}") !important;    
+}
+
 .ui-icon-svg-csv {
     background-image: url("#{resource['images:/csv.svg']}") !important;    
 }
