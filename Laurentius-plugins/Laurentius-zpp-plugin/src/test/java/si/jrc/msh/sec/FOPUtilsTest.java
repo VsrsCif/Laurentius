@@ -33,7 +33,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import si.jrc.msh.plugin.zpp.ZPPOutInterceptor;
 import si.jrc.msh.plugin.zpp.utils.FOPUtils;
-import si.laurentius.commons.MimeValues;
+import si.laurentius.commons.enums.MimeValue;
 import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.exception.FOPException;
 import si.laurentius.commons.exception.StorageException;
@@ -321,12 +321,12 @@ Datum opravljene storitve : <Datum opravljene storitve>
     MSHInPart ip = new MSHInPart();
     ip.setFilename("Test.txt");
     ip.setDescription("test attachment");
-    ip.setMimeType(MimeValues.MIME_TEXI.getMimeType());
+    ip.setMimeType(MimeValue.MIME_TEXI.getMimeType());
     
     MSHInPart ip2 = new MSHInPart();
     ip2.setFilename("Test.txt");
     ip2.setDescription("test attachment");
-    ip2.setMimeType(MimeValues.MIME_TEXI.getMimeType());
+    ip2.setMimeType(MimeValue.MIME_TEXI.getMimeType());
 
 
     im.getMSHInPayload().getMSHInParts().add(ip);
@@ -367,11 +367,11 @@ Datum opravljene storitve : <Datum opravljene storitve>
     MSHOutPart op = new MSHOutPart();
     op.setFilename("Test.txt");
     op.setDescription("test file");
-    op.setMimeType(MimeValues.MIME_TEXI.getMimeType());
+    op.setMimeType(MimeValue.MIME_TEXI.getMimeType());
     MSHOutPart op1 = new MSHOutPart();
     op1.setFilename("Test.txt");
     op1.setDescription("test file");
-    op1.setMimeType(MimeValues.MIME_TEXI.getMimeType());
+    op1.setMimeType(MimeValue.MIME_TEXI.getMimeType());
     
     om.getMSHOutPayload().getMSHOutParts().add(op);
     om.getMSHOutPayload().getMSHOutParts().add(op1);

@@ -8,7 +8,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import si.laurentius.commons.SEDInboxMailStatus;
+import si.laurentius.commons.enums.SEDInboxMailStatus;
 
 /**
  *

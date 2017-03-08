@@ -479,13 +479,13 @@ public class DialogImportCert {
   public String getUpdateTargetPanel() {
 
     if (Objects.equals(importDialogType, DLG_TYPE_CERTSTORE)) {
-      return ":forms:PanelKeystore:keylist";
+      return ":forms:PanelKeystore:certPanel:keylist";
     } else if (Objects.equals(importDialogType, DLG_TYPE_ROOT_CA_STORE)) {
-      return ":forms:PanelRootCA:RootCAlist";
+      return ":forms:PanelRootCA:rootCAView:RootCAlist";
     } else {
       LOG.formatedWarning("Invalid dialog type %s",
               importDialogType);
-      return ":forms:PanelKeystore:keylist";
+      return ":forms:PanelKeystore:certPanel:keylist";
     }
   }
 }

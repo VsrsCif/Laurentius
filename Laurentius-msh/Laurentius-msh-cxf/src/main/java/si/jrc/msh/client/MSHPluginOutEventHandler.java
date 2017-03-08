@@ -28,7 +28,7 @@ public class MSHPluginOutEventHandler {
 
  public void outEvent(MSHOutMail outMail, EBMSMessageContext ectx, OutMailEventInterface.PluginOutEvent evnt) {
     long l = LOG.logStart();
-
+/*
     if (outMail == null){
       LOG.logWarn("No MSHOutMail object  found to process!", null);
     } else if (ectx == null){
@@ -56,6 +56,7 @@ public class MSHPluginOutEventHandler {
       LOG.formatedlog("No plugin OutMailEventLisneter found for mail: '%d' pmode '%s'." ,outMail.getId(), ectx.getPMode().getId() );
     }
     LOG.logEnd(l);
+*/
   }
 
 }

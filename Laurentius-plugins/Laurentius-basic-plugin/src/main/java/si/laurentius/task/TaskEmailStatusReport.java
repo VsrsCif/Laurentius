@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Properties;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
-import si.laurentius.commons.SEDInboxMailStatus;
+import si.laurentius.commons.enums.SEDInboxMailStatus;
 import si.laurentius.msh.inbox.mail.MSHInMail;
 import si.laurentius.plugin.crontask.CronTaskDef;
 import si.laurentius.plugin.interfaces.TaskExecutionInterface;

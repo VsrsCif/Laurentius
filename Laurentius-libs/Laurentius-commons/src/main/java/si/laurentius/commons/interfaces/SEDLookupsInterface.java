@@ -19,9 +19,9 @@ import java.util.List;
 import javax.ejb.Local;
 import si.laurentius.cron.SEDCronJob;
 import si.laurentius.ebox.SEDBox;
-import si.laurentius.interceptor.SEDInterceptorRule;
-import si.laurentius.process.SEDProcessorRule;
-import si.laurentius.process.SEDProcessorSet;
+import si.laurentius.interceptor.SEDInterceptor;
+import si.laurentius.process.SEDProcessorInstance;
+import si.laurentius.process.SEDProcessor;
 import si.laurentius.user.SEDUser;
 
 /**
@@ -57,21 +57,14 @@ public interface SEDLookupsInterface {
    * @param sb
    * @return
    */
-  boolean addSEDProcessorSet(SEDProcessorSet sb);
+  boolean addSEDProcessor(SEDProcessor sb);
 
   /**
    *
    * @param sb
    * @return
    */
-  boolean addSEDProcessorRule(SEDProcessorRule sb);
-
-  /**
-   *
-   * @param sb
-   * @return
-   */
-  boolean addSEDInterceptorRule(SEDInterceptorRule sb);
+  boolean addSEDInterceptor(SEDInterceptor sb);
 
   /**
    *
@@ -94,21 +87,15 @@ public interface SEDLookupsInterface {
    */
   SEDCronJob getSEDCronJobById(BigInteger id);
 
-  /**
-   *
-   * @param id
-   * @return
-   */
-  SEDProcessorSet getSEDProcessorSet(String code);
 
   /**
    *
    * @param id
    * @return
    */
-  SEDProcessorRule getSEDProcessorRule(BigInteger id);
+  SEDProcessor getSEDProcessor(BigInteger id);
 
-  SEDInterceptorRule getSEDInterceptorRuleById(BigInteger id);
+  SEDInterceptor getSEDInterceptorById(BigInteger id);
 
   /**
    *
@@ -123,8 +110,8 @@ public interface SEDLookupsInterface {
    * @param name
    * @return
    */
-  SEDInterceptorRule getSEDInterceptorRuleByName(String name);
-  
+  SEDInterceptor getSEDInterceptorByName(String name);
+  SEDProcessor getSEDProcessorByName(String name);
   
   /**
    *
@@ -139,11 +126,11 @@ public interface SEDLookupsInterface {
    */
   List<SEDBox> getSEDBoxes();
 
-  List<SEDProcessorSet> getSEDProcessorSets();
 
-  List<SEDProcessorRule> getSEDProcessorRules();
+  List<SEDProcessor> getSEDProcessors();
+  
 
-  List<SEDInterceptorRule> getSEDInterceptorRules();
+  List<SEDInterceptor> getSEDInterceptors();
 
   /**
    *
@@ -178,26 +165,21 @@ public interface SEDLookupsInterface {
    */
   boolean removeSEDUser(SEDUser sb);
 
-  /**
-   *
-   * @param sb
-   * @return
-   */
-  boolean removeSEDProcessorSet(SEDProcessorSet sb);
+
 
   /**
    *
    * @param sb
    * @return
    */
-  boolean removeSEDProcessorRule(SEDProcessorRule sb);
+  boolean removeSEDProcessor(SEDProcessor sb);
 
   /**
    *
    * @param sb
    * @return
    */
-  boolean removeSEDInterceptorRule(SEDInterceptorRule sb);
+  boolean removeSEDInterceptor(SEDInterceptor sb);
 
   /**
    *
@@ -220,26 +202,21 @@ public interface SEDLookupsInterface {
    */
   boolean updateSEDUser(SEDUser sb);
 
-  /**
-   *
-   * @param sb
-   * @return
-   */
-  boolean updateSEDProcessorSet(SEDProcessorSet sb);
 
   /**
    *
    * @param sb
    * @return
    */
-  boolean updateSEDProcessorRule(SEDProcessorRule sb);
+  boolean updateSEDProcessor(SEDProcessor sb);
+  boolean updateSEDProcessorInstance(SEDProcessorInstance sb);
 
   /**
    *
    * @param sb
    * @return
    */
-  boolean updateSEDInterceptorRule(SEDInterceptorRule sb);
+  boolean updateSEDInterceptor(SEDInterceptor sb);
   
   void clearAllCache();
   void clearCache(Class cls);

@@ -14,18 +14,18 @@
  */
 package si.laurentius.msh.web.pmode;
 
+
 import java.util.List;
+import java.util.Objects;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
+import javax.xml.datatype.Duration;
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.interfaces.PModeInterface;
 import si.laurentius.commons.utils.SEDLogger;
-import si.laurentius.msh.pmode.PartyIdentitySet;
 import si.laurentius.msh.pmode.ReceptionAwareness;
-import si.laurentius.msh.web.gui.dlg.DialogDelete;
 
 /**
  *
@@ -57,28 +57,64 @@ public class PModeReceptionAwarenessView extends AbstractPModeJSFView<ReceptionA
    */
   @Override
   public void createEditable() {
-    ReceptionAwareness pmodeReceptionAwareness = new ReceptionAwareness();
-    setNew(pmodeReceptionAwareness);
+     String sbname = "RA_%03d";
+    int i = 1;
+
+    while (existRAById(String.format(sbname, i))) {
+      i++;
+    }
+    ReceptionAwareness ra = new ReceptionAwareness();
+    ra.setId(String.format(sbname, i));
+    ra.setReceiptType("AS4Receipt");
+    ra.setReplyPattern("response");
+    ra.setDuplicateDetection(new ReceptionAwareness.DuplicateDetection());
+    ra.setRetry(new ReceptionAwareness.Retry());
+    
+    ra.getDuplicateDetection().setEliminate(Boolean.TRUE);
+    
+    
+    ra.getRetry().setMaxRetries(3);
+    ra.getRetry().setMultiplyPeriod(5);
+    ra.getRetry().setPeriod(5227);
+    
+    
+    setNew(ra);
 
   }
+  
+  
+   private boolean existRAById(String id){
+     List<ReceptionAwareness> lst = mPModeInteface.getReceptionAwarenesses();
+     for (ReceptionAwareness ra: lst){
+       if (Objects.equals(ra.getId(), id)){
+         return true;
+       }
+     }
+     return false;
+   }
 
   /**
    *
    */
   @Override
-  public void removeSelected() {
-
-    long l = LOG.logStart();
-
+  public boolean removeSelected() {
+    boolean bSuc = false;
     ReceptionAwareness srv = getSelected();
     if (srv != null) {
       mPModeInteface.removeReceptionAwareness(srv);
+      bSuc = true;
     }
+    return bSuc;
 
   }
 
    @Override
   public boolean validateData() {
+    ReceptionAwareness cj = getEditable();
+     if (isEditableNew() && existRAById(cj.getId())) {
+      addError("Name: '" + cj.getId()+ "' already exists!");
+      return false;
+    }
     
     return true;
   }
@@ -127,5 +163,16 @@ public class PModeReceptionAwarenessView extends AbstractPModeJSFView<ReceptionA
 
   }
 
+@Override
+  public String getUpdateTargetTable() {
+    return ":forms:SettingsPModeReceptionAwarenesses:pmodeRAPanel:TblPModeReceptionAwareness";
+  }
 
+  @Override
+  public String getSelectedDesc() {
+     if (getSelected() != null) {
+      return getSelected().getId();
+    }
+    return null;
+  }
 }

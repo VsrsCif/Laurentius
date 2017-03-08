@@ -11,8 +11,8 @@ import java.util.List;
 import si.laurentius.msh.inbox.mail.MSHInMail;
 import si.laurentius.msh.outbox.mail.MSHOutMail;
 import si.laurentius.cron.SEDTaskExecution;
-import si.laurentius.commons.SEDInboxMailStatus;
-import si.laurentius.commons.SEDOutboxMailStatus;
+import si.laurentius.commons.enums.SEDInboxMailStatus;
+import si.laurentius.commons.enums.SEDOutboxMailStatus;
 import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.interfaces.SEDDaoInterface;
 

@@ -6,96 +6,82 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:p="http://primefaces.org/ui"
       xmlns:composite="http://java.sun.com/jsf/composite"
+      xmlns:dlg="http://java.sun.com/jsf/composite/laurentius-ui/dialog"
       >
     <composite:interface>
     </composite:interface>
 
     <composite:implementation >      
-        <!-- USER ADD/EDIT dialog! -->
-        <p:dialog   header="#{msg['SEDUserDialog']}" widgetVar="userDialog"
-                    modal="true" hideEffect="fade" resizable="false" appendTo="@(body)" width="600">
-            <h:form id="userDialogForm" >
-                <p:messages id="dlgUsrMessage" showDetail="true" autoUpdate="true" closable="true" />
-                <p:layout  id="userDetails" style="min-width:550px;min-height:480px;">
-                    <p:layoutUnit position="center" rendered="#{empty adminSEDUserView.editable}" >
-                        <h:outputText value="Select row in table" />
-                    </p:layoutUnit>
-                    <p:layoutUnit position="center" rendered="#{not empty adminSEDUserView.editable}" >
-                        <table style=" width: 100%; padding: 1px; margin: 0;" >
-                            <tr>
-                                <td class="grid-label"><h:outputText value="#{msg['Username']}:" /></td>
-                                <td colspan="3"><h:outputText value="#{adminSEDUserView.editable.userId}" 
-                                                              rendered="#{empty adminSEDUserView.new}" />
-                                    <h:inputText value="#{adminSEDUserView.editable.userId}"
-                                                 rendered="#{not empty adminSEDUserView.new}" style="width: 430px"/></td>
-                            </tr>
-                            <tr>
-                                <td class="grid-label"><h:outputText value="#{msg['Name']}:" /></td>
-                                <td colspan="3"><h:inputText value="#{adminSEDUserView.editable.name}" 
-                                                             style="width: 430px" /></td>
-                            </tr>
-                            <tr>
-                                <td class="grid-label"><h:outputText value="#{msg['Description']}:" /></td>
-                                <td colspan="3"><h:inputTextarea value="#{adminSEDUserView.editable.desc}" 
-                                                                 cols="4" style="width: 420px"/></td>
-                            </tr>
-                            <tr>
-                                <td class="grid-label"><h:outputText value="#{msg['EMail']}:" /></td>
-                                <td colspan="3"><h:inputText value="#{adminSEDUserView.editable.email}" 
-                                                             style="width: 430px" /></td>
-                            </tr>
-                            <tr>
-                                <td class="grid-label"><h:outputText value="#{msg['ActiveFromDate']}:"  /></td>
-                                <td><p:calendar styleClass="searchDate" value="#{adminSEDUserView.editable.activeFromDate}"
-                                                pattern="dd.MM.yyyy" mask="true" navigator="true" showOn="button" 
-                                                /></td>
+        <dlg:dlg-abstract   id="userDialog"
+                            formId="userDialogForm"
+                            dialogTitle="#{msg['SEDUserDialog']}" 
+                            editable="#{adminSEDUserView.editable}"
+                            width="800"
+                            height="300"
+                            updateOnSave=":forms:SettingsUsers:userPanel:TblSedUser"
+                            onConfirmAction="#{adminSEDUserView.addOrUpdateEditable()}" >
+            <p:layout>
+                <p:layoutUnit position="center">
 
-                                <td class="grid-label"><h:outputText value="#{msg['ActiveToDate']}:"/></td>
-                                <td><p:calendar styleClass="searchDate" value="#{adminSEDUserView.editable.activeToDate}" 
-                                                pattern="dd.MM.yyyy" mask="true" navigator="true" showOn="button" 
-                                                /></td>
-                            </tr>
-                        </table>
-                        <hr />
-                        <h:outputText class="grid-label" value="#{msg['SED-Boxes']}:" style="width:100% !important;" />
-                        <p:pickList id="UserBoxPickList" 
-                                    value="#{adminSEDUserView.currentPickupDualSEDBoxList}" 
-                                    var="sbox"                                                 
-                                    itemValue="#{sbox}" 
-                                    itemLabel="#{sbox.localBoxName}" 
-                                    showSourceControls="false"
-                                    showTargetControls="false" showCheckbox="false" responsive="true"
-                                    showSourceFilter="false" showTargetFilter="false" 
-                                    converter="userSedBoxPickListConverter"
-                                    style="width: 100%"
-                                    >
-                            <f:facet name="sourceCaption">#{msg['Available']}</f:facet>
-                            <f:facet name="targetCaption">#{msg['User sed-boxes']}</f:facet>
-                            <p:column >
-                                <h:outputText value="#{sbox.localBoxName}" />
-                            </p:column>
-                        </p:pickList>
+                    <table style=" width: 100%; padding: 1px; margin: 0;" >
+                        <tr>
+                            <td class="grid-label"><h:outputText value="#{msg['Username']}:" /></td>
+                            <td colspan="3"><h:outputText value="#{adminSEDUserView.editable.userId}" 
+                                                          rendered="#{empty adminSEDUserView.new}" />
+                                <h:inputText value="#{adminSEDUserView.editable.userId}"
+                                             rendered="#{not empty adminSEDUserView.new}" style="width: 430px"/></td>
+                        </tr>
+                        <tr>
+                            <td class="grid-label"><h:outputText value="#{msg['Name']}:" /></td>
+                            <td colspan="3"><h:inputText value="#{adminSEDUserView.editable.name}" 
+                                                         style="width: 430px" /></td>
+                        </tr>
+                        <tr>
+                            <td class="grid-label"><h:outputText value="#{msg['Description']}:" /></td>
+                            <td colspan="3"><h:inputTextarea value="#{adminSEDUserView.editable.desc}" 
+                                                             cols="4" style="width: 420px"/></td>
+                        </tr>
+                        <tr>
+                            <td class="grid-label"><h:outputText value="#{msg['EMail']}:" /></td>
+                            <td colspan="3"><h:inputText value="#{adminSEDUserView.editable.email}" 
+                                                         style="width: 430px" /></td>
+                        </tr>
+                        <tr>
+                            <td class="grid-label"><h:outputText value="#{msg['ActiveFromDate']}:"  /></td>
+                            <td><p:calendar styleClass="searchDate" value="#{adminSEDUserView.editable.activeFromDate}"
+                                            pattern="dd.MM.yyyy" mask="true" navigator="true" showOn="button" 
+                                            /></td>
 
-                    </p:layoutUnit>
-                    <p:layoutUnit position="south"  size="40" minSize="40" maxSize="40" >
-                        <p:toolbar 
-                            styleClass="dialogButtonBar" >
-                            <f:facet name="right"  >
-                                <p:commandButton value="#{msg['Ok']}" update=":forms:SettingsUsers:TblSedUser" 
-                                                 styleClass="toolbar-Button" icon="ui-icon-svg-ok ui-icon-size-22" 
-                                                 actionListener="#{adminSEDUserView.addOrUpdateEditable()}"                                         
-                                                 oncomplete="if (args &amp;&amp; args.saved) PF('userDialog').hide()"   />
+                            <td class="grid-label"><h:outputText value="#{msg['ActiveToDate']}:"/></td>
+                            <td><p:calendar styleClass="searchDate" value="#{adminSEDUserView.editable.activeToDate}" 
+                                            pattern="dd.MM.yyyy" mask="true" navigator="true" showOn="button" 
+                                            /></td>
+                        </tr>
+                    </table>
+                </p:layoutUnit>
+                <p:layoutUnit position="east" size="350" maxSize="350" minSize="350">
+                    <h:outputText class="label" value="#{msg['SED-Boxes']}:" style="width:100% !important;" />
+                    <p:pickList id="UserBoxPickList" 
+                                value="#{adminSEDUserView.currentPickupDualSEDBoxList}" 
+                                var="sbox"                                                 
+                                itemValue="#{sbox}" 
+                                itemLabel="#{sbox.localBoxName}" 
+                                showSourceControls="false"
+                                showTargetControls="false" showCheckbox="false" responsive="true"
+                                showSourceFilter="false" showTargetFilter="false" 
+                                converter="userSedBoxPickListConverter"
+                                style="width: 100%"
+                                >
+                        <f:facet name="sourceCaption">#{msg['Available']}</f:facet>
+                        <f:facet name="targetCaption">#{msg['User sed-boxes']}</f:facet>
+                        <p:column >
+                            <h:outputText value="#{sbox.localBoxName}" />
+                        </p:column>
+                    </p:pickList>
+                </p:layoutUnit>
+            </p:layout>
 
-                                <p:commandButton value="#{msg['Cancel']}"  
-                                                 styleClass="toolbar-Button" 
-                                                 icon="ui-icon-svg-cancel ui-icon-size-22" 
-                                                 onclick="PF('userDialog').hide();return false;"/>                                                 
-                            </f:facet>
-                        </p:toolbar>
-                    </p:layoutUnit>
-                </p:layout>
-            </h:form>
-        </p:dialog>
+        </dlg:dlg-abstract>
     </composite:implementation>
 
 </html>

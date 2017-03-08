@@ -18,13 +18,11 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.interfaces.PModeInterface;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.msh.pmode.PMode;
-import si.laurentius.msh.web.gui.dlg.DialogDelete;
 
 /**
  *
@@ -70,14 +68,14 @@ public class PModeView extends AbstractPModeJSFView<PMode> {
    *
    */
   @Override
-  public void removeSelected() {
-
-    long l = LOG.logStart();
-
+  public boolean removeSelected() {
+    boolean bSuc = false;
     PMode srv = getSelected();
     if (srv != null) {
       mPModeInteface.removePMode(srv);
+      bSuc = true;
     }
+    return bSuc;
 
   }
 
@@ -124,7 +122,19 @@ public class PModeView extends AbstractPModeJSFView<PMode> {
     List<PMode> lst = mPModeInteface.getPModes();
     LOG.logEnd(l);
     return lst;
+  }
 
+  @Override
+  public String getUpdateTargetTable() {
+    return ":forms:SettingsPModes:pmodePanel:TblPMode";
+  }
+
+  @Override
+  public String getSelectedDesc() {
+     if (getSelected() != null) {
+      return getSelected().getId();
+    }
+    return null;
   }
 
 }

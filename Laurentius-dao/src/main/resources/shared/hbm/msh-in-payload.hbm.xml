@@ -19,17 +19,18 @@
         <property column="ENCODING" name="Encoding"  length="128" type="java.lang.String" />
         <property column="MD5" name="Md5"  length="32" type="java.lang.String" />
         <property column="IS_ENCRYPTED" name="IsEncrypted" type="java.lang.Boolean" />
-        <property column="SOURCE" name="Source"  length="32" type="java.lang.String" />
+        <property column="SOURCE" name="Source"  length="32" type="java.lang.String" /> 
         
-        <bag name="properties"  access="field" cascade="all" lazy="false" order-by="Id asc" >
-                <key not-null="true">
-                    <column name="INPART_ID" scale="0" />
-                </key>
-                <one-to-many class="si.laurentius.msh.inbox.payload.MSHInPart$Property" />
+        <bag name="imPartProperties"  access="field" cascade="all" lazy="false" order-by="Id asc" >
+            <key not-null="true">
+                <column name="INPART_ID" scale="0" />
+            </key>
+            <one-to-many class="si.laurentius.msh.inbox.payload.IMPartProperty" />
         </bag>
     </class>    
     
-    <class name="si.laurentius.msh.inbox.payload.MSHInPart$Property" table="LAU_INBOX_PAYLOAD_PROPERTY">
+   
+    <class name="si.laurentius.msh.inbox.payload.IMPartProperty" table="LAU_INBOX_PAYLOAD_PROPERTY">
         <id name="Id" type="java.math.BigInteger">
             <column name="ID" scale="0" />
             <generator class="sequence">

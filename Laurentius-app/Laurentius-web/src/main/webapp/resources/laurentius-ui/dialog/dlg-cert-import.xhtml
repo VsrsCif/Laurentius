@@ -6,16 +6,22 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:p="http://primefaces.org/ui"
       xmlns:composite="http://java.sun.com/jsf/composite"
+       xmlns:dlg="http://java.sun.com/jsf/composite/laurentius-ui/dialog"
       >
     <composite:interface>
     </composite:interface>
 
     <composite:implementation >      
-        <!-- Cert ADD/EDIT dialog!  -->
-        <p:dialog   header="#{msg['SEDCertDialog']}" widgetVar="certImportDialog" modal="true" hideEffect="fade" 
-                    resizable="false" appendTo="@(body)" width="900" >
-            <h:form id="certImportDialogForm">
-                <p:messages id="dlgImportCertMessage" showDetail="true" autoUpdate="true" closable="true" />
+         <dlg:dlg-abstract  id="certImportDialog"
+                            formId="certImportDialogForm"
+                            dialogTitle="#{msg['SEDCertDialog']}" 
+                            editable="SelectCert"
+                            width="600"
+                            height="200"
+                            updateOnSave="#{dialogImportCert.updateTargetPanel}"
+                            onConfirmAction="#{dialogImportCert.importFile()}"
+                            >    
+        
                 <p:panelGrid style="width:100%; height: 100% ">
                     <p:row>
                         <p:column  style=" background:#C7C6C4;border: 1px black groove; padding: 2px">
@@ -30,7 +36,7 @@
                                                             multiple="false"
                                                             mode="advanced"
                                                             sizeLimit="1000000" 
-                                                            update=":dlgcertimport:certImportDialogForm"
+                                                            update=":dlgcertimport:certImportDialog:certImportDialogForm"
                                                             auto="true"
                                                             /> 
                         </p:column>
@@ -45,7 +51,7 @@
                                                    style="width: 200px !important"
                                                    disabled="#{empty dialogImportCert.filename }"
                                                    >
-                                <p:ajax  update="dlgcertimport:certImportDialogForm" />
+                                <p:ajax  update="dlgcertimport:certImportDialog:certImportDialogForm" />
                                 <f:selectItem itemLabel="#{msg['Certificate']}" itemValue="CERT" />
                                 <f:selectItem itemLabel="#{msg['KeystoreJKS']}" itemValue="JKS" />
                                 <f:selectItem itemLabel="#{msg['KeystorePKCS12']}" itemValue="PKCS12" />
@@ -76,7 +82,7 @@
                                              style="width: 100%"
                                              icon="ui-icon-svg-ok ui-icon-size-22" 
                                              action="#{dialogImportCert.openImportKeystore()}"
-                                             update=":dlgcertimport:certImportDialogForm"
+                                             update=":dlgcertimport:certImportDialog:certImportDialogForm"
                                              process="@this,certType,storePasswd"
                                              />
                         </p:column>
@@ -102,7 +108,7 @@
                                      >
                             <p:ajax event="rowSelect"
                                     listener="#{dialogImportCert.importStoreRowSelectionChanged()}"
-                                    update=":dlgcertimport:certImportDialogForm:certDataGrid "
+                                    update=":dlgcertimport:certImportDialog:certImportDialogForm:certDataGrid"
                                     />  
 
                             <p:column headerText="#{msg['Import']}" width="60">
@@ -159,31 +165,7 @@
                             <h:outputText  value="#{dialogImportCert.selectedX509Cert.version}" style="width: 80px"  />
                         </p:panelGrid>
                     </p:layoutUnit>
-
-
-
-                    <p:layoutUnit position="south"  size="40" minSize="40" maxSize="40" >
-                        <p:toolbar 
-                            styleClass="dialogButtonBar" >
-                            <f:facet name="right"  >
-                                <p:commandButton value="#{msg['Import']}"  styleClass="toolbar-Button" 
-                                                 icon="ui-icon-svg-ok ui-icon-size-22" 
-                                                 actionListener="#{dialogImportCert.importFile()}"
-                                                 oncomplete="if (args &amp;&amp; args.saved) PF('certImportDialog').hide()"
-                                                 update="#{dialogImportCert.updateTargetPanel}"                                             
-                                                 />
-
-                                <p:commandButton value="#{msg['Cancel']}"
-                                                 styleClass="toolbar-Button"
-                                                 icon="ui-icon-svg-cancel ui-icon-size-22" 
-                                                 onclick="PF('certImportDialog').hide();return false;"/>
-
-                            </f:facet>
-                        </p:toolbar>
-                    </p:layoutUnit>
                 </p:layout>
-            </h:form>
-        </p:dialog>
-
+         </dlg:dlg-abstract>
     </composite:implementation>
 </html>

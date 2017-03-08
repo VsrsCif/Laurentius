@@ -50,9 +50,11 @@
                                     <p:row>
                                         <p:column colspan="3">
                                             <div align='right' style="width: 100%">
-                                                <p:commandButton value="#{msg['Login']}"
+                                                <p:commandButton  widgetVar="loginButton" value="#{msg['Login']}"
                                                                  actionListener="#{loginManager.login()}"
-                                                                 class="image-Button" icon="ui-icon-size-22 ui-icon-svg-ok"/>
+                                                                 class="image-Button" icon="ui-icon-size-22 ui-icon-svg-ok"
+                                                                 onclick="PF('loginButton').disable()"
+                                                                 oncomplete="PF('loginButton').enable()" />
                                             </div>
                                         </p:column>
                                     </p:row>

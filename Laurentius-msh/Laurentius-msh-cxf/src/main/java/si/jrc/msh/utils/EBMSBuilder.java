@@ -63,7 +63,7 @@ import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 import si.jrc.msh.exception.EBMSError;
 import si.jrc.msh.exception.EBMSErrorCode;
-import si.laurentius.commons.MimeValues;
+import si.laurentius.commons.enums.MimeValue;
 import si.laurentius.commons.PModeConstants;
 import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.pmode.EBMSMessageContext;
@@ -327,7 +327,7 @@ public class EBMSBuilder {
         if (ctx.getTransportProtocol().getGzipCompress()) {
           Property fp = new Property();
           fp.setName(EBMSConstants.EBMS_PAYLOAD_COMPRESSION_TYPE);
-          fp.setValue(MimeValues.MIME_GZIP.getMimeType());
+          fp.setValue(MimeValue.MIME_GZIP.getMimeType());
           fileProp.add(fp);
 
         }

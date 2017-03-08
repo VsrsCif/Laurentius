@@ -6,6 +6,7 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:p="http://primefaces.org/ui"
       xmlns:composite="http://java.sun.com/jsf/composite"
+       xmlns:pnl="http://java.sun.com/jsf/composite/laurentius-ui/panel"
       >
 
     <composite:interface>
@@ -13,21 +14,11 @@
     </composite:interface>
 
     <composite:implementation >
-        
-        <p:layout   widgetVar="CronExecDataMain" style="min-width:400px;min-height:400px;height: 100%;width: 100%"  >              
-            <p:layoutUnit  position="north" resizable="true" closable="true" collapsible="true"
-                           size="38" minSize="38" maxSize="400" style="width:100%;height:100%;padding: 0px; margin: 0px"
-                           gutter="0">
-                <h1><h:outputLink id="growPanelDesc" value="#">
-                        <span class="ui-icon-panel-Header ui-icon ui-icon-svg-cron-exec"  />#{msg['adminCronExecution']}
-                    </h:outputLink>
-                </h1>
-                <p:tooltip id="toolTipGrow" for="growPanelDesc" position="bottom">
-                    <h:outputText value="#{msg['CronExecutionDesc']}"></h:outputText>
-                </p:tooltip>                
-            </p:layoutUnit>
-                  
-            <p:layoutUnit position="center" style="width:100%;height:100%;padding: 0px; margin: 0px" gutter="0" >
+         <pnl:pnl-settings id="InMailPanelData"
+                          title="#{msg['adminCronExecution']}" 
+                          description="#{msg['CronExecutionDesc']}"
+                          icon="ui-icon-svg-cron-exec"
+                          >
                 <p:scrollPanel mode="native" style="width:100%;height:100%"> <!-- p:dataTable scrollable does not resize when toogled suth panel -->
                     <p:dataTable id="CronExecutionTable" 
                                  var="taskExec"
@@ -45,10 +36,8 @@
                                  scrollable="true" 
                                  scrollHeight="100%"
 
-
                                  >
-                        <p:ajax event="rowSelect" listener="#{CronExecutionView.onRowSelect}" 
-                                update="forms:InMailPanel:InMailTab" />                        
+                  
                         <p:column width="60" headerText="#{msg['Nu']}">
                             <h:outputText value="#{CronExecutionView.rowIndex(taskExec) + 1}" />
                         </p:column>
@@ -80,10 +69,8 @@
 
                     </p:dataTable>
                 </p:scrollPanel>
-            </p:layoutUnit>            
-        </p:layout>
 
-
+</pnl:pnl-settings>
     </composite:implementation>
 
 </html>

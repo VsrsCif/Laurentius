@@ -14,9 +14,7 @@
  */
 package si.laurentius.msh.web.admin;
 
-import java.io.Serializable;
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -26,26 +24,23 @@ import java.util.Objects;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import si.laurentius.commons.SEDInterceptorEvents;
-import si.laurentius.commons.SEDInboxMailStatus;
+import si.laurentius.commons.enums.SEDInterceptorEvent;
 import si.laurentius.commons.SEDJNDI;
-import si.laurentius.commons.SEDOutboxMailStatus;
 import si.laurentius.commons.interfaces.PModeInterface;
-import si.laurentius.commons.interfaces.SEDCertStoreInterface;
 import si.laurentius.commons.interfaces.SEDLookupsInterface;
 import si.laurentius.commons.interfaces.SEDPluginManagerInterface;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.Utils;
-import si.laurentius.ebox.SEDBox;
-import si.laurentius.interceptor.SEDInterceptorRule;
+import si.laurentius.interceptor.SEDInterceptor;
 import si.laurentius.interceptor.SEDInterceptorInstance;
 import si.laurentius.interceptor.SEDInterceptorProperty;
-import si.laurentius.msh.pmode.Service;
+import si.laurentius.interceptor.SEDInterceptorRule;
 import si.laurentius.msh.web.abst.AbstractAdminJSFView;
+import si.laurentius.msh.web.plugin.PluginPropertyModel;
+import si.laurentius.msh.web.plugin.PluginPropertyModelItem;
 import si.laurentius.plugin.def.Plugin;
 import si.laurentius.plugin.interceptor.MailInterceptorDef;
-import si.laurentius.plugin.interceptor.MailInterceptorPropertyDef;
-import si.laurentius.plugin.interfaces.PropertyListType;
+import si.laurentius.process.SEDProcessor;
 
 /**
  *
@@ -53,7 +48,7 @@ import si.laurentius.plugin.interfaces.PropertyListType;
  */
 @SessionScoped
 @ManagedBean(name = "adminSEDInterceptorView")
-public class AdminSEDInterceptorView extends AbstractAdminJSFView<SEDInterceptorRule> {
+public class AdminSEDInterceptorView extends AbstractAdminJSFView<SEDInterceptor> {
 
   private static final SEDLogger LOG = new SEDLogger(
           AdminSEDInterceptorView.class);
@@ -66,43 +61,41 @@ public class AdminSEDInterceptorView extends AbstractAdminJSFView<SEDInterceptor
 
   @EJB(mappedName = SEDJNDI.JNDI_PMODE)
   private PModeInterface mPMode;
-  @EJB(mappedName = SEDJNDI.JNDI_DBCERTSTORE)
-  private SEDCertStoreInterface mdbCertStore;
 
-  InterceptorPropertyModel mtpmPropertyModel = new InterceptorPropertyModel();
+  PluginPropertyModel mtpmPropertyModel = new PluginPropertyModel();
 
   /**
    *
    * @param id
    * @return
    */
-  public SEDInterceptorRule getInterceptorRuleById(BigInteger id) {
-    return mdbLookups.getSEDInterceptorRuleById(id);
+  public SEDInterceptor getInterceptorRuleById(BigInteger id) {
+    return mdbLookups.getSEDInterceptorById(id);
   }
 
-  
-    public List<SEDInterceptorEvents> getInterceptEvents(){
-        return Arrays.asList(SEDInterceptorEvents.values());    
-    }
-    
+
+  /**
+   *
+   * @return
+   */
   @Override
   public boolean validateData() {
-    SEDInterceptorRule cj = getEditable();
+    SEDInterceptor cj = getEditable();
     if (Utils.isEmptyString(cj.getName())) {
       addError("Name must not be null ");
       return false;
     }
-    if (isEditableNew() && mdbLookups.getSEDInterceptorRuleByName(cj.getName()) != null) {
+    if (isEditableNew() && mdbLookups.getSEDInterceptorByName(cj.getName()) != null) {
       addError("Name: '" + cj.getName() + "' already exists!");
       return false;
     }
 
-    for (InterceptorPropertyModelItem tmi : mtpmPropertyModel.
-            getInterceptorItems()) {
-      if (tmi.getInterceptorDef().getMandatory() && Utils.isEmptyString(tmi.
+    for (PluginPropertyModelItem tmi : mtpmPropertyModel.
+            getPluginProperties()) {
+      if (tmi.getPropertyDef().getMandatory() && Utils.isEmptyString(tmi.
               getValue())) {
         addError(
-                "Property value: '" + tmi.getInterceptorDef().getKey() + "' is required!");
+                "Property value: '" + tmi.getPropertyDef().getKey() + "' is required!");
         return false;
       }
     }
@@ -119,16 +112,18 @@ public class AdminSEDInterceptorView extends AbstractAdminJSFView<SEDInterceptor
     String sbname = "int_%03d";
     int i = 1;
 
-    while (mdbLookups.getSEDCronJobByName(String.format(sbname, i)) != null) {
+    while (mdbLookups.getSEDInterceptorByName(String.format(sbname, i)) != null) {
       i++;
     }
 
-    SEDInterceptorRule ecj = new SEDInterceptorRule();
+    SEDInterceptor ecj = new SEDInterceptor();
     ecj.setName(String.format(sbname, i));
     ecj.setActive(true);
+    ecj.setInterceptEvent(SEDInterceptorEvent.IN_MESSAGE.getValue());
 
     SEDInterceptorInstance isnt = new SEDInterceptorInstance();
     ecj.setSEDInterceptorInstance(isnt);
+
     // set  first cront task;
     List<Plugin> lstPlg = mPlgManager.getRegistredPlugins();
     for (Plugin p : lstPlg) {
@@ -137,7 +132,13 @@ public class AdminSEDInterceptorView extends AbstractAdminJSFView<SEDInterceptor
         isnt.setPlugin(p.getType());
         isnt.setPluginVersion(p.getVersion());
         isnt.setType(intDef.getType());
-        mtpmPropertyModel.update(isnt, intDef);
+
+        Map<String, String> tpv = new HashMap<>();
+        isnt.getSEDInterceptorProperties().forEach((tp) -> {
+          tpv.put(tp.getKey(), tp.getValue());
+        });
+        mtpmPropertyModel.setPluginProperties(tpv, intDef.
+                getMailInterceptorPropertyDeves());
         break;
       }
     }
@@ -146,7 +147,7 @@ public class AdminSEDInterceptorView extends AbstractAdminJSFView<SEDInterceptor
   }
 
   @Override
-  public void setEditable(SEDInterceptorRule edtbl) {
+  public void setEditable(SEDInterceptor edtbl) {
     super.setEditable(edtbl);
     mtpmPropertyModel.clear();
     SEDInterceptorInstance t = getEditableInstance();
@@ -158,25 +159,30 @@ public class AdminSEDInterceptorView extends AbstractAdminJSFView<SEDInterceptor
 
   /**
    *
+   * @return
    */
   @Override
-  public void removeSelected() {
+  public boolean removeSelected() {
+    boolean bSuc = false;
     if (getSelected() != null) {
-      mdbLookups.removeSEDInterceptorRule(getSelected());
+      bSuc = mdbLookups.removeSEDInterceptor(getSelected());
       setSelected(null);
     }
+    return bSuc;
   }
 
   /**
    *
+   * @return
    */
   @Override
   public boolean persistEditable() {
     boolean bsuc = false;
-    SEDInterceptorRule ecj = getEditable();
+    SEDInterceptor ecj = getEditable();
     if (ecj != null) {
-      mtpmPropertyModel.setDataToInterceptor();
-      bsuc = mdbLookups.addSEDInterceptorRule(ecj);
+
+      setPropertyDataToInterceptorInstance(ecj.getSEDInterceptorInstance());
+      bsuc = mdbLookups.addSEDInterceptor(ecj);
     }
     return bsuc;
 
@@ -184,14 +190,15 @@ public class AdminSEDInterceptorView extends AbstractAdminJSFView<SEDInterceptor
 
   /**
    *
+   * @return
    */
   @Override
   public boolean updateEditable() {
-    SEDInterceptorRule ecj = getEditable();
+    SEDInterceptor ecj = getEditable();
     boolean bsuc = false;
     if (ecj != null) {
-      mtpmPropertyModel.setDataToInterceptor();
-      bsuc = mdbLookups.updateSEDInterceptorRule(ecj);
+      setPropertyDataToInterceptorInstance(ecj.getSEDInterceptorInstance());
+      bsuc = mdbLookups.updateSEDInterceptor(ecj);
     }
     return bsuc;
   }
@@ -201,13 +208,17 @@ public class AdminSEDInterceptorView extends AbstractAdminJSFView<SEDInterceptor
    * @return
    */
   @Override
-  public List<SEDInterceptorRule> getList() {
+  public List<SEDInterceptor> getList() {
     long l = LOG.logStart();
-    List<SEDInterceptorRule> lst = mdbLookups.getSEDInterceptorRules();
+    List<SEDInterceptor> lst = mdbLookups.getSEDInterceptors();
     LOG.logEnd(l, lst != null ? lst.size() : "null");
     return lst;
   }
 
+  /**
+   *
+   * @return
+   */
   public String getEditableInterceptorPluginType() {
     SEDInterceptorInstance t = getEditableInstance();
     return t == null ? null : t.getPlugin();
@@ -231,6 +242,10 @@ public class AdminSEDInterceptorView extends AbstractAdminJSFView<SEDInterceptor
     }
   }
 
+  /**
+   *
+   * @return
+   */
   public List<MailInterceptorDef> getEditablePluginInterceptorDeves() {
 
     SEDInterceptorInstance t = getEditableInstance();
@@ -256,30 +271,48 @@ public class AdminSEDInterceptorView extends AbstractAdminJSFView<SEDInterceptor
     }
   }
 
+  /**
+   *
+   * @return
+   */
   public String getEditableInterceptorType() {
     SEDInterceptorInstance t = getEditableInstance();
     return t == null ? null : t.getType();
   }
 
-  private void updateInterceptorPropertyModel(SEDInterceptorInstance t) {
+  private void updateInterceptorPropertyModel(SEDInterceptorInstance isnt) {
     mtpmPropertyModel.clear();
-    if (t == null
-            || Utils.isEmptyString(t.getPlugin())
-            || Utils.isEmptyString(t.getType())) {
+    if (isnt == null
+            || Utils.isEmptyString(isnt.getPlugin())
+            || Utils.isEmptyString(isnt.getType())) {
       LOG.formatedWarning("Null plugin or type!");
       return;
     }
 
-    MailInterceptorDef ctd = mPlgManager.getMailInterceptoDef(t.getPlugin(), t.
-            getType());
+    MailInterceptorDef ctd = mPlgManager.getMailInterceptoDef(isnt.getPlugin(),
+            isnt.
+                    getType());
     if (ctd == null) {
-      LOG.formatedWarning("Plugin '%s' and interceptor type '%s' not found!", t.
-              getPlugin(), t.getType());
+      LOG.formatedWarning("Plugin '%s' and interceptor type '%s' not found!",
+              isnt.
+                      getPlugin(), isnt.getType());
       return;
     }
-    mtpmPropertyModel.update(t, ctd);
+
+    Map<String, String> tpv = new HashMap<>();
+    for (SEDInterceptorProperty tp : isnt.
+            getSEDInterceptorProperties()) {
+      tpv.put(tp.getKey(), tp.getValue());
+    }
+    mtpmPropertyModel.setPluginProperties(tpv, ctd.
+            getMailInterceptorPropertyDeves());
+
   }
 
+  /**
+   *
+   * @return
+   */
   public SEDInterceptorInstance getEditableInstance() {
     if (getEditable() != null) {
       if (getEditable().getSEDInterceptorInstance() == null) {
@@ -291,14 +324,23 @@ public class AdminSEDInterceptorView extends AbstractAdminJSFView<SEDInterceptor
     return null;
   }
 
-  public List<InterceptorPropertyModelItem> getInterceptorItems() {
-    return mtpmPropertyModel.getInterceptorItems();
+  /**
+   *
+   * @return
+   */
+  public List<PluginPropertyModelItem> getInterceptorItems() {
+    return mtpmPropertyModel.getPluginProperties();
   }
 
+  
+  /**
+   *
+   * @return
+   * 
   public List<Service.Action> getEditableServiceActionList() {
-    if (getEditable() != null
-            && !Utils.isEmptyString(getEditable().getService())) {
-      String srvId = getEditable().getService();
+    if (getEditableDecisionRule() != null
+            && !Utils.isEmptyString(getEditableDecisionRule().getService())) {
+      String srvId = getEditableDecisionRule().getService();
       Service srv = mPMode.getServiceById(srvId);
       if (srv != null) {
         return srv.getActions();
@@ -306,57 +348,23 @@ public class AdminSEDInterceptorView extends AbstractAdminJSFView<SEDInterceptor
     }
     return Collections.emptyList();
   }
-
-  public class InterceptorPropertyModel implements Serializable {
-
-    MailInterceptorDef mctdInterceptorDef = null;
-    SEDInterceptorInstance mSedInterceptor = null;
-    private final List<InterceptorPropertyModelItem> taskItems = new ArrayList<>();
-
-    public void clear() {
-      taskItems.clear();
-      mctdInterceptorDef = null;
-      mSedInterceptor = null;
-    }
-
-    public void update(SEDInterceptorInstance task, MailInterceptorDef taskDef) {
-      clear();
-      mSedInterceptor = task;
-      mctdInterceptorDef = taskDef;
-      if (mSedInterceptor == null || taskDef == null) {
-        return;
+  
+  public SEDDecisionRule getEditableDecisionRule(){
+    SEDDecisionRule dr = null;
+    if (getEditable() != null){
+      if (getEditable().getSEDDecisionRule() == null){
+        getEditable().setSEDDecisionRule(new SEDDecisionRule());
       }
-
-      Map<String, String> tpv = new HashMap<>();
-      for (SEDInterceptorProperty tp : mSedInterceptor.
-              getSEDInterceptorProperties()) {
-        tpv.put(tp.getKey(), tp.getValue());
-      }
-
-      for (MailInterceptorPropertyDef stp : mctdInterceptorDef.
-              getMailInterceptorPropertyDeves()) {
-
-        String key = stp.getKey();
-        taskItems.add(new InterceptorPropertyModelItem(stp, tpv.get(key)));
-      }
+      dr = getEditable().getSEDDecisionRule();
     }
+    return dr;
+    
+  }*/
 
-    public void setDataToInterceptor() {
-      mSedInterceptor.getSEDInterceptorProperties().clear();
-      for (InterceptorPropertyModelItem tmi : taskItems) {
-        SEDInterceptorProperty stp = new SEDInterceptorProperty();
-        stp.setKey(tmi.getInterceptorDef().getKey());
-        stp.setValue(tmi.getValue());
-        mSedInterceptor.getSEDInterceptorProperties().add(stp);
-      }
-
-    }
-
-    public List<InterceptorPropertyModelItem> getInterceptorItems() {
-      return taskItems;
-    }
-  }
-
+  /**
+   *
+   * @return
+   */
   @Override
   public String getSelectedDesc() {
     if (getSelected() != null) {
@@ -365,85 +373,73 @@ public class AdminSEDInterceptorView extends AbstractAdminJSFView<SEDInterceptor
     return null;
   }
 
+  /**
+   *
+   * @return
+   */
   @Override
   public String getUpdateTargetTable() {
-    return ":forms:PanelKeystore:keylist";
+    return ":forms:SettingsInterceptor:intrcPanel:TblInterceptor";
   }
 
-  ;
-
-  public class InterceptorPropertyModelItem implements Serializable {
-
-    MailInterceptorPropertyDef mInterceptorPropDef;
-    String mValue;
-
-    public InterceptorPropertyModelItem(MailInterceptorPropertyDef ctp,
-            String val) {
-      mValue = val;
-      mInterceptorPropDef = ctp;
-
-    }
-
-    public MailInterceptorPropertyDef getInterceptorDef() {
-      return mInterceptorPropDef;
-    }
-
-    public String getValue() {
-      return mValue;
-    }
-
-    public void setValue(String v) {
-      this.mValue = v;
-    }
-
-    public Integer getIntValue() {
-      return mValue != null ? new Integer(mValue) : null;
-    }
-
-    public void setIntValue(Integer v) {
-
-      this.mValue = v != null ? v.toString() : null;
-
-    }
-
-    public Boolean getBooleanValue() {
-      return mValue != null ? mValue.equalsIgnoreCase("true") : null;
-    }
-
-    public void setBooleanValue(Boolean v) {
-      this.mValue = v ? "true" : "false";
-    }
-
-    public List<String> getListValues() {
-      String lst = getInterceptorDef().getValueList();
-      List<String> lstArr = new ArrayList<>();
-      if (Utils.isEmptyString(lst)) {
-        return Collections.emptyList();
-      } else if (lst.equalsIgnoreCase(PropertyListType.LocalBoxes.getType())) {
-        List<SEDBox> sblst = mdbLookups.getSEDBoxes();
-        sblst.forEach(sb -> {
-          lstArr.add(sb.getLocalBoxName());
-        });
-      } else if (lst.
-              equalsIgnoreCase(PropertyListType.KeystoreCertAll.getType())) {
-        lstArr.addAll(mdbCertStore.getKeystoreAliases(false));
-      } else if (lst.equalsIgnoreCase(PropertyListType.KeystoreCertKeys.
-              getType())) {
-        lstArr.addAll(mdbCertStore.getKeystoreAliases(true));
-
-      } else if (lst.equalsIgnoreCase(PropertyListType.InMailStatus.getType())) {
-        for (SEDInboxMailStatus st : SEDInboxMailStatus.values()) {
-          lstArr.add(st.getValue());
-
-        }
-      } else if (lst.equalsIgnoreCase(PropertyListType.OutMailStatus.getType())) {
-        for (SEDOutboxMailStatus st : SEDOutboxMailStatus.values()) {
-          lstArr.add(st.getValue());
-
-        }
-      }
-      return lstArr;
+  public void setPropertyDataToInterceptorInstance(SEDInterceptorInstance inst) {
+    inst.getSEDInterceptorProperties().clear();
+    for (PluginPropertyModelItem tmi : mtpmPropertyModel.getPluginProperties()) {
+      SEDInterceptorProperty stp = new SEDInterceptorProperty();
+      stp.setKey(tmi.getPropertyDef().getKey());
+      stp.setValue(tmi.getValue());
+      inst.getSEDInterceptorProperties().add(stp);
     }
   }
+  
+  public boolean addRuleToEditable(SEDInterceptorRule spi) {
+    boolean bsuc = false;
+    SEDInterceptor pr = getEditable();
+    if (pr != null) {
+      bsuc = pr.getSEDInterceptorRules().add(spi);
+    } else {
+      addError("No editable process rule!");
+    }
+    return bsuc;
+  }
 
+  public boolean removeRuleFromEditable(SEDInterceptorRule spi) {
+    boolean bsuc = false;
+    SEDInterceptor pr = getEditable();
+    if (pr != null) {
+      bsuc = pr.getSEDInterceptorRules().remove(spi);
+    } else {
+      addError("No editable process rule!");
+    }
+    return bsuc;
+  }
+
+  public boolean updateRuleFromEditable(SEDInterceptorRule spiOld,
+          SEDInterceptorRule spiNew) {
+    boolean bsuc = false;
+    SEDInterceptor pr = getEditable();
+    if (pr != null) {
+      int i = pr.getSEDInterceptorRules().indexOf(spiOld);
+      pr.getSEDInterceptorRules().remove(i);
+      pr.getSEDInterceptorRules().add(i, spiNew);
+      bsuc = true;
+
+    } else {
+      addError("No editable process rule!");
+    }
+    return bsuc;
+  }
+  
+  public String getRuleDesc(SEDInterceptor pr) {
+    String strVal = "";
+    if (pr != null && pr.getSEDInterceptorRules().size() > 0) {
+      strVal = pr.getSEDInterceptorRules().stream().
+              map((prr) -> prr.getProperty() + " " + prr.getPredicate() + " " + prr.
+              getValue() + ",").
+              reduce(strVal,
+                      String::concat);
+    }
+    return strVal;
+
+  }
 }

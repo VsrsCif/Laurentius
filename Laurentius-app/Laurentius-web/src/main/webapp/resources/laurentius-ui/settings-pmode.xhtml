@@ -6,73 +6,58 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:p="http://primefaces.org/ui"
       xmlns:composite="http://java.sun.com/jsf/composite"
-      xmlns:sui="http://java.sun.com/jsf/composite/laurentius-ui">
+      xmlns:sui="http://java.sun.com/jsf/composite/laurentius-ui"
+      xmlns:pnl="http://java.sun.com/jsf/composite/laurentius-ui/panel">
 
     <composite:interface>
     </composite:interface>
 
     <composite:implementation >
-        <p:layout   widgetVar="adminPModeView" style="min-width:400px;min-height:400px;height: 100%;width: 100%"  >
-            <p:layoutUnit  position="north" resizable="true" closable="true" collapsible="true"
-                           size="38" minSize="38" maxSize="400" style="width:100%;height:100%;padding: 0px; margin: 0px"
-                           gutter="0">
-                <h1><h:outputLink id="growPanelDesc" value="#">
-                        <span class="ui-icon-panel-Header ui-icon ui-icon-svg-pmode"  />#{msg['PModes']}
-                    </h:outputLink>
-                </h1>
-                <p:tooltip id="toolTipGrow" for="growPanelDesc" position="bottom">
-                    <h:outputText value="#{msg['PModeDefDesc']}"></h:outputText>
-                </p:tooltip>                
-            </p:layoutUnit>
+        <pnl:pnl-settings id="pmodePanel"
+                          title="#{msg['PModes']}" 
+                          description="#{msg['PModeDefDesc']}"
+                          icon="ui-icon-svg-pmode"
+                          >
+            <p:scrollPanel mode="native" style="width:100%;height:100%"> <!-- p:dataTable scrollable does not resize when toogled suth panel -->                
+                <p:dataTable id="TblPMode" 
+                             var="sp" 
+                             value="#{pModeView.list}"
+                             selectionMode="single"
+                             selection="#{pModeView.selected}"
+                             rowKey="#{sp.id}"
+                             currentPageReportTemplate="#{msg['Showing']} {startRecord}-{endRecord} #{msg['OutOf']} {totalRecords}"
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             rowsPerPageTemplate="25,50,100,200" 
+                             paginator="true" 
+                             style="padding: 0px; margin: 0px"
+                             scrollable="true" 
+                             scrollHeight="100%"
+                             rows="100"  >
+                    <p:ajax event="rowDblselect" listener="#{pModeView.startEditSelected()}" 
+                            update=":dlgPMode:pModeDialog:pModeDialogForm"
+                            oncomplete="PF('pModeDialog').show()"/>
 
-            <p:layoutUnit position="center" style="width:100%;height:100%;padding: 0px; margin: 0px" gutter="0" >
-                <p:scrollPanel mode="native" style="width:100%;height:100%"> <!-- p:dataTable scrollable does not resize when toogled suth panel -->                
-                    <p:dataTable id="TblPMode" 
-                                 var="sp" 
-                                 value="#{pModeView.list}"
-                                 selectionMode="single"
-                                 selection="#{pModeView.selected}"
-                                 rowKey="#{sp.id}"
-                                 currentPageReportTemplate="#{msg['Showing']} {startRecord}-{endRecord} #{msg['OutOf']} {totalRecords}"
-                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                                 rowsPerPageTemplate="25,50,100,200" 
-                                 paginator="true" 
-                                 style="padding: 0px; margin: 0px"
-                                 scrollable="true" 
-                                 scrollHeight="100%"
-                                 rows="100"  >
-                        <p:ajax event="rowDblselect" listener="#{pModeView.startEditSelected()}" 
-                                update=":dlgPMode:pModeDialogForm:pMode"
-                                oncomplete="PF('pModeDialog').show()"/>
+                    <f:facet name="header">
 
-                        <f:facet name="header">
-                            <p:commandButton value="#{msg['Add']}"  styleClass="toolbar-Button" icon="ui-icon-svg-add ui-icon-size-22"  
-                                             actionListener="#{pModeView.createEditable()}"
-                                             oncomplete="PF('pModeDialog').show()" 
-                                             update=":dlgPMode:pModeDialogForm:pMode"
+                        <pnl:pnl-table-control 
+                            dialogVar="pModeDialog"
+                            updateDialog=":dlgPMode:pModeDialog:pModeDialogForm"
+                            updateTable=":forms:SettingsPModes:pmodePanel:TblPMode"
+                            addActionListener="#{pModeView.createEditable()}"
+                            editActionListener="#{pModeView.startEditSelected()}"
+                            removeActionListener="#{pModeView.removeSelectedWithWarning()}"                            
+                            />       
+                    </f:facet>
+                    <p:column headerText="#{msg['Id']}" width="200">
+                        <h:outputText value="#{sp.id}" />
+                    </p:column>            
+                    <p:column headerText="#{msg['Service']}">
+                        <h:outputText value="#{sp.serviceIdRef}"></h:outputText>                
+                    </p:column>
+                </p:dataTable>
+            </p:scrollPanel>
 
-                                             />
-                            <p:commandButton value="#{msg['Edit']}"  styleClass="toolbar-Button" icon="ui-icon-svg-edit ui-icon-size-22"  
-                                             oncomplete="PF('pModeDialog').show()"                                                                   
-                                             actionListener="#{pModeView.startEditSelected()}"
-                                             update=":dlgPMode:pModeDialogForm:pMode"
-                                             />
-                            <p:commandButton value="#{msg['Delete']}" styleClass="toolbar-Button" icon="ui-icon-svg-remove ui-icon-size-22"  
-                                             actionListener="#{pModeView.removeSelected()}" 
-                                             update=":forms:SettingsPModes:TblPMode" />
-
-                        </f:facet>
-                        <p:column headerText="#{msg['Id']}" width="200">
-                            <h:outputText value="#{sp.id}" />
-                        </p:column>            
-                        <p:column headerText="#{msg['Service']}">
-                            <h:outputText value="#{sp.serviceIdRef}"></h:outputText>                
-                        </p:column>
-                    </p:dataTable>
-                </p:scrollPanel>
-            </p:layoutUnit>                        
-        </p:layout>
-
+        </pnl:pnl-settings>
     </composite:implementation>
 
 </html>

@@ -20,9 +20,9 @@ import si.laurentius.user.SEDUser;
 import si.laurentius.commons.interfaces.SEDLookupsInterface;
 import si.laurentius.commons.utils.Utils;
 import si.laurentius.commons.utils.xml.XMLUtils;
-import si.laurentius.interceptor.SEDInterceptorRule;
-import si.laurentius.process.SEDProcessorRule;
-import si.laurentius.process.SEDProcessorSet;
+import si.laurentius.interceptor.SEDInterceptor;
+import si.laurentius.process.SEDProcessorInstance;
+import si.laurentius.process.SEDProcessor;
 import si.laurentius.property.SEDProperty;
 
 /**
@@ -41,7 +41,7 @@ public class SEDTestLookup implements SEDLookupsInterface {
   }
 
   @Override
-  public boolean addSEDInterceptorRule(SEDInterceptorRule sb) {
+  public boolean addSEDInterceptor(SEDInterceptor sb) {
     throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
   }
 
@@ -56,22 +56,22 @@ public class SEDTestLookup implements SEDLookupsInterface {
   }
 
   @Override
-  public SEDInterceptorRule getSEDInterceptorRuleById(BigInteger id) {
+  public SEDInterceptor getSEDInterceptorById(BigInteger id) {
     throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
   }
 
   @Override
-  public SEDInterceptorRule getSEDInterceptorRuleByName(String name) {
+  public SEDInterceptor getSEDInterceptorByName(String name) {
     throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
   }
 
   @Override
-  public List<SEDInterceptorRule> getSEDInterceptorRules() {
+  public List<SEDInterceptor> getSEDInterceptors() {
     throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
   }
 
   @Override
-  public SEDProcessorSet getSEDProcessorSet(String code) {
+  public SEDProcessor getSEDProcessorByName(String name) {
     throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
   }
 
@@ -220,7 +220,7 @@ public class SEDTestLookup implements SEDLookupsInterface {
   }
 
   @Override
-  public boolean removeSEDInterceptorRule(SEDInterceptorRule sb) {
+  public boolean removeSEDInterceptor(SEDInterceptor sb) {
     throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
   }
 
@@ -240,7 +240,12 @@ public class SEDTestLookup implements SEDLookupsInterface {
   }
 
   @Override
-  public boolean updateSEDInterceptorRule(SEDInterceptorRule sb) {
+  public boolean updateSEDInterceptor(SEDInterceptor sb) {
+    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+  }
+
+  @Override
+  public boolean updateSEDProcessorInstance(SEDProcessorInstance sb) {
     throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
   }
 
@@ -255,49 +260,32 @@ public class SEDTestLookup implements SEDLookupsInterface {
   }
 
   @Override
-  public boolean addSEDProcessorSet(SEDProcessorSet sb) {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-  }
-
-  @Override
-  public boolean addSEDProcessorRule(SEDProcessorRule sb) {
+  public boolean addSEDProcessor(SEDProcessor sb) {
     throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
   }
 
 
-
   @Override
-  public SEDProcessorRule getSEDProcessorRule(BigInteger id) {
+  public SEDProcessor getSEDProcessor(BigInteger id) {
     throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
   }
 
+
   @Override
-  public List<SEDProcessorSet> getSEDProcessorSets() {
+  public List<SEDProcessor> getSEDProcessors() {
     throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
   }
 
+
   @Override
-  public List<SEDProcessorRule> getSEDProcessorRules() {
+  public boolean removeSEDProcessor(SEDProcessor sb) {
     throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
   }
 
-  @Override
-  public boolean removeSEDProcessorSet(SEDProcessorSet sb) {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-  }
+  
 
   @Override
-  public boolean removeSEDProcessorRule(SEDProcessorRule sb) {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-  }
-
-  @Override
-  public boolean updateSEDProcessorSet(SEDProcessorSet sb) {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-  }
-
-  @Override
-  public boolean updateSEDProcessorRule(SEDProcessorRule sb) {
+  public boolean updateSEDProcessor(SEDProcessor sb) {
     throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
   }
 

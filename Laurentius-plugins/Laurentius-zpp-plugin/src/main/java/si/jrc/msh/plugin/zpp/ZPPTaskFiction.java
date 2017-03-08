@@ -42,10 +42,10 @@ import si.laurentius.lce.enc.SEDCrypto;
 import si.laurentius.lce.enc.SEDKey;
 import si.laurentius.lce.sign.pdf.SignUtils;
 import si.laurentius.cert.SEDCertificate;
-import si.laurentius.commons.MimeValues;
-import si.laurentius.commons.SEDInboxMailStatus;
+import si.laurentius.commons.enums.MimeValue;
+import si.laurentius.commons.enums.SEDInboxMailStatus;
 import si.laurentius.commons.SEDJNDI;
-import si.laurentius.commons.SEDOutboxMailStatus;
+import si.laurentius.commons.enums.SEDOutboxMailStatus;
 import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.SEDValues;
 import si.laurentius.commons.exception.FOPException;
@@ -337,7 +337,7 @@ public class ZPPTaskFiction implements TaskExecutionInterface {
       MSHOutPart mp = new MSHOutPart();
       mp.setDescription(ZPPConstants.S_ZPP_ACTION_FICTION_NOTIFICATION);
       mp.setFilepath(StorageUtils.getRelativePath(fDNViz));
-      mp.setMimeType(MimeValues.MIME_PDF.getMimeType());
+      mp.setMimeType(MimeValue.MIME_PDF.getMimeType());
       moFNotification.getMSHOutPayload().getMSHOutParts().add(mp);
 
       // create signed delivery advice
@@ -398,7 +398,7 @@ public class ZPPTaskFiction implements TaskExecutionInterface {
 
       MSHOutPart ptencKey = new MSHOutPart();
       ptencKey.setEncoding(SEDValues.ENCODING_UTF8);
-      ptencKey.setMimeType(MimeValues.MIME_XML.getMimeType());
+      ptencKey.setMimeType(MimeValue.MIME_XML.getMimeType());
       ptencKey.setName(ZPPConstants.ELM_SIGNAL_ENCRYPTED_KEY);
       ptencKey.setDescription(ZPPConstants.ELM_SIGNAL_ENCRYPTED_KEY);
       ptencKey.setType(ZPPConstants.ELM_SIGNAL_ENCRYPTED_KEY);
@@ -469,7 +469,7 @@ public class ZPPTaskFiction implements TaskExecutionInterface {
       MSHInPart mp = new MSHInPart();
       mp.setDescription(ZPPConstants.S_ZPP_ACTION_FICTION_NOTIFICATION);
       mp.setFilepath(StorageUtils.getRelativePath(fDNViz));
-      mp.setMimeType(MimeValues.MIME_PDF.getMimeType());
+      mp.setMimeType(MimeValue.MIME_PDF.getMimeType());
       moADF.getMSHInPayload().getMSHInParts().add(mp);
 
       mp.setDescription("AdviceOfDeliveryFiction");

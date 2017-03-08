@@ -60,8 +60,8 @@ import si.jrc.msh.utils.EBMSBuilder;
 import si.jrc.msh.utils.EBMSValidation;
 import si.laurentius.commons.cxf.EBMSConstants;
 import si.jrc.msh.utils.EBMSParser;
-import si.laurentius.commons.MimeValues;
-import si.laurentius.commons.SEDInboxMailStatus;
+import si.laurentius.commons.enums.MimeValue;
+import si.laurentius.commons.enums.SEDInboxMailStatus;
 import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.cxf.SoapUtils;
 import si.laurentius.commons.exception.HashException;
@@ -73,6 +73,7 @@ import si.laurentius.commons.utils.HashUtils;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StorageUtils;
 import si.laurentius.commons.utils.Utils;
+import si.laurentius.msh.inbox.payload.IMPartProperty;
 import si.laurentius.msh.pmode.ReceptionAwareness;
 
 /**
@@ -438,15 +439,15 @@ public class EBMSInInterceptor extends AbstractEBMSInterceptor {
       for (MSHInPart p : mMail.getMSHInPayload().getMSHInParts()) {
         // check if payload is compressed
         boolean isCmpr = false;
-        for (MSHInPart.Property prp : p.getProperties()) {
+        for (IMPartProperty prp : p.getIMPartProperties()) {
           if (!Utils.isEmptyString(prp.getName()) &&
               !Utils.isEmptyString(prp.getValue()) &&
               prp.getName().equalsIgnoreCase(EBMSConstants.EBMS_PAYLOAD_COMPRESSION_TYPE) &&
-              prp.getValue().equalsIgnoreCase(MimeValues.MIME_GZIP.getMimeType())) {
+              prp.getValue().equalsIgnoreCase(MimeValue.MIME_GZIP.getMimeType())) {
             // found property EBMS_PAYLOAD_COMPRESSION_TYPE 
             isCmpr = true;
             // remove property because is no longer needed
-            p.getProperties().remove(prp);
+            p.getIMPartProperties().remove(prp);
             break;
           }
         }
@@ -565,7 +566,7 @@ public class EBMSInInterceptor extends AbstractEBMSInterceptor {
         try {
           // if not compressed
           
-          fout = msuStorageUtils.storeInFile(p.getIsEncrypted()?MimeValues.MIME_ENC.getMimeType():p.getMimeType(), dh.getInputStream());
+          fout = msuStorageUtils.storeInFile(p.getIsEncrypted()?MimeValue.MIME_ENC.getMimeType():p.getMimeType(), dh.getInputStream());
         } catch (IOException ex) {
           throw new StorageException(String.format("Error storing attachment %s for message: %s.",
               p.getEbmsId(), msgId), ex);

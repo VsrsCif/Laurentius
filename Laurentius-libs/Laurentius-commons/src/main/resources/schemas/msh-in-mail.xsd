@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 (http://www.altova.com) by XMLSpy 2007 Professional Ed., Installed for 5 users (with SMP from 2007-02-06 to 2008-02-07) (CIF VSRS) -->
 <!--Metadata: 
 Owner: Supreme Court Republic of Slovenia 
 Product: SVEV-MSH
@@ -24,188 +25,40 @@ Copyright 2015, Supreme Court Republic of Slovenia
  See the Licence for the specific language governing permissions and  
  limitations under the Licence.
 -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
-           xmlns:ns1="http://msh.laurentius.si/inbox/mail" 
-           xmlns:ns2="http://msh.laurentius.si/inbox/payload" 
-           xmlns:ns3="http://msh.laurentius.si/inbox/property"
-           xmlns:ns4="http://msh.laurentius.si/inbox/event"
-           targetNamespace="http://msh.laurentius.si/inbox/mail"
-           elementFormDefault="qualified" attributeFormDefault="unqualified">
-    <xs:import namespace="http://msh.laurentius.si/inbox/property" schemaLocation="./msh-in-property.xsd"/>
-    <xs:import namespace="http://msh.laurentius.si/inbox/payload" schemaLocation="./msh-in-payload.xsd"/>	
-    <xs:import namespace="http://msh.laurentius.si/inbox/event" schemaLocation="./msh-in-event.xsd"/>	
-    <xs:element name="MSHInMail" type="ns1:MSHInMailType" />
-    <xs:complexType name="MSHInMailType">
-        <xs:annotation>
-            <xs:appinfo>Schema MSHMail infoset</xs:appinfo>
-            <xs:documentation xml:lang="sl">Shema določa xml infoset izhodne in dohodne pošte, ki se vroča preko SVEV MSH modula. Sestavni deli vsakega maila so:
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://msh.laurentius.si/inbox/mail" xmlns:ns2="http://msh.laurentius.si/inbox/payload" xmlns:ns3="http://msh.laurentius.si/inbox/property" xmlns:ns4="http://msh.laurentius.si/inbox/event" xmlns:ns5="http://msh.laurentius.si/mail" targetNamespace="http://msh.laurentius.si/inbox/mail" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:import namespace="http://msh.laurentius.si/inbox/property" schemaLocation="./msh-in-property.xsd"/>
+	<xs:import namespace="http://msh.laurentius.si/inbox/payload" schemaLocation="./msh-in-payload.xsd"/>
+	<xs:import namespace="http://msh.laurentius.si/inbox/event" schemaLocation="./msh-in-event.xsd"/>
+	<xs:import namespace="http://msh.laurentius.si/mail" schemaLocation="msh-mail.xsd"/>
+	<xs:element name="MSHInMail" type="ns1:MSHInMailType"/>
+	<xs:element name="MSHInMailList">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ns1:MSHInMail" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attribute name="dateTo"/>
+			<xs:attribute name="dateFrom" type="xs:date"/>
+			<xs:attribute name="count" type="xs:int"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="MSHInMailType">
+		<xs:annotation>
+			<xs:appinfo>Schema MSHMail infoset</xs:appinfo>
+			<xs:documentation xml:lang="sl">Shema določa xml infoset izhodne in dohodne pošte, ki se vroča preko SVEV MSH modula. Sestavni deli vsakega maila so:
                 - pošiljatelj
                 - prejemnik
                 - storitev (Storitev, akcija v storitvi)
                 - vsebine, ki se vročajo				
             </xs:documentation>
-        </xs:annotation>
-        <xs:sequence>
-            <xs:element ref="ns3:MSHInProperties" minOccurs="0"/>
-            <xs:element ref="ns2:MSHInPayload" minOccurs="0"/>
-            <xs:element ref="ns4:MSHInEvent" minOccurs="0" maxOccurs="unbounded" />
-        </xs:sequence>
-        <xs:attribute name="messageId" use="optional">
-            <xs:annotation>
-                <xs:documentation xml:lang="sl">Enolična oznaka pošiljke MSH. Pri izhodni pošti se oznaka določi ob dodajanju pošiljke v pošiljanje. Vrednost atributa je enaka
-                    Messaging/MessageInfo/MessageId v ebMS headerju izhodnega sporočila. Pri dohodni pošti se določi mshid določi ob uspešnem prejemu pošiljke.
-                                    
-                </xs:documentation>
-            </xs:annotation>
-            <xs:simpleType>
-                <xs:restriction base="xs:string">
-                    <xs:maxLength value="64"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-        <xs:attribute name="refToMessageId" use="optional">
-            <xs:annotation>
-                <xs:documentation xml:lang="sl">Referenca na messageId dohodne pošiljke. Vrednost atributa je enaka
-                    Messaging/MessageInfo/RefToMessageId v ebMS headerju izhodnega sporočila. 
-                </xs:documentation>
-            </xs:annotation>
-            <xs:simpleType>
-                <xs:restriction base="xs:string">
-                    <xs:maxLength value="64"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-        <xs:attribute name="senderMessageId" use="required">
-            <xs:annotation>
-                <xs:documentation xml:lang="sl"> Enolična oznaka pošiljke pošiljatelja. Kombinacija:  @senderEBox  in @senderMessageId mora bit enolična. ID se uporablja tudi za kontrolo pri oddaji pošiljke v vročanje.  Namen atributa je kontrola, ali je pošiljka že bila oddana v dostavo. 
-                    V primeru, da se sendereBox in senderMessageId že nahaja v tabeli za transport. Servis vrne mshMessageId "prvega sporočila" </xs:documentation>
-            </xs:annotation>
-            <xs:simpleType>
-                <xs:restriction base="xs:string">
-                    <xs:maxLength value="64"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-        <xs:attribute name="service" use="required">
-            <xs:annotation>
-                <xs:documentation xml:lang="sl">Storitve odpreme, ki jo določena v PMode parametrih </xs:documentation>
-            </xs:annotation>
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:maxLength value="64"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-        <xs:attribute name="action" use="required">
-            <xs:annotation>
-                <xs:documentation xml:lang="sl">Akcija v storitvi odpreme, ki jo določena v PMode parametrih  (npr: RegistredMail, LegalZPP, LegalZKP in LegalZUP, SMTPDelivery) </xs:documentation>
-            </xs:annotation>
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:maxLength value="64"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-        <xs:attribute name="conversationId" use="optional">
-            <xs:annotation>
-                <xs:documentation xml:lang="sl">enolična oznaka "poslovne transakcije" v izmenjavi podaktov. V primeru, da ni podan je v prvem sporočilo določen kot senderMessageId.  </xs:documentation>
-            </xs:annotation>
-            <xs:simpleType>
-                <xs:restriction base="xs:string">
-                    <xs:maxLength value="64"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-        <xs:attribute name="subject" use="optional">
-            <xs:annotation>
-                <xs:documentation xml:lang="sl">Opis vsebine sporočila </xs:documentation>
-            </xs:annotation>
-            <xs:simpleType>
-                <xs:restriction base="xs:string">
-                    <xs:maxLength value="512"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-        <xs:attribute name="submittedDate" type="xs:dateTime" use="optional">
-            <xs:annotation>
-                <xs:documentation xml:lang="sl">Datum oddaje pošiljke v vročanje. Datum določi MSH ob prevem uspešnem prejemu pošiljke</xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
-        <xs:attribute name="sentDate" type="xs:dateTime" use="optional">
-            <xs:annotation>
-                <xs:documentation xml:lang="sl">Datum pošiljanja sporočila naslovnikovemu MSH-ju</xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
-        <xs:attribute name="receivedDate" type="xs:dateTime" use="optional">
-            <xs:annotation>
-                <xs:documentation xml:lang="sl">Datum sprejema v naslovnikove MSH. Datum je obvezen za dohodno pošto.sentDate in receiveDate se lahko razlikujeta glede na spodaj ležeči protokol (HTTP,SMTP), multihop etc..  </xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
-        <xs:attribute name="deliveredDate" type="xs:dateTime" use="optional">
-            <xs:annotation>
-                <xs:documentation xml:lang="sl">Datum prevzema pošiljke. Datum je obvezen za dohodne pošiljke, ki so bile uspešno prevzete iz MSH-ja</xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
-        <xs:attribute name="receiverEBox" use="required">
-            <xs:annotation>
-                <xs:documentation xml:lang="sl">Naslovnikov eBox naslov (email oblika). domena določa PMode konfiguracijo naslovnikovega strežnika</xs:documentation>
-            </xs:annotation>
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:maxLength value="64"/>
-                    <xs:pattern value="[_\-a-zA-Z0-9\.\+]+@[a-zA-Z0-9](\.?[\-a-zA-Z0-9]*[a-zA-Z0-9])*"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-        <xs:attribute name="receiverName" use="required">
-            <xs:annotation>
-                <xs:documentation xml:lang="sl">Naslovnikov naziv.</xs:documentation>
-            </xs:annotation>
-            <xs:simpleType>
-                <xs:restriction base="xs:string">
-                    <xs:maxLength value="128"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-        <xs:attribute name="senderEBox" use="required">
-            <xs:annotation>
-                <xs:documentation xml:lang="sl">Pošiljateljev  elektronski naslov (email oblika). domena določa PMode konfiguracijo naslovnikovega strežnika</xs:documentation>
-            </xs:annotation>
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:maxLength value="64"/>
-                    <xs:pattern value="[_\-a-zA-Z0-9\.\+]+@[a-zA-Z0-9](\.?[\-a-zA-Z0-9]*[a-zA-Z0-9])*"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-        <xs:attribute name="senderName" use="required">
-            <xs:annotation>
-                <xs:documentation xml:lang="sl"> Pošiljateljev  naziv </xs:documentation>
-            </xs:annotation>
-            <xs:simpleType>
-                <xs:restriction base="xs:string">
-                    <xs:maxLength value="128"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-        <xs:attribute name="id" type="xs:integer"/>
-        <xs:attribute name="status">
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:maxLength value="32"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-        <xs:attribute name="statusDate" type="xs:dateTime"/>
-    </xs:complexType>
-    <xs:element name="MSHInMailList">
-        <xs:complexType>
-            <xs:sequence>
-                <xs:element ref="ns1:MSHInMail" minOccurs="0" maxOccurs="unbounded"/>
-            </xs:sequence>
-            <xs:attribute name="dateTo"/>
-            <xs:attribute name="dateFrom" type="xs:date"/>
-            <xs:attribute name="count" type="xs:int"/>
-        </xs:complexType>
-    </xs:element>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="ns5:MSHMailType">
+				<xs:sequence>
+					<xs:element ref="ns3:MSHInProperties" minOccurs="0"/>
+					<xs:element ref="ns2:MSHInPayload" minOccurs="0"/>
+					<xs:element ref="ns4:MSHInEvent" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
 </xs:schema>

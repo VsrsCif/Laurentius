@@ -6,6 +6,7 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:p="http://primefaces.org/ui"
       xmlns:composite="http://java.sun.com/jsf/composite"
+      xmlns:dlg="http://java.sun.com/jsf/composite/laurentius-ui/dialog"
       >
     <composite:interface>
     </composite:interface>
@@ -37,15 +38,15 @@
                                 <p:column><h:inputText value="#{OutMailDataView.newOutMail.receiverEBox}" style="width: 100%"/></p:column>
                             </p:row><p:row>
                                 <p:column><h:outputText value="#{msg['Service']}" /></p:column>
-                                 <p:column>
-                                     <p:selectOneMenu id="cmpService" value="#{OutMailDataView.newOutMail.service}" style="width:250px" >
-                                         <p:ajax update="dlgCompose:mailComposeForm:cmpAction"/>
+                                <p:column>
+                                    <p:selectOneMenu id="cmpService" value="#{OutMailDataView.newOutMail.service}" style="width:250px" >
+                                        <p:ajax update="dlgCompose:mailComposeForm:cmpAction"/>
                                         <f:selectItem noSelectionOption="false"  />
                                         <f:selectItems value="#{pModeServiceView.list}" var="srv" itemLabel="#{srv.id}" itemValue="#{srv.id}"/>
                                     </p:selectOneMenu></p:column>
                                 <p:column><h:outputText value="#{msg['Action']}" /></p:column>
                                 <p:column>
-                                     <p:selectOneMenu id="cmpAction" value="#{OutMailDataView.newOutMail.action}" style="width:250px" >
+                                    <p:selectOneMenu id="cmpAction" value="#{OutMailDataView.newOutMail.action}" style="width:250px" >
                                         <f:selectItem noSelectionOption="false"  />
                                         <f:selectItems value="#{OutMailDataView.currentServiceActionList}" var="act" 
                                                        itemLabel="#{act.name}" itemValue="#{act.name}"/>
@@ -103,7 +104,7 @@
                                 <p:commandButton value="#{msg['Cancel']}" styleClass="toolbar-Button"                                                  
                                                  icon="ui-icon-svg-cancel ui-icon-size-22" 
                                                  onclick="PF('mailComposeDialog').hide();return false;"/>
-                                                 
+
                             </f:facet>
                         </p:toolbar>
                     </p:layoutUnit>

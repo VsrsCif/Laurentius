@@ -407,54 +407,6 @@
 	<xs:complexType name="PModeType">
 		<xs:sequence>
 			<xs:element name="ServiceIdRef" type="xs:string"/>
-			<xs:element name="Plugins" minOccurs="0">
-				<xs:complexType>
-					<xs:all>
-						<xs:element name="InMailEventPlugins" minOccurs="0">
-							<xs:complexType>
-								<xs:sequence>
-									<xs:element name="Plugin" type="tns:PluginType" minOccurs="0" maxOccurs="unbounded"/>
-								</xs:sequence>
-							</xs:complexType>
-						</xs:element>
-						<xs:element name="InPlugins" minOccurs="0">
-							<xs:complexType>
-								<xs:sequence>
-									<xs:element name="Plugin" type="tns:PluginType" minOccurs="0" maxOccurs="unbounded"/>
-								</xs:sequence>
-							</xs:complexType>
-						</xs:element>
-						<xs:element name="InFaultPlugins" minOccurs="0">
-							<xs:complexType>
-								<xs:sequence>
-									<xs:element name="Plugin" type="tns:PluginType" minOccurs="0" maxOccurs="unbounded"/>
-								</xs:sequence>
-							</xs:complexType>
-						</xs:element>
-						<xs:element name="OutMailEventPlugins" minOccurs="0">
-							<xs:complexType>
-								<xs:sequence>
-									<xs:element name="Plugin" type="tns:PluginType" minOccurs="0" maxOccurs="unbounded"/>
-								</xs:sequence>
-							</xs:complexType>
-						</xs:element>
-						<xs:element name="OutPlugins" minOccurs="0">
-							<xs:complexType>
-								<xs:sequence>
-									<xs:element name="Plugin" type="tns:PluginType" minOccurs="0" maxOccurs="unbounded"/>
-								</xs:sequence>
-							</xs:complexType>
-						</xs:element>
-						<xs:element name="OutFaultPlugins" minOccurs="0">
-							<xs:complexType>
-								<xs:sequence>
-									<xs:element name="Plugin" type="tns:PluginType" minOccurs="0" maxOccurs="unbounded"/>
-								</xs:sequence>
-							</xs:complexType>
-						</xs:element>
-					</xs:all>
-				</xs:complexType>
-			</xs:element>
 			<xs:element name="LocalPartyInfo" type="tns:PModePartyInfo">
 				<xs:annotation>
 					<xs:documentation>Local party info</xs:documentation>
@@ -677,9 +629,9 @@
                         “maxretries=10,period=3000”, in case the retry period is 3000 ms.</xs:documentation>
 				</xs:annotation>
 				<xs:complexType>
-					<xs:attribute name="maxRetries" type="xs:int" default="3"/>
-					<xs:attribute name="multiplyPeriod" type="xs:int" default="3"/>
-					<xs:attribute name="period" type="xs:int" default="5678"/>
+					<xs:attribute name="maxRetries" type="xs:int" use="required"/>
+					<xs:attribute name="multiplyPeriod" type="xs:int" use="required"/>
+					<xs:attribute name="period" type="xs:int" use="required"/>
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="DuplicateDetection" minOccurs="0">
@@ -693,8 +645,8 @@
                         dow is guaranteed of 7 days minimum.</xs:documentation>
 				</xs:annotation>
 				<xs:complexType>
-					<xs:attribute name="windowPeriode" type="xs:duration" default="P1Y"/>
-					<xs:attribute name="eliminate" type="xs:boolean" default="true"/>
+					<xs:attribute name="windowPeriode" type="xs:duration" use="required"/>
+					<xs:attribute name="eliminate" type="xs:boolean"/>
 				</xs:complexType>
 			</xs:element>
 		</xs:sequence>
@@ -716,7 +668,7 @@
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
-		<xs:attribute name="receiptType" default="AS4Receipt">
+		<xs:attribute name="receiptType" use="required">
 			<xs:simpleType>
 				<xs:restriction base="xs:token">
 					<xs:enumeration value="AS4Receipt"/>

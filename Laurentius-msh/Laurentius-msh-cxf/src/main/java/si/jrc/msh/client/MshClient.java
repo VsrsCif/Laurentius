@@ -62,7 +62,7 @@ import si.jrc.msh.interceptor.MSHPluginOutFaultInterceptor;
 import si.jrc.msh.interceptor.MSHPluginOutInterceptor;
 import si.jrc.msh.transport.SMTPConduit;
 import si.jrc.msh.transport.SMTPTransportFactory;
-import si.laurentius.commons.MimeValues;
+import si.laurentius.commons.enums.MimeValue;
 import si.laurentius.commons.cxf.SoapUtils;
 import si.laurentius.commons.exception.SEDSecurityException;
 import si.laurentius.commons.exception.StorageException;
@@ -250,13 +250,13 @@ public class MshClient {
       if (soapRes != null) {
         File file;
         try {
-          file = StorageUtils.getNewStorageFile(MimeValues.MIME_XML.getSuffix(),
+          file = StorageUtils.getNewStorageFile(MimeValue.MIME_XML.getSuffix(),
                   "RSP_");
           try (FileOutputStream fos = new FileOutputStream(file)) {
             soapRes.writeTo(fos);
             String respFilePath = StorageUtils.getRelativePath(file);
             r.setResultFile(respFilePath);
-            r.setMimeType(MimeValues.MIME_XML.getMimeType());
+            r.setMimeType(MimeValue.MIME_XML.getMimeType());
           } catch (IOException ex) {
             LOG.logError(l, "ERROR saving response to file!", ex);
           }
@@ -280,13 +280,13 @@ public class MshClient {
                 get(key);
 
         try {
-          File file = StorageUtils.getNewStorageFile(MimeValues.MIME_XML.
+          File file = StorageUtils.getNewStorageFile(MimeValue.MIME_XML.
                   getSuffix(), "ERR_");
           try (FileWriter fileWriter = new FileWriter(file)) {
             fileWriter.write(wr.toString());
             //  wr.getDocument().
             r.setResultFile(StorageUtils.getRelativePath(file));
-            r.setMimeType(MimeValues.MIME_XML.getMimeType());
+            r.setMimeType(MimeValue.MIME_XML.getMimeType());
           } catch (IOException ex1) {
             LOG.logError(l, "ERROR saving saop fault to file!", ex);
           }
@@ -303,7 +303,7 @@ public class MshClient {
                 SoapFault.FAULT_CODE_CLIENT));
         try {
           String res = msStorageUtils.storeThrowableAndGetRelativePath(ex);
-          r.setMimeType(MimeValues.MIME_TXT.getMimeType());
+          r.setMimeType(MimeValue.MIME_TXT.getMimeType());
           r.setResultFile(res);
         } catch (StorageException ex1) {
           LOG.logError(l, "ERROR saving saop fault to file!", ex1);
@@ -312,7 +312,7 @@ public class MshClient {
     } catch (SOAPException ex) {
       try {
         String res = msStorageUtils.storeThrowableAndGetRelativePath(ex);
-        r.setMimeType(MimeValues.MIME_TXT.getMimeType());
+        r.setMimeType(MimeValue.MIME_TXT.getMimeType());
         r.setResultFile(res);
       } catch (StorageException ex1) {
         LOG.logError(l, "ERROR saving saop fault to file!", ex);
@@ -325,7 +325,7 @@ public class MshClient {
       try {
         String res = msStorageUtils.storeThrowableAndGetRelativePath(ex);
         r.setResultFile(res);
-        r.setMimeType(MimeValues.MIME_TXT.getMimeType());
+        r.setMimeType(MimeValue.MIME_TXT.getMimeType());
       } catch (StorageException ex1) {
         LOG.logError(l, "ERROR saving saop fault to file!", ex);
       }
@@ -334,7 +334,7 @@ public class MshClient {
       try {
         String res = msStorageUtils.storeThrowableAndGetRelativePath(ex);
         r.setResultFile(res);
-        r.setMimeType(MimeValues.MIME_TXT.getMimeType());
+        r.setMimeType(MimeValue.MIME_TXT.getMimeType());
       } catch (StorageException ex1) {
         LOG.logError(l, "Unexpected error!", ex);
       }

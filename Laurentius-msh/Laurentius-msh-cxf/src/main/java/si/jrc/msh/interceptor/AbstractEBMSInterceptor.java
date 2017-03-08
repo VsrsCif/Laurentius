@@ -16,8 +16,6 @@ package si.jrc.msh.interceptor;
 
 import java.util.Map;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.xml.namespace.QName;
@@ -30,7 +28,6 @@ import org.apache.wss4j.dom.handler.WSHandlerConstants;
 import si.laurentius.msh.pmode.PartyIdentitySetType;
 import si.laurentius.msh.pmode.Security;
 import si.laurentius.msh.pmode.X509;
-import si.laurentius.cert.SEDCertificate;
 import si.jrc.msh.client.sec.SecurityUtils;
 import si.jrc.msh.exception.EBMSError;
 import si.jrc.msh.exception.EBMSErrorCode;
@@ -43,7 +40,6 @@ import si.laurentius.commons.interfaces.PModeInterface;
 import si.laurentius.commons.interfaces.SEDDaoInterface;
 import si.laurentius.commons.interfaces.SEDLookupsInterface;
 import si.laurentius.commons.utils.SEDLogger;
-import si.laurentius.lce.KeystoreUtils;
 import si.laurentius.commons.interfaces.SEDCertStoreInterface;
 
 /**

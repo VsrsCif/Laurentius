@@ -24,7 +24,7 @@ import org.primefaces.event.SelectEvent;
 import org.primefaces.event.UnselectEvent;
 import si.laurentius.cron.SEDTaskExecution;
 import si.laurentius.commons.SEDJNDI;
-import si.laurentius.commons.SEDTaskStatus;
+import si.laurentius.commons.enums.SEDTaskStatus;
 import si.laurentius.commons.interfaces.SEDDaoInterface;
 
 /**

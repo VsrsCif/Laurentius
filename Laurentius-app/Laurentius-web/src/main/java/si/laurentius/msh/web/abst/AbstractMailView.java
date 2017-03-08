@@ -144,7 +144,7 @@ public abstract class AbstractMailView<T, S> {
   public DualListModel<String> getCurrentPickupDualExportData() {
 
     List<String> sbIDs = new ArrayList<>();
-    List<String> sbTrg = ReflectUtils.getBeanMethods(mMailModel.getType());
+    List<String> sbTrg = ReflectUtils.getBeanProperties(mMailModel.getType());
     if (sbTrg.contains("MSHOutProperties")) {
       sbTrg.remove("MSHOutProperties");
     }

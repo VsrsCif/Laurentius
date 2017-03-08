@@ -37,7 +37,7 @@ import si.laurentius.cron.SEDCronJob;
 import si.laurentius.cron.SEDTaskExecution;
 import si.laurentius.cron.SEDTaskProperty;
 import si.laurentius.commons.SEDJNDI;
-import si.laurentius.commons.SEDTaskStatus;
+import si.laurentius.commons.enums.SEDTaskStatus;
 import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.interfaces.SEDDaoInterface;
 import si.laurentius.commons.interfaces.SEDLookupsInterface;

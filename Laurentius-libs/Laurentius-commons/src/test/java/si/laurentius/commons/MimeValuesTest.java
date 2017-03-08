@@ -5,6 +5,7 @@
  */
 package si.laurentius.commons;
 
+import si.laurentius.commons.enums.MimeValue;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -15,7 +16,7 @@ import static org.junit.Assert.*;
 public class MimeValuesTest {
 
   /**
-   * Test of getSuffixBYMimeType method, of class MimeValues.
+   * Test of getSuffixBYMimeType method, of class MimeValue.
    */
   @Test
   public void testGetSuffixBYMimeType() {
@@ -29,16 +30,16 @@ public class MimeValuesTest {
     
     System.out.println("******************************************** int numMsgs = 0;" + Integer.parseInt("M7MGR", 32));
 
-    assertEquals(MimeValues.getSuffixBYMimeType(testExists1), MimeValues.MIME_PDF.getSuffix());
-    assertEquals(MimeValues.getSuffixBYMimeType(testExists2), MimeValues.MIME_PDF.getSuffix());
-    assertEquals(MimeValues.getSuffixBYMimeType(testExists3), MimeValues.MIME_PDF.getSuffix());
-    assertNotEquals(MimeValues.getSuffixBYMimeType(testMultiple), MimeValues.MIME_BIN.getSuffix());    
-    assertEquals(MimeValues.getMimeTypeByFileName(testNotExists), MimeValues.MIME_BIN.getMimeType());
-    assertEquals(MimeValues.getMimeTypeByFileName(testNull), MimeValues.MIME_BIN.getMimeType());
+    assertEquals(MimeValue.getSuffixBYMimeType(testExists1), MimeValue.MIME_PDF.getSuffix());
+    assertEquals(MimeValue.getSuffixBYMimeType(testExists2), MimeValue.MIME_PDF.getSuffix());
+    assertEquals(MimeValue.getSuffixBYMimeType(testExists3), MimeValue.MIME_PDF.getSuffix());
+    assertNotEquals(MimeValue.getSuffixBYMimeType(testMultiple), MimeValue.MIME_BIN.getSuffix());    
+    assertEquals(MimeValue.getMimeTypeByFileName(testNotExists), MimeValue.MIME_BIN.getMimeType());
+    assertEquals(MimeValue.getMimeTypeByFileName(testNull), MimeValue.MIME_BIN.getMimeType());
   }
 
   /**
-   * Test of getMimeTypeByFileName method, of class MimeValues.
+   * Test of getMimeTypeByFileName method, of class MimeValue.
    */
   @Test
   public void testGetMimeTypeByFileName() {
@@ -48,15 +49,15 @@ public class MimeValuesTest {
     String testNotExists = "test.PDFzz";
     String testNull = null;
 
-    assertEquals(MimeValues.getMimeTypeByFileName(testExists1), MimeValues.MIME_PDF.getMimeType());
-    assertEquals(MimeValues.getMimeTypeByFileName(testExists2), MimeValues.MIME_PDF.getMimeType());
-    assertEquals(MimeValues.getMimeTypeByFileName(testExists3), MimeValues.MIME_PDF.getMimeType());
-    assertEquals(MimeValues.getMimeTypeByFileName(testNotExists), MimeValues.MIME_BIN.getMimeType());
-    assertEquals(MimeValues.getMimeTypeByFileName(testNull), MimeValues.MIME_BIN.getMimeType());
+    assertEquals(MimeValue.getMimeTypeByFileName(testExists1), MimeValue.MIME_PDF.getMimeType());
+    assertEquals(MimeValue.getMimeTypeByFileName(testExists2), MimeValue.MIME_PDF.getMimeType());
+    assertEquals(MimeValue.getMimeTypeByFileName(testExists3), MimeValue.MIME_PDF.getMimeType());
+    assertEquals(MimeValue.getMimeTypeByFileName(testNotExists), MimeValue.MIME_BIN.getMimeType());
+    assertEquals(MimeValue.getMimeTypeByFileName(testNull), MimeValue.MIME_BIN.getMimeType());
   }
 
   /**
-   * Test of getMimeTypeBySuffix method, of class MimeValues.
+   * Test of getMimeTypeBySuffix method, of class MimeValue.
    */
   @Test
   public void testGetMimeTypeBySuffix() {
@@ -66,11 +67,11 @@ public class MimeValuesTest {
     String testNotExists = "PDFzz";
     String testNull = null;
 
-    assertEquals(MimeValues.getMimeTypeByFileName(testExists1), MimeValues.MIME_PDF.getMimeType());
-    assertEquals(MimeValues.getMimeTypeByFileName(testExists2), MimeValues.MIME_PDF.getMimeType());
-    assertEquals(MimeValues.getMimeTypeByFileName(testExists3), MimeValues.MIME_PDF.getMimeType());
-    assertEquals(MimeValues.getMimeTypeByFileName(testNotExists), MimeValues.MIME_BIN.getMimeType());
-    assertEquals(MimeValues.getMimeTypeByFileName(testNull), MimeValues.MIME_BIN.getMimeType());
+    assertEquals(MimeValue.getMimeTypeByFileName(testExists1), MimeValue.MIME_PDF.getMimeType());
+    assertEquals(MimeValue.getMimeTypeByFileName(testExists2), MimeValue.MIME_PDF.getMimeType());
+    assertEquals(MimeValue.getMimeTypeByFileName(testExists3), MimeValue.MIME_PDF.getMimeType());
+    assertEquals(MimeValue.getMimeTypeByFileName(testNotExists), MimeValue.MIME_BIN.getMimeType());
+    assertEquals(MimeValue.getMimeTypeByFileName(testNull), MimeValue.MIME_BIN.getMimeType());
   }
 
 }

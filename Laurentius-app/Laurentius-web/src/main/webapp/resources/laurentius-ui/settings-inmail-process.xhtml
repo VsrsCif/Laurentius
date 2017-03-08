@@ -6,143 +6,59 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:p="http://primefaces.org/ui"
       xmlns:composite="http://java.sun.com/jsf/composite"
-
-      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+      xmlns:pnl="http://java.sun.com/jsf/composite/laurentius-ui/panel"
+      >
     <composite:interface>
     </composite:interface>
 
     <composite:implementation >
-        <p:layout   widgetVar="InMailProcessView" style="min-width:400px;min-height:400px;height: 100%;width: 100%"  >
-            <p:layoutUnit  position="north" resizable="true" closable="true" collapsible="true"
-                           size="38" minSize="38" maxSize="400" style="width:100%;height:100%;padding: 0px; margin: 0px"
-                           gutter="0">
-                <h1><h:outputLink id="growPanelDesc" value="#">
-                        <span class="ui-icon-panel-Header ui-icon ui-icon-svg-process"  />#{msg['InMailProcessView']}
-                    </h:outputLink>
-                </h1>
-                <p:tooltip id="toolTipGrow" for="growPanelDesc" position="bottom">
-                    <h:outputText value="#{msg['InMailProcessDesc']}"></h:outputText>
-                </p:tooltip>                
-            </p:layoutUnit>
-
-
-
-            <p:layoutUnit position="center" style="width:100%;height:100%;padding: 0px; margin: 0px" gutter="0" >
-                <p:scrollPanel mode="native" style="width:100%;height:100%"> <!-- p:dataTable scrollable does not resize when toogled suth panel -->                
-                    <p:dataTable id="TblInMailProcessSet" 
-                                 var="sp" 
-                                 value="#{adminSEDInMailProcessSetView.list}"
-                                 selectionMode="single"
-                                 selection="#{adminSEDInMailProcessSetView.selected}"
-                                 rowKey="#{sp.code}"
-                                 rowIndexVar="rowIndex"
-                                 style="padding: 0px; margin: 0px"
-                                 scrollable="true" 
-                                 scrollHeight="100%"
-                                 >
-                        <p:ajax event="rowDblselect" listener="#{adminSEDInMailProcessSetView.startEditSelected()}" 
-                                update=":dlgprocessset:processSetDialogForm:processSet"
-                                oncomplete="PF('processSetDialog').show()"/>
-                        <f:facet name="header">
-                            <p:commandButton value="#{msg['Add']}"  styleClass="toolbar-Button" icon="ui-icon-svg-add ui-icon-size-22"  
-                                             actionListener="#{adminSEDInMailProcessSetView.createEditable()}"
-                                             oncomplete="PF('processSetDialog').show()" 
-                                             update=":dlgprocessset:processSetDialogForm:processSet"
-
-                                             />
-                            <p:commandButton value="#{msg['Edit']}"  styleClass="toolbar-Button" icon="ui-icon-svg-edit ui-icon-size-22"  
-                                             oncomplete="PF('processSetDialog').show()"                                                                   
-                                             actionListener="#{adminSEDInMailProcessSetView.startEditSelected()}"
-                                             update=":dlgprocessset:processSetDialogForm:processSet"
-                                             />
-                            <p:commandButton value="#{msg['Delete']}" styleClass="toolbar-Button" icon="ui-icon-svg-remove ui-icon-size-22"  
-                                             actionListener="#{adminSEDInMailProcessSetView.removeSelected()}" update=":forms:InMailProcess:TblInMailProcessSet" />
-
-                        </f:facet>
-                         <p:column headerText="#{msg['Code']}" width="160">
-                             <h:outputText id="tblCode" value="#{sp.code}"></h:outputText>                
-                            
-                        </p:column>
-                        
-                        <p:column headerText="#{msg['Name']}" width="160">
-                            <h:outputText id="tblimp" value="#{sp.name}"></h:outputText>                
-                            <p:tooltip for=":forms:InMailProcess:TblInMailProcessSet:#{rowIndex}:tblimp"
-                                       value="#{sp.description}"/>
-                        </p:column>
-
-                        <p:column headerText="#{msg['ProcessSetInstances']}" >
-                            <h:outputText value="#{adminSEDInMailProcessSetView.getProcessUnitsInfo(sp)}"></h:outputText>                
-                        </p:column>
-
-                    </p:dataTable>
-                </p:scrollPanel>
-            </p:layoutUnit> 
-            <p:layoutUnit   position="south" size="350" resizable="false"    >
-                <h1><h:outputLink id="growRulePanelDesc" value="#">
-                        <span class="ui-icon-panel-Header ui-icon ui-icon-svg-process"  />#{msg['InMailProcessRules']}
-                    </h:outputLink>
-                </h1>
-                <p:tooltip id="toolTipRuleGrow" for="growRulePanelDesc" position="bottom">
-                    <h:outputText value="#{msg['InMailProcessDesc']}"></h:outputText>
-                </p:tooltip>
-                <p:scrollPanel mode="native" style="width:100%;height:100%"> 
-
-                    <p:dataTable id="TblInMailProcessRule" 
-                                 var="sp" 
-                                 value="#{adminSEDInMailProcessRuleView.list}"
-                                 selectionMode="single"
-                                 selection="#{adminSEDInMailProcessRuleView.selected}"
-                                 rowKey="#{sp.id}"
-                                 style="padding: 0px; margin: 0px"
-                                 scrollable="true" 
-                                 scrollHeight="100%"
-                                 >
-
-                        <p:ajax event="rowDblselect" 
-                                oncomplete="PF('processRuleDialog').show()"                                                                   
-                                             listener="#{adminSEDInMailProcessRuleView.startEditSelected()}"
-                                             update=":dlgprocessrule:processRuleDialogForm:processRule"
-                                             />
-                        <f:facet name="header">
-                            <p:commandButton value="#{msg['Add']}"  styleClass="toolbar-Button" icon="ui-icon-svg-add ui-icon-size-22"  
-                                             actionListener="#{adminSEDInMailProcessRuleView.createEditable()}"
-                                             oncomplete="PF('processRuleDialog').show()" 
-                                             update=":dlgprocessrule:processRuleDialogForm:processRule"
-
-                                             />
-                            <p:commandButton value="#{msg['Edit']}"  styleClass="toolbar-Button" icon="ui-icon-svg-edit ui-icon-size-22"  
-                                             oncomplete="PF('processRuleDialog').show()"                                                                   
-                                             actionListener="#{adminSEDInMailProcessRuleView.startEditSelected()}"
-                                             update=":dlgprocessrule:processRuleDialogForm:processRule"
-                                             />
-                            <p:commandButton value="#{msg['Delete']}" styleClass="toolbar-Button" icon="ui-icon-svg-remove ui-icon-size-22"  
-                                             actionListener="#{adminSEDInMailProcessRuleView.removeSelected()}" update=":forms:InMailProcess:TblInMailProcessSet" />
-
-                        </f:facet>
-
-
-                        <p:column headerText="#{msg['ReceiverBox']}" width="120">
-                            <h:outputText value="#{sp.receiverEBox}" />
-                        </p:column>
-                        <p:column headerText="#{msg['SenderBox']}" width="120">
-                            <h:outputText value="#{sp.senderEBox}" />
-                        </p:column>
-                        <p:column headerText="#{msg['Service']}" width="120">
-                            <h:outputText value="#{sp.service}" />
-                        </p:column>
-                        <p:column headerText="#{msg['Action']}" width="160">
-                            <h:outputText value="#{sp.action}"></h:outputText>                
-                        </p:column>
-                        <p:column headerText="#{msg['ProcessSet']}" width="160">
-                            <h:outputText value="#{sp.procSetCode}"></h:outputText>                
-                        </p:column>
-                    </p:dataTable>
-                </p:scrollPanel>
-
-
-            </p:layoutUnit>
-
-        </p:layout>
+        <pnl:pnl-settings id="procPanel"
+                          title="#{msg['InMailProcessRules']}" 
+                          description="#{msg['InMailProcessDesc']}"
+                          icon="ui-icon-svg-process"
+                          >
+            <p:scrollPanel mode="native" style="width:100%;height:100%"> 
+                <p:dataTable id="TblInMailProcessRule" 
+                             var="sp" 
+                             value="#{adminSEDInMailProcessView.list}"
+                             selectionMode="single"
+                             selection="#{adminSEDInMailProcessView.selected}"
+                             rowKey="#{sp.id}"
+                             style="padding: 0px; margin: 0px"
+                             scrollable="true" 
+                             scrollHeight="100%"
+                             >
+                    <p:ajax event="rowDblselect" 
+                            oncomplete="PF('procDialog').show()"                                                                   
+                            listener="#{adminSEDInMailProcessView.startEditSelected()}"
+                            update=":dlgproc:procDialog:procDialogForm"
+                            />
+                    <f:facet name="header">
+                        <pnl:pnl-table-control 
+                            dialogVar="procDialog"
+                            updateDialog=":dlgproc:procDialog:procDialogForm"
+                            updateTable=":forms:InMailProcess:procPanel:TblInMailProcessRule"
+                            addActionListener="#{adminSEDInMailProcessView.createEditable()}"
+                            editActionListener="#{adminSEDInMailProcessView.startEditSelected()}"
+                            removeActionListener="#{adminSEDInMailProcessView.removeSelectedWithWarning()}"                            
+                            />       
+                    </f:facet>
+                    <p:column headerText="#{msg['Id']}" width="50">
+                        <h:outputText value="#{sp.id}" />
+                    </p:column>
+                    <p:column headerText="#{msg['Name']}" width="120">
+                        <h:outputText value="#{sp.name}" />
+                    </p:column>
+                    <p:column headerText="#{msg['Active']}" width="50" >
+                        <h:outputText value="#{sp.active}"></h:outputText>                
+                    </p:column> 
+        
+                    <p:column headerText="#{msg['Rules']}" >
+                        <h:outputText value="#{adminSEDInMailProcessView.getRuleDesc(sp)}" />
+                    </p:column>     
+                </p:dataTable>
+            </p:scrollPanel>
+        </pnl:pnl-settings>
     </composite:implementation>
 
 </html>

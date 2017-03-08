@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      xmlns:dlg="http://java.sun.com/jsf/composite/laurentius-ui/dialog"
+      xmlns:pnl="http://java.sun.com/jsf/composite/laurentius-ui/panel"
+      >
+    <composite:interface>
+    </composite:interface>
+
+    <composite:implementation >      
+        <dlg:dlg-abstract   id="procDialog"
+                            formId="procDialogForm"
+                            dialogTitle="#{msg['SEDProcessRuleDialog']}" 
+                            editable="#{adminSEDInMailProcessView.editable}"
+                            width="1000"
+                            height="360"
+                            updateOnSave=":forms:InMailProcess:procPanel:TblInMailProcessRule"
+                            onConfirmAction="#{adminSEDInMailProcessView.addOrUpdateEditable()}"
+                            >
+            <p:layout style="width:100%;height:100%;">
+                <p:layoutUnit   position="center"  >
+                    <p:panelGrid  id= "intrcRule" columns="2" columnClasses="grid-label, value"
+                                  style="width:100%;">
+
+                        <h:outputText value="#{msg['Name']}:" />
+                        <p:inputText id="cname" value="#{adminSEDInMailProcessView.editable.name}" 
+                                     disabled="#{!adminSEDInMailProcessView.isEditableNew()}"
+                                     style="width:100%;" 
+                                     />
+                        
+                        <h:outputText value="#{msg['Active']}:" />
+                        <h:selectBooleanCheckbox id="cActive" value="#{adminSEDInMailProcessView.editable.active}"  />
+                        <h:outputText value="#{msg['DeliveredOnSuccess']}:" />
+                        <h:selectBooleanCheckbox id="dos" value="#{adminSEDInMailProcessView.editable.deliveredOnSuccess}"  />
+                        
+                    </p:panelGrid>
+
+                    <p:dataTable id="TblDecisionRule" 
+                                 var="sp" 
+                                 value="#{adminSEDInMailProcessRuleView.list}"                                     
+                                 rowKey="#{sp}"   
+                                 rowIndexVar="rowIndex"
+                                 selectionMode="single"
+                                 selection="#{adminSEDInMailProcessRuleView.selected}"
+                                 scrollable="true" 
+                                 scrollHeight="170"
+                                 >
+
+                        <f:facet name="header">
+                            <pnl:pnl-table-control 
+                                dialogVar="procRuleDialog"
+                                updateDialog=":dlgprocrule:procRuleDialog:procRuleDialogForm"
+                                updateTable=":dlgproc:procDialog:procDialogForm:TblDecisionRule"
+                                addActionListener="#{adminSEDInMailProcessRuleView.createEditable()}"
+                                editActionListener="#{adminSEDInMailProcessRuleView.startEditSelected()}"
+                                removeActionListener="#{adminSEDInMailProcessRuleView.removeSelectedWithWarning()}"                            
+                                />                         
+                        </f:facet>
+                        <p:ajax event="rowDblselect" 
+                                listener="#{adminSEDInMailProcessRuleView.startEditSelected()}" 
+                                oncomplete="PF('procRuleDialog').show()"    
+                                update=":dlgprocrule:procRuleDialog:procRuleDialogForm"
+                                />
+
+                        <p:column headerText="#{msg['MailProperty']}"  width="120">
+                            <h:outputText value="#{sp.property}" /></p:column>
+                        <p:column headerText="#{msg['Pred.']}" width="80">
+                            <h:outputText value="#{sp.predicate}" />
+                        </p:column>
+                        <p:column headerText="#{msg['Value']}">
+                            <h:outputText value="#{sp.value}" />
+                        </p:column>
+                    </p:dataTable>   
+                </p:layoutUnit>
+
+                <p:layoutUnit header="#{msg['ProcessSetInstances']}" position="east" 
+                              rendered="#{not empty adminSEDInMailProcessView.editable}" 
+                              size="500" minSize="500" maxSize="500"  >
+                    <p:dataTable id="TblProcessSetInstaces" 
+                                 var="sp" 
+                                 value="#{adminSEDInMailProcessInstanceView.list}"                                     
+                                 rowKey="#{sp}"   
+                                 rowIndexVar="rowIndex"
+                                 selectionMode="single"
+                                 selection="#{adminSEDInMailProcessInstanceView.selected}"
+                                 scrollable="true" 
+                                 scrollHeight="210"
+
+
+                                 >
+                        <f:facet name="header">
+                            <pnl:pnl-table-control 
+                                dialogVar="procInstanceDialog"
+                                updateDialog=":dlgprocinstance:procInstanceDialog:procInstanceDialogForm"
+                                updateTable=":dlgproc:procDialog:procDialogForm:TblProcessSetInstaces"
+                                addActionListener="#{adminSEDInMailProcessInstanceView.createEditable()}"
+                                editActionListener="#{adminSEDInMailProcessInstanceView.startEditSelected()}"
+                                removeActionListener="#{adminSEDInMailProcessInstanceView.removeSelectedWithWarning()}"                            
+                                />                                  
+                            <span class="ui-separator" style="display: inline-block;">
+                                <span class="ui-icon ui-icon-grip-dotted-vertical " />
+                            </span>
+                            <p:commandButton  styleClass="toolbar-Button" 
+                                              icon="ui-icon-svg-top ui-icon-size-22"  
+                                              actionListener="#{adminSEDInMailProcessInstanceView.selectedInstanceToTop()}"
+                                              update=":dlgproc:procDialog:procDialogForm:TblProcessSetInstaces"
+                                              />
+                            <p:commandButton  styleClass="toolbar-Button" 
+                                              icon="ui-icon-svg-up ui-icon-size-22"  
+                                              actionListener="#{adminSEDInMailProcessInstanceView.selectedInstanceUp()}"
+                                              update=":dlgproc:procDialog:procDialogForm:TblProcessSetInstaces"
+                                              />
+                            <p:commandButton styleClass="toolbar-Button" 
+                                             icon="ui-icon-svg-down ui-icon-size-22"  
+                                             actionListener="#{adminSEDInMailProcessInstanceView.selectedInstanceDown()}"
+                                             update=":dlgproc:procDialog:procDialogForm:TblProcessSetInstaces"
+                                             />
+                            <p:commandButton styleClass="toolbar-Button" 
+                                             icon="ui-icon-svg-bottom ui-icon-size-22"  
+                                             actionListener="#{adminSEDInMailProcessInstanceView.selectedInstanceToBottom()}"
+                                             update=":dlgproc:procDialog:procDialogForm:TblProcessSetInstaces"
+                                             />
+
+
+                        </f:facet>
+                        <p:ajax event="rowDblselect" 
+                                listener="#{adminSEDInMailProcessInstanceView.startEditSelected()}" 
+                                oncomplete="PF('processInstanceDialog').show()"    
+                                update=":dlgprocinstance:procInstanceDialog:procInstanceDialogForm"
+                                />
+
+                        <p:column headerText="#{msg['Plugin']}"  width="120">
+                            <h:outputText value="#{sp.plugin}" /></p:column>
+                        <p:column headerText="#{msg['Type']}" width="120">
+                            <h:outputText value="#{sp.type}" />
+                        </p:column>
+
+
+                    </p:dataTable>                        
+                </p:layoutUnit>  
+            </p:layout>
+        </dlg:dlg-abstract>
+    </composite:implementation>
+</html>

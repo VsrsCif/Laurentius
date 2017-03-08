@@ -2,22 +2,26 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
     
-    <class name="si.laurentius.interceptor.SEDInterceptorRule"
-           table="LAU_INTERCEPTOR_RULE">
+    <class name="si.laurentius.interceptor.SEDInterceptor"
+           table="LAU_INTERCEPTOR">
         <id name="Id" type="java.math.BigInteger" >
             <column name="ID" scale="0" />
             <generator class="sequence">
-                <param name="sequence">SEQ_LAU_INTERCEPTOR_RULE</param>
+                <param name="sequence">SEQ_LAU_INTERCEPTOR</param>
             </generator>
         </id>
-        <property column="NAME" name="Name"  length="128" type="java.lang.String"/>
+        <property column="NAME" name="Name"  length="128" type="java.lang.String" unique="true"/>
         <property column="ACTIVE" name="Active"   type="java.lang.Boolean"/>
-        <property column="INTERCEPT_EVENT" name="InterceptEvent"  length="64" type="java.lang.String"/>
-        <property column="SERVICE" name="Service"  length="256" type="java.lang.String" />
-        <property column="ACTION" name="Action"  length="256" type="java.lang.String" />
-        <property column="RECEIVER_EBOX" name="ReceiverEBox"  length="128" type="java.lang.String" />
-        <property column="SENDER_EBOX" name="SenderEBox"  length="128" type="java.lang.String" />
+        <property column="INTERCEPT_EVENT" name="InterceptEvent"  length="32" type="java.lang.String"/>
+        <property column="INTERCEPT_ROLE" name="InterceptRole"  length="32" type="java.lang.String"/>
         
+        
+        <bag name="sedInterceptorRules"  access="field" cascade="all, delete-orphan" lazy="false" order-by="Id asc" >
+            <key not-null="true">
+                <column name="INTERCEPTOR_ID" scale="0" />
+            </key>
+            <one-to-many class="si.laurentius.interceptor.SEDInterceptorRule" />
+        </bag>       
         <component name="SEDInterceptorInstance" class="si.laurentius.interceptor.SEDInterceptorInstance">
             <property column="INTERCEPTOR_TYPE" name="Type"  length="64" type="java.lang.String"/>
             <property column="INTERCEPTOR_PLUGIN" name="Plugin"  length="64" type="java.lang.String"/>
@@ -31,6 +35,18 @@
         </component>
         
     </class>    
+    <class name="si.laurentius.interceptor.SEDInterceptorRule" table="LAU_INTERC_RULE">
+        <id name="Id" type="java.math.BigInteger">
+            <column name="ID" scale="0" />
+            <generator class="sequence">
+                <param name="sequence">SEQ_LAU_INTERC_RULE</param>                
+            </generator>
+        </id>		
+        <property column="RULE_PROPERTY" name="Property" type="java.lang.String"  length="64" /> 
+        <property column="RULE_PREDICATE" name="Predicate" type="java.lang.String" length="32" />       
+        <property column="RULE_VALUE" name="Value" type="java.lang.String" length="512" />   
+    </class>
+    
     
     <class name="si.laurentius.interceptor.SEDInterceptorProperty" table="LAU_INTERC_INST_PROPERTY">
         <id name="Id" type="java.math.BigInteger">
@@ -43,8 +59,8 @@
         <property column="INTC_PROP_VALUE" name="Value" type="java.lang.String" length="512" />         
     </class>
     
-    <query name="si.laurentius.interceptor.SEDInterceptorRule.getById" ><![CDATA[SELECT p FROM SEDInterceptorRule p WHERE p.Id = :id]]></query>     
-    <query name="si.laurentius.interceptor.SEDInterceptorRule.getAll" ><![CDATA[SELECT p FROM SEDInterceptorRule p order by id asc]]></query>
+    <query name="si.laurentius.interceptor.SEDInterceptor.getById" ><![CDATA[SELECT p FROM SEDInterceptor p WHERE p.Id = :id]]></query>     
+    <query name="si.laurentius.interceptor.SEDInterceptor.getAll" ><![CDATA[SELECT p FROM SEDInterceptor p order by id asc]]></query>
     
 
 </hibernate-mapping>

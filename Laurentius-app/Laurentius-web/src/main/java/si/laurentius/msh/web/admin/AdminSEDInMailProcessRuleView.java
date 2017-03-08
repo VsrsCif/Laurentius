@@ -14,19 +14,14 @@
  */
 package si.laurentius.msh.web.admin;
 
-import java.util.Collections;
 import java.util.List;
-import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 
-import si.laurentius.commons.SEDJNDI;
-import si.laurentius.commons.interfaces.PModeInterface;
-import si.laurentius.commons.interfaces.SEDLookupsInterface;
 import si.laurentius.commons.utils.SEDLogger;
-import si.laurentius.commons.utils.Utils;
-import si.laurentius.msh.pmode.Service;
 import si.laurentius.msh.web.abst.AbstractAdminJSFView;
+import si.laurentius.process.SEDProcessor;
 import si.laurentius.process.SEDProcessorRule;
 
 /**
@@ -37,14 +32,19 @@ import si.laurentius.process.SEDProcessorRule;
 @ManagedBean(name = "adminSEDInMailProcessRuleView")
 public class AdminSEDInMailProcessRuleView extends AbstractAdminJSFView<SEDProcessorRule> {
 
-  private static final SEDLogger LOG = new SEDLogger(AdminSEDInMailProcessRuleView.class);
+  private static final SEDLogger LOG = new SEDLogger(
+          AdminSEDInMailProcessRuleView.class);
 
-  @EJB(mappedName = SEDJNDI.JNDI_SEDLOOKUPS)
-  private SEDLookupsInterface mdbLookups;
+  @ManagedProperty(value = "#{adminSEDInMailProcessView}")
+  private AdminSEDInMailProcessView admRuleView;
 
-  @EJB(mappedName = SEDJNDI.JNDI_PMODE)
-  private PModeInterface mPMode;
+  public AdminSEDInMailProcessView getAdmRuleView() {
+    return admRuleView;
+  }
 
+  public void setAdmRuleView(AdminSEDInMailProcessView admRuleView) {
+    this.admRuleView = admRuleView;
+  }
 
   @Override
   public boolean validateData() {
@@ -57,9 +57,12 @@ public class AdminSEDInMailProcessRuleView extends AbstractAdminJSFView<SEDProce
    */
   @Override
   public void createEditable() {
-    SEDProcessorRule ecj = new SEDProcessorRule();
-   
-    setNew(ecj);
+    SEDProcessor sps = admRuleView.getEditable();
+    if (sps != null) {
+      SEDProcessorRule spi = new SEDProcessorRule();
+
+      setNew(spi);
+    }
 
   }
 
@@ -67,11 +70,17 @@ public class AdminSEDInMailProcessRuleView extends AbstractAdminJSFView<SEDProce
    *
    */
   @Override
-  public void removeSelected() {
-    if (getSelected() != null) {
-      mdbLookups.removeSEDProcessorRule(getSelected());
+  public boolean removeSelected() {
+    boolean bSuc = false;
+    SEDProcessorRule ecj = getSelected();
+    if (ecj != null) {
+      bSuc = admRuleView.removeRuleFromEditable(ecj);
       setSelected(null);
+
+    } else {
+      addError("Select process instance!");
     }
+    return bSuc;
   }
 
   /**
@@ -80,14 +89,14 @@ public class AdminSEDInMailProcessRuleView extends AbstractAdminJSFView<SEDProce
   @Override
   public boolean persistEditable() {
     boolean bsuc = false;
+
     SEDProcessorRule ecj = getEditable();
     if (ecj != null) {
-      mdbLookups.addSEDProcessorRule(ecj);
-      
-      bsuc = true;
+      bsuc = admRuleView.addRuleToEditable(ecj);
+    } else {
+      addError("No editable process instance!");
     }
     return bsuc;
-
   }
 
   /**
@@ -98,10 +107,8 @@ public class AdminSEDInMailProcessRuleView extends AbstractAdminJSFView<SEDProce
     SEDProcessorRule ecj = getEditable();
     boolean bsuc = false;
     if (ecj != null) {
-      mdbLookups.updateSEDProcessorRule(ecj);
+      bsuc = admRuleView.updateRuleFromEditable(getSelected(), ecj);
 
-    
-      bsuc = true;
     }
     return bsuc;
   }
@@ -113,21 +120,31 @@ public class AdminSEDInMailProcessRuleView extends AbstractAdminJSFView<SEDProce
   @Override
   public List<SEDProcessorRule> getList() {
     long l = LOG.logStart();
-    List<SEDProcessorRule> lst = mdbLookups.getSEDProcessorRules();
+    List<SEDProcessorRule> lst = admRuleView.getEditable() != null ? admRuleView.
+            getEditable().getSEDProcessorRules() : null;
     LOG.logEnd(l, lst != null ? lst.size() : "null");
     return lst;
   }
 
-public List<Service.Action> getEditableServiceActionList() {
-    if (getEditable()!= null &&
-        !Utils.isEmptyString(getEditable().getService())) {
-      String srvId = getEditable().getService();
-      Service srv = mPMode.getServiceById(srvId);
-      if (srv != null) {
-        return srv.getActions();
-      }
+  /**
+   *
+   * @return
+   */
+  @Override
+  public String getSelectedDesc() {
+    if (getSelected() != null) {
+      return getSelected().getProperty() + ":" + getSelected().getValue();
     }
-    return Collections.emptyList();
+    return null;
+  }
+
+  /**
+   *
+   * @return
+   */
+  @Override
+  public String getUpdateTargetTable() {
+    return "dlgproc:procDialog:procDialogForm:TblDecisionRule";
   }
 
 }

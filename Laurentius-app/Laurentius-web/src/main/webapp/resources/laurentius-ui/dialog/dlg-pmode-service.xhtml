@@ -7,46 +7,23 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:pe="http://primefaces.org/ui/extensions"
       xmlns:composite="http://java.sun.com/jsf/composite"
+      xmlns:dlg="http://java.sun.com/jsf/composite/laurentius-ui/dialog"
       >
     <composite:interface>
     </composite:interface>
 
     <composite:implementation >
-
-        <p:dialog  header="#{msg['PModeServiceDialog']}" widgetVar="pModeServiceDialog" 
-                   modal="true" hideEffect="fade" resizable="false" appendTo="@(body)" height="600" width="1000">
-
-            <h:form id="pModeServiceDialogForm" >
-                <p:layout id="pModeService" style="min-width:950px; height:590px; "  >
-                    <p:layoutUnit position="center"   >
-
-                        <pe:codeMirror id="codeMirror" mode="xml"  class="CodeMirrorXML"
-                                       theme="eclipse" value="#{pModeServiceView.currentObjectAsString}" lineNumbers="true"/>  
-
-                    </p:layoutUnit>
-
-                    <p:layoutUnit position="south"  size="40" minSize="40" maxSize="40" >
-                        <p:toolbar 
-                            styleClass="dialogButtonBar" >
-                            <f:facet name="right"  >
-                                <p:commandButton value="#{msg['Ok']}"  styleClass="toolbar-Button" 
-                                                 icon="ui-icon-svg-ok ui-icon-size-22" 
-                                                 action="#{pModeServiceView.addOrUpdateEditable()}"
-                                                 oncomplete="PF('pModeServiceDialog').hide()" 
-                                                 update=":forms:SettingsPModesServices:TblPModeServices"
-                                                 />
-                                <p:commandButton value="#{msg['Cancel']}" styleClass="toolbar-Button" 
-                                                 icon="ui-icon-svg-cancel ui-icon-size-22"
-                                                 onclick="PF('pModeServiceDialog').hide();return false;"/>
-                                                 
-                            </f:facet>
-                        </p:toolbar>
-                    </p:layoutUnit>
-                </p:layout>
-            </h:form>
-        </p:dialog>
-
-
+        <dlg:dlg-abstract   id="pModeServiceDialog"
+                            formId="pModeServiceDialogForm"
+                            dialogTitle="#{msg['PModeServiceDialog']}" 
+                            editable="#{pModeServiceView.editable}"
+                            width="1000"
+                            height="600"
+                            updateOnSave=":forms:SettingsPModesServices:pmodeServicePanel:TblPModeServices"
+                            onConfirmAction="#{pModeServiceView.addOrUpdateEditable()}" >
+            <pe:codeMirror id="codeMirror" mode="xml"  class="CodeMirrorXML"
+                           theme="eclipse" value="#{pModeServiceView.currentObjectAsString}" lineNumbers="true"/>                    
+        </dlg:dlg-abstract>
     </composite:implementation>
 
 </html>

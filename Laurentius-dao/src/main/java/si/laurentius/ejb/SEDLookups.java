@@ -42,9 +42,9 @@ import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.interfaces.SEDLookupsInterface;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.Utils;
-import si.laurentius.interceptor.SEDInterceptorRule;
-import si.laurentius.process.SEDProcessorRule;
-import si.laurentius.process.SEDProcessorSet;
+import si.laurentius.interceptor.SEDInterceptor;
+import si.laurentius.process.SEDProcessorInstance;
+import si.laurentius.process.SEDProcessor;
 
 /**
  * @author Jože Rihtaršič
@@ -128,17 +128,12 @@ public class SEDLookups implements SEDLookupsInterface {
   }
 
   @Override
-  public boolean addSEDInterceptorRule(SEDInterceptorRule sb) {
+  public boolean addSEDInterceptor(SEDInterceptor sb) {
     return add(sb);
   }
 
   @Override
-  public boolean addSEDProcessorRule(SEDProcessorRule sb) {
-    return add(sb);
-  }
-
-  @Override
-  public boolean addSEDProcessorSet(SEDProcessorSet sb) {
+  public boolean addSEDProcessor(SEDProcessor sb) {
     return add(sb);
   }
 
@@ -282,11 +277,11 @@ public class SEDLookups implements SEDLookupsInterface {
   }
 
   @Override
-  public SEDInterceptorRule getSEDInterceptorRuleById(BigInteger id) {
+  public SEDInterceptor getSEDInterceptorById(BigInteger id) {
     if (id != null) {
 
-      List<SEDInterceptorRule> lst = getSEDInterceptorRules();
-      for (SEDInterceptorRule sb : lst) {
+      List<SEDInterceptor> lst = getSEDInterceptors();
+      for (SEDInterceptor sb : lst) {
         if (id.equals(sb.getId())) {
           return sb;
         }
@@ -310,11 +305,25 @@ public class SEDLookups implements SEDLookupsInterface {
   }
 
   @Override
-  public SEDInterceptorRule getSEDInterceptorRuleByName(String name) {
+  public SEDInterceptor getSEDInterceptorByName(String name) {
     if (name != null) {
 
-      List<SEDInterceptorRule> lst = getSEDInterceptorRules();
-      for (SEDInterceptorRule sb : lst) {
+      List<SEDInterceptor> lst = getSEDInterceptors();
+      for (SEDInterceptor sb : lst) {
+        if (Objects.equals(name, sb.getName())) {
+          return sb;
+        }
+      }
+    }
+    return null;
+  }
+
+  @Override
+  public SEDProcessor getSEDProcessorByName(String name) {
+    if (name != null) {
+
+      List<SEDProcessor> lst = getSEDProcessors();
+      for (SEDProcessor sb : lst) {
         if (Objects.equals(name, sb.getName())) {
           return sb;
         }
@@ -337,15 +346,15 @@ public class SEDLookups implements SEDLookupsInterface {
    * @return
    */
   @Override
-  public List<SEDInterceptorRule> getSEDInterceptorRules() {
-    return getLookup(SEDInterceptorRule.class);
+  public List<SEDInterceptor> getSEDInterceptors() {
+    return getLookup(SEDInterceptor.class);
   }
 
   @Override
-  public SEDProcessorRule getSEDProcessorRule(BigInteger id) {
+  public SEDProcessor getSEDProcessor(BigInteger id) {
     if (id != null) {
-      List<SEDProcessorRule> lst = getSEDProcessorRules();
-      for (SEDProcessorRule sb : lst) {
+      List<SEDProcessor> lst = getSEDProcessors();
+      for (SEDProcessor sb : lst) {
         if (id.equals(sb.getId())) {
           return sb;
         }
@@ -355,26 +364,8 @@ public class SEDLookups implements SEDLookupsInterface {
   }
 
   @Override
-  public List<SEDProcessorRule> getSEDProcessorRules() {
-    return getLookup(SEDProcessorRule.class);
-  }
-
-  @Override
-  public SEDProcessorSet getSEDProcessorSet(String code) {
-    if (code != null) {
-      List<SEDProcessorSet> lst = getSEDProcessorSets();
-      for (SEDProcessorSet sb : lst) {
-        if (Objects.equals(code, sb.getCode())) {
-          return sb;
-        }
-      }
-    }
-    return null;
-  }
-
-  @Override
-  public List<SEDProcessorSet> getSEDProcessorSets() {
-    return getLookup(SEDProcessorSet.class);
+  public List<SEDProcessor> getSEDProcessors() {
+    return getLookup(SEDProcessor.class);
   }
 
   /**
@@ -460,17 +451,12 @@ public class SEDLookups implements SEDLookupsInterface {
    * @return
    */
   @Override
-  public boolean removeSEDInterceptorRule(SEDInterceptorRule sb) {
+  public boolean removeSEDInterceptor(SEDInterceptor sb) {
     return remove(sb);
   }
 
   @Override
-  public boolean removeSEDProcessorRule(SEDProcessorRule sb) {
-    return remove(sb);
-  }
-
-  @Override
-  public boolean removeSEDProcessorSet(SEDProcessorSet sb) {
+  public boolean removeSEDProcessor(SEDProcessor sb) {
     return remove(sb);
   }
 
@@ -563,8 +549,8 @@ public class SEDLookups implements SEDLookupsInterface {
    */
   @Override
   public boolean updateSEDCronJob(SEDCronJob sb) {
-    
-    SEDCronJob st = getById(SEDCronJob.class,sb.getId());
+
+    SEDCronJob st = getById(SEDCronJob.class, sb.getId());
     if (!Objects.deepEquals(st, sb) && st.getSEDTask() != null) {
       // delete connected property list and insert new rows
       sb.getSEDTask().getSEDTaskProperties().forEach(tp -> {
@@ -578,14 +564,15 @@ public class SEDLookups implements SEDLookupsInterface {
   }
 
   @Override
-  public boolean updateSEDInterceptorRule(SEDInterceptorRule sb) {
-    SEDInterceptorRule st = getById(SEDInterceptorRule.class, sb.getId());
-    if (!Objects.deepEquals(st, sb) &&  st.getSEDInterceptorInstance() != null) {
+  public boolean updateSEDInterceptor(SEDInterceptor sb) {
+    SEDInterceptor st = getById(SEDInterceptor.class, sb.getId());
+    if (!Objects.deepEquals(st, sb) && st.getSEDInterceptorInstance() != null) {
       // delete connected property list and insert new rows
-      sb.getSEDInterceptorInstance().getSEDInterceptorProperties().forEach(tp -> {
-        tp.setId(null);
-      });
-      
+      sb.getSEDInterceptorInstance().getSEDInterceptorProperties().forEach(
+              tp -> {
+                tp.setId(null);
+              });
+
       return update(sb, st.getSEDInterceptorInstance().
               getSEDInterceptorProperties());
     } else {
@@ -594,13 +581,46 @@ public class SEDLookups implements SEDLookupsInterface {
   }
 
   @Override
-  public boolean updateSEDProcessorRule(SEDProcessorRule sb) {
-    return update(sb);
+  public boolean updateSEDProcessorInstance(SEDProcessorInstance sb) {
+    boolean bsuc = false;
+    SEDProcessorInstance st = getById(SEDProcessorInstance.class, sb.getId());
+    if (!Objects.deepEquals(st, sb) && st.getSEDProcessorProperties().size() > 0) {
+      // delete connected property list and insert new rows
+      sb.getSEDProcessorProperties().forEach(tp -> {
+        tp.setId(null);
+      });
+
+      bsuc = update(sb, st.getSEDProcessorProperties());
+    } else {
+      bsuc = update(sb);
+    }
+    mlstTimeOut.remove(SEDProcessor.class);
+    return bsuc;
   }
 
   @Override
-  public boolean updateSEDProcessorSet(SEDProcessorSet sb) {
-    return update(sb);
+  public boolean updateSEDProcessor(SEDProcessor sb) {
+    boolean bsuc = false;
+    SEDProcessor st = getById(SEDProcessor.class, sb.getId());
+    if (!Objects.deepEquals(st, sb) && st.getSEDProcessorInstances().size() > 0) {
+      // delete connected property list and insert new rows
+      sb.getSEDProcessorInstances().forEach(tp -> {
+        tp.setId(null);
+        tp.getSEDProcessorProperties().forEach(pp->{pp.setId(null);});
+      });
+
+      bsuc = update(sb, st.getSEDProcessorInstances());
+    } else {
+      bsuc = update(sb);
+    }
+    /*
+    SEDProcessorInstance st = getById(SEDProcessorInstance.class, sb.getId());
+    SEDProcessor rcp = st == sb ? XMLUtils.deepCopyJAXB(sb) : sb;
+
+    rcp.setId(null);
+    rcp.bsuc = remove(st) && add(sb);
+    return update(sb);*/
+    return bsuc;
   }
 
   /**

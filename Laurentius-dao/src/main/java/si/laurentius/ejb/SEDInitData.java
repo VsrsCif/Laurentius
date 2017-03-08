@@ -90,19 +90,18 @@ public class SEDInitData implements SEDInitDataInterface {
     slps.setSEDCronJobs(new SedLookups.SEDCronJobs());
     slps.setSEDProperties(new SedLookups.SEDProperties());
     slps.setSEDUsers(new SedLookups.SEDUsers());
-    slps.setSEDProcessorRules(new SedLookups.SEDProcessorRules());
-    slps.setSEDProcessorSets(new SedLookups.SEDProcessorSets());
+    slps.setSEDProcessors(new SedLookups.SEDProcessors());
+     slps.setSEDInterceptors(new SedLookups.SEDInterceptors());
     slps.setSEDCertPassword(new SedLookups.SEDCertPassword());
     slps.setSEDCertCRLs(new SedLookups.SEDCertCRLs());
 
     slps.getSEDBoxes().getSEDBoxes().addAll(mdbLookups.getSEDBoxes());
     slps.getSEDUsers().getSEDUsers().addAll(mdbLookups.getSEDUsers());
     slps.getSEDCronJobs().getSEDCronJobs().addAll(mdbLookups.getSEDCronJobs());
-    slps.getSEDProcessorRules().getSEDProcessorRules().addAll(mdbLookups.
-            getSEDProcessorRules());
-    slps.getSEDProcessorSets().getSEDProcessorSets().addAll(mdbLookups.
-            getSEDProcessorSets());
-
+    slps.getSEDInterceptors().getSEDInterceptors().addAll(mdbLookups.
+            getSEDInterceptors());
+    slps.getSEDProcessors().getSEDProcessors().addAll(mdbLookups.
+            getSEDProcessors());
     // save passwords 
     if (saveCertPasswords) {
       TypedQuery<SEDCertPassword> query = memEManager.createNamedQuery(
@@ -178,26 +177,23 @@ public class SEDInitData implements SEDInitDataInterface {
       });
     }
 
-    if (cls.getSEDProcessorSets() != null && !cls.getSEDProcessorSets()
-            .getSEDProcessorSets().isEmpty()) {
-      cls.getSEDProcessorSets().getSEDProcessorSets().stream().forEach(
-              (cb) -> {
-                cb.getSEDProcessorInstances().
-                        stream().forEach((c) -> {
-                          c.setId(null);
-                        });
-                mdbLookups.addSEDProcessorSet(cb);
-
-              });
-    }
-
-    if (cls.getSEDProcessorRules() != null && !cls.getSEDProcessorRules()
-            .getSEDProcessorRules().isEmpty()) {
-      cls.getSEDProcessorRules().getSEDProcessorRules().stream().forEach(
+    if (cls.getSEDProcessors() != null && !cls.getSEDProcessors()
+            .getSEDProcessors().isEmpty()) {
+      cls.getSEDProcessors().getSEDProcessors().stream().forEach(
               (cb) -> {
                 cb.setId(null);
+                
+                cb.getSEDProcessorRules().forEach(pr -> {
+                  pr.setId(null);
+                });
+                cb.getSEDProcessorInstances().forEach(pr->{
+                  pr.setId(null);
+                  pr.getSEDProcessorProperties().forEach(prp->{
+                    prp.setId(null);
+                  });
+                });
 
-                mdbLookups.addSEDProcessorRule(cb);
+                mdbLookups.addSEDProcessor(cb);
               });
     }
 
@@ -213,6 +209,26 @@ public class SEDInitData implements SEDInitDataInterface {
                           });
                 }
                 mdbLookups.addSEDCronJob(cb);
+              });
+    }
+
+    if (cls.getSEDInterceptors() != null && !cls.getSEDInterceptors().
+            getSEDInterceptors().isEmpty()) {
+      cls.getSEDInterceptors().getSEDInterceptors().stream().forEach(
+              (cb) -> {
+                
+                cb.setId(null);
+                  cb.getSEDInterceptorRules().forEach(pr->{
+                  pr.setId(null);
+                });
+                  
+                if (cb.getSEDInterceptorInstance() != null) {
+                  cb.getSEDInterceptorInstance().getSEDInterceptorProperties().
+                          stream().forEach((c) -> {
+                            c.setId(null);
+                          });
+                }
+                mdbLookups.addSEDInterceptor(cb);
               });
     }
 

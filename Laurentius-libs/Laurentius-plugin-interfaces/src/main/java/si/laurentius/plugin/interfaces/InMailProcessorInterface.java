@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import javax.ejb.Local;
 import si.laurentius.msh.inbox.mail.MSHInMail;
+import si.laurentius.plugin.interfaces.exception.InMailProcessException;
 
 
 /**
@@ -28,12 +29,11 @@ import si.laurentius.msh.inbox.mail.MSHInMail;
 public interface  InMailProcessorInterface extends PluginComponentInterface  {
    /**
     * 
-    * @param instance
     * @param mi
     * @param map
     * @return 
     */
-  public boolean proccess(String instance, MSHInMail mi, Map<String, Object> map);
+  public boolean proccess(MSHInMail mi, Map<String, Object> map) throws InMailProcessException;
   
   List<String> getInstanceIds();
   

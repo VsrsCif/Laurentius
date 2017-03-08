@@ -27,7 +27,7 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import org.primefaces.context.RequestContext;
 import si.laurentius.cert.SEDCertificate;
-import si.laurentius.commons.CertStatus;
+import si.laurentius.commons.enums.CertStatus;
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.exception.SEDSecurityException;
 import si.laurentius.commons.interfaces.SEDCertStoreInterface;
@@ -35,7 +35,6 @@ import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.Utils;
 import si.laurentius.lce.KeystoreUtils;
 import si.laurentius.msh.web.abst.AbstractAdminJSFView;
-import static si.laurentius.msh.web.abst.AbstractAdminJSFView.CB_PARA_REMOVED;
 
 /**
  *
@@ -67,7 +66,7 @@ public class AdminSEDRootCAView extends AbstractAdminJSFView<SEDCertificate> {
 
   @Override
   public boolean validateData() {
- SEDCertificate ed = getEditable();
+    SEDCertificate ed = getEditable();
 
     // test alias.
     if (Utils.isEmptyString(ed.getAlias())) {
@@ -76,12 +75,12 @@ public class AdminSEDRootCAView extends AbstractAdminJSFView<SEDCertificate> {
     }
     String oldAlias = getSelected().getAlias();
     String newAlias = ed.getAlias();
-    if (!Objects.equals(newAlias,oldAlias)) {
+    if (!Objects.equals(newAlias, oldAlias)) {
 
       List<SEDCertificate> sdcLst = mCertStore.getRootCACertificates();
-     
+
       for (SEDCertificate c : sdcLst) {
-        if (! mku.isEqualCertificateDesc(c, ed) 
+        if (!mku.isEqualCertificateDesc(c, ed)
                 && Objects.equals(c.getAlias(), newAlias)) {
           String msg = String.format("Alias: %s already exists in keystore!",
                   ed.getAlias());
@@ -91,9 +90,9 @@ public class AdminSEDRootCAView extends AbstractAdminJSFView<SEDCertificate> {
           return false;
         }
       }
-      
+
     }
-   
+
     return true;
   }
 
@@ -101,22 +100,23 @@ public class AdminSEDRootCAView extends AbstractAdminJSFView<SEDCertificate> {
    *
    */
   @Override
-  public void removeSelected() {
-SEDCertificate sc = getSelected();
+  public boolean removeSelected() {
+    boolean bSuc = false;
+    SEDCertificate sc = getSelected();
     if (sc != null) {
       try {
         mCertStore.removeCertificateFromRootCAStore(sc);
-        addCallbackParam(CB_PARA_REMOVED, true);
+        bSuc = true;
       } catch (SEDSecurityException ex) {
         String strMessage = String.format(
                 "Error removing cert for alias %s from keystore! Err: %s", sc.
                         getAlias(), ex.getMessage());
         LOG.logError(strMessage, ex);
         addError(strMessage);
-        addCallbackParam(CB_PARA_REMOVED, true);
       }
 
     }
+    return bSuc;
   }
 
   /**
@@ -167,7 +167,7 @@ SEDCertificate sc = getSelected();
             || currDate.before(crt.getValidFrom())
             || currDate.after(crt.getValidTo()));
   }
-  
+
   @Override
   public String getSelectedDesc() {
     if (getSelected() != null) {
@@ -178,7 +178,7 @@ SEDCertificate sc = getSelected();
 
   @Override
   public String getUpdateTargetTable() {
-    return ":forms:PanelRootCA:RootCAlist";
+    return ":forms:PanelRootCA:rootCAView:RootCAlist";
   }
 
   ;

@@ -51,6 +51,7 @@ import si.laurentius.commons.pmode.PModeUtils;
 
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.Utils;
+import si.laurentius.msh.inbox.payload.IMPartProperty;
 import si.laurentius.msh.pmode.ReceptionAwareness;
 
 /**
@@ -258,10 +259,10 @@ public class EBMSParser {
                   part.setIsEncrypted(p.getValue() != null && p.getValue().equalsIgnoreCase("true"));
                   break;
                 default:
-                  MSHInPart.Property prop = new MSHInPart.Property();
+                  IMPartProperty prop = new IMPartProperty();
                   prop.setName(p.getName());
                   prop.setValue(p.getValue());
-                  part.getProperties().add(prop);
+                  part.getIMPartProperties().add(prop);
               }
             }
           }

@@ -5,11 +5,14 @@
  */
 package si.laurentius.ejb;
 
-import com.sun.javafx.css.CalculatedValue;
+import si.laurentius.ejb.utils.TestUtils;
+import si.laurentius.ejb.utils.TestLookupUtils;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -22,10 +25,12 @@ import si.laurentius.cron.SEDTaskProperty;
 import si.laurentius.ebox.SEDBox;
 import si.laurentius.ejb.db.MockUserTransaction;
 import si.laurentius.interceptor.SEDInterceptorProperty;
+import si.laurentius.interceptor.SEDInterceptor;
 import si.laurentius.interceptor.SEDInterceptorRule;
 import si.laurentius.process.SEDProcessorInstance;
+import si.laurentius.process.SEDProcessorProperty;
+import si.laurentius.process.SEDProcessor;
 import si.laurentius.process.SEDProcessorRule;
-import si.laurentius.process.SEDProcessorSet;
 import si.laurentius.user.SEDUser;
 
 /**
@@ -57,15 +62,20 @@ public class SEDLookupsTest extends TestUtils {
   public void testAddSEDBox() throws Exception {
     System.out.println("addSEDBox");
 
-    SEDBox sbInit = TestLookupUtils.createSEDBox();
-    boolean result = mTestInstance.addSEDBox(sbInit);
+    SEDBox init = TestLookupUtils.createSEDBox();
+    boolean result = mTestInstance.addSEDBox(init);
     assertTrue(result);
 
-    SEDBox sb2 = mTestInstance.getSEDBoxByLocalName(sbInit.getLocalBoxName());
-    assertNotNull(sb2);
-    assertEquals(sbInit.getLocalBoxName(), sb2.getLocalBoxName());
-    assertEquals(sbInit.getActiveFromDate(), sb2.getActiveFromDate());
-    assertEquals(sbInit.getActiveToDate(), sb2.getActiveToDate());
+    // force to read from db
+    mTestInstance.clearAllCache();
+    mTestInstance.memEManager.clear();
+
+    SEDBox res = mTestInstance.getSEDBoxByLocalName(init.getLocalBoxName());
+    assertNotEquals(init, res);
+    assertNotNull(res);
+    assertEquals(init.getLocalBoxName(), res.getLocalBoxName());
+    assertEquals(init.getActiveFromDate(), res.getActiveFromDate());
+    assertEquals(init.getActiveToDate(), res.getActiveToDate());
 
   }
 
@@ -73,10 +83,17 @@ public class SEDLookupsTest extends TestUtils {
   public void testAddSEDCronJob() throws Exception {
     System.out.println("addSEDCronJob");
     SEDCronJob init = TestLookupUtils.createSEDCronJob();
+
     boolean result = mTestInstance.addSEDCronJob(init);
     assertTrue(result);
 
+    // force to read from db
+    mTestInstance.clearAllCache();
+    mTestInstance.memEManager.clear();
+
     SEDCronJob res = mTestInstance.getSEDCronJobByName(init.getName());
+    assertNotEquals(init, res);
+
     assertNotNull(res);
     assertNotNull(res.getId());
     assertNotNull(res.getSEDTask());
@@ -112,25 +129,28 @@ public class SEDLookupsTest extends TestUtils {
   }
 
   @Test
-  public void testAddSEDInterceptorRule() throws Exception {
-    System.out.println("addSEDInterceptorRule");
-    SEDInterceptorRule init = TestLookupUtils.createSEDInterceptorRule();
-    boolean result = mTestInstance.addSEDInterceptorRule(init);
+  public void testAddSEDInterceptor() throws Exception {
+    System.out.println("addSEDInterceptor");
+    SEDInterceptor init = TestLookupUtils.createSEDInterceptor();
+    boolean result = mTestInstance.addSEDInterceptor(init);
     assertTrue(result);
 
-    SEDInterceptorRule res = mTestInstance.getSEDInterceptorRuleByName(init.
+    // force to read from db
+    mTestInstance.clearAllCache();
+    mTestInstance.memEManager.clear();
+
+    SEDInterceptor res = mTestInstance.getSEDInterceptorByName(init.
             getName());
+    assertNotEquals(init, res);
+
     assertNotNull(res);
     assertNotNull(res.getId());
     assertNotNull(res.getSEDInterceptorInstance());
     assertEquals(init.getActive(), res.getActive());
-    assertEquals(init.getAction(), res.getAction());
     assertEquals(init.getName(), res.getName());
     assertEquals(init.getInterceptEvent(), res.getInterceptEvent());
+    assertEquals(init.getInterceptRole(), res.getInterceptRole());
 
-    assertEquals(init.getReceiverEBox(), res.getReceiverEBox());
-    assertEquals(init.getSenderEBox(), res.getSenderEBox());
-    assertEquals(init.getService(), res.getService());
     assertEquals(init.getSEDInterceptorInstance().getPlugin(), res.
             getSEDInterceptorInstance().getPlugin());
     assertEquals(init.getSEDInterceptorInstance().getPluginVersion(), res.
@@ -141,6 +161,15 @@ public class SEDLookupsTest extends TestUtils {
             size(), res.getSEDInterceptorInstance().
                     getSEDInterceptorProperties().
                     size());
+
+    for (int i = 0; i < init.getSEDInterceptorRules().size(); i++) {
+      assertEquals(init.getSEDInterceptorRules().get(i).getProperty(), res.
+              getSEDInterceptorRules().get(i).getProperty());
+      assertEquals(init.getSEDInterceptorRules().get(i).getPredicate(), res.
+              getSEDInterceptorRules().get(i).getPredicate());
+      assertEquals(init.getSEDInterceptorRules().get(i).getValue(), res.
+              getSEDInterceptorRules().get(i).getValue());
+    }
 
     for (int i = 0; i < init.getSEDInterceptorInstance().
             getSEDInterceptorProperties().size(); i++) {
@@ -159,62 +188,59 @@ public class SEDLookupsTest extends TestUtils {
   }
 
   @Test
-  public void testAddSEDProcessorRule() throws Exception {
-    System.out.println("addSEDProcessorRule");
+  public void testAddSEDProcessor() throws Exception {
+    System.out.println("addSEDProcessor");
 
-    int iPSize = mTestInstance.getSEDProcessorRules().size();
-    SEDProcessorRule init = TestLookupUtils.createSEDProcessorRule();
-    boolean result = mTestInstance.addSEDProcessorRule(init);
+    int iPSize = mTestInstance.getSEDProcessors().size();
+    SEDProcessor init = TestLookupUtils.createSEDProcessor();
+    boolean result = mTestInstance.addSEDProcessor(init);
     assertTrue(result);
-    assertEquals(iPSize + 1, mTestInstance.getSEDProcessorRules().size());
+    assertEquals(iPSize + 1, mTestInstance.getSEDProcessors().size());
 
-    SEDProcessorRule res = null;
-    for (SEDProcessorRule pr : mTestInstance.getSEDProcessorRules()) {
-      // test code is unique
-      if (Objects.equals(pr.getProcSetCode(), init.getProcSetCode())) {
-        res = pr;
-        break;
-      }
-    }
+    // force to read from db
+    mTestInstance.clearAllCache();
+    mTestInstance.memEManager.clear();
+
+    SEDProcessor res = mTestInstance.getSEDProcessorByName(init.
+            getName());
+    // check if cached object
+    assertNotEquals(init, res);
+
     assertNotNull(res);
     assertNotNull(res.getId());
-    assertEquals(init.getAction(), res.getAction());
-    assertEquals(init.getReceiverEBox(), res.getReceiverEBox());
-    assertEquals(init.getSenderEBox(), res.getSenderEBox());
-    assertEquals(init.getService(), res.getService());
-
-  }
-
-  @Test
-  public void testAddSEDProcessorSet() throws Exception {
-    System.out.println("addSEDProcessorSet");
-    SEDProcessorSet init = TestLookupUtils.createSEDProcessorSet();
-    boolean result = mTestInstance.addSEDProcessorSet(init);
-    assertTrue(result);
-
-    SEDProcessorSet res = mTestInstance.getSEDProcessorSet(init.
-            getCode());
-    assertNotNull(res);
     assertEquals(init.getName(), res.getName());
-    assertEquals(init.getCode(), res.getCode());
-    assertEquals(init.getDescription(), res.getDescription());
-    assertEquals(init.getSEDProcessorInstances().size(),
-            res.getSEDProcessorInstances().size());
+    assertEquals(init.getActive(), res.getActive());
+    assertEquals(init.getDeliveredOnSuccess(), res.getDeliveredOnSuccess());
+    assertEquals(init.getSEDProcessorInstances().size(), res.
+            getSEDProcessorInstances().size());
+
+    for (int i = 0; i < init.getSEDProcessorRules().size(); i++) {
+      assertEquals(init.getSEDProcessorRules().get(i).getProperty(), res.
+              getSEDProcessorRules().get(i).getProperty());
+      assertEquals(init.getSEDProcessorRules().get(i).getPredicate(), res.
+              getSEDProcessorRules().get(i).getPredicate());
+      assertEquals(init.getSEDProcessorRules().get(i).getValue(), res.
+              getSEDProcessorRules().get(i).getValue());
+    }
 
     for (int i = 0; i < init.getSEDProcessorInstances().size(); i++) {
-
       assertNotNull(res.getSEDProcessorInstances().get(i).getId());
-
-      assertEquals(init.getSEDProcessorInstances().get(i).getInstance(),
-              res.getSEDProcessorInstances().get(i).getInstance());
-
       assertEquals(init.getSEDProcessorInstances().get(i).getPlugin(),
               res.getSEDProcessorInstances().get(i).getPlugin());
+
       assertEquals(init.getSEDProcessorInstances().get(i).getPluginVersion(),
               res.getSEDProcessorInstances().get(i).getPluginVersion());
+
       assertEquals(init.getSEDProcessorInstances().get(i).getType(),
               res.getSEDProcessorInstances().get(i).getType());
+
+      assertEquals(init.getSEDProcessorInstances().get(i).
+              getSEDProcessorProperties().size(), res.
+                      getSEDProcessorInstances().get(i).
+                      getSEDProcessorProperties().size());
+
     }
+
   }
 
   @Test
@@ -228,7 +254,13 @@ public class SEDLookupsTest extends TestUtils {
 
     boolean result = mTestInstance.addSEDUser(init);
     assertTrue(result);
+
+    // force to read from db
+    mTestInstance.clearAllCache();
+    mTestInstance.memEManager.clear();
+
     SEDUser res = mTestInstance.getSEDUserByUserId(init.getUserId());
+    assertNotEquals(init, res);
     assertNotNull(res);
     assertEquals(init.getName(), res.getName());
     assertEquals(init.getUserId(), res.getUserId());
@@ -293,16 +325,16 @@ public class SEDLookupsTest extends TestUtils {
   }
 
   @Test
-  public void testGetSEDInterceptorRuleById() throws Exception {
-    System.out.println("getSEDInterceptorRuleById");
+  public void testGetSEDInterceptorById() throws Exception {
+    System.out.println("getSEDInterceptorById");
 
-    SEDInterceptorRule init = TestLookupUtils.createSEDInterceptorRule();
-    boolean result = mTestInstance.addSEDInterceptorRule(init);
+    SEDInterceptor init = TestLookupUtils.createSEDInterceptor();
+    boolean result = mTestInstance.addSEDInterceptor(init);
     assertTrue(result);
 
-    SEDInterceptorRule rs = mTestInstance.getSEDInterceptorRuleByName(init.
+    SEDInterceptor rs = mTestInstance.getSEDInterceptorByName(init.
             getName());
-    SEDInterceptorRule rs2 = mTestInstance.getSEDInterceptorRuleById(
+    SEDInterceptor rs2 = mTestInstance.getSEDInterceptorById(
             rs.getId());
     assertEquals(rs, rs2);
   }
@@ -319,65 +351,38 @@ public class SEDLookupsTest extends TestUtils {
   }
 
   @Test
-  public void testGetSEDInterceptorRules() throws Exception {
-    System.out.println("getSEDInterceptorRules");
-    int iSize = mTestInstance.getSEDInterceptorRules().size();
+  public void testGetSEDInterceptors() throws Exception {
+    System.out.println("getSEDInterceptors");
+    int iSize = mTestInstance.getSEDInterceptors().size();
     int iCnt = 4;
     for (int i = 0; i < iCnt; i++) {
-      mTestInstance.addSEDInterceptorRule(TestLookupUtils.
-              createSEDInterceptorRule());
+      mTestInstance.addSEDInterceptor(TestLookupUtils.
+              createSEDInterceptor());
     }
-    assertEquals(iSize + iCnt, mTestInstance.getSEDInterceptorRules().size());
+    assertEquals(iSize + iCnt, mTestInstance.getSEDInterceptors().size());
 
   }
 
   @Test
-  public void testGetSEDProcessorRule() throws Exception {
-    System.out.println("getSEDProcessorRule");
-    mTestInstance.addSEDProcessorRule(TestLookupUtils.createSEDProcessorRule());
-    SEDProcessorRule rs = mTestInstance.getSEDProcessorRules().get(0);
-    SEDProcessorRule rs2 = mTestInstance.getSEDProcessorRule(rs.getId());
+  public void testGetSEDProcessor() throws Exception {
+    System.out.println("getSEDProcessor");
+    mTestInstance.addSEDProcessor(TestLookupUtils.createSEDProcessor());
+    SEDProcessor rs = mTestInstance.getSEDProcessors().get(0);
+    SEDProcessor rs2 = mTestInstance.getSEDProcessor(rs.getId());
 
     assertEquals(rs, rs2);
 
   }
 
   @Test
-  public void testGetSEDProcessorRules() throws Exception {
-    int iSize = mTestInstance.getSEDProcessorRules().size();
+  public void testGetSEDProcessors() throws Exception {
+    int iSize = mTestInstance.getSEDProcessors().size();
     int iCnt = 4;
     for (int i = 0; i < iCnt; i++) {
       mTestInstance.
-              addSEDProcessorRule(TestLookupUtils.createSEDProcessorRule());
+              addSEDProcessor(TestLookupUtils.createSEDProcessor());
     }
-    assertEquals(iSize + iCnt, mTestInstance.getSEDProcessorRules().size());
-  }
-
-  @Test
-  public void testGetSEDProcessorSet() throws Exception {
-    System.out.println("getSEDProcessorSet");
-    SEDProcessorSet init = TestLookupUtils.createSEDProcessorSet();
-    boolean result = mTestInstance.addSEDProcessorSet(init);
-    assertTrue(result);
-
-    SEDProcessorSet res = mTestInstance.getSEDProcessorSet(init.
-            getCode());
-    assertNotNull(res);
-    assertEquals(init.getName(), res.getName());
-    assertEquals(init.getCode(), res.getCode());
-
-  }
-
-  @Test
-  public void testGetSEDProcessorSets() throws Exception {
-    System.out.println("getSEDProcessorSets");
-    int iSize = mTestInstance.getSEDProcessorSets().size();
-    int iCnt = 4;
-    for (int i = 0; i < iCnt; i++) {
-      mTestInstance.addSEDProcessorSet(TestLookupUtils.createSEDProcessorSet());
-    }
-    assertEquals(iSize + iCnt, mTestInstance.getSEDProcessorSets().size());
-
+    assertEquals(iSize + iCnt, mTestInstance.getSEDProcessors().size());
   }
 
   @Test
@@ -443,58 +448,41 @@ public class SEDLookupsTest extends TestUtils {
   }
 
   @Test
-  public void testRemoveSEDInterceptorRule() throws Exception {
-    System.out.println("removeSEDInterceptorRule");
-    SEDInterceptorRule init = TestLookupUtils.createSEDInterceptorRule();
-    boolean result = mTestInstance.addSEDInterceptorRule(init);
+  public void testRemoveSEDInterceptor() throws Exception {
+    System.out.println("removeSEDInterceptor");
+    SEDInterceptor init = TestLookupUtils.createSEDInterceptor();
+    boolean result = mTestInstance.addSEDInterceptor(init);
     assertTrue(result);
 
-    SEDInterceptorRule sb2 = mTestInstance.getSEDInterceptorRuleByName(init.
+    SEDInterceptor sb2 = mTestInstance.getSEDInterceptorByName(init.
             getName());
     assertNotNull(sb2);
 
-    result = mTestInstance.removeSEDInterceptorRule(sb2);
+    result = mTestInstance.removeSEDInterceptor(sb2);
     assertTrue(result);
 
-    SEDInterceptorRule sb3 = mTestInstance.getSEDInterceptorRuleByName(init.
+    SEDInterceptor sb3 = mTestInstance.getSEDInterceptorByName(init.
             getName());
     assertNull(sb3);
 
   }
 
   @Test
-  public void testRemoveSEDProcessorRule() throws Exception {
-    System.out.println("removeSEDProcessorRule");
-    SEDProcessorRule init = TestLookupUtils.createSEDProcessorRule();
-    boolean result = mTestInstance.addSEDProcessorRule(init);
+  public void testRemoveSEDProcessor() throws Exception {
+    System.out.println("removeSEDProcessor");
+    SEDProcessor init = TestLookupUtils.createSEDProcessor();
+    boolean result = mTestInstance.addSEDProcessor(init);
     assertTrue(result);
 
-    SEDProcessorRule sb2 = mTestInstance.getSEDProcessorRules().get(0);
+    SEDProcessor sb2 = mTestInstance.getSEDProcessors().get(0);
     assertNotNull(sb2);
 
-    result = mTestInstance.removeSEDProcessorRule(sb2);
+    result = mTestInstance.removeSEDProcessor(sb2);
     assertTrue(result);
 
-    SEDProcessorRule sb3 = mTestInstance.getSEDProcessorRule(sb2.getId());
+    SEDProcessor sb3 = mTestInstance.getSEDProcessor(sb2.getId());
     assertNull(sb3);
 
-  }
-
-  @Test
-  public void testRemoveSEDProcessorSet() throws Exception {
-    System.out.println("removeSEDProcessorSet");
-    SEDProcessorSet init = TestLookupUtils.createSEDProcessorSet();
-    boolean result = mTestInstance.addSEDProcessorSet(init);
-    assertTrue(result);
-
-    SEDProcessorSet sb2 = mTestInstance.getSEDProcessorSet(init.getCode());
-    assertNotNull(sb2);
-
-    result = mTestInstance.removeSEDProcessorSet(sb2);
-    assertTrue(result);
-
-    SEDProcessorSet sb3 = mTestInstance.getSEDProcessorSet(init.getCode());
-    assertNull(sb3);
   }
 
   @Test
@@ -630,14 +618,14 @@ public class SEDLookupsTest extends TestUtils {
   }
 
   @Test
-  public void testUpdateSEDInterceptorRule() throws Exception {
-    System.out.println("updateSEDInterceptorRule");
+  public void testUpdateSEDInterceptor() throws Exception {
+    System.out.println("updateSEDInterceptor");
     for (int ind = 0; ind < 4; ind++) {
-      SEDInterceptorRule init = TestLookupUtils.createSEDInterceptorRule();
-      boolean result = mTestInstance.addSEDInterceptorRule(init);
+      SEDInterceptor init = TestLookupUtils.createSEDInterceptor();
+      boolean result = mTestInstance.addSEDInterceptor(init);
       assertTrue(result);
 
-      SEDInterceptorRule res = mTestInstance.getSEDInterceptorRuleByName(init.
+      SEDInterceptor res = mTestInstance.getSEDInterceptorByName(init.
               getName());
 
       // second time create copy of object - test hibernate cache
@@ -646,26 +634,32 @@ public class SEDLookupsTest extends TestUtils {
       }
 
       boolean active = !init.getActive();
-      String action = init.getAction() + "_test";
-      String receiverEBox = init.getReceiverEBox() + "_test";
-      String senderEBox = init.getSenderEBox() + "_test";
-      String service = init.getService() + "_test";
+
       String interceptEvent = init.getInterceptEvent() + "_test";
+      String interceptRole = init.getInterceptRole() + "_test";
 
       String taskPlugin = init.getSEDInterceptorInstance().getPlugin() + "_test";
       String taskPluginVersion = init.getSEDInterceptorInstance().
               getPluginVersion() + "_test";
       String taskType = init.getSEDInterceptorInstance().getType() + "_test";
       String propertyValue = "New propertyValue";
+      String ruleProperty = "NewRule";
+      String rulePredicate = "!=";
+      String ruleValue = "New Value";
+
       int iPropSize = res.getSEDInterceptorInstance().
               getSEDInterceptorProperties().size();
+      int iRuleSize = res.getSEDInterceptorRules().size();
 
       res.setActive(active);
-      res.setAction(action);
       res.setInterceptEvent(interceptEvent);
-      res.setService(service);
-      res.setReceiverEBox(receiverEBox);
-      res.setSenderEBox(senderEBox);
+      res.setInterceptRole(interceptRole);
+      
+      for (int i = 0; i < res.getSEDInterceptorRules().size(); i++) {
+        res.getSEDInterceptorRules().get(i).setProperty(ruleProperty);
+        res.getSEDInterceptorRules().get(i).setPredicate(rulePredicate);
+        res.getSEDInterceptorRules().get(i).setValue(ruleValue);
+      }
 
       res.getSEDInterceptorInstance().setPlugin(taskPlugin);
       res.getSEDInterceptorInstance().setPluginVersion(taskPluginVersion);
@@ -675,7 +669,11 @@ public class SEDLookupsTest extends TestUtils {
       if (ind < 2) {
         res.getSEDInterceptorInstance().
                 getSEDInterceptorProperties().remove(0);
+
         iPropSize--;
+        
+        res.getSEDInterceptorRules().remove(0);
+        iRuleSize--;
       } else {
         SEDInterceptorProperty stp = new SEDInterceptorProperty();
         stp.setKey("new.key");
@@ -683,6 +681,14 @@ public class SEDLookupsTest extends TestUtils {
         res.getSEDInterceptorInstance().
                 getSEDInterceptorProperties().add(stp);
         iPropSize++;
+        
+        SEDInterceptorRule sir = new SEDInterceptorRule();
+        sir.setPredicate(rulePredicate);
+        sir.setProperty(ruleProperty);
+        sir.setValue(ruleValue);
+        res.getSEDInterceptorRules().add(sir);
+        iRuleSize++;
+                
       }
       // change values
       for (int i = 0; i < res.getSEDInterceptorInstance().
@@ -691,20 +697,27 @@ public class SEDLookupsTest extends TestUtils {
                 .get(i).setValue(propertyValue);
 
       }
-      result = mTestInstance.updateSEDInterceptorRule(res);
+      result = mTestInstance.updateSEDInterceptor(res);
       assertTrue(result);
 
-      SEDInterceptorRule res2 = mTestInstance.getSEDInterceptorRuleByName(init.
+      SEDInterceptor res2 = mTestInstance.getSEDInterceptorByName(init.
               getName());
       assertNotNull(res2);
       assertNotNull(res2.getId());
       assertNotNull(res2.getSEDInterceptorInstance());
       assertEquals(active, res2.getActive());
       assertEquals(interceptEvent, res2.getInterceptEvent());
-      assertEquals(action, res2.getAction());
-      assertEquals(service, res2.getService());
-      assertEquals(senderEBox, res2.getSenderEBox());
-      assertEquals(receiverEBox, res2.getReceiverEBox());
+      assertEquals(interceptRole, res2.getInterceptRole());
+      assertEquals(iRuleSize, res2.getSEDInterceptorRules().size());
+
+      for (int i = 0; i < init.getSEDInterceptorRules().size(); i++) {
+        assertEquals(ruleProperty, res.getSEDInterceptorRules().get(i).
+                getProperty());
+        assertEquals(rulePredicate, res.getSEDInterceptorRules().get(i).
+                getPredicate());
+        assertEquals(ruleValue, res.getSEDInterceptorRules().get(i).
+                getValue());
+      }
 
       assertEquals(taskPlugin, res2.getSEDInterceptorInstance().getPlugin());
       assertEquals(taskPluginVersion, res2.getSEDInterceptorInstance().
@@ -723,111 +736,193 @@ public class SEDLookupsTest extends TestUtils {
   }
 
   @Test
-  public void testUpdateSEDProcessorRule() throws Exception {
-    System.out.println("updateSEDProcessorRule");
-    SEDProcessorRule sb = null;
+  public void testUpdateSEDProcessor() throws Exception {
+    System.out.println("updateSEDProcessor");
+    SEDProcessor sb = null;
+    for (int ind = 0; ind < 4; ind++) {
+      int iPSize = mTestInstance.getSEDProcessors().size();
+      SEDProcessor init = TestLookupUtils.createSEDProcessor();
+      boolean result = mTestInstance.addSEDProcessor(init);
+      assertTrue(result);
+      assertEquals(iPSize + 1, mTestInstance.getSEDProcessors().size());
 
-    int iPSize = mTestInstance.getSEDProcessorRules().size();
-    SEDProcessorRule init = TestLookupUtils.createSEDProcessorRule();
-    boolean result = mTestInstance.addSEDProcessorRule(init);
-    assertTrue(result);
-    assertEquals(iPSize + 1, mTestInstance.getSEDProcessorRules().size());
+      SEDProcessor res = mTestInstance.getSEDProcessorByName(init.
+              getName());
+      assertNotNull(res);
+      assertNotNull(res.getId());
 
-    SEDProcessorRule res = null;
-    for (SEDProcessorRule pr : mTestInstance.getSEDProcessorRules()) {
-      // test code is unique
-      if (Objects.equals(pr.getProcSetCode(), init.getProcSetCode())) {
-        res = pr;
-        break;
+      // second time create copy of object - test hibernate cache
+      if (ind % 2 == 0) {
+        res = XMLUtils.deepCopyJAXB(res);
       }
+      
+     
+     
+      String name = res.getName()+"_test";
+      boolean bActive = !res.getActive();
+      boolean bDOS = !res.getDeliveredOnSuccess();
+      
+      String ruleProperty = "NewRule";
+      String rulePredicate = "!=";
+      String ruleValue = "New Value";
+
+      int iInstSize = res.getSEDProcessorInstances().size();
+      int iRuleSize = res.getSEDProcessorRules().size();
+      
+      res.setName(name);
+      res.setActive(bActive);
+      res.setDeliveredOnSuccess(bDOS);
+
+      for (int i = 0; i < res.getSEDProcessorRules().size(); i++) {
+        res.getSEDProcessorRules().get(i).setProperty(ruleProperty);
+        res.getSEDProcessorRules().get(i).setPredicate(rulePredicate);
+        res.getSEDProcessorRules().get(i).setValue(ruleValue);
+      }
+
+      // remove or add  one element
+      if (ind < 2) {
+        res.getSEDProcessorInstances().remove(0);
+        iInstSize--;
+        
+        res.getSEDProcessorRules().remove(0);
+        iRuleSize--;
+      } else {
+        SEDProcessorInstance stp = TestLookupUtils.createSEDProcessorInstance();
+        res.getSEDProcessorInstances().add(stp);
+        iInstSize++;
+        
+        SEDProcessorRule sir = new SEDProcessorRule();
+        sir.setPredicate(rulePredicate);
+        sir.setProperty(ruleProperty);
+        sir.setValue(ruleValue);
+        res.getSEDProcessorRules().add(sir);
+        iRuleSize++;
+      }
+
+      result = mTestInstance.updateSEDProcessor(res);
+      assertTrue(result);
+      SEDProcessor res2 = mTestInstance.getSEDProcessor(res.getId());
+      assertNotNull(res2);
+      
+      assertEquals(name, res2.getName());
+      assertEquals(bActive, res2.getActive());
+      assertEquals(bDOS, res2.getDeliveredOnSuccess());
+      
+      assertEquals(iInstSize, res2.getSEDProcessorInstances().size());
+
+      assertEquals(iRuleSize, res2.getSEDProcessorRules().size());
+
+      for (int i = 0; i < init.getSEDProcessorRules().size(); i++) {
+        assertEquals(ruleProperty, res.getSEDProcessorRules().get(i).
+                getProperty());
+        assertEquals(rulePredicate, res.getSEDProcessorRules().get(i).
+                getPredicate());
+        assertEquals(ruleValue, res.getSEDProcessorRules().get(i).
+                getValue());
+      }
+
     }
-    assertNotNull(res);
-    assertNotNull(res.getId());
-    res = XMLUtils.deepCopyJAXB(res);
+  }
 
-    String action = init.getAction() + "_test";
-    String receiverEBox = init.getReceiverEBox() + "_test";
-    String senderEBox = init.getSenderEBox() + "_test";
-    String service = init.getService() + "_test";
+  @Test
+  public void testUpdateSEDProcessorInstaceOrder() throws Exception {
+    System.out.println("testUpdateSEDProcessorInstaceOrder");
+    SEDProcessor init = TestLookupUtils.createSEDProcessor();
 
-    res.setAction(action);
-    res.setReceiverEBox(receiverEBox);
-    res.setSenderEBox(senderEBox);
-    res.setService(service);
+    while (init.getSEDProcessorInstances().size() < 5) {
+      init.getSEDProcessorInstances().add(TestLookupUtils.
+              createSEDProcessorInstance());
+    }
+    boolean result = mTestInstance.addSEDProcessor(init);
+    assertTrue(result);
 
-    mTestInstance.updateSEDProcessorRule(res);
+    SEDProcessor res = mTestInstance.getSEDProcessorByName(init.
+            getName());
 
-    SEDProcessorRule res2 = mTestInstance.getSEDProcessorRule(res.getId());
-    assertNotNull(res2);
-    assertEquals(action, res2.getAction());
-    assertEquals(receiverEBox, res2.getReceiverEBox());
-    assertEquals(senderEBox, res2.getSenderEBox());
-    assertEquals(service, res2.getService());
+    List<BigInteger> lstID = new ArrayList<>();
+    for (SEDProcessorInstance pi : res.getSEDProcessorInstances()) {
+      lstID.add(pi.getId());
+    }
+
+    SEDProcessorInstance mv = res.getSEDProcessorInstances().remove(3);
+    BigInteger bi = lstID.remove(3);
+
+    res.getSEDProcessorInstances().add(1, mv);
+    lstID.add(1, bi);
+
+    result = mTestInstance.updateSEDProcessor(res);
+    assertTrue(result);
+
+    SEDProcessor res3 = mTestInstance.getSEDProcessorByName(init.
+            getName());
+
+    for (int i = 0; i < lstID.size(); i++) {
+      assertEquals(lstID.get(i), res3.getSEDProcessorInstances().get(i).getId());
+    }
 
   }
 
   @Test
-  public void testUpdateSEDProcessorSet() throws Exception {
-    System.out.println("updateSEDProcessorSet");
-    for (int ind = 0; ind < 4; ind++) {
-      SEDProcessorSet init = TestLookupUtils.createSEDProcessorSet();
-      boolean result = mTestInstance.addSEDProcessorSet(init);
-      assertTrue(result);
+  public void updateSEDProcessorInstance() throws Exception {
+    SEDProcessor init = TestLookupUtils.createSEDProcessor();
+    boolean result = mTestInstance.addSEDProcessor(init);
+    assertTrue(result);
 
-      SEDProcessorSet res = mTestInstance.getSEDProcessorSet(init.
-              getCode());
-      assertNotNull(res);
+    SEDProcessorInstance res = mTestInstance.getSEDProcessorByName(init.
+            getName()).getSEDProcessorInstances().get(0);
+
+    for (int ind = 0; ind < 4; ind++) {
+      String taskPlugin = res.getPlugin() + "_test";
+      String taskPluginVersion = res.
+              getPluginVersion() + "_test";
+      String taskType = res.getType() + "_test";
+      String propertyValue = "New propertyValue";
+      int iPropSize = res.getSEDProcessorProperties().size();
+
       // second time create copy of object - test hibernate cache
       if (ind % 2 == 0) {
         res = XMLUtils.deepCopyJAXB(res);
       }
 
-      String name = init.getName() + "_test";
-      String description = init.getDescription() + "_test";
-      String instance = "NewInstance";
-      int iPropSize = res.getSEDProcessorInstances().size();
+      res.setPlugin(taskPlugin);
+      res.setPluginVersion(taskPluginVersion);
+      res.setType(taskType);
+      // change values
+      for (int i = 0; i < res.getSEDProcessorProperties().size(); i++) {
+        res.getSEDProcessorProperties().get(i).setValue(propertyValue);
 
-      res.setName(name);
-      res.setDescription(description);
+      }
 
       // remove or add  one element
       if (ind < 2) {
-        res.getSEDProcessorInstances().remove(0);
+        res.getSEDProcessorProperties().remove(0);
         iPropSize--;
       } else {
-        SEDProcessorInstance stp = new SEDProcessorInstance();
-        stp.setPlugin("plugin");
-        stp.setPluginVersion("pluginVersion");
-        stp.setPluginVersion("version");
-        stp.setInstance(instance);
-
-        res.getSEDProcessorInstances().add(stp);
+        SEDProcessorProperty stp = new SEDProcessorProperty();
+        stp.setKey("new.key");
+        stp.setValue(propertyValue);
+        res.getSEDProcessorProperties().add(stp);
         iPropSize++;
       }
 
-      // change values
-      for (int i = 0; i < res.getSEDProcessorInstances().size(); i++) {
-        res.getSEDProcessorInstances().get(i).setInstance(instance);
-
-      }
-      result = mTestInstance.updateSEDProcessorSet(res);
+      result = mTestInstance.updateSEDProcessorInstance(res);
       assertTrue(result);
-
-      SEDProcessorSet res2 = mTestInstance.getSEDProcessorSet(init.
-              getCode());
-
+      SEDProcessor rl2 = mTestInstance.getSEDProcessor(init.getId());
+      SEDProcessorInstance res2 = null;
+      for (SEDProcessorInstance pri : rl2.getSEDProcessorInstances()) {
+        if (Objects.equals(pri.getId(), res.getId())) {
+          res2 = pri;
+          break;
+        }
+      }
       assertNotNull(res2);
-      assertEquals(init.getCode(), res2.getCode());
-      assertEquals(name, res2.getName());
-      assertEquals(description, res2.getDescription());
-
-      assertEquals(iPropSize,
-              res2.getSEDProcessorInstances().size());
-
-      for (int i = 0; i < iPropSize; i++) {
-        assertEquals(instance,
-                res2.getSEDProcessorInstances().get(i).getInstance());
-
+      assertEquals(taskPlugin, res2.getPlugin());
+      assertEquals(taskPluginVersion, res2.getPluginVersion());
+      assertEquals(taskType, res2.getType());
+      assertEquals(iPropSize, res2.getSEDProcessorProperties().size());
+      for (int i = 0; i < res2.getSEDProcessorProperties().size(); i++) {
+        assertEquals(propertyValue, res2.getSEDProcessorProperties().get(i).
+                getValue());
       }
 
     }

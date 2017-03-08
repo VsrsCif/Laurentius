@@ -40,13 +40,12 @@ import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.model.UploadedFile;
-import si.laurentius.commons.MimeValues;
+import si.laurentius.commons.enums.MimeValue;
 import si.laurentius.commons.SEDJNDI;
-import si.laurentius.commons.SEDOutboxMailStatus;
+import si.laurentius.commons.enums.SEDOutboxMailStatus;
 import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.exception.HashException;
 import si.laurentius.commons.exception.StorageException;
-import si.laurentius.commons.interfaces.DBSettingsInterface;
 import si.laurentius.commons.interfaces.PModeInterface;
 import si.laurentius.commons.interfaces.SEDDaoInterface;
 import si.laurentius.commons.interfaces.SEDLookupsInterface;
@@ -163,7 +162,7 @@ public class OutMailDataView extends AbstractMailView<MSHOutMail, MSHOutEvent> i
     File f = StorageUtils.getFile(filePath);
     if (f.exists()) {
       try {
-        return new DefaultStreamedContent(new FileInputStream(f), MimeValues.getMimeTypeByFileName(
+        return new DefaultStreamedContent(new FileInputStream(f), MimeValue.getMimeTypeByFileName(
             f.getName()),
             f.getName());
       } catch (FileNotFoundException ex) {
@@ -302,7 +301,7 @@ public class OutMailDataView extends AbstractMailView<MSHOutMail, MSHOutEvent> i
       mp.setFilename(fileName);
       mp.setName(name);
       mp.setFilepath(StorageUtils.getRelativePath(f));
-      mp.setMimeType(MimeValues.getMimeTypeByFileName(fileName));
+      mp.setMimeType(MimeValue.getMimeTypeByFileName(fileName));
 
       String strMD5 = mpHU.getMD5Hash(f);
       mp.setMd5(strMD5);
@@ -404,7 +403,7 @@ public class OutMailDataView extends AbstractMailView<MSHOutMail, MSHOutEvent> i
         MSHOutPart p = new MSHOutPart();
         p.setEncoding("UTF-8");
         p.setDescription("Mail body");
-        p.setMimeType(MimeValues.MIME_TXT.getMimeType());
+        p.setMimeType(MimeValue.MIME_TXT.getMimeType());
 
         // mp.setValue();
         StorageUtils su = new StorageUtils();

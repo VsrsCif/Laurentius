@@ -25,15 +25,21 @@ Copyright 2015, Supreme Court Republic of Slovenia
  See the Licence for the specific language governing permissions and  
  limitations under the Licence.
 -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://laurentius.si/plugin/processor" 
-           xmlns:ns2="http://laurentius.si/plugin/component" 
-           targetNamespace="http://laurentius.si/plugin/processor" elementFormDefault="qualified" attributeFormDefault="unqualified">
-        
-        <xs:import namespace="http://laurentius.si/plugin/component" schemaLocation="./component-base.xsd"/>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://laurentius.si/plugin/processor" xmlns:ns2="http://laurentius.si/plugin/component" targetNamespace="http://laurentius.si/plugin/processor" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:import namespace="http://laurentius.si/plugin/component" schemaLocation="./component-base.xsd"/>
 	<xs:element name="InMailProcessorDef" type="ns1:InMailProcessorDef"/>
 	<xs:complexType name="InMailProcessorDef" mixed="false">
 		<xs:complexContent mixed="false">
-			<xs:extension base="ns2:ComponentBase" />			
+			<xs:extension base="ns2:ComponentBase">
+				<xs:sequence>
+					<xs:element name="MailProcessorPropertyDef" type="ns1:MailProcessorPropertyDef" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="MailProcessorPropertyDef" mixed="false">
+		<xs:complexContent mixed="false">
+			<xs:extension base="ns2:PluginPropertyDef"/>
 		</xs:complexContent>
 	</xs:complexType>
 </xs:schema>

@@ -30,9 +30,9 @@ import java.util.Properties;
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
-import si.laurentius.commons.MimeValues;
+import si.laurentius.commons.enums.MimeValue;
 import si.laurentius.commons.SEDJNDI;
-import si.laurentius.commons.SEDOutboxMailStatus;
+import si.laurentius.commons.enums.SEDOutboxMailStatus;
 import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.exception.PModeException;
 import si.laurentius.commons.exception.StorageException;
@@ -355,7 +355,7 @@ public class TaskFileSubmitter implements TaskExecutionInterface {
       }
 
       File fNew;
-      String mimeType = MimeValues.getMimeTypeByFileName(fn);
+      String mimeType = MimeValue.getMimeTypeByFileName(fn);
       try {
         fNew = mSU.storeOutFile(mimeType, f);
       } catch (StorageException ex) {

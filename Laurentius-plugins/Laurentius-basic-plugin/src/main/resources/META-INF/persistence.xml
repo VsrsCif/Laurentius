@@ -5,7 +5,7 @@
     <persistence-unit name="ebMS_PLG_BASIC_PU" transaction-type="JTA">
         <provider>org.hibernate.ejb.HibernatePersistence</provider>
         <jta-data-source>java:/dsEBMS_SED</jta-data-source>
-        <mapping-file>shared/hbm/plg_imp_export.hbm.xml</mapping-file>
+        <mapping-file>shared/hbm/plg_imp_xslt.hbm.xml</mapping-file>
         
         <properties>
             <property name="hibernate.dialect" value="${laurentius.hibernate.dialect}" />

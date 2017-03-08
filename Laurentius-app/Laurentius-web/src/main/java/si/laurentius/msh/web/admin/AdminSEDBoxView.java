@@ -80,7 +80,8 @@ public class AdminSEDBoxView extends AbstractAdminJSFView<SEDBox> {
    *
    */
   @Override
-  public void removeSelected() {
+  public boolean removeSelected() {
+    boolean bSuc = false;
     SEDBox sb = getSelected();
     if (sb != null) {
       List<String> lstusr = new ArrayList<>();
@@ -94,19 +95,16 @@ public class AdminSEDBoxView extends AbstractAdminJSFView<SEDBox> {
         }
       }
       if (!lstusr.isEmpty()) {
-        addError("To delete, remove box from users: "
-                + String.join(",", lstusr));
-        addCallbackParam(CB_PARA_REMOVED, false);
+        addError("To delete, remove box from users: " + String.join(",", lstusr));
       } else {
-
         mdbLookups.removeSEDBox(sb);
         setSelected(null);
-        addCallbackParam(CB_PARA_REMOVED, true);
+        bSuc = true;
       }
     } else {
       addError("No item selected");
-      addCallbackParam(CB_PARA_REMOVED, false);
     }
+    return bSuc;
 
   }
 
@@ -145,7 +143,7 @@ public class AdminSEDBoxView extends AbstractAdminJSFView<SEDBox> {
 
     SEDBox sb = getEditable();
     // test alias.
-    if (sb==null) {
+    if (sb == null) {
       addError("No editable selected!");
       return false;
     }
@@ -201,7 +199,7 @@ public class AdminSEDBoxView extends AbstractAdminJSFView<SEDBox> {
 
   @Override
   public String getUpdateTargetTable() {
-    return ":forms:SettingsSEDBoxes:TblSedBox";
+    return ":forms:SettingsSEDBoxes:sedboxPanel:TblSedBox";
   }
 
   public List<SEDUser> getEditableUsers() {

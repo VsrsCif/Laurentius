@@ -56,10 +56,10 @@ import si.jrc.msh.plugin.zpp.doc.DocumentSodBuilder;
 import si.jrc.msh.plugin.zpp.utils.FOPUtils;
 import si.laurentius.lce.enc.SEDCrypto;
 import si.laurentius.lce.enc.SEDKey;
-import si.laurentius.commons.MimeValues;
-import si.laurentius.commons.SEDInboxMailStatus;
+import si.laurentius.commons.enums.MimeValue;
+import si.laurentius.commons.enums.SEDInboxMailStatus;
 import si.laurentius.commons.SEDJNDI;
-import si.laurentius.commons.SEDOutboxMailStatus;
+import si.laurentius.commons.enums.SEDOutboxMailStatus;
 import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.cxf.SoapUtils;
 import si.laurentius.commons.exception.FOPException;
@@ -305,7 +305,7 @@ public class ZPPInInterceptor implements SoapInterceptorInterface {
         signal.getAnies().add(elKey);
 
         mDB.setStatusToOutMail(mom, SEDOutboxMailStatus.DELIVERED, "Received ZPP advice of delivery",
-            null, null, StorageUtils.getRelativePath(docFile), MimeValues.MIME_XML.getMimeType());
+            null, null, StorageUtils.getRelativePath(docFile), MimeValue.MIME_XML.getMimeType());
         //mDB.set
       }
 
@@ -459,8 +459,7 @@ public class ZPPInInterceptor implements SoapInterceptorInterface {
             File fNew;
             try (FileInputStream fis = new FileInputStream(StorageUtils.getFile(mip.getFilepath()));
                 FileOutputStream bos =
-                new FileOutputStream(fNew = StorageUtils.getNewStorageFile(
-                    MimeValues.getSuffixBYMimeType(mip.getMimeType()), "zpp-dec"))) {
+                new FileOutputStream(fNew = StorageUtils.getNewStorageFile(MimeValue.getSuffixBYMimeType(mip.getMimeType()), "zpp-dec"))) {
 
               LOG.log("Decrypt file: " + newFileName);
 

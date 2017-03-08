@@ -42,8 +42,6 @@ import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.Utils;
 import si.laurentius.commons.utils.xml.XMLUtils;
-import si.laurentius.plugin.imp.IMPExecute;
-import si.laurentius.plugin.imp.IMPExport;
 import si.laurentius.plugin.imp.IMPXslt;
 import si.laurentius.plugin.imp.Namespace;
 import si.laurentius.plugin.imp.PlgBasicInit;
@@ -112,26 +110,6 @@ public class IMPDatabase implements IMPDBInterface {
    * @return
    */
   @Override
-  public boolean addExecute(IMPExecute sb) {
-    return add(sb);
-  }
-
-  /**
-   *
-   * @param sb
-   * @return
-   */
-  @Override
-  public boolean addExport(IMPExport sb) {
-    return add(sb);
-  }
-
-  /**
-   *
-   * @param sb
-   * @return
-   */
-  @Override
   public boolean addXSLT(IMPXslt sb) {
     return add(sb);
   }
@@ -161,12 +139,8 @@ public class IMPDatabase implements IMPDBInterface {
     PlgBasicInit slps = new PlgBasicInit();
     slps.setExportDate(Calendar.getInstance().getTime());
 
-    slps.setIMPExports(new PlgBasicInit.IMPExports());
-    slps.setIMPExecutes(new PlgBasicInit.IMPExecutes());
     slps.setIMPXslts(new PlgBasicInit.IMPXslts());
 
-    slps.getIMPExports().getIMPExports().addAll(getExports());
-    slps.getIMPExecutes().getIMPExecutes().addAll(getExecutes());
     slps.getIMPXslts().getIMPXslts().addAll(getXSLTs());
 
     try {
@@ -188,52 +162,6 @@ public class IMPDatabase implements IMPDBInterface {
       LOG.logError(l, ex.getMessage(), ex);
     }
     LOG.logEnd(l);
-  }
-
-  @Override
-  public IMPExecute getExecute(String instance) {
-    if (!Utils.isEmptyString(instance)) {
-
-      List<IMPExecute> lst = getExecutes();
-      for (IMPExecute sb : lst) {
-        if (instance.equalsIgnoreCase(sb.getInstance())) {
-          return sb;
-        }
-      }
-    }
-    return null;
-  }
-
-  /**
-   *
-   * @return
-   */
-  @Override
-  public List<IMPExecute> getExecutes() {
-    return getLookup(IMPExecute.class);
-  }
-
-  @Override
-  public IMPExport getExport(String instance) {
-    if (!Utils.isEmptyString(instance)) {
-
-      List<IMPExport> lst = getExports();
-      for (IMPExport sb : lst) {
-        if (instance.equalsIgnoreCase(sb.getInstance())) {
-          return sb;
-        }
-      }
-    }
-    return null;
-  }
-
-  /**
-   *
-   * @return
-   */
-  @Override
-  public List<IMPExport> getExports() {
-    return getLookup(IMPExport.class);
   }
 
   private <T> List<T> getFromCache(Class<T> c) {
@@ -280,7 +208,7 @@ public class IMPDatabase implements IMPDBInterface {
   void init() {
     long l = LOG.logStart();
 
-    if (SEDSystemProperties.isInitData())  {
+    if (SEDSystemProperties.isInitData()) {
 
       File f = new File(SEDSystemProperties.getInitFolder(),
               FILE_INIT_DATA);
@@ -304,22 +232,6 @@ public class IMPDatabase implements IMPDBInterface {
           });
         }
 
-        if (cls.getIMPExports() != null && !cls.getIMPExports().
-                getIMPExports().isEmpty()) {
-          cls.getIMPExports().getIMPExports().stream().forEach(
-                  (cb) -> {
-
-                    add(cb);
-                  });
-        }
-
-        if (cls.getIMPExecutes() != null && !cls.getIMPExecutes().
-                getIMPExecutes().isEmpty()) {
-          cls.getIMPExecutes().getIMPExecutes().stream().forEach(
-                  (cb) -> {
-                    add(cb);
-                  });
-        }
       } catch (JAXBException ex) {
         LOG.logError(l, ex);
       }
@@ -355,26 +267,6 @@ public class IMPDatabase implements IMPDBInterface {
       }
     }
     return suc;
-  }
-
-  /**
-   *
-   * @param sb
-   * @return
-   */
-  @Override
-  public boolean removeExecute(IMPExecute sb) {
-    return remove(sb);
-  }
-
-  /**
-   *
-   * @param sb
-   * @return
-   */
-  @Override
-  public boolean removeExport(IMPExport sb) {
-    return remove(sb);
   }
 
   /**
@@ -439,26 +331,6 @@ public class IMPDatabase implements IMPDBInterface {
       }
     }
     return suc;
-  }
-
-  /**
-   *
-   * @param sb
-   * @return
-   */
-  @Override
-  public boolean updateExecute(IMPExecute sb) {
-    return update(sb);
-  }
-
-  /**
-   *
-   * @param sb
-   * @return
-   */
-  @Override
-  public boolean updateExport(IMPExport sb) {
-    return update(sb);
   }
 
   private <T> boolean updateLookup(Class<T> c) {

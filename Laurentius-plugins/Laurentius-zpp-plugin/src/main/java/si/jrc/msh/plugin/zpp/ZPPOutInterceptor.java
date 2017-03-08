@@ -65,9 +65,9 @@ import si.laurentius.lce.enc.SEDKey;
 import si.laurentius.lce.sign.pdf.SignUtils;
 import si.laurentius.lce.sign.pdf.ValidateSignatureUtils;
 import si.laurentius.cert.SEDCertificate;
-import si.laurentius.commons.MimeValues;
+import si.laurentius.commons.enums.MimeValue;
 import si.laurentius.commons.SEDJNDI;
-import si.laurentius.commons.SEDOutboxMailStatus;
+import si.laurentius.commons.enums.SEDOutboxMailStatus;
 import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.SEDValues;
 import si.laurentius.commons.cxf.SoapUtils;
@@ -341,11 +341,11 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
 
       // create nofitication
       File fDNViz
-              = StorageUtils.getNewStorageFile(MimeValues.MIME_PDF.getSuffix(),
+              = StorageUtils.getNewStorageFile(MimeValue.MIME_PDF.getSuffix(),
                       ZPPConstants.MSG_DELIVERY_NOTIFICATION_FILENAME + "-");
       getFOP().generateVisualization(outMail, fDNViz,
               FOPUtils.FopTransformations.DeliveryNotification,
-              MimeValues.MIME_PDF.getMimeType());
+              MimeValue.MIME_PDF.getMimeType());
 
       String alias
               = eoutCtx.getSenderPartyIdentitySet().getLocalPartySecurity().
@@ -360,7 +360,7 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
 
       MSHOutPart ptNew = new MSHOutPart();
       ptNew.setEncoding(SEDValues.ENCODING_UTF8);
-      ptNew.setMimeType(MimeValues.MIME_PDF.getMimeType());
+      ptNew.setMimeType(MimeValue.MIME_PDF.getMimeType());
       ptNew.setName(ZPPConstants.S_ZPP_ACTION_DELIVERY_NOTIFICATION);
       ptNew.setDescription(ZPPConstants.MSG_DELIVERY_NOTIFICATION_DESC);
       ptNew.setType(ZPPConstants.S_ZPP_ACTION_DELIVERY_NOTIFICATION);
@@ -461,7 +461,7 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
       mDB.setStatusToOutMail(mom, SEDOutboxMailStatus.DELIVERED,
               "Received ZPP advice of delivery",
               null, null, StorageUtils.getRelativePath(docFile),
-              MimeValues.MIME_XML.getMimeType());
+              MimeValue.MIME_XML.getMimeType());
 
     } catch (StorageException | IOException
             | SEDSecurityException | CertificateException | NoSuchAlgorithmException

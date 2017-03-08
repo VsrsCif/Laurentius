@@ -6,13 +6,14 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:p="http://primefaces.org/ui"
       xmlns:composite="http://java.sun.com/jsf/composite"
+       xmlns:pnl="http://java.sun.com/jsf/composite/laurentius-ui/panel"
       >
     <composite:interface>
     </composite:interface>
 
     <composite:implementation >      
         <!-- Cron ADD/EDIT dialog! -->
-        <p:dialog   header="#{msg['SEDCronDialog']}" widgetVar="cronDialog" modal="true" hideEffect="fade" 
+        <p:dialog   header="#{msg['SEDCronDialog']}" widgetVar="cronDialog" modal="true" 
                     resizable="false" appendTo="@(body)" width="750" >
             <h:form id="cronDialogForm">
                 <p:messages id="messagesCronDialog"
@@ -24,7 +25,7 @@
                         <h:outputText value="#{msg['SelectTableRow']}" />
                     </p:layoutUnit>
                     <p:layoutUnit  header="Cron data" position="center" rendered="#{not empty adminSEDCronJobView.editable}"  >
-                        <p:panelGrid  columns="2" columnClasses="label,value" style="width:100%; height: 220px ">
+                        <p:panelGrid  columns="2" columnClasses="grid-label,value" style="width:100%; height: 220px ">
 
                             <h:outputText value="#{msg['Name']}:" />
                             <p:inputText id="cname" value="#{adminSEDCronJobView.editable.name}" 
@@ -58,13 +59,13 @@
                     <p:layoutUnit header="task data" position="east" rendered="#{not empty adminSEDCronJobView.editable}" 
                                   size="450" minSize="450" maxSize="450"  >
 
-                        <p:panelGrid  columns="4" columnClasses="label,value,label,value" style="width: 100%" >
+                        <p:panelGrid  columns="4" columnClasses="grid-label,value,grid-label,value" style="width: 100%" >
                             <h:outputText value="#{msg['Plugin']}" />
                             <p:selectOneMenu id="pluginType" value="#{adminSEDCronJobView.editableTaskPluginType}" 
                                              style="width:150px" 
                                              disabled="#{!adminSEDCronJobView.isEditableNew()}"
                                              >
-                                <p:ajax   update=":dlgcron:cronDialogForm:taskType :dlgcron:cronDialogForm:TblTaskTypeProp" />    
+                                <p:ajax   update=":dlgcron:cronDialogForm:taskType :dlgcron:cronDialogForm:PropertyPanel:PropertyPanelTable" />    
 
                                 <f:selectItems value="#{adminSEDPluginView.list}"  var="plg" itemLabel="#{plg.name}" 
                                                itemValue="#{plg.type}" itemDescription="#{plg.description}"
@@ -77,7 +78,7 @@
                                              style="width:150px"
                                              disabled="#{!adminSEDCronJobView.isEditableNew()}"
                                              >
-                                <p:ajax update=":dlgcron:cronDialogForm:TblTaskTypeProp" />                               
+                                <p:ajax update=":dlgcron:cronDialogForm:PropertyPanel:PropertyPanelTable" />                               
                                 <f:selectItems value="#{adminSEDCronJobView.editablePluginCronTaskDeves}"
                                                var="tskDef" itemLabel="#{tskDef.name}" 
                                                itemValue="#{tskDef.type}" itemDescription="#{tskDef.description}"/>
@@ -85,42 +86,10 @@
                             </p:selectOneMenu>
 
                         </p:panelGrid>
-                        <h:outputText value="#{msg['TaskProperties']}" />
-                        <p:dataTable id="TblTaskTypeProp" 
-                                     var="sp" 
-                                     value="#{adminSEDCronJobView.taskItems}"                                     
-                                     rowKey="#{sp.key}"   
-                                     rowIndexVar="rowIndex"
-                                     scrollable="true" 
-                                     scrollHeight="170"
-                                     editable="true"
-                                     editMode="cell"
-
-                                     >
-                            <p:column headerText="#{msg['Key']}"  width="150">
-                                <h:outputText id="TblTaskTypePropKey" value="#{sp.taskDef.key}" />
-                                <p:tooltip for=":dlgcron:cronDialogForm:TblTaskTypeProp:#{rowIndex}:TblTaskTypePropKey"
-                                            value="#{sp.taskDef.description}"/>
-                            </p:column>
-                            <p:column headerText="#{msg['Mnd.']}" width="20">
-                                <p:selectBooleanCheckbox value="#{sp.taskDef.mandatory}" disabled="true" />
-                            </p:column>
-
-                            <p:column headerText="#{msg['Value']}">
-                                <p:inputText rendered="#{sp.taskDef.type  eq 'string' }" value="#{sp.value}" />
-                                <p:selectBooleanCheckbox rendered="#{sp.taskDef.type  eq 'boolean' }" value="#{sp.booleanValue}" />
-                                <p:spinner rendered="#{sp.taskDef.type  eq 'int' }" value="#{sp.intValue}"  />
-                                <p:selectOneMenu rendered="#{sp.taskDef.type  eq 'list' }"  
-                                                 value="#{sp.value}" 
-                                                 >             
-                                    <f:selectItems value="#{sp.listValues}"
-                                                   var="tskDef" itemLabel="#{lv}" 
-                                                   itemValue="#{lv}" />
-                                </p:selectOneMenu>
-
-
-                            </p:column>
-                        </p:dataTable>                        
+                        <pnl:pnl-plugin-properties id="PropertyPanel"
+                                                   tableId="PropertyPanelTable"
+                                                   propertyList="#{adminSEDCronJobView.taskItems}" 
+                                                   header="#{msg['TaskProperties']}"  />                                         
                     </p:layoutUnit>  
 
                     <p:layoutUnit position="south"  size="40" minSize="40" maxSize="40" >
@@ -131,7 +100,7 @@
                                                  icon="ui-icon-svg-ok ui-icon-size-22" 
                                                  action="#{adminSEDCronJobView.addOrUpdateEditable()}"
                                                  oncomplete="if (args &amp;&amp; args.saved) PF('cronDialog').hide()" 
-                                                 update=":forms:SettingsCron:TblCron"
+                                                 update=":forms:SettingsCron:cronPanel:TblCron"
                                                  />
                                 <p:commandButton value="#{msg['Cancel']}"
                                                  styleClass="toolbar-Button"

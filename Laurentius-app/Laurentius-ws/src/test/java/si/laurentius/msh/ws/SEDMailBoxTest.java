@@ -55,9 +55,9 @@ import si.laurentius.outbox.event.OutEvent;
 import si.laurentius.outbox.mail.OutMail;
 import si.laurentius.outbox.payload.OutPart;
 import si.laurentius.outbox.payload.OutPayload;
-import si.laurentius.commons.MimeValues;
-import si.laurentius.commons.SEDInboxMailStatus;
-import si.laurentius.commons.SEDOutboxMailStatus;
+import si.laurentius.commons.enums.MimeValue;
+import si.laurentius.commons.enums.SEDInboxMailStatus;
+import si.laurentius.commons.enums.SEDOutboxMailStatus;
 import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.exception.HashException;
 import si.laurentius.commons.exception.SVEVReturnValue;
@@ -228,7 +228,7 @@ public class SEDMailBoxTest extends TestUtils {
     ip.setFilename("Test.txt");
     ip.setDescription("test attachment");
     ip.setBin(testContent.getBytes());
-    ip.setMimeType(MimeValues.MIME_TEXI.getMimeType());
+    ip.setMimeType(MimeValue.MIME_TEXI.getMimeType());
     InPart.Property iprop1 = new InPart.Property();
     iprop1.setName("Property 1");
     iprop1.setValue("value");
@@ -264,7 +264,7 @@ public class SEDMailBoxTest extends TestUtils {
     op.setFilename("Test.txt");
     op.setDescription("test attachment");
     op.setBin(testContent.getBytes());
-    op.setMimeType(MimeValues.MIME_TEXI.getMimeType());
+    op.setMimeType(MimeValue.MIME_TEXI.getMimeType());
     
     
     OutPart.Property iprop1 = new OutPart.Property();

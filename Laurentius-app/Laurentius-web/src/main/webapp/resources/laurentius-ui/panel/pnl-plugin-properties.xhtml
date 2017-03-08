@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:cc="http://java.sun.com/jsf/composite"
+      >
+    <cc:interface>
+        <cc:attribute name="propertyList" type="java.util.List" />
+        <cc:attribute name="tableId" type="java.lang.String" />
+        <cc:attribute name="header" />
+    </cc:interface>
+    <cc:implementation >
+        <p:dataTable id="#{cc.attrs.tableId}" 
+                     var="sp" 
+                     value="#{cc.attrs.propertyList}"                                     
+                     rowKey="#{sp.propertyDef.key}"   
+                     rowIndexVar="rowIndex"
+                     scrollable="true" 
+                     scrollHeight="100%"
+                     editable="true"
+                     editMode="cell"
+                     >
+            <f:facet name="header"> <h:outputText value="#{cc.attrs.header}" /></f:facet>
+            <p:column headerText="#{msg['Key']}"  width="150">
+                <h:outputText id="TblPluginTypePropKey" value="#{sp.propertyDef.key}" />
+                <p:tooltip for="#{cc.clientId}:#{cc.attrs.tableId}:#{rowIndex}:TblPluginTypePropKey"
+                           value="# {sp.propertyDef.description}"/>
+            </p:column>
+            <p:column headerText="#{msg['Mnd.']}" width="20">
+                <p:selectBooleanCheckbox value="#{sp.propertyDef.mandatory}" disabled="true" />
+            </p:column>
+
+            <p:column headerText="#{msg['Value']}">
+                <p:inputText rendered="#{sp.propertyDef.type  eq 'string' }" value="#{sp.value}"  style="width: 100%"/>
+                <p:selectBooleanCheckbox rendered="#{sp.propertyDef.type  eq 'boolean' }" value="#{sp.booleanValue}"  />
+                <p:spinner rendered="#{sp.propertyDef.type  eq 'int' }" value="#{sp.intValue}"  style="width: 100%"/>
+                <p:selectOneMenu rendered="#{sp.propertyDef.type  eq 'list' }"  
+                                 value="#{sp.value}"
+                                 style="width: 100%">             
+                    <f:selectItems value="#{LookupsData.getListValuesForPluginListType(sp.propertyDef.valueList)}"
+                                   var="tskDef" itemLabel="#{lv}" 
+                                   itemValue="#{lv}" />
+                </p:selectOneMenu>
+            </p:column>
+        </p:dataTable>  
+    </cc:implementation>
+
+
+</html>

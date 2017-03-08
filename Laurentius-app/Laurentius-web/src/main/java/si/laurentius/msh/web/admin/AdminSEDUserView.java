@@ -112,7 +112,7 @@ public class AdminSEDUserView extends AbstractAdminJSFView<SEDUser> {
 
   @Override
   public String getUpdateTargetTable() {
-    return ":forms:SettingsUsers:TblSedUser";
+    return ":forms:SettingsUsers:userPanel:TblSedUser";
   }
 
   /**
@@ -164,17 +164,17 @@ public class AdminSEDUserView extends AbstractAdminJSFView<SEDUser> {
    *
    */
   @Override
-  public void removeSelected() {
+  public boolean removeSelected() {
+    boolean bSuc = false;
     SEDUser sb = getSelected();
     if (sb != null) {
-      mdbLookups.removeSEDUser(sb);
+      bSuc = mdbLookups.removeSEDUser(sb);
       setSelected(null);
-      setSelected(null);
-      addCallbackParam(CB_PARA_REMOVED, true);
+      setSelected(null);      
     } else {
       addError("No item selected");
-      addCallbackParam(CB_PARA_REMOVED, false);
     }
+    return bSuc;
   }
 
   /**

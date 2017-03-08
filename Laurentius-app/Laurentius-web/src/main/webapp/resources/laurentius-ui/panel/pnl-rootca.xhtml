@@ -11,115 +11,100 @@
     <composite:interface>
     </composite:interface>
     <composite:implementation >
-        <p:layout  id="RootCATabView"  widgetVar="adminRootCAView"
-                   style="min-width:400px;min-height:400px;height: 100%;width: 100%"  >
-            <p:layoutUnit  position="north" resizable="true" closable="true" collapsible="true"
-                           size="38" minSize="38" maxSize="400" style="width:100%;height:100%;padding: 0px; margin: 0px"
-                           gutter="0">
-                <h1><h:outputLink id="growPanelDesc" value="#">
-                        <span class="ui-icon-panel-Header ui-icon ui-icon-svg-certificate"  />#{msg['RootCA']}
-                    </h:outputLink>
-                </h1>
-                <p:tooltip id="toolTipGrow" for="growPanelDesc" position="bottom">
-                    <h:outputText value="#{msg['RootCA']}"></h:outputText>
-                </p:tooltip>                
-            </p:layoutUnit>
+        <pnl:pnl-settings id="rootCAView"
+                          title="#{msg['RootCA']}" 
+                          description="#{msg['RootCA']}"
+                          icon="ui-icon-svg-certificate"
+                          >       
+            <p:scrollPanel mode="native" style="width:100%;height:100%"> 
+                <p:dataTable id="RootCAlist" 
+                             value="#{adminSEDRootCAView.list}" 
+                             var="crt" 
+                             selectionMode="single"
+                             selection="#{adminSEDRootCAView.selected}"                                     
+                             rowKey="#{crt.alias}"
+                             rowStyleClass="#{adminSEDRootCAView.isCertInvalid(crt) ? 'ui-datatable-cell-red': null}"
+                             currentPageReportTemplate="#{msg['Showing']} {startRecord}-{endRecord} #{msg['OutOf']} {totalRecords}"
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             rowsPerPageTemplate="25,50,100,200" 
+                             paginator="true" 
+                             style="padding: 0px; margin: 0px"
+                             scrollable="true" 
+                             scrollHeight="100%"
+                             rows="100" 
+                             >
+                    <f:facet name="header">
+                        <p:toolbar  id="toolbar" style="padding: 0; margin: 0; height: 30px; vertical-align: middle;">
+                            <f:facet name="left"  >
+                                <p:commandButton value="#{msg['AddCertKey']}" styleClass="toolbar-Button"         
+                                                 icon="ui-icon-svg-add ui-icon-size-22"                                                    
+                                                 oncomplete="PF('certImportDialog').show()"
+                                                 action="#{dialogImportCert.setDialogType('DLG_ROOTCATORE')}"                                                       
+                                                 update=":dlgcertimport:certImportDialog:certImportDialogForm"
+                                                 />
 
 
-            <p:layoutUnit id="rootCATab" position="center" resizable="true" closable="true" collapsible="true"
-                          size="400" minSize="400" style="width:100%;height:100%;padding: 0px; margin: 0px"
-                          gutter="0"
-                          >
-                <p:scrollPanel mode="native" style="width:100%;height:100%"> 
-                    <p:dataTable id="RootCAlist" 
-                                 value="#{adminSEDRootCAView.list}" 
-                                 var="crt" 
-                                 selectionMode="single"
-                                 selection="#{adminSEDRootCAView.selected}"                                     
-                                 rowKey="#{crt.alias}"
-                                 style="width:100%"
-                                 scrollHeight="100%"
-                                 scrollable="true"
-                                 rowStyleClass="#{adminSEDRootCAView.isCertInvalid(crt) ? 'ui-datatable-cell-red': null}"
-                                 >
-                        <f:facet name="header">
-                            <p:toolbar  id="toolbar" style="padding: 0; margin: 0; height: 30px; vertical-align: middle;">
-                                <f:facet name="left"  >
-                                    <p:commandButton value="#{msg['AddCertKey']}" styleClass="toolbar-Button"         
-                                                     icon="ui-icon-svg-add ui-icon-size-22"                                                    
-                                                     oncomplete="PF('certImportDialog').show()"
-                                                     action="#{dialogImportCert.setDialogType('DLG_ROOTCATORE')}" 
-                                                      
-                                                     update=":dlgcertimport:certImportDialogForm"
-                                                     />
+                                <p:commandButton value="#{msg['Delete']}" styleClass="toolbar-Button"                                                          
+                                                 update="RootCAlist"
+                                                 icon="ui-icon-svg-remove ui-icon-size-22"  
+                                                 actionListener="#{adminSEDRootCAView.removeSelectedWithWarning()}" 
+                                                 />
+                            </f:facet>
+                            <f:facet name="right"  >
+                                <p:menuButton value="#{msg['Settings']}" >
 
-                                   
-                                    <p:commandButton value="#{msg['Delete']}" styleClass="toolbar-Button"                                                          
-                                                     update="RootCAlist"
-                                                     icon="ui-icon-svg-remove ui-icon-size-22"  
-                                                     actionListener="#{adminSEDRootCAView.removeSelectedWithWarning()}" 
-                                                     />
-                                </f:facet>
-                                <f:facet name="right"  >
-                                    <p:menuButton value="#{msg['Settings']}" 
+                                    <p:menuitem value="#{msg['Password']}" 
+                                                ajax="true"
+                                                onclick="PF('changeCertStorePasswordDialog').show();"/>
+                                </p:menuButton >
 
-                                                  >
+                            </f:facet>
+                        </p:toolbar>
+                    </f:facet>
 
-                                        <p:menuitem value="#{msg['Password']}" 
-                                                    ajax="true"
-                                                    onclick="PF('changeCertStorePasswordDialog').show();"/>
-                                    </p:menuButton >
-
-                                </f:facet>
-                            </p:toolbar>
-                        </f:facet>
-
-                        <p:ajax event="rowDblselect" 
-                                listener="#{adminSEDRootCAView.startEditSelected()}" 
-                                oncomplete="PF('certDialog').show()"
-                                update=":dlgcertificate:certDialogForm:certData" />
-                        <p:columnGroup type="header">
-                            <p:row>
-                                <p:column rowspan="2" headerText="#{msg['IsKey']}" width="40"/>
-                                <p:column rowspan="2" headerText="#{msg['Alias']}" width="100" />
-                                <p:column colspan="2" headerText="#{msg['Valid']}" width="120" />
-                                <p:column rowspan="2" headerText="#{msg['IssuerDN']}" />
-                                <p:column rowspan="2" headerText="#{msg['SubjectDN']}" />
+                    <p:ajax event="rowDblselect" 
+                            listener="#{adminSEDRootCAView.startEditSelected()}" 
+                            oncomplete="PF('certDialog').show()"
+                            update=":dlgcertificate:certDialog:certDialogForm" />
+                    <p:columnGroup type="header">
+                        <p:row>
+                            <p:column rowspan="2" headerText="#{msg['IsKey']}" width="40"/>
+                            <p:column rowspan="2" headerText="#{msg['Alias']}" width="100" />
+                            <p:column colspan="2" headerText="#{msg['Valid']}" width="120" />
+                            <p:column rowspan="2" headerText="#{msg['IssuerDN']}" />
+                            <p:column rowspan="2" headerText="#{msg['SubjectDN']}" />
 
 
-                            </p:row>
-                            <p:row>
-                                <p:column headerText="#{msg['from']}" width="70" />
-                                <p:column headerText="#{msg['to']}" width="70" />
-                            </p:row>
+                        </p:row>
+                        <p:row>
+                            <p:column headerText="#{msg['from']}" width="70" />
+                            <p:column headerText="#{msg['to']}" width="70" />
+                        </p:row>
 
-                        </p:columnGroup>
+                    </p:columnGroup>
 
-                        <p:column >
-                            <h:graphicImage rendered="#{crt.keyEntry}" value="#{resource['images:/privateKeyLong.svg']}" width="40" height="18" />
-                            <h:graphicImage rendered="#{not crt.keyEntry}" value="#{resource['images:/certificateLong.svg']}" width="40" height="18" />
-                        </p:column>     
-                        <p:column width="120">
-                            <h:outputText value="#{crt.alias}" />
-                        </p:column>  
-                        <p:column >
-                            <h:outputText value="#{crt.validFrom}"  ><f:convertDateTime pattern="dd.MM.yyyy" timeZone="CET" /></h:outputText>
-                        </p:column>     
-                        <p:column >
-                            <h:outputText value="#{crt.validTo}"  ><f:convertDateTime pattern="dd.MM.yyyy" timeZone="CET" /></h:outputText>
-                        </p:column>     
+                    <p:column >
+                        <h:graphicImage rendered="#{crt.keyEntry}" value="#{resource['images:/privateKeyLong.svg']}" width="40" height="18" />
+                        <h:graphicImage rendered="#{not crt.keyEntry}" value="#{resource['images:/certificateLong.svg']}" width="40" height="18" />
+                    </p:column>     
+                    <p:column width="120">
+                        <h:outputText value="#{crt.alias}" />
+                    </p:column>  
+                    <p:column >
+                        <h:outputText value="#{crt.validFrom}"  ><f:convertDateTime pattern="dd.MM.yyyy" timeZone="CET" /></h:outputText>
+                    </p:column>     
+                    <p:column >
+                        <h:outputText value="#{crt.validTo}"  ><f:convertDateTime pattern="dd.MM.yyyy" timeZone="CET" /></h:outputText>
+                    </p:column>     
 
-                        <p:column>
-                            <h:outputText value="#{crt.issuerDN}" />
-                        </p:column>     
-                        <p:column>
-                            <h:outputText value="#{crt.subjectDN}" />
-                        </p:column>    
-                    </p:dataTable>
-                </p:scrollPanel>
-            </p:layoutUnit>
-        </p:layout>
+                    <p:column>
+                        <h:outputText value="#{crt.issuerDN}" />
+                    </p:column>     
+                    <p:column>
+                        <h:outputText value="#{crt.subjectDN}" />
+                    </p:column>    
+                </p:dataTable>
+            </p:scrollPanel>
+        </pnl:pnl-settings>
     </composite:implementation>
-
-
 </html>

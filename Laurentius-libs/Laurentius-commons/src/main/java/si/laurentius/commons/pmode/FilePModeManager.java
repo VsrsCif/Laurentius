@@ -73,7 +73,7 @@ public class FilePModeManager implements PModeInterface {
   }
 
   public FilePModeManager(InputStream is)
-      throws PModeException {
+          throws PModeException {
     reload(is);
   }
 
@@ -83,26 +83,32 @@ public class FilePModeManager implements PModeInterface {
    * @param pmrNew
    */
   public void addPMode(int i, PMode pmrNew) {
-    mshSettings.getPModes().add(i, pmrNew);
+    for (PMode pm : getPModes()) {
+      if (Objects.equals(pm.getId(), pmrNew.getId())) {
+        throw new PModeException(String.format(
+                "PMode with Id '%s' already exists!", pmrNew.getId()));
+      }
+    }
+    if (i>=mshSettings.getPModes().size() ) {
+      mshSettings.getPModes().add(pmrNew);
+    } else {
+       mshSettings.getPModes().add(i, pmrNew);
+    }
   }
 
   @Override
   public void addPMode(PMode val) {
-    
-    if (getPModeById(val.getId())!=null){
-      throw new PModeException(String.format("PMode with Id '%s' already exists!",val.getId() ));
-    }
-    mshSettings.getPModes().add(val);
-    
-    
+      addPMode(getPModes().size(), val);
+
   }
 
   @Override
   public void addPartyIdentitySet(PartyIdentitySet val) {
-    if (partyIdentitySetExists(val.getId())){
-      throw new PModeException(String.format("PartyIdentitySet with Id '%s' already exists!",val.getId() ));
+    if (partyIdentitySetExists(val.getId())) {
+      throw new PModeException(String.format(
+              "PartyIdentitySet with Id '%s' already exists!", val.getId()));
     }
-    
+
     if (mshSettings.getParties() == null) {
       mshSettings.setParties(new MSHSetings.Parties());
     }
@@ -113,22 +119,26 @@ public class FilePModeManager implements PModeInterface {
 
   @Override
   public void addReceptionAwareness(ReceptionAwareness val) {
-    if (getReceptionAwarenessById(val.getId())!=null){
-      throw new PModeException(String.format("ReceptionAwareness with Id '%s' already exists!",val.getId() ));
+    if (getReceptionAwarenessById(val.getId()) != null) {
+      throw new PModeException(String.format(
+              "ReceptionAwareness with Id '%s' already exists!", val.getId()));
     }
     if (mshSettings.getReceptionAwarenessPatterns() == null) {
-      mshSettings.setReceptionAwarenessPatterns(new MSHSetings.ReceptionAwarenessPatterns());
+      mshSettings.setReceptionAwarenessPatterns(
+              new MSHSetings.ReceptionAwarenessPatterns());
     }
-    mshSettings.getReceptionAwarenessPatterns().getReceptionAwarenesses().add(val);
+    mshSettings.getReceptionAwarenessPatterns().getReceptionAwarenesses().add(
+            val);
     saveMSHSettings();
   }
 
   @Override
   public void addSecurity(Security val) {
-    if (getSecurityById(val.getId())!=null){
-      throw new PModeException(String.format("Security with Id '%s' already exists!",val.getId() ));
+    if (getSecurityById(val.getId()) != null) {
+      throw new PModeException(String.format(
+              "Security with Id '%s' already exists!", val.getId()));
     }
-    
+
     if (mshSettings.getSecurityPolicies() == null) {
       mshSettings.setSecurityPolicies(new MSHSetings.SecurityPolicies());
     }
@@ -138,8 +148,9 @@ public class FilePModeManager implements PModeInterface {
 
   @Override
   public void addService(Service val) {
-    if (getServiceById(val.getId())!=null){
-      throw new PModeException(String.format("Service with Id '%s' already exists!",val.getId() ));
+    if (getServiceById(val.getId()) != null) {
+      throw new PModeException(String.format(
+              "Service with Id '%s' already exists!", val.getId()));
     }
     if (mshSettings.getServices() == null) {
       mshSettings.setServices(new MSHSetings.Services());
@@ -154,48 +165,56 @@ public class FilePModeManager implements PModeInterface {
 
   @Override
   public EBMSMessageContext createMessageContextForOutMail(MSHOutMail mail)
-      throws PModeException {
+          throws PModeException {
     EBMSMessageContext emc = new EBMSMessageContext();
     // retrieve data
-    PartyIdentitySet sPID = getPartyIdentitySetForSEDAddress(mail.getSenderEBox());
+    PartyIdentitySet sPID = getPartyIdentitySetForSEDAddress(mail.
+            getSenderEBox());
     if (!sPID.getIsLocalIdentity()) {
       String msg = String.format(
-          "Sender '%s' (identityId '%s') for mail '%d' is not local identity and can not send messages!",
-          mail.getSenderEBox(), sPID.getId(), mail.getId());
+              "Sender '%s' (identityId '%s') for mail '%d' is not local identity and can not send messages!",
+              mail.getSenderEBox(), sPID.getId(), mail.getId());
       LOG.logWarn(msg, null);
       throw new PModeException(msg);
     }
 
-    PartyIdentitySet rPID = getPartyIdentitySetForSEDAddress(mail.getReceiverEBox());
+    PartyIdentitySet rPID = getPartyIdentitySetForSEDAddress(mail.
+            getReceiverEBox());
     Service srv = getServiceById(mail.getService());
     Service.Action act = PModeUtils.getActionFromService(mail.getAction(), srv);
 
-    PMode pMode = getPModeForLocalPartyAsSender(sPID.getId(), act.getSendingRole(),
-        rPID.getId(),
-        mail.getService());
+    PMode pMode = getPModeForLocalPartyAsSender(sPID.getId(), act.
+            getSendingRole(),
+            rPID.getId(),
+            mail.getService());
 
-    AgreementRef ar = PModeUtils.getAgreementRefForExchangePartyId(rPID.getId(), pMode);
+    AgreementRef ar = PModeUtils.getAgreementRefForExchangePartyId(rPID.getId(),
+            pMode);
     // fill transprot type, transportchanneltype
     PModeUtils.fillTransportMEPForAction(emc, act.getName(), pMode);
     //  get security
     Security security = null;
     if (!Utils.isEmptyString(emc.getTransportChannelType().getSecurityIdRef())) {
-      security = getSecurityById(emc.getTransportChannelType().getSecurityIdRef());
+      security = getSecurityById(emc.getTransportChannelType().
+              getSecurityIdRef());
     }
     // set getReceptionAwareness
     ReceptionAwareness ra = null;
-    if (emc.getTransportChannelType().getReceptionAwareness() != null &&
-        !Utils.isEmptyString(
-            emc.getTransportChannelType().getReceptionAwareness().getRaPatternIdRef())) {
+    if (emc.getTransportChannelType().getReceptionAwareness() != null
+            && !Utils.isEmptyString(
+                    emc.getTransportChannelType().getReceptionAwareness().
+                            getRaPatternIdRef())) {
       ra = getReceptionAwarenessById(
-          emc.getTransportChannelType().getReceptionAwareness().getRaPatternIdRef());
+              emc.getTransportChannelType().getReceptionAwareness().
+                      getRaPatternIdRef());
     }
 
     // get transport data for push!
     PartyIdentitySetType.TransportProtocol transport = null;
     if (emc.isPushTransfrer()) {
       String transportId = null;
-      for (PMode.ExchangeParties.PartyInfo epi : pMode.getExchangeParties().getPartyInfos()) {
+      for (PMode.ExchangeParties.PartyInfo epi : pMode.getExchangeParties().
+              getPartyInfos()) {
         // get def transport id
         if (Objects.equals(epi.getPartyIdentitySetIdRef(), rPID.getId())) {
           transportId = epi.getPartyDefTransportIdRef();
@@ -206,17 +225,18 @@ public class FilePModeManager implements PModeInterface {
         if (rPID.getTransportProtocols().size() > 0) {
           transport = rPID.getTransportProtocols().get(0);
           LOG.formatedWarning(
-              "PMode: '%s' does not have defined transport for exchange party '%s'. First transport '%s' will be used!",
-              pMode.getId(), rPID.getId(), transport.getId());
+                  "PMode: '%s' does not have defined transport for exchange party '%s'. First transport '%s' will be used!",
+                  pMode.getId(), rPID.getId(), transport.getId());
         } else {
           throw new PModeException(
-              String.format(
-                  "PMode: '%s' does not have defined transport for exchange party '%s'. Action %s in MEP is pushed!  ",
-                  pMode.getId(), rPID.getId(), act.getName()));
+                  String.format(
+                          "PMode: '%s' does not have defined transport for exchange party '%s'. Action %s in MEP is pushed!  ",
+                          pMode.getId(), rPID.getId(), act.getName()));
 
         }
       } else {
-        for (PartyIdentitySetType.TransportProtocol tp : rPID.getTransportProtocols()) {
+        for (PartyIdentitySetType.TransportProtocol tp : rPID.
+                getTransportProtocols()) {
           if (Objects.equals(tp.getId(), transportId)) {
             transport = tp;
             break;
@@ -225,8 +245,9 @@ public class FilePModeManager implements PModeInterface {
       }
     }
     //receiving role
-    String recRole = Objects.equals(srv.getInitiator().getRole(), act.getSendingRole()) ?
-        srv.getExecutor().getRole() : srv.getInitiator().getRole();
+    String recRole = Objects.equals(srv.getInitiator().getRole(), act.
+            getSendingRole())
+                    ? srv.getExecutor().getRole() : srv.getInitiator().getRole();
 
     // set context
     emc.setAction(act);
@@ -254,20 +275,24 @@ public class FilePModeManager implements PModeInterface {
    * @throws PModeException
    */
   @Override
-  public PMode getByAgreementRef(String agrRef, String agrRefType, String agrPMode)
-      throws PModeException {
+  public PMode getByAgreementRef(String agrRef, String agrRefType,
+          String agrPMode)
+          throws PModeException {
 
     for (PMode pm : mshSettings.getPModes()) {
-      for (PMode.ExchangeParties.PartyInfo pi : pm.getExchangeParties().getPartyInfos()) {
-        if (pi.getAgreementRef() != null && pi.getAgreementRef().getValue().equals(agrRef)) {
+      for (PMode.ExchangeParties.PartyInfo pi : pm.getExchangeParties().
+              getPartyInfos()) {
+        if (pi.getAgreementRef() != null && pi.getAgreementRef().getValue().
+                equals(agrRef)) {
           return pm;
         }
 
       }
     }
     throw new PModeException(String.format(
-        "AgreementRef for value: '%s', type: '%s' pmode: '%s' not exist.", agrRef, agrRefType,
-        agrPMode));
+            "AgreementRef for value: '%s', type: '%s' pmode: '%s' not exist.",
+            agrRef, agrRefType,
+            agrPMode));
 
   }
 
@@ -279,7 +304,7 @@ public class FilePModeManager implements PModeInterface {
    */
   @Override
   public PMode getPModeById(String pModeId)
-      throws PModeException {
+          throws PModeException {
 
     for (PMode pm : getPModes()) {
       if (Objects.equals(pm.getId(), pModeId)) {
@@ -293,11 +318,10 @@ public class FilePModeManager implements PModeInterface {
    *
    * @return
    */
-  
-
   /**
-   * Method returs PMODE for given exchange sender Party. If pmode not exists or more than one PMode
-   * is defined for given parameters PModeException is thrown.
+   * Method returs PMODE for given exchange sender Party. If pmode not exists or
+   * more than one PMode is defined for given parameters PModeException is
+   * thrown.
    *
    * @param senderRefId - exchange sender party identity set id
    * @param actionSendingRole - bussines role sender must have in current action
@@ -307,34 +331,37 @@ public class FilePModeManager implements PModeInterface {
    * @throws PModeException
    */
   @Override
-  public PMode getPModeForExchangePartyAsSender(String senderRefId, String actionSendingRole,
-      String receiverRefId, String serviceId)
-      throws PModeException {
+  public PMode getPModeForExchangePartyAsSender(String senderRefId,
+          String actionSendingRole,
+          String receiverRefId, String serviceId)
+          throws PModeException {
 
     List<PMode> lstResult = new ArrayList<>();
     for (PMode pm : getPModes()) {
       // check if service match
-      if (pm.getServiceIdRef() == null ||
-          !Objects.equals(pm.getServiceIdRef(), serviceId)) {
+      if (pm.getServiceIdRef() == null
+              || !Objects.equals(pm.getServiceIdRef(), serviceId)) {
         continue;
       }
       // check if local party match as receiver
-      if (pm.getLocalPartyInfo() == null ||
-          !Objects.equals(pm.getLocalPartyInfo().getPartyIdentitySetIdRef(), receiverRefId)) {
+      if (pm.getLocalPartyInfo() == null
+              || !Objects.equals(pm.getLocalPartyInfo().
+                      getPartyIdentitySetIdRef(), receiverRefId)) {
         continue;
       }
       // check if exchange party list is not null
-      if (pm.getExchangeParties() == null || pm.getExchangeParties().getPartyInfos().isEmpty()) {
+      if (pm.getExchangeParties() == null || pm.getExchangeParties().
+              getPartyInfos().isEmpty()) {
         continue;
       }
 
       // check if exchange party match
       boolean epmatch = false;
-      for (PMode.ExchangeParties.PartyInfo ep : pm.getExchangeParties().getPartyInfos()) {
+      for (PMode.ExchangeParties.PartyInfo ep : pm.getExchangeParties().
+              getPartyInfos()) {
         if (Objects.equals(ep.getPartyIdentitySetIdRef(), senderRefId) // if role match if role is null all roles are ok.
-            &&
-             (Utils.isEmptyString(actionSendingRole) ||
-            ep.getRoles().contains(actionSendingRole))) {
+                && (Utils.isEmptyString(actionSendingRole)
+                || ep.getRoles().contains(actionSendingRole))) {
           epmatch = true;
           break;
         }
@@ -346,20 +373,22 @@ public class FilePModeManager implements PModeInterface {
     }
 
     if (lstResult.size() > 1) {
-      throw new PModeException(String.format("more than one PMODE for exchange" +
-          " senderRefId '%s',actionSendingRole '%s',  receiverRefId '%s', serviceRefId: '%s' ",
-          senderRefId, actionSendingRole, receiverRefId, serviceId));
+      throw new PModeException(String.format(
+              "more than one PMODE for exchange"
+              + " senderRefId '%s',actionSendingRole '%s',  receiverRefId '%s', serviceRefId: '%s' ",
+              senderRefId, actionSendingRole, receiverRefId, serviceId));
     } else if (lstResult.isEmpty()) {
-      throw new PModeException(String.format("No PMODE for exchange" +
-          " senderRefId '%s',actionSendingRole '%s',  receiverRefId '%s', serviceRefId: '%s' ",
-          senderRefId, actionSendingRole, receiverRefId, serviceId));
+      throw new PModeException(String.format("No PMODE for exchange"
+              + " senderRefId '%s',actionSendingRole '%s',  receiverRefId '%s', serviceRefId: '%s' ",
+              senderRefId, actionSendingRole, receiverRefId, serviceId));
     }
     return lstResult.get(0);
   }
 
   /**
-   * Method returs PMODE for given local sender Party. If pmode not exists or more than one PMode is
-   * defined for given parameters PModeException is thrown.
+   * Method returs PMODE for given local sender Party. If pmode not exists or
+   * more than one PMode is defined for given parameters PModeException is
+   * thrown.
    *
    * @param senderRefId - local sender party identity set id
    * @param actionSendingRole - bussines role sender must have in current action
@@ -369,35 +398,39 @@ public class FilePModeManager implements PModeInterface {
    * @throws PModeException
    */
   @Override
-  public PMode getPModeForLocalPartyAsSender(String senderRefId, String actionSendingRole,
-      String receiverRefId, String serviceId)
-      throws PModeException {
+  public PMode getPModeForLocalPartyAsSender(String senderRefId,
+          String actionSendingRole,
+          String receiverRefId, String serviceId)
+          throws PModeException {
 
     List<PMode> lstResult = new ArrayList<>();
     for (PMode pm : getPModes()) {
       // check if service match
-      if (pm.getServiceIdRef() == null ||
-          !Objects.equals(pm.getServiceIdRef(), serviceId)) {
+      if (pm.getServiceIdRef() == null
+              || !Objects.equals(pm.getServiceIdRef(), serviceId)) {
         continue;
       }
       // check if local party match
-      if (pm.getLocalPartyInfo() == null ||
-          !Objects.equals(pm.getLocalPartyInfo().getPartyIdentitySetIdRef(), senderRefId)) {
+      if (pm.getLocalPartyInfo() == null
+              || !Objects.equals(pm.getLocalPartyInfo().
+                      getPartyIdentitySetIdRef(), senderRefId)) {
         continue;
       }
       // check if sending party contains sending role for action
-      if (!Utils.isEmptyString(actionSendingRole) &&
-          !pm.getLocalPartyInfo().getRoles().contains(actionSendingRole)) {
+      if (!Utils.isEmptyString(actionSendingRole)
+              && !pm.getLocalPartyInfo().getRoles().contains(actionSendingRole)) {
         continue;
 
       }
       // check if exchange party list is not null
-      if (pm.getExchangeParties() == null || pm.getExchangeParties().getPartyInfos().isEmpty()) {
+      if (pm.getExchangeParties() == null || pm.getExchangeParties().
+              getPartyInfos().isEmpty()) {
         continue;
       }
       // check if exchange party match
       boolean epmatch = false;
-      for (PMode.ExchangeParties.PartyInfo ep : pm.getExchangeParties().getPartyInfos()) {
+      for (PMode.ExchangeParties.PartyInfo ep : pm.getExchangeParties().
+              getPartyInfos()) {
         if (Objects.equals(ep.getPartyIdentitySetIdRef(), receiverRefId)) {
           epmatch = true;
           break;
@@ -410,13 +443,13 @@ public class FilePModeManager implements PModeInterface {
     }
 
     if (lstResult.size() > 1) {
-      throw new PModeException(String.format("more than one PMODE for local" +
-          " senderRefId '%s',actionSendingRole '%s',  receiverRefId '%s', serviceRefId: '%s' ",
-          senderRefId, actionSendingRole, receiverRefId, serviceId));
+      throw new PModeException(String.format("more than one PMODE for local"
+              + " senderRefId '%s',actionSendingRole '%s',  receiverRefId '%s', serviceRefId: '%s' ",
+              senderRefId, actionSendingRole, receiverRefId, serviceId));
     } else if (lstResult.isEmpty()) {
-      throw new PModeException(String.format("No PMODE for local" +
-          " senderRefId '%s',actionSendingRole '%s',  receiverRefId '%s', serviceRefId: '%s' ",
-          senderRefId, actionSendingRole, receiverRefId, serviceId));
+      throw new PModeException(String.format("No PMODE for local"
+              + " senderRefId '%s',actionSendingRole '%s',  receiverRefId '%s', serviceRefId: '%s' ",
+              senderRefId, actionSendingRole, receiverRefId, serviceId));
     }
     return lstResult.get(0);
   }
@@ -426,7 +459,7 @@ public class FilePModeManager implements PModeInterface {
    * @return @throws PModeException
    */
   public MSHSetings getMSHSettings()
-      throws PModeException {
+          throws PModeException {
     FilePModeManager.this.reload();
     return mshSettings;
   }
@@ -444,9 +477,10 @@ public class FilePModeManager implements PModeInterface {
         return pm;
       }
     }
-    throw new PModeException(String.format("No PartyIdentitySet for id: '%s'.", id));
+    throw new PModeException(String.format("No PartyIdentitySet for id: '%s'.",
+            id));
   }
-  
+
   public boolean partyIdentitySetExists(String id) {
     for (PartyIdentitySet pm : getPartyIdentitySets()) {
       if (Objects.equals(pm.getId(), id)) {
@@ -457,18 +491,20 @@ public class FilePModeManager implements PModeInterface {
   }
 
   /**
-   * Method returs PartyIdentitySet for Authorization. Method is used for pull signal
+   * Method returs PartyIdentitySet for Authorization. Method is used for pull
+   * signal
    *
    * @param username
    * @param password
    * @return first PartyIdentitySet or null if not found
    */
-  public PartyIdentitySet getPartyIdentitySetForAuthorization(String username, String password) {
+  public PartyIdentitySet getPartyIdentitySetForAuthorization(String username,
+          String password) {
 
     for (PartyIdentitySet pis : getPartyIdentitySets()) {
-      if (pis.getAuthorization() != null && username != null && password != null &&
-          Objects.equals(pis.getAuthorization().getUsername(), username) &&
-          Objects.equals(pis.getAuthorization().getPassword(), password)) {
+      if (pis.getAuthorization() != null && username != null && password != null
+              && Objects.equals(pis.getAuthorization().getUsername(), username)
+              && Objects.equals(pis.getAuthorization().getPassword(), password)) {
         return pis;
       }
     }
@@ -476,17 +512,20 @@ public class FilePModeManager implements PModeInterface {
   }
 
   /**
-   * Method returns PartyIdentitySet for partyId and type. Method returs PartyIdentitySet if one of
-   * partyID has matches with given type and partyIdValue ebmsMessage
+   * Method returns PartyIdentitySet for partyId and type. Method returs
+   * PartyIdentitySet if one of partyID has matches with given type and
+   * partyIdValue ebmsMessage
    * <ns2:PartyId type="urn:oasis:names:tc:ebcore:partyid-type:unregistered">test</ns2:PartyId>
    *
-   * @param partyType - type of party - urn:oasis:names:tc:ebcore:partyid-type:unregistered
+   * @param partyType - type of party -
+   * urn:oasis:names:tc:ebcore:partyid-type:unregistered
    * @param partyIdValue - partyId value: test
    * @return first PartyIdentitySet or null if not found
    */
   @Override
-  public PartyIdentitySet getPartyIdentitySetForPartyId(String partyType, String partyIdValue)
-      throws PModeException {
+  public PartyIdentitySet getPartyIdentitySetForPartyId(String partyType,
+          String partyIdValue)
+          throws PModeException {
 
     if (Utils.isEmptyString(partyIdValue)) {
       LOG.logWarn("Empty partyIdValue", null);
@@ -507,25 +546,25 @@ public class FilePModeManager implements PModeInterface {
           continue;
         }
         // check if ID "fixed value" than this is target identiy set
-        if (!Utils.isEmptyString(pid.getFixValue()) &&
-            Objects.equals(pid.getFixValue(), partyIdValue)) {
+        if (!Utils.isEmptyString(pid.getFixValue())
+                && Objects.equals(pid.getFixValue(), partyIdValue)) {
           return pis;
         }
 
         // check if ID from list of identifiers
-        if (srcType.equals(PModeConstants.PARTY_ID_SOURCE_TYPE_IDENTIFIER) &&
-            pid.getIdentifiers().contains(partyIdValue)) {
+        if (srcType.equals(PModeConstants.PARTY_ID_SOURCE_TYPE_IDENTIFIER)
+                && pid.getIdentifiers().contains(partyIdValue)) {
           return pis;
 
         }
         // check if ID is SED 
-        if (srcType.equals(PModeConstants.PARTY_ID_SOURCE_TYPE_ADDRESS) &&
-            partyIdValue.contains("@")) {
+        if (srcType.equals(PModeConstants.PARTY_ID_SOURCE_TYPE_ADDRESS)
+                && partyIdValue.contains("@")) {
           String domain = partyIdValue.substring(partyIdValue.indexOf("@") + 1);
 
-          if (pis.getIsLocalIdentity() ?
-              Objects.equals(domain, getLocalDomain()) :
-              Objects.equals(domain, pis.getDomain())) {
+          if (pis.getIsLocalIdentity()
+                  ? Objects.equals(domain, getLocalDomain())
+                  : Objects.equals(domain, pis.getDomain())) {
             candidates.add(pis);
           }
         }
@@ -535,18 +574,18 @@ public class FilePModeManager implements PModeInterface {
 
     if (candidates.size() > 1) {
       throw new PModeException(String.format(
-          "More than one (%d) for partyType '%s' and value %s!",
-          candidates.size(), partyType, partyIdValue));
+              "More than one (%d) for partyType '%s' and value %s!",
+              candidates.size(), partyType, partyIdValue));
     }
     return candidates.isEmpty() ? null : candidates.get(0);
   }
 
   @Override
   public PartyIdentitySet getPartyIdentitySetForSEDAddress(String address)
-      throws PModeException {
+          throws PModeException {
     if (Utils.isEmptyString(address) || !address.contains("@")) {
-      throw new PModeException(String.format("SED Address must be " +
-          "composed with [localpart]@[domain]. Address '%s'", address));
+      throw new PModeException(String.format("SED Address must be "
+              + "composed with [localpart]@[domain]. Address '%s'", address));
     }
 
     String[] addrTb = address.split("@");
@@ -556,20 +595,22 @@ public class FilePModeManager implements PModeInterface {
     String localDomain = getLocalDomain();
 
     if (Utils.isEmptyString(localDomain)) {
-      throw new RuntimeException("Bad aplication configuratin. Missing domain parameter");
+      throw new RuntimeException(
+              "Bad aplication configuratin. Missing domain parameter");
     }
 
     int iDomainCount = 0;
     List<PartyIdentitySet> candidates = new ArrayList<>();
     for (PartyIdentitySet pis : getPartyIdentitySets()) {
       // check domain
-      if (pis.getIsLocalIdentity() ?
-          Objects.equals(domainPart, localDomain) :
-          Objects.equals(domainPart, pis.getDomain())) {
+      if (pis.getIsLocalIdentity()
+              ? Objects.equals(domainPart, localDomain)
+              : Objects.equals(domainPart, pis.getDomain())) {
         iDomainCount++;
         boolean bContaisIdetifierId = false;
         for (PartyIdentitySetType.PartyId pi : pis.getPartyIds()) {
-          if (pi.getValueSource().equals(PModeConstants.PARTY_ID_SOURCE_TYPE_IDENTIFIER)) {
+          if (pi.getValueSource().equals(
+                  PModeConstants.PARTY_ID_SOURCE_TYPE_IDENTIFIER)) {
             bContaisIdetifierId = true;
             // if contains with identifier return this Etity-set
             if (pi.getIdentifiers().contains(localPart)) {
@@ -585,14 +626,14 @@ public class FilePModeManager implements PModeInterface {
     }
     if (candidates.isEmpty()) {
       throw new PModeException(String.format(
-          "No PartyIdentitySet for address '%s'. Count identitySets for domain %d with no matchin identifiers!",
-          address, iDomainCount));
+              "No PartyIdentitySet for address '%s'. Count identitySets for domain %d with no matchin identifiers!",
+              address, iDomainCount));
     }
 
     if (candidates.size() > 1) {
       throw new PModeException(String.format(
-          "More than one (%d) PartyIdentitySet found for address '%s'!",
-          iDomainCount, address));
+              "More than one (%d) PartyIdentitySet found for address '%s'!",
+              iDomainCount, address));
     }
     return candidates.get(0);
   }
@@ -602,9 +643,9 @@ public class FilePModeManager implements PModeInterface {
     if (mshSettings == null) {
       reload();
     }
-    return mshSettings != null && mshSettings.getParties() != null ?
-        mshSettings.getParties().getPartyIdentitySets() :
-        Collections.emptyList();
+    return mshSettings != null && mshSettings.getParties() != null
+            ? mshSettings.getParties().getPartyIdentitySets()
+            : Collections.emptyList();
   }
 
   @Override
@@ -614,7 +655,8 @@ public class FilePModeManager implements PModeInterface {
         return pm;
       }
     }
-    throw new PModeException(String.format("No ReceptionAwareness for id: '%s'.", id));
+    throw new PModeException(String.
+            format("No ReceptionAwareness for id: '%s'.", id));
   }
 
   @Override
@@ -622,9 +664,10 @@ public class FilePModeManager implements PModeInterface {
     if (mshSettings == null) {
       reload();
     }
-    return mshSettings != null && mshSettings.getReceptionAwarenessPatterns() != null ?
-        mshSettings.getReceptionAwarenessPatterns().getReceptionAwarenesses() :
-        Collections.emptyList();
+    return mshSettings != null && mshSettings.getReceptionAwarenessPatterns() != null
+            ? mshSettings.getReceptionAwarenessPatterns().
+                    getReceptionAwarenesses()
+            : Collections.emptyList();
   }
 
   @Override
@@ -632,43 +675,46 @@ public class FilePModeManager implements PModeInterface {
     if (mshSettings == null) {
       reload();
     }
-    return mshSettings != null && mshSettings.getSecurityPolicies() != null ?
-        mshSettings.getSecurityPolicies().getSecurities() :
-        Collections.emptyList();
+    return mshSettings != null && mshSettings.getSecurityPolicies() != null
+            ? mshSettings.getSecurityPolicies().getSecurities()
+            : Collections.emptyList();
   }
 
   @Override
   public Security getSecurityById(String securityId)
-      throws PModeException {
+          throws PModeException {
 
     for (Security pm : getSecurities()) {
       if (Objects.equals(pm.getId(), securityId)) {
         return pm;
       }
     }
-    throw new PModeException(String.format("No SecurityPolicy for id: '%s'.", securityId));
+    throw new PModeException(String.format("No SecurityPolicy for id: '%s'.",
+            securityId));
   }
 
   @Override
   public Service getServiceById(String serviceId)
-      throws PModeException {
+          throws PModeException {
 
     for (Service pm : getServices()) {
       if (Objects.equals(pm.getId(), serviceId)) {
         return pm;
       }
     }
-    throw new PModeException(String.format("No Service for id: '%s'.", serviceId));
+    throw new PModeException(String.
+            format("No Service for id: '%s'.", serviceId));
   }
 
   @Override
-  public Service getServiceByNameAndTypeAndAction(String serviceName, String serviceType,
-      String action)
-      throws PModeException {
+  public Service getServiceByNameAndTypeAndAction(String serviceName,
+          String serviceType,
+          String action)
+          throws PModeException {
 
     for (Service srv : getServices()) {
-      if (!Objects.equals(srv.getServiceName(), serviceName) ||
-          !Objects.equals(srv.getServiceType(), serviceType)) {
+      if (!Objects.equals(srv.getServiceName(), serviceName)
+              || !Objects.equals(srv.getServiceType(), serviceType)) {
         continue;
       }
 
@@ -680,8 +726,9 @@ public class FilePModeManager implements PModeInterface {
     }
 
     throw new PModeException(String.format(
-        "Service with name '%s', serviceType: '%s' and action '%s' not exists!", serviceName,
-        serviceType, action));
+            "Service with name '%s', serviceType: '%s' and action '%s' not exists!",
+            serviceName,
+            serviceType, action));
 
   }
 
@@ -690,9 +737,9 @@ public class FilePModeManager implements PModeInterface {
     if (mshSettings == null) {
       reload();
     }
-    return mshSettings != null && mshSettings.getServices() != null ?
-        mshSettings.getServices().getServices() :
-        Collections.emptyList();
+    return mshSettings != null && mshSettings.getServices() != null
+            ? mshSettings.getServices().getServices()
+            : Collections.emptyList();
   }
 
   /**
@@ -707,7 +754,8 @@ public class FilePModeManager implements PModeInterface {
         reload(fis);
         mFileLastModifiedDate = pModeFile.lastModified();
       } catch (IOException ex) {
-        String msg = "Error init PModes from file '" + pModeFile.getAbsolutePath() + "'";
+        String msg = "Error init PModes from file '" + pModeFile.
+                getAbsolutePath() + "'";
         throw new PModeException(msg, ex);
       }
     }
@@ -715,13 +763,14 @@ public class FilePModeManager implements PModeInterface {
   }
 
   /**
-   * Reload pmodes from input stream. If parse error occurred PModeException is thrown
+   * Reload pmodes from input stream. If parse error occurred PModeException is
+   * thrown
    *
    * @param is
    * @throws PModeException
    */
   public final void reload(InputStream is)
-      throws PModeException {
+          throws PModeException {
     long l = LOG.logStart();
     clear();
 
@@ -773,7 +822,8 @@ public class FilePModeManager implements PModeInterface {
   public void removeReceptionAwareness(ReceptionAwareness val) {
 
     if (mshSettings.getReceptionAwarenessPatterns() != null) {
-      mshSettings.getReceptionAwarenessPatterns().getReceptionAwarenesses().remove(val);
+      mshSettings.getReceptionAwarenessPatterns().getReceptionAwarenesses().
+              remove(val);
       saveMSHSettings();
     } else {
       LOG.logWarn("No reception awareness defined in msh settings", null);
@@ -809,7 +859,7 @@ public class FilePModeManager implements PModeInterface {
    * @throws PModeException
    */
   public void saveMSHSettings()
-      throws PModeException {
+          throws PModeException {
     long l = LOG.logStart();
     try {
 
@@ -855,7 +905,8 @@ public class FilePModeManager implements PModeInterface {
       }
     }
     if (!suc) {
-      LOG.formatedWarning("No PMode with id  %s. PMode was added as new PMode", val.getId());
+      LOG.formatedWarning("No PMode with id  %s. PMode was added as new PMode",
+              val.getId());
       mshSettings.getPModes().add(val);
     }
     saveMSHSettings();
@@ -869,8 +920,10 @@ public class FilePModeManager implements PModeInterface {
     }
 
     boolean suc = false;
-    for (int index = 0; index < mshSettings.getParties().getPartyIdentitySets().size(); index++) {
-      PartyIdentitySet pm = mshSettings.getParties().getPartyIdentitySets().get(index);
+    for (int index = 0; index < mshSettings.getParties().getPartyIdentitySets().
+            size(); index++) {
+      PartyIdentitySet pm = mshSettings.getParties().getPartyIdentitySets().get(
+              index);
 
       if (pm.getId() != null && Objects.equals(pm.getId(), val.getId())) {
         mshSettings.getParties().getPartyIdentitySets().remove(pm);
@@ -882,8 +935,8 @@ public class FilePModeManager implements PModeInterface {
     if (!suc) {
       mshSettings.getParties().getPartyIdentitySets().add(val);
       LOG.formatedWarning(
-          "No PartyIdentitySet with id  %s. PartyIdentitySet was added as new PartyIdentitySet",
-          val.getId());
+              "No PartyIdentitySet with id  %s. PartyIdentitySet was added as new PartyIdentitySet",
+              val.getId());
     }
     saveMSHSettings();
   }
@@ -892,27 +945,33 @@ public class FilePModeManager implements PModeInterface {
   public void updateReceptionAwareness(ReceptionAwareness val) {
 
     if (mshSettings.getReceptionAwarenessPatterns() == null) {
-      mshSettings.setReceptionAwarenessPatterns(new MSHSetings.ReceptionAwarenessPatterns());
+      mshSettings.setReceptionAwarenessPatterns(
+              new MSHSetings.ReceptionAwarenessPatterns());
     }
 
     boolean suc = false;
-    for (int index = 0; index <
-        mshSettings.getReceptionAwarenessPatterns().getReceptionAwarenesses().size(); index++) {
-      ReceptionAwareness pm =
-          mshSettings.getReceptionAwarenessPatterns().getReceptionAwarenesses().get(index);
+    for (int index = 0; index
+            < mshSettings.getReceptionAwarenessPatterns().
+                    getReceptionAwarenesses().size(); index++) {
+      ReceptionAwareness pm
+              = mshSettings.getReceptionAwarenessPatterns().
+                      getReceptionAwarenesses().get(index);
 
       if (pm.getId() != null && Objects.equals(pm.getId(), val.getId())) {
-        mshSettings.getReceptionAwarenessPatterns().getReceptionAwarenesses().remove(pm);
-        mshSettings.getReceptionAwarenessPatterns().getReceptionAwarenesses().add(index, val);
+        mshSettings.getReceptionAwarenessPatterns().getReceptionAwarenesses().
+                remove(pm);
+        mshSettings.getReceptionAwarenessPatterns().getReceptionAwarenesses().
+                add(index, val);
         suc = true;
         break;
       }
     }
     if (!suc) {
-      mshSettings.getReceptionAwarenessPatterns().getReceptionAwarenesses().add(val);
+      mshSettings.getReceptionAwarenessPatterns().getReceptionAwarenesses().add(
+              val);
       LOG.formatedWarning(
-          "No ReceptionAwareness with id  %s. ReceptionAwareness was added as new ReceptionAwareness",
-          val.getId());
+              "No ReceptionAwareness with id  %s. ReceptionAwareness was added as new ReceptionAwareness",
+              val.getId());
     }
     saveMSHSettings();
   }
@@ -925,10 +984,10 @@ public class FilePModeManager implements PModeInterface {
     }
 
     boolean suc = false;
-    for (int index = 0; index <
-        mshSettings.getSecurityPolicies().getSecurities().size(); index++) {
-      Security pm =
-          mshSettings.getSecurityPolicies().getSecurities().get(index);
+    for (int index = 0; index
+            < mshSettings.getSecurityPolicies().getSecurities().size(); index++) {
+      Security pm
+              = mshSettings.getSecurityPolicies().getSecurities().get(index);
 
       if (pm.getId() != null && Objects.equals(pm.getId(), val.getId())) {
         mshSettings.getSecurityPolicies().getSecurities().remove(pm);
@@ -940,8 +999,8 @@ public class FilePModeManager implements PModeInterface {
     if (!suc) {
       mshSettings.getSecurityPolicies().getSecurities().add(val);
       LOG.formatedWarning(
-          "No Security with id  %s. Security was added as new Security",
-          val.getId());
+              "No Security with id  %s. Security was added as new Security",
+              val.getId());
     }
     saveMSHSettings();
   }
@@ -953,10 +1012,10 @@ public class FilePModeManager implements PModeInterface {
     }
 
     boolean suc = false;
-    for (int index = 0; index <
-        mshSettings.getServices().getServices().size(); index++) {
-      Service pm =
-          mshSettings.getServices().getServices().get(index);
+    for (int index = 0; index
+            < mshSettings.getServices().getServices().size(); index++) {
+      Service pm
+              = mshSettings.getServices().getServices().get(index);
 
       if (pm.getId() != null && Objects.equals(pm.getId(), val.getId())) {
         mshSettings.getServices().getServices().remove(pm);
@@ -968,8 +1027,8 @@ public class FilePModeManager implements PModeInterface {
     if (!suc) {
       mshSettings.getServices().getServices().add(val);
       LOG.formatedWarning(
-          "No Service with id  %s. Service was added as new Service",
-          val.getId());
+              "No Service with id  %s. Service was added as new Service",
+              val.getId());
     }
     saveMSHSettings();
   }

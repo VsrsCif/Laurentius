@@ -26,7 +26,6 @@ import si.laurentius.plugin.imp.IMPXslt;
 import si.laurentius.plugin.imp.Namespace;
 import si.laurentius.plugin.imp.XPathRule;
 
-
 /**
  *
  * @author Jože Rihtaršič
@@ -34,33 +33,34 @@ import si.laurentius.plugin.imp.XPathRule;
 @SessionScoped
 @ManagedBean(name = "adminIMPXsltView")
 public class AdminIMPXsltView extends AbstractAdminJSFView<IMPXslt> {
-  
+
   private static final SEDLogger LOG = new SEDLogger(AdminIMPXsltView.class);
-  
+
   @EJB
   private IMPDBInterface mDB;
-   Namespace selectedNamespace = null;
+  Namespace selectedNamespace = null;
   XPathRule selectedPathRule = null;
+
   @Override
   public void createEditable() {
     IMPXslt imp = new IMPXslt();
     int i = 1;
     String base = "xslt_%03d";
-    while (mDB.getExport(String.format(base, i)) != null) {
+    while (mDB.getXSLT(String.format(base, i)) != null) {
       i++;
     }
     imp.setInstance(String.format(base, i));
-    
-    
+
     setNew(imp);
   }
+
   public void createNamespace() {
 
-    if (getEditable()!= null) {
+    if (getEditable() != null) {
 
       String sbname = "ns%d";
       int i = 1;
-      while (namespacePrefixExists(String.format(sbname, i)) ) {
+      while (namespacePrefixExists(String.format(sbname, i))) {
         i++;
       }
       Namespace ns = new Namespace();
@@ -68,11 +68,13 @@ public class AdminIMPXsltView extends AbstractAdminJSFView<IMPXslt> {
       getEditable().getNamespaces().add(ns);
     }
   }
+
   public void createXPathRule() {
     if (getEditable() != null) {
       getEditable().getXPathRules().add(new XPathRule());
     }
   }
+
   @Override
   public List<IMPXslt> getList() {
     return mDB.getXSLTs();
@@ -82,10 +84,10 @@ public class AdminIMPXsltView extends AbstractAdminJSFView<IMPXslt> {
     return selectedNamespace;
   }
 
-
   public XPathRule getSelectedPathRule() {
     return selectedPathRule;
   }
+
   public XPathRule getSelectedXPathRule() {
     return selectedPathRule;
   }
@@ -103,10 +105,12 @@ public class AdminIMPXsltView extends AbstractAdminJSFView<IMPXslt> {
     return bExists;
 
   }
+
   @Override
   public boolean persistEditable() {
     return mDB.addXSLT(getEditable());
   }
+
   @Override
   public void removeSelected() {
     mDB.removeXSLT(getEditable());
@@ -125,7 +129,6 @@ public class AdminIMPXsltView extends AbstractAdminJSFView<IMPXslt> {
     }
   }
 
-
   public void removeSelectedXPathRule() {
     if (getSelectedXPathRule() != null && getEditable() != null) {
       List<XPathRule> lst = getEditable().getXPathRules();
@@ -138,33 +141,36 @@ public class AdminIMPXsltView extends AbstractAdminJSFView<IMPXslt> {
 
     }
   }
+
   public void setSelectedNamespace(Namespace selectedNamespace) {
     this.selectedNamespace = selectedNamespace;
   }
+
   public void setSelectedPathRule(XPathRule selectedPathRule) {
     this.selectedPathRule = selectedPathRule;
   }
+
   public void setSelectedXPathRule(XPathRule selectedPathRule) {
     this.selectedPathRule = selectedPathRule;
   }
-  
-  
+
   @Override
   public boolean updateEditable() {
     return mDB.updateXSLT(getEditable());
   }
+
   @Override
   public boolean validateData() {
     if (Utils.isEmptyString(getEditable().getInstance())) {
       addError("Instance parametere must not be null!");
       return false;
     }
-    
-    if (isEditableNew() && mDB.getExport(getEditable().getInstance()) != null) {
+
+    if (isEditableNew() && mDB.getXSLT(getEditable().getInstance()) != null) {
       addError("Instance parametere must not be unique!");
       return false;
     }
     return true;
   }
-  
+
 }

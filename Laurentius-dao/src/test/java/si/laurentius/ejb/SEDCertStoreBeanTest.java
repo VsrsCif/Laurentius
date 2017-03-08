@@ -5,6 +5,7 @@
  */
 package si.laurentius.ejb;
 
+import si.laurentius.ejb.utils.TestUtils;
 import java.io.File;
 import java.io.IOException;
 import java.security.Key;

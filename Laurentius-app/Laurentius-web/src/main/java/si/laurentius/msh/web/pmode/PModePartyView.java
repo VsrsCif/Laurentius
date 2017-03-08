@@ -91,13 +91,14 @@ public class PModePartyView extends AbstractPModeJSFView<PartyIdentitySet> {
    *
    */
   @Override
-  public void removeSelected() {
-
+  public boolean removeSelected() {
+    boolean bSuc = false;
     PartyIdentitySet srv = getSelected();
     if (srv != null) {
       mPModeInteface.removePartyIdentitySet(srv);
+      bSuc = true;
     }
-
+    return bSuc;
   }
 
   @Override
@@ -342,5 +343,16 @@ public class PModePartyView extends AbstractPModeJSFView<PartyIdentitySet> {
     }
     return -1;
   }
+ @Override
+  public String getUpdateTargetTable() {
+    return ":forms:SettingsPModesParties:pmodePartyPanel:TblPModeParties";
+  }
 
+  @Override
+  public String getSelectedDesc() {
+     if (getSelected() != null) {
+      return getSelected().getId();
+    }
+    return null;
+  }
 }

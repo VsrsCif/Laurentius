@@ -103,7 +103,7 @@ public class SettingsMenuView implements Serializable {
             AppConstant.S_PANEL_SETT_PMODE, "ui-icon-svg-pmode ui-icon-size-22"),
             root);
     pmodeSettings.setExpanded(true);
-    TreeNode pmodesrv = new DefaultTreeNode(new MenuItem("SettingsPMode",
+    TreeNode pmodesrv = new DefaultTreeNode(new MenuItem("PModeServiceDefinitions",
             AppConstant.S_PANEL_SETT_PMODE_SERVICES,
             "ui-icon-svg-service ui-icon-size-22"),
             pmodeSettings);

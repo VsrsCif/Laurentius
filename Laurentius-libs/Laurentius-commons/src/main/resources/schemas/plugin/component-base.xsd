@@ -25,9 +25,7 @@ Copyright 2015, Supreme Court Republic of Slovenia
  See the Licence for the specific language governing permissions and  
  limitations under the Licence.
 -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
-           xmlns:ns1="http://laurentius.si/plugin/component" 
-           targetNamespace="http://laurentius.si/plugin/component" elementFormDefault="qualified" attributeFormDefault="unqualified">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://laurentius.si/plugin/component" targetNamespace="http://laurentius.si/plugin/component" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xs:complexType name="ComponentBase">
 		<xs:annotation>
 			<xs:documentation xml:lang="sl">Definicija opravil</xs:documentation>
@@ -46,5 +44,52 @@ Copyright 2015, Supreme Court Republic of Slovenia
 		</xs:attribute>
 		<xs:attribute name="jndi" use="required"/>
 		<xs:attribute name="description" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="PluginPropertyDef">
+		<xs:annotation>
+			<xs:documentation/>
+		</xs:annotation>
+		<xs:attribute name="id" type="xs:integer"/>
+		<xs:attribute name="key" use="required">
+			<xs:annotation>
+				<xs:documentation xml:lang="sl">Naziv lastnosti </xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:minLength value="1"/>
+					<xs:maxLength value="64"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="description"/>
+                <xs:attribute name="defValue"/>
+		<xs:attribute name="mandatory" type="xs:boolean" default="false"/>
+		<xs:attribute name="type" default="string">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="16"/>
+					<xs:enumeration value="boolean"/>
+					<xs:enumeration value="string"/>
+					<xs:enumeration value="list"/>
+					<xs:enumeration value="multiList"/>
+					<xs:enumeration value="int"/>
+					<xs:enumeration value="date"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="valueList">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="1024"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="valueFormat">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="512"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
 	</xs:complexType>
 </xs:schema>

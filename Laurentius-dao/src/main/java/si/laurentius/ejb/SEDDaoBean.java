@@ -57,13 +57,13 @@ import si.laurentius.msh.inbox.mail.MSHInMail;
 import si.laurentius.msh.outbox.event.MSHOutEvent;
 import si.laurentius.msh.outbox.mail.MSHOutMail;
 import si.laurentius.cron.SEDTaskExecution;
-import si.laurentius.commons.SEDInboxMailStatus;
+import si.laurentius.commons.enums.SEDInboxMailStatus;
 import si.laurentius.commons.SEDJNDI;
-import si.laurentius.commons.SEDOutboxMailStatus;
+import si.laurentius.commons.enums.SEDOutboxMailStatus;
 import si.laurentius.commons.SEDSystemProperties;
 import static si.laurentius.commons.SEDSystemProperties.SYS_PROP_JNDI_JMS_PREFIX;
 import static si.laurentius.commons.SEDSystemProperties.SYS_PROP_JNDI_PREFIX;
-import si.laurentius.commons.SEDTaskStatus;
+import si.laurentius.commons.enums.SEDTaskStatus;
 import si.laurentius.commons.SEDValues;
 import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.interfaces.JMSManagerInterface;
@@ -112,7 +112,7 @@ public class SEDDaoBean implements SEDDaoInterface {
    * @param o
    * @return
    */
-  public <T> boolean add(T o) {
+  private <T> boolean add(T o) {
     long l = LOG.logStart();
     boolean suc = false;
     try {
@@ -410,7 +410,7 @@ public class SEDDaoBean implements SEDDaoInterface {
    * @param o
    * @return
    */
-  public <T> boolean remove(T o) {
+  private <T> boolean remove(T o) {
     long l = LOG.logStart();
     boolean suc = false;
     try {

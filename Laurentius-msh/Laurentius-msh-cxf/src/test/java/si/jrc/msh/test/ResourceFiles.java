@@ -29,7 +29,7 @@ import org.apache.cxf.message.Exchange;
 import org.apache.cxf.message.ExchangeImpl;
 import org.apache.log4j.Logger;
 import org.junit.Assert;
-import si.laurentius.commons.MimeValues;
+import si.laurentius.commons.enums.MimeValue;
 
 /**
  *
@@ -144,7 +144,7 @@ public class ResourceFiles {
         att.setHeader("id", id);
 
         ByteArrayDataSource bads = new ByteArrayDataSource(bp.getInputStream(),
-            MimeValues.MIME_BIN.getMimeType());
+            MimeValue.MIME_BIN.getMimeType());
         att.setDataHandler(new DataHandler(bads));
         //att.
         msg.getAttachments().add(att);

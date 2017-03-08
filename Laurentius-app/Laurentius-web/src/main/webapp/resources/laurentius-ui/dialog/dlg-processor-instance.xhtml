@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      xmlns:dlg="http://java.sun.com/jsf/composite/laurentius-ui/dialog"
+      xmlns:pnl="http://java.sun.com/jsf/composite/laurentius-ui/panel"
+      >
+    <composite:interface>
+    </composite:interface>
+
+    <composite:implementation >      
+        <dlg:dlg-abstract   id="procInstanceDialog"
+                            formId="procInstanceDialogForm"
+                            dialogTitle="#{msg['SEDProcessInstanceDialog']}" 
+                            editable="#{adminSEDInMailProcessInstanceView.editable}"
+                            width="800"
+                            height="400"
+                            updateOnSave=":dlgproc:procDialog:procDialogForm:TblProcessSetInstaces"
+                            onConfirmAction="#{adminSEDInMailProcessInstanceView.addOrUpdateEditable()}"
+                            >     
+            <p:panelGrid columns="2" columnClasses="grid-label, value">
+                <h:outputText value="#{msg['Plugin']}:" />
+                <p:selectOneMenu id="pluginType" value="#{adminSEDInMailProcessInstanceView.editable.plugin}" 
+                                 style="width:150px" 
+                                 >
+                    <p:ajax update=":dlgprocinstance:procInstanceDialog:procInstanceDialogForm:impInstancetype 
+                            :dlgprocinstance:procInstanceDialog:procInstanceDialogForm:PropertyPanel:PropertyPanelTable"/>    
+
+                    <f:selectItems value="#{adminSEDPluginView.list}"  var="plg" itemLabel="#{plg.name}" 
+                                   itemValue="#{plg.type}" itemDescription="#{plg.description}"
+                                   itemDisabled="#{plg.inMailProcessorDeves.size() eq 0}"
+                                   />
+                </p:selectOneMenu>
+
+
+                <h:outputText value="#{msg['Type']}:" />
+
+                <p:selectOneMenu id="impInstancetype" value="#{adminSEDInMailProcessInstanceView.editableProcessorType}" 
+                                 style="width:150px" 
+                                 >
+                    <p:ajax   update=":dlgprocinstance:procInstanceDialog:procInstanceDialogForm:PropertyPanel:PropertyPanelTable" />    
+                    <f:selectItems value="#{adminSEDInMailProcessInstanceView.selectedSPIProcessorList()}" 
+                                   var="prc" itemLabel="#{prc.name}" 
+                                   itemValue="#{prc.type}" itemDescription="#{prc.description}"
+                                   />
+                </p:selectOneMenu>
+            </p:panelGrid>
+
+            <pnl:pnl-plugin-properties id="PropertyPanel"
+                                       tableId="PropertyPanelTable"
+                                       propertyList="#{adminSEDInMailProcessInstanceView.selectedProcessorItems}" 
+                                       header="#{msg['ProcessorInstanceProperties']}"  />
+
+        </dlg:dlg-abstract>
+    </composite:implementation>
+</html>

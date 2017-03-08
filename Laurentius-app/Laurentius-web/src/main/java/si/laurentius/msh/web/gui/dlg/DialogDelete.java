@@ -3,8 +3,10 @@ package si.laurentius.msh.web.gui.dlg;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.event.ActionEvent;
+import org.primefaces.context.RequestContext;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.msh.web.abst.AbstractAdminJSFView;
+import static si.laurentius.msh.web.abst.AbstractAdminJSFView.CB_PARA_REMOVED;
 
 /**
  *
@@ -27,7 +29,8 @@ public class DialogDelete {
 
   public void removeSelectedRow() {
     if (currentJSFView != null) {
-      currentJSFView.removeSelected();
+      boolean bSuc = currentJSFView.removeSelected();
+      addCallbackParam(CB_PARA_REMOVED, bSuc);
     } else {
       LOG.logWarn("Remove selected row, but no view currentJSFView is setted!", null);
     }
@@ -46,6 +49,9 @@ public class DialogDelete {
   
   public String getTargetTable(){
     return currentJSFView != null? currentJSFView.getUpdateTargetTable():null;
+  }
+  public void addCallbackParam(String val, boolean bval) {
+    RequestContext.getCurrentInstance().addCallbackParam(val, bval);
   }
 
 }

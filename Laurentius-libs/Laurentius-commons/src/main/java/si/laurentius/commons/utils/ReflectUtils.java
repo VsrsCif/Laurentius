@@ -25,6 +25,7 @@ import java.util.Map;
  * @author Joze Rihtarsic <joze.rihtarsic@sodisce.si>
  */
 public class ReflectUtils {
+  private static final SEDLogger LOG = new SEDLogger(ReflectUtils.class);
 
   private static final Map<Class, List<String>> BEAN_MEMBERS = new HashMap<>();
 
@@ -34,7 +35,7 @@ public class ReflectUtils {
    * @param  cls - inspected class
    * @return return list of setter and getter methods
    */
-  public static List<String> getBeanMethods(Class cls) {
+  public static synchronized List<String> getBeanProperties(Class cls) {
     if (BEAN_MEMBERS.containsKey(cls)) {
       return BEAN_MEMBERS.get(cls);
     }
@@ -61,6 +62,22 @@ public class ReflectUtils {
     }
     BEAN_MEMBERS.put(cls, lst);
     return lst;
+  }
+  
+  public static Class getReturnTypeForProperty(Class cls, String propString){
+    try {
+      Method m = cls.getMethod("get" + propString);
+      return m.getReturnType();
+    } catch (NoSuchMethodException | SecurityException ex) {
+     LOG.formatedWarning("Object: %s does not contain property %s",
+                cls.getName(), propString, ex);
+    }
+    return null;
+  
+  }
+  
+  public static synchronized  boolean containsProperty(Class cls, String proString){
+    return getBeanProperties(cls).contains(proString);
   }
 
 }

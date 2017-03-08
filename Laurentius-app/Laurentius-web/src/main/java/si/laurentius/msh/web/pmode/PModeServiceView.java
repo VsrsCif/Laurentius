@@ -18,13 +18,11 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.interfaces.PModeInterface;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.msh.pmode.Service;
-import si.laurentius.msh.web.gui.dlg.DialogDelete;
 
 /**
  *
@@ -41,7 +39,6 @@ public class PModeServiceView extends AbstractPModeJSFView<Service> {
 
   @EJB(mappedName = SEDJNDI.JNDI_PMODE)
   PModeInterface mPModeInteface;
-
 
   /**
    *
@@ -65,22 +62,24 @@ public class PModeServiceView extends AbstractPModeJSFView<Service> {
    *
    */
   @Override
-  public void removeSelected() {
-
-    long l = LOG.logStart();
+  public boolean removeSelected() {
+    boolean bSuc = false;
 
     Service srv = getSelected();
     if (srv != null) {
       mPModeInteface.removeService(srv);
+      bSuc = true;
     }
+    return bSuc;
 
   }
 
-   @Override
+  @Override
   public boolean validateData() {
-    
+
     return true;
   }
+
   /**
    *
    */
@@ -89,7 +88,7 @@ public class PModeServiceView extends AbstractPModeJSFView<Service> {
     long l = LOG.logStart();
     boolean bsuc = false;
     Service sv = getEditable();
-    if (sv != null) {      
+    if (sv != null) {
       mPModeInteface.addService(sv);
       setEditable(null);
       bsuc = true;
@@ -105,7 +104,7 @@ public class PModeServiceView extends AbstractPModeJSFView<Service> {
     long l = LOG.logStart();
     boolean bsuc = false;
     Service sv = getEditable();
-    if (sv != null) {      
+    if (sv != null) {
       mPModeInteface.updateService(sv);
       setEditable(null);
       bsuc = true;
@@ -125,6 +124,16 @@ public class PModeServiceView extends AbstractPModeJSFView<Service> {
     return lst;
 
   }
+ @Override
+  public String getUpdateTargetTable() {
+    return ":forms:SettingsPModesServices:pmodeServicePanel:TblPModeServices";
+  }
 
-
+  @Override
+  public String getSelectedDesc() {
+     if (getSelected() != null) {
+      return getSelected().getId();
+    }
+    return null;
+  }
 }

@@ -27,7 +27,7 @@ import si.jrc.msh.plugin.tc.utils.DisableService;
 import si.jrc.msh.plugin.tc.utils.DisableServiceUtils;
 import si.jrc.msh.plugin.tc.utils.TestUtils;
 import si.laurentius.commons.SEDJNDI;
-import si.laurentius.commons.SEDOutboxMailStatus;
+import si.laurentius.commons.enums.SEDOutboxMailStatus;
 import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.interfaces.PModeInterface;
@@ -377,6 +377,7 @@ public class TCStressTest implements Serializable {
 
   public List<String> getRegistredDisableServicePlugin() {
     List<String> mlst = new ArrayList<>();
+    /*
     for (PMode pmd : mPMode.getPModes()) {
       if (pmd.getPlugins() != null
               && pmd.getPlugins().getInPlugins() != null
@@ -391,7 +392,7 @@ public class TCStressTest implements Serializable {
           }
         }
       }
-    }
+    }*/
     return mlst;
   }
 

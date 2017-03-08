@@ -67,6 +67,7 @@ import si.laurentius.plugin.interfaces.exception.TaskException;
 @Stateless
 @Local(TaskExecutionInterface.class)
 public class TaskArchive implements TaskExecutionInterface {
+
   /**
    *
    */
@@ -77,13 +78,13 @@ public class TaskArchive implements TaskExecutionInterface {
   public static final String KEY_ARCHIVE_PASSWORD = "archive.passwords";
 
   /**
-     *
-     */
+   *
+   */
   public static final String KEY_CHUNK_SIZE = "archive.chunk.size";
 
   /**
-     *
-     */
+   *
+   */
   public static final String KEY_DELETE_RECORDS = "archive.delete.records";
   /**
    *
@@ -94,12 +95,12 @@ public class TaskArchive implements TaskExecutionInterface {
    *
    */
   public static final String STORAGE_FOLDER = "storage";
-  
 
   /**
-     *
-     */
-  public final SimpleDateFormat msdfDateTime = new SimpleDateFormat("yyyyMMdd_HHmmss");
+   *
+   */
+  public final SimpleDateFormat msdfDateTime = new SimpleDateFormat(
+          "yyyyMMdd_HHmmss");
 
   /**
    *
@@ -109,42 +110,42 @@ public class TaskArchive implements TaskExecutionInterface {
   public static void removeRecursive(Path path) throws IOException {
     Files.walkFileTree(path,
             new SimpleFileVisitor<Path>() {
-              @Override
-              public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-                if (exc == null) {
-                  Files.delete(dir);
-                  return FileVisitResult.CONTINUE;
-                } else {
-                  // directory iteration failed; propagate exception
-                  throw exc;
-                }
-              }
+      @Override
+      public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+        if (exc == null) {
+          Files.delete(dir);
+          return FileVisitResult.CONTINUE;
+        } else {
+          // directory iteration failed; propagate exception
+          throw exc;
+        }
+      }
 
-              @Override
-              public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                Files.delete(file);
-                return FileVisitResult.CONTINUE;
-              }
+      @Override
+      public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+        Files.delete(file);
+        return FileVisitResult.CONTINUE;
+      }
 
-              @Override
-              public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
-                // try to delete the file anyway, even if its attributes
-                // could not be read, since delete-only access is
-                // theoretically possible
-                Files.delete(file);
-                return FileVisitResult.CONTINUE;
-              }
+      @Override
+      public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
+        // try to delete the file anyway, even if its attributes
+        // could not be read, since delete-only access is
+        // theoretically possible
+        Files.delete(file);
+        return FileVisitResult.CONTINUE;
+      }
     });
   }
   @EJB(mappedName = SEDJNDI.JNDI_DATA_INIT)
-          SEDInitDataInterface mLookups;
+  SEDInitDataInterface mLookups;
 
   StorageUtils mSU = new StorageUtils();
-
 
   @EJB(mappedName = SEDJNDI.JNDI_SEDDAO)
   SEDDaoInterface mdao;
   String outFileFormat = "%s_%03d.xml";
+
   /**
    *
    * @param to
@@ -164,12 +165,13 @@ public class TaskArchive implements TaskExecutionInterface {
     long l = mdao.getDataListCount(MSHOutMail.class, sp);
     sw.append("\narchive " + l + " inmail\n");
     long pages = l / iChunkSize + 1;
-    
+
     int iPage = 0;
     while (iPage < pages) {
-      
-      List<MSHInMail> lst =
-              mdao.getDataList(MSHInMail.class, (iPage++) * iChunkSize, iChunkSize, "Id", "ASC", sp);
+
+      List<MSHInMail> lst
+              = mdao.getDataList(MSHInMail.class, (iPage++) * iChunkSize,
+                      iChunkSize, "Id", "ASC", sp);
       if (!lst.isEmpty()) {
         noList.setCount(lst.size());
         for (MSHInMail m : lst) {
@@ -178,10 +180,12 @@ public class TaskArchive implements TaskExecutionInterface {
           fw.append(m.getId().toString());
           fw.append(":");
           // add events
-          List<MSHInEvent> le = mdao.getMailEventList(MSHInEvent.class, m.getId());
+          List<MSHInEvent> le = mdao.getMailEventList(MSHInEvent.class, m.
+                  getId());
           m.getMSHInEvents().addAll(le);
           // backup binaries
-          if (m.getMSHInPayload() != null && !m.getMSHInPayload().getMSHInParts().isEmpty()) {
+          if (m.getMSHInPayload() != null && !m.getMSHInPayload().
+                  getMSHInParts().isEmpty()) {
             for (MSHInPart p : m.getMSHInPayload().getMSHInParts()) {
               if (p.getFilepath() != null) {
                 try {
@@ -189,36 +193,42 @@ public class TaskArchive implements TaskExecutionInterface {
                   fw.append(p.getFilepath());
                   fw.append(";");
                 } catch (IOException | StorageException ex) {
-                  throw new TaskException(TaskException.TaskExceptionCode.ProcessException,
-                          "Error occured while copying  file : '" + p.getFilepath() + "'!", ex);
+                  throw new TaskException(
+                          TaskException.TaskExceptionCode.ProcessException,
+                          "Error occured while copying  file : '" + p.
+                                  getFilepath() + "'!", ex);
                 }
               }
             }
           }
           fw.append("\n");
         }
-        
+
         noList.getMSHInMails().addAll(lst);
         File fout = new File(f, String.format(outFileFormat, "MSHInMail", iPage));
-        
+
         try {
           XMLUtils.serialize(noList, fout);
         } catch (JAXBException | FileNotFoundException ex) {
-          throw new TaskException(TaskException.TaskExceptionCode.ProcessException,
-                  "Error occured while exporting out data : '" + f.getFreeSpace() + "'!", ex);
+          throw new TaskException(
+                  TaskException.TaskExceptionCode.ProcessException,
+                  "Error occured while exporting out data : '" + f.
+                          getFreeSpace() + "'!", ex);
         }
-        String strVal =
-                "Exported page " + iPage + " size: " + lst.size() + " to " + fout.getAbsolutePath();
+        String strVal
+                = "Exported page " + iPage + " size: " + lst.size() + " to " + fout.
+                getAbsolutePath();
         sw.append("\t" + strVal + "\n");
-        LOG.log("Exported page " + iPage + " size: " + lst.size() + " to " + fout.getAbsolutePath());
-        
+        LOG.
+                log("Exported page " + iPage + " size: " + lst.size() + " to " + fout.
+                        getAbsolutePath());
+
       }
-      
+
     }
-    
+
     return sw.toString();
   }
-
 
   /**
    *
@@ -230,7 +240,7 @@ public class TaskArchive implements TaskExecutionInterface {
    * @throws IOException
    */
   public String archiveOutMails(Date to, File f, int iChunkSize, Writer fw) throws TaskException,
-      IOException {
+          IOException {
     StringWriter sw = new StringWriter();
     MSHOutMailList noList = new MSHOutMailList();
     SearchParameters sp = new SearchParameters();
@@ -242,8 +252,9 @@ public class TaskArchive implements TaskExecutionInterface {
     int iPage = 0;
     while (iPage < pages) {
 
-      List<MSHOutMail> lst =
-          mdao.getDataList(MSHOutMail.class, (iPage++) * iChunkSize, iChunkSize, "Id", "ASC", sp);
+      List<MSHOutMail> lst
+              = mdao.getDataList(MSHOutMail.class, (iPage++) * iChunkSize,
+                      iChunkSize, "Id", "ASC", sp);
       if (!lst.isEmpty()) {
         noList.setCount(lst.size());
         for (MSHOutMail m : lst) {
@@ -253,10 +264,12 @@ public class TaskArchive implements TaskExecutionInterface {
           fw.append(":");
 
           // add events
-          List<MSHOutEvent> le = mdao.getMailEventList(MSHOutEvent.class, m.getId());
+          List<MSHOutEvent> le = mdao.getMailEventList(MSHOutEvent.class, m.
+                  getId());
           m.getMSHOutEvents().addAll(le);
           // backup binaries
-          if (m.getMSHOutPayload() != null && !m.getMSHOutPayload().getMSHOutParts().isEmpty()) {
+          if (m.getMSHOutPayload() != null && !m.getMSHOutPayload().
+                  getMSHOutParts().isEmpty()) {
             for (MSHOutPart p : m.getMSHOutPayload().getMSHOutParts()) {
               if (p.getFilepath() != null) {
                 try {
@@ -264,8 +277,10 @@ public class TaskArchive implements TaskExecutionInterface {
                   fw.append(p.getFilepath());
                   fw.append(";");
                 } catch (IOException | StorageException ex) {
-                  throw new TaskException(TaskException.TaskExceptionCode.ProcessException,
-                      "Error occured while copying  file : '" + p.getFilepath() + "'!", ex);
+                  throw new TaskException(
+                          TaskException.TaskExceptionCode.ProcessException,
+                          "Error occured while copying  file : '" + p.
+                                  getFilepath() + "'!", ex);
                 }
               }
             }
@@ -274,16 +289,20 @@ public class TaskArchive implements TaskExecutionInterface {
         }
 
         noList.getMSHOutMails().addAll(lst);
-        File fout = new File(f, String.format(outFileFormat, "MSHOutMail", iPage));
+        File fout = new File(f, String.
+                format(outFileFormat, "MSHOutMail", iPage));
 
         try {
           XMLUtils.serialize(noList, fout);
         } catch (JAXBException | FileNotFoundException ex) {
-          throw new TaskException(TaskException.TaskExceptionCode.ProcessException,
-              "Error occured while exporting out data : '" + f.getFreeSpace() + "'!", ex);
+          throw new TaskException(
+                  TaskException.TaskExceptionCode.ProcessException,
+                  "Error occured while exporting out data : '" + f.
+                          getFreeSpace() + "'!", ex);
         }
-        String strVal =
-            "Exported page " + iPage + " size: " + lst.size() + " to " + fout.getAbsolutePath();
+        String strVal
+                = "Exported page " + iPage + " size: " + lst.size() + " to " + fout.
+                getAbsolutePath();
         sw.append("\t" + strVal + "\n");
 
         LOG.log(strVal);
@@ -293,9 +312,9 @@ public class TaskArchive implements TaskExecutionInterface {
 
   }
 
-
-  private CronTaskPropertyDef createTTProperty(String key, String desc, boolean mandatory,
-      String type, String valFormat, String valList) {
+  private CronTaskPropertyDef createTTProperty(String key, String desc,
+          boolean mandatory,
+          String type, String valFormat, String valList) {
     CronTaskPropertyDef ttp = new CronTaskPropertyDef();
     ttp.setKey(key);
     ttp.setDescription(desc);
@@ -309,6 +328,7 @@ public class TaskArchive implements TaskExecutionInterface {
   private CronTaskPropertyDef createTTProperty(String key, String desc) {
     return createTTProperty(key, desc, true, "string", null, null);
   }
+
   /**
    *
    * @param p
@@ -348,7 +368,8 @@ public class TaskArchive implements TaskExecutionInterface {
         dtArhiveTo = cld.getTime();
 
       } catch (NumberFormatException nfe) {
-        throw new TaskException(TaskException.TaskExceptionCode.InitException, "Bad parameter:  '"
+        throw new TaskException(TaskException.TaskExceptionCode.InitException,
+                "Bad parameter:  '"
                 + KEY_EXPORT_FOLDER + "' - not a number!", nfe);
       }
 
@@ -361,7 +382,8 @@ public class TaskArchive implements TaskExecutionInterface {
         iChunkSize = Integer.parseInt(p.getProperty(KEY_CHUNK_SIZE).trim());
       } catch (NumberFormatException nfe) {
         iChunkSize = 1000;
-        String msg = " Bad chunk size parameter: '" + p.getProperty(KEY_CHUNK_SIZE) + "' ";
+        String msg = " Bad chunk size parameter: '" + p.getProperty(
+                KEY_CHUNK_SIZE) + "' ";
         sw.append(msg);
         LOG.logWarn(l, msg, nfe);
       }
@@ -370,13 +392,15 @@ public class TaskArchive implements TaskExecutionInterface {
     if (!p.containsKey(KEY_DELETE_RECORDS)) {
       bDelRecords = false;
     } else {
-      bDelRecords = p.getProperty(KEY_DELETE_RECORDS).trim().equalsIgnoreCase("true");
+      bDelRecords = p.getProperty(KEY_DELETE_RECORDS).trim().equalsIgnoreCase(
+              "true");
     }
-    
+
     if (!p.containsKey(KEY_ARCHIVE_PASSWORD)) {
       bArchivePassword = false;
     } else {
-      bArchivePassword = p.getProperty(KEY_ARCHIVE_PASSWORD).trim().equalsIgnoreCase("true");
+      bArchivePassword = p.getProperty(KEY_ARCHIVE_PASSWORD).trim().
+              equalsIgnoreCase("true");
     }
 
     sw.append("- Init folders:");
@@ -398,17 +422,20 @@ public class TaskArchive implements TaskExecutionInterface {
       lst = LOG.getTime();
       String rs = archiveOutMails(dtArhiveTo, archFolder, iChunkSize, fw);
       sw.append(rs);
-      sw.append(" end: " + (lst - LOG.getTime()) + " ms\n---------------------\n\n");
+      sw.append(
+              " end: " + (lst - LOG.getTime()) + " ms\n---------------------\n\n");
 
       sw.append("---------------------\nArhive in mail");
       lst = LOG.getTime();
       rs = archiveInMails(dtArhiveTo, archFolder, iChunkSize, fw);
       sw.append(rs);
-      sw.append(" end: " + (lst - LOG.getTime()) + " ms\n---------------------\n\n");
+      sw.append(
+              " end: " + (lst - LOG.getTime()) + " ms\n---------------------\n\n");
       fw.flush();
     } catch (IOException ex) {
       throw new TaskException(TaskException.TaskExceptionCode.InitException,
-              "Error opening archive list file:  '" + fbackMails.getAbsolutePath() + "'!", ex);
+              "Error opening archive list file:  '" + fbackMails.
+                      getAbsolutePath() + "'!", ex);
     }
 
     // delete record if archive succedded
@@ -452,7 +479,8 @@ public class TaskArchive implements TaskExecutionInterface {
         // delete records
         // delete files
       } catch (IOException ex) {
-        Logger.getLogger(TaskArchive.class.getName()).log(Level.SEVERE, null, ex);
+        Logger.getLogger(TaskArchive.class.getName()).
+                log(Level.SEVERE, null, ex);
       }
 
     }
@@ -461,27 +489,34 @@ public class TaskArchive implements TaskExecutionInterface {
     LOG.logEnd(l);
     return sw.toString();
   }
+
   @Override
   public CronTaskDef getDefinition() {
     CronTaskDef tt = new CronTaskDef();
     tt.setType("archive");
     tt.setName("Archive data");
     tt.setDescription("Archive data to 'xml' and files to archive-storage");
-    tt.getCronTaskPropertyDeves().add(createTTProperty(KEY_EXPORT_FOLDER, "Archive folder"));
+    tt.getCronTaskPropertyDeves().add(createTTProperty(KEY_EXPORT_FOLDER,
+            "Archive folder"));
     tt.getCronTaskPropertyDeves().add(
-            createTTProperty(KEY_CHUNK_SIZE, "Max mail count in chunk", true, "int", null, null));
+            createTTProperty(KEY_CHUNK_SIZE, "Max mail count in chunk", true,
+                    "int", null, null));
     tt.getCronTaskPropertyDeves().add(
-            createTTProperty(KEY_DELETE_RECORDS, "Delete exported records (true/false)", true,
+            createTTProperty(KEY_DELETE_RECORDS,
+                    "Delete exported records (true/false)", true,
                     "boolean", null, null));
     tt.getCronTaskPropertyDeves().add(
-            createTTProperty(KEY_ARCHIVE_PASSWORD, "Archive passwords (true/false)", false,
+            createTTProperty(KEY_ARCHIVE_PASSWORD,
+                    "Archive passwords (true/false)", false,
                     "boolean", null, null));
     tt.getCronTaskPropertyDeves().add(
-            createTTProperty(KEY_ARCHIVE_OFFSET, "Archive records older than [n] days", true, "int",
+            createTTProperty(KEY_ARCHIVE_OFFSET,
+                    "Archive records older than [n] days", true, "int",
                     null, null));
-    
+
     return tt;
   }
+
   private File initFolders(String rootFolder, String archFolder) throws TaskException {
     File f = new File(StringFormater.replaceProperties(rootFolder));
 
@@ -491,19 +526,20 @@ public class TaskArchive implements TaskExecutionInterface {
     }
     File bck = new File(f, archFolder);
     if (bck.exists()) {
-      throw new TaskException(TaskException.TaskExceptionCode.InitException, "Arhive folder: '"
+      throw new TaskException(TaskException.TaskExceptionCode.InitException,
+              "Arhive folder: '"
               + bck.getAbsolutePath() + "' already exists. " + "Arhive would overwrite folder content!");
     } else if (!bck.mkdirs()) {
       throw new TaskException(TaskException.TaskExceptionCode.InitException,
               "Could not create folder: '" + bck.getAbsolutePath() + "'!");
-      
+
     }
 
     File bckStrg = new File(bck, STORAGE_FOLDER);
     if (!bckStrg.mkdirs()) {
       throw new TaskException(TaskException.TaskExceptionCode.InitException,
               "Could not create folder: '" + bckStrg.getAbsolutePath() + "'!");
-      
+
     }
     return bck;
   }

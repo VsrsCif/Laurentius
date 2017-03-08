@@ -6,89 +6,70 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:p="http://primefaces.org/ui"
       xmlns:composite="http://java.sun.com/jsf/composite"
-      xmlns:sui="http://java.sun.com/jsf/composite/laurentius-ui">
+      xmlns:sui="http://java.sun.com/jsf/composite/laurentius-ui"
+      xmlns:pnl="http://java.sun.com/jsf/composite/laurentius-ui/panel"
+      >
 
     <composite:interface>
     </composite:interface>
 
     <composite:implementation >
+        <pnl:pnl-settings id="pmodeServicePanel"
+                          title="#{msg['Services']}" 
+                          description="#{msg['PModeServiceDefDesc']}"
+                          icon="ui-icon-svg-service"
+                          >
+
+            <p:scrollPanel mode="native" style="width:100%;height:100%"> <!-- p:dataTable scrollable does not resize when toogled suth panel -->                
+                <p:dataTable id="TblPModeServices" 
+                             var="sp" 
+                             value="#{pModeServiceView.list}"
+                             selectionMode="single"
+                             selection="#{pModeServiceView.selected}"
+                             rowKey="#{sp.id}"
+
+                             currentPageReportTemplate="#{msg['Showing']} {startRecord}-{endRecord} #{msg['OutOf']} {totalRecords}"
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             rowsPerPageTemplate="25,50,100,200" 
+                             paginator="true" 
+                             style="padding: 0px; margin: 0px"
+                             scrollable="true" 
+                             scrollHeight="100%"
+                             rows="100" 
 
 
-        <p:layout   widgetVar="PModeServiceMainLayout" style="min-width:400px;min-height:400px;height: 100%;width: 100%"  >
-            <p:layoutUnit  position="north" resizable="true" closable="true" collapsible="true"
-                           size="38" minSize="38" maxSize="400" style="width:100%;height:100%;padding: 0px; margin: 0px"
-                           gutter="0">
-                <h1><h:outputLink id="growPanelDesc" value="#">
-                        <span class="ui-icon-panel-Header ui-icon ui-icon-svg-service"  />#{msg['Services']}
-                    </h:outputLink>
-                </h1>
-                <p:tooltip id="toolTipGrow" for="growPanelDesc" position="bottom">
-                    <h:outputText value="#{msg['PModeServiceDefDesc']}"></h:outputText>
-                </p:tooltip>                
-            </p:layoutUnit>
+                             >
+                    <p:ajax event="rowDblselect" listener="#{pModeServiceView.startEditSelected()}" 
+                            update=":dlgPModeService:pModeServiceDialog:pModeServiceDialogForm"
+                            oncomplete="PF('pModeServiceDialog').show()"/>
 
-            <p:layoutUnit position="center" style="width:100%;height:100%;padding: 0px; margin: 0px" gutter="0" >
-                <p:scrollPanel mode="native" style="width:100%;height:100%"> <!-- p:dataTable scrollable does not resize when toogled suth panel -->                
-                    <p:dataTable id="TblPModeServices" 
-                                 var="sp" 
-                                 value="#{pModeServiceView.list}"
-                                 selectionMode="single"
-                                 selection="#{pModeServiceView.selected}"
-                                 rowKey="#{sp.id}"
+                    <f:facet name="header">
+                        <pnl:pnl-table-control 
+                            dialogVar="pModeServiceDialog"
+                            updateDialog=":dlgPModeService:pModeServiceDialog:pModeServiceDialogForm"
+                            updateTable=":forms:SettingsPModesServices:pmodeServicePanel:TblPModeServices"
+                            addActionListener="#{pModeServiceView.createEditable()}"
+                            editActionListener="#{pModeServiceView.startEditSelected()}"
+                            removeActionListener="#{pModeServiceView.removeSelectedWithWarning()}"                            
+                            />       
 
-                                 currentPageReportTemplate="#{msg['Showing']} {startRecord}-{endRecord} #{msg['OutOf']} {totalRecords}"
-                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                                 rowsPerPageTemplate="25,50,100,200" 
-                                 paginator="true" 
-                                 style="padding: 0px; margin: 0px"
-                                 scrollable="true" 
-                                 scrollHeight="100%"
-                                 rows="100" 
+                    </f:facet>
+                    <p:column  headerText="#{msg['Id']}" width="200">
+                        <h:outputText value="#{sp.id}" />
+                    </p:column>
+                    <p:column  headerText="#{msg['Service']}" >
+                        <h:outputText value="#{sp.serviceName}"></h:outputText>                
+                    </p:column>
+                    <p:column width="160" headerText="#{msg['ServiceType']}">
+                        <h:outputText value="#{sp.serviceType}"></h:outputText>                
+                    </p:column>
+                    <p:column  width="80"  headerText="#{msg['sedProperties']}">
+                        <h:outputText value="#{sp.useSEDProperties}"></h:outputText>                
+                    </p:column>
 
-
-                                 >
-                        <p:ajax event="rowDblselect" listener="#{pModeServiceView.startEditSelected()}" 
-                                update=":dlgPModeService:pModeServiceDialogForm:pModeService"
-                                oncomplete="PF('pModeServiceDialog').show()"/>
-
-                        <f:facet name="header">
-                            <p:commandButton value="#{msg['Add']}"  
-                                             styleClass="toolbar-Button" 
-                                             icon="ui-icon-svg-add ui-icon-size-22" 
-                                             actionListener="#{pModeServiceView.createEditable()}"
-                                             oncomplete="PF('pModeServiceDialog').show()" 
-                                             update=":dlgPModeService:pModeServiceDialogForm:pModeService"
-                                             />
-                            <p:commandButton value="#{msg['Edit']}"  styleClass="toolbar-Button" 
-                                             icon="ui-icon-svg-edit ui-icon-size-22" 
-                                             oncomplete="PF('pModeServiceDialog').show()"                                                                   
-                                             actionListener="#{pModeServiceView.startEditSelected()}"
-                                             update=":dlgPModeService:pModeServiceDialogForm:pModeService"
-                                             />
-                            <p:commandButton value="#{msg['Delete']}" styleClass="toolbar-Button"                                  
-                                             icon="ui-icon-svg-remove ui-icon-size-22" 
-                                             actionListener="#{pModeServiceView.removeSelected()}" 
-                                             update=":forms:SettingsPModesServices:TblPModeServices" />
-
-                        </f:facet>
-                        <p:column  headerText="#{msg['Id']}" width="200">
-                            <h:outputText value="#{sp.id}" />
-                        </p:column>
-                        <p:column  headerText="#{msg['Service']}" >
-                            <h:outputText value="#{sp.serviceName}"></h:outputText>                
-                        </p:column>
-                        <p:column width="160" headerText="#{msg['ServiceType']}">
-                            <h:outputText value="#{sp.serviceType}"></h:outputText>                
-                        </p:column>
-                        <p:column  width="80"  headerText="#{msg['sedProperties']}">
-                            <h:outputText value="#{sp.useSEDProperties}"></h:outputText>                
-                        </p:column>
-
-                    </p:dataTable>
-                </p:scrollPanel>
-            </p:layoutUnit>                        
-        </p:layout>
-
+                </p:dataTable>
+            </p:scrollPanel>
+        </pnl:pnl-settings>
     </composite:implementation>
 
 </html>

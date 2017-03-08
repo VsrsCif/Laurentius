@@ -8,8 +8,6 @@ package si.laurentius.plg.db;
 import java.io.File;
 import java.util.List;
 import javax.ejb.Local;
-import si.laurentius.plugin.imp.IMPExecute;
-import si.laurentius.plugin.imp.IMPExport;
 import si.laurentius.plugin.imp.IMPXslt;
 
 /**
@@ -22,20 +20,7 @@ public interface IMPDBInterface {
 
   void exportInitData(File f);
  
-  
-  IMPExport getExport(String instance);
-  boolean addExport(IMPExport sb);
-  List<IMPExport> getExports();
-  boolean removeExport(IMPExport sb);
-  boolean updateExport(IMPExport sb);
-  
-  IMPExecute getExecute(String instance);
-  boolean addExecute(IMPExecute sb);
-  List<IMPExecute> getExecutes();
-  boolean removeExecute(IMPExecute sb);
-  boolean updateExecute(IMPExecute sb);
-  
-  
+ 
   IMPXslt getXSLT(String instance);
   boolean addXSLT(IMPXslt sb);
   List<IMPXslt> getXSLTs();

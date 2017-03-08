@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Properties;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
-import si.laurentius.commons.SEDInboxMailStatus;
+import si.laurentius.commons.enums.SEDInboxMailStatus;
 import si.laurentius.commons.exception.StorageException;
 import si.laurentius.cron.SEDTaskExecution;
 import si.laurentius.msh.inbox.mail.MSHInMail;

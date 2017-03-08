@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      xmlns:dlg="http://java.sun.com/jsf/composite/laurentius-ui/dialog"
+      >
+    <composite:interface>
+    </composite:interface>
+
+    <composite:implementation >      
+        <dlg:dlg-abstract   id="intcRuleDialog"
+                            formId="intcRuleDialogForm"
+                            dialogTitle="#{msg['SEDInterceptorDialog']}" 
+                            editable="#{adminSEDInterceptorRuleView.editable}"
+                            width="400"
+                            height="150"
+                            updateOnSave=":dlgintc:intcDialog:intcDialogForm:TblDecisionRule"
+                            onConfirmAction="#{adminSEDInterceptorRuleView.addOrUpdateEditable()}"
+                            >      
+            <p:panelGrid  columns="2" columnClasses="grid-label, value"  style="width:100%; height: 100% ">
+
+                <h:outputText value="#{msg['MailProperty']}:" />
+                <p:selectOneMenu id="mailProp" value="#{adminSEDInterceptorRuleView.editable.property}" 
+                                 style="width:250px"                                          
+                                 >
+                    <p:ajax update="mailPred" />;
+                    <f:selectItems value="#{LookupsData.mailProperties}"  var="plg" 
+                                   itemLabel="#{plg}" 
+                                   itemValue="#{plg}"                                           
+                                   />
+                </p:selectOneMenu>
+
+
+                <h:outputText value="#{msg['Predicate']}:" />
+                <p:selectOneMenu id="mailPred" value="#{adminSEDInterceptorRuleView.editable.predicate}" 
+                                 style="width:250px"                                          
+                                 >
+                    <f:selectItems value="#{adminSEDInterceptorRuleView.getRulePredicatesForProperty(adminSEDInterceptorRuleView.editable.property)}"  var="plg" 
+                                   itemLabel="#{plg.desc} (#{plg.value})" 
+                                   itemValue="#{plg.value}"                                           
+                                   />
+                </p:selectOneMenu>
+
+
+                <h:outputText value="#{msg['Value']}:" />
+                <h:inputText  value="#{adminSEDInterceptorRuleView.editable.value}" style="width: 260px"  />
+
+
+            </p:panelGrid>                   
+        </dlg:dlg-abstract>
+    </composite:implementation>
+</html>

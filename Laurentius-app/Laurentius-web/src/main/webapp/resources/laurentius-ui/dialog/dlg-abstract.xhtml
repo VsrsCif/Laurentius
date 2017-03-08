@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:cc="http://java.sun.com/jsf/composite"
+      >
+    <cc:interface>
+        <cc:attribute name="dialogTitle" type="java.lang.String" default="Dialog"/>
+        <cc:attribute name="width" type="java.lang.Integer" default="800" />
+        <cc:attribute name="height" type="java.lang.Integer" default="600" />
+        <cc:attribute name="editable" type="java.lang.Object" />
+        <cc:attribute name="updateOnSave" type="java.lang.String" />
+        <cc:attribute name="onConfirmAction" method-signature="void actionListener()" />
+        <cc:attribute name="formId" type="java.lang.String" />
+
+    </cc:interface>
+
+    <cc:implementation >      
+        <!-- Cron ADD/EDIT dialog! -->
+        <p:dialog   header="#{cc.attrs.dialogTitle}" 
+                    widgetVar="#{cc.attrs.id}" modal="true" hideEffect="fade" 
+                    resizable="false" appendTo="@(body)"
+                    width="#{cc.attrs.width}" height="#{cc.attrs.height}" 
+                    onShow="PF('btnOk').enable();PF('btnCancel').enable();"
+                    >
+            <h:form id="#{cc.attrs.formId}">
+                <p:messages id="dialogMessage"
+                            autoUpdate="true"
+                            showDetail="true"
+                            closable="true"
+                            transient="true"/>
+
+                <p:layout id="dialogLayout" style="width: #{cc.attrs.width-40}px;height:#{cc.attrs.height}px;">
+                    <p:layoutUnit position="center" rendered="#{empty cc.attrs.editable}" >
+                        <h:outputText value="#{msg['SelectTableRow']}" />
+                    </p:layoutUnit>
+
+                    <p:layoutUnit  position="center"  
+                                   rendered="#{not empty cc.attrs.editable}"  >
+                        <cc:insertChildren /> 
+                    </p:layoutUnit>
+
+                    <p:layoutUnit position="south"  size="40" minSize="40" maxSize="40" >
+                        <p:toolbar 
+                            styleClass="dialogButtonBar" >
+                            <f:facet name="right"  >
+                                <p:commandButton widgetVar="btnOk" 
+                                                 value="#{msg['Ok']}"  styleClass="toolbar-Button" 
+                                                 icon="ui-icon-svg-ok ui-icon-size-22" 
+                                                 action="#{cc.attrs.onConfirmAction}"
+                                                 oncomplete="if (args &amp;&amp; args.saved) { PF('#{cc.attrs.id}').hide()}
+                                                             else {PF('btnOk').enable();PF('btnCancel').enable();}" 
+                                                 update="#{cc.attrs.updateOnSave}"
+                                                 
+                                                 onclick="PF('btnOk').disable();PF('btnCancel').disable();"
+                                                 />
+                                <p:commandButton widgetVar="btnCancel"  
+                                                 value="#{msg['Cancel']}"
+                                                 styleClass="toolbar-Button"
+                                                 icon="ui-icon-svg-cancel ui-icon-size-22" 
+                                                 onclick="PF('btnOk').disable();PF('btnCancel').disable();PF('#{cc.attrs.id}').hide();return false;"/>                                                 
+                            </f:facet>
+                        </p:toolbar>
+                    </p:layoutUnit>
+                </p:layout>
+            </h:form>
+        </p:dialog>
+    </cc:implementation>
+</html>

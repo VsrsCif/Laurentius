@@ -10,7 +10,7 @@
                 <param name="sequence">SEQ_LAU_CRON</param>
             </generator>
         </id>
-        <property column="NAME" name="name"  length="128" type="java.lang.String"/>
+        <property column="NAME" name="name"  length="128" type="java.lang.String" unique="true"/>
         <property column="ACTIVE" name="Active"   type="java.lang.Boolean"/>
         <property column="CRON_SECOND" name="Second"  length="64" type="java.lang.String"/>
         <property column="CRON_MINUTE" name="Minute"  length="64" type="java.lang.String"/>

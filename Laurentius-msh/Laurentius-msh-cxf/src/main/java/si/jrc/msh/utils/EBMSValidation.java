@@ -41,7 +41,7 @@ import si.jrc.msh.exception.EBMSError;
 import si.jrc.msh.exception.EBMSErrorCode;
 import si.jrc.msh.exception.EBMSErrorMessage;
 import si.jrc.msh.interceptor.EBMSInInterceptor;
-import si.laurentius.commons.MimeValues;
+import si.laurentius.commons.enums.MimeValue;
 import si.laurentius.commons.cxf.SoapUtils;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.Utils;
@@ -312,8 +312,8 @@ public class EBMSValidation {
       }
 
       if (!Utils.isEmptyString(mimetype) &&
-          (MimeValues.MIME_XML.getMimeType().equalsIgnoreCase(mimetype.trim()) ||
-          MimeValues.MIME_XML1.getMimeType().equalsIgnoreCase(mimetype.trim()))) {
+          (MimeValue.MIME_XML.getMimeType().equalsIgnoreCase(mimetype.trim()) ||
+          MimeValue.MIME_XML1.getMimeType().equalsIgnoreCase(mimetype.trim()))) {
         /* For XML payloads, an PartInfo/PartProperties/Property/@name="CharacterSet" value is
           recommended to identify the character set of the payload before
           compression was applied. The value of this property MUST conform

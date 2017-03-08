@@ -31,9 +31,9 @@ import si.laurentius.msh.pmode.ReceptionAwareness;
 import si.jrc.msh.client.MshClient;
 import si.jrc.msh.client.Result;
 import si.jrc.msh.exception.EBMSErrorCode;
-import si.laurentius.commons.MimeValues;
+import si.laurentius.commons.enums.MimeValue;
 import si.laurentius.commons.SEDJNDI;
-import si.laurentius.commons.SEDOutboxMailStatus;
+import si.laurentius.commons.enums.SEDOutboxMailStatus;
 import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.SEDValues;
 import si.laurentius.commons.exception.PModeException;
@@ -341,7 +341,7 @@ public class MSHQueueBean implements MessageListener {
     if (Utils.isEmptyString(strpath)) {
       setStatusToOutMail(mail, status, desc);
     } else {
-      setStatusToOutMail(mail, status, desc, strpath, MimeValues.MIME_TXT.
+      setStatusToOutMail(mail, status, desc, strpath, MimeValue.MIME_TXT.
               getMimeType());
     }
 

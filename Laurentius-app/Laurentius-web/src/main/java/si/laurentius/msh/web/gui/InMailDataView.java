@@ -38,8 +38,8 @@ import si.laurentius.msh.inbox.mail.MSHInMail;
 import si.laurentius.msh.inbox.payload.MSHInPart;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
-import si.laurentius.commons.MimeValues;
-import si.laurentius.commons.SEDInboxMailStatus;
+import si.laurentius.commons.enums.MimeValue;
+import si.laurentius.commons.enums.SEDInboxMailStatus;
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.interfaces.JMSManagerInterface;
@@ -170,7 +170,7 @@ public class InMailDataView extends AbstractMailView<MSHInMail, MSHInEvent> impl
     File f = StorageUtils.getFile(filePath);
     if (f.exists()) {
       try {
-        return new DefaultStreamedContent(new FileInputStream(f), MimeValues.getMimeTypeByFileName(
+        return new DefaultStreamedContent(new FileInputStream(f), MimeValue.getMimeTypeByFileName(
             f.getName()),
             f.getName());
       } catch (FileNotFoundException ex) {

@@ -18,13 +18,11 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.interfaces.PModeInterface;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.msh.pmode.Security;
-import si.laurentius.msh.web.gui.dlg.DialogDelete;
 
 /**
  *
@@ -64,22 +62,22 @@ public class PModeSecurityView extends AbstractPModeJSFView<Security> {
    *
    */
   @Override
-  public void removeSelected() {
-
-    long l = LOG.logStart();
-
+  public boolean removeSelected() {
+    boolean bSuc = false;
     Security srv = getSelected();
     if (srv != null) {
       mPModeInteface.removeSecurity(srv);;
+      bSuc = true;
     }
-
+    return bSuc;
   }
 
-   @Override
+  @Override
   public boolean validateData() {
-    
+
     return true;
   }
+
   /**
    *
    */
@@ -88,7 +86,7 @@ public class PModeSecurityView extends AbstractPModeJSFView<Security> {
     long l = LOG.logStart();
     boolean bsuc = false;
     Security sv = getEditable();
-    if (sv != null) {      
+    if (sv != null) {
       mPModeInteface.addSecurity(sv);
       setEditable(null);
       return bsuc;
@@ -104,7 +102,7 @@ public class PModeSecurityView extends AbstractPModeJSFView<Security> {
     long l = LOG.logStart();
     boolean bsuc = false;
     Security sv = getEditable();
-    if (sv != null) {      
+    if (sv != null) {
       mPModeInteface.updateSecurity(sv);
       setEditable(null);
       bsuc = true;
@@ -125,5 +123,17 @@ public class PModeSecurityView extends AbstractPModeJSFView<Security> {
 
   }
 
+  @Override
+  public String getUpdateTargetTable() {
+    return ":forms:SettingsPModesSecurities:pmodeSecuritPanel:TblPModeSecurity";
+  }
+
+  @Override
+  public String getSelectedDesc() {
+    if (getSelected() != null) {
+      return getSelected().getId();
+    }
+    return null;
+  }
 
 }

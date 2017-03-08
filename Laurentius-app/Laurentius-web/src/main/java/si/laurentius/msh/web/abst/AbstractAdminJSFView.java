@@ -112,7 +112,7 @@ abstract public class AbstractAdminJSFView<T> extends AbstractJSFView {
   /**
    *
    */
-  abstract public void removeSelected();
+  abstract public boolean removeSelected();
 
   /**
    *
@@ -123,7 +123,6 @@ abstract public class AbstractAdminJSFView<T> extends AbstractJSFView {
     RequestContext context = RequestContext.getCurrentInstance();
     context.execute("PF('DlgDelete').show();");
     context.update("dlgalert:deleteDialog");
-
   }
 
   ;

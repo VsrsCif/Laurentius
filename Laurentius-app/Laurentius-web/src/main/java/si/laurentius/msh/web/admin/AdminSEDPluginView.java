@@ -91,7 +91,8 @@ public class AdminSEDPluginView extends AbstractAdminJSFView<Plugin> {
    *
    */
   @Override
-  public void removeSelected() {
+  public boolean removeSelected() {
+    return false;
   }
 
   /**

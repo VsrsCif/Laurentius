@@ -10,7 +10,7 @@ import java.util.Map;
 import javax.ejb.embeddable.EJBContainer;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import si.laurentius.commons.MimeValues;
+import si.laurentius.commons.enums.MimeValue;
 import si.laurentius.commons.utils.Utils;
 import si.laurentius.msh.inbox.mail.MSHInMail;
 import si.laurentius.msh.inbox.payload.MSHInPart;
@@ -58,14 +58,14 @@ public class ProcessXSLTTest {
     mi.setMSHInPayload(new MSHInPayload());
     // create mime pdf
     MSHInPart mipPDF = new MSHInPart();
-    mipPDF.setMimeType(MimeValues.MIME_PDF.getMimeType());
+    mipPDF.setMimeType(MimeValue.MIME_PDF.getMimeType());
     mipPDF.setFilename("test.pdf");
     mipPDF.setDescription("test pdf");
     mi.getMSHInPayload().getMSHInParts().add(mipPDF);
 
     if (!Utils.isEmptyString(xmlPart)) {
       MSHInPart mipXML = new MSHInPart();
-      mipXML.setMimeType(MimeValues.MIME_XML.getMimeType());
+      mipXML.setMimeType(MimeValue.MIME_XML.getMimeType());
       mipXML.setFilename("test.xml");
       mipXML.setDescription("test xml");
       mi.getMSHInPayload().getMSHInParts().add(mipXML);

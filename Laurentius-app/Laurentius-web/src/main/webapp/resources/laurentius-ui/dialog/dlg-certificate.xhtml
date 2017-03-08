@@ -6,29 +6,27 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:p="http://primefaces.org/ui"
       xmlns:composite="http://java.sun.com/jsf/composite"
+      xmlns:dlg="http://java.sun.com/jsf/composite/laurentius-ui/dialog"
       >
     <composite:interface>
     </composite:interface>
 
     <composite:implementation >      
-        <!-- Cert ADD/EDIT dialog! -->
-        <p:dialog   header="#{msg['SEDCertDialog']}" widgetVar="certDialog" modal="true" hideEffect="fade" 
-                    resizable="false" appendTo="@(body)" width="900" >
-            <h:form id="certDialogForm">
-                <p:messages id="dlgCertMessage" showDetail="true" autoUpdate="true" closable="true" />
-                
-
-                <p:layout id="certData" style="min-width:650px;height:380px;">
-
-                  
-                    <p:layoutUnit   position="center"    >
-                        <f:facet name="header">
-                            <h:graphicImage rendered="#{adminSEDKeystoreView.editable.keyEntry}" value="#{resource['images:/privateKeyLong.svg']}" width="40" height="18" />
-                            <h:graphicImage rendered="#{not adminSEDKeystoreView.editable.keyEntry}" value="#{resource['images:/certificateLong.svg']}" width="40" height="18" />
-                            <h:outputText value="#{msg['Certificate']}" />                                 
-                        </f:facet>
+         <dlg:dlg-abstract   id="certDialog"
+                            formId="certDialogForm"
+                            dialogTitle="#{msg['SEDCertDialog']}" 
+                            editable="#{adminSEDKeystoreView.editable}"
+                            width="550"
+                            height="200"
+                            updateOnSave=":forms:PanelKeystore:certPanel:keylist"
+                            onConfirmAction="#{adminSEDKeystoreView.addOrUpdateEditable()}"
+                            >      
                         <p:panelGrid  columns="2" columnClasses="grid-label, value"  style="width:100%; height: 100% ">
-
+                            <f:facet name="header">
+                                <h:graphicImage rendered="#{adminSEDKeystoreView.editable.keyEntry}" value="#{resource['images:/privateKeyLong.svg']}" width="40" height="18" />
+                                <h:graphicImage rendered="#{not adminSEDKeystoreView.editable.keyEntry}" value="#{resource['images:/certificateLong.svg']}" width="40" height="18" />
+                                <h:outputText value="#{msg['Certificate']}" />                                 
+                            </f:facet>
                             <h:outputText value="#{msg['Alias']}:" />
                             <h:inputText  value="#{adminSEDKeystoreView.editable.alias}" style="width: 260px"  />
 
@@ -53,34 +51,8 @@
                             <h:outputText  value="#{adminSEDKeystoreView.editable.serialNumber}" style="width: 260px"  />
 
                             <h:outputText value="#{msg['SH1Digest']}:" />
-                            <h:outputText value="#{adminSEDKeystoreView.editable.hexSHA1Digest}" style="width: 260px"  />
-         
-                        </p:panelGrid>
-                    </p:layoutUnit>
-
-
-
-                    <p:layoutUnit position="south"  size="40" minSize="40" maxSize="40" >
-                        <p:toolbar 
-                            styleClass="dialogButtonBar" >
-                            <f:facet name="right"  >
-                                <p:commandButton value="#{msg['Ok']}"  styleClass="toolbar-Button" 
-                                                 icon="ui-icon-svg-ok ui-icon-size-22" 
-                                                 action="#{adminSEDKeystoreView.addOrUpdateEditable()}"
-                                                 oncomplete="if (args &amp;&amp; args.saved) PF('certDialog').hide()" 
-                                                 update=":forms:PanelKeystore:keylist"
-                                                 />
-                                <p:commandButton value="#{msg['Cancel']}"
-                                                 styleClass="toolbar-Button"
-                                                 icon="ui-icon-svg-cancel ui-icon-size-22" 
-                                                 onclick="PF('certDialog').hide();return false;"/>
-
-                            </f:facet>
-                        </p:toolbar>
-                    </p:layoutUnit>
-                </p:layout>
-            </h:form>
-        </p:dialog>
-        
+                            <h:outputText value="#{adminSEDKeystoreView.editable.hexSHA1Digest}" style="width: 260px"  />         
+                        </p:panelGrid>                   
+        </dlg:dlg-abstract>
     </composite:implementation>
 </html>

@@ -62,20 +62,12 @@ public class BasicPluginDescription extends AbstractPluginDescription {
     MenuItem miRoot = super.getProcessMenu();
     miRoot.setName(getName());
 
-    MenuItem mi = new MenuItem();
-    mi.setName("Export");
-    mi.setPageId(AppConstant.S_PANEL_IMP_EXPORT);
 
-    MenuItem miExc = new MenuItem();
-    miExc.setName("Execute");
-    miExc.setPageId(AppConstant.S_PANEL_IMP_EXECUTE);
 
     MenuItem miXSLT = new MenuItem();
     miXSLT.setName("XSLT");
     miXSLT.setPageId(AppConstant.S_PANEL_IMP_XSLT);
 
-    miRoot.getMenuItems().add(mi);
-    miRoot.getMenuItems().add(miExc);
     miRoot.getMenuItems().add(miXSLT);
 
     return miRoot;

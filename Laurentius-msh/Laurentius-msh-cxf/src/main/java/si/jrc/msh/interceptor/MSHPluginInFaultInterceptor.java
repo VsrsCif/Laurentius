@@ -14,29 +14,20 @@
  */
 package si.jrc.msh.interceptor;
 
-import java.util.List;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import org.apache.cxf.binding.soap.SoapFault;
 import org.apache.cxf.binding.soap.SoapMessage;
-import org.apache.cxf.binding.soap.interceptor.AbstractSoapInterceptor;
 import org.apache.cxf.interceptor.Fault;
 import org.apache.cxf.phase.Phase;
-import si.jrc.msh.exception.EBMSError;
-import si.jrc.msh.exception.EBMSErrorCode;
-import si.laurentius.msh.pmode.PluginType;
 import si.laurentius.commons.cxf.SoapUtils;
+import si.laurentius.commons.enums.SEDInterceptorEvent;
 import si.laurentius.commons.pmode.EBMSMessageContext;
 import si.laurentius.commons.utils.SEDLogger;
-import si.laurentius.commons.utils.Utils;
 import si.laurentius.msh.inbox.mail.MSHInMail;
-import si.laurentius.plugin.interfaces.SoapInterceptorInterface;
 
 /**
  *
  * @author Jože Rihtaršič
  */
-public class MSHPluginInFaultInterceptor extends AbstractSoapInterceptor {
+public class MSHPluginInFaultInterceptor extends MSHPluginInterceptorAbstract {
 
   /**
    *
@@ -58,32 +49,8 @@ public class MSHPluginInFaultInterceptor extends AbstractSoapInterceptor {
   public void handleMessage(SoapMessage msg)
       throws Fault {
     long l = LOG.logStart();
-    EBMSMessageContext ectx = SoapUtils.getEBMSMessageInContext(msg);
-    MSHInMail inMail = SoapUtils.getMSHInMail(msg);
-    
-    if (ectx == null) {
-      LOG.formatedWarning("No EBMSMessageContext context for in mail: '%d'.", inMail == null?-1:inMail.getId());
-    } else if (ectx.getPMode() != null &&
-         ectx.getPMode().getPlugins() != null &&
-         ectx.getPMode().getPlugins().getInFaultPlugins() != null &&
-         !ectx.getPMode().getPlugins().getInFaultPlugins().getPlugins().isEmpty()) {
-
-      List<PluginType> lst = ectx.getPMode().getPlugins().getInFaultPlugins().getPlugins();
-      lst.stream().map((pt) -> pt.getValue()).filter((str) ->
-          (!Utils.isEmptyString(str))).forEach((str) -> {
-        try {
-          SoapInterceptorInterface example = InitialContext.doLookup(str);
-          example.handleMessage(msg);
-        } catch (NamingException ex) {
-          LOG.logError(l, String.format("SoapInterceptorInterface '%s' not found!", str), ex);
-        }catch (Throwable ex) {
-              String errmsg = String.format("SoapInterceptorInterface '%s' throws an error with message: %s!", str, ex.getMessage());
-              LOG.logError(l, errmsg,  ex);
-               throw new EBMSError(EBMSErrorCode.Other, inMail!=null?inMail.getMessageId():"",
-              errmsg,ex, SoapFault.FAULT_CODE_CLIENT);
-            }
-      });
-    }
+    handleInterception(SEDInterceptorEvent.IN_FAULT_MESSAGE, msg);
+   
     LOG.logEnd(l);
   }
 

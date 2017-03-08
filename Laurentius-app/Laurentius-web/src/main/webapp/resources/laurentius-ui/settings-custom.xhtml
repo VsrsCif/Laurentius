@@ -6,19 +6,26 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:p="http://primefaces.org/ui"
       xmlns:composite="http://java.sun.com/jsf/composite"
+       xmlns:pnl="http://java.sun.com/jsf/composite/laurentius-ui/panel"
       >
     <composite:interface>
     </composite:interface>
 
     <composite:implementation >
-        <h1>Laurentius  #{msg['Version']}: <p:outputLabel value="#{ApplicationData.buildVersion}" /> </h1>
+         <pnl:pnl-settings id="cronPanel"
+                           title="#{msg['SettingsCustom']}" 
+                          description="#{msg['SettingsCustom']}"
+                          icon="ui-icon-svg-settings"
+                          >
+        
         
         <h2>#{msg['ExportBackup']}</h2>
 
        
-        <p:panelGrid  class="width:100%" >
+        <p:panelGrid  class="width:100%" columnClasses="grid-label, value" >
             <p:row > 
-                <p:column colspan="2" ><h:outputText value="#{msg['ExportLookupsToFile']}: #{ApplicationData.exportDataFolder}" /></p:column>
+                <p:column><h:outputText value="#{msg['ExportLookupsToFile']}:" /></p:column>
+                <p:column><h:outputText value="#{msg['ExportLookupsToFile']}: #{ApplicationData.exportDataFolder}" /></p:column>
             </p:row>
             <p:row> 
                 <p:column><p:selectBooleanCheckbox value="#{mainWindow.exportLookupsWithPasswords}"
@@ -65,7 +72,9 @@
                 <h:outputText value="#{ApplicationData.getSEDPropertyValue(sp)}" />
             </p:column>
         </p:dataTable>
-
+        <hr />
+        <h2> #{msg['Version']}: <p:outputLabel value="#{ApplicationData.buildVersion}" /> </h2>
+        </pnl:pnl-settings>
     </composite:implementation>
 
 </html>

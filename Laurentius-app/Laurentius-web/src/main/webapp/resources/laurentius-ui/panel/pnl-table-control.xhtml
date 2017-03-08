@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:cc="http://java.sun.com/jsf/composite">
+    <cc:interface>
+        <cc:attribute name="dialogVar" type="java.lang.String"/>
+        <cc:attribute name="updateDialog" type="java.lang.String"/>
+        <cc:attribute name="updateTable" type="java.lang.String"/>
+        <cc:attribute name="addActionListener" method-signature="void actionListener()" />
+        <cc:attribute name="editActionListener" method-signature="void actionListener()" />
+        <cc:attribute name="removeActionListener" method-signature="void actionListener()" />
+    </cc:interface>
+    <cc:implementation >
+        <p:commandButton  value="#{msg['Add']}"  styleClass="toolbar-Button"
+                          icon="ui-icon-svg-add ui-icon-size-22"  
+                          actionListener="#{cc.attrs.addActionListener}"
+                          oncomplete="PF('#{cc.attrs.dialogVar}').show()" 
+                          update="#{cc.attrs.updateDialog}"
+                          />
+        <p:commandButton value="#{msg['Edit']}"  styleClass="toolbar-Button"
+                         icon="ui-icon-svg-edit ui-icon-size-22"  
+                         oncomplete="PF('#{cc.attrs.dialogVar}').show()"                                                                   
+                         actionListener="#{cc.attrs.editActionListener}"
+                         update="#{cc.attrs.updateDialog}"
+                         />
+        <p:commandButton value="#{msg['Delete']}" styleClass="toolbar-Button" 
+                         icon="ui-icon-svg-remove ui-icon-size-22"  
+                         actionListener="#{cc.attrs.removeActionListener}"
+                         update="#{cc.attrs.updateTable}" 
+                         />
+    </cc:implementation>
+</html>

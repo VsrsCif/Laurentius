@@ -33,8 +33,8 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.util.concurrent.atomic.AtomicInteger;
-import si.laurentius.commons.MimeValues;
-import static si.laurentius.commons.MimeValues.getSuffixBYMimeType;
+import si.laurentius.commons.enums.MimeValue;
+import static si.laurentius.commons.enums.MimeValue.getSuffixBYMimeType;
 import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.exception.StorageException;
 
@@ -429,7 +429,7 @@ public class StorageUtils {
       return null;
     }
 
-    File f = getNewStorageFile(MimeValues.MIME_TXT.getSuffix(), S_ERR_PREFIX);
+    File f = getNewStorageFile(MimeValue.MIME_TXT.getSuffix(), S_ERR_PREFIX);
 
     try (PrintWriter fw = new PrintWriter(f)) {
       Throwable cs = th;

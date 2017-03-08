@@ -19,11 +19,11 @@ public class ReflectUtilsTest {
 
 
   /**
-   * Test of getBeanMethods method, of class ReflectUtils.
+   * Test of getBeanProperties method, of class ReflectUtils.
    */
   @Test
   public void testGetBeanMethods() {
-    List<String> lst =  ReflectUtils.getBeanMethods(TestReflectClass.class);
+    List<String> lst =  ReflectUtils.getBeanProperties(TestReflectClass.class);
     assertEquals("Test class have 3 bean methods", 3, lst.size());
     assertTrue("Test class have Age bean method", lst.contains("Age"));
     assertTrue("Test class have Name bean method", lst.contains("Name"));

@@ -20,15 +20,16 @@
         <property column="MD5" name="Md5"  length="32" type="java.lang.String" />
         <property column="IS_ENCRYPTED" name="IsEncrypted" type="java.lang.Boolean" />
         <property column="SOURCE" name="Source"  length="32" type="java.lang.String" />
-        <bag name="properties"  access="field" cascade="all" lazy="false" order-by="Id asc" >
-                <key not-null="true">
-                    <column name="OUTPART_ID" scale="0" />
-                </key>
-                <one-to-many class="si.laurentius.msh.outbox.payload.MSHOutPart$Property" />
+            
+        <bag name="omPartProperties"  access="field" cascade="all" lazy="false" order-by="Id asc" >
+            <key not-null="true">
+                <column name="OUTPART_ID" scale="0" />
+            </key>
+            <one-to-many class="si.laurentius.msh.outbox.payload.OMPartProperty" />
         </bag>
     </class>    
     
-    <class name="si.laurentius.msh.outbox.payload.MSHOutPart$Property" table="LAU_OUTBOX_PAYLOAD_PROPERTY">
+    <class name="si.laurentius.msh.outbox.payload.OMPartProperty" table="LAU_OUTBOX_PAYLOAD_PROPERTY">
         <id name="Id" type="java.math.BigInteger">
             <column name="ID" scale="0" />
             <generator class="sequence">

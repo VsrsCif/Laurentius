@@ -14,9 +14,7 @@
  */
 package si.laurentius.msh.web.admin;
 
-import java.io.Serializable;
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -28,25 +26,22 @@ import javax.ejb.Timer;
 import javax.ejb.TimerConfig;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import si.laurentius.commons.SEDInboxMailStatus;
 import si.laurentius.cron.SEDCronJob;
 import si.laurentius.cron.SEDTask;
 import si.laurentius.cron.SEDTaskProperty;
 
 import si.laurentius.commons.SEDJNDI;
-import si.laurentius.commons.SEDOutboxMailStatus;
 import si.laurentius.commons.interfaces.SEDCertStoreInterface;
 import si.laurentius.commons.interfaces.SEDLookupsInterface;
 import si.laurentius.commons.interfaces.SEDPluginManagerInterface;
 import si.laurentius.commons.interfaces.SEDSchedulerInterface;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.Utils;
-import si.laurentius.ebox.SEDBox;
 import si.laurentius.msh.web.abst.AbstractAdminJSFView;
+import si.laurentius.msh.web.plugin.PluginPropertyModel;
+import si.laurentius.msh.web.plugin.PluginPropertyModelItem;
 import si.laurentius.plugin.crontask.CronTaskDef;
-import si.laurentius.plugin.crontask.CronTaskPropertyDef;
 import si.laurentius.plugin.def.Plugin;
-import si.laurentius.plugin.interfaces.PropertyListType;
 
 /**
  *
@@ -61,17 +56,13 @@ public class AdminSEDCronJobView extends AbstractAdminJSFView<SEDCronJob> {
   @EJB(mappedName = SEDJNDI.JNDI_SEDLOOKUPS)
   private SEDLookupsInterface mdbLookups;
 
-  @EJB(mappedName = SEDJNDI.JNDI_DBCERTSTORE)
-  private SEDCertStoreInterface mdbCertStore;
-
   @EJB(mappedName = SEDJNDI.JNDI_SEDSCHEDLER)
   private SEDSchedulerInterface mshScheduler;
 
   @EJB(mappedName = SEDJNDI.JNDI_PLUGIN)
   private SEDPluginManagerInterface mPlgManager;
 
-  TaskPropertyModel mtpmPropertyModel = new TaskPropertyModel();
-
+  PluginPropertyModel mtpmPropertyModel = new PluginPropertyModel();
 
   /**
    *
@@ -94,10 +85,11 @@ public class AdminSEDCronJobView extends AbstractAdminJSFView<SEDCronJob> {
       return false;
     }
 
-    for (TaskPropertyModelItem tmi : mtpmPropertyModel.getTaskItems()) {
-      if (tmi.getTaskDef().getMandatory() && Utils.isEmptyString(tmi.getValue())) {
+    for (PluginPropertyModelItem tmi : mtpmPropertyModel.getPluginProperties()) {
+      if (tmi.getPropertyDef().getMandatory() && Utils.isEmptyString(tmi.
+              getValue())) {
         addError(
-                "Property value: '" + tmi.getTaskDef().getKey() + "' is required!");
+                "Property value: '" + tmi.getPropertyDef().getKey() + "' is required!");
         return false;
       }
     }
@@ -138,7 +130,13 @@ public class AdminSEDCronJobView extends AbstractAdminJSFView<SEDCronJob> {
         tsk.setPlugin(p.getType());
         tsk.setPluginVersion(p.getVersion());
         tsk.setType(taskDef.getType());
-        mtpmPropertyModel.update(tsk, taskDef);
+
+        Map<String, String> tpv = new HashMap<>();
+        tsk.getSEDTaskProperties().forEach((tp) -> {
+          tpv.put(tp.getKey(), tp.getValue());
+        });
+        mtpmPropertyModel.setPluginProperties(tpv, taskDef.
+                getCronTaskPropertyDeves());
         break;
       }
     }
@@ -161,11 +159,13 @@ public class AdminSEDCronJobView extends AbstractAdminJSFView<SEDCronJob> {
    *
    */
   @Override
-  public void removeSelected() {
+  public boolean removeSelected() {
+    boolean bSuc = false;
     if (getSelected() != null) {
-      mdbLookups.removeSEDCronJob(getSelected());
+      bSuc = mdbLookups.removeSEDCronJob(getSelected());
       setSelected(null);
     }
+    return bSuc;
   }
 
   /**
@@ -176,7 +176,8 @@ public class AdminSEDCronJobView extends AbstractAdminJSFView<SEDCronJob> {
     boolean bsuc = false;
     SEDCronJob ecj = getEditable();
     if (ecj != null) {
-      mtpmPropertyModel.setDataToTask();
+      setPropertyDataToTaskInstance(ecj.getSEDTask());
+
       mdbLookups.addSEDCronJob(ecj);
       if (ecj.getActive() != null && ecj.getActive()) {
         LOG.log("Register timer to TimerService");
@@ -204,7 +205,7 @@ public class AdminSEDCronJobView extends AbstractAdminJSFView<SEDCronJob> {
     SEDCronJob ecj = getEditable();
     boolean bsuc = false;
     if (ecj != null) {
-      mtpmPropertyModel.setDataToTask();
+      setPropertyDataToTaskInstance(ecj.getSEDTask());
       mdbLookups.updateSEDCronJob(ecj);
 
       for (Timer t : mshScheduler.getServices().getAllTimers()) {
@@ -309,7 +310,14 @@ public class AdminSEDCronJobView extends AbstractAdminJSFView<SEDCronJob> {
               getPlugin(), t.getType());
       return;
     }
-    mtpmPropertyModel.update(t, ctd);
+
+    Map<String, String> tpv = new HashMap<>();
+    t.getSEDTaskProperties().forEach((tp) -> {
+      tpv.put(tp.getKey(), tp.getValue());
+    });
+    mtpmPropertyModel.setPluginProperties(tpv, ctd.
+            getCronTaskPropertyDeves());
+
   }
 
   public SEDTask getEditableSEDTask() {
@@ -323,131 +331,17 @@ public class AdminSEDCronJobView extends AbstractAdminJSFView<SEDCronJob> {
     return null;
   }
 
-  public List<TaskPropertyModelItem> getTaskItems() {
-    return mtpmPropertyModel.getTaskItems();
+  public List<PluginPropertyModelItem> getTaskItems() {
+    return mtpmPropertyModel.getPluginProperties();
   }
 
-  public class TaskPropertyModel implements Serializable {
-
-    CronTaskDef mctdTaskDef = null;
-    SEDTask mSedTask = null;
-    private final List<TaskPropertyModelItem> taskItems = new ArrayList<>();
-
-    public void clear() {
-      taskItems.clear();
-      mctdTaskDef = null;
-      mSedTask = null;
-    }
-
-    public void update(SEDTask task, CronTaskDef taskDef) {
-      clear();
-      mSedTask = task;
-      mctdTaskDef = taskDef;
-      if (mSedTask == null || taskDef == null) {
-        return;
-      }
-
-      Map<String, String> tpv = new HashMap<>();
-      for (SEDTaskProperty tp : mSedTask.getSEDTaskProperties()) {
-        tpv.put(tp.getKey(), tp.getValue());
-      }
-
-      for (CronTaskPropertyDef stp : mctdTaskDef.
-              getCronTaskPropertyDeves()) {
-
-        String key = stp.getKey();
-        taskItems.add(new TaskPropertyModelItem(stp, tpv.get(key)));
-      }
-    }
-
-    public void setDataToTask() {
-      mSedTask.getSEDTaskProperties().clear();
-      for (TaskPropertyModelItem tmi : taskItems) {
-        SEDTaskProperty stp = new SEDTaskProperty();
-        stp.setKey(tmi.getTaskDef().getKey());
-        stp.setValue(tmi.getValue());
-        mSedTask.getSEDTaskProperties().add(stp);
-      }
-
-    }
-
-    public List<TaskPropertyModelItem> getTaskItems() {
-      return taskItems;
-    }
-
-  }
-
-  public class TaskPropertyModelItem implements Serializable {
-
-    CronTaskPropertyDef mTaskPropDef;
-    String mValue;
-
-    public TaskPropertyModelItem(CronTaskPropertyDef ctp, String val) {
-      mValue = val;
-      mTaskPropDef = ctp;
-
-    }
-
-    public CronTaskPropertyDef getTaskDef() {
-      return mTaskPropDef;
-    }
-
-    public String getValue() {
-      return mValue;
-    }
-
-    public void setValue(String v) {
-      this.mValue = v;
-    }
-
-    public Integer getIntValue() {
-      return mValue != null ? new Integer(mValue) : null;
-    }
-
-    public void setIntValue(Integer v) {
-
-      this.mValue = v != null ? v.toString() : null;
-
-    }
-
-    public Boolean getBooleanValue() {
-      return mValue != null ? mValue.equalsIgnoreCase("true") : null;
-    }
-
-    public void setBooleanValue(Boolean v) {
-      this.mValue = v ? "true" : "false";
-    }
-
-    public List<String> getListValues() {
-      String lst = getTaskDef().getValueList();
-      List<String> lstArr = new ArrayList<>();
-      if (Utils.isEmptyString(lst)) {
-        return Collections.emptyList();
-      } else if (lst.equalsIgnoreCase(PropertyListType.LocalBoxes.getType())) {
-        List<SEDBox> sblst = mdbLookups.getSEDBoxes();
-        sblst.forEach(sb -> {
-          lstArr.add(sb.getLocalBoxName());
-        });
-      } else if (lst.
-              equalsIgnoreCase(PropertyListType.KeystoreCertAll.getType())) {
-        lstArr.addAll(mdbCertStore.getKeystoreAliases(false));
-      } else if (lst.equalsIgnoreCase(PropertyListType.KeystoreCertKeys.
-              getType())) {
-        lstArr.addAll(mdbCertStore.getKeystoreAliases(true));
-
-      } else if (lst.equalsIgnoreCase(PropertyListType.InMailStatus.getType())) {
-        for (SEDInboxMailStatus st : SEDInboxMailStatus.values()) {
-          lstArr.add(st.getValue());
-
-        }
-      } else if (lst.equalsIgnoreCase(PropertyListType.OutMailStatus.getType())) {
-        for (SEDOutboxMailStatus st : SEDOutboxMailStatus.values()) {
-          lstArr.add(st.getValue());
-
-        }
-      }
-
-      return lstArr;
+  public void setPropertyDataToTaskInstance(SEDTask inst) {
+    inst.getSEDTaskProperties().clear();
+    for (PluginPropertyModelItem tmi : mtpmPropertyModel.getPluginProperties()) {
+      SEDTaskProperty stp = new SEDTaskProperty();
+      stp.setKey(tmi.getPropertyDef().getKey());
+      stp.setValue(tmi.getValue());
+      inst.getSEDTaskProperties().add(stp);
     }
   }
 }

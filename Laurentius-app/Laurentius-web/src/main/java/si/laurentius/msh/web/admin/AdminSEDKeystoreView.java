@@ -27,7 +27,7 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import org.primefaces.context.RequestContext;
 import si.laurentius.cert.SEDCertificate;
-import si.laurentius.commons.CertStatus;
+import si.laurentius.commons.enums.CertStatus;
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.exception.SEDSecurityException;
 import si.laurentius.commons.interfaces.SEDCertStoreInterface;
@@ -108,23 +108,24 @@ public class AdminSEDKeystoreView extends AbstractAdminJSFView<SEDCertificate> {
    *
    */
   @Override
-  public void removeSelected() {    
+  public boolean removeSelected() {    
+    boolean bSuc = false;
     SEDCertificate sc = getSelected();
     if (sc != null) {
       try {
         LOG.formatedWarning("Remove selected row %s", sc.getAlias());
         mCertStore.removeCertificateFromStore(sc);
-        addCallbackParam(CB_PARA_REMOVED, true);
+        bSuc = true;
       } catch (SEDSecurityException ex) {
         String strMessage = String.format(
                 "Error removing cert for alias %s from keystore! Err: %s", sc.
                         getAlias(), ex.getMessage());
         LOG.logError(strMessage, ex);
-        addError(strMessage);
-        addCallbackParam(CB_PARA_REMOVED, true);
+        addError(strMessage);        
       }
 
     }
+    return bSuc;
   }
 
   /**
@@ -202,7 +203,7 @@ public class AdminSEDKeystoreView extends AbstractAdminJSFView<SEDCertificate> {
 
   @Override
   public String getUpdateTargetTable() {
-    return ":forms:PanelKeystore:keylist";
+    return ":forms:PanelKeystore:certPanel:keylist";
   };
    
 

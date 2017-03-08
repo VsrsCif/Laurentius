@@ -27,7 +27,7 @@ import java.util.UUID;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-import si.laurentius.commons.MimeValues;
+import si.laurentius.commons.enums.MimeValue;
 import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.utils.SEDLogger;
@@ -151,13 +151,13 @@ public class TestUtils {
     for (File f : fls) {
       try {
        
-        File fStorage = mstrgUtils.storeInFile( MimeValues.getMimeTypeByFileName(f.getName()), f);
+        File fStorage = mstrgUtils.storeInFile(MimeValue.getMimeTypeByFileName(f.getName()), f);
         MSHOutPart op = new MSHOutPart();
         op.setFilename(f.getName());
         
         op.setDescription(i++ == 0 ? "Sklep" : "Priloga");
         op.setFilepath(StorageUtils.getRelativePath(fStorage));        
-        op.setMimeType(MimeValues.getMimeTypeByFileName(f.getName()));
+        op.setMimeType(MimeValue.getMimeTypeByFileName(f.getName()));
         om.getMSHOutPayload().getMSHOutParts().add(op);
       } catch (StorageException ex) {
         LOG.logError(l, ex);

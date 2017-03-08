@@ -1,19 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>
-    
-    <class name="si.laurentius.process.SEDProcessorSet"
-           table="LAU_PROCESS_SET">
-        <id name="Code" column="CODE" length="64" type="java.lang.String"  />
-            
-        <property column="NAME" name="Name"  length="128" type="java.lang.String"/>
-        <property column="DESCRIPTION" name="Description"  length="512" type="java.lang.String"   />
-        <list name="sedProcessorInstances" access="field" cascade="all, delete-orphan" lazy="false" >
-            <key column="PROCESS_SET_CODE" />
-            <list-index column="IDX"/>
-            <one-to-many class="si.laurentius.process.SEDProcessorInstance"/>
-        </list>
-    </class>    
+
     
     <class name="si.laurentius.process.SEDProcessorInstance" table="LAU_PROCESS_INSTANCE">
         <id name="Id" type="java.math.BigInteger">
@@ -25,28 +13,64 @@
         <property column="TYPE" name="Type"  length="64" type="java.lang.String"/>
         <property column="PLUGIN" name="Plugin"  length="64" type="java.lang.String"/>
         <property column="PLUGIN_VERSION" name="PluginVersion"  length="32" type="java.lang.String"/>   
-        <property column="INSTANCE" name="Instance"  length="64" type="java.lang.String"/>   
+        <bag name="sedProcessorProperties"  access="field" cascade="all, delete-orphan" lazy="false" order-by="Id asc" >
+            <key not-null="true">
+                <column name="PROCESSOR_INSTANCE_ID" scale="0" />
+            </key>
+            <one-to-many class="si.laurentius.process.SEDProcessorProperty" />
+        </bag>
     </class>
     
-    <class name="si.laurentius.process.SEDProcessorRule"
-            table="LAU_PROCESS_RULE">
+    <class name="si.laurentius.process.SEDProcessorProperty" table="LAU_PROC_INST_PROPERTY">
+        <id name="Id" type="java.math.BigInteger">
+            <column name="ID" scale="0" />
+            <generator class="sequence">
+                <param name="sequence">SEQ_LAU_PROC_INST_PROP</param>                
+            </generator>
+        </id>		
+        <property column="PROC_PROP_KEY" name="Key" type="java.lang.String"  length="64" /> 
+        <property column="PROC_PROP_VALUE" name="Value" type="java.lang.String" length="512" />         
+    </class>
+    
+    <class name="si.laurentius.process.SEDProcessor"
+           table="LAU_PROCESSOR">
         <id name="Id" type="java.math.BigInteger" >
             <column name="ID" scale="0" />
             <generator class="sequence">
-                <param name="sequence">SEQ_LAU_PROCESS_RULE</param>
+                <param name="sequence">SEQ_LAU_PROCESSOR</param>
             </generator>
         </id>
-        <property column="SERVICE" name="Service"  length="256" type="java.lang.String" />
-        <property column="ACTION" name="Action"  length="256" type="java.lang.String" />
-        <property column="RECEIVER_EBOX" name="ReceiverEBox"  length="128" type="java.lang.String" />
-        <property column="SENDER_EBOX" name="SenderEBox"  length="128" type="java.lang.String" />
-        <property column="PROC_SET_CODE" name="ProcSetCode"  length="64" type="java.lang.String" />
+        <property column="NAME" name="Name"  length="128" type="java.lang.String" unique="true" index="Idx_proc_name"/>
+        <property column="ACTIVE" name="Active"   type="java.lang.Boolean"/>
+        <property column="SET_DELIVERED_ON_SUCCESS" name="DeliveredOnSuccess"   type="java.lang.Boolean"/>
+        
+        <bag name="sedProcessorRules"  access="field" cascade="all, delete-orphan" lazy="false" order-by="Id asc" >
+            <key not-null="true">
+                <column name="PROCESSOR_ID" scale="0" />
+            </key>
+            <one-to-many class="si.laurentius.process.SEDProcessorRule" />
+        </bag>
+        <list name="sedProcessorInstances" access="field" cascade="all, delete-orphan" lazy="false" >
+            <key column="PROCESSOR_ID" />
+            <list-index column="IDX"/>
+            <one-to-many class="si.laurentius.process.SEDProcessorInstance"/>
+        </list>
     </class>   
    
-    <query name="si.laurentius.process.SEDProcessorSet.getByCode" ><![CDATA[SELECT p FROM SEDProcessorSet p WHERE p.Code= :code]]></query>     
-    <query name="si.laurentius.process.SEDProcessorSet.getAll" ><![CDATA[SELECT p FROM SEDProcessorSet p order by p.Code asc]]></query>
+    <class name="si.laurentius.process.SEDProcessorRule" table="LAU_PROCESSOR_RULE">
+        <id name="Id" type="java.math.BigInteger">
+            <column name="ID" scale="0" />
+            <generator class="sequence">
+                <param name="sequence">SEQ_LAU_PROCESSOR_RULE</param>                
+            </generator>
+        </id>		
+        <property column="RULE_PROPERTY" name="Property" type="java.lang.String"  length="64" /> 
+        <property column="RULE_PREDICATE" name="Predicate" type="java.lang.String" length="32" />       
+        <property column="RULE_VALUE" name="Value" type="java.lang.String" length="512" />   
+    </class>
+
+    <query name="si.laurentius.process.SEDProcessor.getById" ><![CDATA[SELECT p FROM SEDProcessor p WHERE p.Id = :id]]></query>     
+    <query name="si.laurentius.process.SEDProcessor.getAll" ><![CDATA[SELECT p FROM SEDProcessor p order by id asc]]></query>
     
-    <query name="si.laurentius.process.SEDProcessorRule.getById" ><![CDATA[SELECT p FROM SEDProcessorRule p WHERE p.Id = :id]]></query>     
-    <query name="si.laurentius.process.SEDProcessorRule.getAll" ><![CDATA[SELECT p FROM SEDProcessorRule p order by id asc]]></query>
-    
+    <query name="si.laurentius.process.SEDProcessorInstance.getById" ><![CDATA[SELECT p FROM SEDProcessorInstance p WHERE p.Id = :id]]></query>     
 </hibernate-mapping>
