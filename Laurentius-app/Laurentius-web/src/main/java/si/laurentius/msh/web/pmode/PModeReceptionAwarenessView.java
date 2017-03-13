@@ -14,13 +14,14 @@
  */
 package si.laurentius.msh.web.pmode;
 
-
 import java.util.List;
 import java.util.Objects;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.Duration;
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.interfaces.PModeInterface;
@@ -43,7 +44,6 @@ public class PModeReceptionAwarenessView extends AbstractPModeJSFView<ReceptionA
   @EJB(mappedName = SEDJNDI.JNDI_PMODE)
   PModeInterface mPModeInteface;
 
-
   /**
    *
    */
@@ -57,7 +57,7 @@ public class PModeReceptionAwarenessView extends AbstractPModeJSFView<ReceptionA
    */
   @Override
   public void createEditable() {
-     String sbname = "RA_%03d";
+    String sbname = "RA_%03d";
     int i = 1;
 
     while (existRAById(String.format(sbname, i))) {
@@ -67,31 +67,29 @@ public class PModeReceptionAwarenessView extends AbstractPModeJSFView<ReceptionA
     ra.setId(String.format(sbname, i));
     ra.setReceiptType("AS4Receipt");
     ra.setReplyPattern("response");
+
     ra.setDuplicateDetection(new ReceptionAwareness.DuplicateDetection());
+    ra.getDuplicateDetection().setEliminate(true);
+    ra.getDuplicateDetection().setWindowPeriode(stringToDuration("P1Y"));
+
     ra.setRetry(new ReceptionAwareness.Retry());
-    
-    ra.getDuplicateDetection().setEliminate(Boolean.TRUE);
-    
-    
-    ra.getRetry().setMaxRetries(3);
-    ra.getRetry().setMultiplyPeriod(5);
+    ra.getRetry().setMaxRetries(5);
+    ra.getRetry().setMultiplyPeriod(3);
     ra.getRetry().setPeriod(5227);
-    
-    
+
     setNew(ra);
 
   }
-  
-  
-   private boolean existRAById(String id){
-     List<ReceptionAwareness> lst = mPModeInteface.getReceptionAwarenesses();
-     for (ReceptionAwareness ra: lst){
-       if (Objects.equals(ra.getId(), id)){
-         return true;
-       }
-     }
-     return false;
-   }
+
+  private boolean existRAById(String id) {
+    List<ReceptionAwareness> lst = mPModeInteface.getReceptionAwarenesses();
+    for (ReceptionAwareness ra : lst) {
+      if (Objects.equals(ra.getId(), id)) {
+        return true;
+      }
+    }
+    return false;
+  }
 
   /**
    *
@@ -108,16 +106,17 @@ public class PModeReceptionAwarenessView extends AbstractPModeJSFView<ReceptionA
 
   }
 
-   @Override
+  @Override
   public boolean validateData() {
     ReceptionAwareness cj = getEditable();
-     if (isEditableNew() && existRAById(cj.getId())) {
-      addError("Name: '" + cj.getId()+ "' already exists!");
+    if (isEditableNew() && existRAById(cj.getId())) {
+      addError("Name: '" + cj.getId() + "' already exists!");
       return false;
     }
-    
+
     return true;
   }
+
   /**
    *
    */
@@ -126,10 +125,10 @@ public class PModeReceptionAwarenessView extends AbstractPModeJSFView<ReceptionA
     long l = LOG.logStart();
     boolean bsuc = false;
     ReceptionAwareness sv = getEditable();
-    if (sv != null) {      
+    if (sv != null) {
       mPModeInteface.addReceptionAwareness(sv);
       setEditable(null);
-      bsuc= true;
+      bsuc = true;
     }
     return bsuc;
   }
@@ -138,14 +137,14 @@ public class PModeReceptionAwarenessView extends AbstractPModeJSFView<ReceptionA
    *
    */
   @Override
-  public boolean  updateEditable() {
+  public boolean updateEditable() {
     long l = LOG.logStart();
     boolean bsuc = false;
     ReceptionAwareness sv = getEditable();
-    if (sv != null) {      
+    if (sv != null) {
       mPModeInteface.updateReceptionAwareness(sv);
       setEditable(null);
-      bsuc= true;
+      bsuc = true;
     }
     return bsuc;
   }
@@ -163,16 +162,75 @@ public class PModeReceptionAwarenessView extends AbstractPModeJSFView<ReceptionA
 
   }
 
-@Override
+  @Override
   public String getUpdateTargetTable() {
     return ":forms:SettingsPModeReceptionAwarenesses:pmodeRAPanel:TblPModeReceptionAwareness";
   }
 
   @Override
   public String getSelectedDesc() {
-     if (getSelected() != null) {
+    if (getSelected() != null) {
       return getSelected().getId();
     }
     return null;
+  }
+
+  public ReceptionAwareness.Retry getEditableRetry() {
+    ReceptionAwareness ra = getEditable();
+    if (ra!= null) {
+      if (ra.getRetry() == null) {
+        ra.setRetry(new ReceptionAwareness.Retry());
+        ra.getRetry().setMaxRetries(5);
+        ra.getRetry().setMultiplyPeriod(3);
+        ra.getRetry().setPeriod(5227);
+      }
+      return ra.getRetry();
+    }
+    return null;
+  }
+
+  public ReceptionAwareness.DuplicateDetection getEditableDuplicateDetection() {
+    ReceptionAwareness ra = getEditable();
+    if (ra != null) {
+      if (ra.getDuplicateDetection() == null) {
+        ra.setDuplicateDetection(new ReceptionAwareness.DuplicateDetection());
+        ra.getDuplicateDetection().setEliminate(true);
+        ra.getDuplicateDetection().setWindowPeriode(stringToDuration("P1Y"));
+      }
+      
+      return ra.getDuplicateDetection();
+    }
+    return null;
+  }
+
+  public void setEditableDuplicateDetectionDuration(String value) {
+    ReceptionAwareness.DuplicateDetection dd = getEditableDuplicateDetection();
+    if (dd != null) {
+      dd.setWindowPeriode(stringToDuration(value));
+    }
+
+  }
+
+  public String getEditableDuplicateDetectionDuration() {
+    ReceptionAwareness.DuplicateDetection dd = getEditableDuplicateDetection();
+    if (dd != null && dd.getWindowPeriode()!= null) {
+      return dd.getWindowPeriode().toString();
+    }
+    return null;
+
+  }
+
+  private Duration stringToDuration(String val) {
+    Duration dr;
+    try {
+      dr = DatatypeFactory.newInstance().newDuration(val);
+    } catch (DatatypeConfigurationException ex) {
+      String msg = String.format("Error converting duration %s. Error: ", val,
+              ex.getMessage());
+      LOG.logWarn(msg, ex);
+      addError(msg);
+      dr = null;
+    }
+    return dr;
   }
 }

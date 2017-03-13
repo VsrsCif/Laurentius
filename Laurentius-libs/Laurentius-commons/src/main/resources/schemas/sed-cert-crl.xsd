@@ -25,33 +25,36 @@ Copyright 2016, Supreme Court Republic of Slovenia
  See the Licence for the specific language governing permissions and  
  limitations under the Licence.
 -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:crl="http://laurentius.si/cert/crl"
-           targetNamespace="http://laurentius.si/cert/crl" elementFormDefault="qualified" attributeFormDefault="unqualified">
-    <xs:element name="SEDCertCRL" type="crl:SEDCertCRLType"/>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:crl="http://laurentius.si/cert/crl" targetNamespace="http://laurentius.si/cert/crl" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="SEDCertCRL" type="crl:SEDCertCRLType"/>
 	<xs:complexType name="SEDCertCRLType">
 		<xs:annotation>
-			<xs:documentation xml:lang="sl"></xs:documentation>
+			<xs:documentation xml:lang="sl"/>
 		</xs:annotation>
-		<xs:attribute name="id" type="xs:integer" use="required">
-			<xs:annotation>
-				<xs:documentation>Store  id</xs:documentation>
-			</xs:annotation>
-		</xs:attribute>
+		<xs:sequence>
+			<xs:element name="Url" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:string">
+							<xs:attribute name="protocol" use="required"/>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
 		<xs:attribute name="issuerDN" type="xs:string" use="required">
 			<xs:annotation>
 				<xs:documentation>CRL name</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
-		<xs:attribute name="http" type="xs:string">
+		<xs:attribute name="issuerDigestValue" type="xs:string" use="required">
 			<xs:annotation>
-				<xs:documentation xml:lang="sl">Url to crl list </xs:documentation>
+				<xs:documentation>IssuerDigest value</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
-		<xs:attribute name="ldap" type="xs:string" />
-		<xs:attribute name="effectiveDate"  type="xs:dateTime" use="required"/>
-		<xs:attribute name="nextUpdateDate" type="xs:dateTime" />
-		<xs:attribute name="retrievedDate"  type="xs:dateTime" use="required"/>
+		<xs:attribute name="effectiveDate" type="xs:dateTime" use="required"/>
+		<xs:attribute name="nextUpdateDate" type="xs:dateTime"/>
+		<xs:attribute name="retrievedDate" type="xs:dateTime" use="required"/>
 		<xs:attribute name="filePath" type="xs:string" use="required"/>
 	</xs:complexType>
-	
 </xs:schema>

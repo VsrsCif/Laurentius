@@ -55,13 +55,13 @@
                 </f:facet>
 
                 <h:outputText value="#{msg['MaxRetries']}:" />
-                <p:spinner  value="#{pModeReceptionAwarenessView.editable.retry.maxRetries}"  style="width: 100%"/>
+                <p:spinner  value="#{pModeReceptionAwarenessView.editableRetry.maxRetries}"  style="width: 100%"/>
 
                 <h:outputText value="#{msg['MultiplyPeriod']}:" />
-                <p:spinner  value="#{pModeReceptionAwarenessView.editable.retry.multiplyPeriod}"  style="width: 100%"/>
+                <p:spinner  value="#{pModeReceptionAwarenessView.editableRetry.multiplyPeriod}"  style="width: 100%"/>
 
                 <h:outputText value="#{msg['Period']}:" />
-                <p:spinner  value="#{pModeReceptionAwarenessView.editable.retry.period}"  style="width: 100%"/>
+                <p:spinner  value="#{pModeReceptionAwarenessView.editableRetry.period}"  style="width: 100%"/>
 
             </p:panelGrid>
 
@@ -71,12 +71,12 @@
                     <h:outputText value="#{msg['DuplicateDetection']}:" />
                 </f:facet>
 
-                <h:outputText value="#{msg['WindowPeriode']}:" />
-                <p:inputText  value=""  style="width: 100%"/>
+                <h:outputText value="#{msg['DetectionPeriod']}:" />
+                <p:inputText  value="#{pModeReceptionAwarenessView.editableDuplicateDetectionDuration}"  style="width: 100%"/>
 
-                <h:outputText value="#{msg['MultiplyPeriod']}:" />
-                <p:spinner  value="#{pModeReceptionAwarenessView.editable.duplicateDetection.eliminate}" 
-                            style="width: 100%"/>
+                <h:outputText value="#{msg['Eliminate']}:" />
+                <h:selectBooleanCheckbox  value="#{pModeReceptionAwarenessView.editableDuplicateDetection.eliminate}" 
+                           />
 
             </p:panelGrid>
 

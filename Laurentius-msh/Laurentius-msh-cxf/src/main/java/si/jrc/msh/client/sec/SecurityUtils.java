@@ -33,6 +33,7 @@ import si.jrc.msh.interceptor.EBMSOutInterceptor;
 import si.laurentius.cert.SEDCertPassword;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.lce.KeystoreUtils;
+import si.laurentius.msh.pmode.XPath;
 
 
 /**
@@ -133,7 +134,7 @@ public class SecurityUtils {
     if (ref.getElements() != null &&
         ref.getElements().getXPaths().size() > 0) {
       
-      for (References.Elements.XPath el : ref.getElements().getXPaths()) {
+      for (XPath el : ref.getElements().getXPaths()) {
         String[] lst = el.getXpath().split("/");
         if (lst.length > 0) {
           String xpath = lst[lst.length - 1];
@@ -148,7 +149,7 @@ public class SecurityUtils {
             case 2:
               elmWr.write("{Element}");
               elmWr.write("{");
-              for (References.Elements.XPath.Namespace n : el.getNamespaces()) {
+              for (XPath.Namespace n : el.getNamespaces()) {
                 if (n.getPrefix().equals(nslst[0])) {
                   elmWr.write(n.getNamespace());
                   elmWr.write("}");
@@ -163,7 +164,7 @@ public class SecurityUtils {
         }
       }
     }
-    if (ref.getAllAttachments()) {
+    if (ref.getAllAttachments()!=null && ref.getAllAttachments()) {
       elmWr.write("{}cid:Attachments;");
     }
     return elmWr.toString();
@@ -273,8 +274,8 @@ public class SecurityUtils {
       X509.Signature snc = sc.getX509().getSignature();
       X509.Signature.Reference rsgn = snc.getReference();
 
-      for (References.Elements.XPath el : rsgn.getElements().getXPaths()) {
-        for (References.Elements.XPath.Namespace ns : el.getNamespaces()) {
+      for (XPath el : rsgn.getElements().getXPaths()) {
+        for (XPath.Namespace ns : el.getNamespaces()) {
           prefixes.put(ns.getPrefix(), ns.getNamespace());
         }
         xpaths.add(new CryptoCoverageChecker.XPathExpression(el.getXpath(),
@@ -288,8 +289,8 @@ public class SecurityUtils {
       X509.Encryption snc = sc.getX509().getEncryption();
       X509.Encryption.Reference rsgn = snc.getReference();
 
-      for (References.Elements.XPath el : rsgn.getElements().getXPaths()) {
-        for (References.Elements.XPath.Namespace ns : el.getNamespaces()) {
+      for (XPath el : rsgn.getElements().getXPaths()) {
+        for (XPath.Namespace ns : el.getNamespaces()) {
           prefixes.put(ns.getPrefix(), ns.getNamespace());
         }
         xpaths.add(new CryptoCoverageChecker.XPathExpression(el.getXpath(),

@@ -305,12 +305,18 @@ public class StorageUtils {
   public File copyFileToFolder(String storageFilePath, File folder, boolean bOverWrite)
       throws StorageException {
 
+    return  copyFileToFolder(storageFilePath, folder, bOverWrite, null);
+  }
+  
+  public File copyFileToFolder(String storageFilePath, File folder, boolean bOverWrite, String targetFilename)
+      throws StorageException {
+
     if (!folder.exists() && !folder.mkdirs()) {
       throw new StorageException(format("Could not create dest folder: '%s' to copy file: '%s'.",
           folder.getAbsolutePath(), storageFilePath));
     }
     File srcFile = getFile(storageFilePath);
-    File destFile = new File(folder, srcFile.getName());
+    File destFile = new File(folder, Utils.isEmptyString(targetFilename)?srcFile.getName():targetFilename);
     File pf = destFile.getParentFile();
     if (!pf.exists() && !pf.mkdirs()) {
       throw new StorageException(format("Could not create folder '%s'", pf.getAbsolutePath()));

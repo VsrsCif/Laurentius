@@ -37,7 +37,7 @@ import si.laurentius.commons.utils.SEDLogger;
  */
 @Startup
 @Singleton
-@AccessTimeout(value = 60000)
+  @AccessTimeout(value = 60000)
 public class PModeManagerBean implements PModeInterface {
 
   protected final static SEDLogger LOG = new SEDLogger(PModeManagerBean.class);

@@ -24,30 +24,15 @@ import javax.faces.bean.ManagedBean;
 @ApplicationScoped
 @ManagedBean(name = "AppConstant")
 public class AppConstant {
-  /**
-   *
-   */
-  public static final String S_PANEL_IMP_EXECUTE = "PANEL_IMP_EXECUTE";
 
-  /**
-     *
-     */
-  public static final String S_PANEL_IMP_EXPORT = "PANEL_IMP_EXPORT";
+  
   /**
    *
    */
   public static final String S_PANEL_IMP_XSLT = "PANEL_IMP_XSLT";
-  public String getS_PANEL_IMP_EXECUTE() {
-    return S_PANEL_IMP_EXECUTE;
-  }
 
-  public String getS_PANEL_IMP_EXPORT() {
-    return S_PANEL_IMP_EXPORT;
-  }
   public String getS_PANEL_IMP_XSLT() {
     return S_PANEL_IMP_XSLT;
   }
-
-  
 
 }

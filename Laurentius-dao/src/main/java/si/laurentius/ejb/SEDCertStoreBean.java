@@ -17,29 +17,37 @@ package si.laurentius.ejb;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.Proxy;
 import java.security.Key;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.UnrecoverableKeyException;
+import java.security.cert.CRLException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
+import java.security.cert.CertificateParsingException;
+import java.security.cert.X509CRL;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Resource;
 import javax.ejb.Local;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
+import javax.naming.NamingException;
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.X509KeyManager;
@@ -67,7 +75,9 @@ import si.laurentius.commons.interfaces.SEDCertStoreInterface;
 import si.laurentius.commons.utils.FileUtils;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.Utils;
+import si.laurentius.lce.DigestUtils;
 import si.laurentius.lce.KeystoreUtils;
+import si.laurentius.lce.crl.CRLVerifier;
 import si.laurentius.lce.tls.X509KeyManagerForAlias;
 import si.laurentius.lce.tls.X509TrustManagerForAlias;
 
@@ -92,6 +102,8 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
   private long mlastRefreshTime = 0;
   List<SEDCertificate> mlstCertificates = new ArrayList<>();
   List<SEDCertificate> mlstRootCA = new ArrayList<>();
+
+  Map<String, SEDCertCRL> mlstCertCRL = new Hashtable<>();
 
   KeyStore mCertStore = null;
   KeyStore mRootCAStore = null;
@@ -270,11 +282,22 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
   @Override
   public void changeAlias(String oldAlias, String newAlias)
           throws SEDSecurityException {
-    KeyStore ks = getCertStore();
-    mku.changeAlias(ks, oldAlias, newAlias, mhmPswd.containsKey(oldAlias)
-            ? mhmPswd.get(oldAlias) : null);
-    changeAliasForPassword(oldAlias, newAlias);
-    saveKeystore(ks, KEYSTORE_NAME);
+
+    List<SEDCertificate> lstCert = getCertificates();
+    for (SEDCertificate c : lstCert) {
+      if (Objects.equals(c.getAlias(), oldAlias)) {
+        changeAliasForCertificate(c, newAlias);
+        return;
+      }
+    }
+    throw new SEDSecurityException(
+            SEDSecurityException.SEDSecurityExceptionCode.CertificateException,
+            String.format("Certificate for alias %s not exist!", oldAlias)
+    );
+  }
+
+  public void changeCertAlias(String oldAlias, String newAlias) {
+
   }
 
   /**
@@ -283,44 +306,46 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
    * @param newAlias
    * @throws SEDSecurityException
    */
-  public void changeAliasForPassword(String oldAlias, String newAlias) throws SEDSecurityException {
-    long l = LOG.logStart(oldAlias);
+  public void changeAliasForCertificate(SEDCertificate cert,
+          final String newAlias) throws SEDSecurityException {
+    long l = LOG.logStart(cert.getAlias());
+    KeyStore ks = getCertStore();
 
-    if (mhmPswd.containsKey(oldAlias)) {
-
-      boolean suc = false;
+    if (cert.isKeyEntry()) {
+      String oldAlias = cert.getAlias();
       try {
+        String paswd = mhmPswd.get(oldAlias);
         TypedQuery<SEDCertPassword> tg
                 = memEManager.createNamedQuery(
                         SEDCertPassword.class.getName() + ".getByAlias",
                         SEDCertPassword.class);
-        tg.setParameter("alias", oldAlias);
+        tg.setParameter("alias", cert.getAlias());
 
+        mutUTransaction.begin();
+        SEDCertPassword dbCP = null;
         try {
-          mutUTransaction.begin();
-          SEDCertPassword dbCP = tg.getSingleResult();
-
-          memEManager.remove(memEManager.contains(dbCP) ? dbCP : memEManager.
-                  merge(dbCP));
+          dbCP = tg.getSingleResult();
           dbCP.setAlias(newAlias);
-          memEManager.persist(dbCP);
-          mutUTransaction.commit();
-
+          memEManager.merge(dbCP);
         } catch (NoResultException nre) {
           LOG.formatedWarning("Passoword for alias %s not exist in database!",
                   oldAlias);
           SEDCertPassword cp = new SEDCertPassword();
           cp.setAlias(newAlias);
           cp.setPassword(mhmPswd.get(oldAlias));
-          mutUTransaction.begin();
           memEManager.persist(cp);
-          mutUTransaction.commit();
-
         }
-        String paswd = mhmPswd.remove(oldAlias);
+        // change alias in keystore
+        mku.changeAlias(ks, cert.getAlias(), newAlias, paswd);
+        saveKeystore(ks, KEYSTORE_NAME);
+        mutUTransaction.commit();
+
+        // change password in cache
+        mhmPswd.remove(oldAlias);
         mhmPswd.put(newAlias, paswd);
-        suc = true;
-      } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException
+        cert.setAlias(newAlias);
+
+      } catch (SEDSecurityException | NotSupportedException | SystemException | RollbackException | HeuristicMixedException
               | HeuristicRollbackException | SecurityException | IllegalStateException ex) {
         String msg = String.format(
                 "Error occured whole saving passwd for alias %s. Err %s",
@@ -339,7 +364,16 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
                 ex,
                 msg);
       }
+
+    } else {
+      // change alias in keystore
+      mku.changeAlias(ks, cert.getAlias(), newAlias, null);
+      saveKeystore(ks, KEYSTORE_NAME);
+      cert.setAlias(newAlias);
+
     }
+
+    
   }
 
   /**
@@ -442,7 +476,8 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
    */
   @Override
   public PrivateKey getPrivateKeyForAlias(String alias) throws SEDSecurityException {
-     return (PrivateKey)mku.getPrivateKeyForAlias(getCertStore(), alias, mhmPswd.get(alias));
+    return (PrivateKey) mku.getPrivateKeyForAlias(getCertStore(), alias,
+            mhmPswd.get(alias));
 
   }
 
@@ -455,7 +490,7 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
   public PrivateKey getPrivateKeyForX509Cert(X509Certificate xrc) throws SEDSecurityException {
     KeyStore ks = getCertStore();
     String alias = mku.getPrivateKeyAliasForX509Cert(ks, xrc);
-    return (PrivateKey)mku.getPrivateKeyForAlias(ks, alias, mhmPswd.get(alias));
+    return (PrivateKey) mku.getPrivateKeyForAlias(ks, alias, mhmPswd.get(alias));
   }
 
   /**
@@ -474,7 +509,7 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
    */
   @Override
   public List<SEDCertCRL> getSEDCertCRLs() {
-    return Collections.emptyList();
+    return new ArrayList(mlstCertCRL.values());
   }
 
   /**
@@ -548,9 +583,6 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
     return mku.getTrustedCertForAlias(ks, alias);
   }
 
-  /**
-   *
-   */
   public void initPasswords() {
 
     TypedQuery<SEDCertPassword> cpq = memEManager.createNamedQuery(
@@ -570,64 +602,79 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
    */
   @Override
   public void refreshCrlLists() {
-    /*
-    
-    List<SEDCertStore> scsList = mdLookups.getSEDCertStore();
-    for (SEDCertStore cs : scsList) {
-    
+    mlstCertCRL.clear();
+
     try {
-    KeyStore ks = mku.getKeystore(cs);
-    
-    for (SEDCertificate c : cs.getSEDCertificates()) {
-    if (c.getClrId() == null) {
-    X509Certificate x509 = (X509Certificate) ks.getCertificate(c.
-    getAlias());
-    SEDCertCRL crl = CRLVerifier.getCrlData(x509);
-    SEDCertCRL crlExists = mdLookups.getSEDCertCRLByIssuerDNAndUrl(crl.
-    getIssuerDN(),
-    crl.getHttp(), crl.getLdap());
-    
-    if (crlExists != null) {
-    crl = crlExists;
+      KeyStore ks = getCertStore();
+      Enumeration<String> alsEnum = ks.aliases();
+      while (alsEnum.hasMoreElements()) {
+        String alias = alsEnum.nextElement();
+        X509Certificate x509 = (X509Certificate) ks.getCertificate(alias);
+        getCrlForCert(x509, true);
+      }
+
+    } catch (SEDSecurityException | KeyStoreException ex) {
+      LOG.logError(ex.getMessage(), ex);
     }
-    
-    X509CRL cres = null;
-    if (!Utils.isEmptyString(crl.getHttp())) {
-    cres = CRLVerifier.downloadCRL(crl.getHttp());
-    } else if (!Utils.isEmptyString(crl.getLdap())) {
-    cres = CRLVerifier.downloadCRL(crl.getLdap());
+  }
+
+  public SEDCertCRL getCrlForCert(X509Certificate x509, boolean forceRefresh) {
+    SEDCertCRL crlExists = null;
+    try {
+      SEDCertCRL crl = CRLVerifier.getCrlData(x509);
+
+      if (!forceRefresh && mlstCertCRL.containsKey(crl.getIssuerDigestValue())) {
+        SEDCertCRL cacheTest = mlstCertCRL.get(crl.getIssuerDigestValue());
+        if (cacheTest.getNextUpdateDate().after(Calendar.getInstance().
+                getTime())) {
+
+          // check if at least one url match
+          for (SEDCertCRL.Url uex : cacheTest.getUrls()) {
+            for (SEDCertCRL.Url u : crl.getUrls()) {
+              if (Objects.equals(uex.getValue(), u.getValue())) {
+                crlExists = cacheTest;
+                break;
+              }
+            }
+            if (crlExists != null) {
+              break;
+            }
+          }
+        }
+      }
+      if (crlExists == null || Utils.isEmptyString(crlExists.getFilePath())) {
+        if (updateCrlCache(crl)) {
+          mlstCertCRL.put(crl.getIssuerDigestValue(), crl);
+          crlExists = crl;
+        }
+      }
+    } catch (CertificateParsingException | IOException ex) {
+      LOG.logError("Error updating CRL cache", ex);
     }
-    if (cres != null) {
-    
-    File froot = SEDSystemProperties.getCRLFolder();
-    
-    File f = File.createTempFile("CRL_", ".crl", froot);
-    try (FileOutputStream fos = new FileOutputStream(f)) {
-    fos.write(cres.getEncoded());
+    return crlExists;
+
+  }
+
+  public Boolean isCertificateRevoked(X509Certificate x509Cert) {
+
+    assert x509Cert != null : "Null certificat parameter";
+
+    SEDCertCRL crlData = getCrlForCert(x509Cert, false);
+    X509CRL crl = null;
+    if (crlData != null) {
+      crl = CRLVerifier.getCRLFromFile(crlData.getFilePath());
     }
-    crl.setNextUpdateDate(cres.getNextUpdate());
-    crl.setEffectiveDate(cres.getThisUpdate());
-    crl.setRetrievedDate(Calendar.getInstance().getTime());
-    crl.setFilePath(f.getName());
-    }
-    if (crl.getId() == null) {
-    mdLookups.addSEDCertCRL(crl);
+
+    if (crl != null) {
+      return crl.isRevoked(x509Cert);
     } else {
-    mdLookups.updateSEDCertCRL(crl);
+      LOG.formatedWarning(
+              "Could not validate CRL for certificate %s, serial %d.", x509Cert.
+                      getSubjectX500Principal().getName(), x509Cert.
+                      getSerialNumber());
     }
-    
-    c.setClrId(crl.getId());
-    
-    }
-    }
-    
-    } catch (SEDSecurityException | KeyStoreException | CertificateException | IOException
-    | CRLException | NamingException ex) {
-    LOG.logError(ex.getMessage(), ex);
-    }
-    
-    
-    }*/
+    return null;
+
   }
 
   /**
@@ -641,6 +688,7 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
             lastModified()) {
       refreshCertificates();
       refreshRootCACertificates();
+      refreshCrlLists();
       // refresh keystore
 
       mlastRefreshTime = Calendar.getInstance().getTimeInMillis();
@@ -860,6 +908,46 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
     }
   }
 
+  public boolean updateCrlCache(SEDCertCRL crl) {
+    X509CRL cres = null;
+    boolean bSuc = false;
+    for (SEDCertCRL.Url u : crl.getUrls()) {
+      try {
+        cres = CRLVerifier.downloadCRL(u.getValue(), null);
+      } catch (IOException | CertificateException | CRLException | NamingException ex) {
+        String msg = String.format("Error retrieving CRL Cache for %s url:",
+                crl.getIssuerDN(), u.getValue());
+        LOG.logError(msg, ex);
+      }
+      if (cres != null) {
+        break;
+      }
+    }
+    if (cres != null) {
+
+      try {
+
+        File froot = SEDSystemProperties.getCRLFolder();
+        File f = File.createTempFile("CRL_", ".crl", froot);
+        try (FileOutputStream fos = new FileOutputStream(f)) {
+          fos.write(cres.getEncoded());
+        }
+        crl.setNextUpdateDate(cres.getNextUpdate());
+        crl.setEffectiveDate(cres.getThisUpdate());
+        crl.setRetrievedDate(Calendar.getInstance().getTime());
+        crl.setFilePath(f.getAbsolutePath());
+        bSuc = true;
+      } catch (CRLException | IOException ex) {
+        String msg = String.format("Error saving CRL cache for %s. Error %s",
+                crl.getIssuerDN(), ex.getMessage());
+        LOG.logError(msg, ex);
+      }
+
+    }
+    return bSuc;
+  }
+
+  @Override
   public Properties getCXFKeystoreProperties(String alias) throws SEDSecurityException {
 
     SEDCertificate aliasCrt = getSEDCertificatForAlias(alias);
@@ -891,6 +979,7 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
    * @param cs
    * @return
    */
+  @Override
   public Properties getCXFTruststoreProperties(String alias) {
     Properties signVerProperties = new Properties();
     signVerProperties.put(SEC_PROVIDER, SEC_PROIDER_MERLIN);
@@ -902,4 +991,5 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
     signVerProperties.put(SEC_MERLIN_TRUSTSTORE_TYPE, "JKS");
     return signVerProperties;
   }
+
 }

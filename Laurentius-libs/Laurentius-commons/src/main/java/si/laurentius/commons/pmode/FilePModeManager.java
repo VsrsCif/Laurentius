@@ -89,16 +89,16 @@ public class FilePModeManager implements PModeInterface {
                 "PMode with Id '%s' already exists!", pmrNew.getId()));
       }
     }
-    if (i>=mshSettings.getPModes().size() ) {
+    if (i >= mshSettings.getPModes().size()) {
       mshSettings.getPModes().add(pmrNew);
     } else {
-       mshSettings.getPModes().add(i, pmrNew);
+      mshSettings.getPModes().add(i, pmrNew);
     }
   }
 
   @Override
   public void addPMode(PMode val) {
-      addPMode(getPModes().size(), val);
+    addPMode(getPModes().size(), val);
 
   }
 
@@ -119,6 +119,7 @@ public class FilePModeManager implements PModeInterface {
 
   @Override
   public void addReceptionAwareness(ReceptionAwareness val) {
+
     if (getReceptionAwarenessById(val.getId()) != null) {
       throw new PModeException(String.format(
               "ReceptionAwareness with Id '%s' already exists!", val.getId()));
@@ -655,8 +656,8 @@ public class FilePModeManager implements PModeInterface {
         return pm;
       }
     }
-    throw new PModeException(String.
-            format("No ReceptionAwareness for id: '%s'.", id));
+    LOG.formatedWarning("No ReceptionAwareness for id: '%s'.", id);
+    return null;
   }
 
   @Override
@@ -689,8 +690,9 @@ public class FilePModeManager implements PModeInterface {
         return pm;
       }
     }
-    throw new PModeException(String.format("No SecurityPolicy for id: '%s'.",
-            securityId));
+    LOG.formatedWarning("No SecurityPolicy for id: '%s'.",
+            securityId);
+    return null;
   }
 
   @Override
@@ -702,8 +704,9 @@ public class FilePModeManager implements PModeInterface {
         return pm;
       }
     }
-    throw new PModeException(String.
-            format("No Service for id: '%s'.", serviceId));
+    LOG.formatedWarning("No Service for id: '%s'.", serviceId);
+    return null;
+
   }
 
   @Override

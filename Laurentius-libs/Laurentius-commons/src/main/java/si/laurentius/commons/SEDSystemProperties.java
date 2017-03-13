@@ -29,37 +29,63 @@ public class SEDSystemProperties {
   private static final int IN_BRACKET = 2;
   private static final int NORMAL = 0;
   private static final int SEEN_DOLLAR = 1;
-
-  private static final Map<String, File> mInitFilesFoders = new HashMap<>();
-  private static final Map<String, String> mDefValues = new HashMap<>();
+  /**
+   * System property configuration folder .
+   */
+  public static final String SYS_PROP_CONF_DIR = "laurentius.conf.dir";
+  /**
+   * Crl list folders
+   */
+  public static final String SYS_PROP_CRL_DIR = "laurentius.crl.dir";
+  /**
+   * System property for database dialect
+   */
+  public static final String SYS_PROP_DB_DIALECT = "laurentius.hibernate.dialect";
+  /**
+   * System property for creating/updating database objects
+   *
+   */
+  public static final String SYS_PROP_DB_HBM2DLL = "laurentius.hibernate.hbm2ddl.auto";
+  /**
+   * System property for out qeue workers.
+   *
+   */
+  public static final String SYS_PROP_EXECUTION_WORKERS
+          = "si.laurentius.msh.execution.workers.count";
 
   /**
    * System property for SED home directory.
    */
   public static final String SYS_PROP_HOME_DIR = "laurentius.home";
-
   /**
-   * System property for set security folder (keystor, crl list, root ca ).
+   * System property for initialize data from init folder
+   *
    */
-  public static final String SYS_PROP_SECURITY_DIR = "laurentius.security.dir";
-  /**
-   * Crl list folders
-   */
-    public static final String SYS_PROP_CRL_DIR = "laurentius.crl.dir";
+  public static final String SYS_PROP_INITIALIZE = "laurentius.init";
 
   /**
    * System property initialization folder .
    */
   public static final String SYS_PROP_INIT_DIR = "laurentius.init.dir";
   /**
-   * System property configuration folder .
+   *
    */
-  public static final String SYS_PROP_CONF_DIR = "laurentius.conf.dir";
-
+  public static final String SYS_PROP_JNDI_JMS_PREFIX = "laurentius.jndi.jms.prefix";
   /**
-   * System property storage folder .
+   * System property for JNID prefix: wildfly: java:/jms/ jetty: java:comp/env/
+   * junit test: ''
+   *
+   * <p>
+   * If system property is not given, max 5 outgoing workers are initiated.
+   * Workers handle outbox messages.
+   * </p>
    */
-  public static final String SYS_PROP_STORAGE_DIR = "laurentius.storage.dir";
+  public static final String SYS_PROP_JNDI_PREFIX = "laurentius.jndi.prefix";
+  public static final String SYS_PROP_KEYSTORE_FILE = "laurentius.certstore.file";
+  /**
+   * System property for domain.
+   */
+  public static final String SYS_PROP_LAU_DOMAIN = "laurentius.domain";
 
   /**
    * System property log folder .
@@ -75,79 +101,41 @@ public class SEDSystemProperties {
    * System property for pmode configuration file.
    */
   public static final String SYS_PROP_PMODE_FILE = "laurentius.pmode";
-  
-
-  public static final String SYS_PROP_KEYSTORE_FILE = "laurentius.certstore.file";
-  
-
-  public static final String SYS_PROP_ROOT_CA_FILE = "laurentius.root_ca.file";
-  
-  
-
-  /**
-   * System property for domain.
-   */
-  public static final String SYS_PROP_LAU_DOMAIN = "laurentius.domain";
-
-  /**
-   * System property for database dialect
-   */
-  public static final String SYS_PROP_DB_DIALECT = "laurentius.hibernate.dialect";
-  /**
-   * System property for creating/updating database objects
-   *
-   */
-  public static final String SYS_PROP_DB_HBM2DLL = "laurentius.hibernate.hbm2ddl.auto";
-  /**
-   * System property for initialize data from init folder
-   *
-   */
-  public static final String SYS_PROP_INITIALIZE = "laurentius.init";
-
-  /**
-   * System property for out qeue workers.
-   *
-   */
-  public static final String SYS_PROP_EXECUTION_WORKERS
-          = "si.laurentius.msh.execution.workers.count";
-
-  /**
-   *
-   */
-  public static final String SYS_PROP_JNDI_JMS_PREFIX = "laurentius.jndi.jms.prefix";
-  /**
-   * System property for JNID prefix: wildfly: java:/jms/ jetty: java:comp/env/
-   * junit test: ''
-   *
-   * <p>
-   * If system property is not given, max 5 outgoing workers are initiated.
-   * Workers handle outbox messages.
-   * </p>
-   */
-  public static final String SYS_PROP_JNDI_PREFIX = "laurentius.jndi.prefix";
-
   /**
    *
    */
   public static final String SYS_PROP_QUEUE_SENDER_WORKERS
           = "si.laurentius.msh.sender.workers.count";
 
-  static {
-    mDefValues.put(SYS_PROP_HOME_DIR, System.getProperty(
-            "user.dir") + File.separator + "laurentius-home");
-    mDefValues.put(SYS_PROP_CONF_DIR, "${laurentius.home}/conf");
-    mDefValues.put(SYS_PROP_SECURITY_DIR, "${laurentius.conf.dir}/security");
-    mDefValues.put(SYS_PROP_CRL_DIR, "${laurentius.security.dir}/crl");
-    mDefValues.put(SYS_PROP_INIT_DIR, "${laurentius.conf.dir}/init");
-    mDefValues.put(SYS_PROP_LOG_DIR, "${laurentius.home}/log");
-    mDefValues.put(SYS_PROP_STORAGE_DIR, "${laurentius.home}/storage");
-    mDefValues.put(SYS_PROP_PLUGINS_DIR, "${laurentius.home}/plugins");
+  public static final String SYS_PROP_ROOT_CA_FILE = "laurentius.root_ca.file";
+  /**
+   * System property for set security folder (keystor, crl list, root ca ).
+   */
+  public static final String SYS_PROP_SECURITY_DIR = "laurentius.security.dir";
+  /**
+   * System property storage folder .
+   */
+  public static final String SYS_PROP_STORAGE_DIR = "laurentius.storage.dir";
+  private static final Map<String, String> S_DEF_VALUES = new HashMap<>();
+  private static final Map<String, File> S_INIT_FILES_FOLDERS = new HashMap<>();
 
-    mDefValues.put(SYS_PROP_PMODE_FILE, "pmode-conf.xml");
-    mDefValues.put(SYS_PROP_KEYSTORE_FILE, "laurentius.jks");
-    mDefValues.put(SYS_PROP_ROOT_CA_FILE, "root-ca.jks");
-    
-    mDefValues.put(SYS_PROP_LAU_DOMAIN, "test-laurentius.org");
+
+  static {
+    S_DEF_VALUES.put(SYS_PROP_HOME_DIR, System.getProperty(
+            "user.dir") + File.separator + "laurentius-home");
+    S_DEF_VALUES.put(SYS_PROP_CONF_DIR, "${laurentius.home}/conf");
+    S_DEF_VALUES.put(SYS_PROP_SECURITY_DIR, "${laurentius.conf.dir}/security");
+    S_DEF_VALUES.put(SYS_PROP_CRL_DIR, "${laurentius.security.dir}/crl");
+    S_DEF_VALUES.put(SYS_PROP_INIT_DIR, "${laurentius.conf.dir}/init");
+    S_DEF_VALUES.put(SYS_PROP_LOG_DIR, "${laurentius.home}/log");
+    S_DEF_VALUES.put(SYS_PROP_STORAGE_DIR, "${laurentius.home}/storage");
+    S_DEF_VALUES.put(SYS_PROP_PLUGINS_DIR, "${laurentius.home}/plugins");
+
+    S_DEF_VALUES.put(SYS_PROP_PMODE_FILE, "pmode-conf.xml");
+    S_DEF_VALUES.put(SYS_PROP_KEYSTORE_FILE, "laurentius.jks");
+    S_DEF_VALUES.put(SYS_PROP_ROOT_CA_FILE, "root-ca.jks");
+
+    S_DEF_VALUES.put(SYS_PROP_LAU_DOMAIN, "test-laurentius.org");
 
     if (getProperty(SYS_PROP_QUEUE_SENDER_WORKERS) == null) {
       setProperty(SYS_PROP_QUEUE_SENDER_WORKERS, "5");
@@ -157,82 +145,43 @@ public class SEDSystemProperties {
     }
 
   }
-  
-  public static String getDefValue(String key){
-    return mDefValues.get(key);
+  public static synchronized void clear() {
+    
+    System.getProperties().remove(SYS_PROP_CONF_DIR);
+    System.getProperties().remove(SYS_PROP_HOME_DIR);
+    System.getProperties().remove(SYS_PROP_INIT_DIR);
+    System.getProperties().remove(SYS_PROP_LOG_DIR);
+    System.getProperties().remove(SYS_PROP_SECURITY_DIR);
+    System.getProperties().remove(SYS_PROP_STORAGE_DIR);
+    S_INIT_FILES_FOLDERS.clear();
   }
+  public static File getCRLFolder() {
+    return getFile(SYS_PROP_CRL_DIR, true);
 
-  public static String getLocalDomain() {
-    return System.getProperty(SYS_PROP_LAU_DOMAIN, 
-            mDefValues.get(SYS_PROP_LAU_DOMAIN));
   }
-
-  public static File getHomeFolder() {
-    return getFile(SYS_PROP_HOME_DIR, true);
-
+  public static File getCertstoreFile() {
+    return getFile(getSecurityFolder(), SYS_PROP_KEYSTORE_FILE,
+            false);
   }
 
   public static File getConfFolder() {
     return getFile(SYS_PROP_CONF_DIR, true);
 
   }
-  public static File getCRLFolder() {
-    return getFile(SYS_PROP_CRL_DIR, true);
-
+  public static String getDefValue(String key) {
+    return S_DEF_VALUES.get(key);
   }
-
-  public static File getSecurityFolder() {
-    return getFile(SYS_PROP_SECURITY_DIR, true);
-
-  }
-
-  public static File getSecurityCRLFolder() {
-    return getFile(SYS_PROP_CRL_DIR, true);
-
-  }
-
-  public static File getStorageFolder() {
-    return getFile(SYS_PROP_STORAGE_DIR, true);
-  }
-public static File getLogFolder() {
-    return getFile(SYS_PROP_LOG_DIR, true);
-  }
-  public static File getInitFolder() {
-    return getFile(SYS_PROP_INIT_DIR, true);
-
-  }
-
-  public static File getPluginsFolder() {
-    return getFile(SYS_PROP_PLUGINS_DIR, true);
-
-  }
-
-  public static File getPModeFile() {
-    return getFile(getConfFolder(), SYS_PROP_PMODE_FILE,
-            false);
-  }
-  
-   public static File getCertstoreFile() {
-    return getFile(getSecurityFolder(), SYS_PROP_KEYSTORE_FILE,
-            false);
-  }
-   
-   public static File getRootCAStoreFile() {
-    return getFile(getSecurityFolder(), SYS_PROP_ROOT_CA_FILE,
-            false);
-  }
-
   private static synchronized File getFile(String property,
           boolean isFolder) {
     return getFile(null, property, isFolder);
   }
-
   private static synchronized File getFile(File parent, String property,
           boolean isFolder) {
 
-    if (!mInitFilesFoders.containsKey(property)) {
-      String val = System.getProperty(property, mDefValues.getOrDefault(property,
-              ""));
+    if (!S_INIT_FILES_FOLDERS.containsKey(property)) {
+      String val = System.getProperty(property, S_DEF_VALUES.
+              getOrDefault(property,
+                      ""));
       int iTry = 10;
       while (val.contains("${")) {
         val = replaceProperties(val);
@@ -256,24 +205,55 @@ public static File getLogFolder() {
       // replace system property
       System.setProperty(property, val);
       // cache file
-      mInitFilesFoders.put(property, f);
+      S_INIT_FILES_FOLDERS.put(property, f);
 
     }
-    return mInitFilesFoders.get(property);
+    return S_INIT_FILES_FOLDERS.get(property);
+  }
+  public static File getHomeFolder() {
+    return getFile(SYS_PROP_HOME_DIR, true);
+    
   }
 
-  public static synchronized void clear() {
 
-    System.getProperties().remove(SYS_PROP_CONF_DIR);
-    System.getProperties().remove(SYS_PROP_HOME_DIR);
-    System.getProperties().remove(SYS_PROP_INIT_DIR);
-    System.getProperties().remove(SYS_PROP_LOG_DIR);
-    System.getProperties().remove(SYS_PROP_SECURITY_DIR);
-    System.getProperties().remove(SYS_PROP_STORAGE_DIR);
-    mInitFilesFoders.clear();
+  public static File getInitFolder() {
+    return getFile(SYS_PROP_INIT_DIR, true);
+
   }
-  
-  public static boolean isInitData(){
+  public static String getLocalDomain() {
+    return System.getProperty(SYS_PROP_LAU_DOMAIN,
+            S_DEF_VALUES.get(SYS_PROP_LAU_DOMAIN));
+  }
+  public static File getLogFolder() {
+    return getFile(SYS_PROP_LOG_DIR, true);
+  }
+
+  public static File getPModeFile() {
+    return getFile(getConfFolder(), SYS_PROP_PMODE_FILE,
+            false);
+  }
+  public static File getPluginsFolder() {
+    return getFile(SYS_PROP_PLUGINS_DIR, true);
+    
+  }
+
+  public static File getRootCAStoreFile() {
+    return getFile(getSecurityFolder(), SYS_PROP_ROOT_CA_FILE,
+            false);
+  }
+  public static File getSecurityCRLFolder() {
+    return getFile(SYS_PROP_CRL_DIR, true);
+    
+  }
+  public static File getSecurityFolder() {
+    return getFile(SYS_PROP_SECURITY_DIR, true);
+    
+  }
+  public static File getStorageFolder() {
+    return getFile(SYS_PROP_STORAGE_DIR, true);
+  }
+
+  public static boolean isInitData() {
     return System.getProperty(SYS_PROP_INITIALIZE, "false").equalsIgnoreCase(
             "true");
   }
@@ -318,7 +298,7 @@ public static File getLogFolder() {
         {
           String key = string.substring(start + 2, i);
           properties = true;
-          buffer.append(getProperty(key, mDefValues.getOrDefault(key,"")));
+          buffer.append(getProperty(key, S_DEF_VALUES.getOrDefault(key, "")));
         }
         start = i + 1;
         state = NORMAL;

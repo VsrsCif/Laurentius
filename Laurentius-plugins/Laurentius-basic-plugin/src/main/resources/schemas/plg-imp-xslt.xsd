@@ -25,36 +25,46 @@ Copyright 2016, Supreme Court Republic of Slovenia
  See the Licence for the specific language governing permissions and  
  limitations under the Licence.
 -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
-           xmlns:ns1="http://laurentius.si/plugin/imp" 
-           targetNamespace="http://laurentius.si/plugin/imp" 
-           elementFormDefault="qualified" attributeFormDefault="unqualified">
-    <xs:element name="IMPXslt" type="ns1:IMPXslt"/>
-    <xs:complexType name="IMPXslt">
-        
-        <xs:annotation>
-            <xs:documentation xml:lang="sl">Xslt transformation</xs:documentation>
-        </xs:annotation>
-        <xs:sequence>
-            <!-- xs:element ref="usr:SEDUser" maxOccurs="unbounded"/ -->
-            <xs:element name="Namespace" type="ns1:Namespace" minOccurs="0" maxOccurs="unbounded"/>
-            <xs:element name="XPathRule" type="ns1:XPathRule" minOccurs="0" maxOccurs="unbounded"/>
-        </xs:sequence>
-        <xs:attribute name="instance" type="xs:string" use="required"/>
-        
-    </xs:complexType>
-    <xs:complexType name="Namespace">
-        <xs:attribute name="id" type="xs:integer" use="required"/>
-        <xs:attribute name="prefix" type="xs:string" use="required"/>
-        <xs:attribute name="namespace" type="xs:string" use="required"/>
-    </xs:complexType>
-    <xs:complexType name="XPathRule">
-        <xs:attribute name="id" type="xs:integer" use="required"/>
-        <xs:attribute name="service" type="xs:string" use="required"/>
-        <xs:attribute name="action" type="xs:string" use="required"/>
-        <xs:attribute name="transformation" type="xs:string" use="required"/>
-        <xs:attribute name="xPath" type="xs:string" use="required"/>
-        <xs:attribute name="value" type="xs:string" use="required"/>
-        <xs:attribute name="schema" type="xs:string"/>
-    </xs:complexType>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://laurentius.si/plugin/imp" targetNamespace="http://laurentius.si/plugin/imp" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="IMPXslt" type="ns1:IMPXslt"/>
+	<xs:complexType name="IMPXslt">
+		<xs:annotation>
+			<xs:documentation xml:lang="sl">Xslt transformation</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<!-- xs:element ref="usr:SEDUser" maxOccurs="unbounded"/ -->
+			<xs:element name="XSLTRule" type="ns1:XSLTRule" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="instance" type="xs:string" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="Namespace">
+		<xs:attribute name="id" type="xs:integer" use="required"/>
+		<xs:attribute name="prefix" type="xs:string" use="required"/>
+		<xs:attribute name="namespace" type="xs:string" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="XSLTRule">
+		<xs:sequence>
+			<xs:element name="XPath" type="ns1:XPath"/>
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:integer" use="required"/>
+		<xs:attribute name="transformation" type="xs:string" use="required"/>
+		<xs:attribute name="validateSchema" type="xs:string"/>
+		<xs:attribute name="resultFilename" type="xs:string"/>
+		<xs:attribute name="xPathValue" type="xs:string" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="XPath">
+		<xs:annotation>
+			<xs:documentation>Relative reference from Envelope:
+                env:Header/eb3:Messaging
+                namespaces:
+                env  -> http://www.w3.org/2003/05/soap-envelope
+                eb3->  http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/
+									
+            </xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Namespace" type="ns1:Namespace" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="xpath"/>
+	</xs:complexType>
 </xs:schema>

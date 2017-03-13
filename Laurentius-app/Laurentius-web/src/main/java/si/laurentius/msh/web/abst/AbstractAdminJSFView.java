@@ -123,9 +123,7 @@ abstract public class AbstractAdminJSFView<T> extends AbstractJSFView {
     RequestContext context = RequestContext.getCurrentInstance();
     context.execute("PF('DlgDelete').show();");
     context.update("dlgalert:deleteDialog");
-  }
-
-  ;
+  };
   
  public  Object getBean(final String beanName) {
     final Object returnObject = facesContext().getELContext().getELResolver().

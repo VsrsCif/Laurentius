@@ -689,12 +689,32 @@
 			<xs:element name="To" type="xs:string" minOccurs="0"/>
 		</xs:sequence>
 	</xs:complexType>
+	<xs:complexType name="XPath">
+		<xs:annotation>
+			<xs:documentation>Relative reference from Envelope:
+                                    env:Header/eb3:Messaging
+                                    namespaces:
+                                    env  -> http://www.w3.org/2003/05/soap-envelope
+                                    eb3->  http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/
+									
+                                </xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Namespace" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:attribute name="prefix" use="required"/>
+					<xs:attribute name="namespace" use="required"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="xpath"/>
+	</xs:complexType>
 	<xs:complexType name="References">
 		<xs:sequence>
 			<xs:element name="Elements" minOccurs="0">
 				<xs:complexType>
 					<xs:sequence>
-						<xs:element name="XPath" maxOccurs="unbounded">
+						<xs:element name="XPath" type="tns:XPath" maxOccurs="unbounded">
 							<xs:annotation>
 								<xs:documentation>Relative reference from Envelope:
                                     env:Header/eb3:Messaging
@@ -704,23 +724,12 @@
 									
                                 </xs:documentation>
 							</xs:annotation>
-							<xs:complexType>
-								<xs:sequence>
-									<xs:element name="Namespace" maxOccurs="unbounded">
-										<xs:complexType>
-											<xs:attribute name="prefix" use="required"/>
-											<xs:attribute name="namespace" use="required"/>
-										</xs:complexType>
-									</xs:element>
-								</xs:sequence>
-								<xs:attribute name="xpath"/>
-							</xs:complexType>
 						</xs:element>
 					</xs:sequence>
 				</xs:complexType>
 			</xs:element>
 		</xs:sequence>
-		<xs:attribute name="allAttachments" type="xs:boolean" default="true"/>
+		<xs:attribute name="allAttachments" type="xs:boolean"/>
 	</xs:complexType>
 	<xs:complexType name="Schema">
 		<xs:attribute name="location" type="xs:anyURI" use="required"/>
@@ -764,7 +773,7 @@
 			</xs:element>
 		</xs:sequence>
 		<xs:attribute name="id" type="xs:NCName" use="required"/>
-		<xs:attribute name="WSSVersion" default="1.1">
+		<xs:attribute name="WSSVersion" use="required">
 			<xs:annotation>
 				<xs:documentation>value of this parameter represents the version of WS-Security to be used</xs:documentation>
 			</xs:annotation>
@@ -888,4 +897,5 @@
 			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
+	<xs:element name="References" type="tns:References"/>
 </xs:schema>

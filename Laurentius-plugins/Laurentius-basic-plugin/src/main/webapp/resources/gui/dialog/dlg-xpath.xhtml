@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      xmlns:dlg="http://java.sun.com/jsf/composite/gui/dialog"
+
+      >
+    <composite:interface>
+    </composite:interface>
+
+    <composite:implementation >
+        <dlg:dlg-abstract   id="xPathDialog"
+                            formId="xPathDialogForm"
+                            dialogTitle="#{msg['XSLTRuleDialog']}" 
+                            editable="#{dialogXPath.editable}"
+                            width="600"
+                            height="400"
+                            updateOnSave="#{dialogXPath.updateTableId}"
+                            onConfirmAction="#{dialogXPath.addOrUpdateEditable()}" >
+
+            <p:panelGrid  columns="2" columnClasses="grid-label, value" style="width:100%;">
+
+                <h:outputText value="#{msg['Transformation']}:" />
+                <p:selectOneMenu value="#{dialogXPath.editable.transformation}" 
+                                 style="width:100%" 
+                                 >
+                    <f:selectItems value="#{adminIMPXsltView.transformationFiles}"  var="file" itemLabel="#{file.name}" 
+                                   itemValue="#{file.name}" itemDescription="#{plg.absolutePath}"
+                                   />                    
+                </p:selectOneMenu>
+
+                <h:outputText value="#{msg['ResultName']}:" />
+                <p:inputText value="#{dialogXPath.editable.resultFilename}" 
+                            style="width:100%" 
+                            />
+              
+                <h:outputText value="#{msg['ValidateBySchema']}:" />
+                <p:selectOneMenu value="#{dialogXPath.editable.validateSchema}" 
+                                 style="width:100%" 
+                                 >
+                    <f:selectItems itemLabel="Select result schema" itemValue=""  noSelectionValue="true"/>
+                    <f:selectItems  value="#{adminIMPXsltView.schemaFiles}"  var="file" itemLabel="#{file.name}" 
+                                   itemValue="#{file.name}" itemDescription="#{plg.absolutePath}"
+                                   />                    
+                </p:selectOneMenu>
+                
+            </p:panelGrid> 
+            <p:panelGrid  style="width:100%;">
+                <p:row><p:column colspan="2">
+                        <h:outputText value="#{msg['Namespaces']}:" />
+                    </p:column>
+                </p:row>
+                <p:row><p:column colspan="2">
+                        <p:dataTable id="TblNamespaces" 
+
+                                     var="sp" 
+                                     value="#{dialogXPath.editable.XPath.namespaces}"
+                                     selectionMode="single"
+                                     selection="#{dialogXPath.selectedNamespace}"
+                                     rowKey="#{sp.prefix}"
+                                     style="padding: 0px; margin: 0px;box-sizing: border-box; "
+                                     scrollable="true" 
+                                     scrollHeight="60"
+                                     editable="true"
+                                     editMode="cell" >
+
+                            <f:facet name="header">
+                                <p:commandButton value="#{msg['Add']}" styleClass="toolbar-Button" 
+                                                 icon="ui-icon-svg-add ui-icon-size-22"  
+                                                 update=":dlgXPath:xPathDialog:xPathDialogForm:TblNamespaces" 
+                                                 actionListener="#{dialogXPath.createNamespace()}"
+
+                                                 />
+
+                                <p:commandButton value="#{msg['Delete']}" styleClass="toolbar-Button" 
+                                                 icon="ui-icon-svg-remove ui-icon-size-22"  
+                                                 actionListener="#{dialogXPath.removeSelectedNamespace()}"
+                                                 update=":dlgXPath:xPathDialog:xPathDialogForm:TblNamespaces" 
+                                                 />
+                            </f:facet>
+
+                            <p:column headerText="#{msg['Prefix']}"  width="60">
+                                <p:cellEditor>
+                                    <f:facet name="output"><h:outputText value="#{sp.prefix}" /></f:facet>
+                                    <f:facet name="input"><p:inputText value="#{sp.prefix}" style="width:100%"/></f:facet>
+                                </p:cellEditor>
+                            </p:column>
+                            <p:column headerText="#{msg['Namespace']}" >
+                                <p:cellEditor>
+                                    <f:facet name="output"><h:outputText value="#{sp.namespace}" /></f:facet>
+                                    <f:facet name="input"><p:inputText value="#{sp.namespace}" style="width:100%"/></f:facet>
+                                </p:cellEditor>
+                            </p:column>
+                        </p:dataTable>
+                    </p:column>
+                </p:row>
+                <p:row>  
+                    <p:column class="grid-label">#{msg['xpath']}:</p:column>                    
+                    <p:column class="grid-label"><p:inputText  
+                            value="#{dialogXPath.editable.XPath.xpath}" 
+                            style="width:100%" 
+                            /></p:column>
+                </p:row>
+                <p:row>  
+                    <p:column class="grid-label">#{msg['XPathValue']}:</p:column>                    
+                    <p:column class="grid-label"><p:inputText  
+                            value="#{dialogXPath.editable.XPathValue}" 
+                            style="width:100%" 
+                            /></p:column>
+                </p:row> 
+            </p:panelGrid>
+        </dlg:dlg-abstract>
+    </composite:implementation>
+
+</html>

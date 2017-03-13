@@ -17,6 +17,7 @@ import si.laurentius.msh.inbox.payload.MSHInPart;
 import si.laurentius.msh.inbox.payload.MSHInPayload;
 import si.laurentius.plugin.imp.IMPXslt;
 import si.laurentius.plugin.imp.Namespace;
+import si.laurentius.plugin.imp.XPath;
 import si.laurentius.plugin.processor.InMailProcessorDef;
 
 /**
@@ -42,8 +43,20 @@ public class ProcessXSLTTest {
   public IMPXslt createXSLT(String strXslt){
     IMPXslt xslt = new IMPXslt();
     xslt.setInstance(strXslt);
+      XPath xp = new XPath();
+      xp.setXpath("env:Header/eb3:Messaging");
+      
+    
     Namespace ns1 = new Namespace();
-    xslt.getNamespaces().add(ns1);
+    ns1.setPrefix("env");
+    ns1.setNamespace("http://www.w3.org/2003/05/soap-envelope");
+    
+    Namespace ns2 = new Namespace();
+    ns2.setPrefix("eb3");
+    ns2.setNamespace("http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/");
+    
+    xp.getNamespaces().add(ns1);
+    xp.getNamespaces().add(ns2);
     
     return xslt;
   }

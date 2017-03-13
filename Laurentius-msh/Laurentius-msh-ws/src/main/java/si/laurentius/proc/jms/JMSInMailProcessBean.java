@@ -19,8 +19,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ejb.ActivationConfigProperty;
 import javax.ejb.EJB;
 import javax.ejb.MessageDriven;
@@ -41,19 +39,13 @@ import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.interfaces.SEDLookupsInterface;
 import si.laurentius.commons.interfaces.SEDPluginManagerInterface;
 import si.laurentius.commons.rule.DecisionRuleAssertion;
-import si.laurentius.commons.utils.StringFormater;
-
-import si.laurentius.ebox.SEDBox;
-import si.laurentius.interceptor.SEDInterceptorRule;
 import si.laurentius.msh.inbox.mail.MSHInMail;
 import si.laurentius.plugin.interfaces.InMailProcessorInterface;
 import si.laurentius.plugin.interfaces.exception.InMailProcessException;
 import si.laurentius.plugin.processor.InMailProcessorDef;
 import si.laurentius.process.SEDProcessor;
 import si.laurentius.process.SEDProcessorInstance;
-import si.laurentius.process.SEDProcessorProperty;
 import si.laurentius.process.SEDProcessorRule;
-import si.laurentius.property.SEDProperty;
 
 /**
  *
@@ -188,11 +180,14 @@ public class JMSInMailProcessBean implements MessageListener {
   }
 
   public List<SEDProcessor> getProcessSetsForMail(MSHInMail inMail) {
+    assert inMail!=null: "inmail is null";
+            
     List<SEDProcessor> lstResult = new ArrayList<>();
     List<SEDProcessor> lstPrcAll = msedLookup.getSEDProcessors();
+     
     boolean process = true;
     for (SEDProcessor prc : lstPrcAll) {
-      if (!prc.getActive()) {
+      if (prc.getActive() == null || !prc.getActive()) {
         continue;
       }
       process = true;
@@ -214,22 +209,22 @@ public class JMSInMailProcessBean implements MessageListener {
   private boolean processMail(SEDProcessorInstance spi, MSHInMail mail,
           Map<String, Object> mp) throws NamingException, InMailProcessException {
     boolean res = true;
-    long t = LOG.logStart(mail.getId());
-
-    for (SEDProcessorProperty sp : spi.getSEDProcessorProperties()) {
-      mp.put(sp.getKey(), sp.getValue());
-    }
+    long t = LOG.logStart(mail.getId(), spi.getPlugin(), spi.getType());
+    // set properties
+    spi.getSEDProcessorProperties().
+            forEach((sp) -> {
+              mp.put(sp.getKey(), sp.getValue());
+    });
     // get proc instance
     InMailProcessorDef mi = mPluginManager.getInMailProcessor(spi.
             getPlugin(), spi.getType());
-
-    InMailProcessorInterface ipi;
-
-    ipi = InitialContext.doLookup(mi.getJndi());
-
+ 
+    // get inMail processor
+    InMailProcessorInterface ipi = InitialContext.doLookup(mi.getJndi());
+    // process
     res = ipi.proccess(mail, mp);
 
-    LOG.logEnd(t, mail.getId());
+    LOG.logEnd(t, mail.getId(), spi.getPlugin(), spi.getType());
     return res;
   }
 }

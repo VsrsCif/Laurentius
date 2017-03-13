@@ -73,13 +73,46 @@ public class StringFormaterTest {
     trv.setAge(35);
     trv.setHeight(null);
     
-    String format = "${Name} is ${Age} old and his height is ${Height} cm.";
-    StringFormater instance = new StringFormater();
-    String expResult = "John is 35 old and his height is  cm.";
-    String result = instance.format(format, trv);
+    String format = "${Name} is ${Age} old and his height is ${Height} cm. - ${Not.Exists}";
+    String expResult = "John is 35 old and his height is  cm. - ${Not.Exists}";
+    String result = StringFormater.format(format, trv);
     assertEquals(expResult, result);
   }
 
+  /**
+   * Test of format method, of class StringFormater.
+   */
+  @Test
+  public void testFormat_Object_NS_Object() {
+    String ns = "NS-";
+    TestReflectClass trv = new TestReflectClass();
+    trv.setName("John");
+    trv.setAge(35);
+    trv.setHeight(null);
+    
+    TestReflectClass nsTrv = new TestReflectClass();
+    nsTrv.setName("Ana");
+    nsTrv.setAge(32);
+    nsTrv.setHeight((long)170);
+    
+    String format = "${Name} is ${Age} old and his height is ${Height} cm. "
+            + "But ${NS-Name} is ${NS-Age} old and his height is ${NS-Height} cm. - ${Not.Exists}";
+    String expResult = "John is 35 old and his height is  cm. But Ana is 32 old and his height is 170 cm. - ${Not.Exists}";
+    String result = StringFormater.format(format, trv, "NS-", nsTrv);
+    assertEquals(expResult, result);
+  }
+  /**
+   * Test of replaceProperties method, of class StringFormater.
+   */
+  @Test
+  public void testReplaceFormatSystemProperties() {
+    System.setProperty("test.property.format","testValue");
+    System.setProperty("test.key.format","Test key");
+    String format = "${test.key.format} is ${test.property.format}. - ${Not.Exists}";
+    String expResult = "Test key is testValue. - ${Not.Exists}";
+    String result = StringFormater.format(format, null);
+    assertEquals(expResult, result);
+  }
  
   /**
    * Test of replaceProperties method, of class StringFormater.
@@ -88,8 +121,8 @@ public class StringFormaterTest {
   public void testReplaceProperties() {
     System.setProperty("test.property","testValue");
     System.setProperty("test.key","Test key");
-    String format = "${test.key} is ${test.property}.";
-    String expResult = "Test key is testValue.";
+    String format = "${test.key} is ${test.property}. - ${Not.Exists}";
+    String expResult = "Test key is testValue. - ${Not.Exists}";
     String result = StringFormater.replaceProperties(format);
     assertEquals(expResult, result);
   }

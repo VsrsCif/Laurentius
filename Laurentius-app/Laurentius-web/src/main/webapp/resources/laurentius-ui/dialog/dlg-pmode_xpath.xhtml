@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      xmlns:dlg="http://java.sun.com/jsf/composite/laurentius-ui/dialog"
+      xmlns:pnl="http://java.sun.com/jsf/composite/laurentius-ui/panel"
+      >
+    <composite:interface>
+    </composite:interface>
+
+    <composite:implementation >
+        <dlg:dlg-abstract   id="pModeXPathDialog"
+                            formId="pModeXPathDialogForm"
+                            dialogTitle="#{msg['PModeSecurityDialog']}" 
+                            editable="#{dialogXPath.editable}"
+                            width="600"
+                            height="250"
+                            updateOnSave="#{dialogXPath.updateTableId}"
+                            onConfirmAction="#{dialogXPath.addOrUpdateEditable()}" >
+
+            <p:panelGrid  columns="2" columnClasses="grid-label, value" style="width:100%;">
+                <h:outputText value="#{msg['xpath']}:" />
+                <p:inputText  value="#{dialogXPath.editable.xpath}" 
+                              style="width:100%" 
+                              />
+            </p:panelGrid>
+            <h:outputText value="#{msg['Namespaces']}:" />
+            <p:dataTable id="TblNamespaces" 
+
+                         var="sp" 
+                         value="#{dialogXPath.editable.namespaces}"
+                         selectionMode="single"
+                         selection="#{dialogXPath.selectedNamespace}"
+                         rowKey="#{sp.prefix}"
+                         style="padding: 0px; margin: 0px;box-sizing: border-box; "
+                         scrollable="true" 
+                         scrollHeight="100"
+                         editable="true"
+                         editMode="cell" >
+
+                <f:facet name="header">
+                    <p:commandButton value="#{msg['Add']}" styleClass="toolbar-Button" 
+                                     icon="ui-icon-svg-add ui-icon-size-22"  
+                                     update=":dlgPModeXPath:pModeXPathDialog:pModeXPathDialogForm:TblNamespaces" 
+                                     actionListener="#{dialogXPath.createNamespace()}"
+
+                                     />
+
+                    <p:commandButton value="#{msg['Delete']}" styleClass="toolbar-Button" 
+                                     icon="ui-icon-svg-remove ui-icon-size-22"  
+                                     actionListener="#{dialogXPath.removeSelectedNamespace()}"
+                                     update=":dlgPModeXPath:pModeXPathDialog:pModeXPathDialogForm:TblNamespaces" 
+                                     />
+
+                </f:facet>
+
+                <p:column headerText="#{msg['Prefix']}"  width="60">
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{sp.prefix}" /></f:facet>
+                        <f:facet name="input"><p:inputText value="#{sp.prefix}" style="width:100%"/></f:facet>
+                    </p:cellEditor>
+                </p:column>
+                <p:column headerText="#{msg['Namespace']}" >
+                    <p:cellEditor>
+                        <f:facet name="output"><h:outputText value="#{sp.namespace}" /></f:facet>
+                        <f:facet name="input"><p:inputText value="#{sp.namespace}" style="width:100%"/></f:facet>
+                    </p:cellEditor>
+                </p:column>
+            </p:dataTable>
+
+        </dlg:dlg-abstract>
+    </composite:implementation>
+
+</html>

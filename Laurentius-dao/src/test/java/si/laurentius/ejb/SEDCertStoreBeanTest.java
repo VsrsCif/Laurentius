@@ -35,15 +35,16 @@ import si.laurentius.lce.KeystoreUtils;
 public class SEDCertStoreBeanTest extends TestUtils {
 
   static EntityManagerFactory memfMSHFactory = null;
-  static SEDCertStoreBean mTestInstance = new SEDCertStoreBean();
+  static final SEDCertStoreBean mTestInstance = new SEDCertStoreBean();
   KeystoreUtils mku = new KeystoreUtils();
+  static final String[] CERT_SAMPLES = new String[]{"test-digicert.crt",
+    "test-entrust.crt", "test-symantec.crt", "test-sigovca-web.cer"};
 
   public SEDCertStoreBeanTest() {
   }
 
   @BeforeClass
   public static void setUpClass() throws IOException {
-
 
     // ---------------------------------
     // set logger
@@ -214,6 +215,20 @@ public class SEDCertStoreBeanTest extends TestUtils {
 
     scNew = mTestInstance.getSEDCertificatForAlias(alias);
     assertNull(scNew);
+
+  }
+
+  @Test
+  public void test_F_isCertificateRevoked() throws Exception {
+    for (String certName : CERT_SAMPLES) {
+      X509Certificate xc = mku.getCertFromInputStream(
+              SEDCertStoreBeanTest.class.getResourceAsStream(
+                      "/certs/sample/" + certName));
+      Boolean bval = mTestInstance.isCertificateRevoked(xc);
+
+      assertNotNull(certName, bval);
+      assertTrue(!bval);
+    }
 
   }
 }

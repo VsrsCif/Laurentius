@@ -14,17 +14,19 @@
  */
 package si.laurentius.plg.web;
 
+import java.io.File;
 import java.util.List;
 import java.util.Objects;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import org.primefaces.context.RequestContext;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.Utils;
 import si.laurentius.plg.db.IMPDBInterface;
 import si.laurentius.plugin.imp.IMPXslt;
 import si.laurentius.plugin.imp.Namespace;
-import si.laurentius.plugin.imp.XPathRule;
+import si.laurentius.plugin.imp.XSLTRule;
 
 /**
  *
@@ -39,7 +41,9 @@ public class AdminIMPXsltView extends AbstractAdminJSFView<IMPXslt> {
   @EJB
   private IMPDBInterface mDB;
   Namespace selectedNamespace = null;
-  XPathRule selectedPathRule = null;
+  XSLTRule selectedXSLTRule = null;
+  File transformationFolder = null;
+  File schemaFolder = null;
 
   @Override
   public void createEditable() {
@@ -65,13 +69,7 @@ public class AdminIMPXsltView extends AbstractAdminJSFView<IMPXslt> {
       }
       Namespace ns = new Namespace();
       ns.setPrefix(String.format(sbname, i));
-      getEditable().getNamespaces().add(ns);
-    }
-  }
-
-  public void createXPathRule() {
-    if (getEditable() != null) {
-      getEditable().getXPathRules().add(new XPathRule());
+      //getEditable().getNamespaces().add(ns);
     }
   }
 
@@ -84,23 +82,20 @@ public class AdminIMPXsltView extends AbstractAdminJSFView<IMPXslt> {
     return selectedNamespace;
   }
 
-  public XPathRule getSelectedPathRule() {
-    return selectedPathRule;
-  }
-
-  public XPathRule getSelectedXPathRule() {
-    return selectedPathRule;
+  public XSLTRule getSelectedXSLTRule() {
+    return selectedXSLTRule;
   }
 
   public boolean namespacePrefixExists(String val) {
     boolean bExists = false;
     if (getEditable() != null) {
+      /*
       for (Namespace ns : getEditable().getNamespaces()) {
         if (Objects.equals(ns.getPrefix(), val)) {
           bExists = true;
           break;
         }
-      }
+      }*/
     }
     return bExists;
 
@@ -118,22 +113,23 @@ public class AdminIMPXsltView extends AbstractAdminJSFView<IMPXslt> {
 
   public void removeSelectedNamespace() {
     if (getSelectedNamespace() != null && getEditable() != null) {
+      /*
       List<Namespace> lst = getEditable().getNamespaces();
       for (Namespace ns : lst) {
         if (Objects.equals(ns, getSelectedNamespace())) {
           lst.remove(ns);
           break;
         }
-      }
+      }*/
 
     }
   }
 
-  public void removeSelectedXPathRule() {
-    if (getSelectedXPathRule() != null && getEditable() != null) {
-      List<XPathRule> lst = getEditable().getXPathRules();
-      for (XPathRule xp : lst) {
-        if (Objects.equals(xp, getSelectedXPathRule())) {
+  public void removeSelectedXSLTRule() {
+    if (getSelectedXSLTRule() != null && getEditable() != null) {
+      List<XSLTRule> lst = getEditable().getXSLTRules();
+      for (XSLTRule xp : lst) {
+        if (Objects.equals(xp, getSelectedXSLTRule())) {
           lst.remove(xp);
           break;
         }
@@ -146,12 +142,8 @@ public class AdminIMPXsltView extends AbstractAdminJSFView<IMPXslt> {
     this.selectedNamespace = selectedNamespace;
   }
 
-  public void setSelectedPathRule(XPathRule selectedPathRule) {
-    this.selectedPathRule = selectedPathRule;
-  }
-
-  public void setSelectedXPathRule(XPathRule selectedPathRule) {
-    this.selectedPathRule = selectedPathRule;
+  public void setSelectedXSLTRule(XSLTRule selectedXSLTRule) {
+    this.selectedXSLTRule = selectedXSLTRule;
   }
 
   @Override
@@ -171,6 +163,53 @@ public class AdminIMPXsltView extends AbstractAdminJSFView<IMPXslt> {
       return false;
     }
     return true;
+  }
+
+  public void createXSLTRule() {
+    IMPXslt ed = getEditable();
+    if (ed != null) {
+      DialogXPath dp = (DialogXPath) getBean("dialogXPath");
+      dp.createNewXPath(ed.getXSLTRules());
+      dp.setUpdateTableId(":dlgXslt:xsltDialogForm:TblTransformation");
+      RequestContext context = RequestContext.getCurrentInstance();
+      context.execute("PF('xPathDialog').show();");
+      context.update(":dlgXPath:xPathDialog");
+    }
+
+  }
+
+  public void editXSLTRule() {
+    IMPXslt ed = getEditable();
+    if (ed != null) {
+      DialogXPath dp = (DialogXPath) getBean("dialogXPath");
+
+      dp.setEditable(getSelectedXSLTRule(), ed.getXSLTRules());
+      dp.setUpdateTableId(":dlgXslt:xsltDialogForm:TblTransformation");
+      RequestContext context = RequestContext.getCurrentInstance();
+      context.execute("PF('xPathDialog').show();");
+      context.update(":dlgXPath:xPathDialog");
+    }
+  }
+
+  public Object getBean(final String beanName) {
+    final Object returnObject = facesContext().getELContext().getELResolver().
+            getValue(facesContext().getELContext(), null, beanName);
+    if (returnObject == null) {
+      LOG.formatedWarning("Bean with name %s was not found!", beanName);
+    }
+    return returnObject;
+  }
+
+  public File[] getTransformationFiles() {
+    return PlgSystemProperties.getXSLTFolder().listFiles(
+            (File dir, String name) -> name.toLowerCase().endsWith(".xslt") || name.
+            toLowerCase().endsWith(".xsl"));
+
+  }
+
+  public File[] getSchemaFiles() {
+    return PlgSystemProperties.getSchemaFolder().listFiles(
+            (File dir, String name) -> name.toLowerCase().endsWith(".xsd"));
   }
 
 }

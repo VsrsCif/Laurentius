@@ -51,7 +51,7 @@ public class BasicWebPluginData {
 
   @Resource
   WebServiceContext context;
-  String currentPanel  =AppConstant.S_PANEL_IMP_EXPORT;
+  String currentPanel  =AppConstant.S_PANEL_IMP_XSLT;
 
   @ManagedProperty(value = "#{loginManager}")
   private LoginManager loginManager;

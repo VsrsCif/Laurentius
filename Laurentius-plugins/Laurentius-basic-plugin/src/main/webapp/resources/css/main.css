@@ -198,7 +198,11 @@ h1 {
 
 }
 
-
+.grid-label {
+     width: 120px !important; 
+     background: lightsteelblue;
+     text-align: right !important;
+}
 
 
 

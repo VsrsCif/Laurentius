@@ -10,6 +10,7 @@
         <cc:attribute name="dialogVar" type="java.lang.String"/>
         <cc:attribute name="updateDialog" type="java.lang.String"/>
         <cc:attribute name="updateTable" type="java.lang.String"/>
+        <cc:attribute name="disabled" type="java.lang.Boolean" default="false"/>
         <cc:attribute name="addActionListener" method-signature="void actionListener()" />
         <cc:attribute name="editActionListener" method-signature="void actionListener()" />
         <cc:attribute name="removeActionListener" method-signature="void actionListener()" />
@@ -20,17 +21,20 @@
                           actionListener="#{cc.attrs.addActionListener}"
                           oncomplete="PF('#{cc.attrs.dialogVar}').show()" 
                           update="#{cc.attrs.updateDialog}"
+                          disabled="#{cc.attrs.disabled}"
                           />
         <p:commandButton value="#{msg['Edit']}"  styleClass="toolbar-Button"
                          icon="ui-icon-svg-edit ui-icon-size-22"  
                          oncomplete="PF('#{cc.attrs.dialogVar}').show()"                                                                   
                          actionListener="#{cc.attrs.editActionListener}"
                          update="#{cc.attrs.updateDialog}"
+                         disabled="#{cc.attrs.disabled}"
                          />
         <p:commandButton value="#{msg['Delete']}" styleClass="toolbar-Button" 
                          icon="ui-icon-svg-remove ui-icon-size-22"  
                          actionListener="#{cc.attrs.removeActionListener}"
-                         update="#{cc.attrs.updateTable}" 
+                         update="#{cc.attrs.updateTable}"
+                         disabled="#{cc.attrs.disabled}"
                          />
     </cc:implementation>
 </html>

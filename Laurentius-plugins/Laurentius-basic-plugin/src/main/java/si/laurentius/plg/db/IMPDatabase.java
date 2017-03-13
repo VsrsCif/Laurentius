@@ -45,7 +45,7 @@ import si.laurentius.commons.utils.xml.XMLUtils;
 import si.laurentius.plugin.imp.IMPXslt;
 import si.laurentius.plugin.imp.Namespace;
 import si.laurentius.plugin.imp.PlgBasicInit;
-import si.laurentius.plugin.imp.XPathRule;
+import si.laurentius.plugin.imp.XSLTRule;
 
 /**
  * @author Jože Rihtaršič
@@ -220,14 +220,14 @@ public class IMPDatabase implements IMPDBInterface {
         if (cls.getIMPXslts() != null && !cls.getIMPXslts().
                 getIMPXslts().isEmpty()) {
           cls.getIMPXslts().getIMPXslts().stream().forEach((cb) -> {
-
-            for (Namespace ns : cb.getNamespaces()) {
-              ns.setId(null);
-            }
-            for (XPathRule xpr : cb.getXPathRules()) {
+            for (XSLTRule xpr : cb.getXSLTRules()) {
               xpr.setId(null);
+              if (xpr.getXPath() != null) {
+                for (Namespace ns : xpr.getXPath().getNamespaces()) {
+                  ns.setId(null);
+                }
+              }
             }
-
             addXSLT(cb);
           });
         }

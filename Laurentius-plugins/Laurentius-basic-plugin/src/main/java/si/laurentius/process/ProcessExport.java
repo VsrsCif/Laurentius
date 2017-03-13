@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
@@ -29,6 +30,7 @@ import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StorageUtils;
 import si.laurentius.commons.utils.StringFormater;
+import si.laurentius.commons.utils.Utils;
 import si.laurentius.commons.utils.xml.XMLUtils;
 import si.laurentius.msh.inbox.mail.MSHInMail;
 import si.laurentius.msh.inbox.payload.MSHInPart;
@@ -46,16 +48,17 @@ import si.laurentius.plugin.processor.InMailProcessorDef;
 @Local(InMailProcessorInterface.class)
 public class ProcessExport extends AbstractMailProcessor {
 
+
   private static final SEDLogger LOG = new SEDLogger(ProcessExport.class);
+  private static final String FORMAT_PART_NS = "PART-";
 
   public static final String KEY_EXPORTED_FILES = "imp.exported.files";
   public static final String KEY_EXPORT_METADATA = "imp.export.metadata";
   public static final String KEY_EXPORT_OVERWRITE = "imp.export.overwrite";
   public static final String KEY_EXPORT_METADATA_FILENAME = "imp.export.metadata.filename";
   public static final String KEY_EXPORT_FILEMASK = "imp.export.filemask";
-  public static final String KEY_EXPORT_FOLDER = "imp.export.folder";
 
-  StringFormater msfFormat = new StringFormater();
+  public static final String KEY_EXPORT_FOLDER = "imp.export.folder";
 
   StorageUtils msStorageUtils = new StorageUtils();
 
@@ -76,15 +79,16 @@ public class ProcessExport extends AbstractMailProcessor {
             PropertyType.Boolean.getType(), null, null));
 
     impd.getMailProcessorPropertyDeves().add(createProperty(
-            KEY_EXPORT_METADATA_FILENAME, "metadata.xml", "Metadata filename.",
+            KEY_EXPORT_METADATA_FILENAME, "metadata_${Id}.xml", "Metadata filename.",
             true,
             PropertyType.String.getType(), null, null));
     impd.getMailProcessorPropertyDeves().add(createProperty(
-            KEY_EXPORT_FILEMASK, "${Id}_${SenderEBox}_${Service}",
+            KEY_EXPORT_FILEMASK, "${Id}_${"+FORMAT_PART_NS+"Id}_${"+FORMAT_PART_NS+"Filename}",
             "Filename mask.", true,
             PropertyType.String.getType(), null, null));
     impd.getMailProcessorPropertyDeves().add(createProperty(
-            KEY_EXPORT_FILEMASK, "${laurentius.home}/test-export",
+            KEY_EXPORT_FOLDER,
+            "${laurentius.home}/test-export/${SenderEBox}_${Service}_${Id}",
             "Export folder.", true,
             PropertyType.String.getType(), null, null));
 
@@ -110,47 +114,75 @@ public class ProcessExport extends AbstractMailProcessor {
     return suc;
   }
 
-  public List<String> exportMail(Map<String, Object> map, MSHInMail mail)
+  public List<String> exportMail(Map<String, Object> map, MSHInMail inMail)
           throws InMailProcessException {
 
-    String fileMask = (String) map.getOrDefault(KEY_EXPORT_FILEMASK, "test");
-    String expFolderPath = (String) map.getOrDefault(KEY_EXPORT_FOLDER, "./");
+    String fileMask = (String) map.
+            getOrDefault(KEY_EXPORT_FILEMASK, "${"+FORMAT_PART_NS+"Id}_${"+FORMAT_PART_NS+"Filename}");
+
+    String expFolderPath = (String) map.
+            getOrDefault(KEY_EXPORT_FOLDER, "./");
+     String metaDataFileName = (String) map.
+            getOrDefault(KEY_EXPORT_METADATA_FILENAME, "metadata_${Id}.xml");
+    
     boolean overwriteFiles = ((String) map.getOrDefault(KEY_EXPORT_OVERWRITE,
-            "false")).equalsIgnoreCase(
-                    "true");
+            "false")).equalsIgnoreCase("true");
     boolean exportMetaData = ((String) map.getOrDefault(KEY_EXPORT_METADATA,
-            "false")).equalsIgnoreCase(
-                    "true");
+            "false")).equalsIgnoreCase("true");
 
-    String exportFolderName;
-    File exportFolder;
-    // export metadata
-    List<String> listFiles = new ArrayList<>();
+    expFolderPath =StringFormater.format(expFolderPath, inMail);
+    File exportFolder = new File(expFolderPath);
 
-    exportFolderName = msfFormat.format(fileMask, mail);
-    String folder = StringFormater.replaceProperties(expFolderPath);
-    exportFolder = new File(folder + File.separator + exportFolderName);
+    
+    List<String> listFiles =  new ArrayList<>();
+    
     if (!exportFolder.exists() && !exportFolder.mkdirs()) {
       String errMsg = String.format(
               "Export failed! Could not create export folder '%s'!",
-              folder);
+              expFolderPath);
       throw new InMailProcessException(
               InMailProcessException.ProcessExceptionCode.InitException,
               errMsg);
     }
+    
+    MSHInMail cpMail = XMLUtils.deepCopyJAXB(inMail);
 
+
+      for (MSHInPart mip : cpMail.getMSHInPayload().getMSHInParts()) {
+        File f;
+        String  fileName = null;
+        if (Utils.isEmptyString(fileMask)){
+          fileName =null;
+        } else   {
+          fileName = StringFormater.format(fileMask, cpMail, FORMAT_PART_NS, mip);          
+        }
+        
+        try {
+          f = msStorageUtils.copyFileToFolder(mip.getFilepath(), exportFolder,
+                  overwriteFiles, fileName);
+          mip.setFilepath(f.getAbsolutePath());
+          
+          listFiles.add(f.getAbsolutePath());
+        } catch (StorageException ex) {
+          String errMsg = String.format("Failed to export file %s! Error %s",
+                  mip.getFilepath(), ex.getMessage());
+          throw new InMailProcessException(
+                  InMailProcessException.ProcessExceptionCode.ProcessException,
+                  errMsg);
+        }
+      }
+      
+      
     if (exportMetaData) {
-      File fn = new File(
-              exportFolder.getAbsolutePath() + File.separator + String.format(
-              "metadata_%06d.", mail.getId())
-              + MimeValue.MIME_XML.getSuffix());
+      File fn = new File(exportFolder, String.format(
+              "metadata_%06d.%s", cpMail.getId(), MimeValue.MIME_XML.getSuffix()));
       if (fn.exists() && overwriteFiles) {
         fn.delete();
       }
 
       try {
 
-        XMLUtils.serialize(mail, fn);
+        XMLUtils.serialize(cpMail, fn);
         listFiles.add(fn.getAbsolutePath());
 
       } catch (JAXBException | FileNotFoundException ex) {
@@ -161,22 +193,8 @@ public class ProcessExport extends AbstractMailProcessor {
                 errMsg);
 
       }
-
-      for (MSHInPart mip : mail.getMSHInPayload().getMSHInParts()) {
-        File f;
-        try {
-          f = msStorageUtils.copyFileToFolder(mip.getFilepath(), exportFolder,
-                  overwriteFiles);
-          listFiles.add(f.getAbsolutePath());
-        } catch (StorageException ex) {
-          String errMsg = String.format("Failed to export file %s! Error %s",
-                  mip.getFilepath(), ex.getMessage());
-          throw new InMailProcessException(
-                  InMailProcessException.ProcessExceptionCode.ProcessException,
-                  errMsg);
-        }
-      }
     }
+    
     return listFiles;
   }
 

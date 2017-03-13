@@ -6,166 +6,165 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:p="http://primefaces.org/ui"
       xmlns:composite="http://java.sun.com/jsf/composite"
-       xmlns:dlg="http://java.sun.com/jsf/composite/laurentius-ui/dialog"
+      xmlns:dlg="http://java.sun.com/jsf/composite/laurentius-ui/dialog"
       >
     <composite:interface>
     </composite:interface>
 
     <composite:implementation >      
-         <dlg:dlg-abstract  id="certImportDialog"
-                            formId="certImportDialogForm"
-                            dialogTitle="#{msg['SEDCertDialog']}" 
-                            editable="SelectCert"
-                            width="600"
-                            height="200"
-                            updateOnSave="#{dialogImportCert.updateTargetPanel}"
-                            onConfirmAction="#{dialogImportCert.importFile()}"
-                            >    
-        
-                <p:panelGrid style="width:100%; height: 100% ">
-                    <p:row>
-                        <p:column  style=" background:#C7C6C4;border: 1px black groove; padding: 2px">
-                            <h:outputText value="1. #{msg['ChooseKeystore']}" />
-                        </p:column>
+        <dlg:dlg-abstract  id="certImportDialog"
+                           formId="certImportDialogForm"
+                           dialogTitle="#{msg['SEDCertDialog']}" 
+                           editable="SelectCert"
+                           width="800"
+                           height="500"
+                           updateOnSave="#{dialogImportCert.updateTargetPanel}"
+                           onConfirmAction="#{dialogImportCert.importFile()}"
+                           >    
+            <p:layout id="certData" style="min-width:650px;height:380px;">
 
-                        <p:column colspan="5"><p:fileUpload fileUploadListener="#{dialogImportCert.handleKeystoreUpload}"
-                                                            skinSimple="true" dragDropSupport="true"
-                                                            uploadLabel="#{msg['Add']}" 
-                                                            cancelLabel="#{msg['Cancel']}" 
-                                                            label="#{msg['Browse']}" 
-                                                            multiple="false"
-                                                            mode="advanced"
-                                                            sizeLimit="1000000" 
-                                                            update=":dlgcertimport:certImportDialog:certImportDialogForm"
-                                                            auto="true"
-                                                            /> 
-                        </p:column>
-                    </p:row>
-
-                    <p:row><p:column  style=" background:#C7C6C4;border: 1px black groove; padding: 2px">
-                            <h:outputText value="2. #{msg['ChooseKeystoreType']}" /></p:column>
-
-
-                        <p:column><h:outputText id='certType' value="#{msg['KeyStoreType']}" /></p:column>
-                        <p:column><p:selectOneMenu value="#{dialogImportCert.keystoreType}"  
-                                                   style="width: 200px !important"
-                                                   disabled="#{empty dialogImportCert.filename }"
-                                                   >
-                                <p:ajax  update="dlgcertimport:certImportDialog:certImportDialogForm" />
-                                <f:selectItem itemLabel="#{msg['Certificate']}" itemValue="CERT" />
-                                <f:selectItem itemLabel="#{msg['KeystoreJKS']}" itemValue="JKS" />
-                                <f:selectItem itemLabel="#{msg['KeystorePKCS12']}" itemValue="PKCS12" />
-
-                            </p:selectOneMenu>  
-                        </p:column>
-                        <p:column><h:outputText id='passwd' value="#{msg['Password']}" /></p:column>
-                        <p:column><p:inputText  id="storePasswd"
-                                                value="#{dialogImportCert.password}" 
-                                                required="#{dialogImportCert.keystoreType != 'CERT'}"
-                                                disabled="#{dialogImportCert.keystoreType == 'CERT' 
-                                                            or empty dialogImportCert.filename }"
-                                                requiredMessage="#{msg['EnterPassword']}"
-                                                /></p:column>
-
-                    </p:row>
-
-
-                    <p:row><p:column  style=" background:#C7C6C4;border: 1px black groove; padding: 2px">
-                            <h:outputText value="3. #{msg['OpenKeystore']}" /></p:column>
-
-                        <p:column><h:outputText value="#{msg['Filename']}:"/></p:column>
-                        <p:column colspan="2"><h:outputText value="#{dialogImportCert.filename}"/></p:column>
-                        <p:column>
-                            <p:commandButton value="#{msg['Open']}"
-                                             disabled="#{empty dialogImportCert.filename }"
-                                             styleClass="toolbar-Button"
-                                             style="width: 100%"
-                                             icon="ui-icon-svg-ok ui-icon-size-22" 
-                                             action="#{dialogImportCert.openImportKeystore()}"
-                                             update=":dlgcertimport:certImportDialog:certImportDialogForm"
-                                             process="@this,certType,storePasswd"
-                                             />
-                        </p:column>
-                    </p:row>
-
-                </p:panelGrid>
-                <hr />
-
-                <p:layout id="certData" style="min-width:650px;height:380px;">
-
-                    <p:layoutUnit  id="CertList" header="Seznam ključev" position="west" size="180" minSize="300" maxSize="300"
-                                   rendered="#{dialogImportCert.keystoreType != 'CERT'}"
-                                   >
-
-                        <p:dataTable id="TblCertficates" 
-                                     value="#{dialogImportCert.certificates}" 
-                                     var="crt" 
-                                     scrollable="true" 
-                                     scrollHeight="100%"
-                                     selectionMode="single"
-                                     rowKey="#{crt.alias}"
-                                     selection="#{dialogImportCert.selectedCertificate}"
-                                     >
-                            <p:ajax event="rowSelect"
-                                    listener="#{dialogImportCert.importStoreRowSelectionChanged()}"
-                                    update=":dlgcertimport:certImportDialog:certImportDialogForm:certDataGrid"
-                                    />  
-
-                            <p:column headerText="#{msg['Import']}" width="60">
-                                <h:selectBooleanCheckbox id="cActive" value="#{crt.import}"  />
-                            </p:column>  
-
-                            <p:column headerText="#{msg['IsKey']}" width="60">
-                                <h:graphicImage rendered="#{crt.keyEntry}" value="#{resource['images:/privateKeyLong.svg']}" width="40" height="18" />
-                                <h:graphicImage rendered="#{not crt.keyEntry}" value="#{resource['images:/certificateLong.svg']}" width="40" height="18" />
-                            </p:column>     
-
-                            <p:column headerText="#{msg['Alias']}">
-                                <h:outputText value="#{crt.alias}" />
+                <p:layoutUnit position="north" size="150" minSize="150" maxSize="150"
+                                >
+                    <p:panelGrid style="width:100%; height: 100% ">
+                        <p:row>
+                            <p:column  style=" background:#C7C6C4;border: 1px black groove; padding: 2px">
+                                <h:outputText value="1. #{msg['ChooseKeystore']}" />
                             </p:column>
 
-                            <p:column headerText="#{msg['Password']}" rendered="#{dialogImportCert.showKeyPasswords()}">
-                                <h:inputText rendered="#{crt.keyEntry}" value="#{crt.password}" />
+                            <p:column colspan="5"><p:fileUpload fileUploadListener="#{dialogImportCert.handleKeystoreUpload}"
+                                                                skinSimple="true" dragDropSupport="true"
+                                                                uploadLabel="#{msg['Add']}" 
+                                                                cancelLabel="#{msg['Cancel']}" 
+                                                                label="#{msg['Browse']}" 
+                                                                multiple="false"
+                                                                mode="advanced"
+                                                                sizeLimit="1000000" 
+                                                                update=":dlgcertimport:certImportDialog:certImportDialogForm"
+                                                                auto="true"
+                                                                /> 
                             </p:column>
-                        </p:dataTable>
+                        </p:row>
+
+                        <p:row><p:column  style=" background:#C7C6C4;border: 1px black groove; padding: 2px">
+                                <h:outputText value="2. #{msg['ChooseKeystoreType']}" /></p:column>
 
 
-                    </p:layoutUnit>
-                    <p:layoutUnit  position="center"    >
+                            <p:column><h:outputText id='certType' value="#{msg['KeyStoreType']}" /></p:column>
+                            <p:column><p:selectOneMenu value="#{dialogImportCert.keystoreType}"  
+                                                       style="width: 200px !important"
+                                                       disabled="#{empty dialogImportCert.filename }"
+                                                       >
+                                    <p:ajax  update="dlgcertimport:certImportDialog:certImportDialogForm" />
+                                    <f:selectItem itemLabel="#{msg['Certificate']}" itemValue="CERT" />
+                                    <f:selectItem itemLabel="#{msg['KeystoreJKS']}" itemValue="JKS" />
+                                    <f:selectItem itemLabel="#{msg['KeystorePKCS12']}" itemValue="PKCS12" />
 
-                        <p:panelGrid  id = "certDataGrid" columns="2" columnClasses="grid-label, value"  style="width:100%; height: 100% ">
-                            <f:facet  name="header">
-                                <h:graphicImage rendered="#{dialogImportCert.selectedCertificate.keyEntry}" value="#{resource['images:/privateKeyLong.svg']}" width="40" height="18" />
-                                <h:graphicImage rendered="#{not dialogImportCert.selectedCertificate.keyEntry}" value="#{resource['images:/certificateLong.svg']}" width="40" height="18" />
-                                <h:outputText value="#{msg['Certificate']}" />                                 
-                            </f:facet>
-                            <h:outputText value="#{msg['Alias']}:" />
-                            <h:outputText value="#{dialogImportCert.selectedCertificate.alias}" style="width: 260px"  />
+                                </p:selectOneMenu>  
+                            </p:column>
+                            <p:column><h:outputText id='passwd' value="#{msg['Password']}" /></p:column>
+                            <p:column><p:inputText  id="storePasswd"
+                                                    value="#{dialogImportCert.password}" 
+                                                    required="#{dialogImportCert.keystoreType != 'CERT'}"
+                                                    disabled="#{dialogImportCert.keystoreType == 'CERT' 
+                                                                or empty dialogImportCert.filename }"
+                                                    requiredMessage="#{msg['EnterPassword']}"
+                                                    /></p:column>
+                        </p:row>
+                        <p:row><p:column  style=" background:#C7C6C4;border: 1px black groove; padding: 2px">
+                                <h:outputText value="3. #{msg['OpenKeystore']}" /></p:column>
 
-                            <h:outputText value="#{msg['SubjectDN']}:" />
-                            <h:outputText  value="#{dialogImportCert.selectedX509Cert.subjectDN}" style="width: 260px"  />
+                            <p:column><h:outputText value="#{msg['Filename']}:"/></p:column>
+                            <p:column colspan="2"><h:outputText value="#{dialogImportCert.filename}"/></p:column>
+                            <p:column>
+                                <p:commandButton value="#{msg['Open']}"
+                                                 disabled="#{empty dialogImportCert.filename }"
+                                                 styleClass="toolbar-Button"
+                                                 style="width: 100%"
+                                                 icon="ui-icon-svg-ok ui-icon-size-22" 
+                                                 action="#{dialogImportCert.openImportKeystore()}"
+                                                 update=":dlgcertimport:certImportDialog:certImportDialogForm"
+                                                 process="@this,certType,storePasswd"
+                                                 />
+                            </p:column>
+                        </p:row>
 
-                            <h:outputText value="#{msg['IssuerDN']}:" />
-                            <h:outputText  value="#{dialogImportCert.selectedX509Cert.issuerDN}" style="width: 260px"  />
+                    </p:panelGrid>
 
-                            <h:outputText value="#{msg['ValidFrom']}:" />
-                            <h:outputText  value="#{dialogImportCert.selectedX509Cert.notBefore}" style="width: 100%">
-                                <f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
-                            </h:outputText>
+                </p:layoutUnit>
 
-                            <h:outputText value="#{msg['ValidTo']}:" />                            
-                            <h:outputText  value="#{dialogImportCert.selectedX509Cert.notAfter}" style="width: 100%">
-                                <f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
-                            </h:outputText>
+                <p:layoutUnit  id="CertList" header="Seznam ključev" position="west" size="180" minSize="300" maxSize="300"
+                               rendered="#{dialogImportCert.keystoreType != 'CERT'}"
+                               >
 
-                            <h:outputText value="#{msg['SerialNumber']}:" />
-                            <h:outputText  value="#{dialogImportCert.selectedX509Cert.serialNumber}" style="width: 260px"  />
+                    <p:dataTable id="TblCertficates" 
+                                 value="#{dialogImportCert.certificates}" 
+                                 var="crt" 
+                                 scrollable="true" 
+                                 scrollHeight="100%"
+                                 selectionMode="single"
+                                 rowKey="#{crt.alias}"
+                                 selection="#{dialogImportCert.selectedCertificate}"
+                                 >
+                        <p:ajax event="rowSelect"
+                                listener="#{dialogImportCert.importStoreRowSelectionChanged()}"
+                                update=":dlgcertimport:certImportDialog:certImportDialogForm:certDataGrid"
+                                />  
 
-                            <h:outputText value="#{msg['Version']}:" />
-                            <h:outputText  value="#{dialogImportCert.selectedX509Cert.version}" style="width: 80px"  />
-                        </p:panelGrid>
-                    </p:layoutUnit>
-                </p:layout>
-         </dlg:dlg-abstract>
+                        <p:column headerText="#{msg['Import']}" width="60">
+                            <h:selectBooleanCheckbox id="cActive" value="#{crt.import}"  />
+                        </p:column>  
+
+                        <p:column headerText="#{msg['IsKey']}" width="60">
+                            <h:graphicImage rendered="#{crt.keyEntry}" value="#{resource['images:/privateKeyLong.svg']}" width="40" height="18" />
+                            <h:graphicImage rendered="#{not crt.keyEntry}" value="#{resource['images:/certificateLong.svg']}" width="40" height="18" />
+                        </p:column>     
+
+                        <p:column headerText="#{msg['Alias']}">
+                            <h:outputText value="#{crt.alias}" />
+                        </p:column>
+
+                        <p:column headerText="#{msg['Password']}" rendered="#{dialogImportCert.showKeyPasswords()}">
+                            <h:inputText rendered="#{crt.keyEntry}" value="#{crt.password}" />
+                        </p:column>
+                    </p:dataTable>
+
+
+                </p:layoutUnit>
+                <p:layoutUnit  position="center"    >
+
+                    <p:panelGrid  id = "certDataGrid" columns="2" columnClasses="grid-label, value"  style="width:100%; height: 100% ">
+                        <f:facet  name="header">
+                            <h:graphicImage rendered="#{dialogImportCert.selectedCertificate.keyEntry}" value="#{resource['images:/privateKeyLong.svg']}" width="40" height="18" />
+                            <h:graphicImage rendered="#{not dialogImportCert.selectedCertificate.keyEntry}" value="#{resource['images:/certificateLong.svg']}" width="40" height="18" />
+                            <h:outputText value="#{msg['Certificate']}" />                                 
+                        </f:facet>
+                        <h:outputText value="#{msg['Alias']}:" />
+                        <h:outputText value="#{dialogImportCert.selectedCertificate.alias}" style="width: 260px"  />
+
+                        <h:outputText value="#{msg['SubjectDN']}:" />
+                        <h:outputText  value="#{dialogImportCert.selectedX509Cert.subjectDN}" style="width: 260px"  />
+
+                        <h:outputText value="#{msg['IssuerDN']}:" />
+                        <h:outputText  value="#{dialogImportCert.selectedX509Cert.issuerDN}" style="width: 260px"  />
+
+                        <h:outputText value="#{msg['ValidFrom']}:" />
+                        <h:outputText  value="#{dialogImportCert.selectedX509Cert.notBefore}" style="width: 100%">
+                            <f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
+                        </h:outputText>
+
+                        <h:outputText value="#{msg['ValidTo']}:" />                            
+                        <h:outputText  value="#{dialogImportCert.selectedX509Cert.notAfter}" style="width: 100%">
+                            <f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
+                        </h:outputText>
+
+                        <h:outputText value="#{msg['SerialNumber']}:" />
+                        <h:outputText  value="#{dialogImportCert.selectedX509Cert.serialNumber}" style="width: 260px"  />
+
+                        <h:outputText value="#{msg['Version']}:" />
+                        <h:outputText  value="#{dialogImportCert.selectedX509Cert.version}" style="width: 80px"  />
+                    </p:panelGrid>
+                </p:layoutUnit>
+            </p:layout>
+        </dlg:dlg-abstract>
     </composite:implementation>
 </html>

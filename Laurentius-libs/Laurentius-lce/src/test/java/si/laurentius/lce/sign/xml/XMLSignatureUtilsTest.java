@@ -5,7 +5,6 @@
  */
 package si.laurentius.lce.sign.xml;
 
-import si.laurentius.lce.sign.xml.XMLSignatureUtils;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;

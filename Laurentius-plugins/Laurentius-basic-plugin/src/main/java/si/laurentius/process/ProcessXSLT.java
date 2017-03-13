@@ -37,14 +37,15 @@ import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.interfaces.SEDDaoInterface;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StorageUtils;
-import si.laurentius.commons.utils.StringFormater;
+import si.laurentius.commons.utils.Utils;
 import si.laurentius.commons.utils.xml.XMLUtils;
 import si.laurentius.msh.inbox.mail.MSHInMail;
 import si.laurentius.msh.inbox.payload.MSHInPart;
 
 import si.laurentius.plg.db.IMPDBInterface;
+import si.laurentius.plg.web.PlgSystemProperties;
 import si.laurentius.plugin.imp.IMPXslt;
-import si.laurentius.plugin.imp.XPathRule;
+import si.laurentius.plugin.imp.XSLTRule;
 import si.laurentius.plugin.interfaces.InMailProcessorInterface;
 import si.laurentius.plugin.interfaces.PropertyType;
 import si.laurentius.plugin.interfaces.exception.InMailProcessException;
@@ -62,9 +63,11 @@ import si.laurentius.process.xslt.XSLTUtils;
 public class ProcessXSLT extends AbstractMailProcessor {
 
   private static final SEDLogger LOG = new SEDLogger(ProcessXSLT.class);
-  XPathUtils mxsltUtils = new XPathUtils();
-
   public static final String KEY_XSLT_INSTANCE = "imp.xslt.instance";
+  private static final String FILE_PREFIX = "xslt";
+  private static final String FILE_SOURCE = "imp_xslt";
+
+  XPathUtils mxsltUtils = new XPathUtils();
 
   @EJB
   private IMPDBInterface mDB;
@@ -113,77 +116,70 @@ public class ProcessXSLT extends AbstractMailProcessor {
 
   public void tranformPayloads(IMPXslt xslt, MSHInMail mim)
           throws InMailProcessException {
-    LOG.formatedlog("XSLT for box");
-    for (XPathRule xpr : xslt.getXPathRules()) {
-      LOG.formatedlog("XSLT for box rule 1");
-      if (Objects.equals(xpr.getService(), mim.getService())
-              && Objects.equals(xpr.getAction(), mim.getAction())
-              && mim.getMSHInPayload() != null
-              && !mim.getMSHInPayload().getMSHInParts().isEmpty()) {
 
-        LOG.formatedlog("XSLT for box rule 2");
-        List<MSHInPart> miplst = mim.getMSHInPayload().getMSHInParts();
-        XPath xpath = mxsltUtils.createXPathFromNSContext(
-                new XSLTNamespaceContext(
-                        xslt.getNamespaces()));
-        List<MSHInPart> mipNewPayload = new ArrayList<>();
-        for (MSHInPart mip : miplst) {
-          LOG.formatedlog("XSLT for box rule 3");
-          if (Objects.
-                  equals(mip.getMimeType(), MimeValue.MIME_XML.getMimeType())) {
-            LOG.formatedlog("XSLT for box rule 4");
-            try {
-              Document doc = XMLUtils.deserializeToDom(StorageUtils.getFile(mip.
-                      getFilepath()));
-              if (mxsltUtils.doesRuleApply(doc, xpath, xpr.getXPath(), xpr.
-                      getValue())) {
-                LOG.formatedlog("XSLT for box rule 5");
-                String trFile = StringFormater.replaceProperties(xpr.
-                        getTransformation());
-                LOG.formatedlog("XSLT file %s ", trFile);
+    // if empty message  - skip transformation
+    if (mim.getMSHInPayload() == null
+            || mim.getMSHInPayload().getMSHInParts().isEmpty()) {
+      LOG.formatedWarning(
+              "Could not execute XSLT transformation '%s' on mail '%d' - no payloads",
+              xslt.getInstance(), mim.getId());
+      return;
+    }
 
-                try {
-                  File fRes = StorageUtils.getNewStorageFile("xml", "xslt");
-                  XSLTUtils.transform(doc, new File(trFile), fRes);
+    for (XSLTRule xpr : xslt.getXSLTRules()) {
 
-                  MSHInPart mipt = new MSHInPart();
-                  mipt.setDescription("Transform");
-                  mipt.setMimeType(MimeValue.MIME_XML.getMimeType());
-                  mipt.setFilename(fRes.getName());
-                  mipt.setSource("xslt");
-                  mipt.setFilepath(StorageUtils.getRelativePath(fRes));
-                  mipt.setName("transformation");
-                  mipNewPayload.add(mipt);
+      List<MSHInPart> miplst = mim.getMSHInPayload().getMSHInParts();
+      // create xpath context
+      XPath xpath = mxsltUtils.createXPathFromNSContext(
+              new XSLTNamespaceContext(
+                      xpr.getXPath().getNamespaces()));
+      //  get xslt transformation
+      File fXSLT = getXSLTFile(xpr.getTransformation());
+      // new payloads  holder
+      List<MSHInPart> mipNewPayload = new ArrayList<>();
 
-                } catch (JAXBException | TransformerException | StorageException ex) {
-                  String errMsg = String.format(
-                          "XSLT transformation failed %s!",
-                          ex.getMessage());
-                  throw new InMailProcessException(
-                          InMailProcessException.ProcessExceptionCode.ProcessException,
-                          errMsg, ex, false, true);
-                }
-
-              }
-            } catch (IOException | ParserConfigurationException | SAXException
-                    | XPathExpressionException ex) {
-
-              String errMsg = String.format(
-                      "XSLT transformation failed %s!",
-                      ex.getMessage());
-              throw new InMailProcessException(
-                      InMailProcessException.ProcessExceptionCode.ProcessException,
-                      errMsg, ex, false, true);
-            }
-
-          }
+      for (MSHInPart mip : miplst) {
+        // check if file is mimetype
+        if (!Objects.equals(mip.getMimeType(), MimeValue.MIME_XML.
+                getMimeType())) {
+          continue;
         }
-        // add new payloads
-        if (!mipNewPayload.isEmpty()) {
-          mim.getMSHInPayload().getMSHInParts().addAll(mipNewPayload);
+
+        try {
+          Document doc = XMLUtils.deserializeToDom(StorageUtils.getFile(
+                  mip.getFilepath()));
+
+          // assert xpath rule  or there is no rule
+          if (Utils.isEmptyString(xpr.getXPath().getXpath())
+                  || !mxsltUtils.doesRuleApply(doc, xpath,
+                          xpr.getXPath().getXpath(), xpr.getXPathValue())) {
+            continue;
+          }
+
           try {
-            mDBDao.updateInMail(mim, "transform", "");
-          } catch (StorageException ex) {
+
+            File fRes = StorageUtils.getNewStorageFile(
+                    MimeValue.MIME_XML.getSuffix(), FILE_PREFIX);
+            // transform
+            XSLTUtils.transform(doc, fXSLT, fRes);
+
+            String resultName = xpr.getResultFilename();
+            resultName = Utils.isEmptyString(resultName) ? "Transformation" : resultName;
+
+            MSHInPart mipt = new MSHInPart();
+            mipt.setDescription(String.format(
+                    "Transform of '%s' with xslt: '%s'", mip.
+                            getFilename(), xpr.getTransformation()));
+
+            mipt.setMimeType(MimeValue.MIME_XML.getMimeType());
+            mipt.setFilename(resultName.toLowerCase().endsWith(
+                    MimeValue.MIME_XML.getSuffix()) ? resultName
+                    : resultName + "." +MimeValue.MIME_XML.getSuffix());
+            mipt.setSource(FILE_SOURCE);
+            mipt.setFilepath(StorageUtils.getRelativePath(fRes));
+            mipt.setName(resultName);
+            mipNewPayload.add(mipt);
+          } catch (JAXBException | TransformerException | StorageException ex) {
             String errMsg = String.format(
                     "XSLT transformation failed %s!",
                     ex.getMessage());
@@ -191,11 +187,49 @@ public class ProcessXSLT extends AbstractMailProcessor {
                     InMailProcessException.ProcessExceptionCode.ProcessException,
                     errMsg, ex, false, true);
           }
+
+        } catch (IOException | ParserConfigurationException | SAXException
+                | XPathExpressionException ex) {
+
+          String errMsg = String.format(
+                  "XSLT transformation failed %s!",
+                  ex.getMessage());
+          throw new InMailProcessException(
+                  InMailProcessException.ProcessExceptionCode.ProcessException,
+                  errMsg, ex, false, true);
+        }
+
+      }
+
+      // add new payloads
+      if (!mipNewPayload.isEmpty()) {
+        mim.getMSHInPayload().getMSHInParts().addAll(mipNewPayload);
+        try {
+          mDBDao.updateInMail(mim, "transform", "");
+        } catch (StorageException ex) {
+          String errMsg = String.format(
+                  "XSLT transformation failed %s!",
+                  ex.getMessage());
+          throw new InMailProcessException(
+                  InMailProcessException.ProcessExceptionCode.ProcessException,
+                  errMsg, ex, false, true);
         }
 
       }
     }
+  }
 
+  private File getXSLTFile(String xsltFileName) throws InMailProcessException {
+    File fXSLT = new File(PlgSystemProperties.getXSLTFolder(), xsltFileName);
+    if (!fXSLT.exists()) {
+      String errMsg = String.format(
+              "Transformation file %s not exist!", fXSLT.
+                      getAbsolutePath());
+      throw new InMailProcessException(
+              InMailProcessException.ProcessExceptionCode.InitException,
+              errMsg, null, false, true);
+    }
+    return fXSLT;
   }
 
 }

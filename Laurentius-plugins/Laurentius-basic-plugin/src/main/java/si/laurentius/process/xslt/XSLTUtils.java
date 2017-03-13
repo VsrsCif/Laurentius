@@ -53,7 +53,6 @@ public class XSLTUtils {
 
     
     TransformerFactory factory = TransformerFactory.newInstance();
-    //TransformerFactoryImpl factory = new TransformerFactoryImpl();
     Transformer transformer = factory.newTransformer(new StreamSource(xsltFile));
     transformer.setURIResolver(new XsltURIResolver(xsltFile.getParentFile()));
     transformer.transform(new DOMSource(source), new StreamResult(fileResult));

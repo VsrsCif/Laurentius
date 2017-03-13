@@ -63,14 +63,9 @@
 
                         <p:panelGrid  style="width: 100%; height: 100%" >
                             <p:row> 
-                                <p:column><h:outputText value="#{msg['JNDI']}:" /></p:column>
-                                <p:column><p:commandButton value="#{msg['UpdatePlugin']}" icon="ui-icon-sed-refresh" 
-                                                           style="width: 100%; height: 28px " 
-                                                           actionListener="#{adminSEDPluginView.refreshDataFromEJB}"
-                                                           update=":dlgPlugin:pluginDialogForm:plugin"/></p:column>
-                            </p:row>
-                            <p:row> 
-                                <p:column colspan="2"><p:inputTextarea  value="#{adminSEDPluginView.selected.jndi}" rows="4" style="width: 95%" />
+                                 <p:column><h:outputText value="#{msg['JNDI']}:" /></p:column>
+                                 <p:column>
+                                    <p:inputTextarea  value="#{adminSEDPluginView.selected.jndi}" rows="3" style="width: 95%" />
                                 </p:column>
                             </p:row>
                             <p:row> 

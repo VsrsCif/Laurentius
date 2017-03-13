@@ -15,6 +15,7 @@ import static si.laurentius.msh.web.abst.AbstractAdminJSFView.CB_PARA_REMOVED;
 @SessionScoped
 @ManagedBean(name = "dialogDelete")
 public class DialogDelete {
+
   private static final SEDLogger LOG = new SEDLogger(DialogDelete.class);
 
   AbstractAdminJSFView currentJSFView;
@@ -32,7 +33,8 @@ public class DialogDelete {
       boolean bSuc = currentJSFView.removeSelected();
       addCallbackParam(CB_PARA_REMOVED, bSuc);
     } else {
-      LOG.logWarn("Remove selected row, but no view currentJSFView is setted!", null);
+      LOG.logWarn("Remove selected row, but no view currentJSFView is setted!",
+              null);
     }
   }
 
@@ -46,12 +48,14 @@ public class DialogDelete {
   public boolean getIsSelectedTableRow() {
     return currentJSFView != null && currentJSFView.getSelected() != null;
   }
-  
-  public String getTargetTable(){
-    return currentJSFView != null? currentJSFView.getUpdateTargetTable():null;
+
+  public String getTargetTable() {
+    return currentJSFView != null ? currentJSFView.getUpdateTargetTable() : null;
   }
+
   public void addCallbackParam(String val, boolean bval) {
     RequestContext.getCurrentInstance().addCallbackParam(val, bval);
   }
+  
 
 }

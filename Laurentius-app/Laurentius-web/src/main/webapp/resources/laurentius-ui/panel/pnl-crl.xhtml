@@ -36,31 +36,32 @@
                                          update="TblCRL"  
                                          />
 
-                    </f:facet>
-                    <p:column headerText="#{msg['Id']}" width="60">
-                        <h:outputText value="#{sp.id}" /></p:column>
+                    </f:facet>                   
+                    <p:column style="width:16px" headerText="#{msg['URL']}">
+                        <p:rowToggler />
+                    </p:column>
                     <p:column headerText="#{msg['IssuerDN']}" >
                         <h:outputText value="#{sp.issuerDN}"></h:outputText>                
                     </p:column>
-                    <p:column headerText="#{msg['Http']}" width="120">
-                        <h:outputText value="#{sp.http}" ></h:outputText>                
-                    </p:column>
-                    <p:column headerText="#{msg['Ldap']}" width="120">
-                        <h:outputText value="#{sp.ldap}" ></h:outputText>                
-                    </p:column>
-
-                    <p:column headerText="#{msg['effectiveDate']}" width="60">
+                   
+                   
+                    <p:column headerText="#{msg['effectiveDate']}" width="80">
                         <h:outputText value="#{sp.effectiveDate}"><f:convertDateTime pattern="dd.MM.yyyy HH:mm" timeZone="CET" /></h:outputText>                
                     </p:column>
-                    <p:column headerText="#{msg['nextUpdateDate']}" width="60">
+                    <p:column headerText="#{msg['nextUpdateDate']}" width="80">
                         <h:outputText value="#{sp.nextUpdateDate}"><f:convertDateTime pattern="dd.MM.yyyy HH:mm" timeZone="CET" /></h:outputText>                
                     </p:column>
-                    <p:column headerText="#{msg['retrievedDate']}" width="60">
+                    <p:column headerText="#{msg['retrievedDate']}" width="80">
                         <h:outputText value="#{sp.retrievedDate}"><f:convertDateTime pattern="dd.MM.yyyy HH:mm" timeZone="CET" /></h:outputText>
                     </p:column>
-                    <p:column headerText="#{msg['filePath']}" width="80">
+                    <p:column headerText="#{msg['filePath']}" width="120">
                         <h:outputText value="#{sp.filePath}" ></h:outputText>                
                     </p:column>
+                     <p:rowExpansion>
+                         <p:dataList value="#{sp.urls}" var="crlUrl"  type="unordered" itemType="none">
+                            #{crlUrl.value}
+                        </p:dataList>
+                    </p:rowExpansion>
 
                 </p:dataTable>
 

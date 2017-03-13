@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import javax.ejb.AccessTimeout;
 import javax.ejb.Local;
 import javax.ejb.Lock;
 import javax.ejb.LockType;
@@ -41,6 +42,7 @@ import si.laurentius.plugin.processor.InMailProcessorDef;
  */
 @Startup
 @Singleton
+@AccessTimeout(value = 30000)
 @Local(SEDPluginManagerInterface.class)
 @TransactionManagement(TransactionManagementType.BEAN)
 public class SEDPluginManager implements SEDPluginManagerInterface {
