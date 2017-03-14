@@ -190,9 +190,6 @@ abstract public class AbstractAdminJSFView<T> extends AbstractJSFView {
   }
 
   ;
-   
-   public void addCallbackParam(String val, boolean bval) {
-    RequestContext.getCurrentInstance().addCallbackParam(val, bval);
-  }
+ 
 
 }

@@ -12,8 +12,10 @@
  * or implied. See the Licence for the specific language governing permissions and limitations under
  * the Licence.
  */
-
 package si.laurentius.commons.enums;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -23,7 +25,8 @@ public enum SEDInboxMailStatus {
 
   /**
    *
-   *//**
+   */
+  /**
    *
    */
   //RECEIVE("RECEIVE", "Receive message in process.", "orange"),
@@ -32,41 +35,47 @@ public enum SEDInboxMailStatus {
    *
    */
   RECEIVED("RECEIVED", "Message is sucessfuly received to MSH.", "green"),
-
   /**
    *
    */
   PROCESS("PROCESS", "Message is locked by plugin", "darkgray"),
-  
-    /**
+  /**
    *
    */
   PREADY("PREADY", "Message is locked by plugin", "darkgreen"),
-
   /**
    *
    */
   LOCKED("LOCKED", "Message is locked by consumer", "lightblue"),
-
   /**
    *
    */
   PLOCKED("PLOCKED", "Message is locked by plugin", "lightgray"),
-
   /**
    *
    */
   DELIVERED("DELIVERED", "Message is consumed", "darkblue"),
-
   /**
    *
    */
   ERROR("ERROR", "Error occured receiving, processing MSH", "red"),
-
   /**
    *
    */
   DELETED("DELETED", "Pošiljka je izbrisana", "black");
+
+  private static final List<String> listOfValues;
+
+  static {
+    listOfValues = new ArrayList<>();
+    for (SEDInboxMailStatus enmVal : values()) {
+      listOfValues.add(enmVal.getValue());
+    }
+  }
+
+  public static List<String> listOfValues() {
+    return listOfValues;
+  }
 
   String mstrVal;
   String mstrDesc;
@@ -80,6 +89,7 @@ public enum SEDInboxMailStatus {
 
   /**
    * Status code
+   *
    * @return status
    */
   public String getValue() {
@@ -87,7 +97,8 @@ public enum SEDInboxMailStatus {
   }
 
   /**
-   ** returns status  string
+   ** returns status string
+   *
    * @return status descr
    */
   public String getDesc() {
@@ -96,6 +107,7 @@ public enum SEDInboxMailStatus {
 
   /**
    * returns status color string
+   *
    * @return color string
    */
   public String getColor() {

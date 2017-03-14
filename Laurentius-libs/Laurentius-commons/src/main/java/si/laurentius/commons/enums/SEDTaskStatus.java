@@ -14,6 +14,10 @@
  */
 package si.laurentius.commons.enums;
 
+import java.util.ArrayList;
+import java.util.List;
+import static si.laurentius.commons.enums.SEDInboxMailStatus.values;
+
 /**
  *
  * @author Joze Rihtarsic <joze.rihtarsic@sodisce.si>
@@ -39,6 +43,19 @@ public enum SEDTaskStatus {
      *
      */
   ERROR("ERROR", "Error occured ", "red");
+  
+  private static final List<String> listOfValues;
+
+  static {
+    listOfValues = new ArrayList<>();
+    for (SEDTaskStatus enmVal : values()) {
+      listOfValues.add(enmVal.getValue());
+    }
+  }
+
+  public static List<String> listOfValues() {
+    return listOfValues;
+  }
 
   String mstrVal;
   String mstrDesc;

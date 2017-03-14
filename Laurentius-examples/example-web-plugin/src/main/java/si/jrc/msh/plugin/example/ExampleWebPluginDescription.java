@@ -23,6 +23,7 @@ import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import si.laurentius.commons.SEDGUIConstants;
 import si.laurentius.commons.utils.SEDLogger;
+import si.laurentius.plugin.def.MenuItem;
 import si.laurentius.plugin.interfaces.AbstractPluginDescription;
 import si.laurentius.plugin.interfaces.PluginDescriptionInterface;
 import si.laurentius.plugin.interfaces.exception.PluginException;
@@ -37,6 +38,7 @@ import si.laurentius.plugin.interfaces.exception.PluginException;
 public class ExampleWebPluginDescription extends  AbstractPluginDescription {
   
   private static final SEDLogger LOG = new SEDLogger(ExampleWebPluginDescription.class);
+  MenuItem miRoot = null;
   
   @PostConstruct
   private void postConstruct() {    
@@ -76,6 +78,19 @@ public class ExampleWebPluginDescription extends  AbstractPluginDescription {
     return "Example web plugin";
   }
 
+    @Override
+  public MenuItem getMenu() {
+    if (miRoot == null) {
+      miRoot  = new MenuItem();
+      miRoot.setName(getName());
+    }
+    return miRoot;
+  }
+
+  @Override
+  public MenuItem getProcessMenu() {
+    return null;
+  }
   /**
    *
    * @return

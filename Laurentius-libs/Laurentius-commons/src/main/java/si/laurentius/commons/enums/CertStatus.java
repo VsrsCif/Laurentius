@@ -28,6 +28,7 @@ public enum CertStatus {
   INVALID_CRL(32);
   
   
+  
   int miCode;
   CertStatus(int iCode){
     miCode = iCode;

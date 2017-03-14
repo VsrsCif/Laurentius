@@ -85,7 +85,9 @@ public class AppConstant {
      *
      */
   public static final String S_PANEL_SETT_CERT_ROOT_CA = "PANEL_SETT_CERT_ROOT_CA";
-  public static final String S_PANEL_SETT_CERT_CRL = "S_PANEL_SETT_CERT_CRL";
+  public static final String S_PANEL_SETT_CERT_CRL = "PANEL_SETT_CERT_CRL";
+  
+   public static final String S_PANEL_SETT_JMS = "PANEL_SETT_JMS";
 
   /**
      *
@@ -241,7 +243,9 @@ public class AppConstant {
   public String getS_PANEL_SETT_CERT_CRL() {
     return S_PANEL_SETT_CERT_CRL;
   }
-
-
+  
+  public String getS_PANEL_SETT_JMS() {
+    return S_PANEL_SETT_JMS;
+  }
 
 }

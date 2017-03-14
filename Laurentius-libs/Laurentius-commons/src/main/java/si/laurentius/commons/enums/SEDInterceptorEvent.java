@@ -14,6 +14,10 @@
  */
 package si.laurentius.commons.enums;
 
+import java.util.ArrayList;
+import java.util.List;
+import static si.laurentius.commons.enums.SEDInboxMailStatus.values;
+
 /**
  *
  * @author Joze Rihtarsic <joze.rihtarsic@sodisce.si>
@@ -40,6 +44,19 @@ public enum SEDInterceptorEvent {
      */
   OUT_FAULT_MESSAGE("OutFaultMessage", "Intercept out fault message.");
 
+  private static final List<String> listOfValues;
+
+  static {
+    listOfValues = new ArrayList<>();
+    for (SEDInterceptorEvent enmVal : values()) {
+      listOfValues.add(enmVal.getValue());
+    }
+  }
+
+  public static List<String> listOfValues() {
+    return listOfValues;
+  }
+  
   String mstrVal;
   String mstrDesc;
 

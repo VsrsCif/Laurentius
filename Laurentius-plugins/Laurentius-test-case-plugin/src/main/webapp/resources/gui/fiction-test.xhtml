@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      xmlns:pnl="http://java.sun.com/jsf/composite/gui/panel">
+    <composite:interface>
+    </composite:interface>
+
+    <composite:implementation >
+        <pnl:pnl-settings id="cronPanel"
+                          title="#{msg['CustomTest']}" 
+                          description="#{msg['CustomTest']}"
+                          icon="ui-icon-svg-test"
+                          >
+
+            <h3>Testni podatki</h3>
+            <p:panelGrid  style="width: 580px">
+                <f:facet name="header">
+                    <h:outputText value="Vnesite testne podatke" />
+                </f:facet>
+                <p:row>
+                    <p:column>
+                        <h:outputText value="Izberite lokalni predal:" />
+                    </p:column>
+                    <p:column>
+                        <p:selectOneMenu id="ebox" value="#{TCStressTest.testSenderEBox}" style="width:150px" >
+                            <f:selectItem noSelectionOption="false"  />
+                            <f:selectItems value="#{testCasePluginData.userEBoxes}" />
+                        </p:selectOneMenu>                                    
+
+                        <h:outputText value="#{TCStressTest.localDomain}" />
+                    </p:column>
+                </p:row>
+                <p:row>
+                    <p:column>
+                        <h:outputText value="Vnesite predal naslovnika/pošiljatelja:" />
+                    </p:column>
+                    <p:column>
+                        <h:inputText value="#{TCStressTest.testReceiverEBox}" style="width: 100%"/>
+                    </p:column>
+                </p:row>
+            </p:panelGrid>
+
+            <h3>ZPP vročanje</h3>
+            Namen orodja je spremeniti čas oddaje pošiljke v naslovnikov sistem. Tako da je nastopil rok za
+            fiktivno vročitev 
+            <br /> <br /> 
+
+            Vnesite ID izhodne pošiljke. Id za pošiljko dobite v Orodju "Izhodna pošta", 
+            v zavihku "Podatki kuverte" (Spodaj) podatek ID.  Spreminjanje datuma dostav v naslovnikov sistem 
+            deluje samo za pošiljke v statusu Poslano (SENT)<br /> 
+            <h:outputText value="Id:" />
+            <p:inputNumber value="#{TCStressTest.fictionMailId}" decimalPlaces="0" style="width: 200px"/>
+
+
+            <br />
+            Nastavi čas oddaje v naslovnikov sistem (Danes - 15 dni):
+            <p:commandButton value="Nastavi" 
+                             actionListener="#{TCStressTest.changeSentDateAction}"
+                             update=":tcForm:messages"
+
+                             />
+        </pnl:pnl-settings>
+    </composite:implementation>
+</html>

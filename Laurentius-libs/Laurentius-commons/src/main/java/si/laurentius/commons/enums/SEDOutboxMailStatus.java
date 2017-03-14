@@ -14,6 +14,10 @@
  */
 package si.laurentius.commons.enums;
 
+import java.util.ArrayList;
+import java.util.List;
+import static si.laurentius.commons.enums.SEDInboxMailStatus.values;
+
 /**
  *
  * @author Joze Rihtarsic <joze.rihtarsic@sodisce.si>
@@ -78,6 +82,20 @@ public enum SEDOutboxMailStatus {
    */
   DELETED("DELETED", "Pošiljka je izbrisana", "black");
 
+  private static final List<String> listOfValues;
+
+  static {
+    listOfValues = new ArrayList<>();
+    for (SEDOutboxMailStatus enmVal : values()) {
+      listOfValues.add(enmVal.getValue());
+    }
+  }
+
+  public static List<String> listOfValues() {
+    return listOfValues;
+  }
+  
+  
   String mstrVal;
   String mstrDesc;
   String mstrColor;

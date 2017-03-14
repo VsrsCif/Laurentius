@@ -33,11 +33,13 @@ import si.laurentius.process.ProcessXSLT;
 @Local(PluginDescriptionInterface.class)
 public class BasicPluginDescription extends AbstractPluginDescription {
   
+  private static final SEDLogger LOG = new SEDLogger(
+          BasicPluginDescription.class);
+  MenuItem miRoot = null;
   @EJB
   private IMPDBInterface mDB;
 
-  private static final SEDLogger LOG = new SEDLogger(
-          BasicPluginDescription.class);
+ 
 
   /**
    *
@@ -46,6 +48,11 @@ public class BasicPluginDescription extends AbstractPluginDescription {
   @Override
   public String getDesc() {
     return "Basic  plugin descriptor";
+  }
+
+  @Override
+  public MenuItem getMenu() {
+    return null;
   }
 
   /**
@@ -59,17 +66,15 @@ public class BasicPluginDescription extends AbstractPluginDescription {
 
   @Override
   public MenuItem getProcessMenu() {
-    MenuItem miRoot = super.getProcessMenu();
-    miRoot.setName(getName());
+    if (miRoot == null) {
+      miRoot = new MenuItem();
+      miRoot.setName(getName());
 
-
-
-    MenuItem miXSLT = new MenuItem();
-    miXSLT.setName("XSLT");
-    miXSLT.setPageId(AppConstant.S_PANEL_IMP_XSLT);
-
-    miRoot.getMenuItems().add(miXSLT);
-
+      MenuItem miXSLT = new MenuItem();
+      miXSLT.setName("XSLT");
+      miXSLT.setPageId(AppConstant.S_PANEL_IMP_XSLT);
+      miRoot.getMenuItems().add(miXSLT);
+    }
     return miRoot;
   }
 
@@ -126,11 +131,8 @@ public class BasicPluginDescription extends AbstractPluginDescription {
       LOG.logError("Error occured while registering plugin: " + ex.
               getMessage(), ex);
     }
-    
-    
+
   }
-  
- 
 
   /**
    *
@@ -138,10 +140,10 @@ public class BasicPluginDescription extends AbstractPluginDescription {
    * @param savePasswds
    */
   @Override
-  public void exportData(File initFolder, boolean  savePasswds) {
-    
+  public void exportData(File initFolder, boolean savePasswds) {
+
     mDB.exportInitData(initFolder);
-    
+
   }
 
 }

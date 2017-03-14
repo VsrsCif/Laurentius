@@ -15,7 +15,8 @@
 package si.laurentius.msh.web.gui;
 
 import java.math.BigInteger;
-import si.laurentius.commons.SEDSystemProperties;
+import java.util.ArrayList;
+import si.laurentius.commons.enums.SEDInboxMailStatus;
 import si.laurentius.msh.inbox.mail.MSHInMail;
 import si.laurentius.commons.interfaces.SEDDaoInterface;
 import si.laurentius.msh.web.abst.AbstractMailDataModel;
@@ -27,7 +28,7 @@ import si.laurentius.msh.web.gui.entities.InMailTableFilter;
  */
 public class InMailDataModel extends AbstractMailDataModel<MSHInMail> {
 
-  InMailTableFilter imtFilter = new InMailTableFilter();
+  InMailTableFilter imtFilter = null;
 
   /**
    *
@@ -35,7 +36,8 @@ public class InMailDataModel extends AbstractMailDataModel<MSHInMail> {
    * @param userSessionData
    * @param db
    */
-  public InMailDataModel(Class<MSHInMail> type, UserSessionData userSessionData, SEDDaoInterface db) {
+  public InMailDataModel(Class<MSHInMail> type, UserSessionData userSessionData,
+          SEDDaoInterface db) {
     super(type);
     setUserSessionData(userSessionData, db);
   }
@@ -74,21 +76,9 @@ public class InMailDataModel extends AbstractMailDataModel<MSHInMail> {
    */
   @Override
   public Object externalFilters() {
-    if (imtFilter == null) {
-      imtFilter = new InMailTableFilter();
-    }
-    String domain = "@" + SEDSystemProperties.getLocalDomain();
-    String strSedBox = getUserSessionData().getCurrentSEDBox();
-    imtFilter.getReceiverEBoxList().clear();
-    if (strSedBox == null || strSedBox.equalsIgnoreCase("ALL")) {
-      getUserSessionData().getUserEBoxes().forEach(localPart -> {
-        imtFilter.getReceiverEBoxList().add(localPart + domain);
-      });
-    } else {
-      imtFilter.getReceiverEBoxList().add(strSedBox+ domain);
-    }
-
-    return imtFilter;
+    
+  
+    return  getFilter();
   }
 
   /**
@@ -96,6 +86,12 @@ public class InMailDataModel extends AbstractMailDataModel<MSHInMail> {
    * @return
    */
   public InMailTableFilter getFilter() {
+     if (imtFilter == null) {
+      imtFilter = new InMailTableFilter();
+      imtFilter.getReceiverEBoxList().addAll(getUserSessionData().
+              getUserEBoxesWithDomain());
+      imtFilter.getStatusList().addAll(SEDInboxMailStatus.listOfValues());
+    }
     return imtFilter;
   }
 

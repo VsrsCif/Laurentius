@@ -31,6 +31,7 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.ws.WebServiceContext;
 import si.jrc.msh.plugin.tc.utils.TestUtils;
@@ -40,6 +41,7 @@ import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.interfaces.SEDDaoInterface;
 import si.laurentius.commons.interfaces.SEDLookupsInterface;
 import si.laurentius.commons.utils.SEDLogger;
+import si.laurentius.commons.utils.Utils;
 import si.laurentius.user.SEDUser;
 
 /**
@@ -65,6 +67,8 @@ public class TestCasePluginData {
   SEDLookupsInterface mDBLookUp;
 
   TestUtils mTestUtils = new TestUtils();
+  boolean showNavigator = true;
+  String currentPanel = AppConstant.S_PANEL_STRESS_TEST;
 
   /**
    *
@@ -82,14 +86,17 @@ public class TestCasePluginData {
     long l = LOG.logStart();
 
     ExternalContext externalContext = facesContext().getExternalContext();
-    SEDUser su =
-        (SEDUser) externalContext.getSessionMap().get(SEDGUIConstants.SESSION_USER_VARIABLE_NAME);
+    SEDUser su
+            = (SEDUser) externalContext.getSessionMap().get(
+                    SEDGUIConstants.SESSION_USER_VARIABLE_NAME);
     if (su == null) {
-      Principal principal = facesContext().getExternalContext().getUserPrincipal();
+      Principal principal = facesContext().getExternalContext().
+              getUserPrincipal();
       if (principal != null) {
         LOG.formatedlog("User principal is %s", principal.getName());
         su = mDBLookUp.getSEDUserByUserId(principal.getName());
-        externalContext.getSessionMap().put(SEDGUIConstants.SESSION_USER_VARIABLE_NAME, su);
+        externalContext.getSessionMap().put(
+                SEDGUIConstants.SESSION_USER_VARIABLE_NAME, su);
 
       } else {
         LOG.log("Principal is NULL");
@@ -133,7 +140,8 @@ public class TestCasePluginData {
     String strBuildVer = "";
     Manifest p;
     File manifestFile = null;
-    String home = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/");
+    String home = FacesContext.getCurrentInstance().getExternalContext().
+            getRealPath("/");
     manifestFile = new File(home, "META-INF/MANIFEST.MF");
     try (FileInputStream fis = new FileInputStream(manifestFile)) {
       p = new Manifest();
@@ -185,4 +193,38 @@ public class TestCasePluginData {
     return getUserEBoxes().contains(bx[0]);
   }
 
+  public boolean isShowNavigator() {
+    return showNavigator;
+  }
+
+  public void setShowNavigator(boolean showNavigator) {
+    this.showNavigator = showNavigator;
+  }
+
+  /**
+   *
+   * @param event
+   */
+  public void onToolbarButtonAction(ActionEvent event) {
+    if (event != null) {
+      String res = (String) event.getComponent().getAttributes().get("panel");
+      currentPanel = res;
+    }
+  }
+
+  public void setCurrentPanel(String currentPanel) {
+    this.currentPanel = currentPanel;
+  }
+  
+  public String getCurrentPanel() {
+    return this.currentPanel;
+  }
+  
+  public boolean renderPanel(String panel){
+    LOG.formatedWarning("Render pane %s current panel %s", panel, currentPanel);
+    return !Utils.isEmptyString(currentPanel) && currentPanel.equalsIgnoreCase(
+            panel);
+  }
+    
+    
 }

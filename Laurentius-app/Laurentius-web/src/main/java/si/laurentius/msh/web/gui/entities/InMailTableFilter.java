@@ -59,7 +59,7 @@ public class InMailTableFilter {
   /**
    *
    */
-  protected List<String> receiverEBoxList = new ArrayList<>();
+  protected List<String> receiverEBoxList =null;
   protected String refToMessageId;
 
   /**
@@ -76,7 +76,7 @@ public class InMailTableFilter {
   /**
    *
    */
-  protected List<String> statusList = new ArrayList<>();
+  protected List<String> statusList = null;
 
   /**
    *
@@ -84,9 +84,7 @@ public class InMailTableFilter {
   protected String subject;
 
   public InMailTableFilter() {
-     for (SEDInboxMailStatus st: SEDInboxMailStatus.values()){
-       statusList.add(st.getValue());
-     }
+     
   }
 
   
@@ -136,8 +134,17 @@ public class InMailTableFilter {
    * @return
    */
   public List<String> getReceiverEBoxList() {
+    if (receiverEBoxList == null) {
+      receiverEBoxList = new ArrayList<>();
+    }
     return receiverEBoxList;
   }
+
+  public void setReceiverEBoxList(List<String> receiverEBoxList) {
+    this.receiverEBoxList = receiverEBoxList;
+  }
+  
+  
   public String getRefToMessageId() {
     return refToMessageId;
   }
@@ -169,6 +176,9 @@ public class InMailTableFilter {
    * @return
    */
   public List<String> getStatusList() {
+    if (statusList == null) {
+      statusList = new ArrayList<>();
+    }
     return statusList;
   }
 

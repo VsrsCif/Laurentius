@@ -194,10 +194,14 @@ public class SEDDaoBean implements SEDDaoInterface {
             continue;
           }
 
-          if (fieldName.endsWith("List") && searchValue instanceof List &&
-              !((List) searchValue).isEmpty()) {
-            lstPredicate.add(om.get(fieldName.substring(0, fieldName.lastIndexOf("List"))).in(
+          if (fieldName.endsWith("List") && searchValue instanceof List){
+            String property = fieldName.substring(0, fieldName.lastIndexOf("List"));
+            if ( !((List) searchValue).isEmpty()) {
+            lstPredicate.add(om.get(property).in(
                 ((List) searchValue).toArray()));
+            } else {
+              lstPredicate.add(om.get(property).isNull());            
+            }
           } else {
             try {
               cls.getMethod("set" + fieldName, new Class[]{m.getReturnType()});
@@ -494,6 +498,9 @@ public class SEDDaoBean implements SEDDaoInterface {
       throws StorageException {
     removeMail(MSHOutMail.class, MSHOutEvent.class, bi);
   }
+  
+  
+  @Override
   public void sendOutMessage(MSHOutMail mail, int retry, long delay, String userId,
           String applicationId)
           throws StorageException {
@@ -539,6 +546,7 @@ public class SEDDaoBean implements SEDDaoInterface {
       MessageProducer sender = session.createProducer(mqMSHQueue);
       Message message = session.createMessage();
       message.setLongProperty(SEDValues.EBMS_QUEUE_PARAM_MAIL_ID, mail.getId().longValue());
+      message.setStringProperty(SEDValues.EBMS_QUEUE_DUPLICATE_DETECTION_ID_Artemis,  mail.getId().toString());
       message.setIntProperty(SEDValues.EBMS_QUEUE_PARAM_RETRY, retry);
       message.setLongProperty(SEDValues.EBMS_QUEUE_PARAM_DELAY, delay);
       message.setLongProperty(SEDValues.EBMS_QUEUE_DELAY_AMQ, delay);

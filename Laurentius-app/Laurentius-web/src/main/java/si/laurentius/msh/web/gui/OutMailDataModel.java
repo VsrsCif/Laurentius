@@ -15,7 +15,7 @@
 package si.laurentius.msh.web.gui;
 
 import java.math.BigInteger;
-import si.laurentius.commons.SEDSystemProperties;
+import si.laurentius.commons.enums.SEDOutboxMailStatus;
 import si.laurentius.msh.outbox.mail.MSHOutMail;
 import si.laurentius.commons.interfaces.SEDDaoInterface;
 import si.laurentius.msh.web.abst.AbstractMailDataModel;
@@ -27,7 +27,8 @@ import si.laurentius.msh.web.gui.entities.OutMailTableFilter;
  */
 public class OutMailDataModel extends AbstractMailDataModel<MSHOutMail> {
 
-  OutMailTableFilter outFilter = new OutMailTableFilter();
+  OutMailTableFilter outFilter = null;
+
 
   
   /**
@@ -41,6 +42,7 @@ public class OutMailDataModel extends AbstractMailDataModel<MSHOutMail> {
     setUserSessionData(messageBean, db);
   }
 
+  
   /**
    *
    * @param inMail
@@ -74,21 +76,8 @@ public class OutMailDataModel extends AbstractMailDataModel<MSHOutMail> {
    */
   @Override
   public Object externalFilters() {
-    if (outFilter == null) {
-      outFilter = new OutMailTableFilter();
-    }
-    String domain =  "@" +  SEDSystemProperties.getLocalDomain();
-    String strSedBox = getUserSessionData().getCurrentSEDBox();
-    outFilter.getSenderEBoxList().clear();
-    if (strSedBox == null || strSedBox.equalsIgnoreCase("ALL")) {
-      getUserSessionData().getUserEBoxes().forEach(localPart -> {
-        outFilter.getSenderEBoxList().add(localPart + domain);      
-      });
-    } else {
-      outFilter.getSenderEBoxList().add(strSedBox+ domain);
-    }
-
-    return outFilter;
+    
+    return getFilter();
   }
 
   /**
@@ -96,6 +85,11 @@ public class OutMailDataModel extends AbstractMailDataModel<MSHOutMail> {
    * @return
    */
   public OutMailTableFilter getFilter() {
+    if (outFilter == null) {
+      outFilter = new OutMailTableFilter();
+      outFilter.getSenderEBoxList().addAll(getUserSessionData().getUserEBoxesWithDomain());
+      outFilter.getStatusList().addAll(SEDOutboxMailStatus.listOfValues());
+    }
     return outFilter;
   }
 
@@ -107,5 +101,6 @@ public class OutMailDataModel extends AbstractMailDataModel<MSHOutMail> {
     this.outFilter = imtFilter;
   }
 
+  
   
 }

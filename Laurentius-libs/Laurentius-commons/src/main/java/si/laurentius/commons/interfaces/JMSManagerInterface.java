@@ -14,6 +14,7 @@
  */
 package si.laurentius.commons.interfaces;
 
+import java.io.Serializable;
 import javax.ejb.Local;
 import javax.jms.JMSException;
 import javax.naming.NamingException;
@@ -36,7 +37,7 @@ public interface JMSManagerInterface {
    * @throws NamingException
    */
   boolean sendMessage(long biPosiljkaId, int retry, long delay,
-      boolean transacted) throws NamingException, JMSException;
+          boolean transacted) throws NamingException, JMSException;
 
   /**
    *
@@ -46,7 +47,125 @@ public interface JMSManagerInterface {
    * @throws JMSException
    */
   boolean exportInMail(long biInMailId)
-      throws NamingException, JMSException;
-  
-   int getMessageCountInQueue() throws NamingException, JMSException;
+          throws NamingException, JMSException;
+
+  QueueData getMessageProperties(String queName) throws NamingException, JMSException;
+
+  boolean pauseQueue(String queName) throws NamingException, JMSException;
+
+  boolean resumeQueue(String queName) throws NamingException, JMSException;
+
+  public static class QueueData implements Serializable {
+
+    java.lang.String Address;
+    java.lang.String  ConsumerCount;
+    java.lang.String DeadLetterAddress;
+    java.lang.String  DeliveringCount;
+    java.lang.String ExpiryAddress;
+    java.lang.String  FirstMessageAge;
+    java.lang.String  MessageCount;
+    java.lang.String  MessagesAcknowledged;
+    java.lang.String  MessagesAdded;
+    java.lang.String Name;
+    java.lang.String  Paused;
+    java.lang.String  ScheduledCount;
+
+    public String getAddress() {
+      return Address;
+    }
+
+    public void setAddress(String Address) {
+      this.Address = Address;
+    }
+
+    public String getConsumerCount() {
+      return ConsumerCount;
+    }
+
+    public void setConsumerCount(String ConsumerCount) {
+      this.ConsumerCount = ConsumerCount;
+    }
+
+    public String getDeadLetterAddress() {
+      return DeadLetterAddress;
+    }
+
+    public void setDeadLetterAddress(String DeadLetterAddress) {
+      this.DeadLetterAddress = DeadLetterAddress;
+    }
+
+    public String getDeliveringCount() {
+      return DeliveringCount;
+    }
+
+    public void setDeliveringCount(String DeliveringCount) {
+      this.DeliveringCount = DeliveringCount;
+    }
+
+    public String getExpiryAddress() {
+      return ExpiryAddress;
+    }
+
+    public void setExpiryAddress(String ExpiryAddress) {
+      this.ExpiryAddress = ExpiryAddress;
+    }
+
+    public String getFirstMessageAge() {
+      return FirstMessageAge;
+    }
+
+    public void setFirstMessageAge(String FirstMessageAge) {
+      this.FirstMessageAge = FirstMessageAge;
+    }
+
+    public String getMessageCount() {
+      return MessageCount;
+    }
+
+    public void setMessageCount(String MessageCount) {
+      this.MessageCount = MessageCount;
+    }
+
+    public String getMessagesAcknowledged() {
+      return MessagesAcknowledged;
+    }
+
+    public void setMessagesAcknowledged(String MessagesAcknowledged) {
+      this.MessagesAcknowledged = MessagesAcknowledged;
+    }
+
+    public String getMessagesAdded() {
+      return MessagesAdded;
+    }
+
+    public void setMessagesAdded(String MessagesAdded) {
+      this.MessagesAdded = MessagesAdded;
+    }
+
+    public String getName() {
+      return Name;
+    }
+
+    public void setName(String Name) {
+      this.Name = Name;
+    }
+
+    public String getPaused() {
+      return Paused;
+    }
+
+    public void setPaused(String Paused) {
+      this.Paused = Paused;
+    }
+
+    public String getScheduledCount() {
+      return ScheduledCount;
+    }
+
+    public void setScheduledCount(String ScheduledCount) {
+      this.ScheduledCount = ScheduledCount;
+    }
+
+   
+  }
 }

@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+        <title>Test cases</title>
+        <h:outputStylesheet name="css/main.css" />
+        <h:outputStylesheet name="css/icons.css" />
+    </h:head>
+
+    <h:body>
+        <h:form id="testcase-forms" >
+            <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
+            <!-- main window -->    
+            <p:layout id="TestCasePlugin" style="min-width:400px;min-height:400px;"  fullPage="true" >
+                <p:layoutUnit position="north"   >
+                    <h1 style="padding: 2;margin: 0;background: gray;color: white;"> Orodja za izvajanje testnih scenarijev</h1>
+                    <h3>Testni podatki</h3>
+                    <p:panelGrid  style="width: 580px">
+                        <f:facet name="header">
+                            <h:outputText value="Vnesite testne podatke" />
+                        </f:facet>
+                        <p:row>
+                            <p:column>
+                                <h:outputText value="Izberite lokalni predal:" />
+                            </p:column>
+                            <p:column>
+                                <p:selectOneMenu id="ebox" value="#{TCStressTest.testSenderEBox}" style="width:150px" >
+                                    <f:selectItem noSelectionOption="false"  />
+                                    <f:selectItems value="#{testCasePluginData.userEBoxes}" />
+                                </p:selectOneMenu>                                    
+
+                                <h:outputText value="#{TCStressTest.localDomain}" />
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column>
+                                <h:outputText value="Vnesite predal naslovnika/pošiljatelja:" />
+                            </p:column>
+                            <p:column>
+                                <h:inputText value="#{TCStressTest.testReceiverEBox}" style="width: 100%"/>
+                            </p:column>
+                        </p:row>
+                    </p:panelGrid>
+                </p:layoutUnit>
+
+                <p:layoutUnit position="center"   >                    
+                    <p:tabView id="TestCaseTab"  >
+                        <p:tab   id="InMailDataTab" >
+                            <f:facet name="title">
+                                <h:graphicImage value="#{resource['images:/test.svg']}" width="22" height="22" />
+                                <h:outputText value="Obremenitveni test" />
+                            </f:facet>
+                            <h3>Večja količina pošiljk</h3>
+                            Namen orodja je generiranje večje količine datotek ter pošiljanje v naslovnikov sistem.<br />
+                            <p:panelGrid columns="2">
+                                <h:outputText value="Storitev:" />
+                                <p:selectOneMenu value="#{TCStressTest.stressTestService}"  style="width: 200px !important" >
+                                    <f:selectItem itemLabel="DeliveryWithReceipt" itemValue="DeliveryWithReceipt" />
+                                    <f:selectItem itemLabel="LegalDelivery_ZPP" itemValue="LegalDelivery_ZPP" />                   
+                                </p:selectOneMenu>
+
+                                <h:outputText value="Število pošiljk:" />
+                                <p:selectOneMenu value="#{TCStressTest.stressTestCnt}"  style="width: 200px !important" >
+                                    <f:selectItem itemLabel="5" itemValue="5" />
+                                    <f:selectItem itemLabel="10" itemValue="10" />
+                                    <f:selectItem itemLabel="50" itemValue="50" />
+                                    <f:selectItem itemLabel="100" itemValue="100" />
+                                    <f:selectItem itemLabel="500" itemValue="500" />
+                                    <f:selectItem itemLabel="1000" itemValue="1000" />
+                                    <f:selectItem itemLabel="2000" itemValue="2000" />
+                                    <f:selectItem itemLabel="5000" itemValue="5000" />
+                                </p:selectOneMenu>
+                            </p:panelGrid>
+
+                            <p:progressBar widgetVar="pbDRWAjax" ajax="true" value="#{TCStressTest.stressTestProgress}" 
+                                           labelTemplate="{value}%" styleClass="animated" global="false" > 
+                                <p:ajax event="complete" listener="#{TCStressTest.onStressTestComplete()}" 
+                                   
+                                        oncomplete="PF('startDRW').enable()"/>
+                            </p:progressBar>
+                            <br />
+                            <p:commandButton value="Prični" 
+                                             onclick="PF('pbDRWAjax').start();PF('startDRW').disable();" 
+                                             actionListener="#{TCStressTest.executeStressTest()}"
+                                             widgetVar="startDRW" />
+
+                            <p:commandButton value="Prekini" actionListener="#{TCStressTest.cancelStressTest()}" 
+                                             oncomplete="PF('pbDRWAjax').cancel();PF('startDRW').enable();" />
+
+                            <hr /><hr />
+
+                            <h3>Prenos velikih pošiljk</h3>
+                            Namen orodja je generiranje velikih datotek ter pošiljanje v naslovnikov sistem.<br />
+                            <p:panelGrid columns="2">
+                                <h:outputText value="Storitev:" />
+                                <p:selectOneMenu value="#{TCStressTest.payloadSizeTestService}"  style="width: 200px !important" >
+                                    <f:selectItem itemLabel="DeliveryWithReceipt" itemValue="DeliveryWithReceipt" />
+                                    <f:selectItem itemLabel="LegalDelivery_ZPP" itemValue="LegalDelivery_ZPP" />                   
+                                </p:selectOneMenu>
+
+                                <h:outputText value="Velikost datoteke:" />
+                                <p:selectOneMenu value="#{TCStressTest.payloadSize}"  style="width: 200px !important" >
+                                    <f:selectItem itemLabel="10KB"  itemValue="10" />
+                                    <f:selectItem itemLabel="100KB" itemValue="100" />
+                                    <f:selectItem itemLabel="1MB"   itemValue="1000" />
+                                    <f:selectItem itemLabel="10MB"  itemValue="10000" />
+                                    <f:selectItem itemLabel="50MB"  itemValue="50000" />
+                                    <f:selectItem itemLabel="100MB" itemValue="100000" />
+                                </p:selectOneMenu>
+                            </p:panelGrid>
+                            <p:progressBar widgetVar="pbPSAjax" ajax="true" value="#{TCStressTest.payloadSizeTestProgress}" 
+                                           labelTemplate="{value}%" styleClass="animated" global="false" > 
+                                <p:ajax event="complete" listener="#{TCStressTest.onPayloadSizeTestComplete()}" update=":testcase-forms:messages"
+                                        oncomplete="PF('startPS').enable()"/>
+                            </p:progressBar>
+                            <br />
+
+                            <p:commandButton value="Prični" 
+                                             onclick="PF('pbPSAjax').start();PF('startPS').disable();" 
+                                             actionListener="#{TCStressTest.executePayloadSizeTest()}"
+                                             widgetVar="startPS" />
+
+                            <p:commandButton value="Prekini" actionListener="#{TCStressTest.cancelPayloadSizeTest()}" 
+                                             oncomplete="PF('pbPSAjax').cancel();PF('startPS').enable();" />
+                        </p:tab>
+                        <p:tab >
+                            <f:facet name="title" rendered="#{TCStressTest.getRegistredDisableServicePlugin().size() > 0}">
+                                <h:graphicImage value="#{resource['images:/test.svg']}" width="22" height="22" />                            
+                                <h:outputText value="Nedelovanje strežnika" />
+                            </f:facet>
+                            <p:outputPanel rendered="#{TCStressTest.getRegistredDisableServicePlugin().size() > 0}">
+
+                                <h3>Robustnost: Nedelovanje strežnika: HTTP - 503</h3>
+                                Namen orodja je za določene storitve/pošiljatelje nastaviti nedelovanje servisa. Ob klicu storitve
+                                je odgovor SoapFault -  HTTP - 503.
+                                <br /> <br /> 
+
+                                <p:selectOneMenu value="#{TCStressTest.disableService}"  style="width: 200px !important" >
+                                    <f:selectItem noSelectionOption="true" />
+                                    <f:selectItems value="#{TCStressTest.getRegistredDisableServicePlugin()}" />                   
+                                </p:selectOneMenu>
+                                <p:commandButton value="Dodaj"                                      
+                                                 actionListener="#{TCStressTest.addNewDisableService()}"
+                                                 update=":testcase-forms:TestCaseTab:datalist" />
+
+
+                                <p:dataTable id="datalist" value="#{TCStressTest.disableServiceList}"
+                                             scrollable="true"
+                                             scrollHeight="135"
+                                             var="ds" >
+                                    <f:facet name="header">
+                                        Seznam vseh aktivnih blokad na strežniku (Prejemnik je vedno "lokalni" predal)
+                                    </f:facet>
+                                    <p:column style="width:32px;">
+                                        <p:commandButton update=":testcase-forms:TestCaseTab:datalist" 
+                                                         icon="ui-icon-sed-remove" 
+                                                         title="Delete" 
+                                                         disabled="#{!testCasePluginData.isUserLocalBox(ds.receiverBox)}"
+                                                         actionListener="#{TCStressTest.removeSelectedService}">
+                                            <f:attribute name="disabledService" value="#{ds}" />
+                                        </p:commandButton>
+                                    </p:column>
+
+                                    <p:column width="60" headerText="Storitev">
+                                        <h:outputText value="#{ds.serviceId}" />
+                                    </p:column>
+                                    <p:column width="60" headerText="Pošiljatelj">
+                                        <h:outputText value="#{ds.senderBox}" />
+                                    </p:column>
+                                    <p:column width="60" headerText="Prejemnik">
+                                        <h:outputText value="#{ds.receiverBox}" />
+                                    </p:column>
+
+                                </p:dataTable>
+
+                            </p:outputPanel>
+                        </p:tab>
+                        <p:tab >
+                            <f:facet name="title">
+                                <h:graphicImage value="#{resource['images:/test.svg']}" width="22" height="22" />                            
+                                <h:outputText value="Fiktivna vročitev" />
+                            </f:facet>
+                            <h3>ZPP vročanje</h3>
+                            Namen orodja je spremeniti čas oddaje pošiljke v naslovnikov sistem. Tako da je nastopil rok za
+                            fiktivno vročitev 
+                            <br /> <br /> 
+
+                            Vnesite ID izhodne pošiljke. Id za pošiljko dobite v Orodju "Izhodna pošta", 
+                            v zavihku "Podatki kuverte" (Spodaj) podatek ID.  Spreminjanje datuma dostav v naslovnikov sistem 
+                            deluje samo za pošiljke v statusu Poslano (SENT)<br /> 
+                            <h:outputText value="Id:" />
+                            <p:inputNumber value="#{TCStressTest.fictionMailId}" decimalPlaces="0" style="width: 200px"/>
+
+
+                            <br />
+                            Nastavi čas oddaje v naslovnikov sistem (Danes - 15 dni):
+                            <p:commandButton value="Nastavi" 
+                                             actionListener="#{TCStressTest.changeSentDateAction}"
+                                             update=":testcase-forms:messages"
+
+                                             />
+                        </p:tab>
+
+                        <p:tab >
+                            <f:facet name="title">
+                                <h:graphicImage value="#{resource['images:/test.svg']}" width="22" height="22" />                            
+                                <h:outputText value="Generični testi" />
+                            </f:facet>
+                            <h3>Testni primeri: izvršilni postopki</h3>
+                            Namen orodja je testiranje obdelave prejete pošte, ki nastanejo v izvršilnih postopkih.
+                            <br /> <br /> 
+                            <h:outputText value="Storitev:" />
+                            <p:selectOneMenu value="#{genericTestCases.genericTestService}"  style="width: 200px !important" >
+                                <f:selectItem itemLabel="DeliveryWithReceipt" itemValue="DeliveryWithReceipt" />
+                                <f:selectItem itemLabel="LegalDelivery_ZPP" itemValue="LegalDelivery_ZPP" />                   
+                            </p:selectOneMenu>
+                            
+                                <p:scrollPanel mode="native" style="width:100%;height:300px"> 
+                                    <div>
+                                        
+                                        <p:repeat value="#{genericTestCases.testCases}" var="tc" >
+
+
+                                        <h:panelGrid columns="2" cellpadding="2">
+                                            <h:outputText value="Test:" />
+                                            <h:outputText value="#{tc.name}" style="font-weight: bold"/>
+
+                                            <h:outputText value="Opis:" />
+                                            <h:outputText value="#{tc.description}" style="font-weight: bold"/>
+
+                                            <p:commandButton value="Pošlji" 
+                                                             actionListener="#{genericTestCases.submitTestCaseMail(tc)}"
+                                                             update=":testcase-forms:messages"
+
+                                                             />
+                                        </h:panelGrid>
+
+
+                                        <hr />
+                                    </p:repeat>
+                                        </div>
+                                </p:scrollPanel>
+
+                        </p:tab>
+                    </p:tabView>
+
+
+
+                </p:layoutUnit>                       
+            </p:layout>
+        </h:form>
+
+
+    </h:body>
+</html>

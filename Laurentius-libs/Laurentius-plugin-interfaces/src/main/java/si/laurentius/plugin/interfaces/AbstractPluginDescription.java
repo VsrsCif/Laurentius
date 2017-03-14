@@ -60,7 +60,7 @@ public abstract class AbstractPluginDescription implements
 
     return mPlgDef;
   }
-
+/*
   @Override
   public MenuItem getMenu() {
 
@@ -76,7 +76,7 @@ public abstract class AbstractPluginDescription implements
     mi.setName(getName());
 
     return mi;
-  }
+  }*/
 
   @EJB(mappedName = SEDJNDI.JNDI_PLUGIN)
   private SEDPluginManagerInterface mPluginManager;

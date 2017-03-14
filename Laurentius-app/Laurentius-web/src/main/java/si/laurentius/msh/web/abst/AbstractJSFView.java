@@ -8,6 +8,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
+import org.primefaces.context.RequestContext;
 
 /**
  *
@@ -15,35 +16,38 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class AbstractJSFView {
 
-    /**
-     *
-     * @return
-     */
-    protected ExternalContext externalContext() {
-        return facesContext().getExternalContext();
-    }
+  /**
+   *
+   * @return
+   */
+  protected ExternalContext externalContext() {
+    return facesContext().getExternalContext();
+  }
 
-    /**
-     *
-     * @return
-     */
-    protected FacesContext facesContext() {
-        return FacesContext.getCurrentInstance();
-    }
+  /**
+   *
+   * @return
+   */
+  protected FacesContext facesContext() {
+    return FacesContext.getCurrentInstance();
+  }
 
-    protected void addError(String desc) {
-        facesContext().addMessage(null,
-                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error",
-                        desc));
-    }
+  protected void addError(String desc) {
+    facesContext().addMessage(null,
+            new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error",
+                    desc));
+  }
 
-    /**
-     *
-     * @return
-     */
-    public String getClientIP() {
-        return ((HttpServletRequest) externalContext().getRequest()).
-                getRemoteAddr();
-    }
+  /**
+   *
+   * @return
+   */
+  public String getClientIP() {
+    return ((HttpServletRequest) externalContext().getRequest()).
+            getRemoteAddr();
+  }
 
+  public void addCallbackParam(String val, boolean bval) {
+    RequestContext.getCurrentInstance().addCallbackParam(val, bval);
+  }
 }

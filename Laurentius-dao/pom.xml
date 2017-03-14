@@ -89,7 +89,7 @@
             <artifactId>hibernate-entitymanager</artifactId>
             <scope>test</scope>
         </dependency>
-         <dependency>
+        <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcprov-jdk15on</artifactId>            
             <scope>test</scope>
@@ -106,7 +106,12 @@
             <artifactId>javaee-api</artifactId>            
             <scope>provided</scope>
         </dependency>
-        
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>artemis-jms-client</artifactId>
+            <version>1.1.0</version>
+            <scope>provided</scope>
+        </dependency>
       
     </dependencies>
 
@@ -125,7 +130,7 @@
                         <manifestEntries>                            
                             <!-- implementation-version>${project.version}</implementation-version>             
                             <Implementation-Build>${buildNumber}</Implementation-Build -->
-                            <Dependencies>si.laurentius</Dependencies>
+                            <Dependencies>si.laurentius, org.apache.activemq.artemis</Dependencies>
                         </manifestEntries>
                 
                     </archive>

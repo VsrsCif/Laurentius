@@ -8,7 +8,6 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import si.laurentius.commons.enums.SEDOutboxMailStatus;
 
 /**
  *
@@ -37,7 +36,7 @@ public class OutMailTableFilter {
   /**
    *
    */
-  protected List<String> senderEBoxList = new ArrayList<>();
+  protected List<String> senderEBoxList = null;
   protected String senderMessageId;
 
   /**
@@ -48,7 +47,7 @@ public class OutMailTableFilter {
   /**
    *
    */
-  protected List<String> statusList = new ArrayList<>() ;
+  protected List<String> statusList =null;
 
   /**
    *
@@ -64,8 +63,8 @@ public class OutMailTableFilter {
    *
    */
   protected Date submittedDateTo;
-  
-     /**
+
+  /**
    *
    */
   protected Date statusDateFrom;
@@ -74,12 +73,11 @@ public class OutMailTableFilter {
    *
    */
   protected Date statusDateTo;
-  
+
   public OutMailTableFilter() {
-     for (SEDOutboxMailStatus st: SEDOutboxMailStatus.values()){
-       statusList.add(st.getValue());
-     }
+
   }
+
   /**
    *
    * @return
@@ -87,6 +85,7 @@ public class OutMailTableFilter {
   public String getAction() {
     return action;
   }
+
   /**
    *
    * @return
@@ -99,10 +98,10 @@ public class OutMailTableFilter {
     return id;
   }
 
-
   public String getMessageId() {
     return messageId;
   }
+
   /**
    *
    * @return
@@ -114,18 +113,25 @@ public class OutMailTableFilter {
   public String getRefToMessageId() {
     return refToMessageId;
   }
+
   /**
    *
    * @return
    */
   public List<String> getSenderEBoxList() {
+    if (senderEBoxList == null) {
+      senderEBoxList = new ArrayList<>();
+    }
     return senderEBoxList;
+  }
+
+  public void setSenderEBoxList(List<String> senderEBoxList) {
+    this.senderEBoxList = senderEBoxList;
   }
 
   public String getSenderMessageId() {
     return senderMessageId;
   }
-
 
   /**
    *
@@ -140,6 +146,9 @@ public class OutMailTableFilter {
    * @return
    */
   public List<String> getStatusList() {
+    if (statusList == null) {
+      statusList = new ArrayList<>();
+    }
     return statusList;
   }
 
@@ -182,9 +191,11 @@ public class OutMailTableFilter {
   public void setConversationId(String conversationId) {
     this.conversationId = conversationId;
   }
+
   public void setId(BigInteger id) {
     this.id = id;
   }
+
   public void setMessageId(String messageId) {
     this.messageId = messageId;
   }
@@ -196,9 +207,11 @@ public class OutMailTableFilter {
   public void setReceiverEBox(String receiverEBox) {
     this.receiverEBox = receiverEBox;
   }
+
   public void setRefToMessageId(String refToMessageId) {
     this.refToMessageId = refToMessageId;
   }
+
   public void setSenderMessageId(String senderMessageId) {
     this.senderMessageId = senderMessageId;
   }
@@ -259,18 +272,16 @@ public class OutMailTableFilter {
     this.statusDateTo = statusDateTo;
   }
 
-  
-  
   @Override
   public String toString() {
-    return "OutMailTableFilter{" + "action=" + action + ", conversationId=" + conversationId +
-        ", id=" + id + ", messageId=" + messageId + ", receiverEBox=" + receiverEBox +
-        ", refToMessageId=" + refToMessageId + ", senderEBoxList=" + senderEBoxList +
-        ", senderMessageId=" + senderMessageId + ", service=" + service + ", status=" +String.join(
-            ";", statusList) +
-        ", subject=" + subject + ", submittedDateFrom=" + submittedDateFrom + ", submittedDateTo=" +
-        submittedDateTo + '}';
+    return "OutMailTableFilter{" + "action=" + action + ", conversationId=" + conversationId
+            + ", id=" + id + ", messageId=" + messageId + ", receiverEBox=" + receiverEBox
+            + ", refToMessageId=" + refToMessageId + ", senderEBoxList=" + senderEBoxList
+            + ", senderMessageId=" + senderMessageId + ", service=" + service + ", status=" + String.
+                    join(
+                            ";", statusList)
+            + ", subject=" + subject + ", submittedDateFrom=" + submittedDateFrom + ", submittedDateTo="
+            + submittedDateTo + '}';
   }
-
 
 }

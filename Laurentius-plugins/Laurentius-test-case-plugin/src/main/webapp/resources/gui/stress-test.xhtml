@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      xmlns:pnl="http://java.sun.com/jsf/composite/gui/panel"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <composite:interface>
+    </composite:interface>
+
+    <composite:implementation >
+        <pnl:pnl-settings id="cronPanel"
+                          title="#{msg['StressTest']}" 
+                          description="#{msg['StressTest']}"
+                          icon="ui-icon-svg-test"
+                          >
+
+            <!-- main window -->    
+
+            <h3>Testni podatki</h3>
+            <p:panelGrid  style="width: 580px">
+                <f:facet name="header">
+                    <h:outputText value="Vnesite testne podatke" />
+                </f:facet>
+                <p:row>
+                    <p:column>
+                        <h:outputText value="Izberite lokalni predal:" />
+                    </p:column>
+                    <p:column>
+                        <p:selectOneMenu id="ebox" value="#{TCStressTest.testSenderEBox}" style="width:150px" >
+                            <f:selectItem noSelectionOption="false"  />
+                            <f:selectItems value="#{testCasePluginData.userEBoxes}" />
+                        </p:selectOneMenu>                                    
+
+                        <h:outputText value="#{TCStressTest.localDomain}" />
+                    </p:column>
+                </p:row>
+                <p:row>
+                    <p:column>
+                        <h:outputText value="Vnesite predal naslovnika/pošiljatelja:" />
+                    </p:column>
+                    <p:column>
+                        <h:inputText value="#{TCStressTest.testReceiverEBox}" style="width: 100%"/>
+                    </p:column>
+                </p:row>
+            </p:panelGrid>
+
+            <h3>Večja količina pošiljk</h3>
+            Namen orodja je generiranje večje količine datotek ter pošiljanje v naslovnikov sistem.<br />
+            <p:panelGrid columns="2">
+                <h:outputText value="Storitev:" />
+                <p:selectOneMenu value="#{TCStressTest.stressTestService}"  style="width: 200px !important" >
+                    <f:selectItem itemLabel="DeliveryWithReceipt" itemValue="DeliveryWithReceipt" />
+                    <f:selectItem itemLabel="LegalDelivery_ZPP" itemValue="LegalDelivery_ZPP" />                   
+                </p:selectOneMenu>
+
+                <h:outputText value="Število pošiljk:" />
+                <p:selectOneMenu value="#{TCStressTest.stressTestCnt}"  style="width: 200px !important" >
+                    <f:selectItem itemLabel="5" itemValue="5" />
+                    <f:selectItem itemLabel="10" itemValue="10" />
+                    <f:selectItem itemLabel="50" itemValue="50" />
+                    <f:selectItem itemLabel="100" itemValue="100" />
+                    <f:selectItem itemLabel="500" itemValue="500" />
+                    <f:selectItem itemLabel="1000" itemValue="1000" />
+                    <f:selectItem itemLabel="2000" itemValue="2000" />
+                    <f:selectItem itemLabel="5000" itemValue="5000" />
+                </p:selectOneMenu>
+            </p:panelGrid>
+
+            <p:progressBar widgetVar="pbDRWAjax" ajax="true" value="#{TCStressTest.stressTestProgress}" 
+                           labelTemplate="{value}%" styleClass="animated" global="false" > 
+                <p:ajax event="complete" listener="#{TCStressTest.onStressTestComplete()}" 
+
+                        oncomplete="PF('startDRW').enable()"/>
+            </p:progressBar>
+            <br />
+            <p:commandButton value="Prični" 
+                             onclick="PF('pbDRWAjax').start();PF('startDRW').disable();" 
+                             actionListener="#{TCStressTest.executeStressTest()}"
+                             widgetVar="startDRW" />
+
+            <p:commandButton value="Prekini" actionListener="#{TCStressTest.cancelStressTest()}" 
+                             oncomplete="PF('pbDRWAjax').cancel();PF('startDRW').enable();" />
+
+            <hr /><hr />
+
+            <h3>Prenos velikih pošiljk</h3>
+            Namen orodja je generiranje velikih datotek ter pošiljanje v naslovnikov sistem.<br />
+            <p:panelGrid columns="2">
+                <h:outputText value="Storitev:" />
+                <p:selectOneMenu value="#{TCStressTest.payloadSizeTestService}"  style="width: 200px !important" >
+                    <f:selectItem itemLabel="DeliveryWithReceipt" itemValue="DeliveryWithReceipt" />
+                    <f:selectItem itemLabel="LegalDelivery_ZPP" itemValue="LegalDelivery_ZPP" />                   
+                </p:selectOneMenu>
+
+                <h:outputText value="Velikost datoteke:" />
+                <p:selectOneMenu value="#{TCStressTest.payloadSize}"  style="width: 200px !important" >
+                    <f:selectItem itemLabel="10KB"  itemValue="10" />
+                    <f:selectItem itemLabel="100KB" itemValue="100" />
+                    <f:selectItem itemLabel="1MB"   itemValue="1000" />
+                    <f:selectItem itemLabel="10MB"  itemValue="10000" />
+                    <f:selectItem itemLabel="50MB"  itemValue="50000" />
+                    <f:selectItem itemLabel="100MB" itemValue="100000" />
+                </p:selectOneMenu>
+            </p:panelGrid>
+            <p:progressBar widgetVar="pbPSAjax" ajax="true" value="#{TCStressTest.payloadSizeTestProgress}" 
+                           labelTemplate="{value}%" styleClass="animated" global="false" > 
+                <p:ajax event="complete" listener="#{TCStressTest.onPayloadSizeTestComplete()}" 
+                        update=":tcForm:messages"
+                        oncomplete="PF('startPS').enable()"/>
+            </p:progressBar>
+            <br />
+
+            <p:commandButton value="Prični" 
+                             onclick="PF('pbPSAjax').start();PF('startPS').disable();" 
+                             actionListener="#{TCStressTest.executePayloadSizeTest()}"
+                             widgetVar="startPS" />
+
+            <p:commandButton value="Prekini" actionListener="#{TCStressTest.cancelPayloadSizeTest()}" 
+                             oncomplete="PF('pbPSAjax').cancel();PF('startPS').enable();" />
+
+
+        </pnl:pnl-settings>
+    </composite:implementation>
+</html>

@@ -143,7 +143,8 @@ public class SettingsMenuView implements Serializable {
             "ui-icon-svg-cron-exec ui-icon-size-22"), addons);
 
     for (Plugin p : mPluginManager.getRegistredPlugins()) {
-      if (!Utils.isEmptyString(p.getWebContext()) && p.getMainMenu() != null) {
+      if (!Utils.isEmptyString(p.getWebContext()) && p.getProcessMenu() != null) {
+     
         for (si.laurentius.plugin.def.MenuItem pmi : p.getProcessMenu().
                 getMenuItems()) {
           TreeNode plugin = new DefaultTreeNode(

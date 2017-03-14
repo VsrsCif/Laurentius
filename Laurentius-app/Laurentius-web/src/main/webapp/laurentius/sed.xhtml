@@ -144,16 +144,7 @@
                                 <span class="ui-separator">
                                     <span class="ui-icon ui-icon-grip-dotted-vertical " />
                                 </span>
-                                <p:outputLabel for="ebox" value="#{msg['SED-Box']}:" />
-                                <p:selectOneMenu id="ebox" value="#{userSessionData.currentSEDBox}" style="width:150px" >
-                                    <p:ajax update=":forms:MainPanel" />
-                                    <f:selectItem itemValue="ALL" noSelectionOption="true" itemLabel="All SED-Boxes"/>
-                                    <f:selectItems value="#{userSessionData.userEBoxes}" />
-                                </p:selectOneMenu>
-                                <p:outputLabel value="#{ApplicationData.domain}" />
-                                <span class="ui-separator">
-                                    <span class="ui-icon ui-icon-grip-dotted-vertical " />
-                                </span>
+
 
 
                             </f:facet>
@@ -183,8 +174,8 @@
                             <sui:settings-plugins id="SettingsPlugin" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_ADMIN_PLUGIN)}"  />
                             <sui:settings-inmail-process id="InMailProcess" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_INMAIL_PROCESS)}"  />
                             <sui:settings-interceptor id="SettingsInterceptor" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_INTERCEPTOR)}"  />
-
                             <sui:cron-execution-table id="CronExecutions" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_CRON_EXEC)}"  />
+                            <sui:monitor-jms id="SettingsJMS" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_SETT_JMS)}"  />
 
 
 
@@ -205,8 +196,8 @@
                         <p:blockUI block="MainPanelUnit" 
                                    trigger=":forms:btnRefresh 
                                    :forms:toolbars:btnInRefresh 
-                                   :forms:toolbars:btnOutRefresh
-                                   :forms:ebox">
+                                   :forms:toolbars:btnOutRefresh"
+                                   >
                             <h:graphicImage value="#{resource['images:/ajax-progress.gif']}"  /> 
                             <h:outputText value="#{msg['Refresh']}" />
                         </p:blockUI>
@@ -261,13 +252,23 @@
                                     <p:calendar  value="#{InMailDataView.inMailModel.filter.receivedDateTo}" pattern="dd.MM.yyyy HH:mm"
                                                  mask="true" navigator="true" showOn="button" styleClass="searchDate" style="width: 100%"/>
 
+                                    <p:outputLabel for="recBox" value="#{msg['ReceiverBox']}:" />
+                                    <p:selectCheckboxMenu id="recBox"  label="ReceiverBoxes" 
+                                                          value="#{InMailDataView.inMailModel.filter.receiverEBoxList}"
+                                                          style="width:100%" >
+                                        <f:selectItems itemLabel="#{ubox}" 
+                                                       value="#{userSessionData.userEBoxesWithDomain}" var="ubox"  />
+                                    </p:selectCheckboxMenu>
+           
+
                                     <h:outputText value="#{msg['SenderBox']}:" />
                                     <h:inputText value="#{InMailDataView.inMailModel.filter.senderEBox}" style="width: 100%" />
 
                                     <h:outputText value="#{msg['Status']}:" />
                                     <p:selectCheckboxMenu id="inSts" filter="false"  label="Statusi"  style="width: 100%"
                                                           value="#{InMailDataView.inMailModel.filter.statusList}" >                                               
-                                        <f:selectItems value="#{InMailDataView.inStatuses}"   />
+                                        <f:selectItems value="#{LookupsData.inMailStatuses}" var="st" itemValue="#{st.value}" 
+                                                       itemLabel="#{st.value}" itemDescription="#{st.desc}"  />
                                     </p:selectCheckboxMenu>
 
                                     <h:outputText  value="#{msg['StatusChangeFromDate']}:" />
@@ -343,12 +344,21 @@
                                     <h:outputText value="#{msg['ReceiverBox']}:" />
                                     <h:inputText value="#{OutMailDataView.outMailModel.filter.receiverEBox}" style="width: 100%" />
 
+                                    <p:outputLabel for="sendBox" value="#{msg['SenderBox']}:" />
+                                    <p:selectCheckboxMenu id="sendBox" label="SenderBoxes" 
+                                                          value="#{OutMailDataView.outMailModel.filter.senderEBoxList}" 
+                                                          style="width:100%" >                                       
+                                        <f:selectItems itemLabel="#{ubox}" 
+                                                       value="#{userSessionData.userEBoxesWithDomain}" var="ubox" />
+                                    </p:selectCheckboxMenu>
+                                        
                                     <h:outputText value="#{msg['Status']}:" />
 
                                     <p:selectCheckboxMenu id="outSts" filter="false"  label="Statusi" 
                                                           value="#{OutMailDataView.outMailModel.filter.statusList}" 
                                                           style="width: 100%" >
-                                        <f:selectItems value="#{OutMailDataView.outStatuses}"   />
+                                        <f:selectItems value="#{LookupsData.outMailStatuses}" var="st" itemValue="#{st.value}" 
+                                                       itemLabel="#{st.value}" itemDescription="#{st.desc}"  />
                                     </p:selectCheckboxMenu>
 
                                     <h:outputText  value="#{msg['StatusChangeFromDate']}:" />
@@ -391,12 +401,12 @@
                                     <h:inputText value="#{OutMailDataView.outMailModel.filter.senderMessageId}" style="width: 100%"/>
 
                                     <h:outputText value="" />
-                                    <p:commandButton id="btnOutRefresh"
+                                    <p:commandButton id="btnOutRefresh" 
                                                      value="#{msg['Search']}" 
                                                      icon="ui-icon-size-32 ui-icon-svg-search"                                             
                                                      style="width: 100%; height: 36px"
-                                                     update=":forms:MainPanel" ajax="true"
-                                                     onclick="PF('blockMainPanel').show();"/>
+                                                     update=":forms:MainPanel" ajax="true"     
+                                                     />
                                 </p:panelGrid>
                             </p:tab>
 
@@ -418,21 +428,7 @@
                                     </p:treeNode>
 
                                 </p:tree>
-                                <!-- p:menu class="ui-accordion-button" id="pluginmenu" style="width: 100%">
-                                    <c:forEach items="# {adminSEDPluginView.list}" var="plg">
-                                        <c:if test="# {not empty plg.webContext and userSessionData.showPluginForUser(plg) }">
-                                            <p:menuitem value="# {plg.name}" 
-                                                        actionListener="# {adminSEDPluginView.onSelectedViewPluginAction}" 
-                                                        icon="ui-icon-svg-plugin ui-icon-size-22"
-                                                        update="forms:MainPanel" >
-                                                <f:attribute name="panel" value="PANEL_PLUGIN" />
-                                                <f:attribute name="pluginItem" value="# {plg}" />
-                                            </p:menuitem>
-                                        </c:if>
-
-
-                                    </c:forEach>   
-                                </p:menu -->
+                               
                             </p:tab>
                             <p:tab id="PANEL_SETT_CUSTOM" rendered="#{userSessionData.user.adminRole}">
 
@@ -454,7 +450,7 @@
 
 
                             </p:tab>
-                            <p:tab id="PANEL_MONITOR" rendered="#{userSessionData.user.adminRole}">
+                            <p:tab id="PANEL_CRON_EXEC" rendered="#{userSessionData.user.adminRole}">
 
                                 <f:facet name="title">
                                     <h:graphicImage value="#{resource['images:/monitor.svg']}" width="22" height="22" />
@@ -467,6 +463,12 @@
                                                 actionListener="#{mainWindow.onToolbarButtonAction}"  
                                                 update="forms:MainPanel">
                                         <f:attribute name="panel" value="PANEL_CRON_EXEC" />
+                                    </p:menuitem>
+                                    <p:menuitem value="#{msg['MonitorJMS']}" 
+                                                icon="ui-icon-svg-cron-exec ui-icon-size-22" 
+                                                actionListener="#{mainWindow.onToolbarButtonAction}"  
+                                                update="forms:MainPanel">
+                                        <f:attribute name="panel" value="PANEL_SETT_JMS" />
                                     </p:menuitem>
                                 </p:menu>
 
@@ -501,7 +503,7 @@
             <dlg:dlg-pmode-security id="dlgPModeSecurity" />
             <dlg:dlg-pmode-as4-ra id="dlgPModeReceptionAwareness" />
             <dlg:dlg-pmode_xpath id="dlgPModeXPath" />
- 
+
         </h:body>
     </f:view>
 </html>

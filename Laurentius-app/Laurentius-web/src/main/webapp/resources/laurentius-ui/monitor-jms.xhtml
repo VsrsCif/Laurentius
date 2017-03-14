@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      xmlns:pnl="http://java.sun.com/jsf/composite/laurentius-ui/panel"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      >
+    <composite:interface>
+    </composite:interface>
+
+    <composite:implementation >
+        <pnl:pnl-settings id="jmsPanel"
+                          title="#{msg['MonitorJMS']}" 
+                          description="#{msg['SettingsJMS']}"
+                          icon="ui-icon-svg-settings"
+                          >
+            
+
+
+            <h2>#{msg['QueueSubmit']}</h2>
+            <c:set var="qdata" value="#{monitorJMSView.submitQueueData}" scope="request"/>
+            <pnl:pnl-jms-data data="#{qdata}"  />
+
+
+            <h2>#{msg['QueueProcessInMail']}</h2>
+            <c:set var="qPrcdata" value="#{monitorJMSView.processMessages}" scope="request"/>
+            <pnl:pnl-jms-data data="#{qPrcdata}" />
+        </pnl:pnl-settings>
+    </composite:implementation>
+
+</html>

@@ -33,6 +33,7 @@ public class PluginMenuView implements Serializable {
   private SEDPluginManagerInterface mPluginManager;
 
   private TreeNode selectedNode;
+  TreeNode mtnRootNode = null;
 
   public MainWindow getMainWindow() {
     return mainWindow;
@@ -43,11 +44,15 @@ public class PluginMenuView implements Serializable {
   }
 
   public TreeNode getRoot() {
+    
 
-    return createMenu();
+    return updateMenu();
   }
 
   public TreeNode getSelectedNode() {
+    if (selectedNode == null && mtnRootNode!= null && mtnRootNode.getChildCount()>0) {
+      selectedNode = mtnRootNode.getChildren().get(0);
+    }
     return selectedNode;
   }
 
@@ -64,7 +69,8 @@ public class PluginMenuView implements Serializable {
 
   public String getSelectedWebContext() {
     if (selectedNode != null) {
-      LOG.formatedWarning("get selected web context %s", ((MenuItem) selectedNode.getData()).getWebUrl());
+      LOG.formatedWarning("get selected web context %s",
+              ((MenuItem) selectedNode.getData()).getWebUrl());
       return ((MenuItem) selectedNode.getData()).getWebUrl();
 
     }
@@ -72,25 +78,32 @@ public class PluginMenuView implements Serializable {
     return null;
   }
 
-  public TreeNode createMenu() {
-    TreeNode root = new DefaultTreeNode(
-            new MenuItem("Plugin Menu", "ROOT", ""), null);
+  private TreeNode updateMenu() {
+    if (mtnRootNode == null) {
+      mtnRootNode = new DefaultTreeNode(
+              new MenuItem("Plugin Menu", "ROOT", ""), null);
 
-    for (Plugin p : mPluginManager.getRegistredPlugins()) {
-      if (!Utils.isEmptyString(p.getWebContext()) && p.getMainMenu() != null) {
 
-        TreeNode rootMI = new DefaultTreeNode(new MenuItem(p.getMainMenu().getName(), null,"ui-icon-svg-plugin ui-icon-size-22", p.getWebContext()), root);
+      for (Plugin p : mPluginManager.getRegistredPlugins()) {
+        if (!Utils.isEmptyString(p.getWebContext()) && p.getMainMenu() != null) {
 
-        for (si.laurentius.plugin.def.MenuItem pmi : p.getMainMenu().
-                getMenuItems()) {
-          TreeNode plugin = new DefaultTreeNode(
-                  new MenuItem(pmi.getName(), null,"ui-icon-svg-plugin ui-icon-size-16", String.format(
-                                  "%s?page=%s&navigator=false", p.getWebContext(),pmi.getPageId())), rootMI);
+          TreeNode rootMI = new DefaultTreeNode(new MenuItem(p.getMainMenu().
+                  getName(), null, "ui-icon-svg-plugin ui-icon-size-22", p.
+                          getWebContext()), mtnRootNode);
+
+          for (si.laurentius.plugin.def.MenuItem pmi : p.getMainMenu().
+                  getMenuItems()) {
+            TreeNode plugin = new DefaultTreeNode(
+                    new MenuItem(pmi.getName(), null,
+                            "ui-icon-svg-plugin ui-icon-size-16", String.format(
+                                    "%s?page=%s&navigator=false", p.
+                                            getWebContext(), pmi.getPageId())),
+                    rootMI);
+          }
         }
       }
     }
 
-
-    return root;
+    return mtnRootNode;
   }
 }

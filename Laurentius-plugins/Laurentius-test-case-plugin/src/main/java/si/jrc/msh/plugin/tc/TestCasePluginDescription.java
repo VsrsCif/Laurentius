@@ -15,14 +15,15 @@
 package si.jrc.msh.plugin.tc;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.Local;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
+import si.jrc.msh.plugin.tc.web.AppConstant;
 import si.laurentius.commons.SEDGUIConstants;
 import si.laurentius.commons.utils.SEDLogger;
+import si.laurentius.plugin.def.MenuItem;
 import si.laurentius.plugin.interfaces.AbstractPluginDescription;
 import si.laurentius.plugin.interfaces.PluginDescriptionInterface;
 import si.laurentius.plugin.interfaces.exception.PluginException;
@@ -38,6 +39,7 @@ public class TestCasePluginDescription extends AbstractPluginDescription {
 
   private static final SEDLogger LOG = new SEDLogger(
           TestCasePluginDescription.class);
+  MenuItem miRoot = null;
 
   @PostConstruct
   private void postConstruct() {
@@ -97,6 +99,44 @@ public class TestCasePluginDescription extends AbstractPluginDescription {
   @Override
   public String getType() {
     return "TestCasePlugin";
+  }
+
+  @Override
+  public MenuItem getMenu() {
+    if (miRoot == null) {
+      miRoot = new MenuItem();
+      miRoot.setName(getName());
+
+      //
+      MenuItem stressTest = new MenuItem();
+      stressTest.setName("Stress test");
+      stressTest.setPageId(AppConstant.S_PANEL_STRESS_TEST);
+
+      MenuItem fictionTest = new MenuItem();
+      fictionTest.setName("Fiction test");
+      fictionTest.setPageId(AppConstant.S_PANEL_FICTION_TEST);
+
+      MenuItem customTest = new MenuItem();
+      customTest.setName("Custom test");
+      customTest.setPageId(AppConstant.S_PANEL_CUSTOM_TEST);
+
+      MenuItem reliabilityTest = new MenuItem();
+      reliabilityTest.setName("Reliability test");
+      reliabilityTest.setPageId(AppConstant.S_PANEL_RELIABILITY_TEST);
+
+      miRoot.getMenuItems().add(stressTest);
+      miRoot.getMenuItems().add(fictionTest);
+      miRoot.getMenuItems().add(customTest);
+      miRoot.getMenuItems().add(reliabilityTest);
+    }
+
+    return miRoot;
+
+  }
+
+  @Override
+  public MenuItem getProcessMenu() {
+    return null;
   }
 
 }

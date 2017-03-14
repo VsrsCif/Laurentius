@@ -19,7 +19,6 @@ import si.laurentius.commons.interfaces.SEDPluginManagerInterface;
 import si.laurentius.commons.utils.ReflectUtils;
 import si.laurentius.commons.utils.Utils;
 import si.laurentius.ebox.SEDBox;
-import si.laurentius.msh.inbox.mail.MSHInMail;
 import si.laurentius.msh.mail.MSHMailType;
 import si.laurentius.msh.web.abst.AbstractJSFView;
 import si.laurentius.plugin.interfaces.PropertyListType;
@@ -93,6 +92,13 @@ public class LookupsData extends AbstractJSFView {
   }
     public SEDInterceptorEvent[] getInterceptEvents() {
     return SEDInterceptorEvent.values();
+  }
+    
+     public SEDOutboxMailStatus[] getOutMailStatuses() {
+    return SEDOutboxMailStatus.values();
+  }
+        public SEDInboxMailStatus[] getInMailStatuses() {
+    return SEDInboxMailStatus.values();
   }
 
 

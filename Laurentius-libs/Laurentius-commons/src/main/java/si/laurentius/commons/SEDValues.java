@@ -34,6 +34,12 @@ public class SEDValues {
      * Artemis value for delay!
      */
     public static final String EBMS_QUEUE_DELAY_Artemis = "_AMQ_SCHED_DELIVERY"; // artemis value for delay!
+    
+      /**
+     * Artemis duplicate detection id!
+     */
+    public static final String EBMS_QUEUE_DUPLICATE_DETECTION_ID_Artemis = "_AMQ_DUPL_ID";
+    
 
   /**
      *

@@ -98,6 +98,16 @@ public class UserSessionData extends AbstractJSFView {
     }
     return lst;
   }
+  public List<String> getUserEBoxesWithDomain() {
+    List<String> lst = new ArrayList<>();
+    SEDUser usr = getUser();
+    if (usr != null) {
+      getUser().getSEDBoxes().stream().forEach((sb) -> {
+        lst.add(sb.getLocalBoxName() + "@" + SEDSystemProperties.getLocalDomain());
+      });
+    }
+    return lst;
+  }
 
   /**
      *
