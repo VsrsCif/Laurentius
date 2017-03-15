@@ -140,7 +140,7 @@ public class PModeSecurityView extends AbstractPModeJSFView<Security> {
     if (sv != null) {
       mPModeInteface.addSecurity(sv);
       setEditable(null);
-      return bsuc;
+      bsuc = true;
     }
     return bsuc;
   }

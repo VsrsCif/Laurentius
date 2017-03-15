@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- shema XSD za IzvrsbeXml/1.01 --> 
+<!-- 
+*************************************************************************************
+INFO_GLAVA_SHEME
+*************************************************************************************
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:iZbs_Zaglavje="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_ZaglavjeSporocil.xsd" xmlns:iZbs_Spl="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_SplosniTipi.xsd" targetNamespace="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_ZaglavjeSporocil.xsd" elementFormDefault="qualified">
+	<xs:import namespace="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_SplosniTipi.xsd" schemaLocation="IzvrsbeXml_tipi_SplosniTipi.xsd"/>
+	<!-- *****************************************************************************
+	    SKLOP: GLAVNI PODATKOVNI TIPI
+	    ***************************************************************************** -->
+	<xs:complexType name="HeaderType">
+		<xs:choice>
+			<xs:group ref="iZbs_Zaglavje:HeaderStandardType"/>
+			<xs:group ref="iZbs_Zaglavje:HeaderCursType"/>
+		</xs:choice>
+	</xs:complexType>
+	<!-- *****************************************************************************
+	    Standardna glava vsakega sporočila (za request & response)
+	    ***************************************************************************** -->
+	<!--	<xs:complexType name="HeaderStandardType"> -->
+	<xs:group name="HeaderStandardType">
+		<xs:annotation>
+			<xs:documentation>Elementi zaglavja, ki se standardno uporabljajo v sklopu standarda IzvrsbeXML, razen za komunikacijo s Carinsko upravo RS.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="DatumSporocila" type="xs:dateTime">
+				<xs:annotation>
+					<xs:documentation>Datum in čas kreiranja sporočila</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="IdSporocila" type="iZbs_Spl:IdPoAvtorjuSplosniType">
+				<xs:annotation>
+					<xs:documentation>Enoličen identifikator sporočila (npr. UUID)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="IdPovezanegaSporocila" type="iZbs_Spl:IdPoAvtorjuSplosniType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Referenca, ki jo vpiše pošiljatelj za uparjanje sporočil.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="PrejemnikSporocila" type="iZbs_Spl:AvtorPodrobnostiType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Podatki o prejemniku/naslovniku sporočila. Obvezen element; izjemoma se PrejemnikSporocila ne zapiše, če je XML-sporočilo sinhroni odgovor na neustrezno XML-sporočilo, iz katerega ni bilo moč razbrati pošiljatelja.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="PosiljateljSporocila" type="iZbs_Spl:AvtorPodrobnostiType">
+				<xs:annotation>
+					<xs:documentation>Podatki o pošiljatelju sporočila.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="PosrednikSporocila" type="iZbs_Spl:AvtorPodrobnostiType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Oznaka posrednika, ki posreduje sporočila naslovniku.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="TestAliProdukcija">
+				<xs:annotation>
+					<xs:documentation>Možni vrednosti: 'TEST' ali 'PRODUKCIJA'</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="TEST"/>
+						<xs:enumeration value="PRODUKCIJA"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="IdIzvornegaSistema">
+				<xs:annotation>
+					<xs:documentation>Interna oznaka (ID) sistema ali programa, v katerem se je pripravilo sporočilo.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1"/>
+						<xs:maxLength value="40"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="Verzija" type="iZbs_Zaglavje:VerzijaType">
+				<xs:annotation>
+					<xs:documentation>Verzija spletne storitve in XSD-sheme, na osnovi katere je pripravljeno sporočilo.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="JeKriptirano" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Ali je sporočilo kodirano (DA / NE)?</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="DA"/>
+						<xs:enumeration value="NE"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="AvtorizacijskiZeton" type="iZbs_Zaglavje:ZetonType" minOccurs="0"/>
+			<xs:element name="OblikaOdgovoraWS" type="iZbs_Zaglavje:OblikaOdgovoraWSType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>S tem parametrom lahko določimo ali želimo dolg ali kratek odgovor (manj podatkov za prenos) - DOLG_ODGOVOR ali KRATEK_ODGOVOR. Parameter uporaben samo za tiste storitve, ki podpirajo dve vrsti odgovorov.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="PrioritetaObdelave" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>S tem parametrom se lahko določi pomembnost, oz. časovno nujnost procesiranja pri prejemniku. Možne vrednosti so od 1 do 10 (1=najbolj nujno, 10=najmanj nujno). Parameter uporaben samo za tiste storitve, sporočila in obdelave, ki podpirajo različne prioritete procesiranja.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:minInclusive value="1"/>
+						<xs:maxInclusive value="10"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="Parametri" type="iZbs_Zaglavje:ParametriType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Opcijski parametri, ki so odvisni od  posameznih procesov/storitev</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:group>
+	<!-- *****************************************************************************
+	    Posebna glava samo za Carinsko upravo RS (za request & response)
+	    ***************************************************************************** -->
+	<xs:group name="HeaderCursType">
+		<xs:annotation>
+			<xs:documentation>Posebni elementi zaglavja, ki se uporabljajo samo za komunikacijo s Carinsko upravo RS (=CURS).</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Referenca" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Referenca, ki jo vpiše stranka za uparjanje sporočil. Enoličen identifikator sporočila.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DSPrejDrz">
+				<xs:annotation>
+					<xs:documentation>Del davčne št. prejemnika, ki predstavlja državo npr. »SI«</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="DSPrej">
+				<xs:annotation>
+					<xs:documentation>Davčna številka prejemnika</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="17"/>
+						<xs:minLength value="8"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="OEnPrej" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Šifra lokacije prejemnika</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="3"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="DSPosDrz">
+				<xs:annotation>
+					<xs:documentation>Del davčne št. pošiljatelja, ki predstavlja državo npr. »SI«</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="DSPos">
+				<xs:annotation>
+					<xs:documentation>Davčna številka pošiljatelja</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="17"/>
+						<xs:minLength value="8"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="OEnPos">
+				<xs:annotation>
+					<xs:documentation>Šifra lokacije pošiljatelja</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="3"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="TestIndikator">
+				<xs:annotation>
+					<xs:documentation>
+                            Test ali produkcija: 1 = Test, 0 = Produkcija. Če elementa TestIndikator ni je privzeta nastavitev 0 = produkcija
+                        </xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="0"/>
+						<xs:enumeration value="1"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="TipSp">
+				<xs:annotation>
+					<xs:documentation>V katerem formatu je dokument. (Predvidene možnosti: »XML«, »FF«, »EDIFACT«)</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="XML"/>
+						<xs:enumeration value="FF"/>
+						<xs:enumeration value="EDIFACT"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="OzDok" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Oznaka dokumenta. (Primer: »400«, »420«, »INSTAT62-SI«...)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Datum" type="xs:dateTime" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Datum in čas kreiranja sporočila</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Kriptirano" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Ali je sporočilo kodirano 0 = Ne, 1 = Da. Privzeta vrednost je 1</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="0"/>
+						<xs:enumeration value="1"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="Brezpapirno" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Indikator načina vodenja postopka na podlagi dokumenta 0 = običajno elektronsko vlaganje (postopek temelji na papirnem dokumentu), 1 = brezpapirno. Privzeta vrednost je 0</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="0"/>
+						<xs:enumeration value="1"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="Prejemnik">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Posrednik">
+							<xs:annotation>
+								<xs:documentation>Oznaka posrednika, ki posreduje sporočila naslovniku.</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:string"/>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="Naslovnik">
+							<xs:annotation>
+								<xs:documentation>Identifikacijska oznaka končnega uporabnika pri posredniku.</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:string"/>
+							</xs:simpleType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:group>
+	<!-- *****************************************************************************
+	    Odgovor/rezultat vsakega sporočila
+	    ***************************************************************************** -->
+	<xs:complexType name="ResponseHeaderType">
+		<xs:sequence>
+			<xs:element name="ResponseStatus" type="iZbs_Zaglavje:ResponseStatusType">
+				<xs:annotation>
+					<xs:documentation>Status odgovora (OK ali ERROR)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Napake" type="iZbs_Spl:NapakeType" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- *****************************************************************************
+	    SKLOP: POMOŽNI PODATKOVNI TIPI, ki so del glavnih podatkovnih tipov
+	    ***************************************************************************** -->
+	<xs:simpleType name="OblikaOdgovoraWSType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="DOLG_ODGOVOR"/>
+			<xs:enumeration value="KRATEK_ODGOVOR"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ZetonType">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="36"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="VerzijaType">
+		<xs:sequence>
+			<xs:element name="VerzijaStoritve" type="xs:string" minOccurs="0"/>
+			<xs:element name="VerzijaXsdShemeSporocila" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ParametriType">
+		<xs:sequence>
+			<xs:element name="Parameter" type="iZbs_Zaglavje:ParameterType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Dodatni parameter</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ParameterType">
+		<xs:sequence>
+			<xs:element name="Naziv" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Ime/naziv parametra</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Vrednost" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Vsebina/vrednost parametra</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="ResponseStatusType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="ERROR"/>
+			<xs:enumeration value="OK"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

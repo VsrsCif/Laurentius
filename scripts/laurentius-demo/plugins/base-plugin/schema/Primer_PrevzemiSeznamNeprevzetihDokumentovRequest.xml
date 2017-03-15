@@ -1,0 +1,54 @@
+<?xml version="1.0" ?>
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+  <S:Body>
+    <ns10:PrevzemiSeznamNeprevzetihDokumentovRequest xmlns="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_ElementiSklepa.xsd" xmlns:ns2="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_SplosniTipi.xsd" xmlns:ns3="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_ObvestilaOObdelavah.xsd" xmlns:ns4="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_ElementiDokumenta.xsd" xmlns:ns5="http://www.w3.org/2000/09/xmldsig#" xmlns:ns6="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_ObvestilaOSklepih.xsd" xmlns:ns7="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_DokumentPovratnica.xsd" xmlns:ns8="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_DokumentNeprevzetihDokumentov.xsd" xmlns:ns9="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_ZaglavjeSporocil.xsd" xmlns:ns10="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_OperacijeWS.xsd" xmlns:ns11="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_Body.xsd" xmlns:ns12="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_DokumentAkcijSklepov.xsd" xmlns:ns13="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_AkcijeSklepov.xsd" xmlns:ns14="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_DokumentObvestilOObdelavah.xsd" xmlns:ns15="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_DokumentObvestilOSklepih.xsd">
+      <ns10:Header>
+        <ns9:DatumSporocila>2014-06-23T13:20:06.908+02:00</ns9:DatumSporocila>
+        <ns9:IdSporocila>
+          <ns2:Id>f10d3574-bc61-4a59-b4b2-04de03f1caa2</ns2:Id>
+          <ns2:DavcnaStevilka>
+            <ns2:Drzava>SI</ns2:Drzava>
+            <ns2:Vrednost>94314527</ns2:Vrednost>
+          </ns2:DavcnaStevilka>
+        </ns9:IdSporocila>
+        <ns9:PrejemnikSporocila>
+          <ns2:DavcnaStevilka>
+            <ns2:Drzava>SI</ns2:Drzava>
+            <ns2:Vrednost>47730811</ns2:Vrednost>
+          </ns2:DavcnaStevilka>
+          <ns2:Naziv>CARINSKA UPRAVA RS</ns2:Naziv>
+          <ns2:Naslov>
+            <ns2:Ulica>Šmartinska</ns2:Ulica>
+            <ns2:HisnaStevilka>55</ns2:HisnaStevilka>
+            <ns2:Kraj>Ljubljana</ns2:Kraj>
+            <ns2:Posta>1000</ns2:Posta>
+            <ns2:PostniPredal xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"/>
+            <ns2:Drzava>SI</ns2:Drzava>
+          </ns2:Naslov>
+        </ns9:PrejemnikSporocila>
+        <ns9:PosiljateljSporocila>
+          <ns2:DavcnaStevilka>
+            <ns2:Drzava>SI</ns2:Drzava>
+            <ns2:Vrednost>94314527</ns2:Vrednost>
+          </ns2:DavcnaStevilka>
+          <ns2:Naziv>Nova KBM d.o.o.</ns2:Naziv>
+          <ns2:Naslov>
+            <ns2:Ulica>Vita Kraigherja</ns2:Ulica>
+            <ns2:HisnaStevilka>4</ns2:HisnaStevilka>
+            <ns2:Kraj>Maribor</ns2:Kraj>
+            <ns2:Posta>2000</ns2:Posta>
+            <ns2:PostniPredal xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"/>
+            <ns2:Drzava>SI</ns2:Drzava>
+          </ns2:Naslov>
+        </ns9:PosiljateljSporocila>
+        <ns9:TestAliProdukcija>TEST</ns9:TestAliProdukcija>
+        <ns9:IdIzvornegaSistema>NKBM</ns9:IdIzvornegaSistema>
+        <ns9:Verzija>
+          <ns9:VerzijaStoritve>1.0</ns9:VerzijaStoritve>
+          <ns9:VerzijaXsdShemeSporocila>1.0</ns9:VerzijaXsdShemeSporocila>
+        </ns9:Verzija>
+      </ns10:Header>
+      <ns10:Body/>
+    </ns10:PrevzemiSeznamNeprevzetihDokumentovRequest>
+  </S:Body>
+</S:Envelope>

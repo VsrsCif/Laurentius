@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- shema XSD za IzvrsbeXml/1.01 -->
+<!-- 
+*************************************************************************************
+INFO_GLAVA_SHEME
+*************************************************************************************
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:dSignature="http://www.w3.org/2000/09/xmldsig#" xmlns:iZbs_ElDoc="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_ElementiDokumenta.xsd" xmlns:iZbs_Spl="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_SplosniTipi.xsd" targetNamespace="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_ElementiDokumenta.xsd" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
+	<xs:import namespace="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_SplosniTipi.xsd" schemaLocation="IzvrsbeXml_tipi_SplosniTipi.xsd"/>
+	<xs:import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="xmlDSignature-core-schema.xsd"/>
+	<xs:annotation>
+		<xs:documentation/>
+	</xs:annotation>
+	<xs:complexType name="OsnovniPodatkiDokumentaType">
+		<xs:sequence>
+			<xs:element name="IdDokumenta" type="iZbs_Spl:IdPoAvtorjuSplosniType">
+				<xs:annotation>
+					<xs:documentation>Unikaten ključ dokumenta, ki ga definira avtor dokumenta XML</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="VerzijaSheme">
+				<xs:annotation>
+					<xs:documentation>Zapis verzije XSD sheme, po kateri je izdelan XML (npr.: 1.01)</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="8"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="VerzijaSifrantov">
+				<xs:annotation>
+					<xs:documentation></xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="8"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="DatumInUraDokumenta">
+				<xs:annotation>
+					<xs:documentation>Datum in ura nastanka dokumenta</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:dateTime"/>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="IdPovezanegaDokumenta" type="iZbs_Spl:IdPoAvtorjuSplosniType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Opcijski podatek - ID dokumenta, na katerega se ta dokument sklicuje (npr. pri povratnih informacijah ali pri transformaciji iz drugega formata).</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="OpombeDokumenta" type="iZbs_Spl:OpombeType" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="SplosniPodatkiOPaketuType">
+		<xs:sequence>
+			<xs:element name="IdPaketa" type="iZbs_Spl:IdPoAvtorjuSplosniType">
+				<xs:annotation>
+					<xs:documentation>Ta številka je lahko enako kot pri IdDokumenta.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DatumInUraIzdelave">
+				<xs:simpleType>
+					<xs:restriction base="xs:dateTime"/>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="SteviloZapisov">
+				<xs:annotation>
+					<xs:documentation/>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:nonNegativeInteger"/>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="OpombePaketa" type="iZbs_Spl:OpombeType" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="PodpisAvtorjaDokumentaType">
+		<xs:sequence>
+			<xs:element ref="dSignature:Signature"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- *****************************************************************************
+	    SKLOP PODTIPOV, povezanih z akcijami
+	    ***************************************************************************** -->
+</xs:schema>

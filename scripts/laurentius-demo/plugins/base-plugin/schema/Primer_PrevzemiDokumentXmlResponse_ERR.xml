@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Primer XML datoteke, ki jo pripravi izdajatelj in poslje do banke -->
+<iZbs_DokVseb:PrevzemiDokumentXmlResponse xsi:schemaLocation="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_DokumentiVsebinski.xsd IzvrsbeXml_DokumentiVsebinski.xsd" xmlns:dSignature="http://www.w3.org/2000/09/xmldsig#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:iZbs_DokVseb="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_DokumentiVsebinski.xsd" xmlns:iZbs_AS="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_AkcijeSklepov.xsd" xmlns:iZbs_Body="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_Body.xsd" xmlns:iZbs_DocAS="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_DokumentAkcijSklepov.xsd" xmlns:iZbs_ElDoc="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_ElementiDokumenta.xsd" xmlns:iZbs_ElS="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_ElementiSklepa.xsd" xmlns:iZbs_Spl="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_SplosniTipi.xsd" xmlns:iZbs_Zaglavje="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_ZaglavjeSporocil.xsd">
+	<iZbs_DokVseb:Header>
+		<iZbs_Zaglavje:DatumSporocila>2001-12-17T09:30:47Z</iZbs_Zaglavje:DatumSporocila>
+		<iZbs_Zaglavje:IdSporocila>
+			<iZbs_Spl:Id>1234567890abcdefg</iZbs_Spl:Id>
+			<iZbs_Spl:DavcnaStevilka>
+				<iZbs_Spl:Drzava>SI</iZbs_Spl:Drzava>
+				<iZbs_Spl:Vrednost>70310815</iZbs_Spl:Vrednost>
+			</iZbs_Spl:DavcnaStevilka>
+		</iZbs_Zaglavje:IdSporocila>
+		<iZbs_Zaglavje:PrejemnikSporocila>
+			<iZbs_Spl:DavcnaStevilka>
+				<iZbs_Spl:Drzava>SI</iZbs_Spl:Drzava>
+				<iZbs_Spl:Vrednost>94314527</iZbs_Spl:Vrednost>
+			</iZbs_Spl:DavcnaStevilka>
+			<iZbs_Spl:Naziv>Nova KBM d.d.</iZbs_Spl:Naziv>
+			<iZbs_Spl:Naslov>
+				<iZbs_Spl:Ulica>Ulica Vita Kraigherja</iZbs_Spl:Ulica>
+				<iZbs_Spl:HisnaStevilka>4</iZbs_Spl:HisnaStevilka>
+				<iZbs_Spl:Kraj>Maribor</iZbs_Spl:Kraj>
+				<iZbs_Spl:Posta>2505</iZbs_Spl:Posta>
+				<iZbs_Spl:PostniPredal></iZbs_Spl:PostniPredal>
+				<iZbs_Spl:Drzava>SI</iZbs_Spl:Drzava>
+				<iZbs_Spl:ElektronskiPostniNaslov>info@nkbm.si</iZbs_Spl:ElektronskiPostniNaslov>
+				<iZbs_Spl:Telefon>++386 (0)2 229 22 90</iZbs_Spl:Telefon>
+			</iZbs_Spl:Naslov>
+		</iZbs_Zaglavje:PrejemnikSporocila>
+		<iZbs_Zaglavje:PosiljateljSporocila>
+			<iZbs_Spl:DavcnaStevilka>
+				<iZbs_Spl:Drzava>SI</iZbs_Spl:Drzava>
+				<iZbs_Spl:Vrednost>70310815</iZbs_Spl:Vrednost>
+			</iZbs_Spl:DavcnaStevilka>
+			<iZbs_Spl:Naziv>Davčna uprava Republike Slovenije</iZbs_Spl:Naziv>
+			<iZbs_Spl:Naslov>
+				<iZbs_Spl:Ulica>Šmartinska cesta</iZbs_Spl:Ulica>
+				<iZbs_Spl:HisnaStevilka>55</iZbs_Spl:HisnaStevilka>
+				<iZbs_Spl:Kraj>Ljubljana</iZbs_Spl:Kraj>
+				<iZbs_Spl:Posta>1001</iZbs_Spl:Posta>
+				<iZbs_Spl:PostniPredal></iZbs_Spl:PostniPredal>
+				<iZbs_Spl:Drzava>SI</iZbs_Spl:Drzava>
+				<iZbs_Spl:ElektronskiPostniNaslov>info@durs.gov.si</iZbs_Spl:ElektronskiPostniNaslov>
+				<iZbs_Spl:Telefon>++ 386 (0)1 369 30 00</iZbs_Spl:Telefon>
+			</iZbs_Spl:Naslov>
+		</iZbs_Zaglavje:PosiljateljSporocila>
+		<iZbs_Zaglavje:TestAliProdukcija>PRODUKCIJA</iZbs_Zaglavje:TestAliProdukcija>
+		<iZbs_Zaglavje:IdIzvornegaSistema>DURS-IS01</iZbs_Zaglavje:IdIzvornegaSistema>
+		<iZbs_Zaglavje:Verzija>
+			<iZbs_Zaglavje:VerzijaStoritve>1.0</iZbs_Zaglavje:VerzijaStoritve>
+			<iZbs_Zaglavje:VerzijaXsdShemeSporocila>1.0</iZbs_Zaglavje:VerzijaXsdShemeSporocila>
+		</iZbs_Zaglavje:Verzija>
+	</iZbs_DokVseb:Header>
+	<iZbs_DokVseb:ResponseHeader>
+		<iZbs_Zaglavje:ResponseStatus>ERROR</iZbs_Zaglavje:ResponseStatus>
+		<iZbs_Zaglavje:Napake><iZbs_Spl:Napaka>
+			<iZbs_Spl:NapakaTip>KRITICNA_NAPAKA</iZbs_Spl:NapakaTip>
+			<iZbs_Spl:NapakaKoda>20021-ID_DOKUMENTA_NAPACEN</iZbs_Spl:NapakaKoda>
+			<iZbs_Spl:NapakaOpis>ID dokumenta, ki ga je banka podala v zahtevi, pri klicu WS metode PrevzemiDokument, ni pravilen.</iZbs_Spl:NapakaOpis>
+		</iZbs_Spl:Napaka></iZbs_Zaglavje:Napake>
+	</iZbs_DokVseb:ResponseHeader>
+	<iZbs_DokVseb:Body>
+			<iZbs_Body:DokumentPrazenObNapaki></iZbs_Body:DokumentPrazenObNapaki>
+	</iZbs_DokVseb:Body>
+	<dSignature:Signature>
+		<dSignature:SignedInfo>
+			<dSignature:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+			<dSignature:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+			<dSignature:Reference URI="">
+				<dSignature:Transforms>
+					<dSignature:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+				</dSignature:Transforms>
+				<dSignature:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+				<dSignature:DigestValue>dPDL0sHLEXf+pSKE3PVZTKFZA68=</dSignature:DigestValue>
+			</dSignature:Reference>
+		</dSignature:SignedInfo>
+		<dSignature:SignatureValue>e7QhyxcTzDwC/1Ol3BAliIQhYE/415SBJEx9LJ8ny2XI1VlDQvf42PJOFoSoPfk/Z8w6O4Gp/9PFJWIwxaPX63WrvwwlkPqq+51021gUQhZRaPUIqPnrJ/isfPJ1kaVPyq1xHoEKuD2qtzaHRFEtRYpBum2st6dNjE6v+cHYq6Q=</dSignature:SignatureValue>
+	</dSignature:Signature>
+</iZbs_DokVseb:PrevzemiDokumentXmlResponse>

@@ -18,6 +18,7 @@ import javax.ejb.Local;
 import javax.ejb.Timeout;
 import javax.ejb.Timer;
 import javax.ejb.TimerService;
+import si.laurentius.cron.SEDCronJob;
 
 /**
  *
@@ -32,6 +33,9 @@ public interface SEDSchedulerInterface {
    * @return
    */
   TimerService getServices();
+  
+  boolean activateCronJob(SEDCronJob cj);
+  boolean stopCronJob(SEDCronJob cj);
 
   /**
    *

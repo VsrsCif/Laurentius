@@ -32,7 +32,6 @@ import si.laurentius.commons.cxf.SoapUtils;
 import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.interfaces.JMSManagerInterface;
 import si.laurentius.commons.interfaces.SEDDaoInterface;
-import si.laurentius.commons.utils.HashUtils;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StorageUtils;
 import si.laurentius.commons.utils.StringFormater;
@@ -67,7 +66,6 @@ public class EBMSEndpoint implements Provider<SOAPMessage> {
 
   @EJB(mappedName = SEDJNDI.JNDI_SEDDAO)
   SEDDaoInterface mDB;
-  HashUtils mpHU = new HashUtils();
   StringFormater msfFormat = new StringFormater();
   StorageUtils msuStorageUtils = new StorageUtils();
   @Resource

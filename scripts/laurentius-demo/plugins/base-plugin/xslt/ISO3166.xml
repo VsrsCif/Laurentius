@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ISOCountryCodes>
+	<ISO3166 name="Afghanistan" a2="AF" a3="AFG" n3="004"/>
+	<ISO3166 name="Åland Islands" a2="AX" a3="ALA" n3="248"/>
+	<ISO3166 name="Albania" a2="AL" a3="ALB" n3="008"/>
+	<ISO3166 name="Algeria" a2="DZ" a3="DZA" n3="012"/>
+	<ISO3166 name="American Samoa" a2="AS" a3="ASM" n3="016"/>
+	<ISO3166 name="Andorra" a2="AD" a3="AND" n3="020"/>
+	<ISO3166 name="Angola" a2="AO" a3="AGO" n3="024"/>
+	<ISO3166 name="Anguilla" a2="AI" a3="AIA" n3="660"/>
+	<ISO3166 name="Antarctica" a2="AQ" a3="ATA" n3="010"/>
+	<ISO3166 name="Antigua and Barbuda" a2="AG" a3="ATG" n3="028"/>
+	<ISO3166 name="Argentina" a2="AR" a3="ARG" n3="032"/>
+	<ISO3166 name="Armenia" a2="AM" a3="ARM" n3="051"/>
+	<ISO3166 name="Aruba" a2="AW" a3="ABW" n3="533"/>
+	<ISO3166 name="Australia" a2="AU" a3="AUS" n3="036"/>
+	<ISO3166 name="Austria" a2="AT" a3="AUT" n3="040"/>
+	<ISO3166 name="Azerbaijan" a2="AZ" a3="AZE" n3="031"/>
+	<ISO3166 name="Bahamas" a2="BS" a3="BHS" n3="044"/>
+	<ISO3166 name="Bahrain" a2="BH" a3="BHR" n3="048"/>
+	<ISO3166 name="Bangladesh" a2="BD" a3="BGD" n3="050"/>
+	<ISO3166 name="Barbados" a2="BB" a3="BRB" n3="052"/>
+	<ISO3166 name="Belarus" a2="BY" a3="BLR" n3="112"/>
+	<ISO3166 name="Belgium" a2="BE" a3="BEL" n3="056"/>
+	<ISO3166 name="Belize" a2="BZ" a3="BLZ" n3="084"/>
+	<ISO3166 name="Benin" a2="BJ" a3="BEN" n3="204"/>
+	<ISO3166 name="Bermuda" a2="BM" a3="BMU" n3="060"/>
+	<ISO3166 name="Bhutan" a2="BT" a3="BTN" n3="064"/>
+	<ISO3166 name="Bolivia (Plurinational State of)" a2="BO" a3="BOL" n3="068"/>
+	<ISO3166 name="Bonaire, Sint Eustatius and Saba" a2="BQ" a3="BES" n3="535"/>
+	<ISO3166 name="Bosnia and Herzegovina" a2="BA" a3="BIH" n3="070"/>
+	<ISO3166 name="Botswana" a2="BW" a3="BWA" n3="072"/>
+	<ISO3166 name="Bouvet Island" a2="BV" a3="BVT" n3="074"/>
+	<ISO3166 name="Brazil" a2="BR" a3="BRA" n3="076"/>
+	<ISO3166 name="British Indian Ocean Territory" a2="IO" a3="IOT" n3="086"/>
+	<ISO3166 name="Brunei Darussalam" a2="BN" a3="BRN" n3="096"/>
+	<ISO3166 name="Bulgaria" a2="BG" a3="BGR" n3="100"/>
+	<ISO3166 name="Burkina Faso" a2="BF" a3="BFA" n3="854"/>
+	<ISO3166 name="Burundi" a2="BI" a3="BDI" n3="108"/>
+	<ISO3166 name="Cabo Verde" a2="CV" a3="CPV" n3="132"/>
+	<ISO3166 name="Cambodia" a2="KH" a3="KHM" n3="116"/>
+	<ISO3166 name="Cameroon" a2="CM" a3="CMR" n3="120"/>
+	<ISO3166 name="Canada" a2="CA" a3="CAN" n3="124"/>
+	<ISO3166 name="Cayman Islands" a2="KY" a3="CYM" n3="136"/>
+	<ISO3166 name="Central African Republic" a2="CF" a3="CAF" n3="140"/>
+	<ISO3166 name="Chad" a2="TD" a3="TCD" n3="148"/>
+	<ISO3166 name="Chile" a2="CL" a3="CHL" n3="152"/>
+	<ISO3166 name="China" a2="CN" a3="CHN" n3="156"/>
+	<ISO3166 name="Christmas Island" a2="CX" a3="CXR" n3="162"/>
+	<ISO3166 name="Cocos (Keeling) Islands" a2="CC" a3="CCK" n3="166"/>
+	<ISO3166 name="Colombia" a2="CO" a3="COL" n3="170"/>
+	<ISO3166 name="Comoros" a2="KM" a3="COM" n3="174"/>
+	<ISO3166 name="Congo" a2="CG" a3="COG" n3="178"/>
+	<ISO3166 name="Congo (Democratic Republic of the)" a2="CD" a3="COD" n3="180"/>
+	<ISO3166 name="Cook Islands" a2="CK" a3="COK" n3="184"/>
+	<ISO3166 name="Costa Rica" a2="CR" a3="CRI" n3="188"/>
+	<ISO3166 name="Côte d'Ivoire" a2="CI" a3="CIV" n3="384"/>
+	<ISO3166 name="Croatia" a2="HR" a3="HRV" n3="191"/>
+	<ISO3166 name="Cuba" a2="CU" a3="CUB" n3="192"/>
+	<ISO3166 name="Curaçao" a2="CW" a3="CUW" n3="531"/>
+	<ISO3166 name="Cyprus" a2="CY" a3="CYP" n3="196"/>
+	<ISO3166 name="Czechia" a2="CZ" a3="CZE" n3="203"/>
+	<ISO3166 name="Denmark" a2="DK" a3="DNK" n3="208"/>
+	<ISO3166 name="Djibouti" a2="DJ" a3="DJI" n3="262"/>
+	<ISO3166 name="Dominica" a2="DM" a3="DMA" n3="212"/>
+	<ISO3166 name="Dominican Republic" a2="DO" a3="DOM" n3="214"/>
+	<ISO3166 name="Ecuador" a2="EC" a3="ECU" n3="218"/>
+	<ISO3166 name="Egypt" a2="EG" a3="EGY" n3="818"/>
+	<ISO3166 name="El Salvador" a2="SV" a3="SLV" n3="222"/>
+	<ISO3166 name="Equatorial Guinea" a2="GQ" a3="GNQ" n3="226"/>
+	<ISO3166 name="Eritrea" a2="ER" a3="ERI" n3="232"/>
+	<ISO3166 name="Estonia" a2="EE" a3="EST" n3="233"/>
+	<ISO3166 name="Ethiopia" a2="ET" a3="ETH" n3="231"/>
+	<ISO3166 name="Falkland Islands (Malvinas)" a2="FK" a3="FLK" n3="238"/>
+	<ISO3166 name="Faroe Islands" a2="FO" a3="FRO" n3="234"/>
+	<ISO3166 name="Fiji" a2="FJ" a3="FJI" n3="242"/>
+	<ISO3166 name="Finland" a2="FI" a3="FIN" n3="246"/>
+	<ISO3166 name="France" a2="FR" a3="FRA" n3="250"/>
+	<ISO3166 name="French Guiana" a2="GF" a3="GUF" n3="254"/>
+	<ISO3166 name="French Polynesia" a2="PF" a3="PYF" n3="258"/>
+	<ISO3166 name="French Southern Territories" a2="TF" a3="ATF" n3="260"/>
+	<ISO3166 name="Gabon" a2="GA" a3="GAB" n3="266"/>
+	<ISO3166 name="Gambia" a2="GM" a3="GMB" n3="270"/>
+	<ISO3166 name="Georgia" a2="GE" a3="GEO" n3="268"/>
+	<ISO3166 name="Germany" a2="DE" a3="DEU" n3="276"/>
+	<ISO3166 name="Ghana" a2="GH" a3="GHA" n3="288"/>
+	<ISO3166 name="Gibraltar" a2="GI" a3="GIB" n3="292"/>
+	<ISO3166 name="Greece" a2="GR" a3="GRC" n3="300"/>
+	<ISO3166 name="Greenland" a2="GL" a3="GRL" n3="304"/>
+	<ISO3166 name="Grenada" a2="GD" a3="GRD" n3="308"/>
+	<ISO3166 name="Guadeloupe" a2="GP" a3="GLP" n3="312"/>
+	<ISO3166 name="Guam" a2="GU" a3="GUM" n3="316"/>
+	<ISO3166 name="Guatemala" a2="GT" a3="GTM" n3="320"/>
+	<ISO3166 name="Guernsey" a2="GG" a3="GGY" n3="831"/>
+	<ISO3166 name="Guinea" a2="GN" a3="GIN" n3="324"/>
+	<ISO3166 name="Guinea-Bissau" a2="GW" a3="GNB" n3="624"/>
+	<ISO3166 name="Guyana" a2="GY" a3="GUY" n3="328"/>
+	<ISO3166 name="Haiti" a2="HT" a3="HTI" n3="332"/>
+	<ISO3166 name="Heard Island and McDonald Islands" a2="HM" a3="HMD" n3="334"/>
+	<ISO3166 name="Holy See" a2="VA" a3="VAT" n3="336"/>
+	<ISO3166 name="Honduras" a2="HN" a3="HND" n3="340"/>
+	<ISO3166 name="Hong Kong" a2="HK" a3="HKG" n3="344"/>
+	<ISO3166 name="Hungary" a2="HU" a3="HUN" n3="348"/>
+	<ISO3166 name="Iceland" a2="IS" a3="ISL" n3="352"/>
+	<ISO3166 name="India" a2="IN" a3="IND" n3="356"/>
+	<ISO3166 name="Indonesia" a2="ID" a3="IDN" n3="360"/>
+	<ISO3166 name="Iran (Islamic Republic of)" a2="IR" a3="IRN" n3="364"/>
+	<ISO3166 name="Iraq" a2="IQ" a3="IRQ" n3="368"/>
+	<ISO3166 name="Ireland" a2="IE" a3="IRL" n3="372"/>
+	<ISO3166 name="Isle of Man" a2="IM" a3="IMN" n3="833"/>
+	<ISO3166 name="Israel" a2="IL" a3="ISR" n3="376"/>
+	<ISO3166 name="Italy" a2="IT" a3="ITA" n3="380"/>
+	<ISO3166 name="Jamaica" a2="JM" a3="JAM" n3="388"/>
+	<ISO3166 name="Japan" a2="JP" a3="JPN" n3="392"/>
+	<ISO3166 name="Jersey" a2="JE" a3="JEY" n3="832"/>
+	<ISO3166 name="Jordan" a2="JO" a3="JOR" n3="400"/>
+	<ISO3166 name="Kazakhstan" a2="KZ" a3="KAZ" n3="398"/>
+	<ISO3166 name="Kenya" a2="KE" a3="KEN" n3="404"/>
+	<ISO3166 name="Kiribati" a2="KI" a3="KIR" n3="296"/>
+	<ISO3166 name="Korea (Democratic People's Republic of)" a2="KP" a3="PRK" n3="408"/>
+	<ISO3166 name="Korea (Republic of)" a2="KR" a3="KOR" n3="410"/>
+	<ISO3166 name="Kuwait" a2="KW" a3="KWT" n3="414"/>
+	<ISO3166 name="Kyrgyzstan" a2="KG" a3="KGZ" n3="417"/>
+	<ISO3166 name="Lao People's Democratic Republic" a2="LA" a3="LAO" n3="418"/>
+	<ISO3166 name="Latvia" a2="LV" a3="LVA" n3="428"/>
+	<ISO3166 name="Lebanon" a2="LB" a3="LBN" n3="422"/>
+	<ISO3166 name="Lesotho" a2="LS" a3="LSO" n3="426"/>
+	<ISO3166 name="Liberia" a2="LR" a3="LBR" n3="430"/>
+	<ISO3166 name="Libya" a2="LY" a3="LBY" n3="434"/>
+	<ISO3166 name="Liechtenstein" a2="LI" a3="LIE" n3="438"/>
+	<ISO3166 name="Lithuania" a2="LT" a3="LTU" n3="440"/>
+	<ISO3166 name="Luxembourg" a2="LU" a3="LUX" n3="442"/>
+	<ISO3166 name="Macao" a2="MO" a3="MAC" n3="446"/>
+	<ISO3166 name="Macedonia (the former Yugoslav Republic of)" a2="MK" a3="MKD" n3="807"/>
+	<ISO3166 name="Madagascar" a2="MG" a3="MDG" n3="450"/>
+	<ISO3166 name="Malawi" a2="MW" a3="MWI" n3="454"/>
+	<ISO3166 name="Malaysia" a2="MY" a3="MYS" n3="458"/>
+	<ISO3166 name="Maldives" a2="MV" a3="MDV" n3="462"/>
+	<ISO3166 name="Mali" a2="ML" a3="MLI" n3="466"/>
+	<ISO3166 name="Malta" a2="MT" a3="MLT" n3="470"/>
+	<ISO3166 name="Marshall Islands" a2="MH" a3="MHL" n3="584"/>
+	<ISO3166 name="Martinique" a2="MQ" a3="MTQ" n3="474"/>
+	<ISO3166 name="Mauritania" a2="MR" a3="MRT" n3="478"/>
+	<ISO3166 name="Mauritius" a2="MU" a3="MUS" n3="480"/>
+	<ISO3166 name="Mayotte" a2="YT" a3="MYT" n3="175"/>
+	<ISO3166 name="Mexico" a2="MX" a3="MEX" n3="484"/>
+	<ISO3166 name="Micronesia (Federated States of)" a2="FM" a3="FSM" n3="583"/>
+	<ISO3166 name="Moldova (Republic of)" a2="MD" a3="MDA" n3="498"/>
+	<ISO3166 name="Monaco" a2="MC" a3="MCO" n3="492"/>
+	<ISO3166 name="Mongolia" a2="MN" a3="MNG" n3="496"/>
+	<ISO3166 name="Montenegro" a2="ME" a3="MNE" n3="499"/>
+	<ISO3166 name="Montserrat" a2="MS" a3="MSR" n3="500"/>
+	<ISO3166 name="Morocco" a2="MA" a3="MAR" n3="504"/>
+	<ISO3166 name="Mozambique" a2="MZ" a3="MOZ" n3="508"/>
+	<ISO3166 name="Myanmar" a2="MM" a3="MMR" n3="104"/>
+	<ISO3166 name="Namibia" a2="NA" a3="NAM" n3="516"/>
+	<ISO3166 name="Nauru" a2="NR" a3="NRU" n3="520"/>
+	<ISO3166 name="Nepal" a2="NP" a3="NPL" n3="524"/>
+	<ISO3166 name="Netherlands" a2="NL" a3="NLD" n3="528"/>
+	<ISO3166 name="New Caledonia" a2="NC" a3="NCL" n3="540"/>
+	<ISO3166 name="New Zealand" a2="NZ" a3="NZL" n3="554"/>
+	<ISO3166 name="Nicaragua" a2="NI" a3="NIC" n3="558"/>
+	<ISO3166 name="Niger" a2="NE" a3="NER" n3="562"/>
+	<ISO3166 name="Nigeria" a2="NG" a3="NGA" n3="566"/>
+	<ISO3166 name="Niue" a2="NU" a3="NIU" n3="570"/>
+	<ISO3166 name="Norfolk Island" a2="NF" a3="NFK" n3="574"/>
+	<ISO3166 name="Northern Mariana Islands" a2="MP" a3="MNP" n3="580"/>
+	<ISO3166 name="Norway" a2="NO" a3="NOR" n3="578"/>
+	<ISO3166 name="Oman" a2="OM" a3="OMN" n3="512"/>
+	<ISO3166 name="Pakistan" a2="PK" a3="PAK" n3="586"/>
+	<ISO3166 name="Palau" a2="PW" a3="PLW" n3="585"/>
+	<ISO3166 name="Palestine, State of" a2="PS" a3="PSE" n3="275"/>
+	<ISO3166 name="Panama" a2="PA" a3="PAN" n3="591"/>
+	<ISO3166 name="Papua New Guinea" a2="PG" a3="PNG" n3="598"/>
+	<ISO3166 name="Paraguay" a2="PY" a3="PRY" n3="600"/>
+	<ISO3166 name="Peru" a2="PE" a3="PER" n3="604"/>
+	<ISO3166 name="Philippines" a2="PH" a3="PHL" n3="608"/>
+	<ISO3166 name="Pitcairn" a2="PN" a3="PCN" n3="612"/>
+	<ISO3166 name="Poland" a2="PL" a3="POL" n3="616"/>
+	<ISO3166 name="Portugal" a2="PT" a3="PRT" n3="620"/>
+	<ISO3166 name="Puerto Rico" a2="PR" a3="PRI" n3="630"/>
+	<ISO3166 name="Qatar" a2="QA" a3="QAT" n3="634"/>
+	<ISO3166 name="Réunion" a2="RE" a3="REU" n3="638"/>
+	<ISO3166 name="Romania" a2="RO" a3="ROU" n3="642"/>
+	<ISO3166 name="Russian Federation" a2="RU" a3="RUS" n3="643"/>
+	<ISO3166 name="Rwanda" a2="RW" a3="RWA" n3="646"/>
+	<ISO3166 name="Saint Barthélemy" a2="BL" a3="BLM" n3="652"/>
+	<ISO3166 name="Saint Helena, Ascension and Tristan da Cunha" a2="SH" a3="SHN" n3="654"/>
+	<ISO3166 name="Saint Kitts and Nevis" a2="KN" a3="KNA" n3="659"/>
+	<ISO3166 name="Saint Lucia" a2="LC" a3="LCA" n3="662"/>
+	<ISO3166 name="Saint Martin (French part)" a2="MF" a3="MAF" n3="663"/>
+	<ISO3166 name="Saint Pierre and Miquelon" a2="PM" a3="SPM" n3="666"/>
+	<ISO3166 name="Saint Vincent and the Grenadines" a2="VC" a3="VCT" n3="670"/>
+	<ISO3166 name="Samoa" a2="WS" a3="WSM" n3="882"/>
+	<ISO3166 name="San Marino" a2="SM" a3="SMR" n3="674"/>
+	<ISO3166 name="Sao Tome and Principe" a2="ST" a3="STP" n3="678"/>
+	<ISO3166 name="Saudi Arabia" a2="SA" a3="SAU" n3="682"/>
+	<ISO3166 name="Senegal" a2="SN" a3="SEN" n3="686"/>
+	<ISO3166 name="Serbia" a2="RS" a3="SRB" n3="688"/>
+	<ISO3166 name="Seychelles" a2="SC" a3="SYC" n3="690"/>
+	<ISO3166 name="Sierra Leone" a2="SL" a3="SLE" n3="694"/>
+	<ISO3166 name="Singapore" a2="SG" a3="SGP" n3="702"/>
+	<ISO3166 name="Sint Maarten (Dutch part)" a2="SX" a3="SXM" n3="534"/>
+	<ISO3166 name="Slovakia" a2="SK" a3="SVK" n3="703"/>
+	<ISO3166 name="Slovenia" a2="SI" a3="SVN" n3="705"/>
+	<ISO3166 name="Slovenia" a2="SI" a3="" n3="705"/> <!-- !!  null means Slovenia-->
+	<ISO3166 name="Solomon Islands" a2="SB" a3="SLB" n3="090"/>
+	<ISO3166 name="Somalia" a2="SO" a3="SOM" n3="706"/>
+	<ISO3166 name="South Africa" a2="ZA" a3="ZAF" n3="710"/>
+	<ISO3166 name="South Georgia and the South Sandwich Islands" a2="GS" a3="SGS" n3="239"/>
+	<ISO3166 name="South Sudan" a2="SS" a3="SSD" n3="728"/>
+	<ISO3166 name="Spain" a2="ES" a3="ESP" n3="724"/>
+	<ISO3166 name="Sri Lanka" a2="LK" a3="LKA" n3="144"/>
+	<ISO3166 name="Sudan" a2="SD" a3="SDN" n3="729"/>
+	<ISO3166 name="Suriname" a2="SR" a3="SUR" n3="740"/>
+	<ISO3166 name="Svalbard and Jan Mayen" a2="SJ" a3="SJM" n3="744"/>
+	<ISO3166 name="Swaziland" a2="SZ" a3="SWZ" n3="748"/>
+	<ISO3166 name="Sweden" a2="SE" a3="SWE" n3="752"/>
+	<ISO3166 name="Switzerland" a2="CH" a3="CHE" n3="756"/>
+	<ISO3166 name="Syrian Arab Republic" a2="SY" a3="SYR" n3="760"/>
+	<ISO3166 name="Taiwan, Province of China[a]" a2="TW" a3="TWN" n3="158"/>
+	<ISO3166 name="Tajikistan" a2="TJ" a3="TJK" n3="762"/>
+	<ISO3166 name="Tanzania, United Republic of" a2="TZ" a3="TZA" n3="834"/>
+	<ISO3166 name="Thailand" a2="TH" a3="THA" n3="764"/>
+	<ISO3166 name="Timor-Leste" a2="TL" a3="TLS" n3="626"/>
+	<ISO3166 name="Togo" a2="TG" a3="TGO" n3="768"/>
+	<ISO3166 name="Tokelau" a2="TK" a3="TKL" n3="772"/>
+	<ISO3166 name="Tonga" a2="TO" a3="TON" n3="776"/>
+	<ISO3166 name="Trinidad and Tobago" a2="TT" a3="TTO" n3="780"/>
+	<ISO3166 name="Tunisia" a2="TN" a3="TUN" n3="788"/>
+	<ISO3166 name="Turkey" a2="TR" a3="TUR" n3="792"/>
+	<ISO3166 name="Turkmenistan" a2="TM" a3="TKM" n3="795"/>
+	<ISO3166 name="Turks and Caicos Islands" a2="TC" a3="TCA" n3="796"/>
+	<ISO3166 name="Tuvalu" a2="TV" a3="TUV" n3="798"/>
+	<ISO3166 name="Uganda" a2="UG" a3="UGA" n3="800"/>
+	<ISO3166 name="Ukraine" a2="UA" a3="UKR" n3="804"/>
+	<ISO3166 name="United Arab Emirates" a2="AE" a3="ARE" n3="784"/>
+	<ISO3166 name="United Kingdom of Great Britain and Northern Ireland" a2="GB" a3="GBR" n3="826"/>
+	<ISO3166 name="United States of America" a2="US" a3="USA" n3="840"/>
+	<ISO3166 name="United States Minor Outlying Islands" a2="UM" a3="UMI" n3="581"/>
+	<ISO3166 name="Uruguay" a2="UY" a3="URY" n3="858"/>
+	<ISO3166 name="Uzbekistan" a2="UZ" a3="UZB" n3="860"/>
+	<ISO3166 name="Vanuatu" a2="VU" a3="VUT" n3="548"/>
+	<ISO3166 name="Venezuela (Bolivarian Republic of)" a2="VE" a3="VEN" n3="862"/>
+	<ISO3166 name="Viet Nam" a2="VN" a3="VNM" n3="704"/>
+	<ISO3166 name="Virgin Islands (British)" a2="VG" a3="VGB" n3="092"/>
+	<ISO3166 name="Virgin Islands (U.S.)" a2="VI" a3="VIR" n3="850"/>
+	<ISO3166 name="Wallis and Futuna" a2="WF" a3="WLF" n3="876"/>
+	<ISO3166 name="Western Sahara" a2="EH" a3="ESH" n3="732"/>
+	<ISO3166 name="Yemen" a2="YE" a3="YEM" n3="887"/>
+	<ISO3166 name="Zambia" a2="ZM" a3="ZMB" n3="894"/>
+	<ISO3166 name="Zimbabwe" a2="ZW" a3="ZWE" n3="716"/>
+</ISOCountryCodes>

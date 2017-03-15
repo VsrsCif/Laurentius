@@ -1,0 +1,485 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- shema XSD za IzvrsbeXml/1.01 --> 
+<!-- 
+*************************************************************************************
+INFO_GLAVA_SHEME
+*************************************************************************************
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:iZbs_ElS="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_ElementiSklepa.xsd" xmlns:iZbs_Spl="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_SplosniTipi.xsd" xmlns:iZbs_Sts="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_Statusi.xsd" targetNamespace="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_ElementiSklepa.xsd" elementFormDefault="qualified">
+	<xs:import namespace="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_SplosniTipi.xsd" schemaLocation="IzvrsbeXml_tipi_SplosniTipi.xsd"/>
+	<xs:import namespace="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_Statusi.xsd" schemaLocation="IzvrsbeXml_tipi_Statusi.xsd"/>
+	<!-- *****************************************************************************
+	    SKLOP: GLAVNI PODATKOVNI TIPI, ki so povezani s sklepi
+	    ***************************************************************************** -->
+	<xs:complexType name="SklepType">
+		<xs:annotation>
+			<xs:documentation/>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="IdSklepa" type="iZbs_ElS:IdSklepaType"/>
+			<xs:element name="IzdajateljSklepaPodrobnosti" type="iZbs_Spl:AvtorPodrobnostiType" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="DatumiSklepa" type="iZbs_ElS:DatumiSklepaType"/>
+			<xs:element name="StatusSklepaPriSubjektu" type="iZbs_ElS:StatusSklepaPriSubjektuType"/>
+			<!-- Status vsebuje 2 podatka: status in ID subjekta, pri katerem status velja -->
+			<xs:element name="KlasifikatorjiSklepa" type="iZbs_ElS:KlasifikatorjiSklepaType"/>
+			<xs:element name="Dolzniki" type="iZbs_ElS:DolznikiType"/>
+			<xs:element name="Upnik" type="iZbs_ElS:UpnikType"/>
+			<xs:element name="Terjatve" type="iZbs_ElS:TerjatveType"/>
+			<xs:element name="NestrukturiraniPodatki" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:complexContent>
+						<xs:extension base="iZbs_ElS:NestrukturiraniPodatkiType">
+							<xs:attribute name="format" type="iZbs_Spl:OblikovniFormatNestrukturiraneVsebineType" default="XHTML"/>
+						</xs:extension>
+					</xs:complexContent>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="OpombeSklepa" type="iZbs_Spl:OpombeType" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="PripadajoceDatoteke" type="iZbs_ElS:PripadajoceDatotekeType" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- *****************************************************************************
+	    Podatkovni tip, ki se uporablja pri akciji POPRAVEK_SKLEPA
+	    ***************************************************************************** -->
+	<xs:complexType name="SklepBrezTerjatevInStatusovType">
+		<xs:annotation>
+			<xs:documentation/>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="IdSklepa" type="iZbs_ElS:IdSklepaType"/>
+			<xs:element name="IzdajateljSklepaPodrobnosti" type="iZbs_Spl:AvtorPodrobnostiType" minOccurs="0"/>
+			<xs:element name="DatumiSklepa" type="iZbs_ElS:DatumiSklepaType"/>
+			<xs:element name="KlasifikatorjiSklepa" type="iZbs_ElS:KlasifikatorjiSklepaType"/>
+			<xs:element name="Dolzniki" type="iZbs_ElS:DolznikiType"/>
+			<xs:element name="Upnik" type="iZbs_ElS:UpnikType"/>
+			<xs:element name="NestrukturiraniPodatki" minOccurs="0" maxOccurs="1">
+				<xs:complexType>
+					<xs:complexContent>
+						<xs:extension base="iZbs_ElS:NestrukturiraniPodatkiType">
+							<xs:attribute name="format" type="iZbs_Spl:OblikovniFormatNestrukturiraneVsebineType" default="XHTML"/>
+						</xs:extension>
+					</xs:complexContent>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="OpombeSklepa" type="iZbs_Spl:OpombeType" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="PripadajoceDatoteke" type="iZbs_ElS:PripadajoceDatotekeType" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- *****************************************************************************
+	    Podatkovni tip, ki se uporablja pri akcijah spreminjanja terjatev
+	    ***************************************************************************** -->
+	<xs:complexType name="SklepIdInTerjatveType">
+		<xs:annotation>
+			<xs:documentation/>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="IdSklepa" type="iZbs_ElS:IdSklepaType"/>
+			<xs:element name="Terjatve" type="iZbs_ElS:TerjatveType"/>
+			<xs:element name="PripadajoceDatoteke" type="iZbs_ElS:PripadajoceDatotekeType" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- *****************************************************************************
+	    Podatkovni tip, ki se uporablja pri akcijah spreminjanja statusov
+	    ***************************************************************************** -->
+	<xs:complexType name="SklepIdInStatusType">
+		<xs:annotation>
+			<xs:documentation/>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="IdSklepa" type="iZbs_ElS:IdSklepaType"/>
+			<xs:element name="ZahtevanStatus" type="iZbs_ElS:StatusSklepaPriSubjektuType"/>
+			<xs:element name="DatumVeljavnostiStatusaDo" type="xs:date" minOccurs="0"/>
+			<xs:element name="PripadajoceDatoteke" type="iZbs_ElS:PripadajoceDatotekeType" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ***************************************************************************** -->
+	<xs:complexType name="SklepIdStatusInZadrzaneTerjatveType">
+		<xs:annotation>
+			<xs:documentation/>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="IdSklepa" type="iZbs_ElS:IdSklepaType"/>
+			<xs:element name="ZahtevanStatus" type="iZbs_ElS:StatusSklepaPriSubjektuType"/>
+			<xs:element name="ZadrzaneTerjatve" type="iZbs_ElS:TerjatveType"/>
+			<xs:element name="DatumZadrzanjaTerjatevDo" type="xs:date"/>
+			<xs:element name="PripadajoceDatoteke" type="iZbs_ElS:PripadajoceDatotekeType" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- *****************************************************************************
+	    SKLOP: POMOŽNI PODATKOVNI TIPI, ki so del glavnih podatkovnih tipov
+	    ***************************************************************************** -->
+	<xs:complexType name="IdSklepaType">
+		<xs:annotation>
+			<xs:documentation>Enoličen identifikator sklepa, unikaten za vsakega izdajatelja posebej.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="OpravilnaStevilka" type="iZbs_ElS:SklepIdType">
+				<xs:annotation>
+					<xs:documentation>Opravilna številka sklepa pri izdajatelju (unikaten ključ pri izdajatelju)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="IzdajateljDavcnaStevilka" type="iZbs_Spl:DavcnaStevilkaType">
+				<xs:annotation>
+					<xs:documentation/>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="DatumiSklepaType">
+		<xs:annotation>
+			<xs:documentation>Pomembni datumi, ki so povezani s sklepom.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="DatumIzdaje">
+				<xs:simpleType>
+					<xs:restriction base="xs:date"/>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="DatumIzvrsljivosti" nillable="true">
+				<xs:simpleType>
+					<xs:restriction base="xs:date"/>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="DatumVrocitve" nillable="true">
+				<xs:simpleType>
+					<xs:restriction base="xs:date"/>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="StatusSklepaPriSubjektuType">
+		<xs:annotation>
+			<xs:documentation>Status sklepa pri točno določenem subjektu (izdajatelju/banki), v določenem trenutku. 'IdNadomestnegaSklepa' se uporabi samo pri sklepu, ki ima status 'NADOMESCEN'. V to polje vpišemo podatek o drugem, novejšem sklepu, ki je nadomestil ta sklep.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="StatusSklepa" type="iZbs_Sts:StatusSklepaType"/>
+			<xs:element name="SubjektDavcnaStevilka" type="iZbs_Spl:DavcnaStevilkaType"/>
+			<xs:element name="DatumZapisaStatusa" type="xs:dateTime"/>
+			<xs:element name="IdNadomestnegaSklepa" type="iZbs_ElS:IdSklepaType" minOccurs="0"/>
+			<!-- 'IdNadomestnegaSklepa' se uporabi samo pri sklepu, ki ima status 'NADOMESCEN'. V to polje vpišemo podatek o drugem, novejšem sklepu, ki je nadomestil ta sklep. -->
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="KlasifikatorjiSklepaType">
+		<xs:annotation>
+			<xs:documentation>Klasifikatorji, ki določajo tip sklepa, njegovo prioriteto ...</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="VrstaDolga">
+				<xs:annotation>
+					<xs:documentation>Možne vrednosti: DAVCNI, NEDAVCNI, PREZIVNINA. Element določa prioriteto poplačevanja sklepov.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="DAVCNI"/>
+						<xs:enumeration value="NEDAVCNI"/>
+						<xs:enumeration value="PREZIVNINA"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="VrstaListine">
+				<xs:annotation>
+					<xs:documentation>Možne vrednosti: IZVRSILNI_NASLOV, PREDLOZENA_MENICA, VERODOSTOJNA_LISTINA.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="IZVRSILNI_NASLOV"/>
+						<xs:enumeration value="PREDLOZENA_MENICA"/>
+						<xs:enumeration value="VERODOSTOJNA_LISTINA"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="OznakaListine">
+				<xs:annotation>
+					<xs:documentation>Opcijsko polje, izpolni se pri izvršbah COVL-a (pomembno pri menicah, zaradi obračuna obresti od stroškov).</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string"/>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="DolznikiType">
+		<xs:sequence>
+			<xs:element name="Dolznik" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Subjekt" type="iZbs_Spl:SubjektType"/>
+						<xs:element name="TipDolznika">
+							<xs:annotation>
+								<xs:documentation>Možne vrednosti: EDINI_DOLZNIK, SODOLZNIK.</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:enumeration value="EDINI_DOLZNIK"/>
+									<xs:enumeration value="SODOLZNIK"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<!-- BANKE -->
+						<xs:element name="BankeInRacuni">
+							<xs:complexType>
+								<xs:sequence>
+									<!-- BANKA -->
+									<xs:element name="BankaInRacuni" maxOccurs="unbounded">
+										<xs:annotation>
+											<xs:documentation>Banke se z atributom 'Rang' številčijo od 1 do n. Banka z rangom 1 je privzeto primarna banka. Če primarna banka ne izvršuje več sklepa, postane primarna banka naslednja, tj. tista, ki ima naslednjo najnižjo številko atributa 'Rang'.</xs:documentation>
+										</xs:annotation>
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element name="BICKodaBanke" type="iZbs_Spl:BICKodaType"/>
+												<xs:element name="NazivBanke" type="iZbs_Spl:FirmaNazivType"/>
+												<!-- TRR SEZNAM pri eni banki -->
+												<xs:element name="TrrSeznam">
+													<xs:annotation>
+														<xs:documentation>V trenutku izdaje sklepa se določi samo primarni račun, na primarni banki, z atributom 'Rang' = 1. Ostalih računov izdajatelj ne rabi navajati.</xs:documentation>
+													</xs:annotation>
+													<xs:complexType>
+														<xs:sequence>
+															<xs:element name="TrrIbanStevilka" minOccurs="0" maxOccurs="unbounded">
+																<xs:complexType>
+																	<xs:simpleContent>
+																		<xs:extension base="iZbs_Spl:TrrIbanType">
+																			<xs:attribute name="Rang" type="iZbs_ElS:RangType" use="required"/>
+																		</xs:extension>
+																	</xs:simpleContent>
+																</xs:complexType>
+															</xs:element>
+														</xs:sequence>
+													</xs:complexType>
+												</xs:element>
+											</xs:sequence>
+											<xs:attribute name="Rang" type="iZbs_ElS:RangType" use="required"/>
+										</xs:complexType>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="UpnikType">
+		<xs:sequence>
+			<xs:element name="Subjekt" type="iZbs_Spl:SubjektType"/>
+			<xs:element name="Pooblascenec" type="iZbs_ElS:PooblascenecType" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TerjatveType">
+		<xs:annotation>
+			<xs:documentation/>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Terjatev" type="iZbs_ElS:TerjatevType" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TerjatevType">
+		<xs:annotation>
+			<xs:documentation/>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="TipTerjatve">
+				<xs:annotation>
+					<xs:documentation>Možne vrednosti: GLAVNICA, OBRESTI, STROSKI</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="GLAVNICA"/>
+						<xs:enumeration value="OBRESTI"/>
+						<xs:enumeration value="STROSKI"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="ZnesekZValuto" type="iZbs_Spl:ZnesekZValutoType"/>
+			<xs:element name="ObrestiZaTerjatev" type="iZbs_ElS:ObrestiZaTerjatevType" minOccurs="0"/>
+			<xs:element name="TrrPrejemnika" type="iZbs_Spl:TrrIbanType">
+				<xs:annotation>
+					<xs:documentation>Transakcijski račun prejemnika, v IBAN obliki. IBAN računi se začnejo z dvema črkama, ki označujeta državo (npr. SI) in se nadaljuje s številkami.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="SklicZaNakazilo" type="iZbs_Spl:SklicType">
+				<xs:annotation>
+					<xs:documentation/>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="OpombeTerjatve" type="iZbs_Spl:OpombeType" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ObrestiZaTerjatevType">
+		<xs:annotation>
+			<xs:documentation/>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="TipObresti">
+				<xs:annotation>
+					<xs:documentation>Možne vrednosti: NI_OBRESTI, ZAMUDNE_OBRESTI_PO_OZ, ZAMUDNE_OBRESTI_PO_ZDAVP, FIKSNA_LETNA_OBRESTNA_MERA, GLEJ_OPIS.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="NI_OBRESTI"/>
+						<xs:enumeration value="ZAMUDNE_OBRESTI_PO_OZ"/>
+						<xs:enumeration value="ZAMUDNE_OBRESTI_PO_ZDAVP"/>
+						<xs:enumeration value="FIKSNA_LETNA_OBRESTNA_MERA"/>
+						<xs:enumeration value="GLEJ_OPIS"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="StevilcniParameter" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Številčni parameter (za tip FIKSNA_LETNA_OBRESTNA_MERA).</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:float"/>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="OpisZaTipObresti" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Opis postopka za 'ročni' izračun obresti (uporabi tega polja se skušamo izogniti; uporabno samo v ekstremnih primerih).</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="400"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="DatumObrestovanjaOd" type="xs:date" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Datum, od katerega je potrebno računati obresti (obresti se računajo VKLJUČNO z datumom, ki je naveden; npr. če piše 1.1.2012, se obresti računajo tudi za dan 1.1.2012, ne pa od dneva 2.1.2012 naprej).</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="TrrPrejemnikaZaObresti" type="iZbs_Spl:TrrIbanType">
+				<xs:annotation>
+					<xs:documentation>Transakcijski račun za nakazilo obresti upniku, v IBAN obliki.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="SklicZaNakaziloZaObresti" type="iZbs_Spl:SklicType">
+				<xs:annotation>
+					<xs:documentation/>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="NestrukturiraniPodatkiType">
+		<xs:annotation>
+			<xs:documentation/>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="NazivDokumenta" type="iZbs_ElS:NestrukturiranPodatekType" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="VsebinaNadNazivomDokumenta" type="iZbs_ElS:NestrukturiranPodatekType" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="VsebinaPodNazivomDokumenta" type="iZbs_ElS:NestrukturiranPodatekType" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="VsebinaIzrek" type="iZbs_ElS:NestrukturiranPodatekType" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="VsebinaObrazlozitev" type="iZbs_ElS:NestrukturiranPodatekType" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="VsebinaPravniPouk" type="iZbs_ElS:NestrukturiranPodatekType" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="VsebinaNadOdgovornimiOsebami" type="iZbs_ElS:NestrukturiranPodatekType" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="VsebinaPodOdgovornimiOsebami" type="iZbs_ElS:NestrukturiranPodatekType" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="OdgovorneOsebe" type="iZbs_ElS:OdgovorneOsebeType" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="NestrukturiranPodatekType">
+		<xs:annotation>
+			<xs:documentation>Tip za zapis nestrukturirane vsebine.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string"/>
+	</xs:simpleType>
+	<xs:complexType name="OdgovorneOsebeType">
+		<xs:sequence>
+			<xs:element name="VodjaPostopkaImeInPriimek">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="100"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="VodjaPostopkaDodatenOpis">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="200"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="OdgovornaOsebaImeInPriimek">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="100"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="OdgovornaOsebaDodatenOpis">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="200"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="SklepIdType">
+		<xs:annotation>
+			<xs:documentation>Opravilna številka sklepa pri izdajatelju (unikaten ključ pri izdajatelju). Vsebuje lahko cifre ali črke, ki so zapisane z velikimi znaki.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="([0-9]|[A-Z]|/|-| ){0,36}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="PooblascenecType">
+		<xs:sequence>
+			<xs:element name="TipPooblascenca">
+				<xs:annotation>
+					<xs:documentation>Možne vrednosti: POOBLASCENEC, ZASTOPNIK, ODVETNIK. Opomba: ODVETNIK je namenjen samo za sklepe sodišč.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="POOBLASCENEC"/>
+						<xs:enumeration value="ZASTOPNIK"/>
+						<xs:enumeration value="ODVETNIK"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="Subjekt" type="iZbs_Spl:SubjektType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="PripadajoceDatotekeType">
+		<xs:annotation>
+			<xs:documentation>Prilozenih je lahko do 10 datotek, v ASCII zapisu, kodiranem po algoritmu base64.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Datoteka" type="iZbs_ElS:PripadajocaDatotekaType" minOccurs="0" maxOccurs="10"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="PripadajocaDatotekaType">
+		<xs:sequence>
+			<xs:element name="IdDatoteke" type="iZbs_Spl:IdPoAvtorjuSplosniType">
+				<xs:annotation>
+					<xs:documentation>Enolicen identifikator datoteke pri avtorju.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="FormatDatoteke" type="iZbs_Spl:FormatDatotekeType">
+				<xs:annotation>
+					<xs:documentation>Na primer: TXT, XML, JPG, TIF, ZIP ...</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="KratekOpisDatoteke" minOccurs="0" maxOccurs="1">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="200"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="VsebinaDatoteke">
+				<xs:annotation>
+					<xs:documentation>Vsebina datoteke; iz originalne oblike pretvorjena v ASCII format (podmnozica 64 razlicnih znakov) po Base64 algoritmu. Dolzina ASCII zapisa lahko znasa maksimalno en milijon znakov. Potrebno je upostevati, da mora biti originalna datoteka ustrezno manjsa, saj so prostorske izgube pri uporabi algoritma Base64 v povprecju okoli 33 %.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:base64Binary">
+						<xs:maxLength value="1000000"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="RangType">
+		<xs:restriction base="xs:short">
+			<xs:minInclusive value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

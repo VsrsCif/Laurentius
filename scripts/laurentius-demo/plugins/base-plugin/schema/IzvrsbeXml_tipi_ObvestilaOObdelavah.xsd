@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- shema XSD za IzvrsbeXml/1.01 -->
+<!-- 
+*************************************************************************************
+INFO_GLAVA_SHEME
+*************************************************************************************
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:iZbs_ObvOObd="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_ObvestilaOObdelavah.xsd" xmlns:iZbs_ElS="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_ElementiSklepa.xsd" xmlns:iZbs_Spl="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_SplosniTipi.xsd" xmlns:iZbs_Sts="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_Statusi.xsd" xmlns:iZbs_AS="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_AkcijeSklepov.xsd" targetNamespace="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_ObvestilaOObdelavah.xsd" elementFormDefault="qualified">
+	<xs:import namespace="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_ElementiSklepa.xsd" schemaLocation="IzvrsbeXml_tipi_ElementiSklepa.xsd"/>
+	<xs:import namespace="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_SplosniTipi.xsd" schemaLocation="IzvrsbeXml_tipi_SplosniTipi.xsd"/>
+	<xs:import namespace="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_Statusi.xsd" schemaLocation="IzvrsbeXml_tipi_Statusi.xsd"/>
+	<xs:import namespace="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_AkcijeSklepov.xsd" schemaLocation="IzvrsbeXml_tipi_AkcijeSklepov.xsd"/>
+	<!-- *****************************************************************************
+	    SKLOP 1: glavni podatkovni tip za obvestilo o obdelavi določenega zahtevka/akcije
+	    ***************************************************************************** -->
+	<xs:complexType name="ObvestiloOObdelaviType">
+		<xs:annotation>
+			<xs:documentation>
+				ObvestiloOObdelaviType je namenjen zapisu in povratnemu poročanju o uspešnosti obdelave/procesiranja določenega zahtevka.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="IdObdelaveZahtevka" type="iZbs_Spl:IdPoAvtorjuSplosniType">
+				<xs:annotation>
+					<xs:documentation>
+						V to polje vnese banka unikatni ID obdelave posameznega zahtevka.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="IdZahtevka" type="iZbs_Spl:IdPoAvtorjuSplosniType"/>
+			<xs:element name="IdSklepa" type="iZbs_ElS:IdSklepaType"/>
+			<xs:element name="TipZahtevka" type="iZbs_AS:TipAkcijeSklepaType"/>
+			<xs:element name="StatusObdelaveZahtevka" type="iZbs_Sts:StatusObdelaveType"/>
+			<xs:element name="DatumInUraObdelave" type="xs:dateTime"/>
+			<xs:element name="Napake" type="iZbs_Spl:NapakeType" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="OpombeObdelave" type="iZbs_Spl:OpombeType" minOccurs="0"/>
+			<xs:element name="InformacijeODolznikih" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+						InformacijeODolznikih vsebuje seznam dolžnikov, za vsakega izmed njih pa podatke o nerazpolozljivih sredstvih (depozitih in varcevanjih).
+					</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="InformacijeODolzniku" type="iZbs_ObvOObd:InformacijeODolzniku" minOccurs="0"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- *****************************************************************************
+	    Pomozni podatkovni tipi, ki se uporabljajo pri InformacijeODolznikih
+	    ***************************************************************************** -->
+	<xs:complexType name="InformacijeODolzniku">
+		<xs:annotation>
+			<xs:documentation>
+				InformacijeODolzniku vsebuje podatke o nerazpolozljivih sredstvih (depozitih in varcevanjih) za enega komitenta.
+				Vpeljano zaradi ZDavP-2I, ki določa, da morajo banke izdajatelja obveščati o sredstvih, s katerimi dolžnik ne more razpolagati (depoziti, varčevanja).
+				Polje InformacijeODolznikih se izpolni samo v primeru, ko je status obdelave OK. Znotraj sklopa InformacijeODolznikih se posredujejo informacije za vsakega dolžnika posebej.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="DavcnaStevilka" type="iZbs_Spl:DavcnaStevilkaType"/>
+			<xs:element name="AliImaAktivneRacune" type="xs:boolean"/>
+			<xs:element name="NerazpolozljivaSredstva">
+				<xs:annotation>
+					<xs:documentation>Vsebuje seznam depozitov in varcevanj.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="NerazpolozljivoSredstvo" type="iZbs_ObvOObd:NerazpolozljivoSredstvo" minOccurs="0"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="NerazpolozljivoSredstvo">
+		<xs:sequence>
+			<xs:element name="IdSredstva" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Opcijski identifikator sredstva (npr. interna ali javna oznaka v banki); banka uporabi za lazjo sledljivost in testiranje pravilnosti.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="35"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="ZnesekZValuto" type="iZbs_Spl:ZnesekZValutoType"/>
+			<xs:element name="DatumZapadlosti" type="xs:date"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

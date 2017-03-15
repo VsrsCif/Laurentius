@@ -1,0 +1,45 @@
+body
+{
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size:0.7em;
+	line-height:130%;
+	margin:1em; 
+}
+table
+{
+	font-weight: normal;
+	border: 4pt;
+	color: black;
+	padding-top: true;
+	text-indent: left;
+	padding: 8px 8px 8px 8px;
+}
+
+td 
+{
+	vertical-align: top;
+}
+
+
+th 
+{
+	background-color: aqua;
+	vertical-align: middle;
+	padding: 8px 8px 8px 8px;
+}
+
+
+tabLevo
+{
+	text-align: left;
+}
+
+tabDesno
+{
+	text-align: right;
+}
+
+tabCenter
+{
+	text-align: center;
+}

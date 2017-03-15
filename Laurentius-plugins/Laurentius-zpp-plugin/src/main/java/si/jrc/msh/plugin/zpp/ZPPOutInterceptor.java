@@ -21,7 +21,6 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.security.InvalidKeyException;
 import java.security.Key;
-import java.security.KeyStore;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
@@ -64,7 +63,6 @@ import si.laurentius.lce.enc.SEDCrypto;
 import si.laurentius.lce.enc.SEDKey;
 import si.laurentius.lce.sign.pdf.SignUtils;
 import si.laurentius.lce.sign.pdf.ValidateSignatureUtils;
-import si.laurentius.cert.SEDCertificate;
 import si.laurentius.commons.enums.MimeValue;
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.enums.SEDOutboxMailStatus;
@@ -78,13 +76,14 @@ import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.interfaces.SEDDaoInterface;
 import si.laurentius.commons.interfaces.SEDLookupsInterface;
 import si.laurentius.commons.pmode.EBMSMessageContext;
-import si.laurentius.commons.utils.HashUtils;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StorageUtils;
 
 import si.laurentius.lce.KeystoreUtils;
 import si.laurentius.msh.inbox.mail.MSHInMail;
 import si.laurentius.commons.interfaces.SEDCertStoreInterface;
+import si.laurentius.lce.DigestUtils;
+import si.laurentius.msh.outbox.payload.OMPartProperty;
 import si.laurentius.plugin.interceptor.MailInterceptorDef;
 import si.laurentius.plugin.interfaces.SoapInterceptorInterface;
 
@@ -125,7 +124,7 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
   @PersistenceContext(unitName = "ebMS_ZPP_PU", name = "ebMS_ZPP_PU")
   public EntityManager memEManager;
   FOPUtils mfpFop = null;
-  HashUtils mpHU = new HashUtils();
+  ;
   SEDCrypto mscCrypto = new SEDCrypto();
   KeystoreUtils mksu = new KeystoreUtils();
 
@@ -170,11 +169,20 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
       File fOut = new File(fIn.getAbsoluteFile() + ZPPConstants.S_ZPP_ENC_SUFFIX);
       mscCrypto.encryptFile(fIn, fOut, skey);
       MSHOutPart ptNew = new MSHOutPart();
-      ptNew.setMimeType(pt.getMimeType());
+     
+      OMPartProperty omp = new OMPartProperty();
+      omp.setName(ZPPConstants.S_PART_PROPERTY_ORIGIN_MIMETYPE);
+      omp.setValue(pt.getMimeType());
+      
+       ptNew.setMimeType(MimeValue.MIME_BIN.getMimeType());
+      
+      ptNew.getOMPartProperties().add(omp);
+      //ptNew.setMimeType(pt.getMimeType());
       ptNew.setFilepath(StorageUtils.getRelativePath(fOut));
       ptNew.setDescription(ZPPConstants.MSG_DOC_PREFIX_DESC + pt.
               getDescription());
-      ptNew.setMd5(mpHU.getMD5Hash(fOut));
+      ptNew.setSha1Value(DigestUtils.getHexSha1Digest(fOut));
+      ptNew.setSize(BigInteger.valueOf(fOut.length()));
       ptNew.setName(pt.getName());
       ptNew.setFilename(fOut.getName());
       ptNew.setIsEncrypted(Boolean.TRUE);
@@ -256,7 +264,7 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
 
     MSHInMail mInMail = SoapUtils.getMSHInMail(msg);
 
-    LOG.formatedlog("**************** in mail %s, service %s ", mInMail,
+    LOG.formatedlog("got mail %s, service %s ", mInMail,
             mInMail != null
                     ? mInMail.getService() : "sss");
     // if service ZPP delivery, action delivery

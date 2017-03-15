@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:schema="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_OperacijeWS.xsd"
+                  xmlns:tns="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_OperacijeWS.xsd"
+                  name="IzvrsbeWS"
+                  targetNamespace="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_OperacijeWS.xsd">
+   <wsdl:types>
+      <xsd:schema targetNamespace="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_OperacijeWS.xsd">
+         <xsd:include schemaLocation="IzvrsbeXml_OperacijeWS.xsd"/>
+      </xsd:schema>
+   </wsdl:types>
+   <wsdl:message name="PrevzemiSeznamNeprevzetihDokumentovRequestMessage">
+      <wsdl:part name="body" element="schema:PrevzemiSeznamNeprevzetihDokumentovRequest"/>
+   </wsdl:message>
+   <wsdl:message name="PrevzemiSeznamNeprevzetihDokumentovResponseMessage">
+      <wsdl:part name="body" element="schema:PrevzemiSeznamNeprevzetihDokumentovResponse"/>
+   </wsdl:message>
+   <wsdl:message name="PrevzemiDokumentRequestMessage">
+      <wsdl:part name="body" element="schema:PrevzemiDokumentRequest"/>
+   </wsdl:message>
+   <wsdl:message name="PrevzemiDokumentResponseMessage">
+      <wsdl:part name="body" element="schema:PrevzemiDokumentResponse"/>
+   </wsdl:message>
+   <wsdl:message name="NaloziDokumentRequestMessage">
+      <wsdl:part name="body" element="schema:NaloziDokumentRequest"/>
+   </wsdl:message>
+   <wsdl:message name="NaloziDokumentResponseMessage">
+      <wsdl:part name="body" element="schema:NaloziDokumentResponse"/>
+   </wsdl:message>
+   <wsdl:portType name="IzvrsbeWSPortType">
+      <wsdl:operation name="PrevzemiSeznamNeprevzetihDokumentov">
+         <wsdl:input name="PrevzemiSeznamNeprevzetihDokumentovInput"
+                     message="tns:PrevzemiSeznamNeprevzetihDokumentovRequestMessage"/>
+         <wsdl:output name="PrevzemiSeznamNeprevzetihDokumentovOutput"
+                      message="tns:PrevzemiSeznamNeprevzetihDokumentovResponseMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="PrevzemiDokument">
+         <wsdl:input name="PrevzemiDokumentInput" message="tns:PrevzemiDokumentRequestMessage"/>
+         <wsdl:output name="PrevzemiDokumentOutput" message="tns:PrevzemiDokumentResponseMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="NaloziDokument">
+         <wsdl:input name="NaloziDokumentInput" message="tns:NaloziDokumentRequestMessage"/>
+         <wsdl:output name="NaloziDokumentOutput" message="tns:NaloziDokumentResponseMessage"/>
+      </wsdl:operation>
+   </wsdl:portType>
+   <wsdl:binding name="IzvrsbeWSBinding" type="tns:IzvrsbeWSPortType">
+      <wsdlsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+      <wsdl:operation name="PrevzemiSeznamNeprevzetihDokumentov">
+         <wsdlsoap:operation soapAction="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_OperacijeWS.xsd/PrevzemiSeznamNeprevzetihDokumentov"/>
+         <wsdl:input name="PrevzemiSeznamNeprevzetihDokumentovInput">
+            <wsdlsoap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output name="PrevzemiSeznamNeprevzetihDokumentovOutput">
+            <wsdlsoap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="PrevzemiDokument">
+         <wsdlsoap:operation soapAction="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_OperacijeWS.xsd/PrevzemiDokument"/>
+         <wsdl:input name="PrevzemiDokumentInput">
+            <wsdlsoap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output name="PrevzemiDokumentOutput">
+            <wsdlsoap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="NaloziDokument">
+         <wsdlsoap:operation soapAction="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_OperacijeWS.xsd/NaloziDokument"/>
+         <wsdl:input name="NaloziDokumentInput">
+            <wsdlsoap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output name="NaloziDokumentOutput">
+            <wsdlsoap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+   </wsdl:binding>
+   <wsdl:service name="IzvrsbeWSService">
+      <wsdl:port name="IzvrsbeWSPort" binding="tns:IzvrsbeWSBinding">
+         <wsdlsoap:address location="http://localhost:7001/IzvrsbeWS/IzvrsbeWSService"/>
+      </wsdl:port>
+   </wsdl:service>
+</wsdl:definitions>

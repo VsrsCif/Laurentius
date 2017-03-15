@@ -15,6 +15,7 @@
 package si.laurentius.msh.web.admin;
 
 import java.math.BigInteger;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -31,7 +32,6 @@ import si.laurentius.cron.SEDTask;
 import si.laurentius.cron.SEDTaskProperty;
 
 import si.laurentius.commons.SEDJNDI;
-import si.laurentius.commons.interfaces.SEDCertStoreInterface;
 import si.laurentius.commons.interfaces.SEDLookupsInterface;
 import si.laurentius.commons.interfaces.SEDPluginManagerInterface;
 import si.laurentius.commons.interfaces.SEDSchedulerInterface;
@@ -180,15 +180,7 @@ public class AdminSEDCronJobView extends AbstractAdminJSFView<SEDCronJob> {
 
       mdbLookups.addSEDCronJob(ecj);
       if (ecj.getActive() != null && ecj.getActive()) {
-        LOG.log("Register timer to TimerService");
-        ScheduleExpression se
-                = new ScheduleExpression().second(ecj.getSecond()).
-                        minute(ecj.getMinute())
-                        .hour(ecj.getHour()).dayOfMonth(ecj.
-                        getDayOfMonth()).month(ecj.getMonth())
-                        .dayOfWeek(ecj.getDayOfWeek());
-        TimerConfig checkTest = new TimerConfig(ecj.getId(), false);
-        mshScheduler.getServices().createCalendarTimer(se, checkTest);
+        mshScheduler.activateCronJob(ecj);
 
       }
       bsuc = true;
@@ -208,12 +200,8 @@ public class AdminSEDCronJobView extends AbstractAdminJSFView<SEDCronJob> {
       setPropertyDataToTaskInstance(ecj.getSEDTask());
       mdbLookups.updateSEDCronJob(ecj);
 
-      for (Timer t : mshScheduler.getServices().getAllTimers()) {
-        if (t.getInfo().equals(ecj.getId())) {
-          t.cancel();
-          break;
-        }
-      }
+      mshScheduler.stopCronJob(ecj);
+
       if (ecj.getActive() != null && ecj.getActive()) {
         LOG.log("Register timer to TimerService");
         ScheduleExpression se
@@ -343,5 +331,9 @@ public class AdminSEDCronJobView extends AbstractAdminJSFView<SEDCronJob> {
       stp.setValue(tmi.getValue());
       inst.getSEDTaskProperties().add(stp);
     }
+  }
+
+  public Collection<Timer> getRegisredTimers() {
+    return mshScheduler.getServices().getAllTimers();
   }
 }

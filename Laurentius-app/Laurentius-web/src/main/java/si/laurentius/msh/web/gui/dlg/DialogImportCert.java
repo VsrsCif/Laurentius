@@ -219,10 +219,7 @@ public class DialogImportCert {
         } catch (CertificateEncodingException | SEDSecurityException ex) {
           String strmsg = "Error reading cert: " + ex.getMessage();
           addError(strmsg);
-        } catch (NoSuchAlgorithmException ex) {
-          String strmsg = "Error reading cert: " + ex.getMessage();
-          addError(strmsg);;
-        }
+        } 
       } catch (IOException ex) {
         String strmsg = "Error reading file: " + getFilename();
         addError(strmsg);

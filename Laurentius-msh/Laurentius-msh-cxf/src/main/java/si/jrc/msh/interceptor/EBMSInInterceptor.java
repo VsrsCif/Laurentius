@@ -18,6 +18,7 @@ import com.google.common.base.Objects;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -61,7 +62,6 @@ import si.jrc.msh.utils.EBMSValidation;
 import si.laurentius.commons.cxf.EBMSConstants;
 import si.jrc.msh.utils.EBMSParser;
 import si.laurentius.commons.enums.MimeValue;
-import si.laurentius.commons.enums.SEDInboxMailStatus;
 import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.cxf.SoapUtils;
 import si.laurentius.commons.exception.HashException;
@@ -69,10 +69,10 @@ import si.laurentius.commons.exception.PModeException;
 import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.pmode.EBMSMessageContext;
 import si.laurentius.commons.utils.GZIPUtil;
-import si.laurentius.commons.utils.HashUtils;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StorageUtils;
 import si.laurentius.commons.utils.Utils;
+import si.laurentius.lce.DigestUtils;
 import si.laurentius.msh.inbox.payload.IMPartProperty;
 import si.laurentius.msh.pmode.ReceptionAwareness;
 
@@ -92,7 +92,6 @@ public class EBMSInInterceptor extends AbstractEBMSInterceptor {
 
   final StorageUtils msuStorageUtils = new StorageUtils();
   final EBMSValidation mebmsValidation = new EBMSValidation();
-  final HashUtils mpHU = new HashUtils();
   final GZIPUtil mGZIPUtils = new GZIPUtil();
   final EBMSParser mebmsParser = new EBMSParser();
   final CryptoCoverageChecker checker = new CryptoCoverageChecker();
@@ -575,10 +574,10 @@ public class EBMSInInterceptor extends AbstractEBMSInterceptor {
     }
     // set MD5 and relative path;
     if (fout != null) {
-      String strMD5 = mpHU.getMD5Hash(fout);
       String relPath = StorageUtils.getRelativePath(fout);
       p.setFilepath(relPath);
-      p.setMd5(strMD5);
+      p.setSha1Value(DigestUtils.getHexSha1Digest(fout));
+      p.setSize(BigInteger.valueOf(fout.length()));
 
       if (Utils.isEmptyString(p.getFilename())) {
         p.setFilename(fout.getName());

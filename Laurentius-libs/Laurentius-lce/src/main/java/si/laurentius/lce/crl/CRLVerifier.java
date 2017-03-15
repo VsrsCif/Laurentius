@@ -155,11 +155,9 @@ public class CRLVerifier {
     scrl.setIssuerDN(cert.getIssuerX500Principal().getName());
     byte[] issuerEncoded = cert.getIssuerX500Principal().getEncoded();
     if (issuerEncoded != null) {
-      try {
+     
         scrl.setIssuerDigestValue(DigestUtils.getHexSha1Digest(issuerEncoded));
-      } catch (NoSuchAlgorithmException ex) {
-        LOG.logError(ex.getMessage(), ex);
-      }
+     
     }
 
     byte[] dtExt = cert.getExtensionValue(S_CRL_DEST_POINTS);

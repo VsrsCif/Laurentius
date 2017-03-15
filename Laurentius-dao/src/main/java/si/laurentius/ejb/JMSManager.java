@@ -240,7 +240,7 @@ public class JMSManager implements JMSManagerInterface {
 
     connection.start();
     String queName = ResourceNames.JMS_QUEUE + jndiQue.
-            substring(jndiQue.indexOf("/") + 1);
+            substring(jndiQue.indexOf('/') + 1);
 
     Message m = session.createMessage();
 
@@ -360,7 +360,7 @@ public class JMSManager implements JMSManagerInterface {
         Message m = session.createMessage();
         JMSManagementHelper.putOperationInvocation(m,
                 ResourceNames.JMS_QUEUE + jndiQue.
-                        substring(jndiQue.indexOf("/") + 1), operation);
+                        substring(jndiQue.indexOf('/') + 1), operation);
         Message response = requestor.request(m);
         suc = JMSManagementHelper.hasOperationSucceeded(response);
         if (!suc) {

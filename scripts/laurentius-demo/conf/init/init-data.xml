@@ -1,61 +1,74 @@
 
-<SedLookups xmlns:ns2="http://laurentius.si/cron/" xmlns:ns3="http://laurentius.si/ebox" xmlns:ns4="http://laurentius.si/xslt" xmlns:ns5="http://laurentius.si/plugin" xmlns:ns6="http://laurentius.si/property" xmlns:ns7="http://laurentius.si/user" xmlns:ns8="http://laurentius.si/cert" xmlns:ns9="http://laurentius.si/cert/crl" exportDate="2016-11-25T10:50:42.446+01:00">
-    <SEDCronJobs>
-        
+<SedLookups xmlns:ns2="http://laurentius.si/cron" xmlns:ns3="http://laurentius.si/interceptor" xmlns:ns4="http://laurentius.si/process" xmlns:ns5="http://laurentius.si/ebox" xmlns:ns6="http://laurentius.si/property" xmlns:ns7="http://laurentius.si/user" xmlns:ns8="http://laurentius.si/cert" xmlns:ns9="http://laurentius.si/cert/crl" exportDate="2016-11-25T10:50:42.446+01:00">
+ <SEDCronJobs>
+        <ns2:SEDCronJob  name="ZPPSign-B-Department" active="true" second="0" minute="*/5" hour="*" dayOfMonth="*" month="*" dayOfWeek="*">
+            <ns2:SEDTask plugin="LegalZPP" type="zpp-plugin" pluginVersion="1.0.0">
+                <ns2:SEDTaskProperty id="22" key="zpp.sedbox">b.department</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="23" key="zpp.sign.key.alias">test-zpp-sign</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="24" key="zpp.max.mail.count">100</ns2:SEDTaskProperty>
+            </ns2:SEDTask>
+        </ns2:SEDCronJob>
+        <ns2:SEDCronJob  name="ZPPSign-A-Department" active="true" second="0" minute="*/5" hour="*" dayOfMonth="*" month="*" dayOfWeek="*">
+            <ns2:SEDTask plugin="LegalZPP" type="zpp-plugin" pluginVersion="1.0.0">
+                <ns2:SEDTaskProperty id="22" key="zpp.sedbox">a.department</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="23" key="zpp.sign.key.alias">test-zpp-sign</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="24" key="zpp.max.mail.count">100</ns2:SEDTaskProperty>
+            </ns2:SEDTask>
+        </ns2:SEDCronJob>
     </SEDCronJobs>
-   
+    <SEDInterceptors>
+        <ns3:SEDInterceptor id="25" name="ZPP_InMessages" active="true" interceptEvent="InMessage" interceptRole="All">
+            <ns3:SEDInterceptorRule id="26" property="Service" predicate="=" value="LegalDelivery_ZPP"/>
+            <ns3:SEDInterceptorInstance plugin="LegalZPP" type="ZPPInInterceptor" pluginVersion="1.0.0"/>
+        </ns3:SEDInterceptor>
+        <ns3:SEDInterceptor id="27" name="ZPP_OutMessages" active="true" interceptEvent="OutMessage" interceptRole="All">
+            <ns3:SEDInterceptorRule id="28" property="Service" predicate="=" value="LegalDelivery_ZPP"/>
+            <ns3:SEDInterceptorInstance plugin="LegalZPP" type="ZPPOutInterceptor" pluginVersion="1.0.0"/>
+        </ns3:SEDInterceptor>
+    </SEDInterceptors>
+    <SEDProcessors>
+
+        <ns4:SEDProcessor id="11" name="proc_001" active="true" deliveredOnSuccess="true">
+            <ns4:SEDProcessorRule id="12" property="Service" predicate="=" value="DeliveryWithReceipt"/>
+            <ns4:SEDProcessorInstance id="13" type="xslt" plugin="BasicTaskPlugin" pluginVersion="1.0.0">
+                <ns4:SEDProcessorProperty id="14" key="imp.xslt.instance">vsrs2zbs_001</ns4:SEDProcessorProperty>
+            </ns4:SEDProcessorInstance>
+            <ns4:SEDProcessorInstance id="15" type="export" plugin="BasicTaskPlugin" pluginVersion="1.0.0">
+                <ns4:SEDProcessorProperty id="16" key="imp.export.metadata">true</ns4:SEDProcessorProperty>
+                <ns4:SEDProcessorProperty id="17" key="imp.export.overwrite">true</ns4:SEDProcessorProperty>
+                <ns4:SEDProcessorProperty id="18" key="imp.export.metadata.filename">metadata_${Id}.xml</ns4:SEDProcessorProperty>
+                <ns4:SEDProcessorProperty id="19" key="imp.export.filemask">${Id}_{PART-Id}_${PART-Filename}</ns4:SEDProcessorProperty>
+                <ns4:SEDProcessorProperty id="20" key="imp.export.folder">${laurentius.home}/test-export/${SenderEBox}_${Service}_${Id}</ns4:SEDProcessorProperty>
+            </ns4:SEDProcessorInstance>
+        </ns4:SEDProcessor>
+    </SEDProcessors>
     <SEDBoxes>
-        <ns3:SEDBox localBoxName="a.department" activeFromDate="2016-04-20+02:00">
-            <ns3:Export active="true" exportMetaData="true" folder="${laurentius.home}/export/a" fileMask="${Service}_${Id}" overwrite="false"/>
-            <ns3:Execute active="false" command="" parameters=""/>
-            <ns3:XSLT>
-                <ns4:Namespace id="130" prefix="izv" namespace="http://sodisce.si/izvrsba"/>
-                <ns4:XPathRule id="131" service="DeliveryWithReceipt" action="Delivery" transformation="${laurentius.home}/xslt/c2b_eizvrsba-demo_v01.xsl" xPath="//izv:OpisPosiljke/@schemaVersion" value="1.1"/>
-            </ns3:XSLT>
-        </ns3:SEDBox>
-        <ns3:SEDBox localBoxName="b.department" activeFromDate="2016-04-20+02:00">
-            <ns3:Export active="true" exportMetaData="true" folder="${laurentius.home}/export/b" fileMask="${Id}_${SenderEBox}_${Service}" overwrite="false"/>
-            <ns3:Execute active="false" command="" parameters=""/>
-            <ns3:XSLT>
-                <ns4:Namespace id="136" prefix="izv" namespace="http://sodisce.si/izvrsba"/>
-                <ns4:XPathRule id="137" service="DeliveryWithReceipt" action="Delivery" transformation="${laurentius.home}/xslt/c2b_eizvrsba-demo_v01.xsl" xPath="//izv:OpisPosiljke/@schemaVersion" value="1.1"/>
-            </ns3:XSLT>
-        </ns3:SEDBox>
+        <ns5:SEDBox localBoxName="a.department" activeFromDate="2016-04-20+02:00">
+            
+        </ns5:SEDBox>
+        <ns5:SEDBox localBoxName="b.department" activeFromDate="2016-04-20+02:00">
+           
+        </ns5:SEDBox>
     </SEDBoxes>
     
     <SEDProperties>
         <ns6:SEDProperty key="si.laurentius.pmode" value="pmode-conf.xml" group="SYSTEM"/>
-        <ns6:SEDProperty key="si.laurentius.domain" value="mb-laurentius.si" group="SYSTEM"/>
     </SEDProperties>
     <SEDUsers>
         <ns7:SEDUser userId="user" activeFromDate="2016-04-20+02:00">
-            <ns3:SEDBox localBoxName="a.department" activeFromDate="2016-04-20+02:00">
-                <ns3:Export active="false" exportMetaData="true" folder="${laurentius.home}/export/a" fileMask="${Service}_${Id}"/>
-                <ns3:Execute active="false" command="" parameters=""/>
-                <ns3:XSLT/>
-            </ns3:SEDBox>
-            <ns3:SEDBox localBoxName="b.department" activeFromDate="2016-04-20+02:00">
-                <ns3:Export active="false" exportMetaData="true" folder="${laurentius.home}/export/b" fileMask="${Id}_${SenderEBox}_${Service}"/>
-                <ns3:Execute active="false" command="" parameters=""/>
-                <ns3:XSLT/>
-            </ns3:SEDBox>
+            <ns5:SEDBox localBoxName="a.department" activeFromDate="2016-04-20+02:00" />
+            <ns5:SEDBox localBoxName="b.department" activeFromDate="2016-04-20+02:00" />               
         </ns7:SEDUser>
         <ns7:SEDUser userId="admin" adminRole="true" activeFromDate="2016-04-20+02:00">
-            <ns3:SEDBox localBoxName="a.department" activeFromDate="2016-04-20+02:00">
-                <ns3:Export active="false" exportMetaData="true" folder="${laurentius.home}/export/a" fileMask="${Service}_${Id}"/>
-                <ns3:Execute active="false" command="" parameters=""/>
-                <ns3:XSLT/>
-            </ns3:SEDBox>
-            <ns3:SEDBox localBoxName="b.department" activeFromDate="2016-04-20+02:00">
-                <ns3:Export active="false" exportMetaData="true" folder="${laurentius.home}/export/b" fileMask="${Id}_${SenderEBox}_${Service}"/>
-                <ns3:Execute active="false" command="" parameters=""/>
-                <ns3:XSLT/>
-            </ns3:SEDBox>
+            <ns5:SEDBox localBoxName="a.department" activeFromDate="2016-04-20+02:00" />
+            <ns5:SEDBox localBoxName="b.department" activeFromDate="2016-04-20+02:00" />            
         </ns7:SEDUser>
     </SEDUsers>
-    <SEDCertStores>
-
-
-    </SEDCertStores>
-    <SEDCertCRLs/>
+  <SEDCertPassword>
+        <ns8:SEDCertPassword alias="keystore" password="passwd1234" keyPassword="false"/>
+        <ns8:SEDCertPassword alias="rootCA" password="passwd1234" keyPassword="false"/>
+        <ns8:SEDCertPassword alias="test-laurentius" password="key1234" keyPassword="false"/>
+        <ns8:SEDCertPassword alias="test-zpp-sign" password="key1234" keyPassword="false"/>
+ 		<ns8:SEDCertPassword alias="test-tls" password="key1234" keyPassword="false"/>
+    </SEDCertPassword>
 </SedLookups>

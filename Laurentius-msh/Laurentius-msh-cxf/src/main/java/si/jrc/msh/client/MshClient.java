@@ -19,10 +19,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.security.cert.X509Certificate;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.TrustManager;
 import javax.xml.namespace.QName;
@@ -72,7 +68,6 @@ import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StorageUtils;
 import si.laurentius.commons.utils.Utils;
 import si.laurentius.lce.KeystoreUtils;
-import si.laurentius.lce.tls.X509TrustManagerForAlias;
 
 /**
  * Sets up MSH client and submits message.

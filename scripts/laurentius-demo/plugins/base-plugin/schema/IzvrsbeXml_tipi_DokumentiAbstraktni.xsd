@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- shema XSD za IzvrsbeXml/1.01 --> 
+<!-- 
+*************************************************************************************
+INFO_GLAVA_SHEME
+*************************************************************************************
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:iZbs_DocAbs="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_DokumentiAbstraktni.xsd" targetNamespace="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_DokumentiAbstraktni.xsd" elementFormDefault="qualified">
+
+	<!-- *****************************************************************************
+	    SKLOP: GLAVNI PODATKOVNI TIPI
+	    ***************************************************************************** -->
+	<xs:complexType name="DokumentZaIzdajatelja" abstract="true">
+		<xs:annotation>
+			<xs:documentation>DokumentZaIzdajatelja je abstraktni podatkovni tip, ki vsebuje podtipe dokumentov, ki so namenjeni pošiljanju do izdajateljev.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence/>
+	</xs:complexType>
+
+	<xs:complexType name="DokumentZaIzvrsevalca" abstract="true">
+		<xs:annotation>
+			<xs:documentation>DokumentZaIzvrsevalca je abstraktni podatkovni tip, ki vsebuje podtipe dokumentov, ki so namenjeni pošiljanju do izvrševalcev (npr. bank).</xs:documentation>
+		</xs:annotation>
+		<xs:sequence/>
+	</xs:complexType>
+
+</xs:schema>

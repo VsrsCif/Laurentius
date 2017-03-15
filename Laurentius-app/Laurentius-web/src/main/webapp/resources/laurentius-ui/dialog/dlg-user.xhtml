@@ -22,42 +22,33 @@
                             onConfirmAction="#{adminSEDUserView.addOrUpdateEditable()}" >
             <p:layout>
                 <p:layoutUnit position="center">
+                    <p:panelGrid  id= "intrcRule" columns="2" columnClasses="grid-label, value"
+                                  style="width:100%;">
 
-                    <table style=" width: 100%; padding: 1px; margin: 0;" >
-                        <tr>
-                            <td class="grid-label"><h:outputText value="#{msg['Username']}:" /></td>
-                            <td colspan="3"><h:outputText value="#{adminSEDUserView.editable.userId}" 
-                                                          rendered="#{empty adminSEDUserView.new}" />
-                                <h:inputText value="#{adminSEDUserView.editable.userId}"
-                                             rendered="#{not empty adminSEDUserView.new}" style="width: 430px"/></td>
-                        </tr>
-                        <tr>
-                            <td class="grid-label"><h:outputText value="#{msg['Name']}:" /></td>
-                            <td colspan="3"><h:inputText value="#{adminSEDUserView.editable.name}" 
-                                                         style="width: 430px" /></td>
-                        </tr>
-                        <tr>
-                            <td class="grid-label"><h:outputText value="#{msg['Description']}:" /></td>
-                            <td colspan="3"><h:inputTextarea value="#{adminSEDUserView.editable.desc}" 
-                                                             cols="4" style="width: 420px"/></td>
-                        </tr>
-                        <tr>
-                            <td class="grid-label"><h:outputText value="#{msg['EMail']}:" /></td>
-                            <td colspan="3"><h:inputText value="#{adminSEDUserView.editable.email}" 
-                                                         style="width: 430px" /></td>
-                        </tr>
-                        <tr>
-                            <td class="grid-label"><h:outputText value="#{msg['ActiveFromDate']}:"  /></td>
-                            <td><p:calendar styleClass="searchDate" value="#{adminSEDUserView.editable.activeFromDate}"
-                                            pattern="dd.MM.yyyy" mask="true" navigator="true" showOn="button" 
-                                            /></td>
+                        <h:outputText value="#{msg['Username']}:" />
+                        <h:inputText value="#{adminSEDUserView.editable.userId}" 
+                                     disabled="#{empty adminSEDUserView.new}"  style="width:100%;" />
 
-                            <td class="grid-label"><h:outputText value="#{msg['ActiveToDate']}:"/></td>
-                            <td><p:calendar styleClass="searchDate" value="#{adminSEDUserView.editable.activeToDate}" 
-                                            pattern="dd.MM.yyyy" mask="true" navigator="true" showOn="button" 
-                                            /></td>
-                        </tr>
-                    </table>
+
+                        <h:outputText value="#{msg['Name']}:" />
+                        <h:inputText value="#{adminSEDUserView.editable.name}" style="width:100%;" />
+
+                        <h:outputText value="#{msg['Description']}:" />
+                        <h:inputTextarea value="#{adminSEDUserView.editable.desc}" style="width:100%;" />
+
+                        <h:outputText value="#{msg['EMail']}:" />
+                        <h:inputText value="#{adminSEDUserView.editable.email}"  style="width:100%;"/>
+
+                        <h:outputText value="#{msg['ActiveFromDate']}:"  />
+                        <p:calendar styleClass="searchDate" value="#{adminSEDUserView.editable.activeFromDate}"
+                                    pattern="dd.MM.yyyy" mask="true" navigator="true" showOn="button" 
+                                    style="width:100%;"/>
+
+                        <h:outputText value="#{msg['ActiveToDate']}:"/>
+                        <p:calendar styleClass="searchDate" value="#{adminSEDUserView.editable.activeToDate}" 
+                                    pattern="dd.MM.yyyy" mask="true" navigator="true" showOn="button" 
+                                    style="width:100%;" />
+                    </p:panelGrid>
                 </p:layoutUnit>
                 <p:layoutUnit position="east" size="350" maxSize="350" minSize="350">
                     <h:outputText class="label" value="#{msg['SED-Boxes']}:" style="width:100% !important;" />

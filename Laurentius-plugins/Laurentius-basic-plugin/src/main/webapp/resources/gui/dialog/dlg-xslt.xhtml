@@ -23,10 +23,10 @@
                     <p:layoutUnit position="center" rendered="#{not empty adminIMPXsltView.editable}"  >
 
                         <p:panelGrid   >
-               
+
                             <p:row>
                                 <p:column class="grid-label">#{msg['Instance']}:</p:column>
-                                
+
                                 <p:column class="value"><p:inputText  value="#{adminIMPXsltView.editable.instance}" 
                                                                       disabled="#{!adminIMPXsltView.isEditableNew()}"
                                                                       style="width:100%" 
@@ -66,7 +66,9 @@
                                                              actionListener="#{adminIMPXsltView.removeSelectedXSLTRule()}"
                                                              update=":dlgXslt:xsltDialogForm:TblTransformation" />
                                         </f:facet>
-
+                                        <p:ajax event="rowDblselect" update=":dlgXPath:xPathDialog:xPathDialogForm" 
+                                                listener="#{adminIMPXsltView.editXSLTRule()}"
+                                                 />
 
                                         <p:column headerText="#{msg['Transformation']}"  width="180" >
                                             <h:outputText value="#{sp.transformation}" />
@@ -77,11 +79,11 @@
                                         <p:column headerText="#{msg['Value']}"  width="60">
                                             <h:outputText value="#{sp.XPathValue}" />
                                         </p:column>
-                                         <p:column headerText="#{msg['ResultName']}" width="120">
-                                             <h:outputText value="#{sp.resultFilename}" />
+                                        <p:column headerText="#{msg['ResultName']}" width="120">
+                                            <h:outputText value="#{sp.resultFilename}" />
                                         </p:column>
-                                         <p:column headerText="#{msg['ValidateBySchema']}" width="120">
-                                             <h:outputText value="#{sp.validateSchema}" />
+                                        <p:column headerText="#{msg['ValidateBySchema']}" width="120">
+                                            <h:outputText value="#{sp.validateSchema}" />
                                         </p:column>
                                     </p:dataTable>
                                 </p:column>

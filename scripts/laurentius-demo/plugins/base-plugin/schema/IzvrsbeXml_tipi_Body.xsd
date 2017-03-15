@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- shema XSD za IzvrsbeXml/1.01 --> 
+<!-- 
+*************************************************************************************
+INFO_GLAVA_SHEME
+*************************************************************************************
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:iZbs_Body="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_Body.xsd" xmlns:iZbs_DocAS="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_DokumentAkcijSklepov.xsd" xmlns:iZbs_DocObvOSkl="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_DokumentObvestilOSklepih.xsd" xmlns:iZbs_DocPov="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_DokumentPovratnica.xsd" xmlns:iZbs_DocObvOObd="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_DokumentObvestilOObdelavah.xsd" xmlns:iZbs_DocNepDoc="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_DokumentNeprevzetihDokumentov.xsd" xmlns:iZbs_Spl="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_SplosniTipi.xsd" targetNamespace="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_Body.xsd" elementFormDefault="qualified">
+	<xs:import namespace="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_DokumentAkcijSklepov.xsd" schemaLocation="IzvrsbeXml_tipi_DokumentAkcijSklepov.xsd"/>
+	<xs:import namespace="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_DokumentObvestilOSklepih.xsd" schemaLocation="IzvrsbeXml_tipi_DokumentObvestilOSklepih.xsd"/>
+	<xs:import namespace="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_DokumentPovratnica.xsd" schemaLocation="IzvrsbeXml_tipi_DokumentPovratnica.xsd"/>
+	<xs:import namespace="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_DokumentObvestilOObdelavah.xsd" schemaLocation="IzvrsbeXml_tipi_DokumentObvestilOObdelavah.xsd"/>
+	<xs:import namespace="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_DokumentNeprevzetihDokumentov.xsd" schemaLocation="IzvrsbeXml_tipi_DokumentNeprevzetihDokumentov.xsd"/>
+	<xs:import namespace="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_SplosniTipi.xsd" schemaLocation="IzvrsbeXml_tipi_SplosniTipi.xsd"/>
+	<!-- *****************************************************************************
+	    SKLOP: GLAVNI PODATKOVNI TIPI
+	    ***************************************************************************** -->
+	<xs:complexType name="BodyZaMetodaNaloziDokumentType">
+		<xs:annotation>
+			<xs:documentation/>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:choice>
+				<xs:element name="DokumentObvestilOSklepih" type="iZbs_DocObvOSkl:DokumentObvestilOSklepihType"/>
+				<xs:element name="Povratnica" type="iZbs_DocPov:PovratnicaType"/>
+				<xs:element name="DokumentObvestilOObdelavah" type="iZbs_DocObvOObd:DokumentObvestilOObdelavahType"/>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ***************************************************************************** -->
+	<xs:complexType name="BodyZaMetodaPrevzemiDokumentType">
+		<xs:annotation>
+			<xs:documentation>Elementi znotraj 'choice' izbire so opcijski, ker se ne poda noben element, če pride do napaka na zahtevi (request).</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:choice>
+				<xs:element name="DokumentAkcijSklepov" type="iZbs_DocAS:DokumentAkcijSklepovType" minOccurs="0"/>
+				<xs:element name="DokumentPrazenObNapaki" type="iZbs_Body:DokumentPrazenObNapakiType" minOccurs="0"/>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ***************************************************************************** -->
+	<xs:complexType name="BodyPrazenType">
+		<xs:annotation>
+			<xs:documentation>Prazen 'Body' element, brez vsebine in brez podrejenih XML-oznak. Uporablja se samo v primeru napak, ko izdajatelj sporoča o neki napaki.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence/>
+	</xs:complexType>
+	<!-- ***************************************************************************** -->
+	<xs:complexType name="DokumentPrazenObNapakiType">
+		<xs:annotation>
+			<xs:documentation>Prazen dokument. Uporablja se samo v primeru napak, ko izdajatelj sporoča o neki napaki.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence/>
+	</xs:complexType>
+	<!-- ***************************************************************************** -->
+	<xs:complexType name="BodyZaPovratnicaType">
+		<xs:annotation>
+			<xs:documentation>Body za povratnico.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Povratnica" type="iZbs_DocPov:PovratnicaType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ***************************************************************************** -->
+	<xs:complexType name="BodyZaDokumentNeprevzetihDokumentovType">
+		<xs:annotation>
+			<xs:documentation>Body za 'DokumentNeprevzetihDokumentov'.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="DokumentNeprevzetihDokumentov" type="iZbs_DocNepDoc:DokumentNeprevzetihDokumentovType" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ***************************************************************************** -->
+	<xs:complexType name="BodyZaIdDokumentaType">
+		<xs:annotation>
+			<xs:documentation>Obda element 'IdDokumenta' z 'Body' elementom.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="IdDokumenta" type="iZbs_Spl:IdPoAvtorjuSplosniType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ***************************************************************************** -->
+	<xs:complexType name="BodyZaBase64Type">
+		<xs:annotation>
+			<xs:documentation>Body za posiljanje sporocil, kodiranih po Base64 algoritmu.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:choice>
+				<xs:element name="SporociloZipInBase64" type="xs:base64Binary">
+					<xs:annotation>
+						<xs:documentation>XML datoteka/podatki se najprej kompresirajo z ZIP-algoritmom, nato pa se datoteka ZIP pretvori v Base64 obliko ter zapiše znotraj tega polja. To je priporočljiv način kodiranja vsebinskih XML-dokumentov.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="SporociloBase64" type="xs:base64Binary">
+					<xs:annotation>
+						<xs:documentation>XML datoteka/podatki pretvorjeni v Base64 obliko, brez uporabe kompresije ZIP.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

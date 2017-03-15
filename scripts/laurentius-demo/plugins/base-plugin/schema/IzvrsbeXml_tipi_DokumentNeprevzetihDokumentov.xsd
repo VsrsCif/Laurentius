@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- shema XSD za IzvrsbeXml/1.01 --> 
+<!-- 
+*************************************************************************************
+INFO_GLAVA_SHEME
+*************************************************************************************
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:iZbs_ElDoc="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_ElementiDokumenta.xsd" xmlns:iZbs_Spl="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_SplosniTipi.xsd" xmlns:iZbs_DocNepDoc="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_DokumentNeprevzetihDokumentov.xsd" targetNamespace="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_DokumentNeprevzetihDokumentov.xsd" elementFormDefault="qualified">
+	<xs:import namespace="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_ElementiDokumenta.xsd" schemaLocation="IzvrsbeXml_tipi_ElementiDokumenta.xsd"/>
+	<xs:import namespace="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_SplosniTipi.xsd" schemaLocation="IzvrsbeXml_tipi_SplosniTipi.xsd"/>
+	<!-- *****************************************************************************
+	    SKLOP: GLAVNI PODATKOVNI TIPI
+	    ***************************************************************************** -->
+	<xs:complexType name="DokumentNeprevzetihDokumentovType">
+		<xs:annotation>
+			<xs:documentation/>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="OsnovniPodatkiDokumenta" type="iZbs_ElDoc:OsnovniPodatkiDokumentaType"/>
+			<xs:element name="PaketNeprevzetihDokumentov" type="iZbs_DocNepDoc:PaketNeprevzetihDokumentovType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- *****************************************************************************
+	    SKLOP: POMOŽNI PODATKOVNI TIPI, ki so del glavnih podatkovnih tipov
+	    ***************************************************************************** -->
+	<xs:complexType name="PaketNeprevzetihDokumentovType">
+		<xs:annotation>
+			<xs:documentation/>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="SplosniPodatkiOPaketu" type="iZbs_ElDoc:SplosniPodatkiOPaketuType"/>
+			<xs:element name="SeznamNeprevzetihDokumentov" type="iZbs_DocNepDoc:SeznamNeprevzetihDokumentovType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="SeznamNeprevzetihDokumentovType">
+		<xs:annotation>
+			<xs:documentation/>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Dokument" type="iZbs_DocNepDoc:DokumentType" maxOccurs="10000"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="DokumentType">
+		<xs:annotation>
+			<xs:documentation>ID in tip neprevzetega dokumenta.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="IdDokumenta" type="iZbs_Spl:IdPoAvtorjuSplosniType"/>
+			<xs:element name="DatumInUraDostopnosti" type="xs:dateTime">
+				<xs:annotation>
+					<xs:documentation>Podatek o tem, kdaj je postal dokument dosegljiv banki, v nabiralniku spletne storitve izdajatelja.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="TipDokumenta" type="iZbs_DocNepDoc:TipDokumentaType" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="TipDokumentaType">
+		<xs:annotation>
+			<xs:documentation>Tip dokumenta.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="ZAHTEVE_ZA_SKLEPE"/>
+			<xs:enumeration value="INFORMACIJE"/>
+			<xs:enumeration value="OSTALO"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

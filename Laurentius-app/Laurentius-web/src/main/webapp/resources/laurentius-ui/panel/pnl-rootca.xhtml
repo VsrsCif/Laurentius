@@ -50,22 +50,18 @@
                                                  actionListener="#{adminSEDRootCAView.removeSelectedWithWarning()}" 
                                                  />
                             </f:facet>
-                            <f:facet name="right"  >
-                                <p:menuButton value="#{msg['Settings']}" >
+                            <!-- p:facet name="right"  >
+                                <p:menuButton value="# {msg['Settings']}" >
 
-                                    <p:menuitem value="#{msg['Password']}" 
+                                    <p:menuitem value="# {msg['Password']}" 
                                                 ajax="true"
                                                 onclick="PF('changeCertStorePasswordDialog').show();"/>
-                                </p:menuButton >
+                                </p:menuButton>
 
-                            </f:facet>
+                            </f:facet -->
                         </p:toolbar>
                     </f:facet>
 
-                    <p:ajax event="rowDblselect" 
-                            listener="#{adminSEDRootCAView.startEditSelected()}" 
-                            oncomplete="PF('certDialog').show()"
-                            update=":dlgcertificate:certDialog:certDialogForm" />
                     <p:columnGroup type="header">
                         <p:row>
                             <p:column rowspan="2" headerText="#{msg['IsKey']}" width="40"/>

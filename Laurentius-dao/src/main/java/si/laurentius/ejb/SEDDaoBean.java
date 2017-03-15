@@ -546,7 +546,8 @@ public class SEDDaoBean implements SEDDaoInterface {
       MessageProducer sender = session.createProducer(mqMSHQueue);
       Message message = session.createMessage();
       message.setLongProperty(SEDValues.EBMS_QUEUE_PARAM_MAIL_ID, mail.getId().longValue());
-      message.setStringProperty(SEDValues.EBMS_QUEUE_DUPLICATE_DETECTION_ID_Artemis,  mail.getId().toString());
+      // problem for duplicate detection on resending 
+      //message.setStringProperty(SEDValues.EBMS_QUEUE_DUPLICATE_DETECTION_ID_Artemis,  mail.getId().toString());
       message.setIntProperty(SEDValues.EBMS_QUEUE_PARAM_RETRY, retry);
       message.setLongProperty(SEDValues.EBMS_QUEUE_PARAM_DELAY, delay);
       message.setLongProperty(SEDValues.EBMS_QUEUE_DELAY_AMQ, delay);
@@ -601,7 +602,7 @@ public class SEDDaoBean implements SEDDaoInterface {
       throw new StorageException(msg, ex);
       
     }  finally {
-      
+     
       try {
         if (connection != null) {
           connection.close();
@@ -713,7 +714,9 @@ public class SEDDaoBean implements SEDDaoInterface {
 
       mutUTransaction.commit();
 
-      mJMS.sendMessage(mail.getId().longValue(), 0, 0, false);
+      // add message to queue
+      sendOutMessage(mail, 0, 0, userID, applicationId);
+      //mJMS.sendMessage(mail.getId().longValue(), 0, 0, false);
 
     } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException |
         HeuristicRollbackException | SecurityException | IllegalStateException ex) {
@@ -727,12 +730,7 @@ public class SEDDaoBean implements SEDDaoInterface {
         LOG.logError(l, msg, ex);
         throw new StorageException(msg, ex);
       }
-    } catch (NamingException | JMSException ex) {
-      String msg = "Error submitting mail Out JMS:" + ex.getMessage();
-      LOG.logError(l, msg, ex);
-      setStatusToOutMail(mail, SEDOutboxMailStatus.ERROR, msg);
-      throw new StorageException(msg, ex);
-    }
+    } 
     LOG.logEnd(l);
 
   }

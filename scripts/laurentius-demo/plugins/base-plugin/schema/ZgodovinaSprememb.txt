@@ -1,0 +1,65 @@
+IzvrsbeXml - zgodovina sprememb
+
+=======================================================================
+IzvrsbeXML verzija 1.01, 29.1.2016 in 17.6.2016 
+
+DOKUMENTACIJA
+ni sprememb
+
+SHEME XSD 1.01
+V imenskih prostorih shem se je ohranila verzija 1.0, zaradi lažje vpeljave v produkcijo s strani udeležencev. Ohranitev verzije 1.0 v imenskih prostorih je bila soglasno dogovorjena na ZBS, v delovni skupini za e-izvršbe.
+Verzija 1.01 se piše v polje 'VerzijaSheme'.
+
+Datoteka: IzvrsbeXml_tipi_ElementiDokumenta.xsd
+- VerzijaSheme: izbrisan šifrant in možnost prostega vpisa verzije, za lažji prehod na nove verzije shem XSD, ki ohranjajo kompatibilnost s staro verzijo sheme; trenutno se polni: 1.01
+- VerzijaSifrantov: izbrisan šifrant in možnost prostega vpisa verzije, za lažji prehod na nove verzije shem XSD, ki ohranjajo kompatibilnost s staro verzijo sheme. Predlaga se vnos verzije sheme 1.01
+
+Datoteka: IzvrsbeXml_tipi_SplosniTipi.xsd
+- V imenih in priimkih je odpravljena omejitev na èrke. Po novem so dopustni tudi drugi znaki, npr. '-'. Maksimalna dolžina je omejena na 100 znakov. 
+- Pri nazivih pravnih osebah je podaljšana maksimalna dolžina (podatkovni tip FirmaNazivType), in sicer iz 60 znakov na 250 znakov, kar je enako najveèji dopustni dolžini v registru AJPES.
+- Dopolnjen podatkovni tip TrrIbanType (za zapis tujih TRR, ki lahko vsebujejo tudi èrke).
+
+Datoteka: IzvrsbeXml_tipi_ObvestilaOObdelavah.xsd
+- Zaradi sprememb zakonodaje je dodan opcijski sklop elementov, ki se ugnezdi v opcijski element InformacijeODolznikih. 
+  ZDavP-2I doloèa, da morajo banke izdajatelja obvešèati o sredstvih, s katerimi dolžnik ne more razpolagati (depoziti, varèevanja).
+  Polje InformacijeODolznikih se izpolni samo v primeru, ko je status obdelave OK. Znotraj sklopa InformacijeODolznikih se posredujejo informacije za vsakega dolžnika posebej.
+
+Datoteka: IzvrsbeXml_tipi_SifrantNapaka.xsd (sprememba 17.6.2016)
+V šifrant napak in opozoril sta (na željo FURS) dodani dve šifri:
+			<xs:enumeration value="20013-NI_TRR_JE_DEPOZIT"/>
+			<xs:enumeration value="20014-PREMALO_TRRSREDSTEV_JE_DEPOZIT"/>
+Uporabljata se za poroèanje obstoja vezanih sredstev. Pri obeh se v polju NapakaTip doloèi vrednost 'OPOZORILO'.
+
+
+=======================================================================
+IzvrsbeXML verzija 1.0 produkcija FURS, 24.10.2014
+
+DOKUMENTACIJA
+Datoteka: ZBS_IZVRSBE_StandardIzvrsbeXML_ver1.0_2014-10-16.doc
+- nova verzija dokumenta s tehniènim opisom standarda za e-izvršbe; pregledano, dopolnjeno in odobreno s strani DS za informatiko na ZBS ter s strani FURS.
+
+SHEMA XSD
+Datoteka: IzvrsbeXml_tipi_SifrantDrzava.xsd
+- v šifrant dodane nove oznake držav (npr. XK za Kosovo; CW, IM, PS, AX)
+
+Datoteka: IzvrsbeXml_tipi_ObvestilaOSklepih.xsd
+- na predlog FURS dodan novi tip obvestila: OBVESTILO_O_DEPOZITU_Type
+- tip obvestila OBVESTILO_O_POMANJKANJU_SREDSTEV_Type je razširjen z novim poljem:
+    <xs:element name="AliImaDolznikDepozit" type="xs:boolean" minOccurs="0"/>
+    ki sprejme vrednosti true/false.
+- tip obvestila OBVESTILO_O_STANJU_SKLEPA_Type ima popravljeno polje VrstniRedPriDolzniku  
+		<xs:element name="VrstniRedPriDolzniku" type="xs:unsignedShort"/>
+		<!-- parameter VrstniRedPriDolzniku lahko vsebuje vrednosti od 0 do 65535 -->
+
+PRIMERI DATOTEK XML
+Dodani so novi primeri datotek XML:
+- Primer_PrevzemiSeznamNeprevzetihDokumentovRequest.xml
+- Primer_PrevzemiDokumentRequest.xml
+- Primer_NaloziDokumentRequest.xml
+
+=======================================================================
+
+
+
+
+

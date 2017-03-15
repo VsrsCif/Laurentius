@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- shema XSD za IzvrsbeXml/1.01 --> 
+<!-- 
+*************************************************************************************
+Shema za zapis vsebine o izvršbah.
+Vsebina o izvršbah se zapiše v takšni obliki, neodvisno od načina prenosa (WS, ročna izmenjava na CD-ju, SFTP itd.).
+*************************************************************************************
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:iZbs_DokVseb="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_DokumentiVsebinski.xsd" xmlns:iZbs_Body="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_Body.xsd" xmlns:iZbs_Zaglavje="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_ZaglavjeSporocil.xsd" xmlns:dSignature="http://www.w3.org/2000/09/xmldsig#" targetNamespace="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_DokumentiVsebinski.xsd" elementFormDefault="qualified">
+	<xs:import namespace="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_Body.xsd" schemaLocation="IzvrsbeXml_tipi_Body.xsd"/>
+	<xs:import namespace="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_ZaglavjeSporocil.xsd" schemaLocation="IzvrsbeXml_tipi_ZaglavjeSporocil.xsd"/>
+	<xs:import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="xmlDSignature-core-schema.xsd"/>
+	<!-- **********************************************************************************
+			METODA: PrevzemiDokument
+		*********************************************************************************** -->
+	<!--  -->
+	<xs:complexType name="PrevzemiDokumentXmlRequestType">
+		<xs:sequence>
+			<xs:element name="Header" type="iZbs_Zaglavje:HeaderType"/>
+			<xs:element name="Body" type="iZbs_Body:BodyZaIdDokumentaType"/>
+			<xs:element ref="dSignature:Signature" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="PrevzemiDokumentXmlRequest" type="iZbs_DokVseb:PrevzemiDokumentXmlRequestType">
+		<xs:annotation>
+			<xs:documentation>
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<!--  -->
+	<xs:complexType name="PrevzemiDokumentXmlResponseType">
+		<xs:sequence>
+			<xs:element name="Header" type="iZbs_Zaglavje:HeaderType"/>
+			<xs:element name="ResponseHeader" type="iZbs_Zaglavje:ResponseHeaderType"/>
+			<xs:element name="Body" type="iZbs_Body:BodyZaMetodaPrevzemiDokumentType"/>
+			<xs:element ref="dSignature:Signature" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="PrevzemiDokumentXmlResponse" type="iZbs_DokVseb:PrevzemiDokumentXmlResponseType">
+		<xs:annotation>
+			<xs:documentation/>
+		</xs:annotation>
+	</xs:element>
+	<!-- **********************************************************************************
+			METODA: NaloziDokument
+		*********************************************************************************** -->
+	<!-- -->
+	<xs:complexType name="NaloziDokumentXmlRequestType">
+		<xs:sequence>
+			<xs:element name="Header" type="iZbs_Zaglavje:HeaderType"/>
+			<xs:element name="Body" type="iZbs_Body:BodyZaMetodaNaloziDokumentType"/>
+			<xs:element ref="dSignature:Signature" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="NaloziDokumentXmlRequest" type="iZbs_DokVseb:NaloziDokumentXmlRequestType">
+		<xs:annotation>
+			<xs:documentation>
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<!-- -->
+	<xs:complexType name="NaloziDokumentXmlResponseType">
+		<xs:sequence>
+			<xs:element name="Header" type="iZbs_Zaglavje:HeaderType"/>
+			<xs:element name="ResponseHeader" type="iZbs_Zaglavje:ResponseHeaderType"/>
+			<xs:element name="Body" type="iZbs_Body:BodyZaPovratnicaType"/>
+			<xs:element ref="dSignature:Signature" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="NaloziDokumentXmlResponse" type="iZbs_DokVseb:NaloziDokumentXmlResponseType">
+		<xs:annotation>
+			<xs:documentation/>
+		</xs:annotation>
+	</xs:element>
+</xs:schema>

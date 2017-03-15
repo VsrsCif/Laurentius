@@ -7,6 +7,7 @@ package si.jrc.msh.plugin.zpp;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.security.KeyStore;
@@ -44,13 +45,13 @@ import si.laurentius.commons.exception.SEDSecurityException;
 import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.interfaces.JMSManagerInterface;
 import si.laurentius.commons.interfaces.SEDDaoInterface;
-import si.laurentius.commons.utils.HashUtils;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StorageUtils;
 import si.laurentius.commons.utils.StringFormater;
 import si.laurentius.commons.utils.Utils;
 import si.laurentius.lce.KeystoreUtils;
 import si.laurentius.commons.interfaces.SEDCertStoreInterface;
+import si.laurentius.lce.DigestUtils;
 import si.laurentius.plugin.crontask.CronTaskDef;
 import si.laurentius.plugin.crontask.CronTaskPropertyDef;
 import si.laurentius.plugin.interfaces.PropertyListType;
@@ -74,7 +75,6 @@ public class ZPPTask implements TaskExecutionInterface {
   private static final String PROCESS_MAIL_COUNT = "zpp.max.mail.count";
 
   SEDCrypto mSedCrypto = new SEDCrypto();
-  HashUtils mpHU = new HashUtils();
   DocumentSodBuilder dsbSodBuilder = new DocumentSodBuilder();
   KeystoreUtils mkeyUtils = new KeystoreUtils();
 
@@ -181,7 +181,6 @@ public class ZPPTask implements TaskExecutionInterface {
    */
   @Override
   public CronTaskDef getDefinition() {
-    
 
     CronTaskDef tt = new CronTaskDef();
     tt.setType("zpp-plugin");
@@ -211,8 +210,6 @@ public class ZPPTask implements TaskExecutionInterface {
     ttp.setValueList(valList);
     return ttp;
   }
-
-  
 
   /**
    *
@@ -257,11 +254,10 @@ public class ZPPTask implements TaskExecutionInterface {
               MimeConstants.MIME_PDF);
 
       // sign with receiver certificate 
-     
       PrivateKey pk = mCertBean.getPrivateKeyForAlias(signAlias);
-        X509Certificate xcert = mCertBean.getX509CertForAlias(signAlias);
-      
-      signPDFDocument(pk,xcert, fDNViz);
+      X509Certificate xcert = mCertBean.getX509CertForAlias(signAlias);
+
+      signPDFDocument(pk, xcert, fDNViz);
       // sign with systemCertificate
 
       mout.setMSHOutPayload(new MSHOutPayload());
@@ -269,7 +265,8 @@ public class ZPPTask implements TaskExecutionInterface {
       mp.setDescription("DeliveryAdvice");
       mp.setMimeType(MimeValue.MIME_PDF.getMimeType());
       mout.getMSHOutPayload().getMSHOutParts().add(mp);
-      mp.setMd5(mpHU.getMD5Hash(fDNViz));
+      mp.setSha1Value(DigestUtils.getHexSha1Digest(fDNViz));
+      mp.setSize(BigInteger.valueOf(fDNViz.length()));
       mp.setFilename(fDNViz.getName());
       mp.setFilepath(StorageUtils.getRelativePath(fDNViz));
       mp.setName(mp.getFilename().
@@ -294,7 +291,7 @@ public class ZPPTask implements TaskExecutionInterface {
   public FOPUtils getFOP() {
     if (mfpFop == null) {
       File fconf
-              = new File(SEDSystemProperties.getPluginsFolder(), 
+              = new File(SEDSystemProperties.getPluginsFolder(),
                       ZPPConstants.SVEV_FOLDER + File.separator + ZPPConstants.FOP_CONFIG_FILENAME);
 
       mfpFop
@@ -309,7 +306,6 @@ public class ZPPTask implements TaskExecutionInterface {
     try {
       File ftmp = File.createTempFile("tmp_sign", ".pdf");
 
-      
       SignUtils su = new SignUtils(pk, xcert);
       su.signPDF(f, ftmp, true);
       Files.move(ftmp.toPath(), f.toPath(), StandardCopyOption.REPLACE_EXISTING);

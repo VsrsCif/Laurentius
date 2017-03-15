@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- shema XSD za IzvrsbeXml/1.01 --> 
+<!-- 
+*************************************************************************************
+INFO_GLAVA_SHEME
+*************************************************************************************
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:iZbs_AS="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_AkcijeSklepov.xsd" xmlns:iZbs_ElS="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_ElementiSklepa.xsd" xmlns:iZbs_ElDoc="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_ElementiDokumenta.xsd" xmlns:iZbs_Spl="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_SplosniTipi.xsd" targetNamespace="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_AkcijeSklepov.xsd" elementFormDefault="qualified">
+	<xs:import namespace="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_ElementiDokumenta.xsd" schemaLocation="IzvrsbeXml_tipi_ElementiDokumenta.xsd"/>
+	<xs:import namespace="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_ElementiSklepa.xsd" schemaLocation="IzvrsbeXml_tipi_ElementiSklepa.xsd"/>
+	<xs:import namespace="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_SplosniTipi.xsd" schemaLocation="IzvrsbeXml_tipi_SplosniTipi.xsd"/>
+	<xs:complexType name="AkcijaSklepaType" abstract="true">
+		<xs:annotation>
+			<xs:documentation>
+				AkcijaSklepaType je abstraktni podatkovni tip, ki vsebuje veliko podtipov, ki razširjajo osnovni tip AkcijaSklepaType, za vsako podvrsto akcij nad sklepi.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="IdAkcije" type="iZbs_Spl:IdPoAvtorjuSplosniType"/>
+			<xs:element name="NarocnikAkcijePodrobnosti" type="iZbs_Spl:AvtorPodrobnostiType" minOccurs="0"/>
+			<xs:element name="DatumiAkcije" type="iZbs_AS:DatumiAkcijeType"/>
+			<xs:element name="OpombeAkcije" type="iZbs_Spl:OpombeType" minOccurs="0"/>
+			<!--			<xs:element name="PrilozeneDatoteke" type="PrilozeneDatotekeType" minOccurs="0"/> -->
+		</xs:sequence>
+	</xs:complexType>
+	<!-- *****************************************************************************
+	    SKLOP 1: AKCIJE za vnos novih sklepov
+	    ***************************************************************************** -->
+	<xs:complexType name="NOV_SKLEP_Type">
+		<xs:annotation>
+			<xs:documentation>NOV_SKLEP_Type je podatkovni tip, ki vsebuje vse potrebene podatke za akcijo vpisa novega sklepa.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="iZbs_AS:AkcijaSklepaType">
+				<xs:sequence>
+					<xs:element name="Sklep" type="iZbs_ElS:SklepType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ***************************************************************************** -->
+	<xs:complexType name="NADOMESTNI_SKLEP_Type">
+		<xs:annotation>
+			<xs:documentation>NADOMESTNI_SKLEP_Type je podatkovni tip, ki vsebuje vse potrebene podatke za akcijo vpisa novega sklepa, ki nadomešča nek drug, stari sklep.
+			Stari sklep dobi pri tej akciji status 'NADOMESCEN' in pri starem sklepu se v polje Sklep/StatusSklepaPriSubjektu/IdNadomestnegaSklepa napolni ID novega sklepa. Nov sklep lahko nadomesti več starih sklepov. Stari sklepi se navedejo v polju 'PovezaniSklepi'.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="iZbs_AS:AkcijaSklepaType">
+				<xs:sequence>
+					<xs:element name="PovezaniSklepi" type="iZbs_AS:PovezaniSklepiType"/>
+					<xs:element name="Sklep" type="iZbs_ElS:SklepType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ***************************************************************************** -->
+	<xs:complexType name="ZAVAROVANJE_TERJATVE_Type">
+		<xs:annotation>
+			<xs:documentation>ZAVAROVANJE_TERJATVE_Type je podatkovni tip, ki vsebuje vse potrebene podatke za akcijo vpisa novega, začasnega 'sklepa', namenjenega zavarovanju (npr. zavarovanje izpolnitve davčne obveznosti).</xs:documentation>
+			<xs:documentation>ZAVAROVANJE_TERJATVE_Type se obnaša podobno kot je NOV_SKLEP, le da ima parameter DatumVeljavnostiDo.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="iZbs_AS:AkcijaSklepaType">
+				<xs:sequence>
+					<xs:element name="DatumVeljavnostiDo" type="xs:date"/>
+					<xs:element name="Sklep" type="iZbs_ElS:SklepType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- *****************************************************************************
+	    SKLOP 2: AKCIJE za popravek osnovnih podatkov sklepa
+	    ***************************************************************************** -->
+	<xs:complexType name="POPRAVEK_SKLEPA_Type">
+		<xs:annotation>
+			<xs:documentation>POPRAVEK_SKLEPA_Type je podatkovni tip, ki vsebuje vse potrebene podatke za spremembo osnovnih podatkov o obstoječem, starem sklepu. V te spremembe niso vključeni statusi in terjatve.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="iZbs_AS:AkcijaSklepaType">
+				<xs:sequence>
+					<xs:element name="SklepBrezTerjatevInStatusov" type="iZbs_ElS:SklepBrezTerjatevInStatusovType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- *****************************************************************************
+	    SKLOP 3: AKCIJE za spremembo višine terjatev
+	    ***************************************************************************** -->
+	<xs:complexType name="SPREMEMBA_TERJATEV_ABSOLUTNO_Type">
+		<xs:annotation>
+			<xs:documentation>SPREMEMBA_TERJATEV_ABSOLUTNO_Type je namenjena absolutnemu spreminjanju zneskov terjatev sklepa. To pomeni, da se prepiše celoten stari znesek (za posamezni TRR) in se nadomesti z novim zneskom. . Če je računov za nakazilo terjatev več, je lahko v zahtevku zapisanih več terjatev naenkrat. V polje OpombeTerjatve se lahko vpiše opcijski komentar.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="iZbs_AS:AkcijaSklepaType">
+				<xs:sequence>
+					<xs:element name="SklepIdInTerjatve" type="iZbs_ElS:SklepIdInTerjatveType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ***************************************************************************** -->
+	<xs:complexType name="POVECANJE_TERJATEV_RELATIVNO_Type">
+		<xs:annotation>
+			<xs:documentation>POVECANJE_TERJATEV_RELATIVNO_Type je namenjena relativnemu povečanju terjatev sklepa. To pomeni, da se k staremu znesku terjatev prišteje novi znesek, torej: KONČNI_ZNESEK_TERJATEV = STARI_ZNESEK + NOVI_ZNESEK, glede na TRR nakazila. Vsi zneski morajo biti podani s pozitivno vrednostjo, večjo od 0. Če je računov za nakazilo terjatev več, je lahko v zahtevku zapisanih več terjatev naenkrat. V polje OpombeTerjatve se lahko vpiše opcijski komentar.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="iZbs_AS:AkcijaSklepaType">
+				<xs:sequence>
+					<xs:element name="SklepIdInTerjatve" type="iZbs_ElS:SklepIdInTerjatveType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ***************************************************************************** -->
+	<xs:complexType name="ZMANJSANJE_TERJATEV_RELATIVNO_Type">
+		<xs:annotation>
+			<xs:documentation>ZMANJSANJE_TERJATEV_RELATIVNO_Type je namenjena relativnemu zmanjšanju terjatev sklepa. To pomeni, da je: KONČNI_ZNESEK_TERJATEV = STARI_ZNESEK - NOVI_ZNESEK, glede na TRR nakazila. Vsi zneski morajo biti podani s pozitivno vrednostjo, večjo od 0. Če je računov za nakazilo terjatev več, je lahko v zahtevku zapisanih več terjatev naenkrat. V polje OpombeTerjatve se lahko vpiše opcijski komentar.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="iZbs_AS:AkcijaSklepaType">
+				<xs:sequence>
+					<xs:element name="SklepIdInTerjatve" type="iZbs_ElS:SklepIdInTerjatveType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- *****************************************************************************
+	    SKLOP 3: AKCIJE za spremembo statusa sklepa
+	    ***************************************************************************** -->
+	<xs:complexType name="SPREMEMBA_STATUSA_Type">
+		<xs:annotation>
+			<xs:documentation>SPREMEMBA_STATUSA_Type je tip, namenjena spreminjanju statusa sklepa.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="iZbs_AS:AkcijaSklepaType">
+				<xs:sequence>
+					<xs:element name="SklepIdInStatus" type="iZbs_ElS:SklepIdInStatusType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ***************************************************************************** -->
+	<xs:complexType name="ZADRZANO_IZVRSEVANJE_DELA_TERJATEV_Type">
+		<xs:annotation>
+			<xs:documentation>ZADRZANO_IZVRSEVANJE_DELA_TERJATEV_Type tip omogoča zadržanje izvrševanja samo na določenem delu terjatev. Ostale, izvzete terjatve, ostanejo normalno 'aktivne' in status sklepa je lahko IZVRSLJIV.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="iZbs_AS:AkcijaSklepaType">
+				<xs:sequence>
+					<xs:element name="SklepIdStatusInZadrzaneTerjatve" type="iZbs_ElS:SklepIdStatusInZadrzaneTerjatveType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- *****************************************************************************
+	    SKLOP 4: AKCIJE za poizvedbe izdajatelja po določenih informacijah
+	    ***************************************************************************** -->
+	<xs:complexType name="POIZVEDBA_O_STANJU_SKLEPA_Type">
+		<xs:annotation>
+			<xs:documentation>Na podlagi podatkov tipa POIZVEDBA_O_STANJU_SKLEPA_Type lahko izdajatelj zahteva, da mu izvrševalec pošlje informacije o določenem sklepu.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="iZbs_AS:AkcijaSklepaType">
+				<xs:sequence>
+					<xs:element name="IdSklepa" type="iZbs_ElS:IdSklepaType"/>
+					<xs:element name="IzdajateljSklepaPodrobnosti" type="iZbs_Spl:AvtorPodrobnostiType" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- *****************************************************************************
+	    SKLOP PODTIPOV, povezanih z akcijami
+	    ***************************************************************************** -->
+	<xs:complexType name="DatumiAkcijeType">
+		<xs:annotation>
+			<xs:documentation>Datumi, povezani z akcijo.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="DatumNastanka">
+				<xs:simpleType>
+					<xs:restriction base="xs:dateTime"/>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="PovezaniSklepiType">
+		<xs:annotation>
+			<xs:documentation>Seznam ID-jev sklepa, na katere se akcija navezuje.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="IdSklepa" type="iZbs_ElS:IdSklepaType" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="PovezanSklepType">
+		<xs:annotation>
+			<xs:documentation>IdSklepa, na katere se akcija navezuje.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="IdSklepa" type="iZbs_ElS:IdSklepaType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ***************************************************************************** -->
+	<xs:simpleType name="TipAkcijeSklepaType">
+		<xs:annotation>
+			<xs:documentation>TipAkcijeSklepaType - definira vse možne vrste akcij - uporablja se pri povratnem obveščanju o statusu obdelave.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="NOV_SKLEP"/>
+			<xs:enumeration value="NADOMESTNI_SKLEP"/>
+			<xs:enumeration value="ZAVAROVANJE_TERJATVE"/>
+			<xs:enumeration value="POPRAVEK_SKLEPA"/>
+			<xs:enumeration value="SPREMEMBA_TERJATEV_ABSOLUTNO"/>
+			<xs:enumeration value="POVECANJE_TERJATEV_RELATIVNO"/>
+			<xs:enumeration value="ZMANJSANJE_TERJATEV_RELATIVNO"/>
+			<xs:enumeration value="SPREMEMBA_STATUSA"/>
+			<xs:enumeration value="ZADRZANO_IZVRSEVANJE_DELA_TERJATEV"/>
+			<xs:enumeration value="POIZVEDBA_O_STANJU_SKLEPA"/>
+			<xs:enumeration value="OSTALO"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

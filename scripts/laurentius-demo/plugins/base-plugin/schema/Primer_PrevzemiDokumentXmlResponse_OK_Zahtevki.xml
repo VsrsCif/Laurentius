@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Primer XML datoteke, ki jo pripravi izdajatelj in poslje do banke -->
+<iZbs_DokVseb:PrevzemiDokumentXmlResponse xmlns:dSignature="http://www.w3.org/2000/09/xmldsig#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:iZbs_AS="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_AkcijeSklepov.xsd" xmlns:iZbs_Body="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_Body.xsd" xmlns:iZbs_DocAS="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_DokumentAkcijSklepov.xsd" xmlns:iZbs_ElDoc="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_ElementiDokumenta.xsd" xmlns:iZbs_ElS="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_ElementiSklepa.xsd" xmlns:iZbs_Spl="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_SplosniTipi.xsd" xmlns:iZbs_Zaglavje="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_ZaglavjeSporocil.xsd" xmlns:iZbs_DokVseb="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_DokumentiVsebinski.xsd" xsi:schemaLocation="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_DokumentiVsebinski.xsd Z:\sluzba\code\SVEV2.0\testiranje\zbs-eizvrsba\ZBS_IZVRSBE_1.01_2016-06-17\XmlShemaItd\IzvrsbeXml\1.0\IzvrsbeXml_DokumentiVsebinski.xsd">
+	<iZbs_DokVseb:Header>
+		<iZbs_Zaglavje:DatumSporocila>2001-12-17T09:30:47Z</iZbs_Zaglavje:DatumSporocila>
+		<iZbs_Zaglavje:IdSporocila>
+			<iZbs_Spl:Id>1234567890abcdefg</iZbs_Spl:Id>
+			<iZbs_Spl:DavcnaStevilka>
+				<iZbs_Spl:Drzava>SI</iZbs_Spl:Drzava>
+				<iZbs_Spl:Vrednost>70310815</iZbs_Spl:Vrednost>
+			</iZbs_Spl:DavcnaStevilka>
+		</iZbs_Zaglavje:IdSporocila>
+		<iZbs_Zaglavje:PrejemnikSporocila>
+			<iZbs_Spl:DavcnaStevilka>
+				<iZbs_Spl:Drzava>SI</iZbs_Spl:Drzava>
+				<iZbs_Spl:Vrednost>94314527</iZbs_Spl:Vrednost>
+			</iZbs_Spl:DavcnaStevilka>
+			<iZbs_Spl:Naziv>Nova KBM d.d.</iZbs_Spl:Naziv>
+			<iZbs_Spl:Naslov>
+				<iZbs_Spl:Ulica>Ulica Vita Kraigherja</iZbs_Spl:Ulica>
+				<iZbs_Spl:HisnaStevilka>4</iZbs_Spl:HisnaStevilka>
+				<iZbs_Spl:Kraj>Maribor</iZbs_Spl:Kraj>
+				<iZbs_Spl:Posta>2505</iZbs_Spl:Posta>
+				<iZbs_Spl:PostniPredal/>
+				<iZbs_Spl:Drzava>SI</iZbs_Spl:Drzava>
+				<iZbs_Spl:ElektronskiPostniNaslov>info@nkbm.si</iZbs_Spl:ElektronskiPostniNaslov>
+				<iZbs_Spl:Telefon>++386 (0)2 229 22 90</iZbs_Spl:Telefon>
+			</iZbs_Spl:Naslov>
+		</iZbs_Zaglavje:PrejemnikSporocila>
+		<iZbs_Zaglavje:PosiljateljSporocila>
+			<iZbs_Spl:DavcnaStevilka>
+				<iZbs_Spl:Drzava>SI</iZbs_Spl:Drzava>
+				<iZbs_Spl:Vrednost>70310815</iZbs_Spl:Vrednost>
+			</iZbs_Spl:DavcnaStevilka>
+			<iZbs_Spl:Naziv>Davčna uprava Republike Slovenije</iZbs_Spl:Naziv>
+			<iZbs_Spl:Naslov>
+				<iZbs_Spl:Ulica>Šmartinska cesta</iZbs_Spl:Ulica>
+				<iZbs_Spl:HisnaStevilka>55</iZbs_Spl:HisnaStevilka>
+				<iZbs_Spl:Kraj>Ljubljana</iZbs_Spl:Kraj>
+				<iZbs_Spl:Posta>1001</iZbs_Spl:Posta>
+				<iZbs_Spl:PostniPredal/>
+				<iZbs_Spl:Drzava>SI</iZbs_Spl:Drzava>
+				<iZbs_Spl:ElektronskiPostniNaslov>info@durs.gov.si</iZbs_Spl:ElektronskiPostniNaslov>
+				<iZbs_Spl:Telefon>++ 386 (0)1 369 30 00</iZbs_Spl:Telefon>
+			</iZbs_Spl:Naslov>
+		</iZbs_Zaglavje:PosiljateljSporocila>
+		<iZbs_Zaglavje:TestAliProdukcija>PRODUKCIJA</iZbs_Zaglavje:TestAliProdukcija>
+		<iZbs_Zaglavje:IdIzvornegaSistema>DURS-IS01</iZbs_Zaglavje:IdIzvornegaSistema>
+		<iZbs_Zaglavje:Verzija>
+			<iZbs_Zaglavje:VerzijaStoritve>1.0</iZbs_Zaglavje:VerzijaStoritve>
+			<iZbs_Zaglavje:VerzijaXsdShemeSporocila>1.0</iZbs_Zaglavje:VerzijaXsdShemeSporocila>
+		</iZbs_Zaglavje:Verzija>
+	</iZbs_DokVseb:Header>
+	<iZbs_DokVseb:ResponseHeader>
+		<iZbs_Zaglavje:ResponseStatus>OK</iZbs_Zaglavje:ResponseStatus>
+	</iZbs_DokVseb:ResponseHeader>
+	<iZbs_DokVseb:Body>
+		<iZbs_Body:DokumentAkcijSklepov>
+			<iZbs_DocAS:OsnovniPodatkiDokumenta>
+				<iZbs_ElDoc:IdDokumenta>
+					<iZbs_Spl:Id>DokumentDurs12345</iZbs_Spl:Id>
+					<iZbs_Spl:DavcnaStevilka>
+						<iZbs_Spl:Drzava>SI</iZbs_Spl:Drzava>
+						<iZbs_Spl:Vrednost>70310815</iZbs_Spl:Vrednost>
+					</iZbs_Spl:DavcnaStevilka>
+				</iZbs_ElDoc:IdDokumenta>
+				<iZbs_ElDoc:VerzijaSheme>1.0</iZbs_ElDoc:VerzijaSheme>
+				<iZbs_ElDoc:VerzijaSifrantov>1.0</iZbs_ElDoc:VerzijaSifrantov>
+				<iZbs_ElDoc:DatumInUraDokumenta>2011-12-17T09:30:47Z</iZbs_ElDoc:DatumInUraDokumenta>
+				<iZbs_ElDoc:IdPovezanegaDokumenta>
+					<iZbs_Spl:Id>DokumentNkbmKlicWs12345</iZbs_Spl:Id>
+					<iZbs_Spl:DavcnaStevilka>
+						<iZbs_Spl:Drzava>SI</iZbs_Spl:Drzava>
+						<iZbs_Spl:Vrednost>94314527</iZbs_Spl:Vrednost>
+					</iZbs_Spl:DavcnaStevilka>
+				</iZbs_ElDoc:IdPovezanegaDokumenta>
+				<iZbs_ElDoc:OpombeDokumenta>
+					<iZbs_Spl:Opomba>
+						<iZbs_Spl:KategorijaOpombe>INFORMACIJE</iZbs_Spl:KategorijaOpombe>
+						<iZbs_Spl:OpombaTekst>Te opombe so opcijske in se lahko izpustijo ...</iZbs_Spl:OpombaTekst>
+					</iZbs_Spl:Opomba>
+				</iZbs_ElDoc:OpombeDokumenta>
+			</iZbs_DocAS:OsnovniPodatkiDokumenta>
+			<iZbs_DocAS:PaketAkcijSklepov>
+				<iZbs_DocAS:SplosniPodatkiOPaketu>
+					<iZbs_ElDoc:IdPaketa>
+						<iZbs_Spl:Id>DokumentDurs12345</iZbs_Spl:Id>
+						<iZbs_Spl:DavcnaStevilka>
+							<iZbs_Spl:Drzava>SI</iZbs_Spl:Drzava>
+							<iZbs_Spl:Vrednost>70310815</iZbs_Spl:Vrednost>
+						</iZbs_Spl:DavcnaStevilka>
+					</iZbs_ElDoc:IdPaketa>
+					<iZbs_ElDoc:DatumInUraIzdelave>2011-12-17T09:30:47Z</iZbs_ElDoc:DatumInUraIzdelave>
+					<iZbs_ElDoc:SteviloZapisov>1</iZbs_ElDoc:SteviloZapisov>
+				</iZbs_DocAS:SplosniPodatkiOPaketu>
+				<iZbs_DocAS:AkcijeSklepov>
+					<iZbs_DocAS:AkcijaSklepa xsi:type="iZbs_AS:NOV_SKLEP_Type">
+						<iZbs_AS:IdAkcije>
+							<iZbs_Spl:Id>AKCIJA_ID_123456</iZbs_Spl:Id>
+							<iZbs_Spl:DavcnaStevilka>
+								<iZbs_Spl:Drzava>SI</iZbs_Spl:Drzava>
+								<iZbs_Spl:Vrednost>70310815</iZbs_Spl:Vrednost>
+							</iZbs_Spl:DavcnaStevilka>
+						</iZbs_AS:IdAkcije>
+						<iZbs_AS:DatumiAkcije>
+							<iZbs_AS:DatumNastanka>2011-12-17T09:30:47Z</iZbs_AS:DatumNastanka>
+						</iZbs_AS:DatumiAkcije>
+						<iZbs_AS:Sklep>
+							<iZbs_ElS:IdSklepa>
+								<iZbs_ElS:OpravilnaStevilka>SKLEP1234</iZbs_ElS:OpravilnaStevilka>
+								<iZbs_ElS:IzdajateljDavcnaStevilka>
+									<iZbs_Spl:Drzava>SI</iZbs_Spl:Drzava>
+									<iZbs_Spl:Vrednost>70310815</iZbs_Spl:Vrednost>
+								</iZbs_ElS:IzdajateljDavcnaStevilka>
+							</iZbs_ElS:IdSklepa>
+							<iZbs_ElS:DatumiSklepa>
+								<iZbs_ElS:DatumIzdaje>2011-05-10</iZbs_ElS:DatumIzdaje>
+								<iZbs_ElS:DatumIzvrsljivosti>2011-05-10</iZbs_ElS:DatumIzvrsljivosti>
+								<iZbs_ElS:DatumVrocitve>2011-05-10</iZbs_ElS:DatumVrocitve>
+							</iZbs_ElS:DatumiSklepa>
+							<iZbs_ElS:StatusSklepaPriSubjektu>
+								<iZbs_ElS:StatusSklepa>30000-IZVRSLJIV</iZbs_ElS:StatusSklepa>
+								<iZbs_ElS:SubjektDavcnaStevilka>
+									<iZbs_Spl:Drzava>SI</iZbs_Spl:Drzava>
+									<iZbs_Spl:Vrednost>70310815</iZbs_Spl:Vrednost>
+								</iZbs_ElS:SubjektDavcnaStevilka>
+								<iZbs_ElS:DatumZapisaStatusa>2011-12-17T09:30:47Z</iZbs_ElS:DatumZapisaStatusa>
+							</iZbs_ElS:StatusSklepaPriSubjektu>
+							<iZbs_ElS:KlasifikatorjiSklepa>
+								<iZbs_ElS:VrstaDolga>DAVCNI</iZbs_ElS:VrstaDolga>
+								<iZbs_ElS:VrstaListine>VERODOSTOJNA_LISTINA</iZbs_ElS:VrstaListine>
+								<iZbs_ElS:OznakaListine/>
+							</iZbs_ElS:KlasifikatorjiSklepa>
+							<iZbs_ElS:Dolzniki>
+								<iZbs_ElS:Dolznik>
+									<iZbs_ElS:Subjekt xsi:type="iZbs_Spl:FizicnaOsebaType">
+										<iZbs_Spl:Ime>Jaka</iZbs_Spl:Ime>
+										<iZbs_Spl:Priimek>Novak</iZbs_Spl:Priimek>
+										<iZbs_Spl:DatumRojstva xsi:nil="true"/>
+										<iZbs_Spl:DavcnaStevilka>
+											<iZbs_Spl:Drzava>SI</iZbs_Spl:Drzava>
+											<iZbs_Spl:Vrednost>11310815</iZbs_Spl:Vrednost>
+										</iZbs_Spl:DavcnaStevilka>
+										<iZbs_Spl:Emso>2505971500254</iZbs_Spl:Emso>
+										<iZbs_Spl:Naslov>
+											<iZbs_Spl:Ulica>Celjska ulica</iZbs_Spl:Ulica>
+											<iZbs_Spl:HisnaStevilka>10</iZbs_Spl:HisnaStevilka>
+											<iZbs_Spl:Kraj>Ljubljana</iZbs_Spl:Kraj>
+											<iZbs_Spl:Posta>1000</iZbs_Spl:Posta>
+											<iZbs_Spl:PostniPredal/>
+											<iZbs_Spl:Drzava>SI</iZbs_Spl:Drzava>
+											<iZbs_Spl:ElektronskiPostniNaslov/>
+											<iZbs_Spl:Telefon/>
+										</iZbs_Spl:Naslov>
+									</iZbs_ElS:Subjekt>
+									<iZbs_ElS:TipDolznika>EDINI_DOLZNIK</iZbs_ElS:TipDolznika>
+									<iZbs_ElS:BankeInRacuni>
+										<iZbs_ElS:BankaInRacuni Rang="1">
+											<iZbs_ElS:BICKodaBanke>KBMASI2X</iZbs_ElS:BICKodaBanke>
+											<iZbs_ElS:NazivBanke>Nova KBM d.d.</iZbs_ElS:NazivBanke>
+											<iZbs_ElS:TrrSeznam>
+												<iZbs_ElS:TrrIbanStevilka Rang="1">SI56010000000400014</iZbs_ElS:TrrIbanStevilka>
+											</iZbs_ElS:TrrSeznam>
+										</iZbs_ElS:BankaInRacuni>
+										<iZbs_ElS:BankaInRacuni Rang="2">
+											<iZbs_ElS:BICKodaBanke>ABANSI2X</iZbs_ElS:BICKodaBanke>
+											<iZbs_ElS:NazivBanke>Abanka d.d.</iZbs_ElS:NazivBanke>
+											<iZbs_ElS:TrrSeznam/>
+										</iZbs_ElS:BankaInRacuni>
+									</iZbs_ElS:BankeInRacuni>
+								</iZbs_ElS:Dolznik>
+							</iZbs_ElS:Dolzniki>
+							<iZbs_ElS:Upnik>
+								<iZbs_ElS:Subjekt xsi:type="iZbs_Spl:FizicnaOsebaType">
+									<iZbs_Spl:Ime/>
+									<iZbs_Spl:Priimek/>
+									<iZbs_Spl:DatumRojstva xsi:nil="true"/>
+									<iZbs_Spl:DavcnaStevilka>
+										<iZbs_Spl:Drzava>SI</iZbs_Spl:Drzava>
+										<iZbs_Spl:Vrednost>112380815</iZbs_Spl:Vrednost>
+									</iZbs_Spl:DavcnaStevilka>
+									<iZbs_Spl:Emso/>
+									<iZbs_Spl:Naslov>
+										<iZbs_Spl:Ulica/>
+										<iZbs_Spl:HisnaStevilka/>
+										<iZbs_Spl:Kraj/>
+										<iZbs_Spl:Posta/>
+										<iZbs_Spl:PostniPredal/>
+										<iZbs_Spl:Drzava/>
+										<iZbs_Spl:ElektronskiPostniNaslov/>
+										<iZbs_Spl:Telefon/>
+									</iZbs_Spl:Naslov>
+								</iZbs_ElS:Subjekt>
+							</iZbs_ElS:Upnik>
+							<iZbs_ElS:Terjatve>
+								<iZbs_ElS:Terjatev>
+									<iZbs_ElS:TipTerjatve>STROSKI</iZbs_ElS:TipTerjatve>
+									<iZbs_ElS:ZnesekZValuto>
+										<iZbs_Spl:Znesek>10</iZbs_Spl:Znesek>
+										<iZbs_Spl:Valuta>EUR</iZbs_Spl:Valuta>
+									</iZbs_ElS:ZnesekZValuto>
+									<!-- OPOMBA: ko ni obresti, lahko izpustimo celoten sklop elementa <ObrestiZaTerjatev> -->
+									<iZbs_ElS:ObrestiZaTerjatev>
+										<iZbs_ElS:TipObresti>NI_OBRESTI</iZbs_ElS:TipObresti>
+										<iZbs_ElS:DatumObrestovanjaOd xsi:nil="true"/>
+										<iZbs_ElS:TrrPrejemnikaZaObresti>SI56010000000400014</iZbs_ElS:TrrPrejemnikaZaObresti>
+										<iZbs_ElS:SklicZaNakaziloZaObresti>
+											<iZbs_Spl:StrukturiranaReferencaSI>SI0519-1235-84503</iZbs_Spl:StrukturiranaReferencaSI>
+										</iZbs_ElS:SklicZaNakaziloZaObresti>
+									</iZbs_ElS:ObrestiZaTerjatev>
+									<iZbs_ElS:TrrPrejemnika>SI56010000000400014</iZbs_ElS:TrrPrejemnika>
+									<iZbs_ElS:SklicZaNakazilo>
+										<iZbs_Spl:StrukturiranaReferencaSI>SI1267567-57657-7757</iZbs_Spl:StrukturiranaReferencaSI>
+									</iZbs_ElS:SklicZaNakazilo>
+								</iZbs_ElS:Terjatev>
+								<iZbs_ElS:Terjatev>
+									<iZbs_ElS:TipTerjatve>GLAVNICA</iZbs_ElS:TipTerjatve>
+									<iZbs_ElS:ZnesekZValuto>
+										<iZbs_Spl:Znesek>510</iZbs_Spl:Znesek>
+										<iZbs_Spl:Valuta>EUR</iZbs_Spl:Valuta>
+									</iZbs_ElS:ZnesekZValuto>
+									<iZbs_ElS:ObrestiZaTerjatev>
+										<iZbs_ElS:TipObresti>ZAMUDNE_OBRESTI_PO_ZDAVP</iZbs_ElS:TipObresti>
+										<iZbs_ElS:DatumObrestovanjaOd>2011-12-17</iZbs_ElS:DatumObrestovanjaOd>
+										<iZbs_ElS:TrrPrejemnikaZaObresti>SI56010000000400014</iZbs_ElS:TrrPrejemnikaZaObresti>
+										<iZbs_ElS:SklicZaNakaziloZaObresti>
+											<iZbs_Spl:StrukturiranaReferencaSI>SI0519-1235-84503</iZbs_Spl:StrukturiranaReferencaSI>
+										</iZbs_ElS:SklicZaNakaziloZaObresti>
+									</iZbs_ElS:ObrestiZaTerjatev>
+									<iZbs_ElS:TrrPrejemnika>SI56010000000400014</iZbs_ElS:TrrPrejemnika>
+									<iZbs_ElS:SklicZaNakazilo>
+										<iZbs_Spl:StrukturiranaReferencaSI>SI0519-1235-84503</iZbs_Spl:StrukturiranaReferencaSI>
+									</iZbs_ElS:SklicZaNakazilo>
+								</iZbs_ElS:Terjatev>
+							</iZbs_ElS:Terjatve>
+							<iZbs_ElS:NestrukturiraniPodatki>
+								<iZbs_ElS:NazivDokumenta>SKLEP O DAVČNI IZVRŠBI na dolžnikova denarna sredstva</iZbs_ElS:NazivDokumenta>
+								<iZbs_ElS:VsebinaNadNazivomDokumenta>Carinski urad Maribor izdaja na podlagi 3. in 12. točke 12. člena Zakona o carinski službi (ZCS-1-UPB1; Uradni list RS, št. 103/04 s spremembami) in prvega odstavka 150. člena Zakona o davčnem postopku (ZDavP-2-UPB4, Uradni list RS, št. 13/11, v nadaljevanju: ZDavP-2), po uradni dolžnosti, v zadevi davčne izvršbe zoper dolžnika XXXXXX YYYYYY, Ljubljanska ulica ZZ, 2000 Maribor, naslednji</iZbs_ElS:VsebinaNadNazivomDokumenta>
+								<iZbs_ElS:VsebinaPodNazivomDokumenta/>
+								<iZbs_ElS:VsebinaIzrek>Dolžnik Jaka Novak, Ljubljanska ulica XX, 2000 Maribor, davčna št. 213123, je dolžan plačati ...</iZbs_ElS:VsebinaIzrek>
+								<iZbs_ElS:VsebinaObrazlozitev>Iz knjigovodskih evidenc davčnega organa izhaja, da zavezanec ni v predpisanem roku poravnal obveznosti, katere so navedene v seznamu izvršilnih naslovov, zato je davčni organ v skladu s 143. členom ZDavP-2 začel davčno izvršbo....</iZbs_ElS:VsebinaObrazlozitev>
+								<iZbs_ElS:VsebinaPravniPouk>Zoper ta sklep je dovoljena pritožba na Ministrstvu za finance v Ljubljani, v 8 dneh od vročitve tega sklepa. Pritožba se vloži pisno ali ustno na zapisnik pri Davčnem uradu MARIBOR, Celjska ulica ....
+									Banka ali hranilnica lahko vloži ugovor, da dolžnik pri njej nima odprtega računa v 8 dneh od vročitve sklepa pri Davčnem uradu  MARIBOR, Celjska ulica ....</iZbs_ElS:VsebinaPravniPouk>
+								<iZbs_ElS:VsebinaNadOdgovornimiOsebami/>
+								<iZbs_ElS:VsebinaPodOdgovornimiOsebami/>
+								<iZbs_ElS:OdgovorneOsebe>
+									<iZbs_ElS:VodjaPostopkaImeInPriimek>Tamara Komac</iZbs_ElS:VodjaPostopkaImeInPriimek>
+									<iZbs_ElS:VodjaPostopkaDodatenOpis>višji svetovalec</iZbs_ElS:VodjaPostopkaDodatenOpis>
+									<iZbs_ElS:OdgovornaOsebaImeInPriimek>Olga Fajt</iZbs_ElS:OdgovornaOsebaImeInPriimek>
+									<iZbs_ElS:OdgovornaOsebaDodatenOpis>Vodja sektorja za davčno knjigovodstvo ...</iZbs_ElS:OdgovornaOsebaDodatenOpis>
+								</iZbs_ElS:OdgovorneOsebe>
+							</iZbs_ElS:NestrukturiraniPodatki>
+						</iZbs_AS:Sklep>
+					</iZbs_DocAS:AkcijaSklepa>
+					<!-- paket lahko vsebuje vec akcij, do 500 -->
+				</iZbs_DocAS:AkcijeSklepov>
+			</iZbs_DocAS:PaketAkcijSklepov>
+		</iZbs_Body:DokumentAkcijSklepov>
+	</iZbs_DokVseb:Body>
+	<dSignature:Signature>
+		<dSignature:SignedInfo>
+			<dSignature:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+			<dSignature:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+			<dSignature:Reference URI="">
+				<dSignature:Transforms>
+					<dSignature:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+				</dSignature:Transforms>
+				<dSignature:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+				<dSignature:DigestValue>dPDL0sHLEXf+pSKE3PVZTKFZA68=</dSignature:DigestValue>
+			</dSignature:Reference>
+		</dSignature:SignedInfo>
+		<dSignature:SignatureValue>e7QhyxcTzDwC/1Ol3BAliIQhYE/415SBJEx9LJ8ny2XI1VlDQvf42PJOFoSoPfk/Z8w6O4Gp/9PFJWIwxaPX63WrvwwlkPqq+51021gUQhZRaPUIqPnrJ/isfPJ1kaVPyq1xHoEKuD2qtzaHRFEtRYpBum2st6dNjE6v+cHYq6Q=</dSignature:SignatureValue>
+	</dSignature:Signature>
+</iZbs_DokVseb:PrevzemiDokumentXmlResponse>

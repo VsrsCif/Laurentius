@@ -1,0 +1,484 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- shema XSD za IzvrsbeXml/1.01 -->
+<!-- 
+*************************************************************************************
+INFO_GLAVA_SHEME
+*************************************************************************************
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:iZbs_Spl="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_SplosniTipi.xsd" xmlns:iZbs_SifErr="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_SifrantNapaka.xsd" xmlns:iZbs_SifDrz="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_SifrantDrzava.xsd" xmlns:iZbs_SifVlt="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_SifrantValuta.xsd" targetNamespace="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_SplosniTipi.xsd" elementFormDefault="qualified">
+	<xs:import namespace="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_SifrantNapaka.xsd" schemaLocation="IzvrsbeXml_tipi_SifrantNapaka.xsd"/>
+	<xs:import namespace="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_SifrantDrzava.xsd" schemaLocation="IzvrsbeXml_tipi_SifrantDrzava.xsd"/>
+	<xs:import namespace="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_SifrantValuta.xsd" schemaLocation="IzvrsbeXml_tipi_SifrantValuta.xsd"/>
+	<!-- ****************************************************************** -->
+	<!-- Splošni podatkovni tipi -->
+	<!-- ****************************************************************** -->
+	<xs:complexType name="DavcnaStevilkaType">
+		<xs:annotation>
+			<xs:documentation>Davčna številka. Lahko se nanaša na poljubno državo. Več informacij o davčnih številkah: http://en.wikipedia.org/wiki/Value_added_tax_identification_number</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Drzava" type="iZbs_SifDrz:DrzavaType">
+				<xs:annotation>
+					<xs:documentation>Dvomestna koda države, po ISO 3166.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Vrednost">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="5"/>
+						<xs:maxLength value="17"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="MaticnaStevilkaType">
+		<xs:annotation>
+			<xs:documentation>Podatkovni tip za 10-mestno matično številko pravne osebe, iz registra AJPES. 10-mestna matična številka opredeljuje organizacijo in enoto znotraj organizacije.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="([0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9])?"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="InternaOznakaEnoteIdType">
+		<xs:annotation>
+			<xs:documentation>Interna oznaka organizacijske enote, v primeru, da zanjo ne obstaja matična številka.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="6"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="EmsoType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="([0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9])?"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="TrrIbanType">
+		<xs:annotation>
+			<xs:documentation>Račun v IBAN obliki se začne z dvema črkama, ki označujeta državo (npr. SI), nato sledita dve številki, za njima pa niz številk ali črk. Račun pišemo brez znakov minus in brez presledkov.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[a-zA-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="ZnesekZValutoType">
+		<xs:annotation>
+			<xs:documentation>Denarni znesek in pripadajoča denarna valuta.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Znesek">
+				<xs:annotation>
+					<xs:documentation>Denarni znesek.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:decimal">
+						<xs:totalDigits value="14"/>
+						<xs:fractionDigits value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="Valuta" type="iZbs_SifVlt:ValutaType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="BICKodaType">
+		<xs:annotation>
+			<xs:documentation>
+			BIC koda (z drugimi nazivi tudi: ISO 9362, SWIFT ID, SWIFT-BIC, SWIFT koda) je bančna identifikacijska koda. Je univerzalna metoda identifikacije finančnih institucij in služi olajšanju avtomatizacije procesiranja telekomunikacijsko izmenjanih sporočil bančnih in finančnih institucij.
+			Struktura BIC kode; BIC je sestavljen iz 8 ali 11 znakov, in sicer: 
+			 - koda banke (štirje črkovni znaki), 
+			 - koda države (dva črkovna znaka - oznaka države po ISO standardu), 
+			 - lokacijska koda (dva črkovno numerična znaka, ki identificirata lokacijo institucije v določeni državi) in
+			 - koda podružnice (trije črkovno numerični znaki – le ta je opcijska).
+			Na primer: BIC koda Banke Slovenije je BSLJSI2X. 
+		</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="(([A-Z][A-Z][A-Z][A-Z][A-Z][A-Z])\w{2}(\w{3})?)"/>
+			<!-- BIC / SWIFT koda banke -->
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="NaslovType">
+		<xs:sequence>
+			<xs:element name="Ulica" nillable="true">
+				<xs:annotation>
+					<xs:documentation/>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="35"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="HisnaStevilka" nillable="true">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="6"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="Kraj" nillable="true">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="40"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="Posta" nillable="true">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="9"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="PostniPredal" nillable="true">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="15"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="Drzava" type="iZbs_SifDrz:DrzavaType"/>
+			<xs:element name="ElektronskiPostniNaslov" nillable="true" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="100"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="Telefon" nillable="true" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="50"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="SklicType">
+		<xs:sequence>
+			<xs:choice>
+				<xs:element name="StrukturiranaReferencaSI">
+					<xs:annotation>
+						<xs:documentation>Sklic po starem slovenskem standardu (sprejet na ZBS, junij 2006). Referenca SI je sestavljena iz treh sklopov: 1.) string 'SI'; 2.) številka modela (2 znaka); 3.) vsebina modela, ki je sestavljena iz največ 22 znakov, od tega do 20 številk in največ dva vezaja '-'. Referenco SI bo v prihodnosti nadomestila referenca RF.</xs:documentation>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:pattern value="(S{1}I{1}([0-9]|-){0,24})?"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="StrukturiranaReferencaRF">
+					<xs:annotation>
+						<xs:documentation>Sklic po standardu ISO 11649, uporabljen tudi v SEPA sistemih. Sklic sestavljajo trije sklopi: 1. sklop) konstanta RF; 2. sklop) na 3. in 4. mestu kontrolna številka, ki se izračuna po modulu MOD 97-10, ki je definirana v standardu ISO/IEC 7064; 3. sklop) od 5. do 25. znakovnega mesta so dovoljene številke in črke A do Z. Primera: RF45SBO2010, RF712348231</xs:documentation>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:pattern value="(R{1}F{1}[0-9][0-9]([a-z]|[A-Z]|[0-9]){0,21})?"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="NestrukturiranaReferenca">
+					<xs:annotation>
+						<xs:documentation>Podaja nestrukturirano referenco. Vsebuje lahko string dolžine do 120 znakov. V praksi se skušamo izogibati uporabi nestrukturirane reference, ki ni po standardu SI ali RF.</xs:documentation>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="120"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="SubjektType" abstract="true">
+		<xs:annotation>
+			<xs:documentation>SubjektType je abstraktni podatkovni tip, ki vsebuje 3 možne podtipe: FizicnaOsebaType, PodjetnikType in PravnaOsebaType.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence/>
+	</xs:complexType>
+	<xs:complexType name="FizicnaOsebaType">
+		<xs:annotation>
+			<xs:documentation>FizicnaOsebaType je podatkovni tip, ki vsebuje osnovne podatke o fizični osebi. Je del abstraktnega tipa SubjektType.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="iZbs_Spl:SubjektType">
+				<xs:sequence>
+					<xs:element name="Ime">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:maxLength value="100"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="Priimek" nillable="true">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:maxLength value="100"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="DatumRojstva" nillable="true">
+						<xs:simpleType>
+							<xs:restriction base="xs:date"/>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="DavcnaStevilka" type="iZbs_Spl:DavcnaStevilkaType" nillable="true"/>
+					<xs:element name="Emso" type="iZbs_Spl:EmsoType" nillable="true"/>
+					<xs:element name="Naslov" type="iZbs_Spl:NaslovType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="PodjetnikType">
+		<xs:annotation>
+			<xs:documentation>Podjetnik (s.p.) podeduje elemente fizične osebe, k njim pa dodaja elementa: FirmaNaziv in MaticnaStevilkaFirme (za matično številko s.p.-ja)</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="iZbs_Spl:FizicnaOsebaType">
+				<xs:sequence>
+					<xs:element name="FirmaNaziv" type="iZbs_Spl:FirmaNazivType" nillable="true"/>
+					<xs:element name="MaticnaStevilkaFirme" type="iZbs_Spl:MaticnaStevilkaType" nillable="true"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="PravnaOsebaType">
+		<xs:annotation>
+			<xs:documentation>PravnaOsebaType je podatkovni tip, ki vsebuje osnovne podatke o pravni osebi osebi. Je del abstraktnega tipa SubjektType.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="iZbs_Spl:SubjektType">
+				<xs:sequence>
+					<xs:element name="FirmaNaziv" type="iZbs_Spl:FirmaNazivType">
+						<xs:annotation>
+							<xs:documentation>Ime firme/organizacije</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="DavcnaStevilka" type="iZbs_Spl:DavcnaStevilkaType" nillable="true"/>
+					<xs:element name="MaticnaStevilka" type="iZbs_Spl:MaticnaStevilkaType" nillable="true">
+						<xs:annotation>
+							<xs:documentation>10-mestna matična številka iz centralnega registra RS (AJPES)</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Naslov" type="iZbs_Spl:NaslovType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="OpombeType">
+		<xs:sequence>
+			<xs:element name="Opomba" type="iZbs_Spl:OpombaType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="OpombaType">
+		<xs:annotation>
+			<xs:documentation>Sintaktično preverljiv sklic, po standardu. Dovoljeni znaki so cifre in vezaji '-'.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="KategorijaOpombe" type="iZbs_Spl:KategorijaOpombeType"/>
+			<xs:element name="OpombaTekst" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ****************************************************************** -->
+	<xs:simpleType name="KategorijaOpombeType">
+		<xs:annotation>
+			<xs:documentation>Kode za kategorije opomb.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="OBVEZNO_PREBERI"/>
+			<xs:enumeration value="POMEMBNO_OBVESTILO"/>
+			<xs:enumeration value="INFORMACIJE"/>
+			<xs:enumeration value="OPOZORILO"/>
+			<xs:enumeration value="OSTALO"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="NapakeType">
+		<xs:annotation>
+			<xs:documentation>Zapis napak</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Napaka" type="iZbs_Spl:NapakaType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="NapakaType">
+		<xs:annotation>
+			<xs:documentation>Zapis napake (koda + opis + kategorija)</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="NapakaTip" type="iZbs_SifErr:NapakaTipType">
+				<xs:annotation>
+					<xs:documentation>OPOZORILO ali KRITICNA_NAPAKA</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NapakaKoda" type="iZbs_SifErr:NapakaKodaType">
+				<xs:annotation>
+					<xs:documentation>Šifra iz šifranta kod napak.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="NapakaOpis">
+				<xs:annotation>
+					<xs:documentation>Poljuben komentar o napaki.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="500"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="Datum" nillable="true" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Datum, ki je povezan s statusom napake. Na primer, če je koda napake = '20011-NI_TRR', potem se lahko v polje Datum piše datum zaprtja TRR.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:date"/>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="Ugovor" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Tekst za ugovor.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="200"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ****************************************************************** -->
+	<!-- konec splošnih podatkovnih tipov -->
+	<!-- ****************************************************************** -->
+	<xs:simpleType name="FirmaNazivType">
+		<xs:annotation>
+			<xs:documentation/>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="250"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:element name="EnotaIzdajateljaId" type="iZbs_Spl:MaticnaStevilkaType">
+		<xs:annotation>
+			<xs:documentation>10-mestna matična številka enote izdajatelja, iz javnega regista AJPES.</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="AvtorPodrobnostiType">
+		<xs:annotation>
+			<xs:documentation>Podrobni podatki o avtorju akcije/sklepa/dokumenta (npr. naziv, naslov ...).</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="DavcnaStevilka" type="iZbs_Spl:DavcnaStevilkaType"/>
+			<xs:element name="Naziv" type="iZbs_Spl:FirmaNazivType"/>
+			<xs:element name="Naslov" type="iZbs_Spl:NaslovType" minOccurs="0"/>
+			<xs:element name="Enota" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:choice>
+							<xs:element name="MaticnaStevilkaEnoteId" type="iZbs_Spl:MaticnaStevilkaType"/>
+							<xs:element name="InternaOznakaEnoteId" type="iZbs_Spl:InternaOznakaEnoteIdType"/>
+						</xs:choice>
+						<xs:element name="NazivEnote" type="iZbs_Spl:FirmaNazivType"/>
+						<xs:element name="NaslovEnote" type="iZbs_Spl:NaslovType" minOccurs="0"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="IdPoAvtorjuSplosniType">
+		<xs:annotation>
+			<xs:documentation>Enoličen identifikator, z združitvijo obeh podatkov unikaten pri vsakem avtorju.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Id" type="iZbs_Spl:IdType">
+				<xs:annotation>
+					<xs:documentation>Identifikacijska številka</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DavcnaStevilka" type="iZbs_Spl:DavcnaStevilkaType">
+				<xs:annotation>
+					<xs:documentation>Davčna številka avtorja zapisa</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="IdType">
+		<xs:annotation>
+			<xs:documentation>Splošna Identifikacijska številka (npr. za ID dokumenta, paketa, akcije ...) (unikaten ključ pri vsakem avtorju posebej)</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="100"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- ***************************************************************************** -->
+	<xs:complexType name="SeznamZnesekValutaTrrDavcnaType">
+		<xs:annotation>
+			<xs:documentation>Seznam elementov 'ZnesekValutaTrrDavcnaType'. Zahtevan vsaj en zapis takšnega tipa.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="ZnesekValutaTrrDavcna" type="iZbs_Spl:ZnesekValutaTrrDavcnaType" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ***************************************************************************** -->
+	<xs:complexType name="ZnesekValutaTrrDavcnaType">
+		<xs:annotation>
+			<xs:documentation>Zapis zneska z valuto + TRR + davčno številko lastnika TRR</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="ZnesekZValuto" type="iZbs_Spl:ZnesekZValutoType"/>
+			<xs:element name="TrrIban" type="iZbs_Spl:TrrIbanType"/>
+			<xs:element name="DavcnaStevilka" type="iZbs_Spl:DavcnaStevilkaType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ***************************************************************************** -->
+	<xs:complexType name="SeznamNakazilType">
+		<xs:annotation>
+			<xs:documentation>Seznam elementov 'ZnesekValutaTrrDavcnaType'. Zahtevan vsaj en zapis takšnega tipa.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Nakazilo" type="iZbs_Spl:NakaziloType" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ***************************************************************************** -->
+	<xs:complexType name="NakaziloType">
+		<xs:annotation>
+			<xs:documentation>Zapis zneska z valuto + TRR + davčno številko lastnika TRR</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="ZnesekZValuto" type="iZbs_Spl:ZnesekZValutoType"/>
+			<xs:element name="TrrIbanPlacnika" type="iZbs_Spl:TrrIbanType"/>
+			<xs:element name="TrrIbanPrejemnika" type="iZbs_Spl:TrrIbanType"/>
+			<xs:element name="DavcnaStevilkaPlacnika" type="iZbs_Spl:DavcnaStevilkaType" minOccurs="0"/>
+			<xs:element name="Sklic" type="iZbs_Spl:SklicType" minOccurs="0"/>
+			<xs:element name="Datum" type="xs:date"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ****************************************************************** -->
+	<!-- Šifrant tipov datotek -->
+	<!-- ****************************************************************** -->
+	<xs:simpleType name="FormatDatotekeType">
+		<xs:annotation>
+			<xs:documentation>Šifrant tipov/formatov datotek, za priponke.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="TXT"/>
+			<xs:enumeration value="XHTML"/>
+			<xs:enumeration value="XML"/>
+			<xs:enumeration value="PDF"/>
+			<xs:enumeration value="JPG"/>
+			<xs:enumeration value="TIF"/>
+			<xs:enumeration value="ZIP"/>
+			<xs:enumeration value="OSTALO"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- ****************************************************************** -->
+	<!-- Šifrant oblikovnih formatov, za zapis vsebine -->
+	<!-- ****************************************************************** -->
+	<xs:simpleType name="OblikovniFormatNestrukturiraneVsebineType">
+		<xs:annotation>
+			<xs:documentation>Šifrant oblikovnih formatov, za zapis nestrukturirane vsebine.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="TXT"/>
+			<xs:enumeration value="XHTML"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

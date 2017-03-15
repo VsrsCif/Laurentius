@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- shema XSD za IzvrsbeXml/1.01 --> 
+<!-- 
+*************************************************************************************
+INFO_GLAVA_SHEME
+*************************************************************************************
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:iZbs_Sts="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_Statusi.xsd" targetNamespace="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_Statusi.xsd" elementFormDefault="qualified">
+	<!-- *****************************************************************************
+	    Sklop TEHNIČNIH statusov
+	    ***************************************************************************** -->
+	<xs:simpleType name="StatusIzmenjaveType">
+		<xs:annotation>
+			<xs:documentation>Statusi izmenjave sporočila/dokumenta.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="00000-NOV"/>
+			<xs:enumeration value="00001-V_IZMENJAVI"/>
+			<xs:enumeration value="00002-PREVZET"/>
+			<xs:enumeration value="00003-PREVZET_Z_NAPAKO"/>
+			<xs:enumeration value="00009-PREVZET_FIZICNO"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="StatusObdelaveType">
+		<xs:annotation>
+			<xs:documentation>Statusi obdelav zehtevkov/akcij.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="10001-OBDELAN"/>
+			<xs:enumeration value="10002-ZAVRNJEN"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- *****************************************************************************
+	    Sklop VSEBINSKIH statusov
+	    ***************************************************************************** -->
+	<xs:simpleType name="StatusSklepaType">
+		<xs:annotation>
+			<xs:documentation>Statusi sklepov.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="30000-IZVRSLJIV"/>
+			<xs:enumeration value="30001-NEIZVRSLJIV"/>
+			<xs:enumeration value="30002-ZADRZAN"/>
+			<xs:enumeration value="30003-NADOMESCEN"/>
+			<xs:enumeration value="30004-PRISILNA_PORAVNAVA_STECAJ"/>
+			<xs:enumeration value="30005-POPLACAN"/>
+			<xs:enumeration value="30006-ZAKLJUCEN"/>
+			<!-- statusi SKLEPOV -->
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

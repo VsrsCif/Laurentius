@@ -1,0 +1,496 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- shema XSD za IzvrsbeXml/1.01 --> 
+<!-- 
+*************************************************************************************
+INFO_GLAVA_SHEME
+*************************************************************************************
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+xmlns:iZbs_SifDrz="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_SifrantDrzava.xsd"
+targetNamespace="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_SifrantDrzava.xsd" elementFormDefault="qualified">
+
+	<!-- ****************************************************************** -->
+	<!-- Država - seznam podprtih vrednosti -->
+	<!-- ****************************************************************** -->
+	<xs:simpleType name="DrzavaType">
+		<xs:annotation>
+			<xs:documentation>Šifrant držav, po ISO 3166, dvomestni zapis.</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value=""/>
+			<xs:enumeration value="AF"/>
+			<xs:enumeration value="AL"/>
+			<xs:enumeration value="DZ"/>
+			<xs:enumeration value="AD"/>
+			<xs:enumeration value="AO"/>
+			<xs:enumeration value="AI"/>
+			<xs:enumeration value="AG"/>
+			<xs:enumeration value="AR"/>
+			<xs:enumeration value="AM"/>
+			<xs:enumeration value="AW"/>
+			<xs:enumeration value="SH"/>
+			<xs:enumeration value="AU"/>
+			<xs:enumeration value="AT"/>
+			<xs:enumeration value="AZ"/>
+			<xs:enumeration value="BS"/>
+			<xs:enumeration value="BH"/>
+			<xs:enumeration value="BD"/>
+			<xs:enumeration value="BB"/>
+			<xs:enumeration value="BY"/>
+			<xs:enumeration value="BE"/>
+			<xs:enumeration value="BZ"/>
+			<xs:enumeration value="BJ"/>
+			<xs:enumeration value="BM"/>
+			<xs:enumeration value="BT"/>
+			<xs:enumeration value="BO"/>
+			<xs:enumeration value="BA"/>
+			<xs:enumeration value="BW"/>
+			<xs:enumeration value="BR"/>
+			<xs:enumeration value="IO"/>
+			<xs:enumeration value="BN"/>
+			<xs:enumeration value="BG"/>
+			<xs:enumeration value="BF"/>
+			<xs:enumeration value="BI"/>
+			<xs:enumeration value="KH"/>
+			<xs:enumeration value="CM"/>
+			<xs:enumeration value="CA"/>
+			<xs:enumeration value="CV"/>
+			<xs:enumeration value="KY"/>
+			<xs:enumeration value="CF"/>
+			<xs:enumeration value="TD"/>
+			<xs:enumeration value="CL"/>
+			<xs:enumeration value="CN"/>
+			<xs:enumeration value="CO"/>
+			<xs:enumeration value="KM"/>
+			<xs:enumeration value="CG"/>
+			<xs:enumeration value="CK"/>
+			<xs:enumeration value="CR"/>
+			<xs:enumeration value="CI"/>
+			<xs:enumeration value="HR"/>
+			<xs:enumeration value="CU"/>
+			<xs:enumeration value="CY"/>
+			<xs:enumeration value="CZ"/>
+			<xs:enumeration value="KP"/>
+			<xs:enumeration value="DC"/>
+			<xs:enumeration value="DK"/>
+			<xs:enumeration value="DJ"/>
+			<xs:enumeration value="DM"/>
+			<xs:enumeration value="DO"/>
+			<xs:enumeration value="EC"/>
+			<xs:enumeration value="EG"/>
+			<xs:enumeration value="SV"/>
+			<xs:enumeration value="GQ"/>
+			<xs:enumeration value="ER"/>
+			<xs:enumeration value="EE"/>
+			<xs:enumeration value="ET"/>
+			<xs:enumeration value="FK"/>
+			<xs:enumeration value="FO"/>
+			<xs:enumeration value="FJ"/>
+			<xs:enumeration value="FI"/>
+			<xs:enumeration value="FR"/>
+			<xs:enumeration value="GF"/>
+			<xs:enumeration value="PF"/>
+			<xs:enumeration value="TF"/>
+			<xs:enumeration value="GA"/>
+			<xs:enumeration value="GM"/>
+			<xs:enumeration value="GE"/>
+			<xs:enumeration value="DE"/>
+			<xs:enumeration value="GH"/>
+			<xs:enumeration value="GI"/>
+			<xs:enumeration value="GB"/>
+			<xs:enumeration value="GR"/>
+			<xs:enumeration value="GL"/>
+			<xs:enumeration value="GD"/>
+			<xs:enumeration value="GP"/>
+			<xs:enumeration value="GU"/>
+			<xs:enumeration value="GT"/>
+			<xs:enumeration value="GN"/>
+			<xs:enumeration value="GW"/>
+			<xs:enumeration value="GY"/>
+			<xs:enumeration value="HT"/>
+			<xs:enumeration value="HN"/>
+			<xs:enumeration value="HK"/>
+			<xs:enumeration value="HU"/>
+			<xs:enumeration value="IS"/>
+			<xs:enumeration value="IN"/>
+			<xs:enumeration value="ID"/>
+			<xs:enumeration value="IR"/>
+			<xs:enumeration value="IQ"/>
+			<xs:enumeration value="IE"/>
+			<xs:enumeration value="IL"/>
+			<xs:enumeration value="IT"/>
+			<xs:enumeration value="JM"/>
+			<xs:enumeration value="JP"/>
+			<xs:enumeration value="JO"/>
+			<xs:enumeration value="KZ"/>
+			<xs:enumeration value="KE"/>
+			<xs:enumeration value="KI"/>
+			<xs:enumeration value="KR"/>
+			<xs:enumeration value="KW"/>
+			<xs:enumeration value="KG"/>
+			<xs:enumeration value="LA"/>
+			<xs:enumeration value="LV"/>
+			<xs:enumeration value="LB"/>
+			<xs:enumeration value="LS"/>
+			<xs:enumeration value="LR"/>
+			<xs:enumeration value="LY"/>
+			<xs:enumeration value="LI"/>
+			<xs:enumeration value="LT"/>
+			<xs:enumeration value="LU"/>
+			<xs:enumeration value="MO"/>
+			<xs:enumeration value="MG"/>
+			<xs:enumeration value="MW"/>
+			<xs:enumeration value="MY"/>
+			<xs:enumeration value="MV"/>
+			<xs:enumeration value="ML"/>
+			<xs:enumeration value="MT"/>
+			<xs:enumeration value="MH"/>
+			<xs:enumeration value="MQ"/>
+			<xs:enumeration value="MR"/>
+			<xs:enumeration value="MU"/>
+			<xs:enumeration value="MX"/>
+			<xs:enumeration value="FM"/>
+			<xs:enumeration value="MD"/>
+			<xs:enumeration value="MC"/>
+			<xs:enumeration value="MN"/>
+			<xs:enumeration value="ME"/>
+			<xs:enumeration value="MS"/>
+			<xs:enumeration value="MA"/>
+			<xs:enumeration value="MZ"/>
+			<xs:enumeration value="MM"/>
+			<xs:enumeration value="NA"/>
+			<xs:enumeration value="NR"/>
+			<xs:enumeration value="NP"/>
+			<xs:enumeration value="AN"/>
+			<xs:enumeration value="NL"/>
+			<xs:enumeration value="NC"/>
+			<xs:enumeration value="NZ"/>
+			<xs:enumeration value="NI"/>
+			<xs:enumeration value="NE"/>
+			<xs:enumeration value="NG"/>
+			<xs:enumeration value="NU"/>
+			<xs:enumeration value="NF"/>
+			<xs:enumeration value="NO"/>
+			<xs:enumeration value="OM"/>
+			<xs:enumeration value="PK"/>
+			<xs:enumeration value="PW"/>
+			<xs:enumeration value="PA"/>
+			<xs:enumeration value="PG"/>
+			<xs:enumeration value="PY"/>
+			<xs:enumeration value="PE"/>
+			<xs:enumeration value="PH"/>
+			<xs:enumeration value="PN"/>
+			<xs:enumeration value="PL"/>
+			<xs:enumeration value="PT"/>
+			<xs:enumeration value="PR"/>
+			<xs:enumeration value="QA"/>
+			<xs:enumeration value="RO"/>
+			<xs:enumeration value="RU"/>
+			<xs:enumeration value="RW"/>
+			<xs:enumeration value="RE"/>
+			<xs:enumeration value="KN"/>
+			<xs:enumeration value="LC"/>
+			<xs:enumeration value="VC"/>
+			<xs:enumeration value="AS"/>
+			<xs:enumeration value="SM"/>
+			<xs:enumeration value="ST"/>
+			<xs:enumeration value="SA"/>
+			<xs:enumeration value="RE"/>
+			<xs:enumeration value="SN"/>
+			<xs:enumeration value="RS"/>
+			<xs:enumeration value="SC"/>
+			<xs:enumeration value="SL"/>
+			<xs:enumeration value="SG"/>
+			<xs:enumeration value="SK"/>
+			<xs:enumeration value="SI"/>
+			<xs:enumeration value="SB"/>
+			<xs:enumeration value="SO"/>
+			<xs:enumeration value="ZA"/>
+			<xs:enumeration value="GS"/>
+			<xs:enumeration value="ES"/>
+			<xs:enumeration value="LK"/>
+			<xs:enumeration value="SH"/>
+			<xs:enumeration value="SD"/>
+			<xs:enumeration value="SR"/>
+			<xs:enumeration value="SZ"/>
+			<xs:enumeration value="SE"/>
+			<xs:enumeration value="CH"/>
+			<xs:enumeration value="SY"/>
+			<xs:enumeration value="TJ"/>
+			<xs:enumeration value="TZ"/>
+			<xs:enumeration value="YT"/>
+			<xs:enumeration value="PM"/>
+			<xs:enumeration value="TH"/>
+			<xs:enumeration value="MK"/>
+			<xs:enumeration value="TG"/>
+			<xs:enumeration value="TK"/>
+			<xs:enumeration value="TO"/>
+			<xs:enumeration value="TT"/>
+			<xs:enumeration value="SH"/>
+			<xs:enumeration value="MP"/>
+			<xs:enumeration value="TN"/>
+			<xs:enumeration value="TR"/>
+			<xs:enumeration value="TM"/>
+			<xs:enumeration value="TC"/>
+			<xs:enumeration value="TV"/>
+			<xs:enumeration value="UG"/>
+			<xs:enumeration value="UA"/>
+			<xs:enumeration value="AE"/>
+			<xs:enumeration value="US"/>
+			<xs:enumeration value="UY"/>
+			<xs:enumeration value="UZ"/>
+			<xs:enumeration value="VU"/>
+			<xs:enumeration value="VA"/>
+			<xs:enumeration value="VE"/>
+			<xs:enumeration value="VN"/>
+			<xs:enumeration value="VG"/>
+			<xs:enumeration value="VI"/>
+			<xs:enumeration value="WF"/>
+			<xs:enumeration value="WS"/>
+			<xs:enumeration value="YE"/>
+			<xs:enumeration value="ZM"/>
+			<xs:enumeration value="ZW"/>
+			<xs:enumeration value="XK"/>
+			<xs:enumeration value="CW"/>
+			<xs:enumeration value="IM"/>
+			<xs:enumeration value="PS"/>
+			<xs:enumeration value="AX"/>
+			<!--
+					ISO 3166 kode držav
+					AF	Afghanistan
+					AL	Albania
+					DZ	Algeria
+					AD	Andorra
+					AO	Angola
+					AI	Anguilla
+					AG	Antigua and Barbuda
+					AR	Argentina
+					AM	Armenia
+					AW	Aruba
+					SH	Ascension
+					AU	Australia
+					AT	Austria *
+					AZ	Azerbaijan
+					BS	Bahamas
+					BH	Bahrain
+					BD	Bangladesh
+					BB	Barbados
+					BY	Belarus
+					BE	Belgium
+					BZ	Belize
+					BJ	Benin
+					BM	Bermuda
+					BT	Bhutan
+					BO	Bolivia
+					BA	Bosnia and Herzegovina
+					BW	Botswana
+					BR	Brazil
+					IO	British Indian Ocean Territory
+					BN	Brunei Darussalam
+					BG	Bulgaria (Rep)
+					BF	Burkina Faso
+					BI	Burundi
+					KH	Cambodia
+					CM	Cameroon
+					CA	Canada *
+					CV	Cape Verde
+					KY	Cayman Islands
+					CF	Central African Rep
+					TD	Chad
+					CL	Chile
+					CN	China (People's Rep)
+					CO	Colombia
+					KM	Comoros
+					CG	Congo (Rep)
+					CK	Cook Islands
+					CR	Costa Rica
+					CI	Cote d'Ivoire (Rep)
+					HR	Croatia
+					CU	Cuba
+					CY	Cyprus
+					CZ	Czech Rep
+					KP	Dem People's Rep of Korea
+					DC	Dem Rep of the Congo
+					DK	Denmark
+					DJ	Djibouti
+					DM	Dominica
+					DO	Dominican Republic
+					EC	Ecuador
+					EG	Egypt
+					SV	El Salvador
+					GQ	Equatorial Guinea
+					ER	Eritrea
+					EE	Estonia
+					ET	Ethiopia
+					FK	Falkland Islands (Malvinas)
+					FO	Faröe Islands
+					FJ	Fiji
+					FI	Finland (including the Aland Islands)*
+					FR	France
+					GF	French Guiana
+					PF	French Polynesia (including Clipperton Island)
+					TF	French Southern and Antarctic Territories (St. Paul and Amsterdam Islands, Crozet Islands, Kerguelen Islands, Terre Adélie)
+					GA	Gabon
+					GM	Gambia
+					GE	Georgia
+					DE	Germany *
+					GH	Ghana
+					GI	Gibraltar
+					GB	Great Britain (United Kingdom of Great Britain and Northern Ireland, Guernsey, Jersey, Isle of Man)*
+					GR	Greece
+					GL	Greenland
+					GD	Grenada
+					GP	Guadeloupe (including St Barthélémy and St Martin)
+					GU	Guam
+					GT	Guatemala
+					GN	Guinea
+					GW	Guinea-Bissau
+					GY	Guyana
+					HT	Haiti
+					HN	Honduras (Rep)
+					HK	Hong Kong
+					HU	Hungary (Rep)*
+					IS	Iceland
+					IN	India
+					ID	Indonesia
+					IR	Iran (Islamic Rep)
+					IQ	Iraq
+					IE	Ireland *
+					IL	Israel
+					IT	Italy *
+					JM	Jamaica
+					JP	Japan
+					JO	Jordan
+					KZ	Kazakhstan
+					KE	Kenya
+					KI	Kiribati
+					KR	Korea (Rep)
+					KW	Kuwait
+					KG	Kyrgyzstan
+					LA	Lao People's Dem Rep
+					LV	Latvia
+					LB	Lebanon
+					LS	Lesotho
+					LR	Liberia
+					LY	Libyan Jamahiriya
+					LI	Liechtenstein
+					LT	Lithuania
+					LU	Luxembourg *
+					MO	Macao
+					MG	Madagascar
+					MW	Malawi
+					MY	Malaysia
+					MV	Maldives
+					ML	Mali
+					MT	Malta
+					MH	Marshall Islands
+					MQ	Martinique
+					MR	Mauritania
+					MU	Mauritius
+					MX	Mexico
+					FM	Micronesia (Federal States of)
+					MD	Moldova
+					MC	Monaco
+					MN	Mongolia
+					ME	Montenegro
+					MS	Montserrat
+					MA	Morocco
+					MZ	Mozambique
+					MM	Myanmar
+					NA	Namibia
+					NR	Nauru
+					NP	Nepal
+					AN	Netherlands Antilles (Bonaire, Curacao, Saba, St Eustatius, St Maarten)
+					NL	Netherlands*
+					NC	New Caledonia
+					NZ	New Zealand (including the Ross Dependency)
+					NI	Nicaragua
+					NE	Niger
+					NG	Nigeria
+					NU	Niue
+					NF	Norfolk Island
+					NO	Norway
+					OM	Oman
+					PK	Pakistan
+					PW	Palau
+					PA	Panama (Rep)
+					PG	Papua New Guinea
+					PY	Paraguay
+					PE	Peru
+					PH	Philippines
+					PN	Pitcairn Islands (Pitcairn, Henderson, Ducie and Oeno)
+					PL	Poland (Rep)
+					PT	Portugal
+					PR	Puerto Rico
+					QA	Qatar
+					RO	Romania
+					RU	Russian Federation *
+					RW	Rwanda
+					RE	Réunion
+					KN	Saint Christopher (St Kitts) and Nevis
+					LC	Saint Lucia
+					VC	Saint Vincent and the Grenadines
+					AS	Samoa
+					SM	San Marino
+					ST	Sao Tome and Principe
+					SA	Saudi Arabia
+					RE	Scaterred Islands (Bassas da India, Europa, Juan de Nova, Glorieuses, Tromelin)
+					SN	Senegal
+					RS	Serbia
+					SC	Seychelles
+					SL	Sierra Leone
+					SG	Singapore
+					SK	Slovakia
+					SI	Slovenia
+					SB	Solomon Islands
+					SO	Somalia
+					ZA	South Africa
+					GS	South Georgia and the South Sandwich Islands
+					ES	Spain
+					LK	Sri Lanka
+					SH	St Helena
+					SD	Sudan
+					SR	Suriname
+					SZ	Swaziland
+					SE	Sweden
+					CH	Switzerland
+					SY	Syrian Arab Rep
+					TJ	Tajikistan
+					TZ	Tanzania (United Rep)
+					YT	Territorial Community of Mayotte
+					PM	Territorial Community of St Pierre and Miquelon
+					TH	Thailand
+					MK	The former Yugoslav Republic Of Macedonia
+					TG	Togo
+					TK	Tokelau
+					TO	Tonga (including Niuafo'ou)
+					TT	Trinidad and Tobago
+					SH	Tristan da Cunha
+					MP	Trust Territory of the Pacific Islands (Mariana Islands including Saipan and Tinian, but not the United States possession of Guam)
+					TN	Tunisia
+					TR	Turkey
+					TM	Turkmenistan
+					TC	Turks and Caicos Islands
+					TV	Tuvalu
+					UG	Uganda
+					UA	Ukraine
+					AE	United Arab Emirates
+					US	United States of America*
+					UY	Uruguay
+					UZ	Uzbekistan
+					VU	Vanuatu
+					VA	Vatican
+					VE	Venezuela
+					VN	Viet Nam
+					VG	Virgin Islands
+					VI	Virgin Islands of the United States of America
+					WF	Wallis and Futuna Islands
+					WS	Western Samoa
+					YE	Yemen
+					ZM	Zambia
+					ZW	Zimbabwe
+					XK  Kosovo
+				-->
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

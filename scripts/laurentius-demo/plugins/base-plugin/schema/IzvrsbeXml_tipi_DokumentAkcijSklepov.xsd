@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- shema XSD za IzvrsbeXml/1.01 --> 
+<!-- 
+*************************************************************************************
+INFO_GLAVA_SHEME
+*************************************************************************************
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:iZbs_DocAS="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_DokumentAkcijSklepov.xsd" xmlns:iZbs_AS="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_AkcijeSklepov.xsd" xmlns:iZbs_ElDoc="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_ElementiDokumenta.xsd" targetNamespace="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_DokumentAkcijSklepov.xsd" elementFormDefault="qualified">
+	<xs:import namespace="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_AkcijeSklepov.xsd" schemaLocation="IzvrsbeXml_tipi_AkcijeSklepov.xsd"/>
+	<xs:import namespace="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_ElementiDokumenta.xsd" schemaLocation="IzvrsbeXml_tipi_ElementiDokumenta.xsd"/>
+	<!-- *****************************************************************************
+	    SKLOP: GLAVNI PODATKOVNI TIPI
+	    ***************************************************************************** -->
+	<xs:complexType name="DokumentAkcijSklepovType">
+		<xs:annotation>
+			<xs:documentation/>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="OsnovniPodatkiDokumenta" type="iZbs_ElDoc:OsnovniPodatkiDokumentaType"/>
+			<xs:element name="PaketAkcijSklepov" type="iZbs_DocAS:PaketAkcijSklepovType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- *****************************************************************************
+	    SKLOP: POMOŽNI PODATKOVNI TIPI, ki so del glavnih podatkovnih tipov
+	    ***************************************************************************** -->
+	<xs:complexType name="PaketAkcijSklepovType">
+		<xs:annotation>
+			<xs:documentation/>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="SplosniPodatkiOPaketu" type="iZbs_ElDoc:SplosniPodatkiOPaketuType"/>
+			<xs:element name="AkcijeSklepov" type="iZbs_DocAS:AkcijeSklepovType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="AkcijeSklepovType">
+		<xs:annotation>
+			<xs:documentation/>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="AkcijaSklepa" type="iZbs_AS:AkcijaSklepaType" minOccurs="1" maxOccurs="500"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

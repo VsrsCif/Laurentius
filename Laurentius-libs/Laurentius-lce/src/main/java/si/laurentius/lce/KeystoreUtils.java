@@ -347,7 +347,7 @@ public class KeystoreUtils {
     } catch (KeyStoreException ex) {
       throw new SEDSecurityException(ReadWriteFileException, ex,
               "Read keystore aliased: !");
-    } catch (CertificateEncodingException | NoSuchAlgorithmException ex) {
+    } catch (CertificateEncodingException ex) {
       throw new SEDSecurityException(ReadWriteFileException, ex,
               "Error calculating sha digest for certificate!");
     }

@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- shema XSD za IzvrsbeXml/1.01 --> 
+<!-- 
+*************************************************************************************
+INFO_GLAVA_SHEME
+*************************************************************************************
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:iZbs_ObvOSkl="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_ObvestilaOSklepih.xsd" xmlns:iZbs_ElS="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_ElementiSklepa.xsd" xmlns:iZbs_ElDoc="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_ElementiDokumenta.xsd" xmlns:iZbs_Spl="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_SplosniTipi.xsd" targetNamespace="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_ObvestilaOSklepih.xsd" elementFormDefault="qualified">
+	<xs:import namespace="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_ElementiDokumenta.xsd" schemaLocation="IzvrsbeXml_tipi_ElementiDokumenta.xsd"/>
+	<xs:import namespace="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_ElementiSklepa.xsd" schemaLocation="IzvrsbeXml_tipi_ElementiSklepa.xsd"/>
+	<xs:import namespace="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_SplosniTipi.xsd" schemaLocation="IzvrsbeXml_tipi_SplosniTipi.xsd"/>
+	<xs:complexType name="ObvestiloOSklepuType" abstract="true">
+		<xs:annotation>
+			<xs:documentation>
+				ObvestiloOSklepuType je abstraktni podatkovni tip, ki vsebuje veliko podtipov, ki razširjajo osnovni tip ObvestiloOSklepuType, za vsako podvrsto obvestila.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="IdObvestila" type="iZbs_Spl:IdPoAvtorjuSplosniType"/>
+			<xs:element name="AvtorObvestilaPodrobnosti" type="iZbs_Spl:AvtorPodrobnostiType" minOccurs="0"/>
+			<xs:element name="DatumObvestila" type="xs:date"/>
+			<xs:element name="OpombeObvestila" type="iZbs_Spl:OpombeType" minOccurs="0"/>
+			<!--			<xs:element name="PrilozeneDatoteke" type="PrilozeneDatotekeType" minOccurs="0"/> -->
+		</xs:sequence>
+	</xs:complexType>
+	<!-- *****************************************************************************
+	    SKLOP 1: GLAVNA OBVESTILA, ki jih pošiljajo banke/izvrševalci do izdajateljev. Glavna obvestila lahko v določenih primerih predstavljajo abstraktni tip, ki ima izpeljanih več podtipov.
+	    ***************************************************************************** -->
+	<xs:complexType name="OBVESTILO_O_SPREMEMBI_STATUSA_Type">
+		<xs:annotation>
+			<xs:documentation>OBVESTILO_O_SPREMEMBI_STATUSA_Type je podatkovni tip, ki je namenjen obveščanju o spremembi statusa sklepa.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="iZbs_ObvOSkl:ObvestiloOSklepuType">
+				<xs:sequence>
+					<xs:element name="IdSklepa" type="iZbs_ElS:IdSklepaType"/>
+					<xs:element name="StatusSklepaPriSubjektu" type="iZbs_ElS:StatusSklepaPriSubjektuType"/>
+					<xs:element name="IniciatorSpremembeStatusa" type="iZbs_ObvOSkl:IniciatorSpremembeStatusaType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ***************************************************************************** -->
+	<xs:complexType name="OBVESTILO_O_STANJU_SKLEPA_Type">
+		<xs:annotation>
+			<xs:documentation>OBVESTILO_O_STANJU_SKLEPA_Type je podatkovni tip, ki je namenjen obveščanju o stanju sklepa.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="iZbs_ObvOSkl:ObvestiloOSklepuType">
+				<xs:sequence>
+					<xs:element name="IdSklepa" type="iZbs_ElS:IdSklepaType"/>
+					<xs:element name="StatusSklepaPriSubjektu" type="iZbs_ElS:StatusSklepaPriSubjektuType"/>
+					<xs:element name="VrstniRedPriDolzniku" type="xs:unsignedShort"/>
+					<!-- parameter VrstniRedPriDolzniku lahko vsebuje vrednosti od 0 do 65535 -->
+					<xs:element name="ZnesekNepoplacanegaDolgaVEur" type="xs:decimal"/>
+					<!-- pozitiven znesek >= 0 -->
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ***************************************************************************** -->
+	<xs:complexType name="OBVESTILO_O_POMANJKANJU_SREDSTEV_Type">
+		<xs:annotation>
+			<xs:documentation>OBVESTILO_O_POMANJKANJU_SREDSTEV_Type je podatkovni tip, ki je namenjen obveščanju o neobstoju sredstev na TRR ali prilivov, v daljšem časovnem obdobju.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="iZbs_ObvOSkl:ObvestiloOSklepuType">
+				<xs:sequence>
+					<xs:element name="IdSklepa" type="iZbs_ElS:IdSklepaType"/>
+					<xs:element name="TipPomanjkanjaSredstev" type="iZbs_ObvOSkl:TipPomanjkanjaSredstevType"/>
+					<xs:element name="DatumPomanjkanjaSredstevOd" type="xs:date" minOccurs="0"/>
+					<xs:element name="AliImaDolznikDepozit" type="xs:boolean" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ***************************************************************************** -->
+	<xs:complexType name="OBVESTILO_O_OBSTOJU_SREDSTEV_Type">
+		<xs:annotation>
+			<xs:documentation>OBVESTILO_O_OBSTOJU_SREDSTEV_Type je podatkovni tip, ki je namenjen obveščanju o obstoju sredstev na TRR in zmožnosti delnega ali celotnega poplačila sklepa.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="iZbs_ObvOSkl:ObvestiloOSklepuType">
+				<xs:sequence>
+					<xs:element name="IdSklepa" type="iZbs_ElS:IdSklepaType"/>
+					<xs:element name="TipSredstev" type="iZbs_ObvOSkl:TipSredstevType"/>
+					<xs:element name="SeznamZnesekValutaTrrDavcna" type="iZbs_Spl:SeznamZnesekValutaTrrDavcnaType"/>
+					<xs:element name="DatumInUraStanja" type="xs:dateTime"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<!-- ***************************************************************************** -->
+	<xs:complexType name="OBVESTILO_O_POPLACILU_Type">
+		<xs:annotation>
+			<xs:documentation>OBVESTILO_O_POPLACILU_Type je podatkovni tip, ki je namenjen obveščanju o delnem ali celotnem poplačilu sklepa.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="iZbs_ObvOSkl:ObvestiloOSklepuType">
+				<xs:sequence>
+					<xs:element name="IdSklepa" type="iZbs_ElS:IdSklepaType"/>
+					<xs:element name="TipPoplacila" type="iZbs_ObvOSkl:TipPoplacilaType"/>
+					<xs:element name="DatumPoplacila" type="xs:date" minOccurs="0"/>
+					<xs:element name="SeznamNakazil" type="iZbs_Spl:SeznamNakazilType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	
+	<!-- ***************************************************************************** -->
+	<!-- Obvestilo tipa OBVESTILO_O_DEPOZITU_Type je namenjeno porocanju podatkov o depozitu; obvestilo je nastalo na predlog FURS. -->
+	<xs:complexType name="OBVESTILO_O_DEPOZITU_Type">
+		<xs:annotation>
+			<xs:documentation>OBVESTILO_O_DEPOZITU_Type je podatkovni tip, ki je namenjen obveščanju o obstoju depozita.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="iZbs_ObvOSkl:ObvestiloOSklepuType">
+				<xs:sequence>
+					<xs:element name="IdSklepa" type="iZbs_ElS:IdSklepaType"/>
+					<xs:element name="TipSredstev" type="iZbs_ObvOSkl:TipSredstevType" minOccurs="0" nillable="true"/>
+					<xs:element name="ZnesekZValuto" type="iZbs_Spl:ZnesekZValutoType" minOccurs="0" nillable="true"/>
+					<xs:element name="DatumSprostitveSredstev" type="xs:date" minOccurs="0" nillable="true"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	
+	<!-- *****************************************************************************
+	    SKLOP PODTIPOV povezanih z obvestili
+	    ***************************************************************************** -->
+	<xs:simpleType name="IniciatorSpremembeStatusaType">
+		<xs:annotation>
+			<xs:documentation/>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="POPLACILO"/>
+			<xs:enumeration value="ZAPRTJE_TRR"/>
+			<xs:enumeration value="ZAHTEVA_IZDAJATELJA"/>
+			<xs:enumeration value="OSTALO"/>
+			<!--			<xs:enumeration value="OSEBNI_STECAJ"/> -->
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- ***************************************************************************** -->
+	<xs:simpleType name="TipPomanjkanjaSredstevType">
+		<xs:annotation>
+			<xs:documentation/>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="DOLGOROCNO_NI_PRILIVOV"/>
+			<xs:enumeration value="DOLGOROCNO_NI_RUBLJIVIH_PRILIVOV"/>
+			<xs:enumeration value="DOLGOROCNO_NI_RUBLJIVIH_SREDSTEV_IN_PRILIVOV"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- ***************************************************************************** -->
+	<xs:simpleType name="TipSredstevType">
+		<xs:annotation>
+			<xs:documentation/>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="ZA_CELOTNO_POPLACILO"/>
+			<xs:enumeration value="ZA_DELNO_POPLACILO"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- ***************************************************************************** -->
+	<xs:simpleType name="TipPoplacilaType">
+		<xs:annotation>
+			<xs:documentation/>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="CELOTNO_POPLACILO"/>
+			<xs:enumeration value="DELNO_POPLACILO"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- ***************************************************************************** -->
+	<xs:simpleType name="TipObvestilaOSklepihType">
+		<xs:annotation>
+			<xs:documentation>TipObvestilaOSklepihType - definira vse možne tipe obvestil o sklepih (ki jih banke/izvrševalci pošiljajo izdajateljem).</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="OBVESTILO_O_SPREMEMBI_STATUSA"/>
+			<xs:enumeration value="OBVESTILO_O_STANJU_SKLEPA"/>
+			<xs:enumeration value="OBVESTILO_O_POMANJKANJU_SREDSTEV"/>
+			<xs:enumeration value="OBVESTILO_O_OBSTOJU_SREDSTEV"/>
+			<xs:enumeration value="OBVESTILO_O_POPLACILU"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

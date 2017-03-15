@@ -176,8 +176,12 @@
                                 <p:column headerText="#{msg['Description']}">
                                     <h:outputText value="#{plpart.description}" />
                                 </p:column>
-                                <p:column headerText="#{msg['MimeType']}">
+                               <p:column width="60" headerText="#{msg['MimeType']}">
                                     <h:outputText value="#{plpart.mimeType}" />
+                                </p:column>
+
+                                <p:column width="60" headerText="#{msg['Size']}">
+                                    <h:outputText value="#{LookupsData.getHumanReadableSize(plpart.size)}" />
                                 </p:column>
 
                             </p:dataTable>

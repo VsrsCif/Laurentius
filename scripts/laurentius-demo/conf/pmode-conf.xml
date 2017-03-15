@@ -46,7 +46,7 @@
             <PartyId type="urn:oasis:names:tc:ebcore:partyid-type:unregistered:si-svev:sed-box" valueSource="address"/>
             <TransportProtocol id="defalut" isTwoWayProtocol="true">
                 <Address connectionTimeout="120000" receiveTimeout="180000" chunked="false">https://127.0.0.1:8443/laurentius/msh</Address>
-                <TLS serverTrustCertAlias="test-tls"/>
+                <TLS serverTrustCertAlias="test-tls" disableCNAndHostnameCheck="true"/>
                 <Proxy host=""/>
                 <SOAPVersion>1.2</SOAPVersion>
             </TransportProtocol>
@@ -58,7 +58,7 @@
             <PartyId type="urn:oasis:names:tc:ebcore:partyid-type:unregistered:si-svev:sed-box" valueSource="address"/>
             <TransportProtocol id="court-https" isTwoWayProtocol="true">
                 <Address connectionTimeout="120000" receiveTimeout="180000" chunked="false">https://b2g-test.sodisce.si/laurentius/msh</Address>
-                <TLS clientKeyAlias="test-laurentius" serverTrustCertAlias="court-laurentius"/>
+                <TLS clientKeyAlias="test-tls" serverTrustCertAlias="b2g-test.sodisce.si" disableCNAndHostnameCheck="false"/>
                 <Proxy host=""/>
                 <SOAPVersion>1.2</SOAPVersion>
             </TransportProtocol>
@@ -85,7 +85,7 @@
     <ReceptionAwarenessPatterns>
         <ReceptionAwareness id="AS4ReceiptResponse" replyPattern="response" receiptType="AS4Receipt">
             <Retry maxRetries="3" multiplyPeriod="3" period="5678"/>
-            <DuplicateDetection windowPeriode="P1Y"/>
+            <DuplicateDetection windowPeriode="P1Y"  eliminate="true"/>
         </ReceptionAwareness>
     </ReceptionAwarenessPatterns>
     <PMode id="DeliveryWithReceipt">
@@ -121,14 +121,6 @@
     </PMode>
     <PMode id="ZPP-legal">
         <ServiceIdRef>LegalDelivery_ZPP</ServiceIdRef>
-        <Plugins>
-            <InPlugins>
-                <Plugin>java:global/plugin-zpp/ZPPInInterceptor!si.laurentius.commons.interfaces.SoapInterceptorInterface</Plugin>
-            </InPlugins>
-            <OutPlugins>
-                <Plugin>java:global/plugin-zpp/ZPPOutInterceptor!si.laurentius.commons.interfaces.SoapInterceptorInterface</Plugin>
-            </OutPlugins>
-        </Plugins>
         <LocalPartyInfo partyIdentitySetIdRef="test-laurentius" partyDefTransportIdRef="defalut">
             <Role>Sender</Role>
             <Role>Receiver</Role>

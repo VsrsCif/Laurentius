@@ -65,6 +65,10 @@ public class ZPPConstants {
      *
      */
   public static final String S_ZPP_ENC_SUFFIX = ".zpp.enc";
+  
+  public static final String S_PART_PROPERTY_ORIGIN_MIMETYPE = "OriginMimeType";
+  
+  
 
   /**
      *

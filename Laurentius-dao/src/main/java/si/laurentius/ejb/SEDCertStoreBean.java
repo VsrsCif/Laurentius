@@ -98,7 +98,7 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
   public EntityManager memEManager;
   private final Map<String, String> mhmPswd = new HashMap<>();
 
-  private KeystoreUtils mku = new KeystoreUtils();
+  private final KeystoreUtils mku = new KeystoreUtils();
   private long mlastRefreshTime = 0;
   List<SEDCertificate> mlstCertificates = new ArrayList<>();
   List<SEDCertificate> mlstRootCA = new ArrayList<>();
@@ -157,6 +157,8 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
    *
    */
   public static final String SEC_PROVIDER = "org.apache.ws.security.crypto.provider";
+  
+  private String mstrCrlUpdateMessage = null;
 
   /**
    *
@@ -915,9 +917,9 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
       try {
         cres = CRLVerifier.downloadCRL(u.getValue(), null);
       } catch (IOException | CertificateException | CRLException | NamingException ex) {
-        String msg = String.format("Error retrieving CRL Cache for %s url:",
-                crl.getIssuerDN(), u.getValue());
-        LOG.logError(msg, ex);
+        String msg = String.format("Error retrieving CRL Cache for %s url: error %s",
+                crl.getIssuerDN(), u.getValue(),ex.getMessage());
+        LOG.logError(msg, null);
       }
       if (cres != null) {
         break;
@@ -990,6 +992,10 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
             SEDSystemProperties.getCertstoreFile().getAbsolutePath());
     signVerProperties.put(SEC_MERLIN_TRUSTSTORE_TYPE, "JKS");
     return signVerProperties;
+  }
+  
+  public String getCurrentUpdateCRLErrorlMessage(){
+   return mstrCrlUpdateMessage;
   }
 
 }

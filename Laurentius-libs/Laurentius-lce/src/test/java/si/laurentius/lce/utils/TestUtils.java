@@ -1,10 +1,15 @@
 package si.laurentius.lce.utils;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.X509Certificate;
+import java.util.Calendar;
 import si.laurentius.commons.exception.SEDSecurityException;
 import si.laurentius.lce.KeystoreUtils;
 
@@ -47,5 +52,49 @@ public class TestUtils {
             KEYSTORE_PASSWORD.toCharArray());
     return cu.getPrivateKeyEntryForAlias(ks, SIGN_KEY_ALIAS, KEY_PASSWORD);
 
+  }
+  
+  public File createFile(String data)
+      throws IOException {
+
+    return createFile(data.getBytes("UTF-8"));
+  }
+
+  public File createFile(byte[] data)
+      throws IOException {
+    File f = File.createTempFile("hu-test", ".bin");
+
+    try (final FileOutputStream fos = new FileOutputStream(f)) {
+      fos.write(data);
+    }
+
+    return f;
+  }
+
+
+  public File createFile(File parent, String content)
+      throws IOException {
+    File f = File.createTempFile("hu-test", ".bin", parent);
+
+    try (final FileOutputStream fos = new FileOutputStream(f)) {
+      if (content != null) {
+        fos.write(content.getBytes("UTF-8"));
+      } else {
+        fos.write("Test data".getBytes("UTF-8"));
+      }
+    }
+
+    return f;
+  }
+
+  public File createEmptyFile()
+      throws IOException {
+    File f = File.createTempFile("hu-test", ".bin");
+    return f;
+  }
+
+  public byte[] getTestByteArray()
+      throws UnsupportedEncodingException {
+    return ("testbuffer" + Calendar.getInstance().getTimeInMillis()).getBytes("utf-8");
   }
 }

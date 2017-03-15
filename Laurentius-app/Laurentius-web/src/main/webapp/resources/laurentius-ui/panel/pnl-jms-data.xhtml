@@ -10,6 +10,7 @@
       >
     <cc:interface>
         <cc:attribute name="data" type="si.laurentius.commons.interfaces.JMSManagerInterface$QueueData" />
+        <cc:valueHolder name="var"  targets="data"  class="si.laurentius.commons.interfaces.JMSManagerInterface$QueueData"  />
     </cc:interface>
     <cc:implementation >
         
@@ -18,7 +19,7 @@
                  <h:outputText  value="#{cc.attrs.data.address}" />                               
             </f:facet>          
             <h:outputText value="#{msg['expiryAddress']}:" />
-            <h:outputText  value="#{cc.attrs.data.expiryAddress}" />
+            <h:outputText  value="#{attrs.data.expiryAddress}" />
             
             <h:outputText value="#{msg['deadLetterAddress']}:" />
             <h:outputText  value="#{cc.attrs.data.deadLetterAddress}" />

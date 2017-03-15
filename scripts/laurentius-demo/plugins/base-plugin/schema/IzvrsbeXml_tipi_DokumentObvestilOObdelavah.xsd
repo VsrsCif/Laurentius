@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- shema XSD za IzvrsbeXml/1.01 --> 
+<!-- 
+*************************************************************************************
+INFO_GLAVA_SHEME
+*************************************************************************************
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:iZbs_ObvOObd="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_ObvestilaOObdelavah.xsd" xmlns:iZbs_ElDoc="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_ElementiDokumenta.xsd" xmlns:iZbs_DocObvOObd="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_DokumentObvestilOObdelavah.xsd" targetNamespace="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_DokumentObvestilOObdelavah.xsd" elementFormDefault="qualified">
+	<xs:import namespace="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_ObvestilaOObdelavah.xsd" schemaLocation="IzvrsbeXml_tipi_ObvestilaOObdelavah.xsd"/>
+	<xs:import namespace="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_ElementiDokumenta.xsd" schemaLocation="IzvrsbeXml_tipi_ElementiDokumenta.xsd"/>
+	<!-- *****************************************************************************
+	    SKLOP: GLAVNI PODATKOVNI TIPI
+	    ***************************************************************************** -->
+	<xs:complexType name="DokumentObvestilOObdelavahType">
+		<xs:annotation>
+			<xs:documentation/>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="OsnovniPodatkiDokumenta" type="iZbs_ElDoc:OsnovniPodatkiDokumentaType"/>
+			<xs:element name="PaketObvestil" type="iZbs_DocObvOObd:PaketObvestilOObdelavahType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- *****************************************************************************
+	    SKLOP: POMOŽNI PODATKOVNI TIPI, ki so del glavnih podatkovnih tipov
+	    ***************************************************************************** -->
+	<xs:complexType name="PaketObvestilOObdelavahType">
+		<xs:annotation>
+			<xs:documentation/>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="SplosniPodatkiOPaketu" type="iZbs_ElDoc:SplosniPodatkiOPaketuType"/>
+			<xs:element name="ObvestilaOObdelavah" type="iZbs_DocObvOObd:ObvestilaOObdelavahType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ObvestilaOObdelavahType">
+		<xs:annotation>
+			<xs:documentation/>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="ObvestiloOObdelavi" type="iZbs_ObvOObd:ObvestiloOObdelaviType" minOccurs="1" maxOccurs="500"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

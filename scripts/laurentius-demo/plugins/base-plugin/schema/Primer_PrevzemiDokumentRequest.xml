@@ -1,0 +1,56 @@
+<?xml version="1.0" ?>
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+  <S:Body>
+    <ns10:PrevzemiDokumentRequest xmlns="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_ElementiSklepa.xsd" xmlns:ns2="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_SplosniTipi.xsd" xmlns:ns3="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_ObvestilaOObdelavah.xsd" xmlns:ns4="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_ElementiDokumenta.xsd" xmlns:ns5="http://www.w3.org/2000/09/xmldsig#" xmlns:ns6="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_ObvestilaOSklepih.xsd" xmlns:ns7="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_DokumentPovratnica.xsd" xmlns:ns8="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_DokumentNeprevzetihDokumentov.xsd" xmlns:ns9="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_ZaglavjeSporocil.xsd" xmlns:ns10="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_OperacijeWS.xsd" xmlns:ns11="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_Body.xsd" xmlns:ns12="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_DokumentAkcijSklepov.xsd" xmlns:ns13="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_AkcijeSklepov.xsd" xmlns:ns14="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_DokumentObvestilOObdelavah.xsd" xmlns:ns15="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_DokumentObvestilOSklepih.xsd">
+      <ns10:Header>
+        <ns9:DatumSporocila>2014-06-23T13:42:37.512+02:00</ns9:DatumSporocila>
+        <ns9:IdSporocila>
+          <ns2:Id>3de1ec95-5097-4d50-a30e-c785f432df63</ns2:Id>
+          <ns2:DavcnaStevilka>
+            <ns2:Drzava>SI</ns2:Drzava>
+            <ns2:Vrednost>94314527</ns2:Vrednost>
+          </ns2:DavcnaStevilka>
+        </ns9:IdSporocila>
+        <ns9:PrejemnikSporocila>
+          <ns2:DavcnaStevilka>
+            <ns2:Drzava>SI</ns2:Drzava>
+            <ns2:Vrednost>47730811</ns2:Vrednost>
+          </ns2:DavcnaStevilka>
+          <ns2:Naziv>CARINSKA UPRAVA RS</ns2:Naziv>
+          <ns2:Naslov>
+            <ns2:Ulica>Šmartinska</ns2:Ulica>
+            <ns2:HisnaStevilka>55</ns2:HisnaStevilka>
+            <ns2:Kraj>Ljubljana</ns2:Kraj>
+            <ns2:Posta>1000</ns2:Posta>
+            <ns2:PostniPredal xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"/>
+            <ns2:Drzava>SI</ns2:Drzava>
+          </ns2:Naslov>
+        </ns9:PrejemnikSporocila>
+        <ns9:PosiljateljSporocila>
+          <ns2:DavcnaStevilka>
+            <ns2:Drzava>SI</ns2:Drzava>
+            <ns2:Vrednost>94314527</ns2:Vrednost>
+          </ns2:DavcnaStevilka>
+          <ns2:Naziv>Nova KBM d.o.o.</ns2:Naziv>
+          <ns2:Naslov>
+            <ns2:Ulica>Vita Kraigherja</ns2:Ulica>
+            <ns2:HisnaStevilka>4</ns2:HisnaStevilka>
+            <ns2:Kraj>Maribor</ns2:Kraj>
+            <ns2:Posta>2000</ns2:Posta>
+            <ns2:PostniPredal xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true"/>
+            <ns2:Drzava>SI</ns2:Drzava>
+          </ns2:Naslov>
+        </ns9:PosiljateljSporocila>
+        <ns9:TestAliProdukcija>TEST</ns9:TestAliProdukcija>
+        <ns9:IdIzvornegaSistema>NKBM</ns9:IdIzvornegaSistema>
+        <ns9:Verzija>
+          <ns9:VerzijaStoritve>1.0</ns9:VerzijaStoritve>
+          <ns9:VerzijaXsdShemeSporocila>1.0</ns9:VerzijaXsdShemeSporocila>
+        </ns9:Verzija>
+      </ns10:Header>
+      <ns10:Body>
+        <ns11:SporociloZipInBase64>UEsDBBQACAAIAFNt10QAAAAAAAAAAAAAAAA+AAAAZGF2Y25hU3Rldmlsa2FQcmVqZW1uaWthU3RyamF2YS50ZXh0LlNpbXBsZURhdGVGb3JtYXRANmM0OGJiYTHNVttu4zYQfS/QfzDUx0Cmrr5B1iKJk6ybOBtYjjfty4KSxjJlidSSspz4H/pX/bBSli/Krc0mBVrohRyeOTycGQ7lfLpPk0YBXBBG+4re1JQG0ICFhEZ95XZyrnaUhsgxDXHCKPQVypRPrkOF2bvhUKwhJQO2WKZA87s0GcP3JYi8ITmp6ElQX5nnedZDaLVaNde+UCOybgqCvGAOKRZouC648EG6Irl1bfptx0qmAnxCxYI070WoVNTvp81JRr79jqMEFzF4GeMsIEmNWYo2PsjuZQkTlEzk+DGx9UHiExY+PGa0HzGuzCbjETI0TUNaF0lQKEj0i1Kl6zPgELjrDHC+THcnx66h6ZaqtVTDnOhmzzJ6Zrtp68aRZvQ0zUFP0M4wrE1krHrD0DVD0CHo2qqtdduqFdqaik0N1KDdsWeWaYSzlumgLXjjNMBFQLGXQ0GSxZZowNe4wK43rKDb6WZpyiGkTORu1zJ1yzbaFWRv3no8IUWPtMpqjSGlZPFE/3ultDVT1zq6/SYppe0ar0nhDteh5MohiStkZd0CRMK249uEBNiVdcrBx3/+scCNU3mvcOVTLW5wn4mo7WMZFeCxdQO85Dh2R5gTn/EKtLFs1m6kcOzqWpnvw3y/RImMnbz+26q7F+SVqtPR3eiqqmVV3ljZNAKQtSpIj5Kkr+R8CQr62wijehzQSymTgkgSbwL4LyXyh2rqkLJrVuDG5cmoETaZ/N6QzSnJpQfHJJoDj/8xlx9IpfH/S+WLaZvImj5OpCYWLhcBibE7OfMmDnpul31HdkPGKUTYIyKXutxrGf3ykj9bcKbA1xuv7cDLGSd5Aa7sqg56atyh7kToyQPDQWAd/nx1v7Q57KHBluOyVZcjS7a83Ut2aJigW5nZalsqFi1dtXK7q/qWb6jdTgiaOdMDjI3/omE+04sOZ/FIROVbwOGFF/j1h6f0gnBIZ8x1TjFlVFZ7QtY4l38bI8jnLGwcJ1GZiHn6EuVkXFXj+OxUlbRqoFtULS2y+9plBe5lvYXtqUAusCrmWC+JxjADLv98oHE7HvYVqX3CMRUzxlNRG//YBkALSFgGoSp2Osu9UJ16QCJZ7u+Rv5NeMUxxsgQ3GA1uztLVzVmr075Zta4KfPLwVWuNx7+xvnzNa0gH7Y8sx/VE7WNaAbO8TbM7ceUT/yI+X1zSWFyKc/2MPnxZHV1kxw8X2ah9j23tonveOom/0PjXkyUSx6d+61Yc8WzqeRP9PDg+shZff/4pHflzArNouer3q21rW9UM2+J7/SfT/QtQSwcIUYFpLckDAAC7CgAAUEsBAhQAFAAIAAgAU23XRFGBaS3JAwAAuwoAAD4AAAAAAAAAAAAAAAAAAAAAAGRhdmNuYVN0ZXZpbGthUHJlamVtbmlrYVN0cmphdmEudGV4dC5TaW1wbGVEYXRlRm9ybWF0QDZjNDhiYmExUEsFBgAAAAABAAEAbAAAADUEAAAAAA==</ns11:SporociloZipInBase64>
+      </ns10:Body>
+    </ns10:PrevzemiDokumentRequest>
+  </S:Body>
+</S:Envelope>

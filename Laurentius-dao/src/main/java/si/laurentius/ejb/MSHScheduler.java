@@ -14,11 +14,9 @@
  */
 package si.laurentius.ejb;
 
-import java.math.BigInteger;
 import java.util.Calendar;
-import java.util.List;
+import java.util.Objects;
 import java.util.Properties;
-import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.Local;
@@ -45,6 +43,7 @@ import si.laurentius.commons.interfaces.SEDPluginManagerInterface;
 import si.laurentius.commons.interfaces.SEDSchedulerInterface;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.plugin.crontask.CronTaskDef;
+import si.laurentius.plugin.def.Plugin;
 
 import si.laurentius.plugin.interfaces.TaskExecutionInterface;
 import si.laurentius.plugin.interfaces.exception.TaskException;
@@ -65,29 +64,41 @@ public class MSHScheduler implements SEDSchedulerInterface {
 
   @EJB(mappedName = SEDJNDI.JNDI_SEDLOOKUPS)
   private SEDLookupsInterface mdbLookups;
-  
+
   @EJB(mappedName = SEDJNDI.JNDI_PLUGIN)
   private SEDPluginManagerInterface mpmPluginManager;
-
 
   @Resource
   private TimerService timerService;
 
-  @PostConstruct
-  private void construct() {
-    List<SEDCronJob> lst = mdbLookups.getSEDCronJobs();
-    for (SEDCronJob ecj : lst) {
-      if (ecj.getActive() != null && ecj.getActive()) {
-        ScheduleExpression se =
-            new ScheduleExpression().second(ecj.getSecond()).minute(ecj.getMinute())
-                .hour(ecj.getHour()).dayOfMonth(ecj.getDayOfMonth()).month(ecj.getMonth())
-                .dayOfWeek(ecj.getDayOfWeek());
-        TimerConfig checkTest = new TimerConfig(ecj.getId(), false);
-        getServices().createCalendarTimer(se, checkTest);
-      }
-    }
+  @Override
+  public boolean activateCronJob(SEDCronJob cb) {
+    LOG.formatedDebug("Register timer to TimerService %d name %s", cb.getId(),
+            cb.getName());
+    ScheduleExpression se
+            = new ScheduleExpression().second(cb.getSecond()).
+                    minute(cb.getMinute())
+                    .hour(cb.getHour()).dayOfMonth(cb.
+                    getDayOfMonth()).month(cb.getMonth())
+                    .dayOfWeek(cb.getDayOfWeek());
+    TimerConfig checkTest = new TimerConfig(cb.getName(), false);
+    getServices().createCalendarTimer(se, checkTest);
+    return true;
   }
 
+  public boolean stopCronJob(SEDCronJob cb) {
+    LOG.formatedDebug("Stop timer to TimerService %d name %s", cb.getId(),
+            cb.getName());
+    boolean bScu = false;
+    for (Timer t : getServices().getAllTimers()) {
+      if (t.getInfo().equals(cb.getName())) {
+        t.cancel();
+        bScu = true;
+        break;
+      }
+    }
+    return bScu;
+  }
 
   /**
    *
@@ -97,6 +108,7 @@ public class MSHScheduler implements SEDSchedulerInterface {
   public TimerService getServices() {
     return timerService;
   }
+
   /**
    *
    * @param timer
@@ -106,9 +118,15 @@ public class MSHScheduler implements SEDSchedulerInterface {
   public void timeout(Timer timer) {
     long l = LOG.logStart();
 
-    BigInteger bi = (BigInteger) (timer.getInfo());
+    String name = (String) (timer.getInfo());
+    // get cron job
+    SEDCronJob mj = mdbLookups.getSEDCronJobByName(name);
     SEDTaskExecution te = new SEDTaskExecution();
-    te.setCronId(bi);
+    te.setCronId(mj.getId());
+    te.setName(name);
+    te.setType(mj.getSEDTask().getType());
+    te.setPlugin(mj.getSEDTask().getPlugin());
+    te.setPluginVersion(mj.getSEDTask().getPluginVersion());
     te.setStatus(SEDTaskStatus.INIT.getValue());
     te.setStartTimestamp(Calendar.getInstance().getTime());
 
@@ -118,18 +136,39 @@ public class MSHScheduler implements SEDSchedulerInterface {
       LOG.logEnd(l, "Error storing task: '" + te.getType() + "' ", ex);
       return;
     }
-    
 
-    // get cron job
-    SEDCronJob mj = mdbLookups.getSEDCronJobById(bi);
-    
-    CronTaskDef ct = mpmPluginManager.getCronTaskDef(mj.getSEDTask().getPlugin(), mj.getSEDTask().getType());
+    Plugin plg = mpmPluginManager.getPluginByType(mj.getSEDTask().getPlugin());
 
-    te.setName(ct.getName());
-    te.setType(mj.getSEDTask().getType());
-    if (!mj.getActive()) {
+    if (plg == null) {
       te.setStatus(SEDTaskStatus.ERROR.getValue());
-      te.setResult(String.format("Task cron id:  %d  not active!", bi));
+      te.setResult(String.format(
+              "Not plugin %s!", mj.getSEDTask().
+                      getPlugin(), mj.getSEDTask().
+                      getType()));
+      te.setEndTimestamp(Calendar.getInstance().getTime());
+      try {
+        mdbDao.updateExecutionTask(te);
+      } catch (StorageException ex) {
+        LOG.logEnd(l, "Error updating task: '" + te.getType() + "' ", ex);
+      }
+      return;
+    } else if (Objects.equals(plg.getVersion(), mj.getSEDTask().
+            getPluginVersion())) {
+      LOG.formatedWarning("Plugin version mismatch for cron task execution %s",
+              name);
+      te.setPluginVersion(plg.getVersion());
+    }
+
+    CronTaskDef ct = mpmPluginManager.
+            getCronTaskDef(mj.getSEDTask().getPlugin(), mj.getSEDTask().
+                    getType());
+
+    if (ct == null) {
+      te.setStatus(SEDTaskStatus.ERROR.getValue());
+      te.setResult(String.format(
+              "Not task processor for plugin %s and  task %s!", mj.getSEDTask().
+                      getPlugin(), mj.getSEDTask().
+                      getType()));
       te.setEndTimestamp(Calendar.getInstance().getTime());
       try {
         mdbDao.updateExecutionTask(te);
@@ -138,14 +177,27 @@ public class MSHScheduler implements SEDSchedulerInterface {
       }
       return;
     }
-    
+
+    if (!mj.getActive()) {
+      te.setStatus(SEDTaskStatus.ERROR.getValue());
+      te.setResult(String.format("Task cron:  %s  not active!", name));
+      te.setEndTimestamp(Calendar.getInstance().getTime());
+      try {
+        mdbDao.updateExecutionTask(te);
+      } catch (StorageException ex) {
+        LOG.logEnd(l, "Error updating task: '" + te.getType() + "' ", ex);
+      }
+      return;
+    }
+
     // plugin  and task type
     TaskExecutionInterface tproc = null;
     try {
       tproc = InitialContext.doLookup(ct.getJndi());
     } catch (NamingException ex) {
       te.setStatus(SEDTaskStatus.ERROR.getValue());
-      te.setResult(String.format("Error getting taskexecutor: %s. ERROR: %s", ct.getJndi(),
+      te.setResult(String.format("Error getting taskexecutor: %s. ERROR: %s",
+              ct.getJndi(),
               ex.getMessage()));
       te.setEndTimestamp(Calendar.getInstance().getTime());
       try {
@@ -185,7 +237,8 @@ public class MSHScheduler implements SEDSchedulerInterface {
     } catch (TaskException ex) {
 
       te.setStatus(SEDTaskStatus.ERROR.getValue());
-      te.setResult(String.format("TASK ERROR: %s. Err. desc: %s", ct.getJndi(), ex.getMessage()));
+      te.setResult(String.format("TASK ERROR: %s. Err. desc: %s", ct.getJndi(),
+              ex.getMessage()));
       te.setEndTimestamp(Calendar.getInstance().getTime());
       LOG.logEnd(l, "Error updating task: '" + te.getType() + "' ", ex);
       try {

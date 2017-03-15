@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- shema XSD za IzvrsbeXml/1.01 -->
+<!-- 
+*************************************************************************************
+INFO_GLAVA_SHEME
+*************************************************************************************
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:iZbs_SifErr="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_SifrantNapaka.xsd" targetNamespace="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_SifrantNapaka.xsd" elementFormDefault="qualified">
+	<!-- ****************************************************************** -->
+	<!-- Šifrant kod in kategorij napak -->
+	<!-- ****************************************************************** -->
+	<xs:simpleType name="NapakaTipType">
+		<xs:annotation>
+			<xs:documentation>Tip napake: OPOZORILO ali KRITICNA_NAPAKA. Pri OPOZORILO se procesiranje normalno nadaljuje, KRITICNA_NAPAKA pa pomeni, da normalno procesiranje ni dopustno ali ni možno. OPOZORILO se uporabi redkeje, v specifičnih primerih, na primer, ko banka izdajatelju večkrat pošlje isti dokument (zaradi prekinitev na sistemih/povezavah je slednje povsem dopustno), izdajatelj pa na večkrat sprejeti dokument odgovori z OPZORILO + 20003-DUPLIKAT in drugega dokumenta/duplikata ne procesira v internem IT sistemu. 
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="OPOZORILO"/>
+			<xs:enumeration value="KRITICNA_NAPAKA"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="NapakaKodaType">
+		<xs:annotation>
+			<xs:documentation>Kode napak</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="20000-NAPAKA_XML"/>
+			<xs:enumeration value="20001-NAPAKA_PRILOGE"/>
+			<xs:enumeration value="20002-DUPLIKAT"/>
+			<xs:enumeration value="20003-NEUSTREZEN_PODPIS"/>
+			<xs:enumeration value="20004-NEUSTREZNI_ELEMENTI_PAKETA"/>
+			<xs:enumeration value="20005-NEDOVOLJENA_AKCIJA"/>
+			<xs:enumeration value="20006-PODVAJANJE_ID"/>
+			<xs:enumeration value="20007-PODVOJEN_SKLEP"/>
+			<xs:enumeration value="20010-NI_DOLZNIKA"/>
+			<xs:enumeration value="20011-NI_TRR"/>
+			<xs:enumeration value="20012-NI_SKLEPA"/>
+			<xs:enumeration value="20013-NI_TRR_JE_DEPOZIT"/>
+			<xs:enumeration value="20014-PREMALO_TRRSREDSTEV_JE_DEPOZIT"/>
+			<xs:enumeration value="20015-POMANJKLJIVI_PODATKI"/>
+			<xs:enumeration value="20019-ZAVRNJEN_OSTALO"/>
+			<xs:enumeration value="20021-ID_DOKUMENTA_NAPACEN"/>
+			<xs:enumeration value="20022-ID_PAKETA_NAPACEN"/>
+			<xs:enumeration value="20023-ID_ZAHTEVKA_NAPACEN"/>
+			<xs:enumeration value="20024-ID_SKLEPA_NAPACEN"/>
+			<xs:enumeration value="20025-PREVELIKA_DATOTEKA"/>
+			<xs:enumeration value="20026-NAPAKA_BASE64"/>
+			<xs:enumeration value="20027-NAPAKA_ZIP"/>
+			<xs:enumeration value="20030-NAPAKA_IME_DATOTEKE"/>
+			<xs:enumeration value="20031-DUPLIKAT_IME_DATOTEKE"/>
+			<xs:enumeration value="20032-NAPAKA_PRI_DESIFRIRANJU"/>
+			<xs:enumeration value="20099-NAPAKA_OSTALO"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

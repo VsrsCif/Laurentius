@@ -26,13 +26,14 @@ import si.laurentius.msh.outbox.mail.MSHOutMail;
  * @author Joze Rihtarsic <joze.rihtarsic@sodisce.si>
  */
 public class Utils {
-  
+
   /**
    * Thanks to:
    * https://www.mkyong.com/regular-expressions/how-to-validate-email-address-with-regular-expression/
    */
-  private static final Pattern EMAIL_PATTEREN = Pattern.compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
-		+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
+  private static final Pattern EMAIL_PATTEREN = Pattern.compile(
+          "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+          + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
 
   /**
    *
@@ -96,35 +97,36 @@ public class Utils {
     return strVal == null || strVal.trim().isEmpty();
   }
 
- 
-  
   public static String getUUID(String prefix) {
-    return prefix + "-"+ UUID.randomUUID().toString();
+    return prefix + "-" + UUID.randomUUID().toString();
   }
+
   public static String getUUIDWithDomain(String domain) {
-    return UUID.randomUUID().toString() + "@" + domain ;
+    return UUID.randomUUID().toString() + "@" + domain;
   }
-  
-  public static String getInitCauseMessage(Throwable tw){
+
+  public static String getInitCauseMessage(Throwable tw) {
     String msg = tw.getMessage();
     Throwable tst = tw;
-    while ( (tst = tst.getCause())!= null){
+    while ((tst = tst.getCause()) != null) {
       msg = tst.getMessage();
     }
     return msg;
   }
-  
-  public static Throwable getInitCause(Throwable tw){
+
+  public static Throwable getInitCause(Throwable tw) {
     String msg = tw.getMessage();
     Throwable tst = tw;
-    while ( tst.getCause()!= null){
+    while (tst.getCause() != null) {
       tst = tst.getCause();
     }
     return tst;
   }
+
   private Utils() {
-    
+
   }
+
   /**
    * Returns java.util.UUID.randomUUID() as string.
    *
@@ -133,15 +135,32 @@ public class Utils {
   public String getGuidString() {
     return UUID.randomUUID().toString();
   }
-  
-  public static boolean isValidEmailAddress(String strVal){
-    if (isEmptyString(strVal)){
+
+  public static boolean isValidEmailAddress(String strVal) {
+    if (isEmptyString(strVal)) {
       return false;
-    }else {
-     
+    } else {
+
       Matcher m = EMAIL_PATTEREN.matcher(strVal);
       return m.matches();
     }
+  }
+
+  /**
+   * Thansk to aioobe
+   * http://stackoverflow.com/questions/3758606/how-to-convert-byte-size-into-human-readable-format-in-java
+   * @param bytes
+   * @param si
+   * @return 
+   */
+  public static String humanReadableByteCount(long bytes, boolean si) {
+    int unit = si ? 1000 : 1024;
+    if (bytes < unit) {
+      return bytes + " B";
+    }
+    int exp = (int) (Math.log(bytes) / Math.log(unit));
+    String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp - 1) + (si ? "" : "i");
+    return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
   }
 
 }

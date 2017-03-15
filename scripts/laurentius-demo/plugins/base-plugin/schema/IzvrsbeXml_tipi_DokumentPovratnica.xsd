@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- shema XSD za IzvrsbeXml/1.01 --> 
+<!-- 
+*************************************************************************************
+INFO_GLAVA_SHEME
+*************************************************************************************
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:iZbs_ElDoc="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_ElementiDokumenta.xsd" xmlns:iZbs_Spl="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_SplosniTipi.xsd" xmlns:iZbs_Sts="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_Statusi.xsd" xmlns:iZbs_DocPov="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_DokumentPovratnica.xsd" targetNamespace="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_DokumentPovratnica.xsd" elementFormDefault="qualified">
+	<xs:import namespace="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_ElementiDokumenta.xsd" schemaLocation="IzvrsbeXml_tipi_ElementiDokumenta.xsd"/>
+	<xs:import namespace="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_SplosniTipi.xsd" schemaLocation="IzvrsbeXml_tipi_SplosniTipi.xsd"/>
+	<xs:import namespace="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_Statusi.xsd" schemaLocation="IzvrsbeXml_tipi_Statusi.xsd"/>
+	<!-- *****************************************************************************
+	    SKLOP: GLAVNI PODATKOVNI TIPI
+	    ***************************************************************************** -->
+	<xs:complexType name="PovratnicaType">
+		<xs:annotation>
+			<xs:documentation/>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="OsnovniPodatkiDokumenta" type="iZbs_ElDoc:OsnovniPodatkiDokumentaType"/>
+			<xs:element name="IdPrevzetegaDokumenta" type="iZbs_Spl:IdPoAvtorjuSplosniType"/>
+			<xs:element name="DatumPrevzemaDokumenta" type="xs:dateTime"/>
+			<xs:element name="StatusPrevzemaDokumenta" type="iZbs_Sts:StatusIzmenjaveType">
+				<xs:annotation>
+					<xs:documentation>Polnijo se lahko naslednje vrednosti: 00002-PREVZET, 10003-PREVZET_Z_NAPAKO ali 10009-PREVZET_FIZICNO</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Napake" type="iZbs_Spl:NapakeType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Pri napak se v polje 'StatusPrevzemaDokumenta' vedno piše 10003-PREVZET_Z_NAPAKO</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

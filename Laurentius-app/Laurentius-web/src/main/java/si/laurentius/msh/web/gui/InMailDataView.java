@@ -268,5 +268,6 @@ public class InMailDataView extends AbstractMailView<MSHInMail, MSHInEvent> impl
     }
     return Collections.emptyList();
   }
-
+  
+  
 }

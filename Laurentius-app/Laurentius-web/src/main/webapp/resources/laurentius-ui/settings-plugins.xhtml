@@ -35,12 +35,15 @@
                         <p:ajax event="rowSelect"  
                                 update=":forms:SettingsPlugin:pluginView:PluginDataView"
                                 />
-                        <p:column headerText="#{msg['Type']}" width="120">
-                            <h:outputText value="#{sp.type}" />
-                        </p:column>
+                        
                         <p:column headerText="#{msg['Name']}" width="160">
                             <h:outputText value="#{sp.name}"></h:outputText>                
                         </p:column>
+                        
+                        <p:column headerText="#{msg['Type']}" width="120">
+                            <h:outputText value="#{sp.type}" />
+                        </p:column>
+                        
                         <p:column headerText="#{msg['Version']}" width="160">
                             <h:outputText value="#{sp.version}"></h:outputText>                
                         </p:column>

@@ -4,7 +4,9 @@
  */
 package si.laurentius.msh.web.gui.entities;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -16,6 +18,9 @@ public class CronExecutionFilter {
      *
      */
   protected String name;
+  protected String plugin;
+   protected String type;
+
 
   /**
      *
@@ -30,13 +35,12 @@ public class CronExecutionFilter {
   /**
      *
      */
-  protected String status;
+  protected List<String> statusList = null;;
 
   /**
      *
      */
-  protected String type;
-
+ 
   /**
    *
    * @return
@@ -61,13 +65,7 @@ public class CronExecutionFilter {
     return startTimestampTo;
   }
 
-  /**
-   *
-   * @return
-   */
-  public String getStatus() {
-    return status;
-  }
+ 
 
   /**
    *
@@ -75,6 +73,14 @@ public class CronExecutionFilter {
    */
   public String getType() {
     return type;
+  }
+
+  public String getPlugin() {
+    return plugin;
+  }
+
+  public void setPlugin(String plugin) {
+    this.plugin = plugin;
   }
 
   /**
@@ -101,14 +107,7 @@ public class CronExecutionFilter {
     this.startTimestampTo = startTimestampTo;
   }
 
-  /**
-   *
-   * @param status
-   */
-  public void setStatus(String status) {
-    this.status = status;
-  }
-
+ 
   /**
    *
    * @param type
@@ -117,4 +116,17 @@ public class CronExecutionFilter {
     this.type = type;
   }
 
+  public List<String> getStatusList() {
+     if (statusList == null) {
+      statusList = new ArrayList<>();
+    }
+    return statusList;
+  }
+
+  public void setStatusList(List<String> statusList) {
+    this.statusList = statusList;
+  }
+
+  
+  
 }

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- shema XSD za IzvrsbeXml/1.01 -->
+<!-- 
+*************************************************************************************
+INFO_GLAVA_SHEME
+*************************************************************************************
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:iZbs_OperacijeWS="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_OperacijeWS.xsd" xmlns:iZbs_Body="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_Body.xsd" xmlns:iZbs_Zaglavje="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_ZaglavjeSporocil.xsd" xmlns:dSignature="http://www.w3.org/2000/09/xmldsig#" targetNamespace="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_OperacijeWS.xsd" elementFormDefault="qualified">
+	<xs:import namespace="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_Body.xsd" schemaLocation="IzvrsbeXml_tipi_Body.xsd"/>
+	<xs:import namespace="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_ZaglavjeSporocil.xsd" schemaLocation="IzvrsbeXml_tipi_ZaglavjeSporocil.xsd"/>
+	<xs:import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="xmlDSignature-core-schema.xsd"/>
+	<!--
+		Ta XML-shema je osnova za pripravo WSDL.
+		Metode spletne storitve na strani izdajateljev:
+		* PrevzemiSeznamNeprevzetihDokumentov
+		* PrevzemiDokument
+		* NaloziDokument	
+	-->
+	<!-- **********************************************************************************
+			METODA: PrevzemiSeznamNeprevzetihDokumentov
+			Ta metoda ne uporablja kodiranja base64 in XML-podatkov pri tej metodi ni potrebno podpisovati.
+		*********************************************************************************** -->
+	<!-- Zacetni klic akcije -->
+	<xs:complexType name="PrevzemiSeznamNeprevzetihDokumentovRequestType">
+		<xs:sequence>
+			<xs:element name="Header" type="iZbs_Zaglavje:HeaderType"/>
+			<xs:element name="Body" type="iZbs_Body:BodyPrazenType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="PrevzemiSeznamNeprevzetihDokumentovRequest" type="iZbs_OperacijeWS:PrevzemiSeznamNeprevzetihDokumentovRequestType">
+		<xs:annotation>
+			<xs:documentation>
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<!-- odgovor akcije -->
+	<xs:complexType name="PrevzemiSeznamNeprevzetihDokumentovResponseType">
+		<xs:sequence>
+			<xs:element name="Header" type="iZbs_Zaglavje:HeaderType"/>
+			<xs:element name="ResponseHeader" type="iZbs_Zaglavje:ResponseHeaderType"/>
+			<xs:element name="Body" type="iZbs_Body:BodyZaDokumentNeprevzetihDokumentovType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="PrevzemiSeznamNeprevzetihDokumentovResponse" type="iZbs_OperacijeWS:PrevzemiSeznamNeprevzetihDokumentovResponseType">
+		<xs:annotation>
+			<xs:documentation/>
+		</xs:annotation>
+	</xs:element>
+	<!-- **********************************************************************************
+			METODA: PrevzemiDokument
+			Vhod in izhod iz metode sta XML-dokumenta, kodirana po base64 algoritmu
+		*********************************************************************************** -->
+	<!-- Zacetni klic akcije -->
+	<!-- Izvorna struktura XML v nekriptirani obliki, brez uporabe base64 mora izgledati takole:
+	<xs:complexType name="PrevzemiDokumentXmlRequestType">
+		<xs:sequence>
+			<xs:element name="Header" type="iZbs_Zaglavje:HeaderType"/>
+			<xs:element name="Body" type="iZbs_Body:BodyZaIdDokumentaType"/>
+			<xs:element ref="dSignature:Signature" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	-->
+	<xs:complexType name="PrevzemiDokumentRequestBase64Type">
+		<xs:sequence>
+			<xs:element name="Header" type="iZbs_Zaglavje:HeaderType"/>
+			<xs:element name="Body" type="iZbs_Body:BodyZaBase64Type"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="PrevzemiDokumentRequest" type="iZbs_OperacijeWS:PrevzemiDokumentRequestBase64Type">
+		<xs:annotation>
+			<xs:documentation>Vhod v WS je XML-dokument, XSD-tipa 'iZbs_DokVseb:PrevzemiDokumentXmlRequestType', pretvorjen v base64 obliko. Pretvorba v base64 obliko je potrebna, da se ne izgubi skladnost podpisa z XML-vsebino.</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<!-- Odgovor akcije -->
+	<!-- Izvorna struktura XML v nekriptirani obliki, brez uporabe base64 mora izgledati takole:
+	<xs:complexType name="PrevzemiDokumentXmlResponseType">
+		<xs:sequence>
+			<xs:element name="Header" type="iZbs_Zaglavje:HeaderType"/>
+			<xs:element name="ResponseHeader" type="iZbs_Zaglavje:ResponseHeaderType"/>
+			<xs:element name="Body" type="iZbs_Body:BodyZaBase64Type"/>
+		</xs:sequence>
+	</xs:complexType>
+	-->
+	<xs:complexType name="PrevzemiDokumentResponseBase64Type">
+		<xs:sequence>
+			<xs:element name="Header" type="iZbs_Zaglavje:HeaderType"/>
+			<xs:element name="ResponseHeader" type="iZbs_Zaglavje:ResponseHeaderType"/>
+			<xs:element name="Body" type="iZbs_Body:BodyZaBase64Type"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="PrevzemiDokumentResponse" type="iZbs_OperacijeWS:PrevzemiDokumentResponseBase64Type">
+		<xs:annotation>
+			<xs:documentation>Vrnjen sinhroni odgovor WS je XML-dokument, XSD-tipa 'iZbs_DokVseb:PrevzemiDokumentXmlResponseType', pretvorjen v base64 obliko. Pretvorba v base64 obliko je potrebna, da se ne izgubi skladnost podpisa z XML-vsebino.</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<!-- **********************************************************************************
+			METODA: NaloziDokument
+			Vhod in izhod iz metode sta XML-dokumenta, kodirana po base64 algoritmu
+		*********************************************************************************** -->
+	<!-- Zacetni klic akcije -->
+	<!-- Izvorna struktura XML v nekriptirani obliki, brez uporabe base64 mora izgledati takole:
+	<xs:complexType name="NaloziDokumentXmlRequestType">
+		<xs:sequence>
+			<xs:element name="Header" type="iZbs_Zaglavje:HeaderType"/>
+			<xs:element name="Body" type="iZbs_Body:BodyZaMetodaNaloziDokumentType"/>
+			<xs:element ref="dSignature:Signature" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	-->
+	<xs:complexType name="NaloziDokumentRequestBase64Type">
+		<xs:sequence>
+			<xs:element name="Header" type="iZbs_Zaglavje:HeaderType"/>
+			<xs:element name="Body" type="iZbs_Body:BodyZaBase64Type"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="NaloziDokumentRequest" type="iZbs_OperacijeWS:NaloziDokumentRequestBase64Type">
+		<xs:annotation>
+			<xs:documentation>Vhod v WS je XML-dokument, XSD-tipa 'iZbs_DokVseb:NaloziDokumentXmlRequestType', pretvorjen v base64 obliko. Pretvorba v base64 obliko je potrebna, da se ne izgubi skladnost podpisa z XML-vsebino.</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<!-- odgovor akcije -->
+	<!-- Izvorna struktura XML v nekriptirani obliki, brez uporabe base64 mora izgledati takole:
+	<xs:complexType name="NaloziDokumentXmlResponseType">
+		<xs:sequence>
+			<xs:element name="Header" type="iZbs_Zaglavje:HeaderType"/>
+			<xs:element name="ResponseHeader" type="iZbs_Zaglavje:ResponseHeaderType"/>
+			<xs:element name="Body" type="iZbs_Body:BodyZaPovratnicaType"/>
+			<xs:element ref="dSignature:Signature" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	-->
+	<xs:complexType name="NaloziDokumentResponseBase64Type">
+		<xs:sequence>
+			<xs:element name="Header" type="iZbs_Zaglavje:HeaderType"/>
+			<xs:element name="ResponseHeader" type="iZbs_Zaglavje:ResponseHeaderType"/>
+			<xs:element name="Body" type="iZbs_Body:BodyZaBase64Type"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="NaloziDokumentResponse" type="iZbs_OperacijeWS:NaloziDokumentResponseBase64Type">
+		<xs:annotation>
+			<xs:documentation>Vrnjen sinhroni odgovor WS je XML-dokument, XSD-tipa 'iZbs_DokVseb:NaloziDokumentXmlResponseType', pretvorjen v base64 obliko. Pretvorba v base64 obliko je potrebna, da se ne izgubi skladnost podpisa z XML-vsebino.</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+</xs:schema>

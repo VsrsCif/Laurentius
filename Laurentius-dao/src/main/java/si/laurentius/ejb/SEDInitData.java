@@ -26,8 +26,10 @@ import javax.annotation.PostConstruct;
 import javax.ejb.AccessTimeout;
 import javax.ejb.EJB;
 import javax.ejb.Local;
+import javax.ejb.ScheduleExpression;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
+import javax.ejb.TimerConfig;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.persistence.EntityManager;
@@ -43,6 +45,7 @@ import si.laurentius.commons.interfaces.SEDCertStoreInterface;
 import si.laurentius.commons.interfaces.SEDInitDataInterface;
 import si.laurentius.commons.interfaces.SEDLookupsInterface;
 import si.laurentius.commons.interfaces.SEDPluginManagerInterface;
+import si.laurentius.commons.interfaces.SEDSchedulerInterface;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.xml.XMLUtils;
 import si.laurentius.plugin.def.Plugin;
@@ -72,6 +75,9 @@ public class SEDInitData implements SEDInitDataInterface {
   @EJB(mappedName = SEDJNDI.JNDI_PLUGIN)
   private SEDPluginManagerInterface mPluginManager;
 
+  @EJB(mappedName = SEDJNDI.JNDI_SEDSCHEDLER)
+  private SEDSchedulerInterface mshScheduler;
+
   @PersistenceContext(unitName = "ebMS_LAU_PU", name = "ebMS_LAU_PU")
   private EntityManager memEManager;
 
@@ -91,7 +97,7 @@ public class SEDInitData implements SEDInitDataInterface {
     slps.setSEDProperties(new SedLookups.SEDProperties());
     slps.setSEDUsers(new SedLookups.SEDUsers());
     slps.setSEDProcessors(new SedLookups.SEDProcessors());
-     slps.setSEDInterceptors(new SedLookups.SEDInterceptors());
+    slps.setSEDInterceptors(new SedLookups.SEDInterceptors());
     slps.setSEDCertPassword(new SedLookups.SEDCertPassword());
     slps.setSEDCertCRLs(new SedLookups.SEDCertCRLs());
 
@@ -182,13 +188,13 @@ public class SEDInitData implements SEDInitDataInterface {
       cls.getSEDProcessors().getSEDProcessors().stream().forEach(
               (cb) -> {
                 cb.setId(null);
-                
+
                 cb.getSEDProcessorRules().forEach(pr -> {
                   pr.setId(null);
                 });
-                cb.getSEDProcessorInstances().forEach(pr->{
+                cb.getSEDProcessorInstances().forEach(pr -> {
                   pr.setId(null);
-                  pr.getSEDProcessorProperties().forEach(prp->{
+                  pr.getSEDProcessorProperties().forEach(prp -> {
                     prp.setId(null);
                   });
                 });
@@ -209,6 +215,10 @@ public class SEDInitData implements SEDInitDataInterface {
                           });
                 }
                 mdbLookups.addSEDCronJob(cb);
+                if (cb.getActive() != null && cb.getActive()) {
+                  mshScheduler.activateCronJob(cb);
+
+                }
               });
     }
 
@@ -216,12 +226,12 @@ public class SEDInitData implements SEDInitDataInterface {
             getSEDInterceptors().isEmpty()) {
       cls.getSEDInterceptors().getSEDInterceptors().stream().forEach(
               (cb) -> {
-                
+
                 cb.setId(null);
-                  cb.getSEDInterceptorRules().forEach(pr->{
+                cb.getSEDInterceptorRules().forEach(pr -> {
                   pr.setId(null);
                 });
-                  
+
                 if (cb.getSEDInterceptorInstance() != null) {
                   cb.getSEDInterceptorInstance().getSEDInterceptorProperties().
                           stream().forEach((c) -> {

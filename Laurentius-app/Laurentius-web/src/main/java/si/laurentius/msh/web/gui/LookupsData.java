@@ -1,5 +1,6 @@
 package si.laurentius.msh.web.gui;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -12,6 +13,7 @@ import si.laurentius.commons.enums.SEDInterceptorEvent;
 import si.laurentius.commons.enums.SEDInterceptorRole;
 import si.laurentius.commons.enums.SEDOutboxMailStatus;
 import si.laurentius.commons.enums.SEDRulePredicate;
+import si.laurentius.commons.enums.SEDTaskStatus;
 import si.laurentius.commons.interfaces.PModeInterface;
 import si.laurentius.commons.interfaces.SEDCertStoreInterface;
 import si.laurentius.commons.interfaces.SEDLookupsInterface;
@@ -83,23 +85,32 @@ public class LookupsData extends AbstractJSFView {
 
   }
 
-
   public SEDRulePredicate[] getRulePredicates() {
     return SEDRulePredicate.values();
   }
-   public SEDInterceptorRole[] getInterceptRoles() {
+
+  public SEDInterceptorRole[] getInterceptRoles() {
     return SEDInterceptorRole.values();
   }
-    public SEDInterceptorEvent[] getInterceptEvents() {
+
+  public SEDInterceptorEvent[] getInterceptEvents() {
     return SEDInterceptorEvent.values();
   }
-    
-     public SEDOutboxMailStatus[] getOutMailStatuses() {
+
+  public SEDOutboxMailStatus[] getOutMailStatuses() {
     return SEDOutboxMailStatus.values();
   }
-        public SEDInboxMailStatus[] getInMailStatuses() {
+
+  public SEDInboxMailStatus[] getInMailStatuses() {
     return SEDInboxMailStatus.values();
   }
+  
+   public SEDTaskStatus[] getTaskStatuses() {
+    return SEDTaskStatus.values();
+  }
 
+  public String getHumanReadableSize(BigInteger bi) {
+    return Utils.humanReadableByteCount(bi != null ? bi.longValue() : 0, false);
+  }
 
 }

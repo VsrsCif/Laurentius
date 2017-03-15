@@ -145,7 +145,21 @@ Copyright 2015, Supreme Court Republic of Slovenia
 		</xs:annotation>
 		<xs:attribute name="id" type="xs:integer"/>
 		<xs:attribute name="cronId" type="xs:integer"/>
-		<xs:attribute name="type" type="xs:token" use="required"/>
+		<xs:attribute name="plugin" type="xs:string" use="required">
+			<xs:annotation>
+				<xs:documentation xml:lang="en">  </xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="type" type="xs:string" use="required">
+			<xs:annotation>
+				<xs:documentation xml:lang="en">  </xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="pluginVersion" type="xs:string" use="required">
+			<xs:annotation>
+				<xs:documentation xml:lang="en">  </xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
 		<xs:attribute name="name" use="required">
 			<xs:annotation>
 				<xs:documentation xml:lang="sl">Naziv lastnosti </xs:documentation>

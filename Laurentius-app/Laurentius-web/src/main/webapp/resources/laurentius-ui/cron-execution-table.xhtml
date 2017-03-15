@@ -6,7 +6,7 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:p="http://primefaces.org/ui"
       xmlns:composite="http://java.sun.com/jsf/composite"
-       xmlns:pnl="http://java.sun.com/jsf/composite/laurentius-ui/panel"
+      xmlns:pnl="http://java.sun.com/jsf/composite/laurentius-ui/panel"
       >
 
     <composite:interface>
@@ -14,63 +14,139 @@
     </composite:interface>
 
     <composite:implementation >
-         <pnl:pnl-settings id="InMailPanelData"
+        <pnl:pnl-settings id="InMailPanelData"
                           title="#{msg['adminCronExecution']}" 
                           description="#{msg['CronExecutionDesc']}"
                           icon="ui-icon-svg-cron-exec"
                           >
-                <p:scrollPanel mode="native" style="width:100%;height:100%"> <!-- p:dataTable scrollable does not resize when toogled suth panel -->
-                    <p:dataTable id="CronExecutionTable" 
-                                 var="taskExec"
-                                 value="#{CronExecutionView.model}" 
-                                 selectionMode="single" 
-                                 selection="#{CronExecutionView.current}" 
-                                 rowKey="#{taskExec.id}"
-                                 currentPageReportTemplate="#{msg['Showing']} {startRecord}-{endRecord} #{msg['OutOf']} {totalRecords}"
-                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                                 rowsPerPageTemplate="25,50,100,200" 
-                                 paginator="true" 
-                                 rows="50" 
-                                 lazy="true"
-                                 style="padding: 0px; margin: 0px"
-                                 scrollable="true" 
-                                 scrollHeight="100%"
 
-                                 >
-                  
-                        <p:column width="60" headerText="#{msg['Nu']}">
-                            <h:outputText value="#{CronExecutionView.rowIndex(taskExec) + 1}" />
-                        </p:column>
-                        <p:column width="60" headerText="#{msg['Id']}" >
-                            <h:outputText value="#{taskExec.id}" />
-                        </p:column>
+            <p:layout   widgetVar="adminPluginView" style="min-width:400px;min-height:400px;height: 100%;width: 100%"  >
+                <p:layoutUnit position="north" size="200">
+                    <p:scrollPanel mode="native" style="width:100%;height:100%"> <!-- p:dataTable scrollable does not resize when toogled suth panel -->                
+                        <p:dataTable id="TblRegistredTimers" 
+                                     var="sp" 
+                                     value="#{adminSEDCronJobView.regisredTimers}"
+                                     scrollable="true" 
+                                     scrollHeight="100%"
+                                     >
 
-                        <p:column width="15" style="background-color:#{CronExecutionView.getStatusColor(taskExec.status)}"
-                                  headerText="St.">
-                            <h:outputText value=" " />
-                        </p:column>
-                        <p:column width="150" headerText="#{msg['StartDate']}">
-                            <h:outputText value="#{taskExec.startTimestamp}"  ><f:convertDateTime pattern="dd.MM.yyyy hh:mm:ss.SSS" timeZone="CET" /></h:outputText>
-                        </p:column>
-                        <p:column width="150" headerText="#{msg['EndDate']}">
-                            <h:outputText value="#{taskExec.endTimestamp}"  ><f:convertDateTime pattern="dd.MM.yyyy hh:mm:ss.SSS" timeZone="CET" /></h:outputText>
-                        </p:column>
+                            <f:facet name="header">
+                                #{msg['ActiveCronTimers']}
+                            </f:facet>
+                            <p:column headerText="#{msg['Name']}" width="160">
+                                <h:outputText value="#{sp.info}"></h:outputText>                
+                            </p:column>
+                            <p:column headerText="#{msg['NextExecution']}" width="160">
+                                <h:outputText value="#{sp.nextTimeout}"  >
+                                    <f:convertDateTime pattern="dd.MM.yyyy HH:mm:ss" timeZone="CET" />
+                                </h:outputText>
 
-                        <p:column headerText="#{msg['Type']}"  width="130" >
-                            <h:outputText value="#{taskExec.type}" />
-                        </p:column>
+                            </p:column>
+                            <p:column headerText="#{msg['TimeRemaining']}"  width="160">
+                                <h:outputText value="#{sp.timeRemaining} ms"></h:outputText>                
+                            </p:column>
+                            <p:column headerText="#{msg['Expression']}" >
+                                <h:outputText value="#{sp.schedule.toString()}" />
+                            </p:column>
 
-                        <p:column headerText="#{msg['Name']}"  width="150" >
-                            <h:outputText value="#{taskExec.name}" />
-                        </p:column>
-                        <p:column   headerText="#{msg['Result']}">
-                            <h:outputText value="#{taskExec.result}" />
-                        </p:column>
 
-                    </p:dataTable>
-                </p:scrollPanel>
+                        </p:dataTable>
+                    </p:scrollPanel>
 
-</pnl:pnl-settings>
+                </p:layoutUnit>
+                <p:layoutUnit position="west" size="300">
+                    <p:panelGrid class="filter-params" columns="2" columnClasses="label,value"  style="width: 100%">
+                        <f:facet name="header">
+                            <h:outputText value="#{msg['SearchParameters']}:" />
+                        </f:facet>
+
+                        <h:outputText  value="#{msg['Name']}:" />
+                        <p:inputText value="#{CronExecutionView.model.filter.name}" /> 
+
+                        <h:outputText  value="#{msg['DateFrom']}:" />
+                        <p:calendar  value="#{CronExecutionView.model.filter.startTimestampFrom}" pattern="dd.MM.yyyy HH:mm" 
+                                     mask="true" navigator="true" showOn="button"   styleClass="searchDate" style="width: 100%" />
+
+
+                        <h:outputText value="#{msg['DateTo']}:" />
+                        <p:calendar  value="#{CronExecutionView.model.filter.startTimestampTo}" pattern="dd.MM.yyyy HH:mm"
+                                     mask="true" navigator="true" showOn="button" styleClass="searchDate" style="width: 100%"/>
+
+
+                        <h:outputText value="#{msg['Status']}:" />
+                        <p:selectCheckboxMenu id="inSts" filter="false"  label="Statusi"  style="width: 100%"
+                                              value="#{CronExecutionView.model.filter.statusList}" >                                               
+                            <f:selectItems value="#{LookupsData.taskStatuses}" var="st" itemValue="#{st.value}" 
+                                           itemLabel="#{st.value}" itemDescription="#{st.desc}"  />
+                        </p:selectCheckboxMenu>
+
+
+                        <h:outputText value="" />
+                        <p:commandButton id="btnInRefresh"                                                     
+                                         value="#{msg['Search']}" 
+                                         icon="ui-icon-size-32 ui-icon-svg-search"                                             
+                                         style="width: 100%; height: 36px"
+                                         update="forms:CronExecutions:InMailPanelData:CronExecutionTable"
+                                         ajax="true"
+
+                                         />
+                    </p:panelGrid>
+                </p:layoutUnit>
+                <p:layoutUnit position="center" style="width:100%;height:100%;padding: 0px; margin: 0px" gutter="0" >
+                    <p:scrollPanel mode="native" style="width:100%;height:100%"> <!-- p:dataTable scrollable does not resize when toogled suth panel -->
+                        <p:dataTable id="CronExecutionTable" 
+                                     var="taskExec"
+                                     value="#{CronExecutionView.model}" 
+                                     selectionMode="single" 
+                                     selection="#{CronExecutionView.current}" 
+                                     rowKey="#{taskExec.id}"
+                                     currentPageReportTemplate="#{msg['Showing']} {startRecord}-{endRecord} #{msg['OutOf']} {totalRecords}"
+                                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     rowsPerPageTemplate="25,50,100,200" 
+                                     paginator="true" 
+                                     rows="50" 
+                                     lazy="true"
+                                     style="padding: 0px; margin: 0px"
+                                     scrollable="true" 
+                                     scrollHeight="100%"
+
+                                     >
+                            <f:facet name="header">
+                                #{msg['adminCronExecution']}
+                            </f:facet>
+
+                            <p:column width="60" headerText="#{msg['Nu']}">
+                                <h:outputText value="#{CronExecutionView.rowIndex(taskExec) + 1}" />
+                            </p:column>
+                            <p:column headerText="#{msg['Name']}"  width="150" >
+                                <h:outputText value="#{taskExec.name}" />
+                            </p:column> 
+                            <p:column headerText="#{msg['Type']}"  width="130" >
+                                <h:outputText value="#{taskExec.type}" />
+                            </p:column>
+
+                            <p:column width="15" style="background-color:#{CronExecutionView.getStatusColor(taskExec.status)}"
+                                      headerText="St.">
+                                <h:outputText value=" " />
+                            </p:column>
+                            <p:column width="150" headerText="#{msg['StartDate']}">
+                                <h:outputText value="#{taskExec.startTimestamp}"  ><f:convertDateTime pattern="dd.MM.yyyy hh:mm:ss.SSS" timeZone="CET" /></h:outputText>
+                            </p:column>
+                            <p:column width="150" headerText="#{msg['EndDate']}">
+                                <h:outputText value="#{taskExec.endTimestamp}"  ><f:convertDateTime pattern="dd.MM.yyyy hh:mm:ss.SSS" timeZone="CET" /></h:outputText>
+                            </p:column>
+
+
+
+                            <p:column   headerText="#{msg['Result']}">
+                                <h:outputText value="#{taskExec.result}" />
+                            </p:column>
+
+                        </p:dataTable>
+                    </p:scrollPanel>
+                </p:layoutUnit>
+            </p:layout>
+        </pnl:pnl-settings>
     </composite:implementation>
 
 </html>

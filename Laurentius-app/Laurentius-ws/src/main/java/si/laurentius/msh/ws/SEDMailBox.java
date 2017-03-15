@@ -64,7 +64,6 @@ import si.laurentius.InMailEventListRequest;
 import si.laurentius.InMailEventListResponse;
 import si.laurentius.InMailListRequest;
 import si.laurentius.InMailListResponse;
-import si.laurentius.ModifyActionCode;
 import si.laurentius.ModifyInMailRequest;
 import si.laurentius.ModifyInMailResponse;
 import si.laurentius.ModifyOutMailRequest;
@@ -93,17 +92,16 @@ import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.enums.SEDOutboxMailStatus;
 import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.SEDValues;
-import si.laurentius.commons.exception.HashException;
 import si.laurentius.commons.exception.PModeException;
 import si.laurentius.commons.exception.SVEVReturnValue;
 import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.interfaces.PModeInterface;
 import si.laurentius.commons.interfaces.SEDLookupsInterface;
 import si.laurentius.commons.pmode.PModeUtils;
-import si.laurentius.commons.utils.HashUtils;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StorageUtils;
 import si.laurentius.commons.utils.Utils;
+import si.laurentius.lce.DigestUtils;
 import si.laurentius.msh.ws.utils.SEDRequestUtils;
 
 /**
@@ -130,7 +128,7 @@ public class SEDMailBox implements SEDMailBoxWS {
   @PersistenceContext(unitName = "ebMS_PU", name = "ebMS_PU")
   protected EntityManager memEManager;
 
-  HashUtils mpHU = new HashUtils();
+
 
   @EJB(mappedName = SEDJNDI.JNDI_PMODE)
   protected PModeInterface mpModeManager = null;
@@ -945,10 +943,11 @@ public class SEDMailBox implements SEDMailBoxWS {
           // set MD5 and relative path;
           if (fout != null) {
             serializedFiles.add(fout);
-            String strMD5 = mpHU.getMD5Hash(fout);
+            String strHashValue = DigestUtils.getHexSha1Digest(fout);
             String relPath = StorageUtils.getRelativePath(fout);
             p.setFilepath(relPath);
-            p.setMd5(strMD5);
+            p.setSha1Value(strHashValue);
+            p.setSize(BigInteger.valueOf(fout.length()) );
 
             if (Utils.isEmptyString(p.getFilename())) {
               p.setFilename(fout.getName());
@@ -965,14 +964,7 @@ public class SEDMailBox implements SEDMailBoxWS {
       msherr.setMessage(ex.getMessage());
       rollbackSerializedFiles(serializedFiles);
       throw new SEDException_Exception("Error occured while storing payload", msherr, ex);
-    } catch (HashException ex) {
-      SEDException msherr = new SEDException();
-      msherr.setErrorCode(SEDExceptionCode.SERVER_ERROR);
-      msherr.setMessage(ex.getMessage());
-      rollbackSerializedFiles(serializedFiles);
-      throw new SEDException_Exception("Error occured while calculating payload hash (MD5)",
-          msherr, ex);
-    }
+    } 
 
     // --------------------
     // serialize data and submit message

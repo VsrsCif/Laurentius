@@ -12,13 +12,11 @@ import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.security.Key;
-import java.security.KeyStore;
 import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -41,7 +39,6 @@ import si.jrc.msh.plugin.zpp.utils.FOPUtils;
 import si.laurentius.lce.enc.SEDCrypto;
 import si.laurentius.lce.enc.SEDKey;
 import si.laurentius.lce.sign.pdf.SignUtils;
-import si.laurentius.cert.SEDCertificate;
 import si.laurentius.commons.enums.MimeValue;
 import si.laurentius.commons.enums.SEDInboxMailStatus;
 import si.laurentius.commons.SEDJNDI;
@@ -55,7 +52,6 @@ import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.interfaces.JMSManagerInterface;
 import si.laurentius.commons.interfaces.PModeInterface;
 import si.laurentius.commons.interfaces.SEDDaoInterface;
-import si.laurentius.commons.utils.HashUtils;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StorageUtils;
 import si.laurentius.commons.utils.StringFormater;
@@ -65,6 +61,7 @@ import si.laurentius.msh.inbox.payload.MSHInPart;
 import si.laurentius.msh.inbox.payload.MSHInPayload;
 import si.laurentius.msh.pmode.PartyIdentitySet;
 import si.laurentius.commons.interfaces.SEDCertStoreInterface;
+import si.laurentius.lce.DigestUtils;
 import si.laurentius.plugin.crontask.CronTaskDef;
 import si.laurentius.plugin.crontask.CronTaskPropertyDef;
 import si.laurentius.plugin.interfaces.TaskExecutionInterface;
@@ -85,7 +82,6 @@ public class ZPPTaskFiction implements TaskExecutionInterface {
   private static final String PROCESS_MAIL_COUNT = "zpp.max.mail.count";
 
   SEDCrypto mSedCrypto = new SEDCrypto();
-  HashUtils mpHU = new HashUtils();
   DocumentSodBuilder dsbSodBuilder = new DocumentSodBuilder();
   KeystoreUtils mkeyUtils = new KeystoreUtils();
 
@@ -343,10 +339,11 @@ public class ZPPTaskFiction implements TaskExecutionInterface {
       // create signed delivery advice
       mp.setDescription("AdviceOfDeliveryNotification");
       mp.setFilepath(StorageUtils.getRelativePath(fDNViz));
-      mp.setMd5(mpHU.getMD5Hash(fDNViz));
+      mp.setSha1Value(DigestUtils.getHexSha1Digest(fDNViz));
+      mp.setSize(BigInteger.valueOf(fDNViz.length()));
       mp.setFilename(fDNViz.getName());
       mp.setName(mp.getFilename().substring(0, mp.getFilename().lastIndexOf(".")));
-    } catch (StorageException | HashException ex) {
+    } catch (StorageException ex) {
       String msg = "Error creating visiualization";
       LOG.logError(l, msg, null);
       throw new ZPPException(msg);
@@ -405,10 +402,12 @@ public class ZPPTaskFiction implements TaskExecutionInterface {
       ptencKey.setFilepath(StorageUtils.getRelativePath(fEncryptedKey));
       ptencKey.setFilename(fEncryptedKey.getName());
       ptencKey.setIsEncrypted(Boolean.FALSE);
-      ptencKey.setMd5(mpHU.getMD5Hash(fDNViz));
+      ptencKey.setSha1Value(DigestUtils.getHexSha1Digest(fEncryptedKey));
+      ptencKey.setSize(BigInteger.valueOf(fEncryptedKey.length()));
+      
       moFNotification.getMSHOutPayload().getMSHOutParts().add(ptencKey);
 
-    } catch (HashException | StorageException ex) {
+    } catch ( StorageException ex) {
       LOG.logError(ex.getMessage(), ex);
       throw new ZPPException(ex);
     }
@@ -475,11 +474,13 @@ public class ZPPTaskFiction implements TaskExecutionInterface {
       mp.setDescription("AdviceOfDeliveryFiction");
 
       mp.setFilepath(StorageUtils.getRelativePath(fDNViz));
-      mp.setMd5(mpHU.getMD5Hash(fDNViz));
+      mp.setSha1Value(DigestUtils.getHexSha1Digest(fDNViz));
+      mp.setSize(BigInteger.valueOf(fDNViz.length()));
+      
       mp.setFilename(fDNViz.getName());
       mp.setName(mp.getFilename().substring(0, mp.getFilename().lastIndexOf(".")));
 
-    } catch (StorageException | HashException ex) {
+    } catch (StorageException ex) {
       String msg = "Error occured while creating delivery advice file!";
       throw new ZPPException(msg, ex);
     }

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<iZbs_OperacijeWS:PrevzemiSeznamNeprevzetihDokumentovResponse xsi:schemaLocation="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_OperacijeWS.xsd IzvrsbeXml_OperacijeWS.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:iZbs_OperacijeWS="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_OperacijeWS.xsd" xmlns:iZbs_Body="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_Body.xsd" xmlns:iZbs_DocNepDoc="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_DokumentNeprevzetihDokumentov.xsd" xmlns:iZbs_ElDoc="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_ElementiDokumenta.xsd" xmlns:iZbs_Spl="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_SplosniTipi.xsd" xmlns:iZbs_Zaglavje="http://www.zbs-giz.si/Schemas/IzvrsbeXml/1.0/IzvrsbeXml_tipi_ZaglavjeSporocil.xsd">
+	<iZbs_OperacijeWS:Header>
+		<iZbs_Zaglavje:DatumSporocila>2001-12-17T09:30:47Z</iZbs_Zaglavje:DatumSporocila>
+		<iZbs_Zaglavje:IdSporocila>
+			<iZbs_Spl:Id>sporocilo_id_0000001</iZbs_Spl:Id>
+			<iZbs_Spl:DavcnaStevilka>
+				<iZbs_Spl:Drzava>SI</iZbs_Spl:Drzava>
+				<iZbs_Spl:Vrednost>123456789</iZbs_Spl:Vrednost>
+			</iZbs_Spl:DavcnaStevilka>
+		</iZbs_Zaglavje:IdSporocila>
+		<iZbs_Zaglavje:PosiljateljSporocila>
+			<iZbs_Spl:DavcnaStevilka>
+				<iZbs_Spl:Drzava>SI</iZbs_Spl:Drzava>
+				<iZbs_Spl:Vrednost>123456789</iZbs_Spl:Vrednost>
+			</iZbs_Spl:DavcnaStevilka>
+			<iZbs_Spl:Naziv>IZDAJATELJ XYZ</iZbs_Spl:Naziv>
+		</iZbs_Zaglavje:PosiljateljSporocila>
+		<iZbs_Zaglavje:TestAliProdukcija>TEST</iZbs_Zaglavje:TestAliProdukcija>
+		<iZbs_Zaglavje:IdIzvornegaSistema>izdajateljevITSistem0001</iZbs_Zaglavje:IdIzvornegaSistema>
+		<iZbs_Zaglavje:Verzija>
+			<iZbs_Zaglavje:VerzijaStoritve>2.8</iZbs_Zaglavje:VerzijaStoritve>
+			<iZbs_Zaglavje:VerzijaXsdShemeSporocila>1.0</iZbs_Zaglavje:VerzijaXsdShemeSporocila>
+		</iZbs_Zaglavje:Verzija>
+	</iZbs_OperacijeWS:Header>
+	
+	<iZbs_OperacijeWS:ResponseHeader>
+		<iZbs_Zaglavje:ResponseStatus>OK</iZbs_Zaglavje:ResponseStatus>
+	</iZbs_OperacijeWS:ResponseHeader>
+	
+	<iZbs_OperacijeWS:Body>
+		<iZbs_Body:DokumentNeprevzetihDokumentov>
+
+			<iZbs_DocNepDoc:OsnovniPodatkiDokumenta>
+				<iZbs_ElDoc:IdDokumenta>
+					<iZbs_Spl:Id>dokumentIzdajateljaXyz_id_0000001</iZbs_Spl:Id>
+					<iZbs_Spl:DavcnaStevilka>
+						<iZbs_Spl:Drzava>SI</iZbs_Spl:Drzava>
+						<iZbs_Spl:Vrednost>123456789</iZbs_Spl:Vrednost>
+					</iZbs_Spl:DavcnaStevilka>
+				</iZbs_ElDoc:IdDokumenta>
+				<iZbs_ElDoc:VerzijaSheme>1.0</iZbs_ElDoc:VerzijaSheme>
+				<iZbs_ElDoc:VerzijaSifrantov>1.0</iZbs_ElDoc:VerzijaSifrantov>
+				<iZbs_ElDoc:DatumInUraDokumenta>2001-12-17T09:30:47Z</iZbs_ElDoc:DatumInUraDokumenta>
+			</iZbs_DocNepDoc:OsnovniPodatkiDokumenta>
+
+			<iZbs_DocNepDoc:PaketNeprevzetihDokumentov>
+				<iZbs_DocNepDoc:SplosniPodatkiOPaketu>
+					<iZbs_ElDoc:IdPaketa>
+						<iZbs_Spl:Id>paketIzdajatelja_id_0000001</iZbs_Spl:Id>
+						<iZbs_Spl:DavcnaStevilka>
+							<iZbs_Spl:Drzava>SI</iZbs_Spl:Drzava>
+							<iZbs_Spl:Vrednost>123456789</iZbs_Spl:Vrednost>
+						</iZbs_Spl:DavcnaStevilka>
+					</iZbs_ElDoc:IdPaketa>
+					<iZbs_ElDoc:DatumInUraIzdelave>2013-12-17T09:30:47Z</iZbs_ElDoc:DatumInUraIzdelave>
+					<iZbs_ElDoc:SteviloZapisov>2</iZbs_ElDoc:SteviloZapisov>
+				</iZbs_DocNepDoc:SplosniPodatkiOPaketu>
+				
+				<iZbs_DocNepDoc:SeznamNeprevzetihDokumentov>
+
+					<iZbs_DocNepDoc:Dokument>
+						<iZbs_DocNepDoc:IdDokumenta>
+							<iZbs_Spl:Id>dokumentID1</iZbs_Spl:Id>
+							<iZbs_Spl:DavcnaStevilka>
+								<iZbs_Spl:Drzava>SI</iZbs_Spl:Drzava>
+								<iZbs_Spl:Vrednost>123456789</iZbs_Spl:Vrednost>
+							</iZbs_Spl:DavcnaStevilka>
+						</iZbs_DocNepDoc:IdDokumenta>
+						<iZbs_DocNepDoc:DatumInUraDostopnosti>2013-12-17T09:30:47Z</iZbs_DocNepDoc:DatumInUraDostopnosti>
+						<iZbs_DocNepDoc:TipDokumenta>ZAHTEVE_ZA_SKLEPE</iZbs_DocNepDoc:TipDokumenta>
+					</iZbs_DocNepDoc:Dokument>
+
+					<iZbs_DocNepDoc:Dokument>
+						<iZbs_DocNepDoc:IdDokumenta>
+							<iZbs_Spl:Id>dokumentID2</iZbs_Spl:Id>
+							<iZbs_Spl:DavcnaStevilka>
+								<iZbs_Spl:Drzava>SI</iZbs_Spl:Drzava>
+								<iZbs_Spl:Vrednost>123456789</iZbs_Spl:Vrednost>
+							</iZbs_Spl:DavcnaStevilka>
+						</iZbs_DocNepDoc:IdDokumenta>
+						<iZbs_DocNepDoc:DatumInUraDostopnosti>2013-12-17T09:30:47Z</iZbs_DocNepDoc:DatumInUraDostopnosti>
+						<iZbs_DocNepDoc:TipDokumenta>ZAHTEVE_ZA_SKLEPE</iZbs_DocNepDoc:TipDokumenta>
+					</iZbs_DocNepDoc:Dokument>
+
+				</iZbs_DocNepDoc:SeznamNeprevzetihDokumentov>
+				
+			</iZbs_DocNepDoc:PaketNeprevzetihDokumentov>
+		</iZbs_Body:DokumentNeprevzetihDokumentov>
+	</iZbs_OperacijeWS:Body>
+</iZbs_OperacijeWS:PrevzemiSeznamNeprevzetihDokumentovResponse>

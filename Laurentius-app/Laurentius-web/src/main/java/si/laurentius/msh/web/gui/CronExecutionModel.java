@@ -15,6 +15,7 @@
 package si.laurentius.msh.web.gui;
 
 import java.math.BigInteger;
+import si.laurentius.commons.enums.SEDTaskStatus;
 import si.laurentius.cron.SEDTaskExecution;
 import si.laurentius.commons.interfaces.SEDDaoInterface;
 import si.laurentius.msh.web.abst.AbstractMailDataModel;
@@ -26,7 +27,7 @@ import si.laurentius.msh.web.gui.entities.CronExecutionFilter;
  */
 public class CronExecutionModel extends AbstractMailDataModel<SEDTaskExecution> {
 
-  CronExecutionFilter imtFilter = new CronExecutionFilter();
+  CronExecutionFilter imtFilter =null;
 
   /**
    *
@@ -74,11 +75,8 @@ public class CronExecutionModel extends AbstractMailDataModel<SEDTaskExecution> 
    */
   @Override
   public Object externalFilters() {
-    if (imtFilter == null) {
-      imtFilter = new CronExecutionFilter();
-    }
 
-    return imtFilter;
+    return  getFilter();
   }
 
   /**
@@ -86,6 +84,10 @@ public class CronExecutionModel extends AbstractMailDataModel<SEDTaskExecution> 
    * @return
    */
   public CronExecutionFilter getFilter() {
+     if (imtFilter == null) {
+      imtFilter = new CronExecutionFilter();
+        imtFilter.getStatusList().addAll(SEDTaskStatus.listOfValues());
+    }
     return imtFilter;
   }
 

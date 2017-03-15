@@ -19,16 +19,12 @@
                           icon="ui-icon-svg-settings"
                           >
             
-
-
             <h2>#{msg['QueueSubmit']}</h2>
-            <c:set var="qdata" value="#{monitorJMSView.submitQueueData}" scope="request"/>
-            <pnl:pnl-jms-data data="#{qdata}"  />
+            <pnl:pnl-jms-data  data="#{monitorJMSView.submitQueueData}"   />
 
 
-            <h2>#{msg['QueueProcessInMail']}</h2>
-            <c:set var="qPrcdata" value="#{monitorJMSView.processMessages}" scope="request"/>
-            <pnl:pnl-jms-data data="#{qPrcdata}" />
+            <h2>#{msg['QueueProcessInMail']}</h2>            
+            <pnl:pnl-jms-data data="#{monitorJMSView.processMessages}"  />
         </pnl:pnl-settings>
     </composite:implementation>
 

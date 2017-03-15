@@ -14,6 +14,7 @@
  */
 package si.jrc.msh.plugin.cef;
 
+import java.math.BigInteger;
 import java.util.Properties;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
@@ -194,7 +195,8 @@ public class CEFInInterceptor implements SoapInterceptorInterface {
       mop.setFilepath(mip.getFilepath());
       mop.setMimeType(mip.getMimeType());
       mop.setName(mip.getName());
-      mop.setMd5(mip.getMd5());
+        mop.setSha1Value(mip.getSha1Value());
+      mop.setSize(mip.getSize());
       mout.getMSHOutPayload().getMSHOutParts().add(mop);
     }
 
@@ -302,7 +304,8 @@ public class CEFInInterceptor implements SoapInterceptorInterface {
       mop.setFilepath(mip.getFilepath());
       mop.setMimeType(mip.getMimeType());
       mop.setName(mip.getName());
-      mop.setMd5(mip.getMd5());
+      mop.setSha1Value(mip.getSha1Value());
+      mop.setSize(mip.getSize());
 
       mout.getMSHOutPayload().getMSHOutParts().add(mop);
 
