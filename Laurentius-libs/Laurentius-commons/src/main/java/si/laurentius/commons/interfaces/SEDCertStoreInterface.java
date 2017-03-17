@@ -53,9 +53,9 @@ public interface SEDCertStoreInterface {
   
 
   List<String> getKeystoreAliases(boolean onlyKeys);
-  List<SEDCertificate> getCertificates();
-  List<SEDCertificate> getRootCACertificates();
-  List<X509Certificate> getRootCA509Certs()  throws SEDSecurityException;;
+  List<SEDCertificate> getCertificates() throws SEDSecurityException;
+  List<SEDCertificate> getRootCACertificates() throws SEDSecurityException;
+  List<X509Certificate> getRootCA509Certs()  throws SEDSecurityException;
   
   void removeCertificateFromStore(SEDCertificate crt) throws SEDSecurityException;
   void changeAlias(String oldAlias, String newAlias) throws SEDSecurityException;

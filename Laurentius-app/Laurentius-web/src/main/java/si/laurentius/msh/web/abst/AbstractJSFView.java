@@ -36,6 +36,7 @@ public class AbstractJSFView {
     facesContext().addMessage(null,
             new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error",
                     desc));
+      
   }
 
   /**

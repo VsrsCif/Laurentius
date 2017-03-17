@@ -161,8 +161,10 @@ public class AdminSEDCronJobView extends AbstractAdminJSFView<SEDCronJob> {
   @Override
   public boolean removeSelected() {
     boolean bSuc = false;
-    if (getSelected() != null) {
-      bSuc = mdbLookups.removeSEDCronJob(getSelected());
+    SEDCronJob cj = getSelected();
+    if (cj != null) {
+      mshScheduler.stopCronJob(cj);
+      bSuc = mdbLookups.removeSEDCronJob(cj);
       setSelected(null);
     }
     return bSuc;
@@ -181,7 +183,6 @@ public class AdminSEDCronJobView extends AbstractAdminJSFView<SEDCronJob> {
       mdbLookups.addSEDCronJob(ecj);
       if (ecj.getActive() != null && ecj.getActive()) {
         mshScheduler.activateCronJob(ecj);
-
       }
       bsuc = true;
     }
@@ -198,22 +199,13 @@ public class AdminSEDCronJobView extends AbstractAdminJSFView<SEDCronJob> {
     boolean bsuc = false;
     if (ecj != null) {
       setPropertyDataToTaskInstance(ecj.getSEDTask());
-      mdbLookups.updateSEDCronJob(ecj);
-
-      mshScheduler.stopCronJob(ecj);
-
-      if (ecj.getActive() != null && ecj.getActive()) {
-        LOG.log("Register timer to TimerService");
-        ScheduleExpression se
-                = new ScheduleExpression().second(ecj.getSecond()).
-                        minute(ecj.getMinute())
-                        .hour(ecj.getHour()).dayOfMonth(ecj.
-                        getDayOfMonth()).month(ecj.getMonth())
-                        .dayOfWeek(ecj.getDayOfWeek());
-        TimerConfig checkTest = new TimerConfig(ecj.getId(), false);
-        mshScheduler.getServices().createCalendarTimer(se, checkTest);
+      bsuc = mdbLookups.updateSEDCronJob(ecj);
+      if (bsuc) {
+        mshScheduler.stopCronJob(ecj);
+        if (ecj.getActive() != null && ecj.getActive()) {
+          mshScheduler.activateCronJob(ecj);
+        }
       }
-      bsuc = true;
     }
     return bsuc;
   }
@@ -335,5 +327,19 @@ public class AdminSEDCronJobView extends AbstractAdminJSFView<SEDCronJob> {
 
   public Collection<Timer> getRegisredTimers() {
     return mshScheduler.getServices().getAllTimers();
+  }
+
+  @Override
+  public String getUpdateTargetTable() {
+    return ":forms:SettingsCron:cronPanel:TblCron";
+  }
+
+  @Override
+  public String getSelectedDesc() {
+    SEDCronJob sel = getSelected();
+    if (sel != null) {
+      return sel.getName();
+    }
+    return null;
   }
 }

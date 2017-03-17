@@ -16,9 +16,12 @@ package si.laurentius.msh.web.admin;
 
 import java.security.cert.X509Certificate;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -49,17 +52,12 @@ public class AdminSEDKeystoreView extends AbstractAdminJSFView<SEDCertificate> {
   @EJB(mappedName = SEDJNDI.JNDI_DBCERTSTORE)
   SEDCertStoreInterface mCertStore;
 
-
-
   KeystoreUtils mku = new KeystoreUtils();
   private String password;
 
   X509Certificate editableCert;
 
-
   SEDCertificate selectedImportCertificate;
-
-
 
   /**
    *
@@ -68,8 +66,6 @@ public class AdminSEDKeystoreView extends AbstractAdminJSFView<SEDCertificate> {
   public void createEditable() {
     ;
   }
-
-
 
   @Override
   public boolean validateData() {
@@ -82,12 +78,12 @@ public class AdminSEDKeystoreView extends AbstractAdminJSFView<SEDCertificate> {
     }
     String oldAlias = getSelected().getAlias();
     String newAlias = ed.getAlias();
-    if (!Objects.equals(newAlias,oldAlias)) {
+    if (!Objects.equals(newAlias, oldAlias)) {
 
-      List<SEDCertificate> sdcLst = mCertStore.getCertificates();
-     
+      List<SEDCertificate> sdcLst = getList();
+
       for (SEDCertificate c : sdcLst) {
-        if (! mku.isEqualCertificateDesc(c, ed) 
+        if (!mku.isEqualCertificateDesc(c, ed)
                 && Objects.equals(c.getAlias(), newAlias)) {
           String msg = String.format("Alias: %s already exists in keystore!",
                   ed.getAlias());
@@ -97,18 +93,17 @@ public class AdminSEDKeystoreView extends AbstractAdminJSFView<SEDCertificate> {
           return false;
         }
       }
-      
+
     }
-   
+
     return true;
   }
-
 
   /**
    *
    */
   @Override
-  public boolean removeSelected() {    
+  public boolean removeSelected() {
     boolean bSuc = false;
     SEDCertificate sc = getSelected();
     if (sc != null) {
@@ -121,7 +116,7 @@ public class AdminSEDKeystoreView extends AbstractAdminJSFView<SEDCertificate> {
                 "Error removing cert for alias %s from keystore! Err: %s", sc.
                         getAlias(), ex.getMessage());
         LOG.logError(strMessage, ex);
-        addError(strMessage);        
+        addError(strMessage);
       }
 
     }
@@ -144,19 +139,19 @@ public class AdminSEDKeystoreView extends AbstractAdminJSFView<SEDCertificate> {
     boolean bsuc = false;
     String oldAlias = getSelected().getAlias();
     String newAlias = getEditable().getAlias();
-    if (!Objects.equals(newAlias,oldAlias)) {
-      
-        try {
-          mCertStore.changeAlias(oldAlias, newAlias);
-          bsuc = true;
-        } catch ( SEDSecurityException ex) {
-          String msg = String.format(
-                  "Error changing alias for cert '%s' to '%s'. Err %s",
-                  oldAlias, newAlias, ex.getMessage());
-          LOG.logError(msg, ex);
-          addError(msg);
-          return false;
-        }
+    if (!Objects.equals(newAlias, oldAlias)) {
+
+      try {
+        mCertStore.changeAlias(oldAlias, newAlias);
+        bsuc = true;
+      } catch (SEDSecurityException ex) {
+        String msg = String.format(
+                "Error changing alias for cert '%s' to '%s'. Err %s",
+                oldAlias, newAlias, ex.getMessage());
+        LOG.logError(msg, ex);
+        addError(msg);
+        return false;
+      }
     }
     return bsuc;
   }
@@ -167,7 +162,15 @@ public class AdminSEDKeystoreView extends AbstractAdminJSFView<SEDCertificate> {
    */
   @Override
   public List<SEDCertificate> getList() {
-    return mCertStore.getCertificates();
+    List<SEDCertificate> lst = Collections.emptyList();
+    try {
+      lst = mCertStore.getCertificates();
+    } catch (SEDSecurityException ex) {
+      addError(ex.getMessage());
+      LOG.logError("Error occured while retrieving certificate list!" + ex.
+              getMessage(), ex);
+    }
+    return lst;
   }
 
   public String getRowClass(SEDCertificate crt) {
@@ -204,7 +207,9 @@ public class AdminSEDKeystoreView extends AbstractAdminJSFView<SEDCertificate> {
   @Override
   public String getUpdateTargetTable() {
     return ":forms:PanelKeystore:certPanel:keylist";
-  };
+  }
+
+  ;
    
 
   
@@ -218,7 +223,6 @@ public class AdminSEDKeystoreView extends AbstractAdminJSFView<SEDCertificate> {
     this.selectedImportCertificate = selectedImportCertificate;
   }
 
-  
   public void resetPassword() {
     LOG.formatedWarning("Reset password %s", password);
     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(

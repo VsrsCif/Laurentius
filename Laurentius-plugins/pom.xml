@@ -47,5 +47,6 @@
         <!-- TODO module>Laurentius-meps-plugin</module -->
         <module>Laurentius-cef-plugin</module>
 	<module>Laurentius-test-case-plugin</module>
+        <module>Laurentius-mju-plugin</module>
     </modules>
 </project>

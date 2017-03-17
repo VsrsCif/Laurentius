@@ -23,7 +23,8 @@
         <p:dialog   header="#{cc.attrs.dialogTitle}" 
                     widgetVar="#{cc.attrs.id}" modal="true" hideEffect="fade" 
                     resizable="false" appendTo="@(body)"
-                    width="#{cc.attrs.width}" height="#{cc.attrs.height}" 
+                    width="#{cc.attrs.width}" minHeight="#{cc.attrs.height}" 
+                    
                     onShow="PF('btnOk').enable();PF('btnCancel').enable();"
                     >
             <h:form id="#{cc.attrs.formId}">

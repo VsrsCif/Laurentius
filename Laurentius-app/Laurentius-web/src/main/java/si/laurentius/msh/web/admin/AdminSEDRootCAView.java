@@ -16,9 +16,12 @@ package si.laurentius.msh.web.admin;
 
 import java.security.cert.X509Certificate;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -77,7 +80,7 @@ public class AdminSEDRootCAView extends AbstractAdminJSFView<SEDCertificate> {
     String newAlias = ed.getAlias();
     if (!Objects.equals(newAlias, oldAlias)) {
 
-      List<SEDCertificate> sdcLst = mCertStore.getRootCACertificates();
+      List<SEDCertificate> sdcLst = getList();
 
       for (SEDCertificate c : sdcLst) {
         if (!mku.isEqualCertificateDesc(c, ed)
@@ -142,7 +145,14 @@ public class AdminSEDRootCAView extends AbstractAdminJSFView<SEDCertificate> {
    */
   @Override
   public List<SEDCertificate> getList() {
-    return mCertStore.getRootCACertificates();
+    List<SEDCertificate>  lst = Collections.emptyList();
+    try {
+      lst = mCertStore.getRootCACertificates();
+    } catch (SEDSecurityException ex) {
+      addError(ex.getMessage());
+      LOG.logError("Error occured while retrieving RootCA list!" + ex.getMessage(), ex);
+    }
+      return lst;
   }
 
   public String getRowClass(SEDCertificate crt) {
@@ -170,6 +180,7 @@ public class AdminSEDRootCAView extends AbstractAdminJSFView<SEDCertificate> {
 
   @Override
   public String getSelectedDesc() {
+    
     if (getSelected() != null) {
       return getSelected().getAlias();
     }

@@ -196,49 +196,8 @@ public class PModePartyView extends AbstractPModeJSFView<PartyIdentitySet> {
     return getEditable() != null ? getEditable().getIsLocalIdentity() : false;
   }
 
-  public List<SEDCertificate> getCurrentLocalKeystoreCerts() {
 
-      return mCertBean.getCertificates();
-   
 
-  }
-
-  public List<SEDCertificate> getCurrentTLSKeyCerts() {
-
-    if (getCurrrentTransportTLS() != null) {
-        return  mCertBean.getCertificates();   
-    }
-    return Collections.emptyList();
-    /*
-    if (getCurrrentTransportTLS() != null &&
-        !Utils.isEmptyString(getCurrrentTransportTLS().getKeyStoreName())) {
-      String keystoreName = getCurrrentTransportTLS().getKeyStoreName();
-      SEDCertStore cs = mLookUp.getSEDCertStoreByName(keystoreName);
-      if (cs != null) {
-        return cs.getSEDCertificates();
-      }
-    }
-    return Collections.emptyList();*/
-  }
-
-  public List<SEDCertificate> getCurrentExchangeTruststoreCerts() {
-    if (getEditable() != null && getEditable().getExchangePartySecurity() != null) {    
-        return  mCertBean.getCertificates();
-    }
-
-    return Collections.emptyList();
-
-    /*if (getEditable() !=null && getEditable().getExchangePartySecurity() != null &&
-        !Utils.isEmptyString(getEditable().getExchangePartySecurity().getTrustoreName())) {
-      String keystoreName = getEditable().getExchangePartySecurity().getTrustoreName();
-      SEDCertStore cs = mLookUp.getSEDCertStoreByName(keystoreName);
-      if (cs != null) {
-        return cs.getSEDCertificates();
-      }
-    }
-
-    return Collections.emptyList();*/
-  }
 
   public String getListAsString(List<String> lst) {
     return lst != null ? String.join(",", lst) : "";

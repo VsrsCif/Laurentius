@@ -34,8 +34,7 @@
                              rows="100" 
                              >
                     <f:facet name="header">
-                        <p:toolbar  id="toolbar" style="padding: 0; margin: 0; height: 30px; vertical-align: middle;">
-                            <f:facet name="left"  >
+                       
                                 <p:commandButton value="#{msg['AddCertKey']}" styleClass="toolbar-Button"         
                                                  icon="ui-icon-svg-add ui-icon-size-22"                                                    
                                                  oncomplete="PF('certImportDialog').show()"
@@ -50,7 +49,10 @@
                                                  actionListener="#{adminSEDRootCAView.removeSelectedWithWarning()}" 
                                                  />
                             </f:facet>
-                            <!-- p:facet name="right"  >
+                            <!-- 
+                             <p:toolbar  id="toolbar" style="padding: 0; margin: 0; height: 30px; vertical-align: middle;">
+                            <f:facet name="left"  >
+                            p:facet name="right"  >
                                 <p:menuButton value="# {msg['Settings']}" >
 
                                     <p:menuitem value="# {msg['Password']}" 
@@ -58,9 +60,9 @@
                                                 onclick="PF('changeCertStorePasswordDialog').show();"/>
                                 </p:menuButton>
 
-                            </f:facet -->
+                            </f:facet
                         </p:toolbar>
-                    </f:facet>
+            </f:facet> -->
 
                     <p:columnGroup type="header">
                         <p:row>

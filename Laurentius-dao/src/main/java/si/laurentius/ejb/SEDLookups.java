@@ -15,8 +15,6 @@
 package si.laurentius.ejb;
 
 import java.math.BigInteger;
-import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import javax.annotation.Resource;
@@ -70,9 +68,10 @@ public class SEDLookups implements SEDLookupsInterface {
    */
   @PersistenceContext(unitName = "ebMS_LAU_PU", name = "ebMS_LAU_PU")
   public EntityManager memEManager;
-  private final HashMap<Class, List<?>> mlstCacheLookup = new HashMap<>();
-
-  private final HashMap<Class, Long> mlstTimeOut = new HashMap<>();
+  
+  SimpleListCache mscache = new SimpleListCache();
+  //private final HashMap<Class, List<?>> mlstCacheLookup = new HashMap<>();
+  //private final HashMap<Class, Long> mlstTimeOut = new HashMap<>();
 
   /**
    *
@@ -93,7 +92,8 @@ public class SEDLookups implements SEDLookupsInterface {
       mutUTransaction.begin();
       memEManager.persist(o);
       mutUTransaction.commit();
-      mlstTimeOut.remove(o.getClass()); // remove timeout to refresh lookup at next call
+      mscache.clearCachedList(o.getClass());
+      //mlstTimeOut.remove(o.getClass()); // remove timeout to refresh lookup at next call
       suc = true;
     } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException
             | HeuristicRollbackException | SecurityException | IllegalStateException ex) {
@@ -148,7 +148,8 @@ public class SEDLookups implements SEDLookupsInterface {
   }
 
   private <T> void cacheLookup(List<T> lst, Class<T> c) {
-    if (mlstCacheLookup.containsKey(c)) {
+    mscache.cacheList(lst, c);
+    /*if (mlstCacheLookup.containsKey(c)) {
       mlstCacheLookup.get(c).clear();
       mlstCacheLookup.replace(c, lst);
     } else {
@@ -159,36 +160,41 @@ public class SEDLookups implements SEDLookupsInterface {
       mlstTimeOut.replace(c, Calendar.getInstance().getTimeInMillis());
     } else {
       mlstTimeOut.put(c, Calendar.getInstance().getTimeInMillis());
-    }
+    }*/
   }
 
   @Override
   public void clearAllCache() {
+    mscache.clearAllCache();
+    /*
     for (Class c : mlstCacheLookup.keySet()) {
       mlstCacheLookup.get(c).clear();
     }
     mlstCacheLookup.clear();
     mlstTimeOut.clear();
-
+*/
   }
 
   @Override
   public void clearCache(Class c) {
+    mscache.clearCachedList(c);
+    /*
     if (mlstCacheLookup.containsKey(c)) {
       mlstCacheLookup.get(c).clear();
       mlstCacheLookup.remove(c);
       mlstTimeOut.remove(c);
     }
-
+*/
   }
 
   private <T> List<T> getFromCache(Class<T> c) {
-    return mlstCacheLookup.containsKey(c) ? (List<T>) mlstCacheLookup.get(c) : null;
+    return  mscache.getFromCachedList(c);
+    //return mlstCacheLookup.containsKey(c) ? (List<T>) mlstCacheLookup.get(c) : null;
   }
 
   private <T> List<T> getLookup(Class<T> c) {
     List<T> t;
-    if (updateLookup(c)) {
+    if (mscache.cacheListTimeout(c)) {
       TypedQuery<T> query = memEManager.createNamedQuery(
               c.getName() + ".getAll", c);
       t = query.getResultList();
@@ -410,7 +416,8 @@ public class SEDLookups implements SEDLookupsInterface {
       memEManager.remove(memEManager.contains(o) ? o : memEManager.
               merge(o));
       mutUTransaction.commit();
-      mlstTimeOut.remove(o.getClass()); // remove timeout to refresh lookup at next call
+      mscache.clearCachedList(o.getClass());
+      //mlstTimeOut.remove(o.getClass()); // remove timeout to refresh lookup at next call
       suc = true;
     } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException
             | HeuristicRollbackException | SecurityException | IllegalStateException ex) {
@@ -483,7 +490,8 @@ public class SEDLookups implements SEDLookupsInterface {
       mutUTransaction.begin();
       memEManager.merge(o);
       mutUTransaction.commit();
-      mlstTimeOut.remove(o.getClass()); // remove timeout to refresh lookup at next call
+      mscache.clearCachedList(o.getClass());
+      //mlstTimeOut.remove(o.getClass()); // remove timeout to refresh lookup at next call
       suc = true;
     } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException
             | HeuristicRollbackException | SecurityException | IllegalStateException ex) {
@@ -511,7 +519,8 @@ public class SEDLookups implements SEDLookupsInterface {
       // update basic object 
       memEManager.merge(o);
       mutUTransaction.commit();
-      mlstTimeOut.remove(o.getClass()); // remove timeout to refresh lookup at next call
+      mscache.clearCachedList(o.getClass());
+      //mlstTimeOut.remove(o.getClass()); // remove timeout to refresh lookup at next call
       suc = true;
     } catch (IllegalArgumentException | NotSupportedException | SystemException | RollbackException | HeuristicMixedException
             | HeuristicRollbackException | SecurityException | IllegalStateException ex) {
@@ -526,11 +535,7 @@ public class SEDLookups implements SEDLookupsInterface {
     return suc;
   }
 
-  private <T> boolean updateLookup(Class<T> c) {
-    return !mlstTimeOut.containsKey(c)
-            || (Calendar.getInstance().getTimeInMillis() - mlstTimeOut.
-            get(c)) > S_UPDATE_TIMEOUT;
-  }
+  
 
   /**
    *
@@ -594,7 +599,8 @@ public class SEDLookups implements SEDLookupsInterface {
     } else {
       bsuc = update(sb);
     }
-    mlstTimeOut.remove(SEDProcessor.class);
+    mscache.clearCachedList(SEDProcessor.class);
+    //mlstTimeOut.remove(SEDProcessor.class);
     return bsuc;
   }
 

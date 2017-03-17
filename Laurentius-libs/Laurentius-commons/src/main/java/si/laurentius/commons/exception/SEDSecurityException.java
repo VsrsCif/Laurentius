@@ -134,7 +134,7 @@ public class SEDSecurityException extends Exception {
     /**
          *
          */
-    PasswordFileError("SEC:0005", "PasswordFileError", "Security error: %s", 1),
+    KeystorePasswordError("SEC:0005", "KeystorePasswordError", "Security error: %s", 1),
 
     /**
          *
@@ -181,7 +181,10 @@ public class SEDSecurityException extends Exception {
     /**
          *
          */
-    KeyForAliasNotExists("SEC:0014", "KeyForAliasNotExists", "Key for alias %s not found!", 1), ;
+    KeyForAliasNotExists("SEC:0014", "KeyForAliasNotExists", "Key for alias %s not found!", 1),
+    
+     KeyPasswordError("SEC:0015", "KeyPasswordError", "Security error: %s", 1),
+     ;
     ;
 
     String code;

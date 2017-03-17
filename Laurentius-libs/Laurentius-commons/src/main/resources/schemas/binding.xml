@@ -15,12 +15,12 @@
                                 
              
             <jxb:javaType name="java.util.Date" xmlType="xs:date"
-                          parseMethod="com.jrc.xml.DateAdapter.parseDate"
-                          printMethod="com.jrc.xml.DateAdapter.printDate"/>
+                          parseMethod="si.laurentius.commons.utils.xml.DateAdapter.parseDate"
+                          printMethod="si.laurentius.commons.utils.xml.DateAdapter.printDate"/>
             
             <jxb:javaType name="java.util.Date" xmlType="xs:dateTime"
-                          parseMethod="com.jrc.xml.DateAdapter.parseDateTime"
-                          printMethod="com.jrc.xml.DateAdapter.printDateTime"/>
+                          parseMethod="si.laurentius.commons.utils.xml.DateAdapter.parseDateTime"
+                          printMethod="si.laurentius.commons.utils.xml.DateAdapter.printDateTime"/>
             
             
             <jxb:javaType name="java.lang.Integer" xmlType="xs:int" />

@@ -9,24 +9,24 @@
                 <param name="sequence">SEQ_LAU_OUTBOX_PAYLOAD</param>
             </generator>
         </id>
-        <property column="NAME" name="name"  length="128" type="java.lang.String"  />
-        <property column="DESCRIPTION" name="Description"  length="512" type="java.lang.String"   />
-        <property column="TYPE" name="Type"  length="64" type="java.lang.String" />
-        <property column="FILENAME" name="Filename"  length="128" type="java.lang.String" />
-        <property column="FILEPATH" name="Filepath"  length="1028" type="java.lang.String" />
-        <property column="MIME_TYPE" name="MimeType"  length="128" type="java.lang.String" />
-        <property column="ENCODING" name="Encoding"  length="128" type="java.lang.String" />
-         <property column="SHA1_VALUE" name="Sha1Value"  length="128" type="java.lang.String" />
-        <property column="SIZE" name="Size"  type="java.math.BigInteger" scale="0" />
+        <property column="PART_NAME" name="name"  length="128" type="java.lang.String"  />
+        <property column="PART_DESCRIPTION" name="Description"  length="512" type="java.lang.String"   />
+        <property column="PART_TYPE" name="Type"  length="64" type="java.lang.String" />
+        <property column="PART_FILENAME" name="Filename"  length="128" type="java.lang.String" />
+        <property column="PART_FILEPATH" name="Filepath"  length="1028" type="java.lang.String" />
+        <property column="PART_MIME_TYPE" name="MimeType"  length="128" type="java.lang.String" />
+        <property column="PART_ENCODING" name="Encoding"  length="128" type="java.lang.String" />
+        <property column="PART_SHA1_VALUE" name="Sha1Value"  length="128" type="java.lang.String" />
+        <property column="PART_SIZE" name="Size"  type="java.math.BigInteger" scale="0" />
         
-         <bag name="properties"  access="field" cascade="all" lazy="false" order-by="Id asc" >
-                <key not-null="true">
-                    <column name="OUTPART_ID" scale="0" />
-                </key>
-                <one-to-many class="si.laurentius.outbox.payload.OutPart$Property" />
+        <bag name="properties"  access="field" cascade="all" lazy="false" order-by="Id asc" >
+            <key not-null="true">
+                <column name="OUTPART_ID" scale="0" />
+            </key>
+            <one-to-many class="si.laurentius.outbox.payload.OutPart$Property" />
         </bag>
     </class>  
-     <class name="si.laurentius.outbox.payload.OutPart$Property" table="LAU_OUTBOX_PAYLOAD_PROPERTY">
+    <class name="si.laurentius.outbox.payload.OutPart$Property" table="LAU_OUTBOX_PAYLOAD_PROPERTY">
         <id name="Id" type="java.math.BigInteger">
             <column name="ID" scale="0" />
             <generator class="sequence">

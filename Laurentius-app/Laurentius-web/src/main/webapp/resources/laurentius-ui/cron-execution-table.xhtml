@@ -115,8 +115,9 @@
                                 #{msg['adminCronExecution']}
                             </f:facet>
 
-                            <p:column width="60" headerText="#{msg['Nu']}">
-                                <h:outputText value="#{CronExecutionView.rowIndex(taskExec) + 1}" />
+                            <p:column width="45" style="background-color:#{CronExecutionView.getStatusColor(taskExec.status)}"
+                                      headerText="St.">
+                                <h:outputText value="#{taskExec.status}" />
                             </p:column>
                             <p:column headerText="#{msg['Name']}"  width="150" >
                                 <h:outputText value="#{taskExec.name}" />
@@ -125,10 +126,7 @@
                                 <h:outputText value="#{taskExec.type}" />
                             </p:column>
 
-                            <p:column width="15" style="background-color:#{CronExecutionView.getStatusColor(taskExec.status)}"
-                                      headerText="St.">
-                                <h:outputText value=" " />
-                            </p:column>
+                            
                             <p:column width="150" headerText="#{msg['StartDate']}">
                                 <h:outputText value="#{taskExec.startTimestamp}"  ><f:convertDateTime pattern="dd.MM.yyyy hh:mm:ss.SSS" timeZone="CET" /></h:outputText>
                             </p:column>

@@ -10,7 +10,6 @@ import org.primefaces.event.TabChangeEvent;
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.interfaces.SEDInitDataInterface;
-import si.laurentius.commons.interfaces.SEDLookupsInterface;
 import si.laurentius.commons.utils.SEDLogger;
 
 /**
@@ -83,8 +82,7 @@ public class MainWindow {
   public void onToolbarTabChange(TabChangeEvent event) {
     if (event != null) {
       mstrWindowShow = event.getTab().getId();
-      FacesMessage msg = new FacesMessage("Tab Changed", "Active Tab: " + event.getTab().getId());
-      FacesContext.getCurrentInstance().addMessage(null, msg);
+      LOG.formatedDebug("Tab Changed %s.", event.getTab().getId());    
     }
   }
 

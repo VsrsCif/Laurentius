@@ -22,31 +22,33 @@ import si.laurentius.commons.SEDSystemProperties;
 public class TestUtils {
 
   /**
-     *
-     */
+   *
+   */
   protected static final String JNDI_CONNECTION_FACTORY = "ConnectionFactory";
   /**
-     *
-     */
+   *
+   */
   protected static final String PERSISTENCE_UNIT_NAME = "ebMS_PU";
 
   /**
-     *
-     */
+   *
+   */
   protected static final String LAU_HOME = "target/TEST-LAU_HOME";
   public static final String LAU_TEST_DOMAIN = "test.com";
 
   static {
-    try {
-      Files.createDirectory(Paths.get(LAU_HOME));
-    } catch (IOException ex) {
-      java.util.logging.Logger.getLogger(TestUtils.class.getName()).
-              log(java.util.logging.Level.SEVERE, null, ex);
+    if (!Paths.get(LAU_HOME).toFile().exists()) {
+      try {
+        Files.createDirectory(Paths.get(LAU_HOME));
+      } catch (IOException ex) {
+        java.util.logging.Logger.getLogger(TestUtils.class.getName()).
+                log(java.util.logging.Level.SEVERE, null, ex);
+      }
+      System.setProperty(SEDSystemProperties.SYS_PROP_HOME_DIR, LAU_HOME);
+      System.setProperty(SEDSystemProperties.SYS_PROP_LAU_DOMAIN,
+              LAU_TEST_DOMAIN);
     }
-    System.setProperty(SEDSystemProperties.SYS_PROP_HOME_DIR, LAU_HOME);
-    System.setProperty(SEDSystemProperties.SYS_PROP_LAU_DOMAIN, LAU_TEST_DOMAIN);
   }
-
 
   /**
    *
