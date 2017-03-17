@@ -173,7 +173,7 @@ public class SEDDaoBean implements SEDDaoInterface {
     // set order by
     if (searchParams != null) {
       Class cls = searchParams.getClass();
-      Method[] methodList = cls.getDeclaredMethods();
+      Method[] methodList = cls.getMethods();
       for (Method m : methodList) {
         // only getters (public, starts with get, no arguments)
         String mName = m.getName();
@@ -185,6 +185,7 @@ public class SEDDaoBean implements SEDDaoInterface {
           Object searchValue;
           try {
             searchValue = m.invoke(searchParams, new Object[]{});
+            LOG.formatedWarning("GOT PARAMETER %s  for method %s", searchValue, fieldName);
           } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
             LOG.logError(l, ex);
             continue;
@@ -195,6 +196,7 @@ public class SEDDaoBean implements SEDDaoInterface {
           }
 
           if (fieldName.endsWith("List") && searchValue instanceof List){
+            LOG.formatedWarning("SET PARAMETER LIST %s  for method %s", searchValue, fieldName);
             String property = fieldName.substring(0, fieldName.lastIndexOf("List"));
             if ( !((List) searchValue).isEmpty()) {
             lstPredicate.add(om.get(property).in(
@@ -214,14 +216,20 @@ public class SEDDaoBean implements SEDDaoInterface {
               lstPredicate.add(cb.greaterThanOrEqualTo(
                   om.get(fieldName.substring(0, fieldName.lastIndexOf("From"))),
                   (Comparable) searchValue));
+              LOG.formatedWarning("SET PARAMETER FROM %s  for method %s", searchValue, fieldName);
             } else if (fieldName.endsWith("To") && searchValue instanceof Comparable) {
               lstPredicate.add(cb.lessThan(
                   om.get(fieldName.substring(0, fieldName.lastIndexOf("To"))),
                   (Comparable) searchValue));
+              LOG.formatedWarning("SET PARAMETER TO %s  for method %s", searchValue, fieldName);
             } else if (searchValue instanceof String && !((String) searchValue).isEmpty()) {
+              LOG.formatedWarning("SET PARAMETER String %s  for method %s", searchValue, fieldName);
               lstPredicate.add(cb.equal(om.get(fieldName), searchValue));
             } else if (searchValue instanceof BigInteger) {
+              LOG.formatedWarning("SET PARAMETER INTEGER %s  for method %s", searchValue, fieldName);
               lstPredicate.add(cb.equal(om.get(fieldName), searchValue));
+            } else {
+              LOG.formatedWarning("Unknown type %s", searchValue);
             }
 
           }

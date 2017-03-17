@@ -27,12 +27,12 @@
                                 <h:outputText value="Local box" />
                             </p:column>
                             <p:column>
-                                <p:selectOneMenu id="ebox" value="#{exampleWebPluginData.selectedEBox}" style="width:150px" >
+                                <p:selectOneMenu id="ebox" value="#{mjuWebPluginData.selectedEBox}" style="width:150px" >
                                     <f:selectItem noSelectionOption="false"  />
-                                    <f:selectItems value="#{exampleWebPluginData.userEBoxes}" />
+                                    <f:selectItems value="#{mjuWebPluginData.userEBoxes}" />
                                 </p:selectOneMenu>                                    
 
-                                <h:outputText value="@#{exampleWebPluginData.localDomain}" />
+                                <h:outputText value="@#{mjuWebPluginData.localDomain}" />
                             </p:column>
                         </p:row>
                         <p:row>
@@ -40,7 +40,7 @@
                                 <h:outputText value="Client IP:" />
                             </p:column>
                             <p:column>
-                                <h:outputText value="#{exampleWebPluginData.clientIP}" style="width: 100%"/>
+                                <h:outputText value="#{mjuWebPluginData.clientIP}" style="width: 100%"/>
                             </p:column>
                         </p:row>
                     </p:panelGrid>
@@ -49,14 +49,14 @@
                     <p:menu class="ui-accordion-button" style="width: 180px" >
                         <p:menuitem value="User gui" 
 
-                                    actionListener="#{exampleWebPluginData.onToolbarButtonAction}" 
+                                    actionListener="#{mjuWebPluginData.onToolbarButtonAction}" 
                                     update=":tcform:panelValue"
                                     >
                             <f:attribute name="panel" value="PANEL_USER" />
                         </p:menuitem>
                         <p:menuitem value="Admin gui" 
 
-                                    actionListener="#{exampleWebPluginData.onToolbarButtonAction}" 
+                                    actionListener="#{mjuWebPluginData.onToolbarButtonAction}" 
                                     update="tcform:panelValue">
                             <f:attribute name="panel" value="PANEL_ADMIN" />
                         </p:menuitem>
@@ -68,7 +68,7 @@
 
 
                     <h1 style="padding: 2;margin: 0;background: gray;color: white;"> This is Central panel of example web plugin</h1>
-                    <h:outputText id="panelValue" value="Your web gui settings should be here. #{exampleWebPluginData.showPanel}" />
+                    <h:outputText id="panelValue" value="Your web gui settings should be here. #{mjuWebPluginData.showPanel}" />
                 </p:layoutUnit>     
                 <p:layoutUnit position="east"   >        
                     <h1 style="padding: 2;margin: 0;background: gray;color: white;"> This is east panel</h1>

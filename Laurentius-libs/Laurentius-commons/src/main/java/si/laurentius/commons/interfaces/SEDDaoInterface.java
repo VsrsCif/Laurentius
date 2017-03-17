@@ -17,7 +17,6 @@ package si.laurentius.commons.interfaces;
 import java.math.BigInteger;
 import java.util.List;
 import javax.ejb.Local;
-import javax.jms.JMSException;
 import javax.naming.NamingException;
 import si.laurentius.msh.inbox.mail.MSHInMail;
 import si.laurentius.msh.outbox.mail.MSHOutMail;

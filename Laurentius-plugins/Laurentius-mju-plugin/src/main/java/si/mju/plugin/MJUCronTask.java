@@ -33,14 +33,14 @@ import si.laurentius.plugin.interfaces.exception.TaskException;
  */
 @Stateless
 @Local(TaskExecutionInterface.class)
-public class ExampleWebCronTask implements TaskExecutionInterface {
+public class MJUCronTask implements TaskExecutionInterface {
 
   public static final String KEY_FOLDER = "example.task.folder";
-  public static final String KEY_PARAM_1 = "example.webtask.parameter.001";
-  public static final String KEY_PARAM_2 = "example.webtask.parameter.002";
-  public static final String KEY_PARAM_3 = "example.webtask.parameter.003";
-  public static final String KEY_PARAM_4 = "example.webtask.parameter.004";
-  private static final SEDLogger LOG = new SEDLogger(ExampleWebCronTask.class);
+  public static final String KEY_PARAM_1 = "si.mjuparameter.001";
+  public static final String KEY_PARAM_2 = "si.mjuparameter.002";
+  public static final String KEY_PARAM_3 = "si.mjuparameter.003";
+  public static final String KEY_PARAM_4 = "si.mjuparameter.004";
+  private static final SEDLogger LOG = new SEDLogger(MJUCronTask.class);
 
   /**
    * execute metod
@@ -54,7 +54,7 @@ public class ExampleWebCronTask implements TaskExecutionInterface {
     long l = LOG.logStart();
 
     StringWriter sw = new StringWriter();
-    sw.append("Start example task: ");
+    sw.append("Read all delivered mail from SVEVMJU: ");
     sw.append("\n");
 
     for (String pKey : p.stringPropertyNames()) {

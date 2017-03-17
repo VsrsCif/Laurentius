@@ -15,7 +15,6 @@
 package si.mju.plugin;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.Local;
@@ -35,17 +34,17 @@ import si.laurentius.plugin.interfaces.exception.PluginException;
 @Singleton
 @Startup
 @Local(PluginDescriptionInterface.class)
-public class ExampleWebPluginDescription extends  AbstractPluginDescription {
+public class MJUPluginDescription extends  AbstractPluginDescription {
   
-  private static final SEDLogger LOG = new SEDLogger(ExampleWebPluginDescription.class);
+  private static final SEDLogger LOG = new SEDLogger(MJUPluginDescription.class);
   MenuItem miRoot = null;
   
   @PostConstruct
   private void postConstruct() {    
     try {
       // and log further application specific info
-      registerPluginComponentInterface(ExampleSoapInterceptor.class);
-      registerPluginComponentInterface(ExampleWebCronTask.class);
+      registerPluginComponentInterface(MJUProcessorInZPPMail.class);
+      registerPluginComponentInterface(MJUCronTask.class);
       
      // register plugin
       registerPlugin();
@@ -60,7 +59,7 @@ public class ExampleWebPluginDescription extends  AbstractPluginDescription {
    */
   @Override
   public String getDesc() {
-    return "This is example of plugin with a web administration";
+    return "MJU SVEV 1.0 to SVEV 2.0 implementation";
   }
 
 
@@ -75,7 +74,7 @@ public class ExampleWebPluginDescription extends  AbstractPluginDescription {
    */
   @Override
   public String getName() {
-    return "Example web plugin";
+    return "MJU SVEV1-SVEV2" ;
   }
 
     @Override
@@ -97,7 +96,7 @@ public class ExampleWebPluginDescription extends  AbstractPluginDescription {
    */
   @Override
   public String getWebUrlContext() {
-    return "/laurentius-web/example-web-plugin";
+    return "/laurentius-web/mju";
   }
   
   /**
@@ -115,7 +114,7 @@ public class ExampleWebPluginDescription extends  AbstractPluginDescription {
    */
   @Override
   public String getType() {
-    return "ExampleWebPlugin";
+    return "MJUWebPlugin";
   }
 
 }

@@ -44,7 +44,7 @@ import si.laurentius.user.SEDUser;
  * @author Jože Rihtaršič
  */
 @SessionScoped
-@ManagedBean(name = "exampleWebPluginData")
+@ManagedBean(name = "mjuWebPluginData")
 public class MjuWebPluginData {
 
   private static final SEDLogger LOG = new SEDLogger(MjuWebPluginData.class);
