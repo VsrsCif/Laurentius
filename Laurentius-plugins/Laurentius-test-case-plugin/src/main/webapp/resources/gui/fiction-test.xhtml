@@ -12,58 +12,44 @@
 
     <composite:implementation >
         <pnl:pnl-settings id="cronPanel"
-                          title="#{msg['CustomTest']}" 
-                          description="#{msg['CustomTest']}"
+                          title="#{msg['FictionDelivery']}" 
+                          description="#{msg['FictionDelivery']}"
                           icon="ui-icon-svg-test"
                           >
+              <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
 
-            <h3>Testni podatki</h3>
-            <p:panelGrid  style="width: 580px">
-                <f:facet name="header">
-                    <h:outputText value="Vnesite testne podatke" />
-                </f:facet>
+            <p:panelGrid style="width: 100%">
+
                 <p:row>
-                    <p:column>
-                        <h:outputText value="Izberite lokalni predal:" />
-                    </p:column>
-                    <p:column>
-                        <p:selectOneMenu id="ebox" value="#{TCStressTest.testSenderEBox}" style="width:150px" >
-                            <f:selectItem noSelectionOption="false"  />
-                            <f:selectItems value="#{testCasePluginData.userEBoxes}" />
-                        </p:selectOneMenu>                                    
-
-                        <h:outputText value="#{TCStressTest.localDomain}" />
-                    </p:column>
+                    <p:column colspan="2" styleClass="ui-gp-header" >#{msg['ChangeSentDate']}</p:column>
                 </p:row>
                 <p:row>
-                    <p:column>
-                        <h:outputText value="Vnesite predal naslovnika/pošiljatelja:" />
+                    <p:column colspan="2">#{msg['ChangeSentDateDesc']} <br /> <br /> </p:column>
+                </p:row>                
+                <p:row>
+                    <p:column  styleClass="ui-gp-label">#{msg['OutMailID']}</p:column>
+                    <p:column> 
+                        <p:inputNumber value="#{tcFictionDeliveryTests.mailId}" decimalPlaces="0" style="width: 200px"/>
                     </p:column>
+                </p:row>
+
+                <p:row>
+                    <p:column  styleClass="ui-gp-label">#{msg['DaysBeforeNow']}</p:column>
+                    <p:column > 
+                        <p:inputNumber value="#{tcFictionDeliveryTests.daysBeforeNow}" decimalPlaces="0" style="width: 200px" />
+                    </p:column>
+                </p:row>
+
+
+                <p:row>
                     <p:column>
-                        <h:inputText value="#{TCStressTest.testReceiverEBox}" style="width: 100%"/>
+                        <p:commandButton value="#{msg['SetNewSentDate']}"                                           
+                                         actionListener="#{tcFictionDeliveryTests.changeSentDateAction()}"
+                                         />
                     </p:column>
                 </p:row>
             </p:panelGrid>
 
-            <h3>ZPP vročanje</h3>
-            Namen orodja je spremeniti čas oddaje pošiljke v naslovnikov sistem. Tako da je nastopil rok za
-            fiktivno vročitev 
-            <br /> <br /> 
-
-            Vnesite ID izhodne pošiljke. Id za pošiljko dobite v Orodju "Izhodna pošta", 
-            v zavihku "Podatki kuverte" (Spodaj) podatek ID.  Spreminjanje datuma dostav v naslovnikov sistem 
-            deluje samo za pošiljke v statusu Poslano (SENT)<br /> 
-            <h:outputText value="Id:" />
-            <p:inputNumber value="#{TCStressTest.fictionMailId}" decimalPlaces="0" style="width: 200px"/>
-
-
-            <br />
-            Nastavi čas oddaje v naslovnikov sistem (Danes - 15 dni):
-            <p:commandButton value="Nastavi" 
-                             actionListener="#{TCStressTest.changeSentDateAction}"
-                             update=":tcForm:messages"
-
-                             />
         </pnl:pnl-settings>
     </composite:implementation>
 </html>

@@ -5,7 +5,6 @@
 package si.laurentius.msh.web.abst;
 
 import java.util.List;
-import javax.faces.bean.ManagedProperty;
 import org.primefaces.context.RequestContext;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.xml.XMLUtils;

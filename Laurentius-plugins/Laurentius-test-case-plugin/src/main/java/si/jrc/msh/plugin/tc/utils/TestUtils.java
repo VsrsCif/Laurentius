@@ -38,7 +38,6 @@ import si.laurentius.msh.outbox.mail.MSHOutMail;
 import si.laurentius.msh.outbox.payload.MSHOutPart;
 import si.laurentius.msh.outbox.payload.MSHOutPayload;
 import si.laurentius.msh.outbox.property.MSHOutProperties;
-import si.laurentius.msh.outbox.property.MSHOutProperty;
 import si.laurentius.testcase.MailTestCases;
 
 /**
@@ -48,58 +47,64 @@ import si.laurentius.testcase.MailTestCases;
 public class TestUtils {
 
   private static final SEDLogger LOG = new SEDLogger(TestUtils.class);
-  public static String ROOT_FOLDER = "/test-case/";
-  public static String BLOB_FOLDER = ROOT_FOLDER + "/test-pdf/";
-  public static String GENERIC_FOLDER = ROOT_FOLDER + "/generic-cases/";
-  
+  public static final String ROOT_FOLDER = "/test-case/";
+  public static final String BLOB_FOLDER = ROOT_FOLDER + "/test-pdf/";
+  public static final String GENERIC_FOLDER = ROOT_FOLDER + "generic-cases/";
+
   public static String GENERIC_METADATA = GENERIC_FOLDER + "/testcases.xml";
-  
+
   public static File[] mTstFiles = null;
-  
+
   StorageUtils mstrgUtils = new StorageUtils();
 
-  public MSHOutMail createOutMail(int imsgs, String senderBox, String recName, String recBox,
-      String service, String action) {
+  public MSHOutMail createOutMail(int imsgs, String senderBox, String recName,
+          String recBox,
+          String service, String action) {
 
     Random rnd = new Random(Calendar.getInstance().getTimeInMillis());
 
     return createOutMail(recBox, recName, senderBox,
-        TCLookUp.SENDER_NAMES[rnd.nextInt(
-            TCLookUp.SENDER_NAMES.length)],
-        service, action,
-        TCLookUp.SUBJECTS[rnd.nextInt(TCLookUp.SUBJECTS.length)], getRandomFiles(1, 5,
-        rnd), String.format("VL %d/2016", rnd.nextInt(10000)));
+            TCLookUp.SENDER_NAMES[rnd.nextInt(
+                    TCLookUp.SENDER_NAMES.length)],
+            service, action,
+            TCLookUp.SUBJECTS[rnd.nextInt(TCLookUp.SUBJECTS.length)],
+            getRandomFiles(1, 5,
+                    rnd));
 
   }
-   public MSHOutMail createOutMail(int imsgs, String senderBox, String recName, String recBox,
-      String service, String action,  List<File> lstfiles) {
+
+  public MSHOutMail createOutMail(int imsgs, String senderBox, String recName,
+          String recBox,
+          String service, String action, List<File> lstfiles) {
 
     Random rnd = new Random(Calendar.getInstance().getTimeInMillis());
 
     return createOutMail(recBox, recName, senderBox,
-        TCLookUp.SENDER_NAMES[rnd.nextInt(
-            TCLookUp.SENDER_NAMES.length)],
-        service, action,
-        TCLookUp.SUBJECTS[rnd.nextInt(TCLookUp.SUBJECTS.length)],lstfiles, String.format("VL %d/2016", rnd.nextInt(10000)));
+            TCLookUp.SENDER_NAMES[rnd.nextInt(
+                    TCLookUp.SENDER_NAMES.length)],
+            service, action,
+            TCLookUp.SUBJECTS[rnd.nextInt(TCLookUp.SUBJECTS.length)], lstfiles
+    );
 
   }
-  
-   public MSHOutMail createOutMail( String senderBox, String recName, String recBox,
-      String service, String action, File fName) {
+
+  public MSHOutMail createOutMail(String senderBox, String recName,
+          String recBox,
+          String service, String action, File fName) {
 
     Random rnd = new Random(Calendar.getInstance().getTimeInMillis());
 
-    return createOutMail(recBox, recName, senderBox,
-        TCLookUp.SENDER_NAMES[rnd.nextInt(
-            TCLookUp.SENDER_NAMES.length)],
-        service, action,
-        TCLookUp.SUBJECTS[rnd.nextInt(TCLookUp.SUBJECTS.length)], Collections.singletonList(fName),
-        String.format("VL %d/2016", rnd.nextInt(10000)));
+    return createOutMail(senderBox,
+            TCLookUp.SENDER_NAMES[rnd.nextInt(
+                    TCLookUp.SENDER_NAMES.length)], recBox, recName,
+            service, action,
+            TCLookUp.SUBJECTS[rnd.nextInt(TCLookUp.SUBJECTS.length)],
+            Collections.singletonList(fName));
 
   }
 
   public String serialize(Object o)
-      throws JAXBException {
+          throws JAXBException {
 
     StringWriter sw = new StringWriter();
 
@@ -112,8 +117,8 @@ public class TestUtils {
 
   public List<File> getRandomFiles(int imin, int iMax, Random rnd) {
 
-    int i = imin == iMax || imin > iMax ? imin : rnd.nextInt(iMax - imin) +
-        imin;
+    int i = imin == iMax || imin > iMax ? imin : rnd.nextInt(iMax - imin)
+            + imin;
     i = i > 0 ? i : 1;
     List<File> lst = new ArrayList<>();
     File[] testFiles = getTestFiles();
@@ -123,11 +128,13 @@ public class TestUtils {
     return lst;
   }
 
-  private MSHOutMail createOutMail(String rcBox, String rcName, String sndBox,
-      String sndName,
-      String service, String action, String contentDesc, List<File> fls,
-      String oprst) {
-    long l  = LOG.logStart();
+  public MSHOutMail createOutMail(
+          String sndBox,
+          String sndName,
+          String rcBox, String rcName,
+          String service, String action, String contentDesc,
+          List<File> fls) {
+    long l = LOG.logStart();
 
     MSHOutMail om = new MSHOutMail();
 
@@ -139,24 +146,21 @@ public class TestUtils {
     om.setReceiverEBox(rcBox);
     om.setSenderName(sndName);
     om.setSenderEBox(sndBox);
-    om.setSubject(oprst + " " + contentDesc);
+    om.setSubject(contentDesc);
     om.setMSHOutProperties(new MSHOutProperties());
-    MSHOutProperty opr = new MSHOutProperty();
-    opr.setName("oprst");
-    opr.setValue(oprst);
-    om.getMSHOutProperties().getMSHOutProperties().add(opr);
 
     om.setMSHOutPayload(new MSHOutPayload());
     int i = 0;
     for (File f : fls) {
       try {
-       
-        File fStorage = mstrgUtils.storeInFile(MimeValue.getMimeTypeByFileName(f.getName()), f);
+
+        File fStorage = mstrgUtils.storeInFile(MimeValue.getMimeTypeByFileName(
+                f.getName()), f);
         MSHOutPart op = new MSHOutPart();
         op.setFilename(f.getName());
-        
+
         op.setDescription(i++ == 0 ? "Sklep" : "Priloga");
-        op.setFilepath(StorageUtils.getRelativePath(fStorage));        
+        op.setFilepath(StorageUtils.getRelativePath(fStorage));
         op.setMimeType(MimeValue.getMimeTypeByFileName(f.getName()));
         om.getMSHOutPayload().getMSHOutParts().add(op);
       } catch (StorageException ex) {
@@ -170,18 +174,19 @@ public class TestUtils {
 
   public static File[] getTestFiles() {
     if (mTstFiles == null) {
-      
-      File f = new File(SEDSystemProperties.getPluginsFolder(),  StringFormater.replaceProperties(BLOB_FOLDER));
+
+      File f = new File(SEDSystemProperties.getPluginsFolder(), StringFormater.
+              replaceProperties(BLOB_FOLDER));
       mTstFiles = f.listFiles((File pathname) -> {
-        return pathname.isFile() &&
-            pathname.getName().toLowerCase().endsWith(".pdf");
+        return pathname.isFile()
+                && pathname.getName().toLowerCase().endsWith(".pdf");
       });
 
     }
     return mTstFiles;
   }
-  
-  public static MailTestCases getGenericTestCases(){
+
+  public static MailTestCases getGenericTestCases() {
     MailTestCases mtc = null;
     File f = new File(SEDSystemProperties.getPluginsFolder(), GENERIC_METADATA);
     try {
@@ -190,7 +195,7 @@ public class TestUtils {
       LOG.logError(ex.toString(), ex);
     }
     return mtc;
-  
+
   }
 
 }

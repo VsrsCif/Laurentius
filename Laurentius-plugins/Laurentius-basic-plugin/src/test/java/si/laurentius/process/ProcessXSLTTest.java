@@ -5,11 +5,7 @@
  */
 package si.laurentius.process;
 
-import java.util.List;
-import java.util.Map;
-import javax.ejb.embeddable.EJBContainer;
 import org.junit.Test;
-import static org.junit.Assert.*;
 import si.laurentius.commons.enums.MimeValue;
 import si.laurentius.commons.utils.Utils;
 import si.laurentius.msh.inbox.mail.MSHInMail;
@@ -18,7 +14,6 @@ import si.laurentius.msh.inbox.payload.MSHInPayload;
 import si.laurentius.plugin.imp.IMPXslt;
 import si.laurentius.plugin.imp.Namespace;
 import si.laurentius.plugin.imp.XPath;
-import si.laurentius.plugin.processor.InMailProcessorDef;
 
 /**
  *

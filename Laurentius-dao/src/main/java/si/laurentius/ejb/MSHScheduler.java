@@ -153,7 +153,7 @@ public class MSHScheduler implements SEDSchedulerInterface {
         LOG.logEnd(l, "Error updating task: '" + te.getType() + "' ", ex);
       }
       return;
-    } else if (Objects.equals(plg.getVersion(), mj.getSEDTask().
+    } else if (!Objects.equals(plg.getVersion(), mj.getSEDTask().
             getPluginVersion())) {
       LOG.formatedWarning("Plugin version mismatch for cron task execution %s",
               name);

@@ -4,6 +4,7 @@
       xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:sui="http://java.sun.com/jsf/composite/gui"
       xmlns:p="http://primefaces.org/ui"
+      xmlns:dlg="http://java.sun.com/jsf/composite/gui/dialog"
 
       >
 
@@ -15,15 +16,15 @@
 
     <h:body>
         <f:metadata>
-            <f:viewParam name="page" value="#{testCasePluginData.currentPanel}" />
-            <f:viewParam name="navigator" value="#{testCasePluginData.showNavigator}" />
+            <f:viewParam name="page" value="#{TestCaseMainView.currentPanel}" />
+            <f:viewParam name="navigator" value="#{TestCaseMainView.showNavigator}" />
         </f:metadata>
         <h:form id="tcForm" >
             <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
             <!-- main window -->    
             <p:layout  style="min-width:400px;min-height:400px;"  fullPage="true" >
 
-                <p:layoutUnit  rendered="#{testCasePluginData.showNavigator}" position="west"  size="200" resizable="true" closable="true" collapsible="true" >        
+                <p:layoutUnit  rendered="#{TestCaseMainView.showNavigator}" position="west"  size="200" resizable="true" closable="true" collapsible="true" >        
                     <p:accordionPanel id="toolbars" >
 
                         <p:tab id="Instances"  >
@@ -40,33 +41,27 @@
 
                                 <p:menuitem value="#{msg['StressTest']}" 
                                             icon="ui-icon-svg-test ui-icon-size-22" 
-                                            actionListener="#{testCasePluginData.onToolbarButtonAction}" 
+                                            actionListener="#{TestCaseMainView.onToolbarButtonAction}" 
                                             update=":tcForm:MainPanel"
                                             >
                                     <f:attribute name="panel" value="PANEL_STRESS_TEST" />
                                 </p:menuitem>
                                  <p:menuitem value="#{msg['FictionTest']}" 
                                             icon="ui-icon-svg-test ui-icon-size-22" 
-                                            actionListener="#{testCasePluginData.onToolbarButtonAction}" 
+                                            actionListener="#{TestCaseMainView.onToolbarButtonAction}" 
                                             update=":tcForm:MainPanel"
                                             >
                                     <f:attribute name="panel" value="PANEL_FICTION_TEST" />
                                 </p:menuitem>
                                 <p:menuitem value="#{msg['CustomTest']}" 
                                             icon="ui-icon-svg-test ui-icon-size-22" 
-                                            actionListener="#{testCasePluginData.onToolbarButtonAction}" 
+                                            actionListener="#{TestCaseMainView.onToolbarButtonAction}" 
                                             update=":tcForm:MainPanel"
                                             >
                                     <f:attribute name="panel" value="PANEL_CUSTOM_TEST" />
                                 </p:menuitem>
                                 
-                                 <p:menuitem value="#{msg['ReliabilityTest']}" 
-                                            icon="ui-icon-svg-test ui-icon-size-22" 
-                                            actionListener="#{testCasePluginData.onToolbarButtonAction}" 
-                                            update=":tcForm:MainPanel"
-                                            >
-                                    <f:attribute name="panel" value="PANEL_RELIABILITY_TEST" />
-                                </p:menuitem>
+                              
                             </p:menu>
 
                         </p:tab>
@@ -77,13 +72,13 @@
                 <p:layoutUnit position="center"  >
                     <h:outputText value="#{param['id']}" />
                     <h:panelGroup id="MainPanel">
-                        <sui:stress-test id="PanelStressTest" rendered="#{testCasePluginData.renderPanel(AppConstant.s_PANEL_STRESS_TEST)}"  />
-                        <sui:fiction-test id="PanelFictionTest" rendered="#{testCasePluginData.renderPanel(AppConstant.s_PANEL_FICTION_TEST)}"  />
-                        <sui:custom-test id="PanelCustomTest" rendered="#{testCasePluginData.renderPanel(AppConstant.s_PANEL_CUSTOM_TEST)}"  />
+                        <sui:stress-test id="PanelStressTest" rendered="#{TestCaseMainView.renderPanel(AppConstant.s_PANEL_STRESS_TEST)}"  />
+                        <sui:fiction-test id="PanelFictionTest" rendered="#{TestCaseMainView.renderPanel(AppConstant.s_PANEL_FICTION_TEST)}"  />
+                        <sui:custom-test id="PanelCustomTest" rendered="#{TestCaseMainView.renderPanel(AppConstant.s_PANEL_CUSTOM_TEST)}"  />
                     </h:panelGroup>
                 </p:layoutUnit>     
             </p:layout>
         </h:form>
-
+        <dlg:dlg-progress id="dlgProgress" />
     </h:body>
 </html>

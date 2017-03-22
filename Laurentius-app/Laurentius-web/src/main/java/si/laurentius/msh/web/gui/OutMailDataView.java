@@ -27,6 +27,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
@@ -98,7 +99,8 @@ public class OutMailDataView extends AbstractMailView<MSHOutMail, MSHOutEvent>
     List<String> lstUB = getUserSessionData().getUserEBoxes();
 
     if (!lstUB.isEmpty()) {
-      m.setSenderEBox(lstUB.get(0));
+      m.setSenderEBox(lstUB.get(0) + "@" + SEDSystemProperties.
+              getLocalDomain());
       m.setReceiverEBox(lstUB.get(lstUB.size() - 1) + "@" + SEDSystemProperties.
               getLocalDomain());
     } else {
@@ -106,8 +108,13 @@ public class OutMailDataView extends AbstractMailView<MSHOutMail, MSHOutEvent>
       m.setReceiverEBox("");
     }
 
-    m.setService("LegalDelivery_ZPP");
-    m.setAction("DeliveryNotification");
+    List<Service> srv = mPMode.getServices();
+    if (!srv.isEmpty()) {
+      m.setService(srv.get(0).getId());
+      if (!srv.get(0).getActions().isEmpty()) {
+        m.setAction(srv.get(0).getActions().get(0).getName());
+      }
+    }
     m.setSenderMessageId(Utils.getInstance().getGuidString());
     m.setSubject("VL 1/2016 Predložitveno poročilo, spis I 291/2014");
 
@@ -319,7 +326,7 @@ public class OutMailDataView extends AbstractMailView<MSHOutMail, MSHOutEvent>
       // FacesMessage message = new FacesMessage("Succesful", event.getFile().getFileName() +
       // " is uploaded.");
       // FacesContext.getCurrentInstance().addMessage(null, message);
-    } catch (StorageException | IOException  ex) {
+    } catch (StorageException | IOException ex) {
       Logger.getLogger(OutMailDataView.class.getName()).log(Level.SEVERE, null,
               ex);
     }
@@ -415,9 +422,6 @@ public class OutMailDataView extends AbstractMailView<MSHOutMail, MSHOutEvent>
         String pmodeId = Utils.getPModeIdFromOutMail(newOutMail);
         newOutMail.setReceiverName(newOutMail.getReceiverEBox());
         newOutMail.setSenderName(newOutMail.getSenderEBox());
-        newOutMail.setSenderEBox(
-                newOutMail.getSenderEBox() + "@" + SEDSystemProperties.
-                getLocalDomain());
 
         MSHOutPart p = new MSHOutPart();
         p.setEncoding("UTF-8");
@@ -516,6 +520,31 @@ public class OutMailDataView extends AbstractMailView<MSHOutMail, MSHOutEvent>
       }
     }
     return Collections.emptyList();
+  }
+
+  public void setNewMailService(String ts) {
+    MSHOutMail nm = getNewOutMail();
+    if (nm != null) {
+      if (Objects.equals(nm.getService(), ts)) {
+        return;
+      }
+      nm.setService(ts);
+      if (!Utils.isEmptyString(ts)) {
+        List<Service.Action> lst = getCurrentServiceActionList();
+        if (!lst.isEmpty()) {
+          nm.setAction(lst.get(0).getName());
+        } else {
+          nm.setAction(null);
+        }
+      } else {
+        nm.setAction(null);
+      }
+    }
+  }
+
+  public String getNewMailService() {
+    MSHOutMail nm = getNewOutMail();
+    return nm != null ? nm.getService() : null;
   }
 
   public List<Service.Action> getCurrentFilterServiceActionList() {

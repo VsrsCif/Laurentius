@@ -49,10 +49,10 @@ import si.laurentius.user.SEDUser;
  * @author Jože Rihtaršič
  */
 @SessionScoped
-@ManagedBean(name = "testCasePluginData")
-public class TestCasePluginData {
+@ManagedBean(name = "TestCaseMainView")
+public class TestCaseMainView {
 
-  private static final SEDLogger LOG = new SEDLogger(TestCasePluginData.class);
+  private static final SEDLogger LOG = new SEDLogger(TestCaseMainView.class);
 
   @Resource
   WebServiceContext context;
@@ -120,10 +120,11 @@ public class TestCasePluginData {
    *
    * @return
    */
-  public String getLocalDomain() {
-    return System.getProperty(SEDSystemProperties.SYS_PROP_LAU_DOMAIN);
+   
+  public String getLocalDomain(){
+    return SEDSystemProperties.getLocalDomain();
   }
-
+  
   /**
    *
    * @return
@@ -221,7 +222,6 @@ public class TestCasePluginData {
   }
   
   public boolean renderPanel(String panel){
-    LOG.formatedWarning("Render pane %s current panel %s", panel, currentPanel);
     return !Utils.isEmptyString(currentPanel) && currentPanel.equalsIgnoreCase(
             panel);
   }

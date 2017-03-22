@@ -25,6 +25,7 @@ import javax.faces.bean.ManagedBean;
 @ManagedBean(name = "AppConstant")
 public class AppConstant {
 
+  public static final String PLUGIN_NAME="TestCasePlugin";
   
   /**
    *

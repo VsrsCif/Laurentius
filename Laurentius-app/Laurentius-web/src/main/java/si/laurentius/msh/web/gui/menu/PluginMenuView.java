@@ -90,6 +90,7 @@ public class PluginMenuView implements Serializable {
           TreeNode rootMI = new DefaultTreeNode(new MenuItem(p.getMainMenu().
                   getName(), null, "ui-icon-svg-plugin ui-icon-size-22", p.
                           getWebContext()), mtnRootNode);
+          rootMI.setExpanded(true);
 
           for (si.laurentius.plugin.def.MenuItem pmi : p.getMainMenu().
                   getMenuItems()) {

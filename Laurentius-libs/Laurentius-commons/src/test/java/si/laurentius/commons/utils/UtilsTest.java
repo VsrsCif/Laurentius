@@ -7,8 +7,6 @@ package si.laurentius.commons.utils;
 
 import org.junit.Test;
 import static org.junit.Assert.*;
-import si.laurentius.msh.inbox.mail.MSHInMail;
-import si.laurentius.msh.outbox.mail.MSHOutMail;
 
 /**
  *

@@ -17,7 +17,7 @@
                    appendTo="@(body)"
                    width="1050" >
             <h:form id="mailComposeForm" >
-                <p:layout id="mailComposeDetails" style="min-width:600px;min-height:600px;">
+                <p:layout id="mailComposeDetails" style="min-width:600px;min-height:450px;">
                     <p:layoutUnit position="north"   >
 
                         <p:panelGrid style="width: 100%">
@@ -27,19 +27,37 @@
 
                                 </p:column>
                                 <p:column>
-                                    <p:selectOneMenu id="ebox" value="#{OutMailDataView.newOutMail.senderEBox}" style="width:150px" >
+                                    <p:selectOneMenu id="eboxSSender" 
+                                                     value="#{OutMailDataView.newOutMail.senderEBox}" 
+                                                     style="width:150px"
 
+                                                     >
                                         <f:selectItem noSelectionOption="false"  />
-                                        <f:selectItems value="#{userSessionData.userEBoxes}" />
+                                        <f:selectItems value="#{userSessionData.userEBoxes}"
+                                                       var="ebx"
+                                                       itemLabel="#{ebx}"
+                                                       itemValue="#{ebx}#{ApplicationData.domain}" />
                                     </p:selectOneMenu>                                    
                                     <h:outputText value="#{ApplicationData.domain}" />
+
                                 </p:column>
                                 <p:column><h:outputText value="#{msg['ReceiverBox']}" /></p:column>
-                                <p:column><h:inputText value="#{OutMailDataView.newOutMail.receiverEBox}" style="width: 100%"/></p:column>
+                                <p:column>
+                                    <p:selectOneMenu id="eboxRec" 
+                                                     value="#{OutMailDataView.newOutMail.receiverEBox}" 
+                                                     style="width:250px"
+                                                     editable="true">
+
+                                        <f:selectItems value="#{userSessionData.userEBoxes}" 
+                                                       var="ebx" itemLabel="#{ebx}#{ApplicationData.domain}"
+                                                       itemValue="#{ebx}#{ApplicationData.domain}"
+                                                       />
+                                    </p:selectOneMenu>    
+                                </p:column>
                             </p:row><p:row>
                                 <p:column><h:outputText value="#{msg['Service']}" /></p:column>
                                 <p:column>
-                                    <p:selectOneMenu id="cmpService" value="#{OutMailDataView.newOutMail.service}" style="width:250px" >
+                                    <p:selectOneMenu id="cmpService" value="#{OutMailDataView.newMailService}" style="width:250px" >
                                         <p:ajax update="dlgCompose:mailComposeForm:cmpAction"/>
                                         <f:selectItem noSelectionOption="false"  />
                                         <f:selectItems value="#{pModeServiceView.list}" var="srv" itemLabel="#{srv.id}" itemValue="#{srv.id}"/>

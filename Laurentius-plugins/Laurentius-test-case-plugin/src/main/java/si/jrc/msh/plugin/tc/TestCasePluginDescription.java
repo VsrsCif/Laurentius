@@ -75,7 +75,7 @@ public class TestCasePluginDescription extends AbstractPluginDescription {
    */
   @Override
   public String getName() {
-    return "Test case plugin";
+    return AppConstant.PLUGIN_NAME;
   }
 
   /**
@@ -119,15 +119,15 @@ public class TestCasePluginDescription extends AbstractPluginDescription {
       MenuItem customTest = new MenuItem();
       customTest.setName("Custom test");
       customTest.setPageId(AppConstant.S_PANEL_CUSTOM_TEST);
-
+/*
       MenuItem reliabilityTest = new MenuItem();
       reliabilityTest.setName("Reliability test");
       reliabilityTest.setPageId(AppConstant.S_PANEL_RELIABILITY_TEST);
-
+*/
       miRoot.getMenuItems().add(stressTest);
       miRoot.getMenuItems().add(fictionTest);
       miRoot.getMenuItems().add(customTest);
-      miRoot.getMenuItems().add(reliabilityTest);
+  //    miRoot.getMenuItems().add(reliabilityTest);
     }
 
     return miRoot;
