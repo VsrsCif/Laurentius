@@ -29,6 +29,7 @@ import javax.ejb.Startup;
 import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.transaction.HeuristicMixedException;
@@ -54,6 +55,7 @@ import static si.laurentius.commons.utils.abst.ASettings.newProperties;
 @AccessTimeout(value = 60000)
 @TransactionManagement(TransactionManagementType.BEAN)
 public class DBSettings implements DBSettingsInterface {
+
   protected static final String LAU_SETTINGS = "SED";
   /**
    *
@@ -62,7 +64,7 @@ public class DBSettings implements DBSettingsInterface {
   /**
    *
    */
-  protected static final String SYSTEM_SETTINGS = "SYSTEM";
+
   /**
    *
    */
@@ -77,21 +79,19 @@ public class DBSettings implements DBSettingsInterface {
   protected long m_iRefreshInterval = 1800 * 1000; // 30 min
 
   /**
-     *
-     */
+   *
+   */
   @PersistenceContext(unitName = "ebMS_LAU_PU", name = "ebMS_LAU_PU")
   public EntityManager memEManager;
 
-
   /**
-     *
-     */
+   *
+   */
   final protected Properties mprpProperties = newProperties();
 
-
   /**
-     *
-     */
+   *
+   */
   protected Timer mtTimer = new Timer(true);
   /**
    *
@@ -99,12 +99,9 @@ public class DBSettings implements DBSettingsInterface {
   @Resource
   public UserTransaction mutUTransaction;
 
-
- 
-
   /**
-     *
-     */
+   *
+   */
   public DBSettings() {
     this.mRefreshTask = new TimerTask() {
       @Override
@@ -113,7 +110,7 @@ public class DBSettings implements DBSettingsInterface {
       }
     };
   }
-  
+
   private String getData(String strKey) {
     String strVal = null;
     if (mprpProperties != null) {
@@ -121,6 +118,7 @@ public class DBSettings implements DBSettingsInterface {
     }
     return strVal;
   }
+
   /**
    *
    * @return
@@ -129,36 +127,38 @@ public class DBSettings implements DBSettingsInterface {
   public Properties getProperties() {
     return mprpProperties;
   }
+
   /**
    *
    * @return
    */
   @Override
   public List<SEDProperty> getSEDProperties() {
-    TypedQuery<SEDProperty> q =
-            memEManager.createNamedQuery("SEDProperty.getAll", SEDProperty.class);
+    TypedQuery<SEDProperty> q
+            = memEManager.createNamedQuery("SEDProperty.getAll",
+                    SEDProperty.class);
     return q.getResultList();
   }
 
   /**
-     *
-     */
+   *
+   */
   @Override
   public void initialize() {
     if (!mprpProperties.containsKey(SEDSystemProperties.SYS_PROP_LAU_DOMAIN)) {
       synchronized (mprpProperties) {
-        setData(SEDSystemProperties.SYS_PROP_LAU_DOMAIN, SEDSystemProperties.getLocalDomain(), SYSTEM_SETTINGS);
+        setData(SEDSystemProperties.SYS_PROP_LAU_DOMAIN, SEDSystemProperties.
+                getLocalDomain(), SYSTEM_SETTINGS);
       }
     }
     if (!mprpProperties.containsKey(SEDSystemProperties.SYS_PROP_HOME_DIR)) {
       synchronized (mprpProperties) {
-        setData(SEDSystemProperties.SYS_PROP_HOME_DIR, SEDSystemProperties.getHomeFolder().getAbsolutePath(), SYSTEM_SETTINGS);
+        setData(SEDSystemProperties.SYS_PROP_HOME_DIR, SEDSystemProperties.
+                getHomeFolder().getAbsolutePath(), SYSTEM_SETTINGS);
       }
     }
-
-   
-
   }
+
   /**
    *
    */
@@ -175,11 +175,10 @@ public class DBSettings implements DBSettingsInterface {
         String val = sd.getValue();
         String part = sd.getGroup();
         if (val == null) {
-     
+
           continue;
         }
-        
-        
+
         mprpProperties.put(key, val);
         // set system settings
         if (SYSTEM_SETTINGS.equals(part)) {
@@ -190,26 +189,37 @@ public class DBSettings implements DBSettingsInterface {
     LOG.logEnd(l);
   }
 
-
   /**
    *
    * @param key
    */
-  protected void removeProperty(String key) {
+  protected void removeProperty(String key, String group) {
     long l = LOG.logStart(key);
     try {
 
-      mutUTransaction.begin();
-      TypedQuery<SEDProperty> tq =
-          memEManager.createNamedQuery("SEDProperty.getByKey", SEDProperty.class);
+      TypedQuery<SEDProperty> tq
+              = memEManager.createNamedQuery("SEDProperty.getByKey",
+                      SEDProperty.class);
       tq.setParameter("key", key);
-      
+      tq.setParameter("group", group);
+
       SEDProperty sp = tq.getSingleResult();
-      memEManager.remove(sp);
+
+      mutUTransaction.begin();
+      memEManager.remove(memEManager.contains(sp) ? sp : memEManager.merge(sp));
       mutUTransaction.commit();
 
-    } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException
-        | HeuristicRollbackException | SecurityException | IllegalStateException ex) {
+      if (SYSTEM_SETTINGS.equalsIgnoreCase(group)) {
+        System.clearProperty(key);
+      }
+      mprpProperties.remove(key);
+      
+
+    }  catch (NoResultException nr){
+         LOG.formatedWarning("No property for key %s", key);
+    }
+    catch ( NotSupportedException | SystemException | RollbackException | HeuristicMixedException
+            | HeuristicRollbackException | SecurityException | IllegalStateException ex) {
       String msg = "Error removing property: '" + key + "'";
       LOG.logError(l, msg, ex);
       try {
@@ -233,20 +243,25 @@ public class DBSettings implements DBSettingsInterface {
     long l = LOG.logStart(key);
     try {
 
-      TypedQuery<SEDProperty> tq =
-          memEManager.createNamedQuery("SEDProperty.getByKey", SEDProperty.class);
+      TypedQuery<SEDProperty> tq
+              = memEManager.createNamedQuery("SEDProperty.getByKey",
+                      SEDProperty.class);
       tq.setParameter("key", key);
+      tq.setParameter("group", group);
       mutUTransaction.begin();
       SEDProperty sp = tq.getSingleResult();
       sp.setValue(value);
-      if (group != null) {
-        sp.setGroup(group);
-      }
+
       memEManager.merge(sp);
       mutUTransaction.commit();
 
+      if (SYSTEM_SETTINGS.equalsIgnoreCase(group)) {
+        System.setProperty(key, value);
+      }
+      mprpProperties.setProperty(key, value);
+
     } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException
-        | HeuristicRollbackException | SecurityException | IllegalStateException ex) {
+            | HeuristicRollbackException | SecurityException | IllegalStateException ex) {
       String msg = "Error replacing property: '" + key + "' with value: " + value;
       LOG.logError(l, msg, ex);
       try {
@@ -259,9 +274,11 @@ public class DBSettings implements DBSettingsInterface {
     }
     LOG.logEnd(l, key);
   }
+
   private void setData(String key, String value) {
     setData(key, value, null);
   }
+
   @Lock(LockType.WRITE)
   private void setData(String key, String value, String group) {
     if (key == null || key.trim().isEmpty()) {
@@ -269,12 +286,13 @@ public class DBSettings implements DBSettingsInterface {
     }
     String strKey = key.trim();
     String strValue = value != null ? value.trim() : null;
-    
+
     if (mprpProperties.containsKey(key)) {
       if (strValue == null) {
         mprpProperties.remove(key);
-        removeProperty(key);
-      } else if (mprpProperties.get(strKey) != null && !mprpProperties.get(strKey).equals(strValue)) {
+        removeProperty(key, group);
+      } else if (mprpProperties.get(strKey) != null && !mprpProperties.get(
+              strKey).equals(strValue)) {
         mprpProperties.setProperty(strKey, strValue);
         replaceProperty(strKey, strValue, group);
       }
@@ -283,7 +301,6 @@ public class DBSettings implements DBSettingsInterface {
       storeProperty(strKey, strValue, group);
     }
   }
-
 
   /**
    *
@@ -297,7 +314,7 @@ public class DBSettings implements DBSettingsInterface {
       });
     }
   }
-  
+
   /**
    *
    * @param key
@@ -305,14 +322,22 @@ public class DBSettings implements DBSettingsInterface {
    * @param group
    */
   @Override
-  public void setSEDProperty(String key, String value, String group) {    
-        setData(key, value, group);    
+  public void setSEDProperty(String key, String value, String group) {
+    setData(key, value, group);
   }
+
+  @Override
+  public void removeSEDProperty(String key, String group) {
+    removeProperty(key, group);
+    
+  }
+
   @PostConstruct
   private void startup() {
     refreshData();
     initialize();
   }
+
   /**
    *
    * @param key
@@ -331,10 +356,14 @@ public class DBSettings implements DBSettingsInterface {
       memEManager.persist(sp);
       mutUTransaction.commit();
 
+      if (SYSTEM_SETTINGS.equalsIgnoreCase(group)) {
+        System.setProperty(key, value);
+      }
+
     } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException
             | HeuristicRollbackException | SecurityException | IllegalStateException ex) {
-      String msg =
-              "Error storing property: '" + key + "', Value: '" + value + "', group: '" + group + "' ";
+      String msg
+              = "Error storing property: '" + key + "', Value: '" + value + "', group: '" + group + "' ";
       LOG.logError(l, msg, ex);
       try {
         if (mutUTransaction.getStatus() == Status.STATUS_ACTIVE) {
@@ -346,6 +375,5 @@ public class DBSettings implements DBSettingsInterface {
     }
     LOG.logEnd(l, key);
   }
-
 
 }

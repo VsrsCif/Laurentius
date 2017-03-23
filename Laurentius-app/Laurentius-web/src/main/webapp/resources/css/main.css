@@ -23,9 +23,9 @@ h1 {
 
 
 .grid-label {
-     width: 120px !important; 
-     background: lightsteelblue;
-     text-align: right !important;
+    width: 120px !important; 
+    background: lightsteelblue;
+    text-align: right !important;
 }
 
 
@@ -115,13 +115,13 @@ h1 {
 .ui-datatable-odd {
     background: #ffffff;    
     padding:1px 1px;  
-    
+
 }
 
 .ui-datatable-even {
     background: #D2D5F9;
     padding:1px 1px;  
-    
+
 }
 
 
@@ -297,11 +297,60 @@ td.ui-panelgrid-cell.label {
 }
 
 .ui-panel-Header{
-     color: whitesmoke;
-     box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.8);
-      width:100%;
-      padding: 2px 15px;
-      background-color: #3d3c40;
-      margin: 0 20px
+    color: whitesmoke;
+    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.8);
+    width:100%;
+    padding: 2px 15px;
+    background-color: #3d3c40;
+    margin: 0 20px
+
+}
+
+
+.ui-diagram-element {
+    border:0.1em dotted #E5E4E2; 
+    background-color: #EFEEEC;
+    width:10em; 
+    height:8em;
+    text-align: center;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.8);
+}
+
+.ui-diagram-squence-head {
+    border:0.1em dotted #E5E4E2; 
+    background-color: #EFEEEC;
+    width:7em; 
+    height:3em;
+    text-align: center;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.8);
+}
+
+.ui-diagram-squence-body {
+    border:0.1em dotted #E5E4E2; 
+    background-color: #EFEEEC;
+    width:1em; 
+    height:6em;
+    text-align: center;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.8);
+}
+
+.ui-diagram-squence-body {
+    border:0.1em dotted #E5E4E2; 
+    background-color: #EFEEEC;
+    width:1em; 
+    height:6em;
+    text-align: center;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.8);
+}
+
+
+.ui-diagram-element:hover {
+    background-color: #C7C6C4;
+}
+
+.action-connector{
+    background: whitesmoke;
+    top: -1em;
+    position: relative;
     
 }

@@ -27,6 +27,8 @@ import si.laurentius.property.SEDProperty;
  */
 @Local
 public interface DBSettingsInterface {
+  
+  public static final String SYSTEM_SETTINGS = "SYSTEM";
 
   /**
    *
@@ -41,9 +43,20 @@ public interface DBSettingsInterface {
    * @param value
    * @param group
    */
-  @Lock(value = LockType.READ)
+  @Lock(value = LockType.WRITE)
   void setSEDProperty(String key, String value, String group);
+  
+     /**
+   *
+   * @param key
+   * @param value
+   * @param group
+   */
+  @Lock(value = LockType.WRITE)
+  void removeSEDProperty(String key, String group);
   /**
+   * 
+   * 
    *
    * @return
    */

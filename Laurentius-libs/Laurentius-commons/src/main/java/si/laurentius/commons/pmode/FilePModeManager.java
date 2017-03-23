@@ -47,6 +47,7 @@ import java.util.Collections;
 import static java.lang.String.format;
 import static java.lang.System.getProperty;
 import static si.laurentius.commons.pmode.FilePModeManager.LOG;
+import si.laurentius.commons.pmode.enums.ActionRole;
 import static si.laurentius.commons.utils.xml.XMLUtils.deserialize;
 import static si.laurentius.commons.utils.xml.XMLUtils.serialize;
 
@@ -185,7 +186,7 @@ public class FilePModeManager implements PModeInterface {
     Service.Action act = PModeUtils.getActionFromService(mail.getAction(), srv);
 
     PMode pMode = getPModeForLocalPartyAsSender(sPID.getId(), act.
-            getSendingRole(),
+            getInvokeRole(),
             rPID.getId(),
             mail.getService());
 
@@ -246,9 +247,12 @@ public class FilePModeManager implements PModeInterface {
       }
     }
     //receiving role
-    String recRole = Objects.equals(srv.getInitiator().getRole(), act.
-            getSendingRole())
-                    ? srv.getExecutor().getRole() : srv.getInitiator().getRole();
+    String sendingRole = Objects.equals(act.getInvokeRole(), ActionRole.Executor.getValue())?
+            srv.getExecutor().getRole() : srv.getInitiator().getRole();
+    
+            
+    String recRole = Objects.equals(act.getInvokeRole(), ActionRole.Executor.getValue())?
+            srv.getInitiator().getRole() : srv.getExecutor().getRole();
 
     // set context
     emc.setAction(act);
@@ -257,7 +261,7 @@ public class FilePModeManager implements PModeInterface {
     emc.setReceiverPartyIdentitySet(rPID);
     emc.setSenderPartyIdentitySet(sPID);
     emc.setSecurity(security);
-    emc.setSendingRole(act.getSendingRole());
+    emc.setSendingRole(sendingRole);
     emc.setReceivingRole(recRole);
     emc.setService(srv);
     emc.setTransportProtocol(transport);

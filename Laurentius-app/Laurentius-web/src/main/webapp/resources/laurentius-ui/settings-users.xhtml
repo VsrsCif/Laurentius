@@ -62,7 +62,7 @@
                     </p:column>
                     <p:rowExpansion>
                         <p:dataList value="#{sp.SEDBoxes}" var="ebox"  type="unordered" itemType="none">
-                            #{ebox.localBoxName}
+                            #{ebox.localBoxName}#{ApplicationData.domain}
                         </p:dataList>
                     </p:rowExpansion>
                 </p:dataTable>

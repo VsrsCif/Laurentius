@@ -48,7 +48,7 @@
                             />       
                     </f:facet>
                     <p:column headerText="#{msg['SED-Box']}" width="200">
-                        <h:outputText value="#{sp.localBoxName}" />
+                        <h:outputText value="#{sp.localBoxName}#{ApplicationData.domain}" />
                     </p:column>
                     <p:column headerText="#{msg['ActiveFromDate']}" width="80">
                         <h:outputText value="#{sp.activeFromDate}"  ><f:convertDateTime pattern="dd.MM.yyyy"  timeZone="CET" /></h:outputText>                

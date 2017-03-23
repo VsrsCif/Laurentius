@@ -27,21 +27,7 @@ public class MainWindow {
   String currentProgressLabel ="";
   private boolean exportLookupsWithPasswords = true;
   
-  @EJB(mappedName = SEDJNDI.JNDI_DATA_INIT)
-  private SEDInitDataInterface msedLookups;
-
-  public boolean isExportLookupsWithPasswords() {
-    return exportLookupsWithPasswords;
-  }
-
-  public void setExportLookupsWithPasswords(boolean exportLookupsWithPasswords) {
-    this.exportLookupsWithPasswords = exportLookupsWithPasswords;
-  }
-  
-  public void exportLookups() {
-    msedLookups.exportLookups(SEDSystemProperties.getInitFolder(),
-            isExportLookupsWithPasswords());
-  }
+ 
   /**
    *
    * @param summary

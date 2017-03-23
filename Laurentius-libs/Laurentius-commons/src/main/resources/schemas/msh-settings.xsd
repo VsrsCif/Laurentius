@@ -119,7 +119,7 @@
 								</xs:sequence>
 							</xs:complexType>
 						</xs:element>
-						<xs:element name="PayloadProfiles" minOccurs="0" maxOccurs="unbounded">
+						<xs:element name="PayloadProfiles" minOccurs="0">
 							<xs:complexType>
 								<xs:sequence>
 									<xs:element name="PayloadProfile" minOccurs="0" maxOccurs="unbounded">
@@ -160,12 +160,15 @@
 					</xs:sequence>
 					<xs:attribute name="name" use="required"/>
 					<xs:attribute name="after" type="xs:string"/>
-					<xs:attribute name="sendingRole" use="required">
+					<xs:attribute name="invokeRole" use="required">
 						<xs:annotation>
 							<xs:documentation>Service party role who can send message. </xs:documentation>
 						</xs:annotation>
 						<xs:simpleType>
-							<xs:restriction base="xs:token"/>
+							<xs:restriction base="xs:token">
+								<xs:enumeration value="initiator"/>
+								<xs:enumeration value="executor"/>
+							</xs:restriction>
 						</xs:simpleType>
 					</xs:attribute>
 				</xs:complexType>
@@ -186,7 +189,7 @@
 				<xs:documentation> If the type attribute is not present, the content of the name MUST be a URI (see [RFC2396]). </xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
-		<xs:attribute name="useSEDProperties" type="xs:boolean" default="true">
+		<xs:attribute name="useSEDProperties" type="xs:boolean">
 			<xs:annotation>
 				<xs:documentation>add special sed prioperties  as subject, submit date, filenames, filetype etc</xs:documentation>
 			</xs:annotation>

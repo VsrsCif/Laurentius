@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.interceptor.Interceptors;
@@ -98,6 +99,7 @@ import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.interfaces.PModeInterface;
 import si.laurentius.commons.interfaces.SEDLookupsInterface;
 import si.laurentius.commons.pmode.PModeUtils;
+import si.laurentius.commons.pmode.enums.ActionRole;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StorageUtils;
 import si.laurentius.commons.utils.Utils;
@@ -1284,7 +1286,11 @@ public class SEDMailBox implements SEDMailBoxWS {
       rPID = mpModeManager.getPartyIdentitySetForSEDAddress(mail.getReceiverEBox());
       srv = mpModeManager.getServiceById(mail.getService());
       Service.Action act = PModeUtils.getActionFromService(mail.getAction(), srv);
-      pm = mpModeManager.getPModeForLocalPartyAsSender(sPID.getId(), act.getSendingRole(),
+      
+      String sendingRole = Objects.equals(act.getInvokeRole(), ActionRole.Executor.getValue())?
+              srv.getExecutor().getRole():srv.getInitiator().getRole();
+      
+      pm = mpModeManager.getPModeForLocalPartyAsSender(sPID.getId(), sendingRole,
           rPID.getId(),
           mail.getService());
     } catch (PModeException ex) {

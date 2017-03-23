@@ -40,13 +40,13 @@
 
                              >
                     <p:ajax event="rowDblselect" listener="#{pModeServiceView.startEditSelected()}" 
-                            update=":dlgPModeService:pModeServiceDialog:pModeServiceDialogForm"
-                            oncomplete="PF('pModeServiceDialog').show()"/>
+                            update=":dlgPModeServiceGraph:pModeServiceGraphDialog:pModeServiceGraphDialogForm"
+                            oncomplete="PF('pModeServiceGraphDialog').show()"/>
 
                     <f:facet name="header">
                         <pnl:pnl-table-control 
-                            dialogVar="pModeServiceDialog"
-                            updateDialog=":dlgPModeService:pModeServiceDialog:pModeServiceDialogForm"
+                            dialogVar="pModeServiceGraphDialog"
+                            updateDialog=":dlgPModeServiceGraph:pModeServiceGraphDialog:pModeServiceGraphDialogForm"
                             updateTable=":forms:SettingsPModesServices:pmodeServicePanel:TblPModeServices"
                             addActionListener="#{pModeServiceView.createEditable()}"
                             editActionListener="#{pModeServiceView.startEditSelected()}"

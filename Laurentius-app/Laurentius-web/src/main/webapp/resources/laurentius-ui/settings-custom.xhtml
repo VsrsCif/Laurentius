@@ -6,74 +6,82 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:p="http://primefaces.org/ui"
       xmlns:composite="http://java.sun.com/jsf/composite"
-       xmlns:pnl="http://java.sun.com/jsf/composite/laurentius-ui/panel"
+      xmlns:pnl="http://java.sun.com/jsf/composite/laurentius-ui/panel"
       >
     <composite:interface>
     </composite:interface>
 
     <composite:implementation >
-         <pnl:pnl-settings id="cronPanel"
-                           title="#{msg['SettingsCustom']}" 
+        <pnl:pnl-settings id="settingsPanel"
+                          title="#{msg['SettingsCustom']}" 
                           description="#{msg['SettingsCustom']}"
                           icon="ui-icon-svg-settings"
                           >
-        
-        
-        <h2>#{msg['ExportBackup']}</h2>
-
-       
-        <p:panelGrid  class="width:100%" columnClasses="grid-label, value" >
-            <p:row > 
-                <p:column><h:outputText value="#{msg['ExportLookupsToFile']}:" /></p:column>
-                <p:column><h:outputText value="#{msg['ExportLookupsToFile']}: #{ApplicationData.exportDataFolder}" /></p:column>
-            </p:row>
-            <p:row> 
-                <p:column><p:selectBooleanCheckbox value="#{mainWindow.exportLookupsWithPasswords}"
-                                                   itemLabel="#{msg['ExportWithPasswords']}" /></p:column>
-                <p:column><p:commandButton value="#{msg['Export']}" styleClass="toolbar-Button"
-                                           icon="ui-icon-size-22 ui-icon-svg-csv"                                 
-                                           actionListener="#{mainWindow.exportLookups()}" /></p:column>
-            </p:row>
-        </p:panelGrid>
-
-        <hr />
 
 
-        <h2>#{msg['EnvironmentProperties']}</h2>
-        <p:dataTable var="sp" 
-                     value="#{ApplicationData.systemPropertyKeys}"
-                     rowKey="sp"
-                     style="padding: 0px; margin: 0px"
-                     scrollable="true" 
-                     scrollHeight="150"
+            <h2>#{msg['ExportBackup']}</h2>
 
-                     >
-            <p:column headerText="#{msg['Key']}">
-                <h:outputText value="#{sp}" />
-            </p:column>
-            <p:column headerText="#{msg['Value']}">
-                <h:outputText value="#{ApplicationData.getSystemPropertyValue(sp)}" />
-            </p:column>
-        </p:dataTable>
-        <hr />
-        <h2>#{msg['LaurentiusSettings']}</h2>
-        <p:dataTable var="sp" 
-                     value="#{ApplicationData.SEDPropertyKeys}"
-                     rowKey="sp"
-                     style="padding: 0px; margin: 0px"
-                     scrollable="true" 
-                     scrollHeight="150"
 
-                     >
-            <p:column headerText="#{msg['Key']}">
-                <h:outputText value="#{sp}" />
-            </p:column>
-            <p:column headerText="#{msg['Value']}">
-                <h:outputText value="#{ApplicationData.getSEDPropertyValue(sp)}" />
-            </p:column>
-        </p:dataTable>
-        <hr />
-        <h2> #{msg['Version']}: <p:outputLabel value="#{ApplicationData.buildVersion}" /> </h2>
+            <p:panelGrid  class="width:100%" >
+                <p:row > 
+                    <p:column class="grid-label"><h:outputText value="#{msg['ExportLookupsToFile']}:" /></p:column>
+                    <p:column><h:outputText value="#{msg['ExportLookupsToFile']}: #{ApplicationData.exportDataFolder}" /></p:column>
+                    <p:column><p:selectBooleanCheckbox value="#{adminCustomSettings.exportLookupsWithPasswords}"
+                                                       itemLabel="#{msg['ExportWithPasswords']}" /></p:column>
+                    <p:column><p:commandButton value="#{msg['Export']}" styleClass="toolbar-Button"
+                                               icon="ui-icon-size-22 ui-icon-svg-csv"                                 
+                                               actionListener="#{adminCustomSettings.exportLookups()}" /></p:column>
+                </p:row>
+
+                <p:row > 
+                    <p:column class="grid-label" colspan="3"><h:outputText value="#{msg['ConfigureProxies']}:" /></p:column>
+                    <p:column><p:commandButton value="#{msg['Proxy']}" styleClass="toolbar-Button"
+                                               icon="ui-icon-size-22 ui-icon-svg-csv"   
+                                               actionListener="#{adminCustomSettings.updateProxyFromSystemProperties()}"
+                                               oncomplete="PF('proxyDialog').show()"
+                                               update=":dlgProxy:proxyDialog:proxyDialogForm"/></p:column>
+                </p:row>
+
+            </p:panelGrid>
+
+            <hr />
+
+
+            <h2>#{msg['EnvironmentProperties']}</h2>
+            <p:dataTable var="sp" 
+                         value="#{ApplicationData.systemPropertyKeys}"
+                         rowKey="sp"
+                         style="padding: 0px; margin: 0px"
+                         scrollable="true" 
+                         scrollHeight="150"
+
+                         >
+                <p:column headerText="#{msg['Key']}">
+                    <h:outputText value="#{sp}" />
+                </p:column>
+                <p:column headerText="#{msg['Value']}">
+                    <h:outputText value="#{ApplicationData.getSystemPropertyValue(sp)}" />
+                </p:column>
+            </p:dataTable>
+            <hr />
+            <h2>#{msg['LaurentiusSettings']}</h2>
+            <p:dataTable var="sp" 
+                         value="#{ApplicationData.SEDPropertyKeys}"
+                         rowKey="sp"
+                         style="padding: 0px; margin: 0px"
+                         scrollable="true" 
+                         scrollHeight="150"
+
+                         >
+                <p:column headerText="#{msg['Key']}">
+                    <h:outputText value="#{sp}" />
+                </p:column>
+                <p:column headerText="#{msg['Value']}">
+                    <h:outputText value="#{ApplicationData.getSEDPropertyValue(sp)}" />
+                </p:column>
+            </p:dataTable>
+            <hr />
+            <h2> #{msg['Version']}: <p:outputLabel value="#{ApplicationData.buildVersion}" /> </h2>
         </pnl:pnl-settings>
     </composite:implementation>
 

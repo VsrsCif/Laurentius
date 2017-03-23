@@ -14,13 +14,18 @@
  */
 package si.laurentius.msh.web.pmode;
 
+import java.math.BigInteger;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import si.laurentius.commons.SEDJNDI;
+import si.laurentius.commons.SEDSystemProperties;
+import si.laurentius.commons.enums.MimeValue;
 import si.laurentius.commons.interfaces.PModeInterface;
+import si.laurentius.commons.pmode.enums.ActionRole;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.msh.pmode.Service;
 
@@ -40,12 +45,15 @@ public class PModeServiceView extends AbstractPModeJSFView<Service> {
   @EJB(mappedName = SEDJNDI.JNDI_PMODE)
   PModeInterface mPModeInteface;
 
-  /**
-   *
-   */
-  @PostConstruct
-  public void init() {
+  @ManagedProperty(value = "#{pModeServiceGraphView}")
+  PModeServiceGraphView serviceGraphView;
 
+  public PModeServiceGraphView getServiceGraphView() {
+    return serviceGraphView;
+  }
+
+  public void setServiceGraphView(PModeServiceGraphView serviceGraphView) {
+    this.serviceGraphView = serviceGraphView;
   }
 
   /**
@@ -53,9 +61,99 @@ public class PModeServiceView extends AbstractPModeJSFView<Service> {
    */
   @Override
   public void createEditable() {
-    Service pmodeService = new Service();
-    setNew(pmodeService);
 
+    String sbname = "service_%03d";
+    int i = 1;
+
+    while (mPModeInteface.getServiceById(String.format(sbname, i)) != null) {
+      i++;
+    }
+    String service = String.format(sbname, i);
+    Service srv = new Service();
+    srv.setId(service);
+    srv.setServiceName(service);
+    srv.setInitiator(new Service.Initiator());
+    srv.setExecutor(new Service.Executor());
+
+    srv.getInitiator().setRole(
+            "http://" + SEDSystemProperties.getLocalDomain() + "/requestor");
+    srv.getExecutor().setRole(
+            "http://" + SEDSystemProperties.getLocalDomain() + "/responder");
+
+    srv.setServiceType(
+            "http://" + SEDSystemProperties.getLocalDomain() + "/service");
+    srv.setUseSEDProperties(Boolean.TRUE);
+
+    Service.Action act = new Service.Action();
+    act.setName("TestAction");
+    act.setInvokeRole(ActionRole.Initiator.getValue());
+    act.setPayloadProfiles(new Service.Action.PayloadProfiles());
+
+    Service.Action.PayloadProfiles.PayloadProfile pf = new Service.Action.PayloadProfiles.PayloadProfile();
+    pf.setName("payload");
+    pf.setMIME(MimeValue.MIME_BIN.getMimeType());
+    pf.setMinOccurs(0);
+    pf.setMaxOccurs(100);
+    pf.setMaxSize(BigInteger.valueOf(10 * 1024 * 1024));
+    
+    act.getPayloadProfiles().setMaxSize(BigInteger.valueOf(10 * 1024 * 1024));
+    act.getPayloadProfiles().getPayloadProfiles().add(pf);
+
+    srv.getActions().add(act);
+
+    setNew(srv);
+    serviceGraphView.setService(getEditable());
+
+  }
+
+  public String getEditableInitiatorRole() {
+    Service ed = getEditable();
+    if (ed != null) {
+      if (ed.getInitiator() == null) {
+        ed.setInitiator(new Service.Initiator());
+      }
+      return ed.getInitiator().getRole();
+    }
+    return null;
+  }
+
+  public void setEditableInitiatorRole(String val) {
+    Service ed = getEditable();
+    if (ed != null) {
+      if (ed.getInitiator() == null) {
+        ed.setInitiator(new Service.Initiator());
+      }
+      ed.getInitiator().setRole(val);
+    }
+
+  }
+
+  public String getEditableExecutorRole() {
+    Service ed = getEditable();
+    if (ed != null) {
+      if (ed.getExecutor() == null) {
+        ed.setExecutor(new Service.Executor());
+      }
+      return ed.getExecutor().getRole();
+    }
+    return null;
+  }
+
+  public void setEditableExecutorRole(String val) {
+    Service ed = getEditable();
+    if (ed != null) {
+      if (ed.getExecutor() == null) {
+        ed.setExecutor(new Service.Executor());
+      }
+      ed.getExecutor().setRole(val);
+    }
+  }
+
+  @Override
+  public void startEditSelected() {
+    super.startEditSelected();
+    // set editable service to view
+    serviceGraphView.setService(getEditable());
   }
 
   /**
@@ -124,14 +222,15 @@ public class PModeServiceView extends AbstractPModeJSFView<Service> {
     return lst;
 
   }
- @Override
+
+  @Override
   public String getUpdateTargetTable() {
     return ":forms:SettingsPModesServices:pmodeServicePanel:TblPModeServices";
   }
 
   @Override
   public String getSelectedDesc() {
-     if (getSelected() != null) {
+    if (getSelected() != null) {
       return getSelected().getId();
     }
     return null;

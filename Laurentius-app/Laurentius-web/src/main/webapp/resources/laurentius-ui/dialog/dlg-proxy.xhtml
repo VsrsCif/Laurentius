@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      xmlns:dlg="http://java.sun.com/jsf/composite/laurentius-ui/dialog"
+      >
+    <composite:interface>
+    </composite:interface>
+    <composite:implementation >
+        <dlg:dlg-abstract   id="proxyDialog"
+                            formId="proxyDialogForm"
+                            dialogTitle="#{msg['SEDProxyDialog']}" 
+                            editable="#{adminCustomSettings.proxySettings}"
+                            width="600"
+                            height="350"
+                            updateOnSave=":forms:SettingsCustomPanel:settingsPanel"
+                            onConfirmAction="#{adminCustomSettings.updateProxyToSystemProperties()}"
+                            >
+            <p:layout style="width:100%;height:100%;">
+                <p:layoutUnit position="center">
+                    <p:panelGrid  style="width: 100%">
+                        <f:facet name="header">
+                            <h:outputText value="#{msg['ConfigureProxies']}" />
+
+                        </f:facet>
+                        <p:row>
+                            <p:column class="grid-label">#{msg['HttpProxy']}:</p:column>
+                            <p:column><p:inputText value="#{adminCustomSettings.proxySettings.httpHost}" style="width: 100%"/></p:column>
+                            <p:column class="grid-label">#{msg['Port']}:</p:column>
+                            <p:column><p:spinner value="#{adminCustomSettings.proxySettings.httpPort}" min="0"  size="8"/></p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column class="grid-label" colspan="3">#{msg['SetToAllProtocol']}:</p:column>
+                            <p:column><p:commandButton value="#{msg['Ok']}" styleClass="toolbar-Button"
+                                               icon="ui-icon-size-22 ui-icon-svg-ok"   
+                                               actionListener="#{adminCustomSettings.setHttpProxyToAllProtocols()}"                                               
+                                               update=":dlgProxy:proxyDialog:proxyDialogForm"/></p:column>                            
+                        </p:row>
+                        <p:row>
+                            <p:column class="grid-label">#{msg['HttpsProxy']}:</p:column>
+                            <p:column><p:inputText value="#{adminCustomSettings.proxySettings.httpsHost}" style="width: 100%"/></p:column>
+                            <p:column class="grid-label">#{msg['Port']}:</p:column>
+                            <p:column><p:spinner value="#{adminCustomSettings.proxySettings.httpPort}" min="0"  size="8"/></p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column class="grid-label">#{msg['FTPProxy']}:</p:column>
+                            <p:column><p:inputText value="#{adminCustomSettings.proxySettings.ftpHost}" style="width: 100%"/></p:column>
+                            <p:column class="grid-label">#{msg['Port']}:</p:column>
+                            <p:column><p:spinner value="#{adminCustomSettings.proxySettings.ftpPort}" min="0"  size="8"/></p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column class="grid-label">#{msg['SOCKSProxy']}:</p:column>
+                            <p:column><p:inputText value="#{adminCustomSettings.proxySettings.socksHost}" style="width: 100%"/></p:column>
+                            <p:column class="grid-label">#{msg['Port']}:</p:column>
+                            <p:column><p:spinner value="#{adminCustomSettings.proxySettings.socksPort}" min="0"  size="8"/></p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column  colspan="4">#{msg['NoProxy']}:</p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column style="font-size: 0.8em" colspan="4">#{msg['NoProxyDesc']}:</p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column  colspan="4"><p:inputTextarea rows="4" style="width: 100%"
+                                                                    value="#{adminCustomSettings.proxySettings.noProxyHosts}" /></p:column>
+                        </p:row>
+                    </p:panelGrid>
+
+                </p:layoutUnit>
+            </p:layout>
+
+        </dlg:dlg-abstract>
+    </composite:implementation>
+</html>

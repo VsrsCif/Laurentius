@@ -15,7 +15,7 @@
                             formId="boxDialogForm"
                             dialogTitle="#{msg['SEDBoxDialog']}" 
                             editable="#{adminSEDBoxView.editable}"
-                            width="550"
+                            width="600"
                             height="200"
                             updateOnSave=":forms:SettingsSEDBoxes:sedboxPanel:TblSedBox"
                             onConfirmAction="#{adminSEDBoxView.addOrUpdateEditable()}"
@@ -25,11 +25,13 @@
                     <p:panelGrid  columns="2" columnClasses="grid-label,value" style="width: 100%">
 
                         <h:outputText value="Local box name:" />
-                        <h:outputText value="#{adminSEDBoxView.editable.localBoxName}" 
-                                      rendered="#{empty adminSEDBoxView.new}" style="width: 100%" />
-                        <p:inputText value="#{adminSEDBoxView.editable.localBoxName}"
-                                     rendered="#{not empty adminSEDBoxView.new}" style="width: 100%" /> 
-
+                        <h:outputText value="#{adminSEDBoxView.editable.localBoxName}#{ApplicationData.domain}" 
+                                      rendered="#{empty adminSEDBoxView.new}" style="width: 60%" />
+                        <p:panel style="padding: 0;margin:0; width: 100%" rendered="#{not empty adminSEDBoxView.new}" >
+                            <p:inputText value="#{adminSEDBoxView.editable.localBoxName}" 
+                                         style="width: 60%" />
+                            <h:outputText value="#{ApplicationData.domain}" style="width: 40%" />
+                        </p:panel>
 
                         <h:outputText value="#{msg['ActiveFromDate']}:" />                                                        
                         <p:calendar  class="searchDate"  value="#{adminSEDBoxView.editable.activeFromDate}" pattern="dd.MM.yyyy" mask="true" navigator="true" showOn="button"  />

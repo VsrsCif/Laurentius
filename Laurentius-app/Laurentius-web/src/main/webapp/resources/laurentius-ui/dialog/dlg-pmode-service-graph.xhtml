@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      xmlns:dlg="http://java.sun.com/jsf/composite/laurentius-ui/dialog"
+      xmlns:pnl="http://java.sun.com/jsf/composite/laurentius-ui/panel"
+      >
+    <composite:interface>
+    </composite:interface>
+
+    <composite:implementation >
+        <dlg:dlg-abstract   id="pModeServiceGraphDialog"
+                            formId="pModeServiceGraphDialogForm"
+                            dialogTitle="#{msg['pModeServiceDialog']}" 
+                            editable="#{pModeServiceView.editable}"
+                            width="1000"
+                            height="600"
+                            updateOnSave=":forms:SettingsPModesServices:pmodeServicePanel:TblPModeServices"
+                            onConfirmAction="#{pModeServiceView.addOrUpdateEditable()}" >
+
+            <p:layout>
+                <p:layoutUnit position="north">
+                    <p:panelGrid  columns="4" columnClasses="grid-label, value,grid-label, value"  style="width:100%; height: 100% ">
+                        <f:facet name="header">
+                            <h:outputText value="#{msg['ServiceId']}" />
+                            <h:inputText value="#{pModeServiceView.editable.id}" 
+                                         disabled="#{empty pModeServiceView.new}"  style="width:100%;" />
+                        </f:facet>
+
+
+                        <h:outputText value="#{msg['ServiceName']}:" />
+                        <h:inputText  value="#{pModeServiceView.editable.serviceName}" style="width: 100%"  />
+
+                        <h:outputText value="#{msg['ServiceType']}:" />
+                        <h:inputText  value="#{pModeServiceView.editable.serviceType}" style="width: 100%"  />
+
+                        <h:outputText value="#{msg['InitiatorRole']}:" />
+                        <h:inputText value="#{pModeServiceView.editableInitiatorRole}" style="width: 100%"  />
+
+                        <h:outputText value="#{msg['ExecutorRole']}:" />
+                        <h:inputText value="#{pModeServiceView.editableExecutorRole}" style="width: 100%"  />
+
+                        <h:outputText value="#{msg['UseSEDProperties']}:" />
+                        <h:selectBooleanCheckbox value="#{pModeServiceView.editable.useSEDProperties}" />
+
+                    </p:panelGrid>      
+                </p:layoutUnit>
+                <p:layoutUnit position="center">
+
+
+                    <p:diagram  id="actionDiagram" value="#{pModeServiceGraphView.model}" style="height:600px" styleClass="ui-widget-content" var="el">
+                        <f:facet name="element">
+                            <h:outputText value="#{el}" style="display:block;margin-top:1em;"/>
+                        </f:facet>
+                    </p:diagram>
+                </p:layoutUnit>
+                <p:layoutUnit header="#{msg['Action']}" position="east" 
+                              rendered="#{not empty pModeServiceView.editable}" 
+                              size="500" minSize="500" maxSize="500"  >
+                    <p:scrollPanel mode="native" style="width:100%;height:100%"> <!-- p:dataTable scrollable does not resize when toogled suth panel -->   
+                    <p:dataTable id="TblServiceAction" 
+                                 var="sp" 
+                                 value="#{pModeServiceGraphView.list}"                                     
+                                 rowKey="#{sp}"   
+                                 rowIndexVar="rowIndex"
+                                 selectionMode="single"
+                                 selection="#{pModeServiceGraphView.selected}"
+                                 scrollable="true" 
+                                 scrollHeight="100%"
+
+
+                                 >
+                        <f:facet name="header">
+                            <pnl:pnl-table-control 
+                                dialogVar="pModeServiceActionDialog"
+                                updateDialog=":dlgPModeServiceAction:pModeServiceActionDialog:pModeServiceActionDialogForm"
+                                updateTable="dlgPModeServiceGraph:pModeServiceGraphDialog:pModeServiceGraphDialogForm:TblServiceAction 
+                                dlgPModeServiceGraph:pModeServiceGraphDialog:pModeServiceGraphDialogForm:actionDiagram"
+                                addActionListener="#{pModeServiceGraphView.createEditable()}"
+                                editActionListener="#{pModeServiceGraphView.startEditSelected()}"
+                                removeActionListener="#{pModeServiceGraphView.removeSelectedWithWarning()}"                            
+                                />                                  
+                            <span class="ui-separator" style="display: inline-block;">
+                                <span class="ui-icon ui-icon-grip-dotted-vertical " />
+                            </span>
+                            <p:commandButton  styleClass="toolbar-Button" 
+                                              icon="ui-icon-svg-top ui-icon-size-22"  
+                                              actionListener="#{pModeServiceGraphView.selectedInstanceToTop()}"
+                                              update="TblServiceAction dlgPModeServiceGraph:pModeServiceGraphDialog:pModeServiceGraphDialogForm:actionDiagram"
+                                              />
+                            <p:commandButton  styleClass="toolbar-Button" 
+                                              icon="ui-icon-svg-up ui-icon-size-22"  
+                                              actionListener="#{pModeServiceGraphView.selectedInstanceUp()}"
+                                              update="TblServiceAction dlgPModeServiceGraph:pModeServiceGraphDialog:pModeServiceGraphDialogForm:actionDiagram"
+                                              />
+                            <p:commandButton styleClass="toolbar-Button" 
+                                             icon="ui-icon-svg-down ui-icon-size-22"  
+                                             actionListener="#{pModeServiceGraphView.selectedInstanceDown()}"
+                                             update="TblServiceAction dlgPModeServiceGraph:pModeServiceGraphDialog:pModeServiceGraphDialogForm:actionDiagram"
+                                             />
+                            <p:commandButton styleClass="toolbar-Button" 
+                                             icon="ui-icon-svg-bottom ui-icon-size-22"  
+                                             actionListener="#{pModeServiceGraphView.selectedInstanceToBottom()}"
+                                             update="TblServiceAction dlgPModeServiceGraph:pModeServiceGraphDialog:pModeServiceGraphDialogForm:actionDiagram"
+                                             />
+
+
+                        </f:facet>
+                        <p:ajax event="rowDblselect" 
+                                listener="#{pModeServiceGraphView.startEditSelected()}" 
+                                oncomplete="PF('pModeServiceActionDialog').show()"    
+                                update=":dlgPModeServiceAction:pModeServiceActionDialog:pModeServiceActionDialogForm"
+                                />
+
+                        <p:column style="width:16px">
+                            <p:rowToggler />
+                        </p:column>
+                        <p:column headerText="#{msg['Action']}"  width="120">
+                            <h:outputText value="#{sp.name}" /></p:column>
+                        <p:column headerText="#{msg['InvokeRole']}" width="120">
+                            <h:outputText value="#{sp.invokeRole}" />
+                        </p:column>
+                        <p:rowExpansion>
+                            <p:dataList value="#{sp.payloadProfiles.payloadProfiles}" var="pl"  type="unordered" itemType="none" 
+                                        style="padding: 0; margin: 0 0 0 1em">
+                                #{pl.name} (#{pl.MIME}) 
+                            </p:dataList>
+                        </p:rowExpansion>
+
+                    </p:dataTable> 
+                         </p:scrollPanel>
+                </p:layoutUnit>  
+            </p:layout>
+        </dlg:dlg-abstract>
+    </composite:implementation>
+
+</html>
