@@ -184,9 +184,15 @@ public class FilePModeManager implements PModeInterface {
             getReceiverEBox());
     Service srv = getServiceById(mail.getService());
     Service.Action act = PModeUtils.getActionFromService(mail.getAction(), srv);
-
-    PMode pMode = getPModeForLocalPartyAsSender(sPID.getId(), act.
-            getInvokeRole(),
+        //receiving role
+    String sendingRole = Objects.equals(act.getInvokeRole(), ActionRole.Executor.getValue())?
+            srv.getExecutor().getRole() : srv.getInitiator().getRole();
+    
+            
+    String recRole = Objects.equals(act.getInvokeRole(), ActionRole.Executor.getValue())?
+            srv.getInitiator().getRole() : srv.getExecutor().getRole();
+    
+    PMode pMode = getPModeForLocalPartyAsSender(sPID.getId(), sendingRole,
             rPID.getId(),
             mail.getService());
 
@@ -246,13 +252,7 @@ public class FilePModeManager implements PModeInterface {
         }
       }
     }
-    //receiving role
-    String sendingRole = Objects.equals(act.getInvokeRole(), ActionRole.Executor.getValue())?
-            srv.getExecutor().getRole() : srv.getInitiator().getRole();
-    
-            
-    String recRole = Objects.equals(act.getInvokeRole(), ActionRole.Executor.getValue())?
-            srv.getInitiator().getRole() : srv.getExecutor().getRole();
+
 
     // set context
     emc.setAction(act);

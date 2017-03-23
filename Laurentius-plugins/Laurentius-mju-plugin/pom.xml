@@ -83,7 +83,7 @@
         <dependency>
             <groupId>org.primefaces</groupId>
             <artifactId>primefaces</artifactId>
-            
+            <scope>provided</scope>
         </dependency>	
         
         <dependency>
@@ -120,7 +120,7 @@
                              <!-- use common module and make deployment thinner
                              org.apache.cxf - for interceptor
                                -->
-                            <Dependencies>si.laurentius, org.apache.cxf, org.apache.cxf.impl</Dependencies>
+                            <Dependencies>si.laurentius, org.apache.cxf, org.apache.cxf.impl, org.primefaces</Dependencies>
                         </manifestEntries>
                     </archive>                                 
                 </configuration>                 

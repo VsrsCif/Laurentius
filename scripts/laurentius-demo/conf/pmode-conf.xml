@@ -3,7 +3,7 @@
         <Service id="DeliveryWithReceipt" serviceName="DeliveryWithReceipt" useSEDProperties="true">
             <Initiator role="Sender"/>
             <Executor role="Receiver"/>
-            <Action name="Delivery" sendingRole="Sender">
+            <Action name="Delivery" invokeRole="initiator">
                 <Properties>
                     <Property name="originalSender" required="true"/>
                     <Property name="finalRecipient" required="true"/>
@@ -16,23 +16,23 @@
         <Service id="LegalDelivery_ZPP" serviceName="LegalDelivery_ZPP" serviceType="SVEV">
             <Initiator role="Sender"/>
             <Executor role="Receiver"/>
-            <Action name="DeliveryNotification" sendingRole="Sender">
+            <Action name="DeliveryNotification" invokeRole="initiator">
                 <PayloadProfiles maxSize="10000">
                     <PayloadProfile name="DeliveryNotification" MIME="application/pdf" maxOccurs="1" minOccurs="1"/>
                     <PayloadProfile name="EncryptedPayload" maxSize="10000" maxOccurs="999" minOccurs="1"/>
                 </PayloadProfiles>
             </Action>
-            <Action name="AdviceOfDelivery" sendingRole="Receiver">
+            <Action name="AdviceOfDelivery"  invokeRole="executor">
                 <PayloadProfiles maxSize="10000">
                     <PayloadProfile name="AdviceOfDelivery" MIME="application/pdf" maxOccurs="1" minOccurs="1"/>
                 </PayloadProfiles>
             </Action>
-            <Action name="EncryptedKey" after="DeliveryNotification, AdviceOfDelivery" sendingRole="Sender">
+            <Action name="EncryptedKey" after="DeliveryNotification, AdviceOfDelivery" invokeRole="initiator">
                 <PayloadProfiles maxSize="10000">
                     <PayloadProfile name="EncryptedKey" MIME="application/xml" maxOccurs="1" minOccurs="1"/>
                 </PayloadProfiles>
             </Action>
-            <Action name="FictionNotification" after="DeliveryNotification" sendingRole="Sender">
+            <Action name="FictionNotification" after="DeliveryNotification" invokeRole="initiator">
                 <PayloadProfiles maxSize="10000">
                     <PayloadProfile name="FictionNotification" MIME="application/pdf" maxOccurs="1"/>
                     <PayloadProfile name="EncryptedKey" MIME="application/xml" maxOccurs="1" minOccurs="1"/>

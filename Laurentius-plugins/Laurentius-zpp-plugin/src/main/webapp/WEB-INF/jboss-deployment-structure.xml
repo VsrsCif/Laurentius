@@ -1,0 +1,14 @@
+<jboss-deployment-structure>
+    <deployment>
+        <dependencies>
+            <module name="org.apache.cxf" /> 
+            <module name="org.apache.cxf.impl" /> 
+            <module name="org.apache.commons.io" /> 
+            <module name="org.apache.ws.security" /> 
+            <module name="org.apache.pdfbox" /> 
+            <module name="org.apache.santuario.xmlsec" /> 
+            <module name="si.laurentius" /> 
+             <module name="org.primefaces" meta-inf="export" />  
+        </dependencies>
+    </deployment>
+</jboss-deployment-structure>

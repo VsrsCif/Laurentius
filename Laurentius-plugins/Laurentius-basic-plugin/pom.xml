@@ -69,6 +69,7 @@
         <dependency>
             <groupId>org.primefaces</groupId>
             <artifactId>primefaces</artifactId>
+            <scope>provided</scope>
             
         </dependency>
          <dependency>
@@ -108,7 +109,7 @@
                         <manifestEntries>                            
                             <implementation-version>${project.version}</implementation-version>             
                             <Implementation-Build>${buildNumber}</Implementation-Build>                            
-                            <Dependencies>si.laurentius</Dependencies>
+                            <Dependencies>si.laurentius, org.primefaces</Dependencies>
                         </manifestEntries>
                     </archive>                                 
                 </configuration>                 
