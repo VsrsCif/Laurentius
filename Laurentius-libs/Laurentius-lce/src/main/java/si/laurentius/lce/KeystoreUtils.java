@@ -73,32 +73,7 @@ public class KeystoreUtils {
    */
   
 
-  /**
-   *
-   * @param alias
-   * @param cs
-   * @return
-   * @throws SEDSecurityException
-   *
-   * public KeyStore.PrivateKeyEntry getPrivateKeyEntryForAlias(String alias,
-   * SEDCertStore cs) throws SEDSecurityException {
-   *
-   * if (alias == null) { throw new SEDSecurityException(CertificateException,
-   * "x.509 cert not found in keystore"); }
-   *
-   * KeyStore.PrivateKeyEntry rsaKey = null; try { for (SEDCertificate c :
-   * cs.getSEDCertificates()) { if (c.isKeyEntry() &&
-   * c.getAlias().equalsIgnoreCase(alias)) { rsaKey = (KeyStore.PrivateKeyEntry)
-   * getKeystore(cs).getEntry(alias, new
-   * KeyStore.PasswordProtection(c.getKeyPassword(). toCharArray())); break; } }
-   *
-   * } catch (KeyStoreException | NoSuchAlgorithmException |
-   * UnrecoverableKeyException ex) { throw new
-   * SEDSecurityException(KeyStoreException, ex, ex.getMessage()); } catch
-   * (UnrecoverableEntryException ex) { throw new
-   * SEDSecurityException(KeyStoreException, ex, ex.getMessage()); } return
-   * rsaKey; }
-   */
+
   static public boolean isCertValid(SEDCertificate crt) {
     Date currDate = Calendar.getInstance().getTime();
     return crt.getValidTo() != null
@@ -337,9 +312,7 @@ public class KeystoreUtils {
           ec.setIssuerDN(xc.getIssuerDN().getName());
           ec.setSubjectDN(xc.getSubjectDN().getName());
           ec.setSerialNumber(xc.getSerialNumber() + "");
-
           ec.setHexSHA1Digest(DigestUtils.getHexSha1Digest(xc.getEncoded()));
-
         }
 
         lst.add(ec);

@@ -40,6 +40,7 @@ import si.laurentius.commons.exception.PModeException;
 import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.interfaces.PModeInterface;
 import si.laurentius.commons.interfaces.SEDCertStoreInterface;
+import si.laurentius.commons.interfaces.SEDCertUtilsInterface;
 import si.laurentius.commons.interfaces.SEDDaoInterface;
 import si.laurentius.commons.pmode.EBMSMessageContext;
 import si.laurentius.commons.utils.SEDLogger;
@@ -74,8 +75,8 @@ public class MSHQueueBean implements MessageListener {
   @EJB(mappedName = SEDJNDI.JNDI_SEDDAO)
   SEDDaoInterface mDB;
 
-  @EJB(mappedName = SEDJNDI.JNDI_DBCERTSTORE)
-  SEDCertStoreInterface mCertBean;
+  @EJB(mappedName = SEDJNDI.JNDI_DBCERTUTILS)
+  SEDCertUtilsInterface mCertBean;
 
   MshClient mmshClient = new MshClient();
 

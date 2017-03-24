@@ -12,7 +12,7 @@
  * or implied. See the License for the specific language governing permissions and limitations under
  * the License.
  */
-package si.jrc.msh.client.sec;
+package si.laurentius.ejb.sec;
 
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
@@ -25,12 +25,12 @@ import si.laurentius.commons.utils.SEDLogger;
  *
  * @author Joze Rihtarsic <joze.rihtarsic@sodisce.si>
  */
-public class MSHKeyPasswordCallback implements CallbackHandler {
+public class CertKeyPasswordCallback implements CallbackHandler {
 
   /**
    *
    */
-  protected final SEDLogger LOG = new SEDLogger(MSHKeyPasswordCallback.class);
+  protected final SEDLogger LOG = new SEDLogger(CertKeyPasswordCallback.class);
 
   SEDCertPassword  certPasswd;
 
@@ -39,7 +39,7 @@ public class MSHKeyPasswordCallback implements CallbackHandler {
    *
    * @param cp
    */
-  public MSHKeyPasswordCallback(SEDCertPassword cp) {
+  public CertKeyPasswordCallback(SEDCertPassword cp) {
     this.certPasswd =cp;
 
   }

@@ -175,26 +175,19 @@ public class AdminSEDKeystoreView extends AbstractAdminJSFView<SEDCertificate> {
 
   public String getRowClass(SEDCertificate crt) {
     String strClass = null;
-    if (isCertInvalid(crt)) {
-      strClass = "ui-datatable-cell-red";
-    } else if (crt.isKeyEntry() && (CertStatus.MISSING_PASSWD.hasCode(crt.
-            getStatus())
-            || CertStatus.MISSING_PASSWD.hasCode(crt.getStatus()))) {
-      strClass = "ui-datatable-cell-orange";
+    if (crt.getStatus()!=null && crt.getStatus() !=0){
+        if (crt.getStatus().equals(CertStatus.CRL_NOT_CHECKED.getCode())){
+          strClass = "ui-datatable-cell-orange";
+        } else {
+          strClass = "ui-datatable-cell-red";
+        }          
     }
 
     return strClass;
 
   }
 
-  public boolean isCertInvalid(SEDCertificate crt) {
-
-    Date currDate = Calendar.getInstance().getTime();
-    return crt != null && (crt.getValidTo() == null
-            || crt.getValidFrom() == null
-            || currDate.before(crt.getValidFrom())
-            || currDate.after(crt.getValidTo()));
-  }
+  
 
   @Override
   public String getSelectedDesc() {

@@ -36,7 +36,6 @@ import org.apache.cxf.interceptor.Fault;
 import si.laurentius.msh.outbox.mail.MSHOutMail;
 import si.laurentius.msh.outbox.payload.MSHOutPart;
 import si.laurentius.msh.outbox.property.MSHOutProperty;
-import si.laurentius.msh.pmode.PMode;
 import si.laurentius.msh.pmode.PartyIdentitySet;
 import si.laurentius.msh.pmode.PartyIdentitySetType;
 
@@ -281,7 +280,7 @@ public class EBMSBuilder {
     }
 
     List<Property> lstProperties = new ArrayList<>();
-    if (ctx.getService().getUseSEDProperties()) {
+    if (ctx.getService().getUseSEDProperties()==null || ctx.getService().getUseSEDProperties()) {
 
       if (mo.getSubject() != null) {
         Property p = new Property();
@@ -364,7 +363,7 @@ public class EBMSBuilder {
           fp.setValue(mp.getMimeType());
           fileProp.add(fp);
         }
-        if (ctx.getService().getUseSEDProperties()) {
+        if (ctx.getService().getUseSEDProperties()==null || ctx.getService().getUseSEDProperties()) {
           if (!Utils.isEmptyString(mp.getName())) {
             Property fp = new Property();
             fp.setName(EBMSConstants.EBMS_PAYLOAD_PROPERTY_NAME);

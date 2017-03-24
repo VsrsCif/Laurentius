@@ -19,13 +19,13 @@ package si.laurentius.commons.enums;
  * @author Jože Rihtaršič
  */
 public enum CertStatus {
-  OK(0),
-  NEW(1),
-  MISSING_PASSWD(2),
-  INVALID_PASSWD(4),
-  INVALID_DATE(8),
-  INVALID_ROOT(16),
-  INVALID_CRL(32);
+  OK(0),  
+  MISSING_PASSWD(1),
+  INVALID_PASSWD(2),
+  INVALID_BY_DATE(4),
+  INVALID_BY_ROOTCA(8),
+  CRL_REVOKED(16),
+  CRL_NOT_CHECKED(32);
   
   
   
@@ -49,9 +49,8 @@ public enum CertStatus {
  public Integer removeCode(Integer iSt){
    if(iSt == null){
      return 0;
-   }
-   return 0; //  TODO
-   //return iSt & ~miCode;
+   }   
+   return iSt & ~miCode;
  }
  
  public boolean hasCode(Integer iSt){

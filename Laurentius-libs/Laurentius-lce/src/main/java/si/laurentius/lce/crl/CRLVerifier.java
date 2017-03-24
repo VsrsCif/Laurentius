@@ -117,7 +117,7 @@ public class CRLVerifier {
       env.put(Context.INITIAL_CONTEXT_FACTORY,
               S_INITIAL_CONTEXT_FACTORY_NAME);
       env.put(Context.PROVIDER_URL, crlURL);
-      if (proxy != null) {
+      if (proxy != null && proxy.address()!=null) {
         InetSocketAddress isa = (InetSocketAddress) proxy.address();
         env.put("http.proxyHost", isa.getHostString());
         env.put("https.proxyHost", isa.getHostString());
@@ -172,6 +172,8 @@ public class CRLVerifier {
     }
     return scrl;
   }
+  
+  
   
   public static void addUrlToData(DistributionPointName dpn, SEDCertCRL scrl){
 

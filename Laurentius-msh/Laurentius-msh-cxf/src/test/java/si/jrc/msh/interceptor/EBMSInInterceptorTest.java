@@ -82,7 +82,7 @@ public class EBMSInInterceptorTest {
           INIT_LOOKUPS_RESOURCE_PATH));
 
         mTestInstance.mSedDao = new SEDTestDao();
-        mTestInstance.mCertBean = new SEDTestCertBean();
+        mTestInstance.mCertUtils= new SEDTestCertBean();
             
       setLogger(EBMSInInterceptorTest.class.getSimpleName());
     } catch (PModeException | IOException | JAXBException ex) {

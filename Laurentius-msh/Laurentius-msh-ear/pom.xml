@@ -16,13 +16,6 @@
     <name>Laurentius-msh-ear</name>
 
     <dependencies>
-        <!-- dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>Laurentius-msh-ejb</artifactId>
-            <version>${project.version}</version>		
-            <type>ejb</type>
-        </dependency -->
-
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>Laurentius-msh-ws</artifactId>

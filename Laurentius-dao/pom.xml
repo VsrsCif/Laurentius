@@ -64,6 +64,11 @@
             <version>${project.version}</version>		
             <scope>provided</scope>
         </dependency>
+         <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-ws-security</artifactId>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>		
@@ -130,7 +135,7 @@
                         <manifestEntries>                            
                             <!-- implementation-version>${project.version}</implementation-version>             
                             <Implementation-Build>${buildNumber}</Implementation-Build -->
-                            <Dependencies>si.laurentius, org.apache.activemq.artemis</Dependencies>
+                            <Dependencies>si.laurentius, org.apache.activemq.artemis, org.apache.ws.security</Dependencies>
                         </manifestEntries>
                 
                     </archive>

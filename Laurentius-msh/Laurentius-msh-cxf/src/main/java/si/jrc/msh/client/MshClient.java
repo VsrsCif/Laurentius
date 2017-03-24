@@ -63,6 +63,7 @@ import si.laurentius.commons.cxf.SoapUtils;
 import si.laurentius.commons.exception.SEDSecurityException;
 import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.interfaces.SEDCertStoreInterface;
+import si.laurentius.commons.interfaces.SEDCertUtilsInterface;
 import si.laurentius.commons.pmode.EBMSMessageContext;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StorageUtils;
@@ -103,7 +104,7 @@ public class MshClient {
    */
   public Dispatch<SOAPMessage> createClient(final String messageId,
           final PartyIdentitySet.TransportProtocol protocol,
-          SEDCertStoreInterface sec)
+          SEDCertUtilsInterface sec)
           throws EBMSError {
 
     if (protocol == null) {
@@ -214,7 +215,7 @@ public class MshClient {
    * @return
    */
   public Result pushMessage(MSHOutMail mail, EBMSMessageContext ebms,
-          SEDCertStoreInterface sec) {
+          SEDCertUtilsInterface sec) {
 
     long l = LOG.logStart(mail);
     Result r = new Result();
@@ -352,7 +353,7 @@ public class MshClient {
    * @throws SEDSecurityException
    */
   private void setupTLS(String messageId, HTTPConduit httpConduit,
-          Protocol.TLS tls, SEDCertStoreInterface sec) {
+          Protocol.TLS tls, SEDCertUtilsInterface sec) {
     TLSClientParameters tlsCP = null;
     // create 
     String serverTrustAlias = tls.getServerTrustCertAlias();
