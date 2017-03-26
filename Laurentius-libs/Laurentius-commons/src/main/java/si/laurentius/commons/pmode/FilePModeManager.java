@@ -14,9 +14,7 @@
  */
 package si.laurentius.commons.pmode;
 
-import com.sun.javafx.runtime.SystemProperties;
 import java.io.File;
-import static java.io.File.separator;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -45,11 +43,11 @@ import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.Utils;
 import java.util.Collections;
 import static java.lang.String.format;
-import static java.lang.System.getProperty;
 import static si.laurentius.commons.pmode.FilePModeManager.LOG;
 import si.laurentius.commons.pmode.enums.ActionRole;
 import static si.laurentius.commons.utils.xml.XMLUtils.deserialize;
 import static si.laurentius.commons.utils.xml.XMLUtils.serialize;
+import si.laurentius.msh.pmode.Action;
 
 /**
  *
@@ -183,7 +181,7 @@ public class FilePModeManager implements PModeInterface {
     PartyIdentitySet rPID = getPartyIdentitySetForSEDAddress(mail.
             getReceiverEBox());
     Service srv = getServiceById(mail.getService());
-    Service.Action act = PModeUtils.getActionFromService(mail.getAction(), srv);
+    Action act = PModeUtils.getActionFromService(mail.getAction(), srv);
         //receiving role
     String sendingRole = Objects.equals(act.getInvokeRole(), ActionRole.Executor.getValue())?
             srv.getExecutor().getRole() : srv.getInitiator().getRole();
@@ -725,7 +723,7 @@ public class FilePModeManager implements PModeInterface {
         continue;
       }
 
-      for (Service.Action act : srv.getActions()) {
+      for (Action act : srv.getActions()) {
         if (Objects.equals(act.getName(), action)) {
           return srv;
         }

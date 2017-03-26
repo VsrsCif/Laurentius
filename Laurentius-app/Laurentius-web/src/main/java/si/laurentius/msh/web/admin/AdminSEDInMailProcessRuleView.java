@@ -138,13 +138,5 @@ public class AdminSEDInMailProcessRuleView extends AbstractAdminJSFView<SEDProce
     return null;
   }
 
-  /**
-   *
-   * @return
-   */
-  @Override
-  public String getUpdateTargetTable() {
-    return "dlgproc:procDialog:procDialogForm:TblDecisionRule";
-  }
 
 }

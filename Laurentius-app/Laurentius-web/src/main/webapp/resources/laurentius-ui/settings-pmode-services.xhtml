@@ -39,6 +39,7 @@
 
 
                              >
+                    
                     <p:ajax event="rowDblselect" listener="#{pModeServiceView.startEditSelected()}" 
                             update=":dlgPModeServiceGraph:pModeServiceGraphDialog:pModeServiceGraphDialogForm"
                             oncomplete="PF('pModeServiceGraphDialog').show()"/>
@@ -50,7 +51,7 @@
                             updateTable=":forms:SettingsPModesServices:pmodeServicePanel:TblPModeServices"
                             addActionListener="#{pModeServiceView.createEditable()}"
                             editActionListener="#{pModeServiceView.startEditSelected()}"
-                            removeActionListener="#{pModeServiceView.removeSelectedWithWarning()}"                            
+                            removeActionListener="#{pModeServiceView.removeSelectedWithWarning(':forms:SettingsPModesServices:pmodeServicePanel:TblPModeServices')}"                            
                             />       
 
                     </f:facet>

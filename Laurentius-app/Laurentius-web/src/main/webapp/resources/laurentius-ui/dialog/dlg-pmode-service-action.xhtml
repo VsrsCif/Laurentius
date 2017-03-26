@@ -20,22 +20,29 @@
                             editable="#{pModeServiceGraphView.editable}"
                             width="800"
                             height="450"
-                            updateOnSave=":forms:SettingsPModesServices:pmodeServicePanel:TblPModeServices"
+                            updateOnSave=":dlgPModeServiceGraph:pModeServiceGraphDialog:pModeServiceGraphDialogForm:TblServiceAction
+                            :dlgPModeServiceGraph:pModeServiceGraphDialog:pModeServiceGraphDialogForm:actionDiagram"
                             onConfirmAction="#{pModeServiceGraphView.addOrUpdateEditable()}" >
 
             <p:layout>
                 <p:layoutUnit position="north">
-                    <p:panelGrid  columns="4" columnClasses="grid-label, value"  style="width:100%; height: 100% ">
+                    <p:panelGrid  columns="4" columnClasses="grid-label, value,grid-label, value"  style="width:100%; height: 100% ">
                         <f:facet name="header">
                             <h:outputText value="#{msg['Action']}" />
                             <h:inputText value="#{pModeServiceGraphView.editable.name}" 
-                                         disabled="#{empty pModeServiceView.new}"  style="width:100%;" />
+                                         disabled="#{empty pModeServiceGraphView.new}"  style="width:100%;" />
                         </f:facet>
 
 
                         <h:outputText value="#{msg['InvokeRole']}:" />
-                        <h:inputText  value="#{pModeServiceGraphView.editable.invokeRole}" style="width: 100%"  />
-                        <h:outputText value="#{msg['MaxPayload']}:" />
+                        <p:selectOneMenu value="#{pModeServiceGraphView.editable.invokeRole}" 
+                                         style="width:100%" 
+                                         >
+                            <f:selectItems value="#{LookupsData.PModeActionRoles}" var="ar" 
+                                           itemLabel="#{ar.value}" itemValue="#{ar.value}"/>
+                        </p:selectOneMenu>
+
+                        <h:outputText value="#{msg['MaxPayloadSize']}:" />
                         <h:inputText  value="#{pModeServiceGraphView.editable.payloadProfiles.maxSize}" style="width: 100%"  />
 
 
@@ -57,35 +64,31 @@
                                      >
                             <f:facet name="header">
                                 <pnl:pnl-table-control 
-                                    dialogVar="pModeServiceActionDialog"
-                                    updateDialog=":dlgPModeServiceAction:pModeServiceActionDialog:pModeServiceActionDialogForm"
-                                    updateTable="dlgPModeServiceGraph:pModeServiceGraphDialog:pModeServiceGraphDialogForm:TblServiceAction 
-                                    dlgPModeServiceGraph:pModeServiceGraphDialog:pModeServiceGraphDialogForm:actionDiagram"
+                                    dialogVar="pModeActionPayloadDialog"
+                                    updateDialog=":dlgPModeActionPayload:pModeActionPayloadDialog:pModeActionPayloadDialogForm"
+                                    updateTable=":dlgPModeServiceAction:pModeServiceActionDialog:pModeServiceActionDialogForm:TblPayload"
                                     addActionListener="#{pModeActionPayloadView.createEditable()}"
                                     editActionListener="#{pModeActionPayloadView.startEditSelected()}"
-                                    removeActionListener="#{pModeActionPayloadView.removeSelectedWithWarning()}"                            
+                                    removeActionListener="#{pModeActionPayloadView.removeSelectedWithWarning(':dlgPModeServiceAction:pModeServiceActionDialog:pModeServiceActionDialogForm:TblPayload')}"                            
                                     />        
                             </f:facet>
 
-                                <p:ajax event="rowDblselect" 
-                                        listener="#{pModeActionPayloadView.startEditSelected()}" 
-                                        oncomplete="PF('pModeServiceActionDialog').show()"    
-                                        update=":dlgPModeServiceAction:pModeServiceActionDialog:pModeServiceActionDialogForm"
-                                        />
+                            <p:ajax event="rowDblselect" 
+                                    listener="#{pModeActionPayloadView.startEditSelected()}" 
+                                    oncomplete="PF('pModeActionPayloadDialog').show()"    
+                                    update=":dlgPModeActionPayload:pModeActionPayloadDialog:pModeActionPayloadDialogForm"
+                                    />
 
-                                <p:column style="width:16px">
-                                    <p:rowToggler />
-                                </p:column>
-                                <p:column headerText="#{msg['Name']}"  >
-                                    <h:outputText value="#{sp.name}" /></p:column>
-                                <p:column headerText="#{msg['Mime']}" width="160">
-                                    <h:outputText value="#{sp.MIME}" />
-                                </p:column>
-                                <p:column headerText="#{msg['MinOccurs']}"  width="120">
-                                     <h:outputText value="#{sp.minOccurs}" /></p:column>
-                                 <p:column headerText="#{msg['MaxOccurs']}"  width="120">
-                                     <h:outputText value="#{sp.maxOccurs}" /></p:column>
-                               
+                            <p:column headerText="#{msg['Name']}"  >
+                                <h:outputText value="#{sp.name}" /></p:column>
+                            <p:column headerText="#{msg['MimeType']}" width="160">
+                                <h:outputText value="#{sp.MIME}" />
+                            </p:column>
+                            <p:column headerText="#{msg['MinOccurs']}"  width="120">
+                                <h:outputText value="#{sp.minOccurs}" /></p:column>
+                            <p:column headerText="#{msg['MaxOccurs']}"  width="120">
+                                <h:outputText value="#{sp.maxOccurs}" /></p:column>
+
 
                         </p:dataTable> 
                     </p:scrollPanel>

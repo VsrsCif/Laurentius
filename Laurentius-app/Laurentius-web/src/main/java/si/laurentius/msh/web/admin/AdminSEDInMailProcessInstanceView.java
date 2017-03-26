@@ -318,10 +318,7 @@ public class AdminSEDInMailProcessInstanceView extends AbstractAdminJSFView<SEDP
     this.admProcView = admRuleView;
   }
 
-  @Override
-  public String getUpdateTargetTable() {
-    return ":dlgproc:procDialog:procDialogForm:TblProcessSetInstaces";
-  }
+
 
   @Override
   public String getSelectedDesc() {

@@ -163,11 +163,6 @@ public class PModeReceptionAwarenessView extends AbstractPModeJSFView<ReceptionA
   }
 
   @Override
-  public String getUpdateTargetTable() {
-    return ":forms:SettingsPModeReceptionAwarenesses:pmodeRAPanel:TblPModeReceptionAwareness";
-  }
-
-  @Override
   public String getSelectedDesc() {
     if (getSelected() != null) {
       return getSelected().getId();

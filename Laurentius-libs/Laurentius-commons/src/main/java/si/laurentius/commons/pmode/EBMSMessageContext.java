@@ -14,6 +14,7 @@
  */
 package si.laurentius.commons.pmode;
 
+import si.laurentius.msh.pmode.Action;
 import si.laurentius.msh.pmode.AgreementRef;
 import si.laurentius.msh.pmode.MEPLegType;
 import si.laurentius.msh.pmode.MEPType;
@@ -32,7 +33,7 @@ import si.laurentius.msh.pmode.TransportChannelType;
  */
 public class EBMSMessageContext {
 
-  Service.Action mAction;
+  Action mAction;
   AgreementRef mExchangeAgreementRef;
   TransportChannelType mTransportChannelType;
   PMode mPMode;
@@ -57,11 +58,11 @@ public class EBMSMessageContext {
     this.mMEPLegType = mlt;
   }
 
-  public Service.Action getAction() {
+  public Action getAction() {
     return mAction;
   }
 
-  public void setAction(Service.Action action) {
+  public void setAction(Action action) {
     this.mAction = action;
   }
 

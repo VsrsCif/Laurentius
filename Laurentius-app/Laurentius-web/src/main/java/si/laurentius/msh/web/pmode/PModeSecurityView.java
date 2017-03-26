@@ -174,10 +174,6 @@ public class PModeSecurityView extends AbstractPModeJSFView<Security> {
 
   }
 
-  @Override
-  public String getUpdateTargetTable() {
-    return ":forms:SettingsPModesSecurities:pmodeSecuritPanel:TblPModeSecurity";
-  }
 
   @Override
   public String getSelectedDesc() {

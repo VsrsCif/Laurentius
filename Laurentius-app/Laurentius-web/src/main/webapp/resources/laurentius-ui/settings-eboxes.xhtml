@@ -44,7 +44,7 @@
                             updateTable=":forms:SettingsSEDBoxes:sedboxPanel:TblSedBox"
                             addActionListener="#{adminSEDBoxView.createEditable()}"
                             editActionListener="#{adminSEDBoxView.startEditSelected()}"
-                            removeActionListener="#{adminSEDBoxView.removeSelectedWithWarning()}"                            
+                            removeActionListener="#{adminSEDBoxView.removeSelectedWithWarning(':forms:SettingsSEDBoxes:sedboxPanel:TblSedBox')}"                            
                             />       
                     </f:facet>
                     <p:column headerText="#{msg['SED-Box']}" width="200">

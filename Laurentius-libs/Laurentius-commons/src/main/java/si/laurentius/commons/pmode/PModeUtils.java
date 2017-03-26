@@ -22,10 +22,12 @@ import si.laurentius.msh.pmode.MEPType;
 
 import si.laurentius.msh.pmode.PMode;
 import si.laurentius.msh.pmode.Service;
-import si.laurentius.msh.pmode.Service.Action;
+
+
 import si.laurentius.msh.pmode.TransportChannelType;
 import si.laurentius.commons.exception.PModeException;
 import si.laurentius.commons.utils.SEDLogger;
+import si.laurentius.msh.pmode.Action;
 
 /**
  *
@@ -113,8 +115,8 @@ public class PModeUtils {
    */
   public static Action getActionFromService(String action, Service srv)
       throws PModeException {
-    Service.Action act = null;
-    for (Service.Action a : srv.getActions()) {
+    Action act = null;
+    for (Action a : srv.getActions()) {
       if (Objects.equals(a.getName(), action)) {
         act = a;
         break;

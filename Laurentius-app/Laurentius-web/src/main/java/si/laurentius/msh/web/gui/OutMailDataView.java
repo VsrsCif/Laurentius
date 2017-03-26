@@ -57,6 +57,7 @@ import si.laurentius.msh.outbox.event.MSHOutEvent;
 import si.laurentius.msh.outbox.mail.MSHOutMail;
 import si.laurentius.msh.outbox.payload.MSHOutPart;
 import si.laurentius.msh.outbox.payload.MSHOutPayload;
+import si.laurentius.msh.pmode.Action;
 import si.laurentius.msh.pmode.Service;
 import si.laurentius.msh.web.abst.AbstractMailView;
 
@@ -510,7 +511,7 @@ public class OutMailDataView extends AbstractMailView<MSHOutMail, MSHOutEvent>
     }
   }
 
-  public List<Service.Action> getCurrentServiceActionList() {
+  public List<Action> getCurrentServiceActionList() {
     if (getNewOutMail() != null
             && !Utils.isEmptyString(getNewOutMail().getService())) {
       String srvId = getNewOutMail().getService();
@@ -530,7 +531,7 @@ public class OutMailDataView extends AbstractMailView<MSHOutMail, MSHOutEvent>
       }
       nm.setService(ts);
       if (!Utils.isEmptyString(ts)) {
-        List<Service.Action> lst = getCurrentServiceActionList();
+        List<Action> lst = getCurrentServiceActionList();
         if (!lst.isEmpty()) {
           nm.setAction(lst.get(0).getName());
         } else {
@@ -547,7 +548,7 @@ public class OutMailDataView extends AbstractMailView<MSHOutMail, MSHOutEvent>
     return nm != null ? nm.getService() : null;
   }
 
-  public List<Service.Action> getCurrentFilterServiceActionList() {
+  public List<Action> getCurrentFilterServiceActionList() {
     if (getOutMailModel().getFilter() != null
             && !Utils.isEmptyString(getOutMailModel().getFilter().getService())) {
       String srvId = getOutMailModel().getFilter().getService();

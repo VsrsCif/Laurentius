@@ -116,9 +116,9 @@ abstract public class AbstractAdminJSFView<T> extends AbstractJSFView {
   /**
    *
    */
-  public void removeSelectedWithWarning() {
+  public void removeSelectedWithWarning(String updateTarget) {
     DialogDelete dlg = getDlgDelete();
-    dlg.setCurrentJSFView(this);
+    dlg.setCurrentJSFView(this, updateTarget);
     RequestContext context = RequestContext.getCurrentInstance();
     context.execute("PF('DlgDelete').show();");
     context.update("dlgalert:deleteDialog");
@@ -184,11 +184,7 @@ abstract public class AbstractAdminJSFView<T> extends AbstractJSFView {
    */
   abstract public boolean updateEditable();
 
-  public String getUpdateTargetTable() {
-    return null;
-  }
 
-  ;
  
 
 }

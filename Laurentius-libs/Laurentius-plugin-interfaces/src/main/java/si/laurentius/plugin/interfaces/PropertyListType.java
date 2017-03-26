@@ -23,6 +23,7 @@ public enum PropertyListType {
   OutMailStatus("OutMailStatus"),
   KeystoreCertAll("KeystoreCertAll"),
   KeystoreCertKeys("KeystoreCertKeys"),
+  Services("Services"),
   LocalBoxes("LocalBoxes");
   
   String type;

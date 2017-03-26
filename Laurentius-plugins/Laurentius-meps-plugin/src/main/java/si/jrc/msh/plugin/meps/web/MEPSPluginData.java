@@ -104,7 +104,7 @@ public class MEPSPluginData {
    * @return
    */
   public String getPluginsFolder() {
-    return SEDSystemProperties.SYS_PROP_FOLDER_PLUGINS_DEF;
+    return "";
 
   }
 
@@ -113,7 +113,7 @@ public class MEPSPluginData {
    * @return
    */
   public String getSecurityFileName() {
-    return SEDSystemProperties.SYS_PROP_CERT_DEF;
+    return "";
   }
 
   /**
@@ -121,7 +121,7 @@ public class MEPSPluginData {
    * @return
    */
   public String getStorageFolder() {
-    return SEDSystemProperties.SYS_PROP_FOLDER_STORAGE_DEF;
+    return "";
 
   }
 

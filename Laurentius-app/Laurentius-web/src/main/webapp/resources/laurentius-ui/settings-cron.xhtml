@@ -43,7 +43,7 @@
                             updateTable=":forms:SettingsCron:cronPanel:TblCron"
                             addActionListener="#{adminSEDCronJobView.createEditable()}"
                             editActionListener="#{adminSEDCronJobView.startEditSelected()}"
-                            removeActionListener="#{adminSEDCronJobView.removeSelectedWithWarning()}"                            
+                            removeActionListener="#{adminSEDCronJobView.removeSelectedWithWarning(':forms:SettingsCron:cronPanel:TblCron')}"                            
                             />       
                     </f:facet>
                     <p:column headerText="#{msg['Id']}" width="60">

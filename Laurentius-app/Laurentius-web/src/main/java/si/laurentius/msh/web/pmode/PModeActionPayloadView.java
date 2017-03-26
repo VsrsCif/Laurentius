@@ -15,21 +15,16 @@
 package si.laurentius.msh.web.pmode;
 
 import java.math.BigInteger;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
+import java.util.Objects;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
-import si.laurentius.commons.SEDJNDI;
-import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.enums.MimeValue;
-import si.laurentius.commons.interfaces.PModeInterface;
-import si.laurentius.commons.pmode.enums.ActionRole;
 import si.laurentius.commons.utils.SEDLogger;
-import si.laurentius.msh.pmode.Service;
+import si.laurentius.msh.pmode.Action;
+import si.laurentius.msh.pmode.PayloadProfile;
 
 /**
  *
@@ -37,7 +32,7 @@ import si.laurentius.msh.pmode.Service;
  */
 @SessionScoped
 @ManagedBean(name = "pModeActionPayloadView")
-public class PModeActionPayloadView extends AbstractPModeJSFView<Service.Action.PayloadProfiles.PayloadProfile> {
+public class PModeActionPayloadView extends AbstractPModeJSFView<PayloadProfile> {
 
   /**
    *
@@ -57,39 +52,124 @@ public class PModeActionPayloadView extends AbstractPModeJSFView<Service.Action.
 
   @Override
   public boolean validateData() {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    return true;
   }
 
   @Override
   public void createEditable() {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    String sbname = "payload_%03d";
+    int i = 1;
+    while (payloadExists(String.format(sbname, i))) {
+      i++;
+    }
+
+    PayloadProfile np = new PayloadProfile();
+    np.setName(String.format(sbname, i));
+    np.setMIME(MimeValue.MIME_BIN.getMimeType());
+    np.setMaxOccurs(1);
+    np.setMinOccurs(1);
+    np.setMaxSize(BigInteger.valueOf(10 * 1024 * 1024));
+    setNew(np);
+
+  }
+
+  boolean payloadExists(String name) {
+    List<PayloadProfile> pplst = getList();
+    for (PayloadProfile pp : pplst) {
+      if (Objects.equals(pp.getName(), name)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   @Override
-  public List<Service.Action.PayloadProfiles.PayloadProfile> getList() {
-    if (serviceGraphView.getEditable()!=null ){
-      if (serviceGraphView.getEditable().getPayloadProfiles()==null){
-        serviceGraphView.getEditable().setPayloadProfiles(new Service.Action.PayloadProfiles());
+  public List<PayloadProfile> getList() {
+    if (serviceGraphView.getEditable() != null) {
+      if (serviceGraphView.getEditable().getPayloadProfiles() == null) {
+        serviceGraphView.getEditable().setPayloadProfiles(
+                new Action.PayloadProfiles());
       }
-      return serviceGraphView.getEditable().getPayloadProfiles().getPayloadProfiles();
+      return serviceGraphView.getEditable().getPayloadProfiles().
+              getPayloadProfiles();
     }
     return Collections.emptyList();
   }
 
   @Override
   public boolean persistEditable() {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    boolean bsuc = false;
+
+    PayloadProfile ecj = getEditable();
+    if (ecj != null && serviceGraphView.getEditable() != null) {
+      if (serviceGraphView.getEditable().getPayloadProfiles() == null) {
+        serviceGraphView.getEditable().setPayloadProfiles(
+                new Action.PayloadProfiles());
+      }
+
+      bsuc = serviceGraphView.getEditable().getPayloadProfiles().
+              getPayloadProfiles().add(ecj);
+    } else {
+      addError("No editable payload!");
+    }
+    return bsuc;
   }
 
   @Override
   public boolean removeSelected() {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    boolean bSuc = false;
+    PayloadProfile ecj = getSelected();
+    if (ecj != null && serviceGraphView.getEditable() != null) {
+      if (serviceGraphView.getEditable().getPayloadProfiles() != null) {
+        for (int i = 0; i < serviceGraphView.getEditable().getPayloadProfiles().
+                getPayloadProfiles().size(); i++) {
+          PayloadProfile pp = serviceGraphView.getEditable().
+                  getPayloadProfiles().getPayloadProfiles().get(i);
+          if (Objects.equals(pp.getName(), ecj.getName())) {
+            serviceGraphView.getEditable().getPayloadProfiles().
+                    getPayloadProfiles().remove(i);
+            bSuc = true;
+            break;
+          }
+        }
+
+      } else {
+        addError("No editable payload!");
+      }
+    }
+    return bSuc;
   }
 
   @Override
   public boolean updateEditable() {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    boolean bSuc = false;
+     PayloadProfile ecj = getEditable();
+    if (ecj != null && serviceGraphView.getEditable() != null) {
+      if (serviceGraphView.getEditable().getPayloadProfiles() != null) {
+        for (int i = 0; i < serviceGraphView.getEditable().getPayloadProfiles().
+                getPayloadProfiles().size(); i++) {
+          PayloadProfile pp = serviceGraphView.getEditable().
+                  getPayloadProfiles().getPayloadProfiles().get(i);
+          if (Objects.equals(pp.getName(), ecj.getName())) {
+            serviceGraphView.getEditable().getPayloadProfiles().
+                    getPayloadProfiles().remove(i);
+            serviceGraphView.getEditable().getPayloadProfiles().
+                    getPayloadProfiles().add(i, ecj);
+            bSuc = true;
+            break;
+          }
+        }
+
+      } else {
+        addError("No editable payload!");
+      }
+    }
+    return bSuc;
   }
 
-  
+  @Override
+  public String getSelectedDesc() {
+    return getSelected() != null ? getSelected().getName() : "";
+  }
+
 }

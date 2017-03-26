@@ -104,6 +104,7 @@ import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StorageUtils;
 import si.laurentius.commons.utils.Utils;
 import si.laurentius.lce.DigestUtils;
+import si.laurentius.msh.pmode.Action;
 import si.laurentius.msh.ws.utils.SEDRequestUtils;
 
 /**
@@ -1285,7 +1286,7 @@ public class SEDMailBox implements SEDMailBoxWS {
       sPID = mpModeManager.getPartyIdentitySetForSEDAddress(mail.getSenderEBox());
       rPID = mpModeManager.getPartyIdentitySetForSEDAddress(mail.getReceiverEBox());
       srv = mpModeManager.getServiceById(mail.getService());
-      Service.Action act = PModeUtils.getActionFromService(mail.getAction(), srv);
+      Action act = PModeUtils.getActionFromService(mail.getAction(), srv);
       
       String sendingRole = Objects.equals(act.getInvokeRole(), ActionRole.Executor.getValue())?
               srv.getExecutor().getRole():srv.getInitiator().getRole();

@@ -58,7 +58,7 @@
                                 updateTable=":dlgproc:procDialog:procDialogForm:TblDecisionRule"
                                 addActionListener="#{adminSEDInMailProcessRuleView.createEditable()}"
                                 editActionListener="#{adminSEDInMailProcessRuleView.startEditSelected()}"
-                                removeActionListener="#{adminSEDInMailProcessRuleView.removeSelectedWithWarning()}"                            
+                                removeActionListener="#{adminSEDInMailProcessRuleView.removeSelectedWithWarning(':dlgproc:procDialog:procDialogForm:TblDecisionRule')}"                            
                                 />                         
                         </f:facet>
                         <p:ajax event="rowDblselect" 
@@ -100,7 +100,7 @@
                                 updateTable=":dlgproc:procDialog:procDialogForm:TblProcessSetInstaces"
                                 addActionListener="#{adminSEDInMailProcessInstanceView.createEditable()}"
                                 editActionListener="#{adminSEDInMailProcessInstanceView.startEditSelected()}"
-                                removeActionListener="#{adminSEDInMailProcessInstanceView.removeSelectedWithWarning()}"                            
+                                removeActionListener="#{adminSEDInMailProcessInstanceView.removeSelectedWithWarning(':dlgproc:procDialog:procDialogForm:TblProcessSetInstaces')}"                            
                                 />                                  
                             <span class="ui-separator" style="display: inline-block;">
                                 <span class="ui-icon ui-icon-grip-dotted-vertical " />

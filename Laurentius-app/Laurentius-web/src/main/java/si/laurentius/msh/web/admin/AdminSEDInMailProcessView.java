@@ -242,10 +242,7 @@ public class AdminSEDInMailProcessView extends AbstractAdminJSFView<SEDProcessor
 
   }
 
-  @Override
-  public String getUpdateTargetTable() {
-    return "forms:InMailProcess:procPanel:TblInMailProcessRule";
-  }
+
  @Override
   public String getSelectedDesc() {
     SEDProcessor sel =  getSelected();

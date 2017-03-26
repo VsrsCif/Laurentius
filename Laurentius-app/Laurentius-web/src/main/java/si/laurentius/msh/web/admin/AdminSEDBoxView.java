@@ -197,10 +197,7 @@ public class AdminSEDBoxView extends AbstractAdminJSFView<SEDBox> {
     return null;
   }
 
-  @Override
-  public String getUpdateTargetTable() {
-    return ":forms:SettingsSEDBoxes:sedboxPanel:TblSedBox";
-  }
+
 
   public List<SEDUser> getEditableUsers() {
     SEDBox ed = getEditable();

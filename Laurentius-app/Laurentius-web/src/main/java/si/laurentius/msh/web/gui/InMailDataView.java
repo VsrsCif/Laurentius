@@ -48,6 +48,7 @@ import si.laurentius.commons.interfaces.SEDDaoInterface;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StorageUtils;
 import si.laurentius.commons.utils.Utils;
+import si.laurentius.msh.pmode.Action;
 import si.laurentius.msh.pmode.Service;
 import si.laurentius.msh.web.abst.AbstractMailView;
 
@@ -257,7 +258,7 @@ public class InMailDataView extends AbstractMailView<MSHInMail, MSHInEvent> impl
     LOG.logEnd(l);
   }
 
-  public List<Service.Action> getCurrentFilterServiceActionList() {
+  public List<Action> getCurrentFilterServiceActionList() {
     if (getInMailModel().getFilter() != null &&
         !Utils.isEmptyString(getInMailModel().getFilter().getService())) {
       String srvId = getInMailModel().getFilter().getService();

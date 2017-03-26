@@ -20,8 +20,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -187,18 +185,7 @@ public class AdminSEDRootCAView extends AbstractAdminJSFView<SEDCertificate> {
     return null;
   }
 
-  @Override
-  public String getUpdateTargetTable() {
-    return ":forms:PanelRootCA:rootCAView:RootCAlist";
-  }
-
-  ;
-
-   
-
-  
-
-  public SEDCertificate getSelectedImportCertificate() {
+ public SEDCertificate getSelectedImportCertificate() {
     return selectedImportCertificate;
   }
 

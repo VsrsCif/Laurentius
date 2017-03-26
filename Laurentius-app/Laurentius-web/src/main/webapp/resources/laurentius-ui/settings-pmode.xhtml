@@ -45,7 +45,7 @@
                             updateTable=":forms:SettingsPModes:pmodePanel:TblPMode"
                             addActionListener="#{pModeView.createEditable()}"
                             editActionListener="#{pModeView.startEditSelected()}"
-                            removeActionListener="#{pModeView.removeSelectedWithWarning()}"                            
+                            removeActionListener="#{pModeView.removeSelectedWithWarning(':forms:SettingsPModes:pmodePanel:TblPMode')}"                            
                             />       
                     </f:facet>
                     <p:column headerText="#{msg['Id']}" width="200">

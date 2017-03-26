@@ -9,6 +9,7 @@ import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 import si.laurentius.commons.enums.SEDInboxMailStatus;
 import si.laurentius.commons.SEDJNDI;
+import si.laurentius.commons.enums.MimeValue;
 import si.laurentius.commons.enums.SEDInterceptorEvent;
 import si.laurentius.commons.enums.SEDInterceptorRole;
 import si.laurentius.commons.enums.SEDOutboxMailStatus;
@@ -18,6 +19,7 @@ import si.laurentius.commons.interfaces.PModeInterface;
 import si.laurentius.commons.interfaces.SEDCertStoreInterface;
 import si.laurentius.commons.interfaces.SEDLookupsInterface;
 import si.laurentius.commons.interfaces.SEDPluginManagerInterface;
+import si.laurentius.commons.pmode.enums.ActionRole;
 import si.laurentius.commons.utils.ReflectUtils;
 import si.laurentius.commons.utils.Utils;
 import si.laurentius.ebox.SEDBox;
@@ -104,9 +106,17 @@ public class LookupsData extends AbstractJSFView {
   public SEDInboxMailStatus[] getInMailStatuses() {
     return SEDInboxMailStatus.values();
   }
-  
-   public SEDTaskStatus[] getTaskStatuses() {
+
+  public SEDTaskStatus[] getTaskStatuses() {
     return SEDTaskStatus.values();
+  }
+
+  public ActionRole[] getPModeActionRoles() {
+    return ActionRole.values();
+  }
+
+  public MimeValue[] getMimeValues() {
+    return MimeValue.values();
   }
 
   public String getHumanReadableSize(BigInteger bi) {

@@ -22,9 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import javax.ejb.EJB;
-import javax.ejb.ScheduleExpression;
 import javax.ejb.Timer;
-import javax.ejb.TimerConfig;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import si.laurentius.cron.SEDCronJob;
@@ -329,10 +327,6 @@ public class AdminSEDCronJobView extends AbstractAdminJSFView<SEDCronJob> {
     return mshScheduler.getServices().getAllTimers();
   }
 
-  @Override
-  public String getUpdateTargetTable() {
-    return ":forms:SettingsCron:cronPanel:TblCron";
-  }
 
   @Override
   public String getSelectedDesc() {

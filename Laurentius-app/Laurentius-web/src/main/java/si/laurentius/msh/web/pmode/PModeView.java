@@ -125,11 +125,6 @@ public class PModeView extends AbstractPModeJSFView<PMode> {
   }
 
   @Override
-  public String getUpdateTargetTable() {
-    return ":forms:SettingsPModes:pmodePanel:TblPMode";
-  }
-
-  @Override
   public String getSelectedDesc() {
      if (getSelected() != null) {
       return getSelected().getId();

@@ -15,13 +15,9 @@
 package si.laurentius.msh.web.admin;
 
 import java.security.cert.X509Certificate;
-import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -196,16 +192,7 @@ public class AdminSEDKeystoreView extends AbstractAdminJSFView<SEDCertificate> {
     }
     return null;
   }
-
-  @Override
-  public String getUpdateTargetTable() {
-    return ":forms:PanelKeystore:certPanel:keylist";
-  }
-
-  ;
-   
-
-  
+ 
 
   public SEDCertificate getSelectedImportCertificate() {
     return selectedImportCertificate;

@@ -24,6 +24,7 @@ import si.laurentius.commons.interfaces.SEDDaoInterface;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.Utils;
 import si.laurentius.msh.outbox.mail.MSHOutMail;
+import si.laurentius.msh.pmode.Action;
 import si.laurentius.msh.pmode.Service;
 
 /**
@@ -93,7 +94,7 @@ public class TestCaseAbstract {
     }
     this.testService = ts;
     if (!Utils.isEmptyString(testService)) {
-      List<Service.Action> lst = getCurrentServiceActionList();
+      List<Action> lst = getCurrentServiceActionList();
       if (!lst.isEmpty()) {
         setTestAction(lst.get(0).getName());
       }else {
@@ -108,7 +109,7 @@ public class TestCaseAbstract {
     this.testSubject = testSubject;
   }
 
-  public List<Service.Action> getCurrentServiceActionList() {
+  public List<Action> getCurrentServiceActionList() {
     String srvId = getTestService();
     if (!Utils.isEmptyString(srvId)) {
       Service srv = mPMode.getServiceById(srvId);

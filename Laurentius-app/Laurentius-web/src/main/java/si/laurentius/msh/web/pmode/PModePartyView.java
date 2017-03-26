@@ -300,10 +300,6 @@ public class PModePartyView extends AbstractPModeJSFView<PartyIdentitySet> {
     }
     return -1;
   }
- @Override
-  public String getUpdateTargetTable() {
-    return ":forms:SettingsPModesParties:pmodePartyPanel:TblPModeParties";
-  }
 
   @Override
   public String getSelectedDesc() {

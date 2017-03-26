@@ -25,12 +25,14 @@ import org.primefaces.model.diagram.overlay.ArrowOverlay;
 import org.primefaces.model.diagram.overlay.LabelOverlay;
 import si.laurentius.commons.enums.MimeValue;
 import si.laurentius.commons.pmode.enums.ActionRole;
+import si.laurentius.msh.pmode.Action;
+import si.laurentius.msh.pmode.PayloadProfile;
 import si.laurentius.msh.pmode.Service;
 import si.laurentius.msh.web.abst.AbstractAdminJSFView;
 
 @ManagedBean(name = "pModeServiceGraphView")
 @SessionScoped
-public class PModeServiceGraphView extends AbstractAdminJSFView<Service.Action> {
+public class PModeServiceGraphView extends AbstractAdminJSFView<Action> {
 
   private DefaultDiagramModel model;
 
@@ -39,25 +41,40 @@ public class PModeServiceGraphView extends AbstractAdminJSFView<Service.Action> 
   @Override
   public void createEditable() {
 
-    Service.Action act = new Service.Action();
-     act.setName("TestAction");
-    act.setInvokeRole(ActionRole.Initiator.getValue());
-    act.setPayloadProfiles(new Service.Action.PayloadProfiles());
+    String sbname = "ation_%03d";
+    int i = 1;
+    while (actionExists(String.format(sbname, i))) {
+      i++;
+    }
 
-    Service.Action.PayloadProfiles.PayloadProfile pf = new Service.Action.PayloadProfiles.PayloadProfile();
+    Action act = new Action();
+    act.setName(String.format(sbname, i));
+    act.setInvokeRole(ActionRole.Initiator.getValue());
+    act.setPayloadProfiles(new Action.PayloadProfiles());
+
+    PayloadProfile pf = new PayloadProfile();
     pf.setName("payload");
     pf.setMIME(MimeValue.MIME_BIN.getMimeType());
     pf.setMinOccurs(0);
     pf.setMaxOccurs(100);
     pf.setMaxSize(BigInteger.valueOf(10 * 1024 * 1024));
-    
+
     act.getPayloadProfiles().setMaxSize(BigInteger.valueOf(10 * 1024 * 1024));
     act.getPayloadProfiles().getPayloadProfiles().add(pf);
     setNew(act);
   }
 
+  private boolean actionExists(String action) {
+    for (Action act : editableService.getActions()) {
+      if (Objects.equals(act.getName(), action)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   @Override
-  public List<Service.Action> getList() {
+  public List<Action> getList() {
     if (editableService != null) {
       return editableService.getActions();
     }
@@ -95,12 +112,39 @@ public class PModeServiceGraphView extends AbstractAdminJSFView<Service.Action> 
 
   @Override
   public boolean persistEditable() {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    boolean bsuc = false;
+
+    Action ecj = getEditable();
+    if (ecj != null) {
+
+      bsuc = editableService.getActions().add(ecj);
+      updateGraph();
+    } else {
+      addError("No editable service!");
+    }
+    return bsuc;
   }
 
   @Override
   public boolean removeSelected() {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    boolean bSuc = false;
+    Action ecj = getSelected();
+    if (ecj != null) {
+      for (int i = 0; i < editableService.getActions().size(); i++) {
+        Action act = editableService.getActions().get(i);
+        if (Objects.equals(act.getName(), ecj.getName())) {
+          editableService.getActions().remove(i);
+          updateGraph();
+          bSuc = true;
+          break;
+        }
+      }
+      setSelected(null);
+
+    } else {
+      addError("Select Action!");
+    }
+    return bSuc;
   }
 
   public void setService(Service srv) {
@@ -112,7 +156,7 @@ public class PModeServiceGraphView extends AbstractAdminJSFView<Service.Action> 
     model.clearElements();
     if (editableService != null) {
       for (int i = 0; i < editableService.getActions().size(); i++) {
-        Service.Action a = editableService.getActions().get(i);
+        Action a = editableService.getActions().get(i);
         addAction(a, i);
 
       }
@@ -120,7 +164,7 @@ public class PModeServiceGraphView extends AbstractAdminJSFView<Service.Action> 
     }
   }
 
-  private void addAction(Service.Action act, int index) {
+  private void addAction(Action act, int index) {
 
     Element partyBodyA = new Element(null, "5em", (index * 6 + 5) + "em");
     partyBodyA.setStyleClass("ui-diagram-squence-body");
@@ -139,7 +183,7 @@ public class PModeServiceGraphView extends AbstractAdminJSFView<Service.Action> 
   }
 
   private Connection createConnection(EndPoint from, EndPoint to,
-          Service.Action act) {
+          Action act) {
     Connection conn = null;
     if (Objects.equals(act.getInvokeRole(), ActionRole.Executor.getValue())) {
       conn = new Connection(to, from);
@@ -161,16 +205,35 @@ public class PModeServiceGraphView extends AbstractAdminJSFView<Service.Action> 
 
   @Override
   public boolean updateEditable() {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    Action ecj = getEditable();
+    boolean bsuc = false;
+    if (ecj != null) {
+      for (int i = 0; i < editableService.getActions().size(); i++) {
+        Action act = editableService.getActions().get(i);
+        if (Objects.equals(act.getName(), ecj.getName())) {
+          editableService.getActions().remove(i);
+          editableService.getActions().add(i, ecj);
+          updateGraph();
+          bsuc = true;
+          break;
+        }
+      }
+    }
+    return bsuc;
   }
 
   @Override
   public boolean validateData() {
-    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    return true;
+  }
+
+  @Override
+  public String getSelectedDesc() {
+    return getSelected()!= null?getSelected().getName():"";  
   }
 
   public void selectedInstanceToTop() {
-    Service.Action spi = getSelected();
+    Action spi = getSelected();
 
     if (editableService != null && getSelected() != null) {
       int idx = editableService.getActions().indexOf(spi);
@@ -185,7 +248,7 @@ public class PModeServiceGraphView extends AbstractAdminJSFView<Service.Action> 
   }
 
   public void selectedInstanceUp() {
-    Service.Action spi = getSelected();
+    Action spi = getSelected();
 
     if (editableService != null && spi != null) {
       int idx = editableService.getActions().indexOf(spi);
@@ -200,7 +263,7 @@ public class PModeServiceGraphView extends AbstractAdminJSFView<Service.Action> 
   }
 
   public void selectedInstanceDown() {
-    Service.Action spi = getSelected();
+    Action spi = getSelected();
 
     if (editableService != null && spi != null) {
       int idx = editableService.getActions().indexOf(spi);
@@ -215,7 +278,7 @@ public class PModeServiceGraphView extends AbstractAdminJSFView<Service.Action> 
   }
 
   public void selectedInstanceToBottom() {
-    Service.Action spi = getSelected();
+    Action spi = getSelected();
 
     if (editableService != null && spi != null) {
       int idx = editableService.getActions().indexOf(spi);

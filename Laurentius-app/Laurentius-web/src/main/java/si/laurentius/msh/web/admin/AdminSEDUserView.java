@@ -110,10 +110,6 @@ public class AdminSEDUserView extends AbstractAdminJSFView<SEDUser> {
     return null;
   }
 
-  @Override
-  public String getUpdateTargetTable() {
-    return ":forms:SettingsUsers:userPanel:TblSedUser";
-  }
 
   /**
    *
@@ -224,7 +220,11 @@ public class AdminSEDUserView extends AbstractAdminJSFView<SEDUser> {
    */
   @Override
   public List<SEDUser> getList() {
-    return mdbLookups.getSEDUsers();
+    long l = LOG.logStart();
+    List<SEDUser>  lst = mdbLookups.getSEDUsers();    
+    LOG.logEnd(l);
+    return lst;
+    
   }
 
 }

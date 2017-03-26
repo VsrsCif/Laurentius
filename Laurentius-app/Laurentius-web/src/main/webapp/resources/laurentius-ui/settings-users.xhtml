@@ -33,7 +33,8 @@
                              scrollHeight="100%"
                              rows="100"  >
 
-                    <p:ajax event="rowDblselect" listener="#{adminSEDUserView.startEditSelected()}" 
+                    <p:ajax event="rowDblselect" 
+                            listener="#{adminSEDUserView.startEditSelected()}" 
                             update=":dlguser:userDialog:userDialogForm"
                             oncomplete="PF('userDialog').show()"/>
 
@@ -44,7 +45,7 @@
                             updateTable=":forms:SettingsUsers:userPanel:TblSedUser"
                             addActionListener="#{adminSEDUserView.createEditable()}"
                             editActionListener="#{adminSEDUserView.startEditSelected()}"
-                            removeActionListener="#{adminSEDUserView.removeSelectedWithWarning()}"                            
+                            removeActionListener="#{adminSEDUserView.removeSelectedWithWarning(':forms:SettingsUsers:userPanel:TblSedUser')}"                            
                             />       
                     </f:facet>
 

@@ -15,7 +15,6 @@
 package si.laurentius.msh.web.admin;
 
 import java.math.BigInteger;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -40,7 +39,6 @@ import si.laurentius.msh.web.plugin.PluginPropertyModel;
 import si.laurentius.msh.web.plugin.PluginPropertyModelItem;
 import si.laurentius.plugin.def.Plugin;
 import si.laurentius.plugin.interceptor.MailInterceptorDef;
-import si.laurentius.process.SEDProcessor;
 
 /**
  *
@@ -373,14 +371,6 @@ public class AdminSEDInterceptorView extends AbstractAdminJSFView<SEDInterceptor
     return null;
   }
 
-  /**
-   *
-   * @return
-   */
-  @Override
-  public String getUpdateTargetTable() {
-    return ":forms:SettingsInterceptor:intrcPanel:TblInterceptor";
-  }
 
   public void setPropertyDataToInterceptorInstance(SEDInterceptorInstance inst) {
     inst.getSEDInterceptorProperties().clear();

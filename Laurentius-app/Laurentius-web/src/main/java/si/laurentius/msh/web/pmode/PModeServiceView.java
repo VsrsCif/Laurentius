@@ -27,6 +27,8 @@ import si.laurentius.commons.enums.MimeValue;
 import si.laurentius.commons.interfaces.PModeInterface;
 import si.laurentius.commons.pmode.enums.ActionRole;
 import si.laurentius.commons.utils.SEDLogger;
+import si.laurentius.msh.pmode.Action;
+import si.laurentius.msh.pmode.PayloadProfile;
 import si.laurentius.msh.pmode.Service;
 
 /**
@@ -84,12 +86,12 @@ public class PModeServiceView extends AbstractPModeJSFView<Service> {
             "http://" + SEDSystemProperties.getLocalDomain() + "/service");
     srv.setUseSEDProperties(Boolean.TRUE);
 
-    Service.Action act = new Service.Action();
+    Action act = new Action();
     act.setName("TestAction");
     act.setInvokeRole(ActionRole.Initiator.getValue());
-    act.setPayloadProfiles(new Service.Action.PayloadProfiles());
+    act.setPayloadProfiles(new Action.PayloadProfiles());
 
-    Service.Action.PayloadProfiles.PayloadProfile pf = new Service.Action.PayloadProfiles.PayloadProfile();
+    PayloadProfile pf = new PayloadProfile();
     pf.setName("payload");
     pf.setMIME(MimeValue.MIME_BIN.getMimeType());
     pf.setMinOccurs(0);
@@ -223,10 +225,6 @@ public class PModeServiceView extends AbstractPModeJSFView<Service> {
 
   }
 
-  @Override
-  public String getUpdateTargetTable() {
-    return ":forms:SettingsPModesServices:pmodeServicePanel:TblPModeServices";
-  }
 
   @Override
   public String getSelectedDesc() {

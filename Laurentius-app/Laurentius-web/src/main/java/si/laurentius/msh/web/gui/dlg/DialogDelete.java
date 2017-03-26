@@ -18,13 +18,15 @@ public class DialogDelete {
   private static final SEDLogger LOG = new SEDLogger(DialogDelete.class);
 
   AbstractAdminJSFView currentJSFView;
+  String updateTarget;
 
   public AbstractAdminJSFView getCurrentJSFView() {
     return currentJSFView;
   }
 
-  public void setCurrentJSFView(AbstractAdminJSFView currentJSFView) {
+  public void setCurrentJSFView(AbstractAdminJSFView currentJSFView, String update) {
     this.currentJSFView = currentJSFView;
+    updateTarget = update;
   }
 
   public void removeSelectedRow() {
@@ -49,7 +51,7 @@ public class DialogDelete {
   }
 
   public String getTargetTable() {
-    return currentJSFView != null ? currentJSFView.getUpdateTargetTable() : null;
+    return  updateTarget;
   }
 
   public void addCallbackParam(String val, boolean bval) {

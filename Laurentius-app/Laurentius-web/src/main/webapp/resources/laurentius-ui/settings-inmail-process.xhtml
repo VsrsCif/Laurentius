@@ -40,7 +40,7 @@
                             updateTable=":forms:InMailProcess:procPanel:TblInMailProcessRule"
                             addActionListener="#{adminSEDInMailProcessView.createEditable()}"
                             editActionListener="#{adminSEDInMailProcessView.startEditSelected()}"
-                            removeActionListener="#{adminSEDInMailProcessView.removeSelectedWithWarning()}"                            
+                            removeActionListener="#{adminSEDInMailProcessView.removeSelectedWithWarning(':forms:InMailProcess:procPanel:TblInMailProcessRule')}"                            
                             />       
                     </f:facet>
                     <p:column headerText="#{msg['Id']}" width="50">

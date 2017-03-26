@@ -42,7 +42,7 @@
                             updateTable=":forms:SettingsInterceptor:intrcPanel:TblInterceptor"
                             addActionListener="#{adminSEDInterceptorView.createEditable()}"
                             editActionListener="#{adminSEDInterceptorView.startEditSelected()}"
-                            removeActionListener="#{adminSEDInterceptorView.removeSelectedWithWarning()}"                            
+                            removeActionListener="#{adminSEDInterceptorView.removeSelectedWithWarning(':forms:SettingsInterceptor:intrcPanel:TblInterceptor')}"                            
                             />                     
                     </f:facet>
                     <p:column headerText="#{msg['Id']}" width="60">

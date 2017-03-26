@@ -144,14 +144,6 @@ public class AdminSEDInterceptorRuleView extends AbstractAdminJSFView<SEDInterce
     return null;
   }
 
-  /**
-   *
-   * @return
-   */
-  @Override
-  public String getUpdateTargetTable() {
-    return ":dlgintc:intcDialog:intcDialogForm:TblDecisionRule";
-  }
 
   public List<SEDRulePredicate> getRulePredicatesForProperty(String prp) {
     if (Utils.isEmptyString(prp)) {

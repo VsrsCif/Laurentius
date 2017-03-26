@@ -1,27 +1,34 @@
 /*
- * To change this license header, choose License Headers in Project Properties. To change this
- * template file, choose Tools | Templates and open the template in the editor.
+ * Copyright 2015, Supreme Court Republic of Slovenia
+ * 
+ * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by the European
+ * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work except in
+ * compliance with the Licence. You may obtain a copy of the Licence at:
+ * 
+ * https://joinup.ec.europa.eu/software/page/eupl
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence
+ * is distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the Licence for the specific language governing permissions and limitations under
+ * the Licence.
  */
 package si.jrc.msh.plugin.meps;
 
+import java.io.StringWriter;
 import java.util.Properties;
-import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
-import si.laurentius.commons.SEDJNDI;
-import si.laurentius.commons.interfaces.JMSManagerInterface;
-import si.laurentius.commons.interfaces.SEDDaoInterface;
-import si.laurentius.commons.interfaces.SEDLookupsInterface;
-
 
 import si.laurentius.commons.utils.SEDLogger;
-import si.laurentius.commons.utils.StringFormater;
 import si.laurentius.plugin.crontask.CronTaskDef;
 import si.laurentius.plugin.crontask.CronTaskPropertyDef;
+import si.laurentius.plugin.interfaces.PropertyListType;
+import si.laurentius.plugin.interfaces.PropertyType;
 import si.laurentius.plugin.interfaces.TaskExecutionInterface;
 import si.laurentius.plugin.interfaces.exception.TaskException;
 
 /**
+ * This is samople of cron task plugin component.
  *
  * @author Jože Rihtaršič
  */
@@ -29,18 +36,70 @@ import si.laurentius.plugin.interfaces.exception.TaskException;
 @Local(TaskExecutionInterface.class)
 public class MEPSTask implements TaskExecutionInterface {
 
+  public static final String KEY_FOLDER = "meps.folder";
+  public static final String KEY_SENDER_SEDBOX = "meps.sender.sedbox";
+  public static final String KEY_SENDER_SERVICE = "meps.service";
+  
   private static final SEDLogger LOG = new SEDLogger(MEPSTask.class);
 
-  @EJB(mappedName = SEDJNDI.JNDI_SEDDAO)
-  SEDDaoInterface mDB;
+  /**
+   * execute metod
+   *
+   * @param p - parameters defined at configuration of task instance
+   * @return result description
+   */
+  @Override
+  public String executeTask(Properties p)
+      throws TaskException {
+    long l = LOG.logStart();
+    
+    
+    // create package
+    // create zip
+    // create data file
 
-  @EJB(mappedName = SEDJNDI.JNDI_JMSMANAGER)
-  JMSManagerInterface mJMS;
+     // set files as  prepared
+    
+    StringWriter sw = new StringWriter();
+    sw.append("Start example task: ");
+    sw.append("\n");
 
-  @EJB(mappedName = SEDJNDI.JNDI_SEDLOOKUPS)
-  SEDLookupsInterface msedLookup;
+    for (String pKey : p.stringPropertyNames()) {
+      sw.append(String.format("Property key: '%s' value %s\n", pKey, p.getProperty(pKey)));
+    }
+    sw.append("Example task ends in : " + (l - LOG.getTime()) + " ms\n");
+    LOG.logEnd(l, sw.toString());
+    return sw.toString();
+  }
+  
+  /**
+   * Retrun cron task definition: name, unique type, description, parameters.. 
+   * @return Cron task definition
+   */
 
-  StringFormater msfFormat = new StringFormater();
+  @Override
+  public CronTaskDef getDefinition() {
+    CronTaskDef tt = new CronTaskDef();
+    tt.setType("MEPS-Process");
+    tt.setName("MEPS Batch process");
+    tt.setDescription("Prepare mail to process");
+
+     tt.getCronTaskPropertyDeves().add(
+        createTTProperty(KEY_FOLDER, "Export folder", true, PropertyType.String.getType(), null, null));
+    
+    tt.getCronTaskPropertyDeves().add(
+        createTTProperty(KEY_SENDER_SEDBOX, "Sender box", true, PropertyType.List.getType(), null, PropertyListType.LocalBoxes.getType()));
+    
+    tt.getCronTaskPropertyDeves().add(
+        createTTProperty(KEY_SENDER_SERVICE, "Service", true, PropertyType.List.getType(), null,
+                "PrintAndEnvelope-LegalZPP,PrintAndEnvelope-LegalZPP-Personal,"
+              + "PrintAndEnvelope-LegalZUP,PrintAndEnvelope-Mail-C5,"
+              + "PrintAndEnvelope-RegistredMail-C5,PrintAndEnvelope-RegistredPackage"));
+            
+
+
+    return tt;
+  }
 
   private CronTaskPropertyDef createTTProperty(String key, String desc, boolean mandatory,
       String type, String valFormat, String valList) {
@@ -54,34 +113,6 @@ public class MEPSTask implements TaskExecutionInterface {
     return ttp;
   }
 
-  private CronTaskPropertyDef createTTProperty(String key, String desc) {
-    return createTTProperty(key, desc, true, "string", null, null);
-  }
-
-  /**
-   *
-   * @param p
-   * @return
-   * @throws TaskException
-   */
-  @Override
-  public String executeTask(Properties p) throws TaskException {
-
-    return null;
-  }
-
-
-  /**
-   *
-   * @return
-   */
-  @Override
-  public CronTaskDef getDefinition() {
-    CronTaskDef tt = new CronTaskDef();
-    tt.setType("meps-plugin");
-    tt.setName("MEPS plugin");
-    tt.setDescription("Machine printing and enveloping task");
-    return tt;
-  }
+  
 
 }

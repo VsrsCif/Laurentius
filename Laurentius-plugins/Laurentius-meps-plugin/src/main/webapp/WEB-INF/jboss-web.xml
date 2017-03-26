@@ -10,7 +10,7 @@
     <!-- security-domain>java:/jaas/laurentius-realm"</security-domain -->
     <security-domain>laurentius-realm</security-domain>
     <!-- URL to access the web module -->
-    <context-root>meps</context-root>
+    <context-root>/laurentius-web/meps</context-root>
 
 	
 </jboss-web>
