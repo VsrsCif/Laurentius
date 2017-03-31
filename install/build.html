@@ -1,17 +1,6 @@
-<div class ="sidebar" >    
-    <h2>Kazalo:</h2>
- <ul>
-        <li><a href="#install:quickwildfly">Hitra namestitev na aplikacijski strežnik wildfly</a><br  /></li>
-        <li><a href="#install/build:start">Izgradnja aplikacije Laurentius</a><br  /></li>
-        <li><a href="#install/wildfly:start">Namestitev na aplikacijski strežnik wildfly</a><br  /></li>
-    </ul>
-</div>
 <div class="main">
     <article class='content'>
-
-   
-
-        <h1 id="install/build:start">Izgradnja</h1>
+        <h1 id="install/build:setEnv">Priprava okolja</h1>
 
         Projekt Laurentius je sestavljen s pomočjo <a href="https://maven.apache.org/">maven 3.x</a> tehnologije. 
         Za izgradnjo aplikacije je potrebno imeti nameščeno java 1.8+ in maven 3.x.<br /> Aplikacija uporablja 
@@ -19,9 +8,12 @@
         "Java Cryptography Extension (JCE) Unlimited Strength" v mapo: "<java-home>/lib/security".  <br />
             Dodatek je za javo 1.8 dosegljiv na naslovu:  http://www.oracle.com/technetwork/java/javase/downloads/jce8-download-2133166.html.            
             <br /><br />
+            
+            
             Na spletnem naslovu:  <a href="https://github.com/VsrsCif/Laurentius">https://github.com/VsrsCif/Laurentius</a> prenesi izvorno kodo lokalno na disk. 
             (Priporočamo z klikom na Gumb <b>DownloadZip</b>. Preneseni arhiv Laurentius-master.zip odpakiraj v mapo "Laurentius-master".)<br />
-            V ukazni vrstici (linux: bash, windows: cmd), se postavi v odpakirano mapo in poženi maven ukaz za izgradjo aplikacije:
+            <h1 id="install/build:build">Izgradnja</h1>
+            V ukazni vrstici (linux: bash, windows: cmd), se postavi v odpakirano mapo "Laurentius-master" in poženi maven ukaz za izgradjo aplikacije:
             <pre><code>mvn clean install</code></pre>
             Komponente so uspešno izgrajene, ko se na zaslonu izpiše:
             <pre><code>    
@@ -87,7 +79,7 @@ BUILD SUCCESS
 
             </ul>
 
-                <h3>Namestitev aplikacije</h3>
+              <h1 id="install/build:deploy">Namestitev aplikacije</h1>
             v mapo wildfly-10.0.0.Final/standalone/
             <pre><code>
 copy "[buildFolder]\Laurentius\ebms-msh-module\ebms-msh-ear\target\ebms-msh.ear" [wildfly-home]\standalone\deployments\
@@ -104,6 +96,6 @@ copy "[buildFolder]\Laurentius\Laurentius-module\Laurentius-web\target\Laurentiu
 
             <b>OPOZORILO</b><br />
             aplikacijo s parametrom <b>org.sed.msh.hibernate.hbm2ddl.auto=create</b> poženi samo prvič. Parameter omogoči izdelavo baznih tabel. 
-         
+
     </article>  
 </div>

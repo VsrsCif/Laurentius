@@ -1,56 +1,6 @@
-<div class ="sidebar" >    
-    <h2>Kazalo:</h2>
-    <ul >
-        <li><a href="#/gui/Laurentius:application" >Aplikacija Laurentius</a>
-            <ul style="padding-left: 23px">
-                <li><a href="#gui/Laurentius:login"  >Prijavno okno</a></li> 
-                <li><a href="#gui/Laurentius:workspace" >Delavno okolje</a></li> 
-                <li><a href="#gui/Laurentius:tools" >Sklopi orodij</a></li> 
-            </ul></li>
-        <li><a href="#gui/admin-sed-box:admin" >Administracija: SED-predali</a>
-            <ul style="padding-left: 23px">            
-                <li><a href="#gui/admin-sed-box:add-edit" >Urejanje SED-predala</a></li> 
-                <li><a href="#gui/admin-sed-box:export" >Izvoz dohodne pošte</a></li> 
-                <li><a href="#gui/admin-sed-box:execute" >Izvajanje procesov</a></li> 
-
-            </ul>
-        <li><a href="#gui/admin-sed-user" >Administracija: Uporabniki</a>
-            <ul style="padding-left: 23px">            
-                <li><a href="#gui/admin-sed-user:user" >Seznam uporabnikov</a></li> 
-                <li><a href="#gui/admin-sed-user:add-edit" >Urejanje uporabnika</a></li> 
-            </ul>
-        </li>
-        <li><a href="#gui/admin-keystore" >Administracija: Certifikati</a>
-            <ul style="padding-left: 23px">            
-                <li><a href="#gui/admin-keystore:list" >Seznam shramb</a></li> 
-                <li><a href="#gui/admin-keystore:add-edit" >Urejanje shrambe</a></li> 
-            </ul>
-        </li>
-        <li><a href="#gui/admin-sed-tasks" >Administracija opravil</a>
-            <ul style="padding-left: 23px">            
-                <li><a href="#gui/admin-sed-tasks:list" >Seznam tipov opravil</a></li> 
-                <li><a href="#gui/admin-sed-tasks:add-edit" >Dodajanje, urejanje tipa opravila</a></li> 
-                <li><a href="#gui/admin-sed-tasks:cron-add-edit" >Dodajanje, urejanje urnika opravil</a></li> 
-                <li><a href="#gui/task-backup:backup" >Opravilo: varnostna kopija</a></li> 
-                <li><a href="#gui/task-archive:archive" >Opravilo: arhiv</a></li> 
-                <li><a href="#gui/task-report:report" >Opravilo: poročilo</a></li> 
-                <li><a href="#gui/task-zpp:zpp-plugin" >Opravilo: Vročanje ZPP</a></li> 
-                <li><a href="#gui/task-filesubmitter" >Opravilo: Pošiljanje datotek</a></li>  
-            </ul>
-        </li>
-        <li><a href="#gui/admin-plugin" >Administracija dodatkov</a>
-            <ul style="padding-left: 23px">            
-                <li><a href="#gui/admin-plugin:list" >Seznam dodatkov</a></li> 
-                <li><a href="#gui/admin-plugin:add-edit" >Dodajanje, urejanje dodatka</a></li> 
-
-            </ul>
-        </li>
-        <li><a href="#pmode/pmode" >Administracija: PMODE</a></li>
-    </ul>
-</div>
 <div class="main">
     <article class='content'>
-        <h1 id="gui/admin-sed-box:admin">Administracija uporabnikov</h1>
+        <h1 id="gui/admin-sed-box">Administracija uporabnikov</h1>
         Določanje uporabnikov in uporabniških pravic se izvaja izven aplikacije 
         Laurentius. Aplikacija do uporabnikov in uporabniških pravic dostopa preko nastavitev
         "uporabniške domene" <b> sed-realm</b>, ki 
@@ -61,9 +11,9 @@
         Administracija <b>SED uporabnikov</b> se nahaja v sklopu orodij <b>Nastavitve</b>
        (Settings) orodje Uporabniki (Users). Urejanje omogoča določanje obdobje aktivnosti in predale,
        do katerih ima uporabnik upravičenja.<br /><br />
-       <img src="img/gui/user-list.png" alt="User list" width="680"/> <br />
+       <img class="img-locale" src="img/gui/user-list-en.png" alt="User list" width="680"/> <br />
        
-       <h2 id="gui/admin-sed-user:user">Seznam uporabnikov</h2>
+       <h2 id="gui/admin-sed-user:list">Seznam uporabnikov</h2>
        Orodje <b>Uporabniki</b> prikazuje seznam uporabnikov, ki so določeni v Laurentius. Z klikom na 
        razširitveni gumb na začetku vrstice se prikažejo tudi predali, do katerih ima uporabnik opravičenja.<br />
        V orodni vrstici seznama so gumbi za dodajanje spreminjanje in brisanje uporanikov.<br /><br />
@@ -71,7 +21,7 @@
         Ob kliki na gumb <b>Dodaj</b>(add),  <b>Uredi</b>(Edit) ali dvojnem kliku na izbrano 
        vstico se prikaže dialog za dodajanje/urejanje uporabnika.<br /><br />
        <center>
-        <img src="img/gui/user-edit.png" alt="User  admin" width="500"/> <br />
+        <img class="img-locale" src="img/gui/user-edit-en.png" alt="User  admin" width="500"/> <br />
        </center><br />
        
        <h2 id="gui/admin-sed-user:add-edit">Dodajanje, urejanje uporabnikov</h2>

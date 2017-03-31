@@ -1,16 +1,7 @@
-<div class ="sidebar" >    
-    <h2>Kazalo:</h2>
-    <ul>
-        <li><a href="#install:quickwildfly">Hitra namestitev na aplikacijski strežnik wildfly</a></li>
-        <li><a href="#install/build:start">Izgradnja aplikacije Laurentius</a></li>
-        <li><a href="#install/wildfly:start">Namestitev na aplikacijski strežnik wildfly</a></li>
-        <li><a href="#pmode/pmode" >Nastavitve PMODE</a></li> 
-    </ul>
-</div>
 <div class="main">
     <article class='content'>
 
-        <h1 id="install:start">Opis aplikacije Laurentius</h1>
+        <h1 id="install/install:start">Opis aplikacije Laurentius</h1>
         Aplikacija  <b>Laurentius</b> je 'JEE' aplikacija, ki za svoje delovanje potrebuje:
         <ul>
         <li><b>minimalne zahteve strojne opreme: Pomnilnik (RAM) 2G in diskovna enota, ki je velika vsaj 10 GB</b>.
@@ -26,7 +17,7 @@
     </ul>
 
 
-        <h1 id="install:quickwildfly">Hitra namestitev na aplikacijski strežnik wildfly-10.1.0.Final</h1>
+        <h1 id="install/install:quickwildfly">Hitra namestitev na aplikacijski strežnik wildfly-10.1.0.Final</h1>
         <b>Opozorilo: Hitra namestitev uporablja podatkovna bazo h2 in ni primerna za produkcijsko uporabo.</b>
         <br /><br />
 
@@ -106,7 +97,7 @@
         </table>
         
         
-         <h2  id="install:deploy-script">Parametri skripte deploy-laurentius.(bat|sh)</h2>
+         <h2  id="install/install:deploy-script">Parametri skripte deploy-laurentius.(bat|sh)</h2>
         <pre><code>deploy-laurentius.(bat|sh) --init -b [SED_BUNDLE] -w [WILDFLY_HOME] -l [LAURENTIUS_HOME]</code></pre>
         <ul><li>--init: parameter "inicializira" mapo [LAURENTIUS_HOME] in nastavitve wildfly strežnika.</li>
             <li>-w   WILDFLY_HOME - pot do wildfly aplikacijskega strežnika. Npr.: c:\temp\wildfly-10.1.0.Final</li>
@@ -114,7 +105,7 @@
             <li>-l   LAURENTIUS_HOME     - pot do [LAURENTIUS_HOME] mape. Če ni podana je privzeta mapa '[WILDFLY_HOME]\standalone\data\laurentius-home'.</li>
         </ul>
         
-         <h2  id="install:start-script">Parametri skripte laurentius-demo.(bat|sh)</h2>
+         <h2  id="install/install:start-script">Parametri skripte laurentius-demo.(bat|sh)</h2>
         <pre><code>laurentius-demo.(bat|sh) --init -d [MOJA_DOMENA] -w [WILDFLY_HOME] -l [LAURENTIUS_HOME]</code></pre>
         <ul>
             <li>--init parameter "inicializira" bazne objekte. V primeru, da so že izdelani se bazni objakti najprej izbrišejo. 

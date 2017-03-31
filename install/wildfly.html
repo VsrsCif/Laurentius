@@ -1,11 +1,3 @@
-<div class ="sidebar" >    
-    <h2>Kazalo:</h2>
-    <ul>
-        <li><a href="#install:quickwildfly">Hitra namestitev na aplikacijski strežnik wildfly</a><br  /></li>
-        <li><a href="#install/build:start">Izgradnja aplikacije Laurentius</a><br  /></li>
-        <li><a href="#install/wildfly:start">Namestitev na aplikacijski strežnik wildfly</a><br  /></li>
-    </ul>
-</div>
 <div class="main">
     <article class='content'>
 
@@ -16,15 +8,44 @@
         nastavitev, ki so  prilagojene konkretnemu produkcijskemu okolju.<br /> Opis je lahko tudi 
         v pomoč pri razumevanju delovanja aplikacijskega strežnika <b>Wildfly</b>.
         Podrobnejša navodila namestitve aplikacijskega strežnika so opisana  
-        na naslovu <a href="http://wildfly.org/">wildfly</a>.<br /><br />
+        na naslovu <a href="http://wildfly.org/">wildfly</a><br /><br />
 
-        <h3>Namestitev aplikacijskega strežnika</h3>
+        Opozorilo: Aplikacijski strežnik wildfly za svoje delovanje potrebuje nameščeno java 1.8+!
+
+        <h1 id="install/wildfly:install">Namestitev aplikacijskega strežnika</h1>
         Na povezavi <a href="http://wildfly.org/downloads/">wildfly downloads</a>  prenesi aplikacijski 
         strežnik <b>Java EE7 Full & Web Distribution</b> 10.1.0.Final. Arhiv odpakiraj v namestitveno mapo (npr.:
         c:\temp\wildfly-10.1.0.Final v nadaljevanju: [WILDFLY_HOME]):
 
-        <h3>1. Popravek modula: org.apache.ws.security</h3>
-        Aplikacija Laurentius uporablja apache-cxf knjižnice, ki so nameščeni v wildfly aplikacijskem strežniku. 
+        <h3>Nastavitve standalone-laurentius.xml</h3>
+        Aplikacijski strežnik omogoča nastavitve okolja, 
+        ki vključuje:
+        <ul><li>dostop repozitorij uporabnikov (file, db, ldap...),</li>
+            <li>dostop do podatkovnega sistema (postgres, oracle, h2,...),</li> 
+            <li>nastavitve JMS vrst,</li>
+            <li>nastavitve strežniških vrat za posamezne module,</li>
+            <li>nastavitve strežniškega certifikata za TLS dostop,</li>
+            <li>...</li>
+        </ul>
+
+        V nadaljevanju so opisane spremembe osnovnih nastavitve, ki jih je potrebno 
+        izvesti za namestitev aplikacije Laurentius.
+
+        Nastavite aplikacije laurentius se bodo nahajali v datoteki:
+        <code>[WILDFLY_HOME]standalone/configuration/standalone-laurentius.xml</code>.
+        Zato v mapi: 
+        <code>wildfly-10.1.0.Final/standalone/configuration</code>
+        naredi kopijo: standalone.xml
+        <pre><code>copy|cp standalone.xml standalone-laurentius.xml</code></pre>
+
+
+
+
+        <h1 id="install/wildfly:fix">Prilagoditve osnovne namestitve</h1>
+        <h3>Popravek modula: org.apache.ws.security</h3>
+        Aplikacija Laurentius uporablja apache-cxf knjižnice. Ker ima wildfly aplikacijski 
+        strežnik že nameščene knjižnice, jih uporablja tudi aplikacija laurentius. 
+
         Za uporabo je potreben manjši popravek v namestitveni datoteki:
         <pre><code>wildfly-10.1.0.Final/modules/system/layers/base/org/apache/ws/security/main/module.xml</code></pre>
 
@@ -48,21 +69,21 @@
   &lt;module name="org.slf4j" />
 &lt;/dependencies></code></pre>
         <br />
-        <h3>2. Nastavitve standalone-laurentius.xml</h3>
-        V mapi:  wildfly-10.1.0.Final/standalone/configuration
-        naredi kopijo: standalone.xml
-        <pre><code>copy standalone.xml standalone-laurentius.xml</code></pre>
-        Odpri datoteko <code>standalone-laurentius.xml</code> za urejanje. <br />
+
+        <h1 id="install/wildfly:jms">Nastavitve JMS Vrst</h1>
         Aplikacija Laurentius zaradi zagotavljanja stabilnosti delovanja pri 
         večjih obremenitvah, uporablja tehnologijo JMS (java messaging service) za:
         <ul>
             <li><b>MSHQueue</b> - pošiljanje izhodnih pošiljk;</li>
-            <li><b>SEDExecutionQueue</b> - izvajanje "bash/cmd" procesov ob dohodni pošti. </li>        
+            <li><b>MSHInMailProcessQueue</b> - izvajanje procesov (xslt, izvoz,...) ob dohodni pošti. </li>        
         </ul>
         Uporaba vrst (JMS) omogoča kontrolirano uporabo virov (povezave na bazo, delovni spomin, CPU) 
         pri večjih obremenitvah ter omejuje obremenitve na ostale povezane sisteme.
-        
- <br />
+
+        <br /><br />
+
+        Odpri datoteko <code>standalone-laurentius.xml</code> za urejanje. <br />
+
         V naslednjih korakih bomo vključili JMS (Java messaging Service). 
         V razdelek:
         <pre><code>&lt;server xmlns="urn:jboss:domain:3.0">
@@ -71,32 +92,33 @@
         <pre><code>&lt;extension module="org.wildfly.extension.messaging-activemq"/></code></pre> 
 
         Nato dodaj modul  urn:jboss:domain:messaging-activemq:1.0
-        <pre><code> &lt;subsystem xmlns="urn:jboss:domain:messaging-activemq:1.0">
-            &lt;server name="default">
-                &lt;security-setting name="#">
-                    &lt;role name="guest" send="true" consume="true" create-non-durable-queue="true" delete-non-durable-queue="true"/>
-                &lt;/security-setting>
-                &lt;address-setting name="#" dead-letter-address="jms.queue.DLQ" expiry-address="jms.queue.ExpiryQueue" max-size-bytes="10485760" page-size-bytes="2097152" message-counter-history-day-limit="10"/>
-                &lt;http-connector name="http-connector" socket-binding="http" endpoint="http-acceptor"/>
-                &lt;http-connector name="http-connector-throughput" socket-binding="http" endpoint="http-acceptor-throughput">
-                    &lt;param name="batch-delay" value="50"/>
-                &lt;/http-connector>
-                &lt;in-vm-connector name="in-vm" server-id="0"/>
-                &lt;http-acceptor name="http-acceptor" http-listener="default"/>
-                &lt;http-acceptor name="http-acceptor-throughput" http-listener="default">
-                    &lt;param name="batch-delay" value="50"/>
-                    &lt;param name="direct-deliver" value="false"/>
-                &lt;/http-acceptor>
-                &lt;in-vm-acceptor name="in-vm" server-id="0"/>
-                &lt;jms-queue name="ExpiryQueue" entries="java:/jms/queue/ExpiryQueue"/>
-                &lt;jms-queue name="DLQ" entries="java:/jms/queue/DLQ"/>
-		&lt;jms-queue name="MSHQueue" entries="java:/jms/queue/MSHQueue"/>
-                &lt;jms-queue name="SEDExecutionQueue" entries="java:/jms/queue/SEDExecutionQueue"/>
-                &lt;connection-factory name="InVmConnectionFactory" connectors="in-vm" entries="java:jboss/ConnectionFactory"/>
-                &lt;connection-factory name="RemoteConnectionFactory" connectors="http-connector" entries="java:jboss/exported/jms/RemoteConnectionFactory"/>
-                &lt;pooled-connection-factory name="activemq-ra" transaction="xa" connectors="in-vm" entries="java:/JmsXA java:jboss/DefaultJMSConnectionFactory"/>
-            &lt;/server>
-        &lt;/subsystem></code></pre> 
+        <pre><code>&lt;subsystem xmlns="urn:jboss:domain:messaging-activemq:1.0">
+    &lt;server name="default">
+        &lt;security-setting name="#">
+            &lt;role name="guest" send="true" consume="true" create-non-durable-queue="true" delete-non-durable-queue="true"/>
+        &lt;/security-setting>
+        &lt;address-setting name="#" dead-letter-address="jms.queue.DLQ" expiry-address="jms.queue.ExpiryQueue" redelivery-delay="${redelivery.delay:2}" redelivery-multiplier="${redelivery.multiplier:1.5}" max-delivery-attempts="${max.delivery.attempts:5}" max-size-bytes="10485760" page-size-bytes="2097152" message-counter-history-day-limit="10"/>
+        &lt;http-connector name="http-connector" socket-binding="http" endpoint="http-acceptor"/>
+        &lt;http-connector name="http-connector-throughput" socket-binding="http" endpoint="http-acceptor-throughput">
+            &lt;param name="batch-delay" value="50"/>
+        &lt;/http-connector>
+        &lt;in-vm-connector name="in-vm" server-id="0"/>
+        &lt;http-acceptor name="http-acceptor" http-listener="default"/>
+        &lt;http-acceptor name="http-acceptor-throughput" http-listener="default">
+            &lt;param name="batch-delay" value="50"/>
+            &lt;param name="direct-deliver" value="false"/>
+        &lt;/http-acceptor>
+        &lt;in-vm-acceptor name="in-vm" server-id="0"/>
+        &lt;jms-queue name="ExpiryQueue" entries="java:/jms/queue/ExpiryQueue"/>
+        &lt;jms-queue name="DLQ" entries="java:/jms/queue/DLQ"/>
+        &lt;jms-queue name="MSHQueue" entries="java:/jms/queue/MSHQueue"/>
+        &lt;jms-queue name="MSHInMailProcessQueue" entries="java:/jms/queue/MSHInMailProcessQueue"/>
+        &lt;connection-factory name="InVmConnectionFactory" entries="java:jboss/ConnectionFactory" connectors="in-vm"/>
+        &lt;connection-factory name="RemoteConnectionFactory" entries="java:jboss/exported/jms/RemoteConnectionFactory" connectors="http-connector"/>
+        &lt;pooled-connection-factory name="activemq-ra" entries="java:/JmsXA java:jboss/DefaultJMSConnectionFactory" connectors="in-vm" transaction="xa"/>
+    &lt;/server>
+&lt;/subsystem>
+</code></pre> 
 
         V modul <code>&lt;subsystem xmlns="urn:jboss:domain:ejb3:4.0"></code> dodaj:
         <pre><code>&lt;mdb>
@@ -104,7 +126,7 @@
     &lt;bean-instance-pool-ref pool-name="mdb-strict-max-pool"/>
 &lt;/mdb></code></pre>
 
-        <h3 id="install:wf-users">Določanje uporabnikov</h3>
+        <h1 id="install/wildfly:users">Določanje uporabnikov</h1>
         Aplikacijski strežnik wildfly omogoča uporabo različnih tehnologij ( 
         kot so: OpenLDAP, eDirectory, bazne tabele, datoteke) za avtentikacijo in avtorizacijo. Uporaba modula:
         "urn:jboss:domain:security" omogoča enostavno menjavo mehanizmov avtentikacije brez spreminjanja aplikacije.
@@ -112,7 +134,7 @@
         ko so avtorizacijski podatki v testnem okolju v "property" datotekah. Demo nastavitev Laurentius uporablja
         predpripravljene "property" datoteke laurentius-users.properties in laurentius-roles.properties.
         <br /> <br />
-        
+
         V razdelek <code>&lt;subsystem xmlns="urn:jboss:domain:security:1.2"></code> dodaj
         <b>laurentius-realm</b> varnostno domeno. 
         <pre><code>
@@ -139,22 +161,125 @@ admin=admin1234</code></pre>
 sed=USER
 admin=ADMIN,USER</code></pre>
 
-        
-        <h3>Nastavitev dostopa do SQL sistema za upravljanje s podatkovnimi zbirkam (SQL - DMBS)</h3>        
+
+        <h1 id="install/wildfly:db">Dostop do baze (SQL - DMBS)</h1>
+
         Za dostop do podatkovnih zbirk aplikacija uporablja knjižnico: <a href="http://hibernate.org/">hibernate (5.x)</a>.
         Izbira baze je tako omejena na seznam baz, ki jih podpira hibernate. 
-        (Aplikacija je testirana na bazah: h2, postgresql in oracle 11.) Izbira podatkovne zbirke se tako izvede v nastavitvah 
-        aplikacijskega strežnika.
-        
-        
+        (Aplikacija je testirana na bazah: h2, postgresql in oracle 11.) Izbira sitema SQL podatkovne zbirke
+        se tako izvede v nastavitvah aplikacijskega strežnika. <br /><br /> 
+        Aplikacija Laurentis do baze dostopa preko konfiguracije z nazivom "dsEBMS_SED", zato je potrebno 
+        v razdelku <code>&lt;subsystem xmlns="urn:jboss:domain:datasources:4.0"></code>
+        Določiti dostop do podatkovne zbirke z 'jndi-name="java:/dsEBMS_SED"'
 
-        <h3>Dodajanje jdbc knjižnice  in bazne povezave za postgres</h3>
-        Na spletni strani „https://jdbc.postgresql.org/download.html“ pridobi primereno jdbc knjižnico za nameščeno postgresql bazo. <br />
-        Posgresql driver se bo namestil s pomočjo jboss-cli ukazov, zato v mapi: <br />
+
+        <h2 id="install/wildfly:db-h2">H2 podatkovna zbirka</h2>
+        Osnovna namestitev aplikacijskega strežnika že vsebuje vse potrebne knjižnice
+        za uporabo h2 baze. Zato je potrebno v konfiguraciji samo dodati datasource značko
+        <code>&lt;datasource jndi-name="java:/dsEBMS_SED"</code>
+        <br /> <br />
+        Spodnji primer izdela "datotečno bazo h2" v datoteki "[WILDLFLY_HOME]/standalone/data/laurentius-db" : 
+        <pre><code>&lt;subsystem xmlns="urn:jboss:domain:datasources:4.0">
+    &lt;datasources>
+        &lt;datasource jndi-name="java:jboss/datasources/ExampleDS" pool-name="ExampleDS" enabled="true" use-java-context="true">
+            &lt;connection-url>jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE&lt;/connection-url>
+            &lt;driver>h2&lt;/driver>
+            &lt;security>
+                &lt;user-name>sa&lt;/user-name>
+                &lt;password>sa&lt;/password>
+            &lt;/security>
+        &lt;/datasource>
+        &lt;datasource jndi-name="java:/dsEBMS_SED" pool-name="ebMSSEDPool" enabled="true" statistics-enabled="true">
+            &lt;connection-url>jdbc:h2:file:${jboss.home.dir}/standalone/data/laurentius-db;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=TRUE&lt;/connection-url>
+            &lt;driver>h2&lt;/driver>
+            &lt;pool>
+                &lt;min-pool-size>1&lt;/min-pool-size>
+                &lt;max-pool-size>1&lt;/max-pool-size>
+                &lt;prefill>true&lt;/prefill>
+            &lt;/pool>
+            &lt;security>
+                &lt;user-name>laurentius&lt;/user-name>
+                &lt;password>laurentius&lt;/password>
+            &lt;/security>
+        &lt;/datasource>
+        &lt;drivers>
+            &lt;driver name="h2" module="com.h2database.h2">
+                &lt;xa-datasource-class>org.h2.jdbcx.JdbcDataSource&lt;/xa-datasource-class>
+            &lt;/driver>
+        &lt;/drivers>
+    &lt;/datasources>
+&lt;/subsystem>
+            </code></pre>
+
+        <h2 id="install/wildfly:db-postgres">Postrgres podatkovna zbirka</h2>
+        Za upoabo postgres podatkovne zbirke, je potrebno najprej namestiti 
+        primerne JDBC gonilnike, ki so dosegljivi na  spletni strani „https://jdbc.postgresql.org/download.html“.
+        <br />
+        Gonilnik se doda kot zunanja knjižnica (mudul) tako da se naredi mapa:
+        <code>[WILDFLY_HOME]/modules/org/postgres/main</code>
+        ter se vanj posname: postgresql-[db.version].jdbcXX.jar
+        Hkrati s v mapi izdela datoteka z opisom knjižnice <code>module.xml</code>
+        z vsebino:
+        <pre><code>&lt;?xml version="1.0" ?>
+&lt;module xmlns="urn:jboss:module:1.1" name="org.postgres">
+    &lt;resources>
+        &lt;resource-root path="postgresql-[db.version].jdbcXX.jar"/>
+    &lt;/resources>
+    &lt;dependencies>
+        &lt;module name="javax.api"/>
+        &lt;module name="javax.transaction.api"/>
+    &lt;/dependencies>
+&lt;/module></code></pre><br /><br />
+
+        Novi gonilnik se v konfiguracijski datoteki 'standalone-laurentius.xml' vključi tako, da se
+        doda v razdelku <code>subsystem@xmlns="urn:jboss:domain:datasources:4.0"/drivers</code> nov razdelek 
+        "driver"
+        <pre><code>&lt;driver name="postgres" module="org.postgres">
+    &lt;driver-class>org.postgresql.Driver&lt;/driver-class>
+&lt;/driver>
+</code></pre>
+        <br /><br />
+        Dosto do baze se doda tako kot prikazuje spodnja nastavitev. Za potrebe lastne nastavitve 
+        popravi: connection-url, user-name in password.
+        <pre><code>&lt;subsystem xmlns="urn:jboss:domain:datasources:4.0">
+    &lt;datasources>
+        &lt;datasource jndi-name="java:jboss/datasources/ExampleDS" pool-name="ExampleDS" enabled="true" use-java-context="true">
+            &lt;connection-url>jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE&lt;/connection-url>
+            &lt;driver>h2&lt;/driver>
+            &lt;security>
+                &lt;user-name>sa&lt;/user-name>
+                &lt;password>sa&lt;/password>
+            &lt;/security>
+        &lt;/datasource>
+        &lt;datasource jndi-name="java:/dsEBMS_SED" pool-name="ebMSSEDPool" enabled="true" statistics-enabled="true">
+            &lt;connection-url>jdbc:postgresql://localhost/db_laurentius&lt;/connection-url>
+            &lt;driver>postgres&lt;/driver>
+                        &lt;pool>
+                &lt;min-pool-size>1&lt;/min-pool-size>
+                &lt;max-pool-size>5&lt;/max-pool-size>
+                &lt;prefill>true&lt;/prefill>
+            &lt;/pool>
+            &lt;security>
+                &lt;user-name>lau&lt;/user-name>
+                &lt;password>lau1234t&lt;/password>
+            &lt;/security>
+        &lt;/datasource>
+        &lt;drivers>
+            &lt;driver name="h2" module="com.h2database.h2">
+                &lt;xa-datasource-class>org.h2.jdbcx.JdbcDataSource&lt;/xa-datasource-class>
+            &lt;/driver>
+            &lt;driver name="postgres" module="org.postgres">
+                &lt;driver-class>org.postgresql.Driver&lt;/driver-class>
+            &lt;/driver>
+        &lt;/drivers>
+    &lt;/datasources>
+&lt;/subsystem>
+
+</code></pre>
+
+        Posgresql driver in povezava na bazo se lahko namesti tudi s pomočjo jboss-cli ukazov, zato v mapi: <br />
         <code>wildfly-10.1.0.Final/bin</code>določi widlfly admin uporabnika tako da poženem skripto (in izbereš  userType: a) Management User):<br />
         <code>./add-user.(sh|bat)</code><br /><br />
-
-
 
         Nato poženi aplikacijski strežnik:<br />
         <code>./standalone.(sh|bat) -c standalone-laurentius.xml</code>
@@ -172,26 +297,70 @@ admin=ADMIN,USER</code></pre>
         Nato določi povezavo na bazo:
         <pre><code>[standalone@localhost:9990 /]data-source add --jndi-name=java:/dsEBMS_SED --name=ebMSSEDPool --connection-url=jdbc:postgresql://localhost/db_sed --driver-name=postgres --user-name=[username] --password=[password]</code></pre>
 
+          <h2 id="install/wildfly:db-oracle">Oracle podatkovna zbirka</h2>
+        
+        Za upoabo oracle podatkovne zbirke, je potrebno najprej namestiti 
+        primerne JDBC gonilnike, ki so dosegljivi na  spletni strani „http://www.oracle.com“.
+        <br />
+        Gonilnik se doda kot zunanja knjižnica (mudul) tako da se naredi mapa:
+        <code>[WILDFLY_HOME]/modules/com/oracle/jdbc/main</code>
+        ter se vanj posname: ojdbc[db.version].jar in orai18n[db.version].jar
+        Hkrati se v mapi izdela datoteka z opisom modula <code>module.xml</code>
+        z vsebino:
+        <pre><code>&lt;?xml version="1.0" encoding="UTF-8"?>
+&lt;module xmlns="urn:jboss:module:1.1" name="com.oracle.jdbc">
+  &lt;resources>
+    &lt;resource-root path="ojdbc[db.version].jar"/>
+  &lt;resource-root path="orai18n[db.version].jar"/>
+  &lt;/resources>
+  &lt;dependencies>
+    &lt;module name="javax.api"/>
+    &lt;module name="javax.transaction.api"/>
+    &lt;module name="javax.servlet.api" optional="true"/>  
+  &lt;/dependencies>
+&lt;/module></code></pre><br /><br />
 
-
-        <h3>Namestitev aplikacije</h3>
-        v mapo wildfly-10.1.0.Final/standalone/
-        <pre><code>
-copy "[buildFolder]\Laurentius\ebms-msh-module\ebms-msh-ear\target\ebms-msh.ear" [wildfly-home]\standalone\deployments\
-copy "[buildFolder]\Laurentius\Laurentius-module\Laurentius-ws\target\Laurentius-ws.war" [wildfly-home]\standalone\deployments\
-copy "[buildFolder]\Laurentius\Laurentius-module\Laurentius-web\target\Laurentius-webgui.war" [wildfly-home]\standalone\deployments\</code></pre>
-
-        <h3>Priprava sed-home mape</h3>
-        V mapi <code>[buildFolder]\Laurentius\Laurentius-standalone\home_dir_template</code> je primer prednastavljenih datotek. 
-        Presnemi mapo v c:\temp\home-dir)
-        <pre><code>copy  [buildFolder]\Laurentius\Laurentius-standalone\home_dir_template c:\temp\sed-homer</code></pre>
-
-        Nato ponovno poženi strežnik z naslednjimi nastavitvami:
-        <pre><code>./standalone.sh -c standalone-laurentius.xml -Dorg.sed.msh.hibernate.hbm2ddl.auto=create -Dsed.home=c:\temp\sed-home</code></pre>
-
-        <b>OPOZORILO</b><br />
-        aplikacijo s parametrom <b>org.sed.msh.hibernate.hbm2ddl.auto=create</b> poženi samo prvič. Parameter omogoči izdelavo baznih tabel. 
-
+        Novi gonilnik se v konfiguracijski datoteki 'standalone-laurentius.xml' vključi tako, da se
+        doda v razdelku <code>subsystem@xmlns="urn:jboss:domain:datasources:4.0"/drivers</code> nov razdelek 
+        "driver"
+        <pre><code> &lt;driver name="orcl6" module="com.oracle.jdbc">
+      &lt;xa-datasource-class>oracle.jdbc.driver.OracleDriver&lt;/xa-datasource-class>
+    &lt;/driver>
+</code></pre>
+        <br /><br />
+        Dostop do baze se doda tako kot prikazuje spodnja nastavitev. Za potrebe lastne nastavitve 
+        popravi: connection-url, user-name in password.
+        <pre><code>&lt;datasources>
+  &lt;datasource jndi-name="java:jboss/datasources/ExampleDS" pool-name="ExampleDS" enabled="true" use-java-context="true">
+    &lt;connection-url>jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE&lt;/connection-url>
+    &lt;driver>h2&lt;/driver>
+    &lt;security>
+      &lt;user-name>sa&lt;/user-name>
+      &lt;password>sa&lt;/password>
+    &lt;/security>
+  &lt;/datasource>
+  &lt;datasource jndi-name="java:/dsEBMS_SED" pool-name="ebMSSEDPool" enabled="true" use-java-context="true">
+    &lt;connection-url>jdbc:oracle:thin:@my.address.com:1521:sidl&lt;/connection-url>
+    &lt;driver>orcl6&lt;/driver>
+    &lt;pool>
+      &lt;min-pool-size>3&lt;/min-pool-size>
+      &lt;max-pool-size>5&lt;/max-pool-size>
+      &lt;prefill>true&lt;/prefill>
+    &lt;/pool>
+    &lt;security>
+      &lt;user-name>lau&lt;/user-name>
+      &lt;password>lau1234&lt;/password>
+    &lt;/security>
+  &lt;/datasource>
+  &lt;drivers>
+    &lt;driver name="h2" module="com.h2database.h2">
+      &lt;xa-datasource-class>org.h2.jdbcx.JdbcDataSource&lt;/xa-datasource-class>
+    &lt;/driver>
+    &lt;driver name="orcl6" module="com.oracle.jdbc">
+      &lt;xa-datasource-class>oracle.jdbc.driver.OracleDriver&lt;/xa-datasource-class>
+    &lt;/driver>
+  &lt;/drivers>
+&lt;/datasources></code></pre>
 
     </article>  
 </div>

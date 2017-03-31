@@ -7,96 +7,17 @@
         <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
         <link type="text/css"  rel="stylesheet" href="css/style.css" media="screen" />        
 
+
+        <script type="text/javascript" src="js/jrc-page.js"></script>  
         <script type="text/javascript" src="js/jquery-3.1.0.min.js"></script>  
         <script type="text/javascript" src="js/jrc-xslt.js"></script>  
         <script type="text/javascript" src="codehighlight/highlight.pack.js"></script>  
-        
+
         <link rel="stylesheet" href="codehighlight/agate.css">
 
-        <script type="text/javascript">
-
-            var lastPage = "";
-            function init() {
-                var currentHash = window.location.hash.replace(/^#\/?/, "");
-                if (currentHash === "") {
-                    loadPage("home");
-                } else {
-                    loadPage(currentHash);
-                }
-                return false;
-            }
-
-
-            function loadPage(currentHash) {
-
-                var page = currentHash;
-                if (currentHash.indexOf(":") > 0) {
-                    nvg = currentHash.split(":");
-                    page = nvg[0];
-                }
-
-
-                $(document).ready(function () {
-                    $('#entryPage').load(page + '.html', function () {
-                        
-                        $("div[class='jrcxslt']").each(function (i, block) {
-                            jrcxslt.transform(block);
-                        });
-
-                        // do other stuff load is completed
-                        $('pre code').each(function (i, block) {
-                            hljs.highlightBlock(block);
-                        });
-                    });
-                });
-
-                if (currentHash.indexOf(":") > 0) {
-                    window.window.location.hash = '#/' + currentHash;
-                }
-
-
-
-
-
-                return true;
-            } // for onload
-
-            window.addEventListener("hashchange", function () {
-
-                // When the step is entered hash in the location is updated
-                // (just few lines above from here), so the hash change is 
-                // triggered and we would call `load` again on the same element.
-                //
-                // To avoid this we store last entered hash and compare.
-
-                var currentHash = window.location.hash.replace(/^#\/?/, "");
-                var page = currentHash;
-                if (currentHash.indexOf(":") > 0) {
-                    nvg = currentHash.split(":");
-                    page = nvg[0];
-
-
-                }
-
-
-                if (lastPage === "" || page !== lastPage) {
-
-                    loadPage(page);
-                    lastPage = page;
-                    if (currentHash.indexOf(":") > 0) {
-                        window.window.location.hash = '#/' + currentHash;
-
-                    }
-
-                }
-            });
-
-
-
-        </script>
 
     </head>
-    <body  onload="init()" >
+    <body  onload="jrcnavigation.init()" >
         <!-- Start header, logo,  top menu , main menu-->
         <header role="banner">
             <div class="inner">
@@ -126,7 +47,7 @@
                         <li ><a href="#/home" >O projektu</a></li>
                         <li ><a href="#/ebms" >eMS 3.0</a></li>
                         <li ><a href="#/arhitecture">Arhitektura</a></li>
-                        <li ><a href="#/install">Izgradnja in namestitev</a></li>
+                        <li ><a href="#/install/install">Izgradnja in namestitev</a></li>
                         <li ><a href="#/documentation">Dokumentacija</a></li>
                         <li ><a href="#/thanks-to">Zahvale/Zasluge</a></li>
                     </ul>    	<!-- end ul -->
@@ -139,20 +60,14 @@
         </header>
         <!-- END  header, logo,  top menu -->
         <!-- end header -->
-
-
-
         <main id="content" class="group" role="main">
-
-
             <div  id="entryPage" >
 
             </div>
+            <div  id="entryTOC" >
+
+            </div>
             <!-- end .main -->	
-
-
-
-
         </main>
         <!-- end #content -->
 

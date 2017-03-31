@@ -47,7 +47,7 @@ var jrcxslt = {
         var xml = this.loadXMLDoc(xsdfile);
         var xsl = this.loadXMLDoc(xsltfile);
 // code for IE
-        if (window.ActiveXObject || xhttp.responseType == "msxml-document")
+        if (window.ActiveXObject || xhttp.responseType === "msxml-document")
         {
             ex = xml.transformNode(xsl);
             div.innerHTML = ex;
