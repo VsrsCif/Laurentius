@@ -3,7 +3,7 @@
 
 quit () {
 	echo "\nUsage:\n"
-	echo "laurentius-demo.sh --init [DOMAIN] -l [LAU_HOME]\n"
+	echo "laurentius-demo.sh --init -d [DOMAIN] -l [LAU_HOME]\n"
 	echo "  --init  initialize laurentius (database and demo data are loaded to database)"
 	echo "  -d DOMAIN  -  if --init is setted than domain must be given (ex.: company.org, test-bank.org, etc.)"
 	echo "  -l LAU_HOME  - path tom application home folder  (laurentius.home) if is not given and --init is setted than '[WILDFLY_HOME]\standalone\data\' is setted."	

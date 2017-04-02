@@ -1,15 +1,11 @@
 package si.laurentius.msh.web.gui;
 
-import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import org.primefaces.event.TabChangeEvent;
-import si.laurentius.commons.SEDJNDI;
-import si.laurentius.commons.SEDSystemProperties;
-import si.laurentius.commons.interfaces.SEDInitDataInterface;
 import si.laurentius.commons.utils.SEDLogger;
 
 /**

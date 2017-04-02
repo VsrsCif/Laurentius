@@ -40,7 +40,7 @@ public class SEDRequestUtils {
    * @param mail
    * @throws SEDException_Exception
    */
-  public static void checkOutMailForMissingData(OutMail mail) throws SEDException_Exception {
+  public static void validateMailForMissingData(OutMail mail) throws SEDException_Exception {
     List<String> errLst = new ArrayList<>();
     if (Utils.isEmptyString(mail.getSenderMessageId())) {
       errLst.add("SenderMessageId");
@@ -119,30 +119,10 @@ public class SEDRequestUtils {
    * @param address
    * @return
    */
-  public static boolean isValidMailAddress(String address) {
+  public static boolean isNotValidMailAddress(String address) {
     return address != null && EMAIL_PATTEREN.matcher(address).matches();
 
   }
 
-  /**
-   * Method checks input control parameters
-   *
-   * @param c
-   * @throws SEDException_Exception
-   */
-  public static void validateControl(Control c) throws SEDException_Exception {
-
-    if (c == null) {
-      throw SEDRequestUtils.createSEDException("SubmitMailRequest/Control",
-          SEDExceptionCode.MISSING_DATA);
-    }
-    if (c.getApplicationId() == null) {
-      throw SEDRequestUtils.createSEDException("SubmitMailRequest/Control/@userId",
-          SEDExceptionCode.MISSING_DATA);
-    }
-    if (c.getUserId() == null) {
-      throw SEDRequestUtils.createSEDException("SubmitMailRequest/Control/@getApplicationId",
-          SEDExceptionCode.MISSING_DATA);
-    }
-  }
+  
 }

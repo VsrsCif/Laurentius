@@ -82,6 +82,10 @@ public class SettingsMenuView implements Serializable {
     TreeNode users = new DefaultTreeNode(new MenuItem("Users",
             AppConstant.S_PANEL_ADMIN_USERS, "ui-icon-svg-users ui-icon-size-22"),
             root);
+    
+     TreeNode appl = new DefaultTreeNode(new MenuItem("Applications",
+            AppConstant.S_PANEL_ADMIN_APPL, "ui-icon-svg-cms ui-icon-size-22"),
+            root);
 
     //-certicates
     TreeNode certs = new DefaultTreeNode(new MenuItem("Certificates",

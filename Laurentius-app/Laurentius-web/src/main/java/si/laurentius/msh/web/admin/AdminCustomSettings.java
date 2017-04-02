@@ -12,6 +12,7 @@ import si.laurentius.commons.interfaces.DBSettingsInterface;
 import si.laurentius.commons.interfaces.SEDInitDataInterface;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.Utils;
+import si.laurentius.msh.web.abst.AbstractJSFView;
 
 /**
  *
@@ -19,7 +20,7 @@ import si.laurentius.commons.utils.Utils;
  */
 @SessionScoped
 @ManagedBean(name = "adminCustomSettings")
-public class AdminCustomSettings {
+public class AdminCustomSettings extends AbstractJSFView{
 
   private static final SEDLogger LOG = new SEDLogger(AdminCustomSettings.class);
 
@@ -148,7 +149,10 @@ public class AdminCustomSettings {
       msedSettingsData.setSEDProperty(ProxySettings.SOCKS_PORT, mpsProxy.
               getSocksPort() + "", DBSettingsInterface.SYSTEM_SETTINGS);
     }
-    RequestContext.getCurrentInstance().addCallbackParam("saved", true);
+    
+    addCallbackParam("saved", true);
+    update(":forms:SettingsCustomPanel:settingsPanel:sysProperties", ":forms:SettingsCustomPanel:settingsPanel:sedProperties");
+    
   }
 
   protected int getPort(String port) {

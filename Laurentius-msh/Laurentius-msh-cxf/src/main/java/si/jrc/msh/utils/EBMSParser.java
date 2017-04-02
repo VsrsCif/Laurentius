@@ -102,6 +102,9 @@ public class EBMSParser {
               Date dt = DatatypeConverter.parseDateTime(p.getValue()).getTime();
               mshmail.setSubmittedDate(dt);
               break;
+               case EBMSConstants.EBMS_PROPERTY_SENDER_MSG_ID:
+               mshmail.setSenderMessageId(p.getValue());
+              break;
             default:
               MSHInProperty mp = new MSHInProperty();
               mp.setName(p.getName());

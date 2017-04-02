@@ -41,6 +41,14 @@
                             <f:selectItems value="#{LookupsData.PModeActionRoles}" var="ar" 
                                            itemLabel="#{ar.value}" itemValue="#{ar.value}"/>
                         </p:selectOneMenu>
+                        
+                        <h:outputText value="#{msg['MessageType']}:" />
+                        <p:selectOneMenu value="#{pModeServiceGraphView.editable.messageType}" 
+                                         style="width:100%" 
+                                         >
+                            <f:selectItems value="#{LookupsData.PModeMessageTypes}" var="ar" 
+                                           itemLabel="#{ar.value}" itemValue="#{ar.value}"/>
+                        </p:selectOneMenu>
 
                         <h:outputText value="#{msg['MaxPayloadSize']}:" />
                         <h:inputText  value="#{pModeServiceGraphView.editable.payloadProfiles.maxSize}" style="width: 100%"  />

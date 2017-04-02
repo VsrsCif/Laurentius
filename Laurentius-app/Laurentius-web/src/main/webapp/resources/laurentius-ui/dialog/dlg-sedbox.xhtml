@@ -15,7 +15,7 @@
                             formId="boxDialogForm"
                             dialogTitle="#{msg['SEDBoxDialog']}" 
                             editable="#{adminSEDBoxView.editable}"
-                            width="600"
+                            width="800"
                             height="200"
                             updateOnSave=":forms:SettingsSEDBoxes:sedboxPanel:TblSedBox"
                             onConfirmAction="#{adminSEDBoxView.addOrUpdateEditable()}"
@@ -40,18 +40,33 @@
                     </p:panelGrid>
 
                 </p:layoutUnit>
-                <p:layoutUnit position="east" rendered="#{not empty adminSEDBoxView.editable}"  size="180" maxSize="180" minSize="180" >
-                    <p:dataTable var="usr" value="#{adminSEDBoxView.editableUsers}"
-                                 style="padding: 0px; margin: 0px"
-                                 scrollable="true" 
-                                 scrollHeight="100%"
-                                 rows="100">
-                        <f:facet name="header"><p:outputLabel value="#{msg['Users']}" /></f:facet>
-                        <p:column headerText="#{msg['Username']}" width="100">
-                            <h:outputText value="#{usr.userId}" />
-                        </p:column>              
+                <p:layoutUnit position="east" rendered="#{not empty adminSEDBoxView.editable}"  size="400" maxSize="400" minSize="400" >
+                    <p:panelGrid style="width: 100%; height: 100%" columns="2">
+                        <p:dataTable var="usr" value="#{adminSEDBoxView.editableUsers}"
+                                     style="padding: 0px; margin: 0px"
+                                     scrollable="true" 
+                                     scrollHeight="100%"
+                                     rows="100">
+                            <f:facet name="header"><p:outputLabel value="#{msg['Users']}" /></f:facet>
+                            <p:column headerText="#{msg['Username']}" width="100">
+                                <h:outputText value="#{usr.userId}" />
+                            </p:column>              
 
-                    </p:dataTable>
+                        </p:dataTable>
+
+
+                        <p:dataTable var="usr" value="#{adminSEDBoxView.editableApplications}"
+                                     style="padding: 0px; margin: 0px"
+                                     scrollable="true" 
+                                     scrollHeight="100%"
+                                     rows="100">
+                            <f:facet name="header"><p:outputLabel value="#{msg['Applications']}" /></f:facet>
+                            <p:column headerText="#{msg['ApplicationId']}" width="100">
+                                <h:outputText value="#{usr.applicationId}" />
+                            </p:column>              
+
+                        </p:dataTable>
+                    </p:panelGrid>
                 </p:layoutUnit>
             </p:layout>               
         </dlg:dlg-abstract>

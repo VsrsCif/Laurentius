@@ -14,6 +14,7 @@
  */
 package si.laurentius.commons.utils;
 
+import java.util.Objects;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -95,6 +96,14 @@ public class Utils {
    */
   public static boolean isEmptyString(String strVal) {
     return strVal == null || strVal.trim().isEmpty();
+  }
+  
+  public static boolean equalsEmptyString(String str1, String str2){
+    return Objects.equals(str1, str2)
+                ||  (isEmptyString(str1) // test equality for empty string
+              &&  isEmptyString(str2));
+              
+  
   }
 
   public static String getUUID(String prefix) {

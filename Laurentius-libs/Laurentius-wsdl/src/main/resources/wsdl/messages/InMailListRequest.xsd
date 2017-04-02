@@ -74,18 +74,17 @@ Copyright 2015, Supreme Court Republic of Slovenia
                                 <xs:documentation>Če je podatek "vnesen", servis vrača vse pošiljke z datumom sprejema manjšim  od vnesenega datuma </xs:documentation>
                             </xs:annotation>
                         </xs:attribute>
-                        <xs:attribute name="status" use="optional">
+                        <xs:attribute name="status" use="optional" base="xs:token" default="RECEIVED" >
                             <xs:annotation>
-                                <xs:documentation>Status pošiljke. Če status ni podan  je prevzeti status za pošiljke za prevzem. 
+                                <xs:documentation>Status pošiljke. Če status ni podan  je prevzeti status za pošiljke za 'RECEIVED'  
                                 </xs:documentation>
                             </xs:annotation>
                             <xs:simpleType>
                                 <xs:restriction base="xs:token">
-                                    <xs:length value="20"/>
-                                    <xs:enumeration value="received"/>
-                                    <xs:enumeration value="processed"/>                                    
+                                    <xs:maxLength value="32"/>
                                 </xs:restriction>
                             </xs:simpleType>
+                            
                         </xs:attribute>
                         <xs:attribute name="service" use="required">
                             <xs:annotation>

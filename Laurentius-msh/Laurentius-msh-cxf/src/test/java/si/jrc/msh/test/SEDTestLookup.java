@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import javax.xml.bind.JAXBException;
+import si.laurentius.application.SEDApplication;
 import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.cron.SEDCronJob;
 import si.laurentius.ebox.SEDBox;
@@ -41,6 +42,11 @@ public class SEDTestLookup implements SEDLookupsInterface {
   }
 
   @Override
+  public boolean addSEDApplication(SEDApplication sb) {
+    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+  }
+
+  @Override
   public boolean addSEDInterceptor(SEDInterceptor sb) {
     throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
   }
@@ -52,6 +58,16 @@ public class SEDTestLookup implements SEDLookupsInterface {
 
   @Override
   public void clearCache(Class cls) {
+    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+  }
+
+  @Override
+  public SEDApplication getSEDApplicationById(String id) {
+    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+  }
+
+  @Override
+  public List<SEDApplication> getSEDApplications() {
     throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
   }
 
@@ -210,6 +226,11 @@ public class SEDTestLookup implements SEDLookupsInterface {
   }
 
   @Override
+  public boolean removeSEDApplication(SEDApplication sb) {
+    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+  }
+
+  @Override
   public boolean removeSEDBox(SEDBox sb) {
     return remove(sb);
   }
@@ -227,6 +248,11 @@ public class SEDTestLookup implements SEDLookupsInterface {
   @Override
   public boolean removeSEDUser(SEDUser sb) {
     return remove(sb);
+  }
+
+  @Override
+  public boolean updateSEDApplication(SEDApplication sb) {
+    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
   }
 
   @Override

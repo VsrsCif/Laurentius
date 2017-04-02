@@ -84,7 +84,7 @@ public class CRLVerifier {
    * @throws CRLException
    * @throws NamingException
    */
-  public static X509CRL downloadCRL(final String crlURL, final Proxy proxy)
+  public static X509CRL downloadCRL(final String crlURL)
           throws IOException,
           CertificateException, CRLException,
           NamingException {
@@ -103,8 +103,10 @@ public class CRLVerifier {
             || crlURL.startsWith(S_PROTOCOL_HTTPS.toUpperCase())) {
       URL url = new URL(crlprv);
       CertificateFactory cf = CertificateFactory.getInstance(CF_X509);
-      URLConnection uc = proxy == null ? url.openConnection() : url.
-              openConnection(proxy);
+      URLConnection uc = url.openConnection();
+     /* URLConnection uc = proxy == null ? url.openConnection() : url.
+              openConnection(proxy);*/
+     
       uc.setReadTimeout(10000);
       uc.connect();
       try (InputStream crlStream = uc.getInputStream()) {
@@ -117,13 +119,13 @@ public class CRLVerifier {
       env.put(Context.INITIAL_CONTEXT_FACTORY,
               S_INITIAL_CONTEXT_FACTORY_NAME);
       env.put(Context.PROVIDER_URL, crlURL);
-      if (proxy != null && proxy.address()!=null) {
+      /*if (proxy != null && proxy.address()!=null) {
         InetSocketAddress isa = (InetSocketAddress) proxy.address();
         env.put("http.proxyHost", isa.getHostString());
         env.put("https.proxyHost", isa.getHostString());
         env.put("http.proxyPort", isa.getPort());
         env.put("https.proxyPort", isa.getPort());
-      }
+      }*/
 
       DirContext ctx = new InitialDirContext(env);
       Attributes avals = ctx.getAttributes("");

@@ -97,6 +97,7 @@ copy "%LAU_BUNDLE%\deployments\laurentius-ws.war"  "%WILDFLY_HOME%\standalone\de
 copy "%LAU_BUNDLE%\deployments\laurentius-web.war"  "%WILDFLY_HOME%\standalone\deployments\"
 copy "%LAU_BUNDLE%\deployments\plugin-zpp.war"  "%WILDFLY_HOME%\standalone\deployments\"
 copy "%LAU_BUNDLE%\deployments\plugin-testcase.war"  "%WILDFLY_HOME%\standalone\deployments\"
+copy "%LAU_BUNDLE%\deployments\plugin-basic.war  "%WILDFLY_HOME%\standalone\deployments\"
 
 
 

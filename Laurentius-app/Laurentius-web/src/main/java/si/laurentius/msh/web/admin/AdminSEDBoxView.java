@@ -24,6 +24,7 @@ import java.util.regex.Pattern;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import si.laurentius.application.SEDApplication;
 import si.laurentius.ebox.SEDBox;
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.SEDSystemProperties;
@@ -205,6 +206,26 @@ public class AdminSEDBoxView extends AbstractAdminJSFView<SEDBox> {
       List<SEDUser> lstusr = new ArrayList<>();
       List<SEDUser> lst = mdbLookups.getSEDUsers();
       for (SEDUser u : lst) {
+        for (SEDBox s : u.getSEDBoxes()) {
+          if (Objects.equals(s.getLocalBoxName(), ed.getLocalBoxName())) {
+            lstusr.add(u);
+            break;
+          }
+        }
+      }
+      return lstusr;
+    } else {
+      return Collections.emptyList();
+    }
+
+  }
+  
+  public List<SEDApplication> getEditableApplications() {
+    SEDBox ed = getEditable();
+    if (ed != null) {
+      List<SEDApplication> lstusr = new ArrayList<>();
+      List<SEDApplication> lst = mdbLookups.getSEDApplications();
+      for (SEDApplication u : lst) {
         for (SEDBox s : u.getSEDBoxes()) {
           if (Objects.equals(s.getLocalBoxName(), ed.getLocalBoxName())) {
             lstusr.add(u);

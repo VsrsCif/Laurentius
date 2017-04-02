@@ -19,6 +19,7 @@ import javax.persistence.Persistence;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.BeforeClass;
+import si.laurentius.application.SEDApplication;
 import si.laurentius.commons.utils.xml.XMLUtils;
 import si.laurentius.cron.SEDCronJob;
 import si.laurentius.cron.SEDTaskProperty;
@@ -272,6 +273,37 @@ public class SEDLookupsTest extends TestUtils {
     assertEquals(init.getSEDBoxes().size(), res.getSEDBoxes().size());
   }
 
+  
+  @Test
+  public void testSEDApplication() throws Exception {
+    System.out.println("addSEDApplication");
+    SEDApplication init = TestLookupUtils.createSEDApplication(true);
+    // persist setboxes
+    for (SEDBox sb : init.getSEDBoxes()) {
+      mTestInstance.addSEDBox(sb);
+    }
+
+    boolean result = mTestInstance.addSEDApplication(init);
+    assertTrue(result);
+
+    // force to read from db
+    mTestInstance.clearAllCache();
+    mTestInstance.memEManager.clear();
+
+    SEDApplication res = mTestInstance.getSEDApplicationById(init.getApplicationId());
+    assertNotEquals(init, res);
+    assertNotNull(res);
+    assertEquals(init.getName(), res.getName());
+    assertEquals(init.getApplicationId(), res.getApplicationId());
+    assertEquals(init.getActiveFromDate(), res.getActiveFromDate());
+    assertEquals(init.getActiveToDate(), res.getActiveToDate());
+
+    assertEquals(init.getDesc(), res.getDesc());
+    assertEquals(init.getEmail(), res.getEmail());
+    assertEquals(init.getSEDBoxes().size(), res.getSEDBoxes().size());
+  }
+  
+  
   @Test
   public void testGetSEDBoxByAddressName() throws Exception {
     System.out.println("getSEDBoxByAddressName");
@@ -399,7 +431,34 @@ public class SEDLookupsTest extends TestUtils {
     assertEquals(init.getUserId(), res.getUserId());
 
   }
+  
+  
+  @Test
+  public void testGetSEDApplicationById() throws Exception {
+    System.out.println("testGetSEDApplicationById");
+    SEDApplication init = TestLookupUtils.createSEDApplication(false);
+    boolean result = mTestInstance.addSEDApplication(init);
+    assertTrue(result);
 
+    SEDApplication res = mTestInstance.getSEDApplicationById(init.getApplicationId());
+
+    assertNotNull(res);
+    assertEquals(init.getName(), res.getName());
+    assertEquals(init.getApplicationId(), res.getApplicationId());
+
+  }
+
+  @Test
+  public void testGetSEDApplications() throws Exception {
+    System.out.println("testGetSEDApplications");
+    int iSize = mTestInstance.getSEDApplications().size();
+    int iCnt = 4;
+    for (int i = 0; i < iCnt; i++) {
+      mTestInstance.addSEDApplication(TestLookupUtils.createSEDApplication(false));
+    }
+    assertEquals(iSize + iCnt, mTestInstance.getSEDApplications().size());
+  }
+  
   @Test
   public void testGetSEDUsers() throws Exception {
     System.out.println("getSEDUsers");
@@ -410,6 +469,8 @@ public class SEDLookupsTest extends TestUtils {
     }
     assertEquals(iSize + iCnt, mTestInstance.getSEDUsers().size());
   }
+  
+  
 
   @Test
   public void testRemoveSEDBox() throws Exception {
@@ -428,6 +489,8 @@ public class SEDLookupsTest extends TestUtils {
     assertNull(sb3);
 
   }
+  
+  
 
   @Test
   public void testRemoveSEDCronJob() throws Exception {
@@ -503,6 +566,28 @@ public class SEDLookupsTest extends TestUtils {
     assertNull(sb3);
 
   }
+  
+  @Test
+  public void testRemoveSEDApplication() throws Exception {
+    System.out.println("testRemoveSEDApplication");
+
+    SEDApplication init = TestLookupUtils.createSEDApplication(false);
+    boolean result = mTestInstance.addSEDApplication(init);
+    assertTrue(result);
+
+    SEDApplication sb2 = mTestInstance.getSEDApplicationById(init.getApplicationId());
+    assertNotNull(sb2);
+
+    result = mTestInstance.removeSEDApplication(sb2);
+    assertTrue(result);
+
+    SEDApplication sb3 = mTestInstance.getSEDApplicationById(init.getApplicationId());
+    assertNull(sb3);
+
+  }
+  
+  
+  
 
   @Test
   public void testUpdateSEDBox() throws Exception {
@@ -966,6 +1051,52 @@ public class SEDLookupsTest extends TestUtils {
     assertNotNull(res3);
     assertEquals(name, res3.getName());
     assertEquals(init.getUserId(), res3.getUserId());
+    assertEquals(dtFrom, res3.getActiveFromDate());
+    assertEquals(dtTo, res3.getActiveToDate());
+    assertEquals(desc, res3.getDesc());
+    assertEquals(email, res3.getEmail());
+    assertEquals(init.getSEDBoxes().size(), res3.getSEDBoxes().size());
+
+  }
+  
+   @Test
+  public void testUpdateSEDApplication() throws Exception {
+    System.out.println("testUpdateSEDApplication");
+    SEDApplication init = TestLookupUtils.createSEDApplication(true);
+    // persist setboxes
+    for (SEDBox sb : init.getSEDBoxes()) {
+      mTestInstance.addSEDBox(sb);
+    }
+
+    boolean result = mTestInstance.addSEDApplication(init);
+    assertTrue(result);
+
+    SEDApplication res = mTestInstance.getSEDApplicationById(init.getApplicationId());
+    res = XMLUtils.deepCopyJAXB(res);
+    String name = res.getName() + "_test";
+    String desc = res.getDesc() + "_test";
+    String email = res.getEmail() + "_test";
+
+    Calendar c = Calendar.getInstance();
+    c.add(Calendar.DAY_OF_YEAR, -12);
+    Date dtFrom = c.getTime();
+    Date dtTo = null;
+
+    res.setActiveFromDate(dtFrom);
+    res.setActiveToDate(dtTo);
+
+    res.setDesc(desc);
+    res.setEmail(email);
+    res.setName(name);
+
+    mTestInstance.updateSEDApplication(res);
+
+    SEDApplication res3 = mTestInstance.getSEDApplicationById(init.
+            getApplicationId());
+
+    assertNotNull(res3);
+    assertEquals(name, res3.getName());
+    assertEquals(init.getApplicationId(), res3.getApplicationId());
     assertEquals(dtFrom, res3.getActiveFromDate());
     assertEquals(dtTo, res3.getActiveToDate());
     assertEquals(desc, res3.getDesc());

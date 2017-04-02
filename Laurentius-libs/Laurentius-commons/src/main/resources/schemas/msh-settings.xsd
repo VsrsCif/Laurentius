@@ -155,6 +155,14 @@
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
+		<xs:attribute name="messageType">
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="userMessage"/>
+					<xs:enumeration value="signalMessage"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
 	</xs:complexType>
 	<xs:complexType name="ServiceType">
 		<xs:annotation>

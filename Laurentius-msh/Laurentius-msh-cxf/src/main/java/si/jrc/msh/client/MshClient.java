@@ -19,6 +19,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.TrustManager;
 import javax.xml.namespace.QName;
@@ -39,7 +41,6 @@ import org.apache.cxf.staxutils.W3CDOMStreamWriter;
 import org.apache.cxf.transport.ConduitInitiatorManager;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
-import org.apache.cxf.transports.http.configuration.ProxyServerType;
 import si.laurentius.msh.outbox.mail.MSHOutMail;
 import si.laurentius.msh.pmode.PartyIdentitySet;
 import si.laurentius.msh.pmode.Protocol;
@@ -62,7 +63,6 @@ import si.laurentius.commons.enums.MimeValue;
 import si.laurentius.commons.cxf.SoapUtils;
 import si.laurentius.commons.exception.SEDSecurityException;
 import si.laurentius.commons.exception.StorageException;
-import si.laurentius.commons.interfaces.SEDCertStoreInterface;
 import si.laurentius.commons.interfaces.SEDCertUtilsInterface;
 import si.laurentius.commons.pmode.EBMSMessageContext;
 import si.laurentius.commons.utils.SEDLogger;
@@ -126,6 +126,16 @@ public class MshClient {
     // --------------------------------------------------------------------
     // create MTOM service
     String url = protocol.getAddress().getValue();
+    URL u = null;
+    try {
+      u = new URL(url);
+    } catch (MalformedURLException ex) {
+      throw new EBMSError(EBMSErrorCode.PModeConfigurationError, messageId,
+              "Invalid address" + url, ex,
+              SoapFault.FAULT_CODE_CLIENT);
+
+    }
+
     QName serviceName1 = new QName("", "");
     QName portName1 = new QName("", "");
     Service s = Service.create(serviceName1);
@@ -157,52 +167,72 @@ public class MshClient {
     cxfClient.getOutFaultInterceptors().add(new EBMSOutFaultInterceptor());
     cxfClient.getOutFaultInterceptors().add(new MSHPluginOutFaultInterceptor());
 
-    // test smtp
-    if (url.startsWith("smtp://")) {
-      Bus bus = dimpl.getClient().getBus();
-      ConduitInitiatorManager extension = bus.getExtension(
-              ConduitInitiatorManager.class);
-      extension.registerConduitInitiator("http://schemas.xmlsoap.org/soap/http",
-              new SMTPTransportFactory());
-      SMTPConduit smtp = (SMTPConduit) cxfClient.getConduit();
-      smtp.setSetJNDISession("java:jboss/mail/Default");
-    } else {
-      HTTPConduit http = (HTTPConduit) cxfClient.getConduit();
-      // --------------------------------------------------------------------
-      // set TLS
-      if (protocol.getTLS() != null) {
-        setupTLS(messageId, http, protocol.getTLS(), sec);
+    
+    String url_protocol = u.getProtocol().toLowerCase();
+    switch (url_protocol) {
+      case "smtp": {// test smtp
+        Bus bus = dimpl.getClient().getBus();
+        ConduitInitiatorManager extension = bus.getExtension(
+                ConduitInitiatorManager.class);
+        extension.registerConduitInitiator(
+                "http://schemas.xmlsoap.org/soap/http",
+                new SMTPTransportFactory());
+        SMTPConduit smtp = (SMTPConduit) cxfClient.getConduit();
+        smtp.setSetJNDISession("java:jboss/mail/Default");
       }
-      // --------------------------------------------------------------------
-      // set http client policy
-      HTTPClientPolicy httpClientPolicy = new HTTPClientPolicy();
-      if (protocol.getProxy() != null && !Utils.isEmptyString(protocol.
-              getProxy().getHost())) {
-        httpClientPolicy.setProxyServer(protocol.getProxy().getHost());
-        if (protocol.getProxy().getPort() != null) {
-          httpClientPolicy.setProxyServerPort(protocol.getProxy().getPort());
+      break;
+      case "https": {
+        // --------------------------------------------------------------------
+        // set TLS
+        if (protocol.getTLS() != null
+                && (!Utils.isEmptyString(protocol.getTLS().
+                        getServerTrustCertAlias()))
+                || !Utils.isEmptyString(protocol.getTLS().getClientKeyAlias())) {
+          setupTLS(messageId, (HTTPConduit) cxfClient.getConduit(), protocol.
+                  getTLS(), sec);
         }
-        httpClientPolicy.setProxyServerType(Utils.isEmptyString(protocol.
-                getProxy().getType())
-                        ? ProxyServerType.HTTP
-                        : protocol.getProxy().getType().
-                                equalsIgnoreCase("SOCKS")
-                        ? ProxyServerType.SOCKS : ProxyServerType.HTTP);
+      } // do not break continue with http settings
+      case "http": {
+        HTTPConduit http = (HTTPConduit) cxfClient.getConduit();
+        // --------------------------------------------------------------------
+        // set http client policy
+        HTTPClientPolicy httpClientPolicy = new HTTPClientPolicy();
+        /*
+        if (protocol.getProxy() != null && !Utils.isEmptyString(protocol.
+                getProxy().getHost())) {
+          httpClientPolicy.setProxyServer(protocol.getProxy().getHost());
+          if (protocol.getProxy().getPort() != null) {
+            httpClientPolicy.setProxyServerPort(protocol.getProxy().getPort());
+          }
+          httpClientPolicy.setProxyServerType(Utils.isEmptyString(protocol.
+                  getProxy().getType())
+                          ? ProxyServerType.HTTP
+                          : protocol.getProxy().getType().
+                                  equalsIgnoreCase("SOCKS")
+                          ? ProxyServerType.SOCKS : ProxyServerType.HTTP);
+        }*/
+
+        httpClientPolicy.setConnectionTimeout(protocol.getAddress().
+                getConnectionTimeout() != null
+                        ? protocol.getAddress().getConnectionTimeout() : 120000);
+        httpClientPolicy.setReceiveTimeout(protocol.getAddress().
+                getReceiveTimeout() != null
+                        ? protocol.getAddress().getReceiveTimeout() : 120000);
+        httpClientPolicy.setAllowChunking(
+                protocol.getAddress().getChunked() != null
+                ? protocol.getAddress().getChunked() : false);
+
+        // set http Policy
+        http.setClient(httpClientPolicy);
+        break;
       }
-
-      httpClientPolicy.setConnectionTimeout(protocol.getAddress().
-              getConnectionTimeout() != null
-                      ? protocol.getAddress().getConnectionTimeout() : 120000);
-      httpClientPolicy.setReceiveTimeout(protocol.getAddress().
-              getReceiveTimeout() != null
-                      ? protocol.getAddress().getReceiveTimeout() : 120000);
-      httpClientPolicy.setAllowChunking(
-              protocol.getAddress().getChunked() != null
-              ? protocol.getAddress().getChunked() : false);
-
-      // set http Policy
-      http.setClient(httpClientPolicy);
+      default: {
+       throw new EBMSError(EBMSErrorCode.PModeConfigurationError, messageId,
+              "Invalid protocol: " + url_protocol + " for address: " + url,
+              SoapFault.FAULT_CODE_CLIENT);
+      }
     }
+
     return dispSOAPMsg;
   }
 

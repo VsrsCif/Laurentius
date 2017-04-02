@@ -39,7 +39,7 @@
                                  >
                         <p:ajax event="rowSelect" 
                                 listener="#{OutMailDataView.onRowSelect}" 
-                                update="forms:OutMailPanel:OutMailPanelData:OutMailTab" />
+                                update=":forms:OutMailPanel:OutMailPanelData:OutMailTab" />
                          <p:ajax event="page"
                                 onstart="PF('blockMainPanel').show();"
                                 oncomplete="PF('blockMainPanel').hide();"

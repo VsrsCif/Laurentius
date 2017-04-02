@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 (http://www.altova.com) by XMLSpy 2007 Professional Ed., Installed for 5 users (with SMP from 2007-02-06 to 2008-02-07 (CIF VSRS) -->
+<xs:schema xmlns:tns="http://meps.laurentius.si/report" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://meps.laurentius.si/report">
+	<xs:complexType name="MailStatusReport">
+		<xs:sequence>
+			<xs:element name="MailStatus" type="tns:Status" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="date" type="xs:date" use="required">
+			<xs:annotation>
+				<xs:documentation>Date when status accured for all listed mails</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="mepsPackageCode" type="xs:integer" use="required">
+			<xs:annotation>
+				<xs:documentation>vsrs package id in which listed  mails were sent to process
+</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="postalPackageCode" type="xs:string" use="required">
+			<xs:annotation>
+				<xs:documentation>Post book id defined by Posta Slovenije d.o.o.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="Status">
+		<xs:attribute name="id" type="xs:integer" use="required">
+			<xs:annotation>
+				<xs:documentation>mail id</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="status" use="required">
+			<xs:annotation>
+				<xs:documentation>Status</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:token">					
+					<xs:enumeration value="PROCESSED">
+						<xs:annotation>
+							<xs:documentation source="Pošiljka je kuvertirana in oddana na pošto"/>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="ERROR">
+						<xs:annotation>
+							<xs:documentation source="Napaka pri kuvertiranju pošiljke - pretežka, slab pdf, itd"/>
+						</xs:annotation>
+					</xs:enumeration>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="errDesc">
+			<xs:annotation>
+				<xs:documentation>error description</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="500"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="mass" type="xs:integer" use="optional">
+			<xs:annotation>
+				<xs:documentation>Mass of mail in grams measured by contractor </xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="contentPageCount" type="xs:integer" use="optional">
+			<xs:annotation>
+				<xs:documentation>Number of  sheet of papers on which document had been printed </xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+</xs:schema>

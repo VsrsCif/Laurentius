@@ -2,48 +2,64 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:sui="http://java.sun.com/jsf/composite/gui"
       xmlns:p="http://primefaces.org/ui"
-
+      xmlns:dlg="http://java.sun.com/jsf/composite/gui/dialog"     
       >
 
     <h:head>
-        <title>SED User GUI</title>
-        <link href="resources/css/main.css" rel="stylesheet" />
-        <link href="resources/css/icons.css" rel="stylesheet" />
-
+        <title>Test cases</title>
+        <h:outputStylesheet name="css/main.css" />
+        <h:outputStylesheet name="css/icons.css" />
     </h:head>
 
     <h:body>
-        <h:form id="meps-forms" >
-
-            <p:growl id="messages" showDetail="true" />
+        <f:metadata>
+            <f:viewParam name="page" value="#{MEPSPluginData.currentPanel}" />
+            <f:viewParam name="navigator" value="#{MEPSPluginData.showNavigator}" />
+        </f:metadata>
+        <h:form id="bscform" >
+            <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
             <!-- main window -->    
-            <p:layout id="MEPSPlugin" >
+            <p:layout  style="min-width:400px;min-height:400px;"  fullPage="true" >
 
-                <p:layoutUnit position="center"   >
+                <p:layoutUnit  rendered="#{MEPSPluginData.showNavigator}" position="west"  size="200" resizable="true" closable="true" collapsible="true" >        
+                    <p:accordionPanel id="toolbars" >
 
-                    <p:panelGrid  columns="2" columnClasses="label,value" style="width: 580px">
-                        <f:facet name="header">
+                        <p:tab id="Instances"  >
+                            <f:facet name="title">
 
-                            <h:outputText value="Plugin" />
+                                <h:graphicImage value="#{resource['images:/process.svg']}" width="22" height="22" />
+                                <h:outputText value="#{msg['InMailProcess']}" />                                 
 
-                        </f:facet>
+                            </f:facet>
+
+                            <p:menu class="ui-accordion-button" style="width: 100%">
 
 
 
-                        <h:outputText value="MEPS-home" />
-                        <h:inputText value="" style="width: 100%"/>
+                                <p:menuitem value="#{msg['tEST']}" 
+                                            icon="ui-icon-svg-xslt ui-icon-size-22" 
+                                            actionListener="#{MEPSPluginData.onToolbarButtonAction}" 
+                                            update=":bscform:MainPanel"
+                                            >
+                                    <f:attribute name="panel" value="#{AppConstant.s_PANEL_TEST}" />
+                                </p:menuitem>
+                            </p:menu>
 
-                        <h:outputText value="MEPS 1" />
-                        <h:inputText value="1" style="width: 100%"/>
+                        </p:tab>
+                    </p:accordionPanel>
 
-                        <h:outputText value="MEPS 2" />
-                        <h:inputText value="3" style="width: 100%"/>
-                    </p:panelGrid>
-                </p:layoutUnit>                       
+                </p:layoutUnit>    
+
+                <p:layoutUnit position="center"  >
+                    <h:outputText value="#{param['id']}" />
+                    <h:panelGroup id="MainPanel">
+                        <sui:panel-test id="pnlTest" rendered="#{MEPSPluginData.currentPanel.equalsIgnoreCase(AppConstant.s_PANEL_TEST)}"  />
+                    </h:panelGroup>
+                </p:layoutUnit>     
             </p:layout>
         </h:form>
-
+        <dlg:dlg-compose id="dlgCompose" />
 
     </h:body>
-</html>

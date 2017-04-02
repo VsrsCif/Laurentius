@@ -9,6 +9,7 @@
         <mapping-file>shared/hbm/msh-out-event.hbm.xml</mapping-file>
         <mapping-file>shared/hbm/msh-out-mail.hbm.xml</mapping-file>
         <mapping-file>shared/hbm/msh-out-payload.hbm.xml</mapping-file>
+        <mapping-file>shared/hbm/sed-application.hbm.xml</mapping-file>
         <mapping-file>shared/hbm/sed-property.hbm.xml</mapping-file>
         <mapping-file>shared/hbm/sed-cert-store.hbm.xml</mapping-file>
         <mapping-file>shared/hbm/sed-box.hbm.xml</mapping-file>

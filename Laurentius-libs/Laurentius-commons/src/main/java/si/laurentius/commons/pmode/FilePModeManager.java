@@ -43,6 +43,8 @@ import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.Utils;
 import java.util.Collections;
 import static java.lang.String.format;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import static si.laurentius.commons.pmode.FilePModeManager.LOG;
 import si.laurentius.commons.pmode.enums.ActionRole;
 import static si.laurentius.commons.utils.xml.XMLUtils.deserialize;
@@ -71,8 +73,7 @@ public class FilePModeManager implements PModeInterface {
   public FilePModeManager() {
   }
 
-  public FilePModeManager(InputStream is)
-          throws PModeException {
+  public FilePModeManager(InputStream is) {
     reload(is);
   }
 
@@ -84,7 +85,7 @@ public class FilePModeManager implements PModeInterface {
   public void addPMode(int i, PMode pmrNew) {
     for (PMode pm : getPModes()) {
       if (Objects.equals(pm.getId(), pmrNew.getId())) {
-        throw new PModeException(String.format(
+        throw new IllegalArgumentException(String.format(
                 "PMode with Id '%s' already exists!", pmrNew.getId()));
       }
     }
@@ -104,7 +105,7 @@ public class FilePModeManager implements PModeInterface {
   @Override
   public void addPartyIdentitySet(PartyIdentitySet val) {
     if (partyIdentitySetExists(val.getId())) {
-      throw new PModeException(String.format(
+      throw new IllegalArgumentException(String.format(
               "PartyIdentitySet with Id '%s' already exists!", val.getId()));
     }
 
@@ -120,7 +121,7 @@ public class FilePModeManager implements PModeInterface {
   public void addReceptionAwareness(ReceptionAwareness val) {
 
     if (getReceptionAwarenessById(val.getId()) != null) {
-      throw new PModeException(String.format(
+      throw new IllegalArgumentException(String.format(
               "ReceptionAwareness with Id '%s' already exists!", val.getId()));
     }
     if (mshSettings.getReceptionAwarenessPatterns() == null) {
@@ -135,7 +136,7 @@ public class FilePModeManager implements PModeInterface {
   @Override
   public void addSecurity(Security val) {
     if (getSecurityById(val.getId()) != null) {
-      throw new PModeException(String.format(
+      throw new IllegalArgumentException(String.format(
               "Security with Id '%s' already exists!", val.getId()));
     }
 
@@ -149,7 +150,7 @@ public class FilePModeManager implements PModeInterface {
   @Override
   public void addService(Service val) {
     if (getServiceById(val.getId()) != null) {
-      throw new PModeException(String.format(
+      throw new IllegalArgumentException(String.format(
               "Service with Id '%s' already exists!", val.getId()));
     }
     if (mshSettings.getServices() == null) {
@@ -157,10 +158,6 @@ public class FilePModeManager implements PModeInterface {
     }
     mshSettings.getServices().getServices().add(val);
     saveMSHSettings();
-  }
-
-  public void clear() {
-
   }
 
   @Override
@@ -182,14 +179,15 @@ public class FilePModeManager implements PModeInterface {
             getReceiverEBox());
     Service srv = getServiceById(mail.getService());
     Action act = PModeUtils.getActionFromService(mail.getAction(), srv);
-        //receiving role
-    String sendingRole = Objects.equals(act.getInvokeRole(), ActionRole.Executor.getValue())?
-            srv.getExecutor().getRole() : srv.getInitiator().getRole();
-    
-            
-    String recRole = Objects.equals(act.getInvokeRole(), ActionRole.Executor.getValue())?
-            srv.getInitiator().getRole() : srv.getExecutor().getRole();
-    
+    //receiving role
+    String sendingRole = Objects.equals(act.getInvokeRole(),
+            ActionRole.Executor.getValue())
+            ? srv.getExecutor().getRole() : srv.getInitiator().getRole();
+
+    String recRole = Objects.equals(act.getInvokeRole(), ActionRole.Executor.
+            getValue())
+                    ? srv.getInitiator().getRole() : srv.getExecutor().getRole();
+
     PMode pMode = getPModeForLocalPartyAsSender(sPID.getId(), sendingRole,
             rPID.getId(),
             mail.getService());
@@ -250,7 +248,6 @@ public class FilePModeManager implements PModeInterface {
         }
       }
     }
-
 
     // set context
     emc.setAction(act);
@@ -480,8 +477,9 @@ public class FilePModeManager implements PModeInterface {
         return pm;
       }
     }
-    throw new PModeException(String.format("No PartyIdentitySet for id: '%s'.",
-            id));
+    LOG.formatedWarning("No PartyIdentitySet for id: '%s'.",
+            id);
+    return null;
   }
 
   public boolean partyIdentitySetExists(String id) {
@@ -598,7 +596,7 @@ public class FilePModeManager implements PModeInterface {
     String localDomain = getLocalDomain();
 
     if (Utils.isEmptyString(localDomain)) {
-      throw new RuntimeException(
+      throw new PModeException(
               "Bad aplication configuratin. Missing domain parameter");
     }
 
@@ -684,8 +682,7 @@ public class FilePModeManager implements PModeInterface {
   }
 
   @Override
-  public Security getSecurityById(String securityId)
-          throws PModeException {
+  public Security getSecurityById(String securityId) {
 
     for (Security pm : getSecurities()) {
       if (Objects.equals(pm.getId(), securityId)) {
@@ -698,8 +695,7 @@ public class FilePModeManager implements PModeInterface {
   }
 
   @Override
-  public Service getServiceById(String serviceId)
-          throws PModeException {
+  public Service getServiceById(String serviceId) {
 
     for (Service pm : getServices()) {
       if (Objects.equals(pm.getId(), serviceId)) {
@@ -719,7 +715,8 @@ public class FilePModeManager implements PModeInterface {
 
     for (Service srv : getServices()) {
       if (!Objects.equals(srv.getServiceName(), serviceName)
-              || !Objects.equals(srv.getServiceType(), serviceType)) {
+          || !(Utils.equalsEmptyString(srv.getServiceType(), serviceType)) ) 
+              {
         continue;
       }
 
@@ -761,7 +758,7 @@ public class FilePModeManager implements PModeInterface {
       } catch (IOException ex) {
         String msg = "Error init PModes from file '" + pModeFile.
                 getAbsolutePath() + "'";
-        throw new PModeException(msg, ex);
+        throw new RuntimeException(msg, ex);
       }
     }
     LOG.logEnd(l);
@@ -774,16 +771,13 @@ public class FilePModeManager implements PModeInterface {
    * @param is
    * @throws PModeException
    */
-  public final void reload(InputStream is)
-          throws PModeException {
+  public final void reload(InputStream is) {
     long l = LOG.logStart();
-    clear();
-
     try {
       mshSettings = (MSHSetings) deserialize(is, MSHSetings.class);
     } catch (JAXBException ex) {
       String msg = "Error init MSH Settings!";
-      throw new PModeException(msg, ex);
+      throw new RuntimeException(msg, ex);
     }
     LOG.logEnd(l);
   }
@@ -861,10 +855,9 @@ public class FilePModeManager implements PModeInterface {
 
   /**
    *
-   * @throws PModeException
+   *
    */
-  public void saveMSHSettings()
-          throws PModeException {
+  public void saveMSHSettings() {
     long l = LOG.logStart();
     try {
 
@@ -883,12 +876,12 @@ public class FilePModeManager implements PModeInterface {
         serialize(mshSettings, out);
       } catch (JAXBException | FileNotFoundException ex) {
         String msg = "ERROR serialize PMODE: " + ex.getMessage();
-        throw new PModeException(msg, ex);
+        throw new RuntimeException(msg, ex);
       }
 
     } catch (IOException ex) {
       String msg = "ERROR saving file: " + ex.getMessage();
-      throw new PModeException(msg, ex);
+      throw new RuntimeException(msg, ex);
     }
     LOG.logEnd(l);
   }

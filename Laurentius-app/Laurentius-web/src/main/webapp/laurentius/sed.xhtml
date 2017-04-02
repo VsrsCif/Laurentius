@@ -74,6 +74,12 @@
                                                  actionListener="#{OutMailDataView.composeNewMail()}"
                                                  update=":dlgCompose:mailComposeForm"
                                                  oncomplete="PF('mailComposeDialog').show()"/>
+                                 <p:commandButton value="#{msg['TestAddress']}" styleClass="toolbar-Button"  
+                                                 rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_OUTBOX)}" 
+                                                 icon="ui-icon-size-22 ui-icon-svg-mail-send"
+                                                 actionListener="#{OutMailDataView.composeNewMail()}"
+                                                 update=":dlgTestAddress:testAddressDialogForm"
+                                                 oncomplete="PF('testAddressDialog').show()"/>
 
                                 <p:commandButton value="#{msg['Resend selected']}" styleClass="toolbar-Button" 
                                                  rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_OUTBOX)}"
@@ -167,8 +173,8 @@
                             <sui:settings-pmode-securities id="SettingsPModesSecurities" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_SETT_PMODE_SECURITIES)}"  />
                             <sui:settings-pmode-ra id="SettingsPModeReceptionAwarenesses" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_SETT_PMODE_AS4_RA)}"  />
                             <sui:settings-pmode id="SettingsPModes" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_SETT_PMODE)}"  />
-
                             <sui:settings-users id="SettingsUsers" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_ADMIN_USERS)}"  />
+                            <sui:settings-appl id="SettingsAppls" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_ADMIN_APPL)}"  />
                             <sui:settings-eboxes id="SettingsSEDBoxes" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_ADMIN_EBOXES)}"  />
                             <sui:settings-cron id="SettingsCron" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_ADMIN_CRON)}"  />
                             <sui:settings-plugins id="SettingsPlugin" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_ADMIN_PLUGIN)}"  />
@@ -230,7 +236,7 @@
                     </p:layoutUnit>
                     <p:layoutUnit position="west" resizable="false" size="320" minSize="320" maxSize="320">
                         <p:accordionPanel id="toolbars" >
-                            <p:ajax event="tabChange" listener="#{mainWindow.onToolbarTabChange}" update="forms:MainPanel forms:toolbar" />
+                            <p:ajax event="tabChange" listener="#{mainWindow.onToolbarTabChange}" update=":forms:MainPanel :forms:toolbar" />
                             <p:tab id="PANEL_INBOX"  >
                                 <f:facet name="title">
 
@@ -461,13 +467,13 @@
                                     <p:menuitem value="#{msg['CronExecutions']}" 
                                                 icon="ui-icon-svg-cron-exec ui-icon-size-22" 
                                                 actionListener="#{mainWindow.onToolbarButtonAction}"  
-                                                update="forms:MainPanel">
+                                                update=":forms:MainPanel">
                                         <f:attribute name="panel" value="PANEL_CRON_EXEC" />
                                     </p:menuitem>
                                     <p:menuitem value="#{msg['MonitorJMS']}" 
                                                 icon="ui-icon-svg-cron-exec ui-icon-size-22" 
                                                 actionListener="#{mainWindow.onToolbarButtonAction}"  
-                                                update="forms:MainPanel">
+                                                update=":forms:MainPanel">
                                         <f:attribute name="panel" value="PANEL_SETT_JMS" />
                                     </p:menuitem>
                                 </p:menu>
@@ -489,6 +495,7 @@
             <dlg:dlg-tasktype id="dlgTaskType" />
             <dlg:dlg-sedbox id="dlgsedbox" />
             <dlg:dlg-user id="dlguser" />
+            <dlg:dlg-application id="dlgappl" />
             <dlg:dlg-cron id="dlgcron" />
             <dlg:dlg-interceptor id="dlgintc" />
             <dlg:dlg-interceptor-rule id="dlgintcrule" />
@@ -498,7 +505,6 @@
             <dlg:dlg-export-outdata id="dlgExportOutData" />
             <dlg:dlg-export-indata id="dlgExportInData" />
             <dlg:dlg-pmode id="dlgPMode" />
-            <dlg:dlg-pmode-service id="dlgPModeService" />
             <dlg:dlg-pmode-service-graph id="dlgPModeServiceGraph" />
             <dlg:dlg-pmode-service-action id="dlgPModeServiceAction" />
             <dlg:dlg-pmode-action-payload id="dlgPModeActionPayload" />
@@ -507,7 +513,7 @@
             <dlg:dlg-pmode-as4-ra id="dlgPModeReceptionAwareness" />
             <dlg:dlg-pmode_xpath id="dlgPModeXPath" />
             <dlg:dlg-proxy id="dlgProxy" />
-            
+            <dlg:dlg-test-address id="dlgTestAddress" />
 
         </h:body>
     </f:view>

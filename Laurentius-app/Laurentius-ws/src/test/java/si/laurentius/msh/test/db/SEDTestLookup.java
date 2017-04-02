@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import javax.xml.bind.JAXBException;
+import si.laurentius.application.SEDApplication;
 import si.laurentius.cron.SEDCronJob;
 import si.laurentius.ebox.SEDBox;
 import si.laurentius.user.SEDUser;
@@ -41,6 +42,11 @@ public class SEDTestLookup implements SEDLookupsInterface {
   }
 
   @Override
+  public boolean addSEDApplication(SEDApplication sb) {
+    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+  }
+
+  @Override
   public boolean addSEDInterceptor(SEDInterceptor sb) {
     throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
   }
@@ -53,6 +59,27 @@ public class SEDTestLookup implements SEDLookupsInterface {
   @Override
   public void clearCache(Class cls) {
     throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+  }
+
+  @Override
+  public SEDApplication getSEDApplicationById(String id) {
+    
+     if (id != null && !id.trim().isEmpty()) {
+      String ui = id.trim();
+      List<SEDApplication> lst = getSEDApplications();
+      for (SEDApplication sb : lst) {
+        if (sb.getApplicationId().equalsIgnoreCase(ui)) {
+          return sb;
+        }
+      }
+    }
+    return null;
+
+  }
+
+  @Override
+  public List<SEDApplication> getSEDApplications() {
+     return getLookup(SEDApplication.class);
   }
 
   @Override
@@ -75,8 +102,6 @@ public class SEDTestLookup implements SEDLookupsInterface {
     throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
   }
 
-  
-
   private void init(InputStream is)
           throws IOException, JAXBException {
     SedLookups cls = (SedLookups) XMLUtils.deserialize(is, SedLookups.class);
@@ -92,7 +117,7 @@ public class SEDTestLookup implements SEDLookupsInterface {
 
     mlstCacheLookup.put(SEDBox.class, cls.getSEDBoxes().getSEDBoxes());
 
-    mlstCacheLookup.put(SEDCronJob.class, cls.getSEDCronJobs().getSEDCronJobs());
+    mlstCacheLookup.put(SEDApplication.class, cls.getSEDApplications().getSEDApplications());
     mlstCacheLookup.put(SEDUser.class, cls.getSEDUsers().getSEDUsers());
   }
 
@@ -127,8 +152,6 @@ public class SEDTestLookup implements SEDLookupsInterface {
   public boolean addSEDUser(SEDUser sb) {
     return add(sb);
   }
-
- 
 
   @Override
   public SEDBox getSEDBoxByLocalName(String strname) {
@@ -216,6 +239,11 @@ public class SEDTestLookup implements SEDLookupsInterface {
   }
 
   @Override
+  public boolean removeSEDApplication(SEDApplication sb) {
+    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+  }
+
+  @Override
   public boolean removeSEDBox(SEDBox sb) {
     return remove(sb);
   }
@@ -233,6 +261,11 @@ public class SEDTestLookup implements SEDLookupsInterface {
   @Override
   public boolean removeSEDUser(SEDUser sb) {
     return remove(sb);
+  }
+
+  @Override
+  public boolean updateSEDApplication(SEDApplication sb) {
+    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
   }
 
   @Override
@@ -265,35 +298,25 @@ public class SEDTestLookup implements SEDLookupsInterface {
     throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
   }
 
-  
-
   @Override
   public boolean addSEDProcessor(SEDProcessor sb) {
     throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
   }
-
-
 
   @Override
   public SEDProcessor getSEDProcessor(BigInteger id) {
     throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
   }
 
- 
-
   @Override
   public List<SEDProcessor> getSEDProcessors() {
     throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
   }
 
-  
-
   @Override
   public boolean removeSEDProcessor(SEDProcessor sb) {
     throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
   }
-
-
 
   @Override
   public boolean updateSEDProcessor(SEDProcessor sb) {

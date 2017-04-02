@@ -21,6 +21,7 @@ import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.interfaces.DBSettingsInterface;
 import si.laurentius.msh.web.abst.AbstractJSFView;
+import si.laurentius.property.SEDProperty;
 
 /**
  *
@@ -70,29 +71,12 @@ public class ApplicationData extends AbstractJSFView {
   public String getDomain() {
     return "@" + SEDSystemProperties.getLocalDomain();
   }
-
-  /**
-   *
-   * @return
-   */
-  public List<String> getSEDPropertyKeys() {
-
-    Set<String> s = mdbSettings.getProperties().stringPropertyNames();
-    List<String> lst = new ArrayList<>(s);
-    Collections.sort(lst);
-    return lst;
-
+  
+  public List<SEDProperty> getSEDProperties(){
+    return mdbSettings.getSEDProperties();
   }
 
-  /**
-   *
-   * @param strVal
-   * @return
-   */
-  public String getSEDPropertyValue(String strVal) {
-    return mdbSettings.getProperties().getProperty(strVal);
-
-  }
+  
 
   /**
    *

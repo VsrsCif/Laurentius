@@ -75,6 +75,7 @@ import si.laurentius.commons.utils.Utils;
 import si.laurentius.lce.DigestUtils;
 import si.laurentius.msh.inbox.payload.IMPartProperty;
 import si.laurentius.msh.pmode.ReceptionAwareness;
+import si.laurentius.msh.pmode.Security;
 
 /**
  *
@@ -120,7 +121,7 @@ public class EBMSInInterceptor extends AbstractEBMSInterceptor {
   @Override
   public void handleMessage(SoapMessage msg) {
     long l = LOG.logStart();
-
+    
     SoapVersion version = msg.getVersion();
     boolean isBackChannel = SoapUtils.isRequestMessage(msg);
 
@@ -255,7 +256,7 @@ public class EBMSInInterceptor extends AbstractEBMSInterceptor {
     }
     // validate signals
     for (SignalMessage sm : msgHeader.getSignalMessages()) {
-      mebmsValidation.vaildateSignalMessage(msg, sm, SoapFault.FAULT_CODE_CLIENT);
+      mebmsValidation.processSignalMessage(msg, sm, SoapFault.FAULT_CODE_CLIENT);
 
     }
 
@@ -298,9 +299,10 @@ public class EBMSInInterceptor extends AbstractEBMSInterceptor {
         if (inmctx.getTransportChannelType() != null) {
           if (!Utils.isEmptyString(inmctx.getTransportChannelType().getSecurityIdRef())) {
             String secId = inmctx.getTransportChannelType().getSecurityIdRef();
-            try {
-              inmctx.setSecurity(getPModeManager().getSecurityById(secId));
-            } catch (PModeException ex) {
+            Security sec = getPModeManager().getSecurityById(secId);
+            if (sec!= null) {
+              inmctx.setSecurity(sec);
+            } else {
               String msgERr = String.format(
                   "Error occured while retrieving securitypatteren for '%s'!", secId);
               LOG.logError(l, msgERr, null);
@@ -377,12 +379,14 @@ public class EBMSInInterceptor extends AbstractEBMSInterceptor {
     if (outmctx.getTransportChannelType() != null) {
       if (!Utils.isEmptyString(outmctx.getTransportChannelType().getSecurityIdRef())) {
         String secId = outmctx.getTransportChannelType().getSecurityIdRef();
-        try {
+        Security sec = getPModeManager().getSecurityById(secId);
+        
+        if (sec!= null) {
           outmctx.setSecurity(getPModeManager().getSecurityById(secId));
-        } catch (PModeException ex) {
+        } else  {
           String msgERr = String.format(
               "Error occured while retrieving securitypatteren for '%s'!", secId);
-          LOG.logError(l, msgERr, ex);
+          LOG.logError(l, msgERr, null);
           throw new EBMSError(EBMSErrorCode.ProcessingModeMismatch, messageId,
               msgERr, SoapFault.FAULT_CODE_CLIENT);
         }

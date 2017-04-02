@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      xmlns:dlg="http://java.sun.com/jsf/composite/laurentius-ui/dialog"
+      >
+    <composite:interface>
+    </composite:interface>
+
+    <composite:implementation >
+        <!-- sed-box ADD/EDIT dialog! -->
+        <p:dialog  header="#{msg['MailCompose']}" widgetVar="mailComposeDialog" modal="true" hideEffect="fade" resizable="false" 
+                   appendTo="@(body)"
+                   width="1050" >
+            <h:form id="mailComposeForm" >
+                <p:layout id="mailComposeDetails" style="min-width:600px;min-height:450px;">
+                    <p:layoutUnit position="center"   >
+
+                        <p:panelGrid style="width: 100%">
+                            <f:facet name="header">
+                                <p:row>
+                                    <p:column colspan="4">Sender address</p:column>
+                                    <p:column colspan="4">Receiver address</p:column>
+                                </p:row>
+                            </f:facet>
+
+                            <p:row>
+                                <p:column>name</p:column>
+                                <p:column colspan="3"><p:inputText value=""/></p:column>
+                                <p:column >name</p:column>
+                                <p:column colspan="3"><p:inputText value=""/></p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column>name2</p:column>
+                                <p:column colspan="3"><p:inputText value=""/></p:column>
+                                <p:column >name2</p:column>
+                                <p:column colspan="3"><p:inputText value=""/></p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column>address</p:column>
+                                <p:column colspan="3"><p:inputText value=""/></p:column>
+                                <p:column >address</p:column>
+                                <p:column colspan="3"><p:inputText value=""/></p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column>Postal code</p:column>
+                                <p:column><p:inputText value=""/></p:column>
+                                <p:column>Town</p:column>
+                                <p:column><p:inputText value=""/></p:column>
+
+                                <p:column>Postal code</p:column>
+                                <p:column><p:inputText value=""/></p:column>
+                                <p:column>Town</p:column>
+                                <p:column><p:inputText value=""/></p:column>
+                            </p:row>
+                        </p:panelGrid>
+                    </p:layoutUnit>
+                    <p:layoutUnit  position="east" size="400"  >
+                        <p:fileUpload fileUploadListener="#{OutMailDataView.handleNewOutMailAttachmentUpload}"
+                                      mode="advanced" skinSimple="true" dragDropSupport="false"
+                                      uploadLabel="#{msg['Add']}" 
+                                      cancelLabel="#{msg['Cancel']}" 
+                                      label="#{msg['Choose']}" 
+
+                                      multiple="true"
+                                      update=":dlgCompose:mailComposeForm:mailComposeAttachments" sizeLimit="100000000" 
+                                      style="height: 200px"/>
+
+
+                        <p:dataList id="mailComposeAttachments" value="#{OutMailDataView.getNewOutMailAttachmentList()}"
+                                    var="prp" type="unordered"
+                                    style="height: 200px">
+                            <f:facet name="header">
+                                Priponke:
+                            </f:facet>
+                            <p:commandLink update=":dlgCompose:mailComposeForm:mailComposeAttachments" 
+                                           oncomplete="#{OutMailDataView.removeselectedNewOutMailAttachment()}" 
+                                           title="#{msg['Delete']}" styleClass="ui-icon ui-icon-remove" style="float:left;">
+                                <f:setPropertyActionListener value="#{prp}" target="#{OutMailDataView.selectedNewOutMailAttachment}" />
+                            </p:commandLink>
+
+
+                            <h:outputText value="#{prp.name}" style="display:inline-block"/>
+                        </p:dataList>
+                    </p:layoutUnit>
+
+                  
+                    <p:layoutUnit position="south"  size="40" minSize="40" maxSize="40" >
+                        <p:toolbar 
+                            styleClass="dialogButtonBar" >
+                            <f:facet name="right"  >
+                                <p:commandButton value="#{msg['Ok']}" update=":forms:MainPanel" 
+                                                 styleClass="toolbar-Button" 
+                                                 icon="ui-icon-svg-ok ui-icon-size-22"
+                                                 actionListener="#{OutMailDataView.sendComposedMail()}" 
+                                                 oncomplete="PF('mailComposeDialog').hide()"   />
+                                <p:commandButton value="#{msg['Cancel']}" styleClass="toolbar-Button"                                                  
+                                                 icon="ui-icon-svg-cancel ui-icon-size-22" 
+                                                 onclick="PF('mailComposeDialog').hide();return false;"/>
+
+                            </f:facet>
+                        </p:toolbar>
+                    </p:layoutUnit>
+                </p:layout>
+            </h:form>
+        </p:dialog>
+
+
+    </composite:implementation>
+
+</html>

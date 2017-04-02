@@ -39,6 +39,10 @@
     background-image: url("#{resource['images:/exit.svg']}") !important;    
 }
 
+.ui-icon-svg-cms {
+    background-image: url("#{resource['images:/cms.svg']}") !important;    
+}
+
 .ui-icon-svg-refresh {
     background-image: url("#{resource['images:/refresh.svg']}") !important;    
 }

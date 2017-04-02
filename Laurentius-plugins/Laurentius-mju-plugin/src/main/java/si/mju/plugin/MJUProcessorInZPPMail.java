@@ -101,7 +101,7 @@ public class MJUProcessorInZPPMail implements InMailProcessorInterface {
     String emailFrom = (String) map.get(KEY_MJU_EMAIL_FROM);
 
     EmailData emd = new EmailData(emailTo, null, StringFormater.
-            format(emailFrom, mi), "New mail");
+            format(emailSubjecd, mi), "New mail");
     emd.setEmailSenderAddress(emailFrom);
 
     if (mi.getMSHInPayload() != null) {

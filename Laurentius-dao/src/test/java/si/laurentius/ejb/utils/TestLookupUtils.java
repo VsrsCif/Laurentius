@@ -8,6 +8,7 @@ package si.laurentius.ejb.utils;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
+import si.laurentius.application.SEDApplication;
 import si.laurentius.commons.utils.Utils;
 import si.laurentius.cron.SEDCronJob;
 import si.laurentius.cron.SEDTask;
@@ -179,6 +180,31 @@ public class TestLookupUtils {
     sb.setDesc("Description");
     sb.setEmail("Email");
     sb.setAdminRole(true);
+    if (withBoxes) {
+      int iboxSize = RANDOM_VALUE.nextInt(10) + 3;
+      for (int i = 0; i < iboxSize; i++) {
+        SEDBox pi = createSEDBox();
+        sb.getSEDBoxes().add(pi);
+      }
+    }
+    return sb;
+  }
+  
+   static public SEDApplication createSEDApplication(boolean withBoxes) {
+    SEDApplication sb = new SEDApplication();
+
+    Calendar c = Calendar.getInstance();
+    Date dtFrom = c.getTime();
+    c.add(Calendar.MONTH, 1);
+    Date dtTo = c.getTime();
+
+    sb.setName(Utils.getUUID("name"));
+    sb.setActiveFromDate(dtFrom);
+    sb.setActiveToDate(dtTo);
+    sb.setApplicationId(Utils.getUUID("id"));
+    sb.setDesc("Description");
+    sb.setEmail("Email");
+    
     if (withBoxes) {
       int iboxSize = RANDOM_VALUE.nextInt(10) + 3;
       for (int i = 0; i < iboxSize; i++) {

@@ -47,6 +47,7 @@ import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.SEDValues;
 import si.laurentius.commons.exception.FOPException;
 import si.laurentius.commons.exception.HashException;
+import si.laurentius.commons.exception.PModeException;
 import si.laurentius.commons.exception.SEDSecurityException;
 import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.interfaces.JMSManagerInterface;
@@ -134,7 +135,13 @@ public class ZPPTaskFiction implements TaskExecutionInterface {
     }
     String sedBox = sedBoxPart + "@" + SEDSystemProperties.getLocalDomain();
 
-    PartyIdentitySet pis = mpModeManager.getPartyIdentitySetForSEDAddress(sedBox);
+    PartyIdentitySet pis;
+    try {
+      pis = mpModeManager.getPartyIdentitySetForSEDAddress(sedBox);
+    } catch (PModeException ex) {
+      throw new TaskException(TaskException.TaskExceptionCode.InitException, 
+          ex.getMessage());
+    }
     if (pis == null) {
       throw new TaskException(TaskException.TaskExceptionCode.InitException,
           "Sedbox:  '" + sedBox + "' is not defined in PMode settings!");
@@ -272,7 +279,12 @@ public class ZPPTaskFiction implements TaskExecutionInterface {
 
     String sedBox = mOutMail.getReceiverEBox();
 
-    PartyIdentitySet pis = mpModeManager.getPartyIdentitySetForSEDAddress(sedBox);
+    PartyIdentitySet pis;
+    try {
+      pis = mpModeManager.getPartyIdentitySetForSEDAddress(sedBox);
+    } catch (PModeException ex) {
+      throw new ZPPException(ex.getMessage(), ex);
+    }
     if (pis == null) {
       throw new ZPPException("Receiver sedbox: '" + sedBox + "' is not defined in PMode settings!");
     }

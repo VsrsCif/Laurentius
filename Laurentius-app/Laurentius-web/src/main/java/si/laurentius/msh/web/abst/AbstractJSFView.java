@@ -16,6 +16,10 @@ import org.primefaces.context.RequestContext;
  */
 public class AbstractJSFView {
 
+  public static final String CB_PARA_SAVED = "saved";
+  public static final String CB_PARA_REMOVED = "removed";
+  public static final String CB_PARA_SUCCESS = "success";
+  
   /**
    *
    * @return
@@ -36,7 +40,7 @@ public class AbstractJSFView {
     facesContext().addMessage(null,
             new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error",
                     desc));
-      
+
   }
 
   /**
@@ -50,5 +54,12 @@ public class AbstractJSFView {
 
   public void addCallbackParam(String val, boolean bval) {
     RequestContext.getCurrentInstance().addCallbackParam(val, bval);
+  }
+
+  public void update(String... ids) {
+    for (String id : ids) {
+      RequestContext.getCurrentInstance().update(id);
+
+    }
   }
 }

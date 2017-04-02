@@ -15,6 +15,7 @@
 package si.laurentius.commons.enums;
 
 import java.util.HashMap;
+import si.laurentius.commons.utils.Utils;
 
 /**
  *
@@ -26,6 +27,10 @@ public enum MimeValue {
    *
    */
   MIME_7Z("7z", "application/x-7z-compressed", true),
+  
+  
+  
+  MIME_NULL(".bin", null, false),
 
   /**
    *
@@ -2743,9 +2748,13 @@ public enum MimeValue {
    */
   public static String getSuffixBYMimeType(String strMimeType) {
     String res = MIME_BIN.getSuffix();
+    
+    if (Utils.isEmptyString(strMimeType)){
+      return res;
+    }
 
     for (MimeValue vm : values()) {
-      if (vm.getMimeType().equalsIgnoreCase(strMimeType)) {
+      if (vm.getMimeType()!= null && vm.getMimeType().equalsIgnoreCase(strMimeType)) {
         res = vm.getSuffix();
         if (vm.getDefForMime()) {
           break;
@@ -2777,7 +2786,7 @@ public enum MimeValue {
    */
   public static String getMimeTypeBySuffix(String strSuffix) {
     String res = MIME_BIN.getMimeType();
-    if (strSuffix != null  && !strSuffix.trim().isEmpty()) {      
+    if (!Utils.isEmptyString(strSuffix)) {      
       for (MimeValue vm : values()) {
         if (vm.getSuffix().equalsIgnoreCase(strSuffix)) {
           res = vm.getMimeType();

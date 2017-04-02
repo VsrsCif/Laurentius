@@ -53,7 +53,7 @@ public class DialogImportCert {
 
   public static final String DLG_KS_TYPE_CERT = "CERT";
   public static final String DLG_KS_TYPE_JKS = "JKS";
-  public static final String DLG_KS_TYPE_PKCS12 = "PKCS12J";
+  public static final String DLG_KS_TYPE_PKCS12 = "PKCS12";
 
   public static final String CB_PARA_SAVED = "saved";
 
@@ -219,7 +219,7 @@ public class DialogImportCert {
         } catch (CertificateEncodingException | SEDSecurityException ex) {
           String strmsg = "Error reading cert: " + ex.getMessage();
           addError(strmsg);
-        } 
+        }
       } catch (IOException ex) {
         String strmsg = "Error reading file: " + getFilename();
         addError(strmsg);
@@ -377,9 +377,9 @@ public class DialogImportCert {
   }
 
   public void importKeysAndCertsToCertStore() {
-    boolean suc = true;
-
+    LOG.formatedDebug("importKeysAndCertsToCertStore");
     //check if all passwords are given
+  
     int iImpCout = 0;
     for (SEDCertificate sc : getCertificates()) {
       if (!sc.isImport()) {
@@ -387,34 +387,37 @@ public class DialogImportCert {
       }
       iImpCout++;
       if (sc.isKeyEntry()) {
-        if (Utils.isEmptyString(sc.getPassword())) {
+        if (!Objects.equals(getKeystoreType(), DLG_KS_TYPE_PKCS12) && Utils.
+                isEmptyString(sc.getPassword())) {
           addError("Enter password for key: '"
                   + sc.getAlias() + "'.");
-          suc = false;
-        } else if (Objects.equals(DLG_KS_TYPE_PKCS12, getKeystoreType())){
+          setCBParamSaved(false);
+          return;
+        } else if (Objects.equals(getKeystoreType(), DLG_KS_TYPE_PKCS12)) {
           try {
+            LOG.formatedWarning("Test access to key %s password %s",  sc.getAlias(), sc.
+                    getPassword());
             boolean bac = mku.testAccessToKey(importKeyStore, sc.getAlias(), sc.
                     getPassword());
             if (!bac) {
               addError("Invalid password for key: '"
                       + sc.getAlias() + "'.");
-              suc = false;
+              setCBParamSaved(false);
+              return;
             }
           } catch (SEDSecurityException ex) {
             addError("Invalid password for key: '"
                     + sc.getAlias() + "'.");
-            suc = false;
+            setCBParamSaved(false);
+            return;
           }
+        } else {
+          LOG.formatedDebug("Certificate  %s ready to import!", sc.getAlias());
         }
 
       }
     }
-
-    if (!suc) {
-      setCBParamSaved(false);
-      return;
-    }
-
+    LOG.formatedDebug("Add new %d certifikactes ", iImpCout);
     if (iImpCout == 0) {
       addError("No certificate selected to import!");
       setCBParamSaved(false);
@@ -449,8 +452,8 @@ public class DialogImportCert {
         setCBParamSaved(false);
         return;
       }
-
     }
+    LOG.formatedDebug("Successfully added new  %d certifikactes ", iImpCout);
     setCBParamSaved(true);
 
   }

@@ -54,7 +54,7 @@
                                                        style="width: 200px !important"
                                                        disabled="#{empty dialogImportCert.filename }"
                                                        >
-                                    <p:ajax  update="dlgcertimport:certImportDialog:certImportDialogForm" />
+                                    <p:ajax  update=":dlgcertimport:certImportDialog:certImportDialogForm" />
                                     <f:selectItem itemLabel="#{msg['Certificate']}" itemValue="CERT" />
                                     <f:selectItem itemLabel="#{msg['KeystoreJKS']}" itemValue="JKS" />
                                     <f:selectItem itemLabel="#{msg['KeystorePKCS12']}" itemValue="PKCS12" />
@@ -62,7 +62,7 @@
                                 </p:selectOneMenu>  
                             </p:column>
                             <p:column><h:outputText id='passwd' value="#{msg['Password']}" /></p:column>
-                            <p:column><p:inputText  id="storePasswd"
+                            <p:column><p:password  id="storePasswd"
                                                     value="#{dialogImportCert.password}" 
                                                     required="#{dialogImportCert.keystoreType != 'CERT'}"
                                                     disabled="#{dialogImportCert.keystoreType == 'CERT' 
@@ -124,7 +124,8 @@
                         </p:column>
 
                         <p:column headerText="#{msg['Password']}" rendered="#{dialogImportCert.showKeyPasswords()}">
-                            <h:inputText rendered="#{crt.keyEntry}" value="#{crt.password}" />
+                            
+                            <p:password rendered="#{crt.keyEntry}" value="#{crt.password}" />
                         </p:column>
                     </p:dataTable>
 

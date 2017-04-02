@@ -68,6 +68,7 @@ import si.laurentius.commons.utils.Utils;
 import si.laurentius.lce.DigestUtils;
 import si.laurentius.msh.test.db.MockUserTransaction;
 import si.laurentius.msh.test.db.SEDTestLookup;
+import si.laurentius.msh.test.db.TestWebServiceContext;
 
 /**
  *
@@ -115,6 +116,8 @@ public class SEDMailBoxTest extends TestUtils {
       // mTestInstance.JNDI_CONNECTION_FACTORY = JNDI_CONNECTION_FACTORY;
       // mTestInstance.JNDI_QUEUE_NAME = SEDValues.EBMS_QUEUE_JNDI;
       mTestInstance.mqMSHQueue = mshueue;
+      
+      mTestInstance.mwsCtxt = new TestWebServiceContext("ApplicationId");
 
       // ---------------------------------
       // set lookups     
@@ -233,9 +236,9 @@ public class SEDMailBoxTest extends TestUtils {
     im.setService("LegalDelivery_ZPP");
     im.setConversationId(UUID.randomUUID().toString());
     im.setReceiverName("Mr. Receiver Name");
-    im.setReceiverEBox("receiver.name@test-sed.si");
+    im.setSenderEBox("receiver.name@test-sed.si");
     im.setSenderName("Mr. Sender Name");
-    im.setSenderEBox("izvrsba@test-sed.si");
+    im.setReceiverEBox("izvrsba@test-sed.si");
 
     String testContent = "Test content";
     im.setInPayload(new InPayload());
@@ -670,6 +673,8 @@ public class SEDMailBoxTest extends TestUtils {
     OutMailListRequest omr = new OutMailListRequest();
     omr.setControl(createControl());
     omr.setData(new OutMailListRequest.Data());
+    //omr.getData().setSenderEBox("ceftestparty2gw@test-sed.si");
+    omr.getData().setSenderEBox("izvrsba@test-sed.si");
 
     OutMailListResponse mlr = mTestInstance.getOutMailList(omr);
     assertNotNull("Response", mlr);
@@ -709,6 +714,7 @@ public class SEDMailBoxTest extends TestUtils {
     Date dt = Calendar.getInstance().getTime();
 
     for (int i = 0; i < TEST_CNT; i++) {
+
       smr.getData().setOutMail(createOutMail()); // create new mail
       SubmitMailResponse mr = mTestInstance.submitMail(smr);
       assertEquals("Response/RControl/@returnValue", mr.getRControl().
@@ -716,6 +722,7 @@ public class SEDMailBoxTest extends TestUtils {
               SVEVReturnValue.OK.getValue());
     }
     // check new list
+
     mlr = mTestInstance.getOutMailList(omr);
     assertEquals("Response/RControl/@returnValue", mlr.getRControl().
             getReturnValue().intValue(),
@@ -737,12 +744,14 @@ public class SEDMailBoxTest extends TestUtils {
     // -----------------------------------------
     // add new mail with unique service, action, sender box, receiver box
     String valTest = "connectivity-service"; // must be declared in pmod conf
-    String action = "submitMessage"; // must be declared in pmod conf
+    String action = "submitMessage"; // must be declared in pmod confž
+    String senderBox = "ceftestparty2gw@test-sed.si";
     OutMail om = createOutMail();
 
     om.setService(valTest);
-    om.setAction("submitMessage");
-    om.setSenderEBox("ceftestparty2gw@test-sed.si");
+    om.setAction(action);
+    
+    om.setSenderEBox(senderBox);
     om.setReceiverEBox(UUID.randomUUID().toString() + "@test-sed.si");
     smr.getData().setOutMail(om); // create new mail
     // add new mail
@@ -753,6 +762,7 @@ public class SEDMailBoxTest extends TestUtils {
 
     // test search for service
     omr.getData().setService(om.getService());
+    omr.getData().setSenderEBox(senderBox);
     mlr = mTestInstance.getOutMailList(omr);
     omr.getData().setService(null);
     assertEquals("Service Response/RControl/@returnValue", mlr.getRControl().
@@ -793,7 +803,6 @@ public class SEDMailBoxTest extends TestUtils {
     // test search for SenderEBox
     omr.getData().setSenderEBox((om.getSenderEBox()));
     mlr = mTestInstance.getOutMailList(omr);
-    omr.getData().setSenderEBox(null);
     assertEquals("SenderEBox Response/RControl/@returnValue", mlr.getRControl().
             getReturnValue()
             .intValue(), SVEVReturnValue.OK.getValue());
@@ -818,11 +827,12 @@ public class SEDMailBoxTest extends TestUtils {
 
     // test search for SubmittedDateFrom
     omr.getData().setSubmittedDateFrom(dt);
+    omr.getData().setSenderEBox("izvrsba@test-sed.si");
     mlr = mTestInstance.getOutMailList(omr);
     assertEquals("SubmittedDateFrom Response/RControl/@returnValue", mlr.
             getRControl()
             .getReturnValue().intValue(), SVEVReturnValue.OK.getValue());
-    assertEquals("Test SubmittedDateFrom parameter", TEST_CNT + 1, mlr.
+    assertEquals("Test SubmittedDateFrom parameter", TEST_CNT , mlr.
             getRData().getOutMails()
             .size());
 
@@ -846,7 +856,7 @@ public class SEDMailBoxTest extends TestUtils {
     assertEquals("SubmittedDateFrom Response/RControl/@returnValue", mlr.
             getRControl()
             .getReturnValue().intValue(), SVEVReturnValue.OK.getValue());
-    assertEquals("service RControl/@ResultSize", TEST_CNT + iResCNt + 1, mlr.
+    assertEquals("service RControl/@ResultSize", TEST_CNT + iResCNt , mlr.
             getRControl()
             .getResultSize().intValue());
     assertEquals("service RControl/@getResponseSize", TEST_CNT, mlr.
@@ -938,6 +948,7 @@ public class SEDMailBoxTest extends TestUtils {
     InMailListRequest imr = new InMailListRequest();
     imr.setControl(createControl());
     imr.setData(new InMailListRequest.Data());
+    imr.getData().setReceiverEBox("izvrsba@test-sed.si");
 
     InMailListResponse mlr = mTestInstance.getInMailList(imr);
     assertNotNull("Response", mlr);
@@ -1005,13 +1016,15 @@ public class SEDMailBoxTest extends TestUtils {
 
     im2.setService(valTest);
     im2.setAction(UUID.randomUUID().toString());
+    String recBox = "izvrsba@test-sed.si";
     im2.setSenderEBox(UUID.randomUUID().toString() + "@test-sed.si");
-    im2.setReceiverEBox(UUID.randomUUID().toString() + "@test-sed.si");
+    im2.setReceiverEBox(recBox);
 
     storeInMail(im2);
 
     // test search for service
     imr.getData().setService(im2.getService());
+    imr.getData().setReceiverEBox(recBox);
     mlr = mTestInstance.getInMailList(imr);
     imr.getData().setService(null);
     assertEquals("Service Response/RControl/@returnValue", mlr.getRControl().
@@ -1063,14 +1076,14 @@ public class SEDMailBoxTest extends TestUtils {
     // test search for ReceiverEBox
     imr.getData().setReceiverEBox((im2.getReceiverEBox()));
     mlr = mTestInstance.getInMailList(imr);
-    imr.getData().setReceiverEBox(null);
+
     assertEquals("ReceiverEBox Response/RControl/@returnValue", mlr.
             getRControl().getReturnValue()
             .intValue(), SVEVReturnValue.OK.getValue());
-    assertEquals("Test ReceiverEBox parameter", 1, mlr.getRData().getInMails().
+    assertEquals("Test ReceiverEBox parameter", 7, mlr.getRData().getInMails().
             size());
     assertEquals("Test ReceiverEBox response id", im2.getId(), mlr.getRData().
-            getInMails().get(0)
+            getInMails().get(6)
             .getId());
 
     // test search for SubmittedDateFrom

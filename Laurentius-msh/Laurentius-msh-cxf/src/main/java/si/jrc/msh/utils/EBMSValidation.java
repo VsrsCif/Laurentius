@@ -346,17 +346,18 @@ public class EBMSValidation {
    * @param sv
    * @throws EBMSError
    */
-  public void vaildateSignalMessage(SoapMessage soap, SignalMessage sm, QName sv) {
+  public void processSignalMessage(SoapMessage soap, SignalMessage sm, QName sv) {
     long l = LOG.logStart();
     String msgId = EBMSBuilder.getSignalMessageId(sm);
     for (Element el : sm.getAnies()) {
-      if (!el.getLocalName().equals("EncryptedKey")) {
+      if (el.getLocalName().equals("EncryptedKey")) {
+        // add anies to exchange
+        SoapUtils.setInSignals(sm.getAnies(), soap);
+        
+      } else {
         throw new EBMSError(EBMSErrorCode.FeatureNotSupportedFailure, msgId,
             "Signal type " + el.getTagName() + " not suppored!", sv);
 
-      } else {
-        // add anies to exchange
-        SoapUtils.setInSignals(sm.getAnies(), soap);
 
       }
     }

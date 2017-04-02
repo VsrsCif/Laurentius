@@ -120,8 +120,11 @@
                             </p:column>
                             <p:column headerText="#{msg['Action']}"  width="120">
                                 <h:outputText value="#{sp.name}" /></p:column>
-                            <p:column headerText="#{msg['InvokeRole']}" width="120">
+                            <p:column headerText="#{msg['InvokeRole']}" width="80">
                                 <h:outputText value="#{sp.invokeRole}" />
+                            </p:column>
+                            <p:column headerText="#{msg['MessageType']}" width="80">
+                                <h:outputText value="#{sp.messageType}" />
                             </p:column>
                             <p:rowExpansion>
                                 <p:dataList value="#{sp.payloadProfiles.payloadProfiles}" var="pl"  type="unordered" itemType="none" 

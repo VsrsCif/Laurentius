@@ -14,7 +14,10 @@
  */
 package si.laurentius.msh.web.pmode;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -22,6 +25,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import org.primefaces.event.CellEditEvent;
 import si.laurentius.commons.SEDJNDI;
+import si.laurentius.commons.exception.PModeException;
 import si.laurentius.commons.interfaces.PModeInterface;
 import si.laurentius.commons.interfaces.SEDLookupsInterface;
 import si.laurentius.commons.utils.SEDLogger;
@@ -77,10 +81,12 @@ public class PModePartyView extends AbstractPModeJSFView<PartyIdentitySet> {
   @Override
   public void startEditSelected() {
     if (getSelected() != null && getSelected().getLocalPartySecurity() == null) {
-      getSelected().setLocalPartySecurity(new PartyIdentitySetType.LocalPartySecurity());
+      getSelected().setLocalPartySecurity(
+              new PartyIdentitySetType.LocalPartySecurity());
     }
     if (getSelected() != null && getSelected().getExchangePartySecurity() == null) {
-      getSelected().setExchangePartySecurity(new PartyIdentitySetType.ExchangePartySecurity());
+      getSelected().setExchangePartySecurity(
+              new PartyIdentitySetType.ExchangePartySecurity());
     }
     super.startEditSelected(); // To change body of generated methods, choose Tools | Templates.
   }
@@ -105,21 +111,24 @@ public class PModePartyView extends AbstractPModeJSFView<PartyIdentitySet> {
     if (sv != null && isEditableNew()) {
       if (Utils.isEmptyString(sv.getId())) {
         facesContext().addMessage(null,
-            new FacesMessage(FacesMessage.SEVERITY_WARN, "Id is empty!", "Id must not be empty!"));
+                new FacesMessage(FacesMessage.SEVERITY_WARN, "Id is empty!",
+                        "Id must not be empty!"));
         return false;
       } else if (mPModeInteface.partyIdentitySetExists(sv.getId())) {
         facesContext().addMessage(null,
-            new FacesMessage(FacesMessage.SEVERITY_WARN, "Id alredy exists!", "Id must be unique!"));
+                new FacesMessage(FacesMessage.SEVERITY_WARN, "Id alredy exists!",
+                        "Id must be unique!"));
         return false;
       } else if (!sv.getIsLocalIdentity() && Utils.isEmptyString(sv.getDomain())) {
         facesContext().addMessage(null,
-            new FacesMessage(FacesMessage.SEVERITY_WARN, "Domain is empty!",
-                "For exchange party domain must not be empty!"));
+                new FacesMessage(FacesMessage.SEVERITY_WARN, "Domain is empty!",
+                        "For exchange party domain must not be empty!"));
         return false;
       } else if (sv.getPartyIds().isEmpty()) {
         facesContext().addMessage(null,
-            new FacesMessage(FacesMessage.SEVERITY_WARN, "Identifier list empty",
-                "Define at least one PartyIdentifier"));
+                new FacesMessage(FacesMessage.SEVERITY_WARN,
+                        "Identifier list empty",
+                        "Define at least one PartyIdentifier"));
         return false;
       }
 
@@ -167,9 +176,12 @@ public class PModePartyView extends AbstractPModeJSFView<PartyIdentitySet> {
   @Override
   public List<PartyIdentitySet> getList() {
     long l = LOG.logStart();
-    List<PartyIdentitySet> lst = mPModeInteface.getPartyIdentitySets();
+    List<PartyIdentitySet> lst = null;
+
+    lst = mPModeInteface.getPartyIdentitySets();
+
     LOG.logEnd(l);
-    return lst;
+    return lst == null ? Collections.emptyList() : lst;
 
   }
 
@@ -180,8 +192,9 @@ public class PModePartyView extends AbstractPModeJSFView<PartyIdentitySet> {
   }
 
   public boolean getEditableIdentityActive() {
-    return getEditable() != null && getEditable().getActive() != null ? getEditable().getActive() :
-        true;
+    return getEditable() != null && getEditable().getActive() != null ? getEditable().
+            getActive()
+            : true;
   }
 
   public void setEditableLocalIdentity(boolean bVal) {
@@ -193,9 +206,6 @@ public class PModePartyView extends AbstractPModeJSFView<PartyIdentitySet> {
   public boolean getEditableLocalIdentity() {
     return getEditable() != null ? getEditable().getIsLocalIdentity() : false;
   }
-
-
-
 
   public String getListAsString(List<String> lst) {
     return lst != null ? String.join(",", lst) : "";
@@ -249,7 +259,8 @@ public class PModePartyView extends AbstractPModeJSFView<PartyIdentitySet> {
   public PartyIdentitySetType.LocalPartySecurity getCurrrentLocalPartySecurity() {
     if (getEditable() != null) {
       if (getEditable().getLocalPartySecurity() == null) {
-        getEditable().setLocalPartySecurity(new PartyIdentitySetType.LocalPartySecurity());
+        getEditable().setLocalPartySecurity(
+                new PartyIdentitySetType.LocalPartySecurity());
       }
       return getEditable().getLocalPartySecurity();
     }
@@ -259,7 +270,8 @@ public class PModePartyView extends AbstractPModeJSFView<PartyIdentitySet> {
   public PartyIdentitySetType.ExchangePartySecurity getCurrrentExchangePartySecurity() {
     if (getEditable() != null) {
       if (getEditable().getExchangePartySecurity() == null) {
-        getEditable().setExchangePartySecurity(new PartyIdentitySetType.ExchangePartySecurity());
+        getEditable().setExchangePartySecurity(
+                new PartyIdentitySetType.ExchangePartySecurity());
       }
       return getEditable().getExchangePartySecurity();
     }
@@ -280,8 +292,9 @@ public class PModePartyView extends AbstractPModeJSFView<PartyIdentitySet> {
   }
 
   public void onCellEditTableComplete(CellEditEvent cee) {
-    LOG.formatedlog("Cell edit rindex %d, row key %s, new val %s ", cee.getRowIndex(),
-        cee.getRowKey(), cee.getNewValue());
+    LOG.formatedlog("Cell edit rindex %d, row key %s, new val %s ", cee.
+            getRowIndex(),
+            cee.getRowKey(), cee.getNewValue());
 
   }
 
@@ -295,7 +308,8 @@ public class PModePartyView extends AbstractPModeJSFView<PartyIdentitySet> {
   }
 
   public int getPartyIdIndex(PartyIdentitySetType.PartyId pi) {
-    if (getEditable() != null && pi != null && getEditable().getPartyIds().contains(pi)) {
+    if (getEditable() != null && pi != null && getEditable().getPartyIds().
+            contains(pi)) {
       return getEditable().getPartyIds().indexOf(pi);
     }
     return -1;
@@ -303,7 +317,7 @@ public class PModePartyView extends AbstractPModeJSFView<PartyIdentitySet> {
 
   @Override
   public String getSelectedDesc() {
-     if (getSelected() != null) {
+    if (getSelected() != null) {
       return getSelected().getId();
     }
     return null;

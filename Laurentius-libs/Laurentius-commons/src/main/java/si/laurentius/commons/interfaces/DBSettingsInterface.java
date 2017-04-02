@@ -29,6 +29,7 @@ import si.laurentius.property.SEDProperty;
 public interface DBSettingsInterface {
   
   public static final String SYSTEM_SETTINGS = "SYSTEM";
+  public static final String LAU_SETTINGS = "SED";
 
   /**
    *
@@ -61,18 +62,11 @@ public interface DBSettingsInterface {
    * @return
    */
   List<SEDProperty> getSEDProperties();
-
-  /**
-   *
-   * @return
-   */
-  Properties getProperties();
+    @Lock(value = LockType.WRITE)
+  SEDProperty getSEDProperty(String key, String group);
 
 
-  /**
-     *
-    */
-  void initialize();
 
+  boolean isNetworkConnected();
 
 }

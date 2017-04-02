@@ -48,14 +48,15 @@
 
 
             <h2>#{msg['EnvironmentProperties']}</h2>
-            <p:dataTable var="sp" 
-                         value="#{ApplicationData.systemPropertyKeys}"
-                         rowKey="sp"
-                         style="padding: 0px; margin: 0px"
-                         scrollable="true" 
-                         scrollHeight="150"
+            <p:dataTable  id="sysProperties"
+                          var="sp" 
+                          value="#{ApplicationData.systemPropertyKeys}"
+                          rowKey="sp"
+                          style="padding: 0px; margin: 0px"
+                          scrollable="true" 
+                          scrollHeight="150"
 
-                         >
+                          >
                 <p:column headerText="#{msg['Key']}">
                     <h:outputText value="#{sp}" />
                 </p:column>
@@ -65,19 +66,24 @@
             </p:dataTable>
             <hr />
             <h2>#{msg['LaurentiusSettings']}</h2>
-            <p:dataTable var="sp" 
-                         value="#{ApplicationData.SEDPropertyKeys}"
-                         rowKey="sp"
-                         style="padding: 0px; margin: 0px"
-                         scrollable="true" 
-                         scrollHeight="150"
+            <p:dataTable 
+                id="sedProperties"
+                var="sp" 
+                value="#{ApplicationData.SEDProperties}"
+                rowKey="sp"
+                style="padding: 0px; margin: 0px"
+                scrollable="true" 
+                scrollHeight="150"
 
-                         >
+                >
                 <p:column headerText="#{msg['Key']}">
-                    <h:outputText value="#{sp}" />
+                    <h:outputText value="#{sp.key}" />
                 </p:column>
                 <p:column headerText="#{msg['Value']}">
-                    <h:outputText value="#{ApplicationData.getSEDPropertyValue(sp)}" />
+                    <h:outputText value="#{sp.value}" />
+                </p:column>
+                <p:column headerText="#{msg['Group']}">
+                    <h:outputText value="#{sp.group}" />
                 </p:column>
             </p:dataTable>
             <hr />

@@ -46,11 +46,11 @@
 
                         <p:ajax event="rowSelect"  
                                 listener="#{InMailDataView.onRowSelect}" 
-                                update="forms:InMailPanel:InMailPanelData:InMailTab" />                          
+                                update=":forms:InMailPanel:InMailPanelData:InMailTab" />                          
                         <p:ajax event="page"
                                 onstart="PF('blockMainPanel').show();"
                                 oncomplete="PF('blockMainPanel').hide();"
-                                update="forms:InMailPanel:InMailPanelData:InMailTab" 
+                                update=":forms:InMailPanel:InMailPanelData:InMailTab" 
                                 />  
 
                         <p:column selectionMode="multiple" style="width:16px;text-align:center"/>

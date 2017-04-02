@@ -4,12 +4,31 @@
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
          version="3.0">
 
-    <display-name>SED Web services</display-name>
+    <display-name>Laurentius Web services</display-name>
     <!-- File(s) appended to a request for a URL that is not mapped to a 
     web component -->
     <welcome-file-list>
         <welcome-file>index.xhtml</welcome-file>
     </welcome-file-list>
 
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Restricted Area for cms integration </web-resource-name>
+            <url-pattern>/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>WEBSERVICE</role-name>
+        </auth-constraint>
+    </security-constraint>
+    
+    <login-config>
+        <auth-method>BASIC</auth-method>  
+        
+                    
+    </login-config>
+    
+    <security-role>
+        <role-name>WEBSERVICE</role-name>
+    </security-role>
     
 </web-app>

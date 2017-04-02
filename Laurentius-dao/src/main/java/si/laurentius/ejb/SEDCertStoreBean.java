@@ -17,10 +17,11 @@ package si.laurentius.ejb;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.Proxy;
-import java.net.ProxySelector;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.net.URL;
+import java.net.UnknownHostException;
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.KeyStore;
@@ -41,15 +42,13 @@ import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.Resource;
+import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
@@ -69,11 +68,13 @@ import javax.transaction.UserTransaction;
 import si.laurentius.cert.SEDCertPassword;
 import si.laurentius.cert.SEDCertificate;
 import si.laurentius.cert.crl.SEDCertCRL;
+import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.enums.CertStatus;
 import si.laurentius.commons.exception.SEDSecurityException;
 import static si.laurentius.commons.exception.SEDSecurityException.SEDSecurityExceptionCode.CertificateException;
 import static si.laurentius.commons.exception.SEDSecurityException.SEDSecurityExceptionCode.ReadWriteFileException;
+import si.laurentius.commons.interfaces.DBSettingsInterface;
 import si.laurentius.commons.interfaces.SEDCertStoreInterface;
 import si.laurentius.commons.utils.FileUtils;
 import si.laurentius.commons.utils.SEDLogger;
@@ -94,6 +95,9 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
   public static final String KS_INIT_KEYSTORE_PASSWD = "passwd1234";
 
   private static final SEDLogger LOG = new SEDLogger(SEDCertStoreBean.class);
+
+  @EJB(mappedName = SEDJNDI.JNDI_DBSETTINGS)
+  private DBSettingsInterface mdbSettings;
 
   @PersistenceContext(unitName = "ebMS_LAU_PU", name = "ebMS_LAU_PU")
   public EntityManager memEManager;
@@ -607,7 +611,8 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
       // check if cert is signed
       if (isRootCAInvalid(x509Cert)) {
         lstMsg.add("Certificat is not signed by trusted root CA!");
-        LOG.formatedWarning("Certificate %s  not signed by trusted root CA!", sc.getAlias());
+        LOG.formatedWarning("Certificate %s  not signed by trusted root CA!",
+                sc.getAlias());
         sc.setStatus(CertStatus.INVALID_BY_ROOTCA.addCode(sc.getStatus()));
       }
     } catch (SEDSecurityException ex) {
@@ -622,7 +627,8 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
     if (bR == null) {
       sc.setStatus(CertStatus.CRL_NOT_CHECKED.addCode(sc.getStatus()));
       lstMsg.add("Could not check CRL!");
-      LOG.formatedWarning("Could not check CRL! for certificate %s!", sc.getAlias());
+      LOG.formatedWarning("Could not check CRL! for certificate %s!", sc.
+              getAlias());
     } else if (bR) {
       sc.setStatus(CertStatus.CRL_REVOKED.addCode(sc.getStatus()));
       lstMsg.add("Certificate is revoked");
@@ -643,8 +649,9 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
         break;
       } catch (CertificateException | NoSuchAlgorithmException | InvalidKeyException | NoSuchProviderException | SignatureException ex) {
         LOG.formatedDebug("Cert: %s is not signed by CA cert %s. Error; %s",
-                crt.getSubjectX500Principal().getName(), rca.getIssuerX500Principal(), ex.
-                getMessage());
+                crt.getSubjectX500Principal().getName(), rca.
+                getIssuerX500Principal(), ex.
+                        getMessage());
       }
     }
     return suc;
@@ -904,23 +911,47 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
             | CertificateException ex) {
       throw new SEDSecurityException(ReadWriteFileException, ex, ex.getMessage());
     }
+    switch (alias) {
+      case KEYSTORE_NAME:
+        refreshCertificates();
+        break;
+      case ROOTCA_NAME:
+        refreshRootCACertificates();
+        break;
+      default:
+        LOG.formatedWarning("Unknown keystore alias", alias);
+    }
 
-    mscCacheList.cacheList(mku.getKeyStoreSEDCertificates(ks), alias);
   }
 
   public boolean updateCrlCache(SEDCertCRL crl) {
     X509CRL cres = null;
     boolean bSuc = false;
+
+    if (!isConnectedToNetwork()) {
+      String msg = String.format(
+              "Could not retrieve CRL list network is not connected");
+      LOG.logError(msg, null);
+      return false;
+    }
+
     for (SEDCertCRL.Url u : crl.getUrls()) {
       try {
+        URL ur = new URL(u.getValue());
 
+        if (!isReachable(ur.getHost())) {
+          LOG.formatedWarning("CRL list %s is not reachable!", u.getValue());
+          continue;
+        }
+
+        cres = CRLVerifier.downloadCRL(u.getValue());
+
+        /*
         List<Proxy> prList = ProxySelector.getDefault().select(new URI(u.
                 getValue()));
-
-        cres = CRLVerifier.downloadCRL(u.getValue(), prList.size() > 0 ? prList.
-                get(0) : null);
-
-      } catch (URISyntaxException | IOException | CertificateException | CRLException | NamingException ex) {
+          cres = CRLVerifier.downloadCRL(u.getValue(), prList.size() > 0 ? prList.
+                get(0) : null);*/
+      } catch (IOException | CertificateException | CRLException | NamingException ex) {
         String msg = String.format(
                 "Error retrieving CRL Cache for %s url: error %s",
                 crl.getIssuerDN(), u.getValue(), ex.getMessage());
@@ -989,5 +1020,50 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
     PrivateKey pk = getPrivateKeyForAlias(alias);
     LOG.logEnd(l);
     return pk;
+  }
+
+  public boolean isReachable(String host) {
+    int timeout = 2000;
+    boolean bsuc = false;
+    InetAddress[] addresses;
+    try {
+      addresses = InetAddress.getAllByName(host);
+    } catch (UnknownHostException ex) {
+      LOG.formatedWarning(
+              "Testing reachangle host: %s throws UnknownHostException: %s",
+              host, ex.getMessage());
+      return false;
+    }
+    for (InetAddress address : addresses) {
+      try {
+        if (address.isReachable(timeout)) {
+          bsuc = true;
+        }
+      } catch (IOException ex) {
+        LOG.
+                formatedWarning(
+                        "Testing reachangle host: %s throws IOException: %s",
+                        host, ex.getMessage());
+      }
+    }
+    return bsuc;
+  }
+
+  boolean isConnectedToNetwork() {
+    try {
+      Enumeration<NetworkInterface> interfaces = NetworkInterface.
+              getNetworkInterfaces();
+      while (interfaces.hasMoreElements()) {
+        NetworkInterface interf = interfaces.nextElement();
+
+        if (interf.isUp() && !interf.isLoopback()) {
+          return true;
+        }
+      }
+    } catch (SocketException ex) {
+      LOG.formatedWarning("Errror occured while checking network status %s.",
+              ex.getMessage());
+    }
+    return false;
   }
 }

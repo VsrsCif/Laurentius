@@ -102,7 +102,7 @@ public class CRLVerifierTest {
 
     String crlURL = "http://www.sigov-ca.gov.si/crl/sigov-ca.crl";
     X509CRL expResult = null;
-    X509CRL result = CRLVerifier.downloadCRL(crlURL, null);
+    X509CRL result = CRLVerifier.downloadCRL(crlURL);
     Assert.assertNotNull(result);
 
     Date dt = Calendar.getInstance().getTime();
@@ -122,7 +122,7 @@ public class CRLVerifierTest {
     System.out.println("downloadCRL_LDAP");
     String crlURL = "ldap://x500.gov.si/cn=SIGEN-CA%20G2,organizationIdentifier=VATSI-17659957,o=Republika%20Slovenija,c=SI?certificateRevocationList";
 
-    X509CRL result = CRLVerifier.downloadCRL(crlURL, null);
+    X509CRL result = CRLVerifier.downloadCRL(crlURL);
     Assert.assertNotNull(result);
 
     Date dt = Calendar.getInstance().getTime();
@@ -169,16 +169,15 @@ public class CRLVerifierTest {
       for (InetAddress address : addresses) {
         if (address.isReachable(timeout)) {
           bSuc = true;
+          break;
         }
-
       }
-      return bSuc;
+      
     } catch (UnknownHostException ex) {
       LOG.logError("Unknown host " + testAddress, ex);
     } catch (IOException ex) {
       LOG.logError("IOException from host " + testAddress, ex);
     }
     return bSuc;
-
   }
 }

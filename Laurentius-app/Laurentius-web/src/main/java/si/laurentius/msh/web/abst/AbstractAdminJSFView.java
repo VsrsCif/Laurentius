@@ -5,10 +5,12 @@
 package si.laurentius.msh.web.abst;
 
 import java.util.List;
+import javax.xml.bind.JAXBException;
 import org.primefaces.context.RequestContext;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.xml.XMLUtils;
 import si.laurentius.msh.web.gui.dlg.DialogDelete;
+import si.laurentius.msh.web.gui.dlg.DialogXMLEdit;
 
 /**
  *
@@ -19,8 +21,7 @@ abstract public class AbstractAdminJSFView<T> extends AbstractJSFView {
   
 
 
-  public static final String CB_PARA_SAVED = "saved";
-  public static final String CB_PARA_REMOVED = "removed";
+  
 
   private static final SEDLogger LOG = new SEDLogger(AbstractAdminJSFView.class);
   private T mtEditable;
@@ -124,6 +125,17 @@ abstract public class AbstractAdminJSFView<T> extends AbstractJSFView {
     context.update("dlgalert:deleteDialog");
   };
   
+  /**
+   *
+   */
+  public void showEditableAsString(String updateTarget) {
+    DialogXMLEdit dlg = getDialogXMLEdit();
+    dlg.setCurrentJSFView(this, updateTarget);
+    RequestContext context = RequestContext.getCurrentInstance();
+    context.execute("PF('dialogXMLEdit').show();");
+    context.update("dlgEntityEdit:dialogLayout");
+  };
+  
  public  Object getBean(final String beanName) {
     final Object returnObject = facesContext().getELContext().getELResolver().
             getValue( facesContext().getELContext(), null, beanName);    
@@ -136,6 +148,10 @@ abstract public class AbstractAdminJSFView<T> extends AbstractJSFView {
 
   public DialogDelete getDlgDelete() {
     return (DialogDelete)getBean("dialogDelete");
+  }
+  
+  public DialogXMLEdit getDialogXMLEdit() {
+    return (DialogXMLEdit)getBean("dialogXMLEdit");
   }
 
 
@@ -185,6 +201,44 @@ abstract public class AbstractAdminJSFView<T> extends AbstractJSFView {
   abstract public boolean updateEditable();
 
 
- 
+ /**
+   *
+   * @return
+   */
+  public String getEditableAsString() {
+    long l = LOG.logStart();
+    String pmrs = "";
+    Object val = getEditable();
+    if (val != null) {
+      try {
+        pmrs = XMLUtils.serializeToString(val);
+      } catch (JAXBException ex) {
+        LOG.logError(l, null, ex);
+      }
+    }
+    return pmrs;
+  }
+
+  /**
+   *
+   * @param strPMode
+   */
+  public void setEditableAsString(String strPMode) {
+
+    Object pmed = getEditable();
+    if (pmed != null) {
+      try {
+        T pmdNew = (T) XMLUtils.deserialize(strPMode, pmed.getClass());
+        if (pmed == getNew()) {
+          setNew(pmdNew);
+        } else {
+          setEditable(pmdNew);
+          //          pm.replace(pmdNew, pmed.getId());
+        }
+      } catch (JAXBException ex) {
+        LOG.logError("Error parsing xml string", ex);
+      }
+    }
+  }
 
 }

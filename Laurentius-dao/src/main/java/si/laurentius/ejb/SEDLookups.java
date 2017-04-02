@@ -33,6 +33,7 @@ import javax.transaction.NotSupportedException;
 import javax.transaction.RollbackException;
 import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
+import si.laurentius.application.SEDApplication;
 import si.laurentius.cron.SEDCronJob;
 import si.laurentius.ebox.SEDBox;
 import si.laurentius.user.SEDUser;
@@ -146,50 +147,29 @@ public class SEDLookups implements SEDLookupsInterface {
   public boolean addSEDUser(SEDUser sb) {
     return add(sb);
   }
+  
+  @Override
+  public boolean addSEDApplication(SEDApplication sb) {
+    return add(sb);
+  }
+  
 
   private <T> void cacheLookup(List<T> lst, Class<T> c) {
-    mscache.cacheList(lst, c);
-    /*if (mlstCacheLookup.containsKey(c)) {
-      mlstCacheLookup.get(c).clear();
-      mlstCacheLookup.replace(c, lst);
-    } else {
-      mlstCacheLookup.put(c, lst);
-    }
-
-    if (mlstTimeOut.containsKey(c)) {
-      mlstTimeOut.replace(c, Calendar.getInstance().getTimeInMillis());
-    } else {
-      mlstTimeOut.put(c, Calendar.getInstance().getTimeInMillis());
-    }*/
+    mscache.cacheList(lst, c);    
   }
 
   @Override
   public void clearAllCache() {
-    mscache.clearAllCache();
-    /*
-    for (Class c : mlstCacheLookup.keySet()) {
-      mlstCacheLookup.get(c).clear();
-    }
-    mlstCacheLookup.clear();
-    mlstTimeOut.clear();
-*/
+    mscache.clearAllCache();   
   }
 
   @Override
   public void clearCache(Class c) {
     mscache.clearCachedList(c);
-    /*
-    if (mlstCacheLookup.containsKey(c)) {
-      mlstCacheLookup.get(c).clear();
-      mlstCacheLookup.remove(c);
-      mlstTimeOut.remove(c);
-    }
-*/
   }
 
   private <T> List<T> getFromCache(Class<T> c) {
     return  mscache.getFromCachedList(c);
-    //return mlstCacheLookup.containsKey(c) ? (List<T>) mlstCacheLookup.get(c) : null;
   }
 
   private <T> List<T> getLookup(Class<T> c) {
@@ -221,6 +201,7 @@ public class SEDLookups implements SEDLookupsInterface {
         LOG.logError(msg, null);
         throw new RuntimeException(msg);
       }
+      LOG.formatedWarning("DOMAIN IS %s", domain);
       domain = "@" + domain;
 
       if (!sedBox.toLowerCase().endsWith(domain.toLowerCase())) {
@@ -392,6 +373,22 @@ public class SEDLookups implements SEDLookupsInterface {
     }
     return null;
   }
+  
+  
+   @Override
+  public SEDApplication getSEDApplicationById(String id) {
+    if (id != null && !id.trim().isEmpty()) {
+      String ui = id.trim();
+      List<SEDApplication> lst = getSEDApplications();
+      for (SEDApplication sb : lst) {
+        if (sb.getApplicationId().equalsIgnoreCase(id)) {
+          return sb;
+        }
+      }
+    }
+    return null;
+  }
+  
 
   /**
    *
@@ -401,8 +398,13 @@ public class SEDLookups implements SEDLookupsInterface {
   public List<SEDUser> getSEDUsers() {
     return getLookup(SEDUser.class);
   }
-
-  /**
+  
+  @Override
+  public List<SEDApplication> getSEDApplications() {
+    return getLookup(SEDApplication.class);
+  }
+  
+    /**
    *
    * @param <T>
    * @param o
@@ -417,7 +419,6 @@ public class SEDLookups implements SEDLookupsInterface {
               merge(o));
       mutUTransaction.commit();
       mscache.clearCachedList(o.getClass());
-      //mlstTimeOut.remove(o.getClass()); // remove timeout to refresh lookup at next call
       suc = true;
     } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException
             | HeuristicRollbackException | SecurityException | IllegalStateException ex) {
@@ -477,6 +478,10 @@ public class SEDLookups implements SEDLookupsInterface {
     return remove(sb);
   }
 
+ @Override
+  public boolean removeSEDApplication(SEDApplication sb) {
+    return remove(sb);
+  }
   /**
    *
    * @param <T>
@@ -619,13 +624,6 @@ public class SEDLookups implements SEDLookupsInterface {
     } else {
       bsuc = update(sb);
     }
-    /*
-    SEDProcessorInstance st = getById(SEDProcessorInstance.class, sb.getId());
-    SEDProcessor rcp = st == sb ? XMLUtils.deepCopyJAXB(sb) : sb;
-
-    rcp.setId(null);
-    rcp.bsuc = remove(st) && add(sb);
-    return update(sb);*/
     return bsuc;
   }
 
@@ -638,6 +636,12 @@ public class SEDLookups implements SEDLookupsInterface {
   public boolean updateSEDUser(SEDUser sb) {
     return update(sb);
   }
+  
+  @Override
+  public boolean updateSEDApplication(SEDApplication sb) {
+    return update(sb);
+  }
+  
 
   private <T> T getById(Class c, BigInteger id) {
 
@@ -653,5 +657,7 @@ public class SEDLookups implements SEDLookupsInterface {
     }
     return res;
   }
+  
+  
 
 }

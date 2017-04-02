@@ -495,7 +495,7 @@ public class KeystoreUtils {
 
     Key rsaKey;
     try {
-      rsaKey = ks.getKey(alias, psswd.toCharArray());
+      rsaKey = ks.getKey(alias,psswd!=null? psswd.toCharArray():null);
       if (rsaKey == null) {
         StringWriter sw = new StringWriter();
         sw.append("No key for alias ");

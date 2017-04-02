@@ -47,8 +47,7 @@ public interface PModeInterface {
    */
   @Lock(value = LockType.READ)
   public PMode getPModeForLocalPartyAsSender(String senderRefId, String actionSendingRole,
-      String receiverRefId, String serviceId)
-      throws PModeException;
+      String receiverRefId, String serviceId) throws PModeException ;
 
   /**
    * Method returs PMODE for given exchange sender Party. If pmode not exists or more than one PMode
@@ -63,8 +62,7 @@ public interface PModeInterface {
    */
   @Lock(value = LockType.READ)
   public PMode getPModeForExchangePartyAsSender(String senderRefId, String actionSendingRole,
-      String receiverRefId, String serviceId)
-      throws PModeException;
+      String receiverRefId, String serviceId) throws PModeException;
 
   @Lock(value = LockType.READ)
   public PMode getPModeById(String pmodeId)
@@ -143,8 +141,7 @@ public interface PModeInterface {
    * @return Service for serviceId
    * @throws PModeException
    */
-  public Service getServiceById(String serviceId)
-      throws PModeException;
+  public Service getServiceById(String serviceId);
 
   /**
    * Method returs ReceptionAwareness if exists else throws PModeException!
@@ -153,8 +150,7 @@ public interface PModeInterface {
    * @return ReceptionAwareness for id
    * @throws PModeException
    */
-  public ReceptionAwareness getReceptionAwarenessById(String raId)
-      throws PModeException;
+  public ReceptionAwareness getReceptionAwarenessById(String raId);
 
   /**
    * Method returs service if exists else throws PModeException!
@@ -163,17 +159,16 @@ public interface PModeInterface {
    * @return Security for securityId
    * @throws PModeException
    */
-  public Security getSecurityById(String securityId)
-      throws PModeException;
+  public Security getSecurityById(String securityId);
 
   
   public boolean partyIdentitySetExists(String id);
   
-  public List<PMode> getPModes() throws PModeException;
-  public List<Service> getServices() throws PModeException;
-  public List<PartyIdentitySet> getPartyIdentitySets() throws PModeException;
-  public List<Security> getSecurities() throws PModeException;
-  public List<ReceptionAwareness> getReceptionAwarenesses() throws PModeException;
+  public List<PMode> getPModes() ;
+  public List<Service> getServices() ;
+  public List<PartyIdentitySet> getPartyIdentitySets() ;
+  public List<Security> getSecurities() ;
+  public List<ReceptionAwareness> getReceptionAwarenesses() ;
   
   
   public void addPMode(PMode val);

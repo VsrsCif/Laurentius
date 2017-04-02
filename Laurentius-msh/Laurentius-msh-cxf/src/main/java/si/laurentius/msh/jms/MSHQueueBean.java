@@ -39,7 +39,6 @@ import si.laurentius.commons.SEDValues;
 import si.laurentius.commons.exception.PModeException;
 import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.interfaces.PModeInterface;
-import si.laurentius.commons.interfaces.SEDCertStoreInterface;
 import si.laurentius.commons.interfaces.SEDCertUtilsInterface;
 import si.laurentius.commons.interfaces.SEDDaoInterface;
 import si.laurentius.commons.pmode.EBMSMessageContext;
@@ -165,7 +164,7 @@ public class MSHQueueBean implements MessageListener {
       Exception exc = ex.getCausedByException();
       String errDesc = String.format(
               "Error retrieving EBMSMessageContext for message id: '%d'. Error: %s",
-              jmsMessageId, exc.getMessage());
+              jmsMessageId, Utils.getInitCauseMessage(exc));
       LOG.logError(t, errDesc, ex);
       setStatusToOutMail(mail, SEDOutboxMailStatus.FAILED, errDesc, ex);
       mPluginOutEventHandler.outEvent(mail, null,
@@ -199,28 +198,7 @@ public class MSHQueueBean implements MessageListener {
       setStatusToOutMail(mail, SEDOutboxMailStatus.PUSHING,
               "Start pushing to receiver MSH");
 
-     
-
-      // transport protocol
-/*
-      // set reciept
-      sd.setReceptionAwarenessRetry(jmsRetryCount);
-      /* SEDCertStore scs = null;
-    mCertBean.getRootCACerts()
-      try {
-        scs = mCertBean.getCertificateStore();
-        rootCA= mCertBean.getRootCACertificateStore();
-      } catch (SEDSecurityException ex) {
-
-        String errDesc = ex.getMessage();
-        LOG.logError(t, errDesc, ex);
-        setStatusToOutMail(mail, SEDOutboxMailStatus.FAILED, errDesc, ex);
-        mPluginOutEventHandler.outEvent(mail, null,
-            OutMailEventInterface.PluginOutEvent.FAILED);
-        return;
-
-      }
-       */
+    
       Result sm = mmshClient.pushMessage(mail, sd, mCertBean);
 
       if (sm.getError() != null) {
@@ -232,8 +210,7 @@ public class MSHQueueBean implements MessageListener {
                 getSubMessage(),
                 sm.getResultFile(), sm.getMimeType());
 
-        LOG.formatedWarning("********************* ERROR MESSAGE %s",
-                sm.getError().getEbmsErrorCode().getCode());
+      
         if ((sm.getError().getEbmsErrorCode().equals(
                 EBMSErrorCode.ConnectionFailure)
                 || sm.getError().getEbmsErrorCode().equals(
@@ -332,7 +309,7 @@ public class MSHQueueBean implements MessageListener {
           Throwable ex) {
     String strpath = null;
     if (ex != null) {
-      String msg = String.format("%s, Error: %s", desc, ex.getMessage());
+
       try {
         strpath = msStorageUtils.storeThrowableAndGetRelativePath(ex);
       } catch (StorageException ex1) {

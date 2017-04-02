@@ -9,7 +9,7 @@
         <property column="PROP_VALUE" name="Value"  length="1024" type="java.lang.String" />       
         <property column="LAU_GROUP" name="Group"  length="32" type="java.lang.String" />        
     </class>    
-    <query name="SEDProperty.getAll" ><![CDATA[SELECT p FROM SEDProperty p]]></query>
-    <query name="SEDProperty.getByKey" ><![CDATA[SELECT p FROM SEDProperty p where p.key=:key and p.Group=:group]]></query>
+    <query name="si.laurentius.property.SEDProperty.getAll" ><![CDATA[SELECT p FROM SEDProperty p]]></query>
+    <query name="si.laurentius.property.SEDProperty.getByKey" ><![CDATA[SELECT p FROM SEDProperty p where p.key=:key and p.Group=:group]]></query>
 
 </hibernate-mapping>

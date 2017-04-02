@@ -30,9 +30,11 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.ws.WebServiceContext;
 import org.primefaces.event.RowEditEvent;
+import si.jrc.msh.plugin.meps.AppConstant;
 import si.laurentius.commons.SEDSystemProperties;
 
 /**
@@ -45,6 +47,9 @@ public class MEPSPluginData {
 
   @Resource
   WebServiceContext context;
+  
+  String currentPanel  =AppConstant.S_PANEL_TEST;
+  boolean showNavigator  =true;
 
   /**
    *
@@ -147,24 +152,6 @@ public class MEPSPluginData {
 
   }
 
-  /**
-   *
-   * @param event
-   */
-  public void onCancel(RowEditEvent event) {
-    // FacesMessage msg = new FacesMessage("Item Cancelled");
-    // FacesContext.getCurrentInstance().addMessage(null, msg);
-    // orderList.remove((OrderBean) event.getObject());
-  }
-
-  /**
-   *
-   * @param event
-   */
-  public void onEdit(RowEditEvent event) {
-    // FacesMessage msg = new FacesMessage("Item Edited",((OrderBean) event.getObject()).getItem());
-    // FacesContext.getCurrentInstance().addMessage(null, msg);
-  }
 
   /**
      *
@@ -176,6 +163,33 @@ public class MEPSPluginData {
     UIViewRoot viewroot = viewHandler.createView(facesContext, refreshpage);
     viewroot.setViewId(refreshpage);
     facesContext.setViewRoot(viewroot);
+  }
+
+   /**
+   *
+   * @param event
+   */
+  public void onToolbarButtonAction(ActionEvent event) {
+    if (event != null) {
+      String res = (String) event.getComponent().getAttributes().get("panel");
+      currentPanel = res;
+    }
+  }
+
+  public String getCurrentPanel() {
+    return currentPanel;
+  }
+
+  public void setCurrentPanel(String currentPanel) {
+    this.currentPanel = currentPanel;
+  }
+
+  public boolean isShowNavigator() {
+    return showNavigator;
+  }
+
+  public void setShowNavigator(boolean showNavigator) {
+    this.showNavigator = showNavigator;
   }
 
 }

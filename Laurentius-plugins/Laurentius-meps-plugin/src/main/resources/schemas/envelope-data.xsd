@@ -25,107 +25,85 @@ Copyright 2015, Supreme Court Republic of Slovenia
  See the Licence for the specific language governing permissions and  
  limitations under the Licence.
 -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://laurentius.si.envelope" targetNamespace="http://laurentius.si.envelope" elementFormDefault="qualified" attributeFormDefault="unqualified">
-    <xs:element name="EnvelopeData" type="ns1:EnvelopeData"/>
-    <xs:complexType name="PhysicalAddressType">
-        <xs:sequence>
-            <xs:element name="Name">
-                <xs:annotation>
-                    <xs:documentation>Naziv / Ime in priimek</xs:documentation>
-                </xs:annotation>
-                <xs:simpleType>
-                    <xs:restriction base="xs:string">
-                        <xs:maxLength value="200"/>
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:element>
-            <xs:element name="SubName" minOccurs="0">
-                <xs:annotation>
-                    <xs:documentation>Naziv (Ime priimek) – ki se izpiše pod naziv</xs:documentation>
-                </xs:annotation>
-                <xs:simpleType>
-                    <xs:restriction base="xs:string">
-                        <xs:minLength value="100"/>
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:element>
-            <xs:element name="Street">
-                <xs:annotation>
-                    <xs:documentation>ulica in hišna številka (dodatna oznaka hišne številke)</xs:documentation>
-                </xs:annotation>
-                <xs:simpleType>
-                    <xs:restriction base="xs:string">
-                        <xs:minLength value="100"/>
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:element>
-            <xs:element name="PostalCode">
-                <xs:annotation>
-                    <xs:documentation>Poštna številka </xs:documentation>
-                </xs:annotation>
-                <xs:simpleType>
-                    <xs:restriction base="xs:string">
-                        <xs:minLength value="10"/>
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:element>
-            <xs:element name="City">
-                <xs:annotation>
-                    <xs:documentation>Naziv kraja pošte</xs:documentation>
-                </xs:annotation>
-                <xs:simpleType>
-                    <xs:restriction base="xs:string">
-                        <xs:minLength value="60"/>
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:element>
-            <xs:element name="Country">
-                <xs:simpleType>
-                    <xs:restriction base="xs:string">
-                        <xs:minLength value="100"/>
-                    </xs:restriction>
-                </xs:simpleType>
-            </xs:element>
-        </xs:sequence>
-    </xs:complexType>
-    <xs:complexType name="EnvelopeData">
-        <xs:annotation>
-            <xs:appinfo>Schema EnvelopeData infoset</xs:appinfo>
-            <xs:documentation xml:lang="sl">			
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://meps.laurentius.si/envelope" targetNamespace="http://meps.laurentius.si/envelope" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="EnvelopeData" type="ns1:EnvelopeData"/>
+	<xs:complexType name="PhysicalAddressType">
+		<xs:attribute name="Name" use="required">
+			<xs:annotation>
+				<xs:documentation>Name or Firstname and Surname</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="Name2">
+			<xs:annotation>
+				<xs:documentation>Department name</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="Address" use="required">
+			<xs:annotation>
+				<xs:documentation>Street name and house name or Postal box id</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="PostalCode" use="required">
+			<xs:annotation>
+				<xs:documentation>Postal code</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="PostalName" use="required">
+			<xs:annotation>
+				<xs:documentation>Postal name </xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="Town" use="required"/>
+		<xs:attribute name="Country" use="required"/>
+		<xs:attribute name="CountryCode" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="EnvelopeData">
+		<xs:annotation>
+			<xs:appinfo>Schema EnvelopeData infoset</xs:appinfo>
+			<xs:documentation xml:lang="sl">			
             </xs:documentation>
-        </xs:annotation>
-        <xs:sequence>
-            <xs:element name="MEPS_Id" minOccurs="0"/>
-            <xs:element name="ReceiverAddress" type="ns1:PhysicalAddressType"/>
-            <xs:element name="SenderAdderss" type="ns1:PhysicalAddressType"/>
-            <xs:element name="PostalMarking" type = "ns1:PostalMarking" />                
-            <xs:element name="SenderMailData" type="ns1:SenderMailData" />                
-            <xs:element name="PrintContent" type="ns1:PrintContent" />
-        </xs:sequence>
-    </xs:complexType>
-    <xs:complexType name="SenderMailData">
-        <xs:sequence>
-            <xs:element name="ContentDescription"/>
-            <xs:element name="CaseCode"/>
-            <xs:element name="SenderMailId"/>
-            <xs:element name="SenderMailCode"/>
-            <xs:element name="Calendar"/>
-        </xs:sequence>
-    </xs:complexType>     
-    <xs:complexType name="PostalMarking">
-        <xs:sequence>
-            <xs:element name="UPNCode"/>
-            <xs:element name="SubmitPostalName"/>
-            <xs:element name="SubmitPostalCode"/>
-            <xs:element name="EnvelopeType"/>
-        </xs:sequence>
-    </xs:complexType>
-    <xs:complexType  name="PrintContent">
-        <xs:sequence>
-            <xs:element name="PageCount"/>
-            <xs:element name="FileName"/>
-            <xs:element name="MimeType"/>
-        </xs:sequence>
-    </xs:complexType>
-
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="ExecutorId" minOccurs="0"/>
+                        <xs:element name="ExecutorContractId" minOccurs="0"/>
+			<xs:element name="ReceiverAddress" type="ns1:PhysicalAddressType"/>
+			<xs:element name="SenderAdderss" type="ns1:PhysicalAddressType"/>
+			<xs:element name="PostalData" type="ns1:PostalData"/>
+			<xs:element name="SenderMailData" type="ns1:SenderMailData"/>
+			<xs:element name="PrintContent" type="ns1:PrintContent" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="SenderMailData">
+		<xs:sequence>
+			<xs:element name="ContentDescription"/>
+			<xs:element name="CaseCode"/>
+			<xs:element name="SenderMailId"/>
+			<xs:element name="SenderMailCode"/>
+			<xs:element name="Calendar" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="PostalData">
+		<xs:sequence>
+			<xs:element name="UPNCode">
+				<xs:complexType>
+					<xs:attribute name="prefix"/>
+					<xs:attribute name="code"/>
+					<xs:attribute name="control"/>
+					<xs:attribute name="sufix"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="envelopeType"/>
+		<xs:attribute name="submitPostalCode"/>
+		<xs:attribute name="submitPostalName"/>
+		<xs:attribute name="postalContractId"/>
+		<xs:attribute name="postalContractName"/>
+	</xs:complexType>
+	<xs:complexType name="PrintContent">
+		<xs:sequence>
+			<xs:element name="PageCount" minOccurs="0"/>
+			<xs:element name="FileName"/>
+			<xs:element name="MimeType"/>
+		</xs:sequence>
+	</xs:complexType>
 </xs:schema>

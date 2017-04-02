@@ -45,6 +45,7 @@ import si.laurentius.commons.interfaces.SEDLookupsInterface;
 import si.laurentius.commons.interfaces.SEDPluginManagerInterface;
 import si.laurentius.commons.interfaces.SEDSchedulerInterface;
 import si.laurentius.commons.utils.SEDLogger;
+import si.laurentius.commons.utils.Utils;
 import si.laurentius.commons.utils.xml.XMLUtils;
 import si.laurentius.plugin.def.Plugin;
 import si.laurentius.plugin.interfaces.PluginDescriptionInterface;
@@ -94,6 +95,7 @@ public class SEDInitData implements SEDInitDataInterface {
     slps.setSEDCronJobs(new SedLookups.SEDCronJobs());
     slps.setSEDProperties(new SedLookups.SEDProperties());
     slps.setSEDUsers(new SedLookups.SEDUsers());
+    slps.setSEDApplications(new SedLookups.SEDApplications());
     slps.setSEDProcessors(new SedLookups.SEDProcessors());
     slps.setSEDInterceptors(new SedLookups.SEDInterceptors());
     slps.setSEDCertPassword(new SedLookups.SEDCertPassword());
@@ -101,6 +103,7 @@ public class SEDInitData implements SEDInitDataInterface {
 
     slps.getSEDBoxes().getSEDBoxes().addAll(mdbLookups.getSEDBoxes());
     slps.getSEDUsers().getSEDUsers().addAll(mdbLookups.getSEDUsers());
+    slps.getSEDApplications().getSEDApplications().addAll(mdbLookups.getSEDApplications());
     slps.getSEDCronJobs().getSEDCronJobs().addAll(mdbLookups.getSEDCronJobs());
     slps.getSEDInterceptors().getSEDInterceptors().addAll(mdbLookups.
             getSEDInterceptors());
@@ -248,6 +251,14 @@ public class SEDInitData implements SEDInitDataInterface {
         }
       });
     }
+    if (cls.getSEDApplications() != null && !cls.getSEDApplications().
+            getSEDApplications().isEmpty()) {
+      cls.getSEDApplications().getSEDApplications().stream().forEach((cb) -> {
+        if (mdbLookups.getSEDApplicationById(cb.getApplicationId()) == null) {
+          mdbLookups.addSEDApplication(cb);
+        }
+      });
+    }
   }
 
   private void initSEDKeystores(SedLookups cls) {
@@ -273,25 +284,29 @@ public class SEDInitData implements SEDInitDataInterface {
    * @param cls
    */
   private void initSettings(SedLookups cls) {
+    
+    String sysDomain = System.getProperty(SEDSystemProperties.SYS_PROP_LAU_DOMAIN);
+    String sysHomeDir = System.getProperty(SEDSystemProperties.SYS_PROP_HOME_DIR);
+    // upate system properties from init file
     if (cls.getSEDProperties() != null && !cls.getSEDProperties().
             getSEDProperties().isEmpty()) {
       mdbSettings.setSEDProperties(cls.getSEDProperties().
               getSEDProperties());
 
     }
-
-    if (System.getProperties().containsKey(
-            SEDSystemProperties.SYS_PROP_LAU_DOMAIN)) {
+    // overide system settings!
+    if (!Utils.isEmptyString(sysDomain)){
       mdbSettings.setSEDProperty(SEDSystemProperties.SYS_PROP_LAU_DOMAIN,
-              System.
-                      getProperty(SEDSystemProperties.SYS_PROP_LAU_DOMAIN),
-              "SYSTEM");
+              sysDomain,DBSettingsInterface.SYSTEM_SETTINGS);
     }
-    if (!System.getProperties().containsKey(
-            SEDSystemProperties.SYS_PROP_LAU_DOMAIN)) {
-      System.setProperty(SEDSystemProperties.SYS_PROP_LAU_DOMAIN,
-              SEDSystemProperties.getLocalDomain());
+    
+    // overide system settings!
+    if (!Utils.isEmptyString(sysHomeDir)){
+      mdbSettings.setSEDProperty(SEDSystemProperties.SYS_PROP_HOME_DIR,
+              sysHomeDir,DBSettingsInterface.SYSTEM_SETTINGS);
     }
+
+    
   }
 
   public void exportPluginData(File initFolder, boolean savePasswords) {

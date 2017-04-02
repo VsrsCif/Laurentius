@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      xmlns:pnl="http://java.sun.com/jsf/composite/laurentius-ui/panel"
+      >
+    <composite:interface>
+    </composite:interface>
+
+    <composite:implementation >
+        <pnl:pnl-settings id="applPanel"
+                          title="#{msg['Application']}" 
+                          description="#{msg['SEDApplDefDesc']}"
+                          icon="ui-icon-svg-cms"
+                          >
+            <p:scrollPanel mode="native" style="width:100%;height:100%"> <!-- p:dataTable scrollable does not resize when toogled suth panel -->                
+                <p:dataTable id="TblSedAppl" 
+                             var="sp" 
+                             value="#{adminSEDApplicationView.list}"
+                             selectionMode="single"
+                             selection="#{adminSEDApplicationView.selected}"
+                             rowKey="#{sp.applicationId}"
+                             currentPageReportTemplate="#{msg['Showing']} {startRecord}-{endRecord} #{msg['OutOf']} {totalRecords}"
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             rowsPerPageTemplate="25,50,100,200" 
+                             paginator="true" 
+                             style="padding: 0px; margin: 0px"
+                             scrollable="true" 
+                             scrollHeight="100%"
+                             rows="100"  >
+
+                    <p:ajax event="rowDblselect" 
+                            listener="#{adminSEDApplicationView.startEditSelected()}" 
+                            update=":dlgappl:applDialog:applDialogForm"
+                            oncomplete="PF('applDialog').show()"/>
+
+                    <f:facet name="header">
+                        <pnl:pnl-table-control 
+                            dialogVar="applDialog"
+                            updateDialog=":dlgappl:applDialog:applDialogForm"
+                            updateTable=":forms:SettingsAppls:applPanel:TblSedAppl"
+                            addActionListener="#{adminSEDApplicationView.createEditable()}"
+                            editActionListener="#{adminSEDApplicationView.startEditSelected()}"
+                            removeActionListener="#{adminSEDApplicationView.removeSelectedWithWarning(':forms:SettingsAppls:applPanel:TblSedAppl')}"                            
+                            />       
+                    </f:facet>
+
+                    <p:column style="width:16px">
+                        <p:rowToggler />
+                    </p:column>
+                    <p:column headerText="#{msg['ApplicationId']}" width="250">
+                        <h:outputText value="#{sp.applicationId}" />
+                    </p:column>              
+                    <p:column headerText="#{msg['ActiveFromDate']}" width="60">
+                        <h:outputText value="#{sp.activeFromDate}" ><f:convertDateTime pattern="dd.MM.yyyy"  timeZone="CET" /></h:outputText>                
+                    </p:column>
+                    <p:column headerText="#{msg['ActiveToDate']}" width="60">
+                        <h:outputText value="#{sp.activeToDate}" ><f:convertDateTime pattern="dd.MM.yyyy" timeZone="CET" /></h:outputText>                
+                    </p:column>
+                    <p:rowExpansion>
+                        <p:dataList value="#{sp.SEDBoxes}" var="ebox"  type="unordered" itemType="none">
+                            #{ebox.localBoxName}#{ApplicationData.domain}
+                        </p:dataList>
+                    </p:rowExpansion>
+                </p:dataTable>
+            </p:scrollPanel>           
+        </pnl:pnl-settings>
+    </composite:implementation>
+
+</html>

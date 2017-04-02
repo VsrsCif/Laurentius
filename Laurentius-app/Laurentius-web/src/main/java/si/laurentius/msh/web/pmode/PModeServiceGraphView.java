@@ -25,6 +25,7 @@ import org.primefaces.model.diagram.overlay.ArrowOverlay;
 import org.primefaces.model.diagram.overlay.LabelOverlay;
 import si.laurentius.commons.enums.MimeValue;
 import si.laurentius.commons.pmode.enums.ActionRole;
+import si.laurentius.commons.pmode.enums.MessageType;
 import si.laurentius.msh.pmode.Action;
 import si.laurentius.msh.pmode.PayloadProfile;
 import si.laurentius.msh.pmode.Service;
@@ -50,6 +51,7 @@ public class PModeServiceGraphView extends AbstractAdminJSFView<Action> {
     Action act = new Action();
     act.setName(String.format(sbname, i));
     act.setInvokeRole(ActionRole.Initiator.getValue());
+    act.setMessageType(MessageType.UserMessage.getValue());
     act.setPayloadProfiles(new Action.PayloadProfiles());
 
     PayloadProfile pf = new PayloadProfile();
@@ -89,7 +91,10 @@ public class PModeServiceGraphView extends AbstractAdminJSFView<Action> {
 
     model.getDefaultConnectionOverlays().add(new ArrowOverlay(20, 20, 1, 1));
     StraightConnector connector = new StraightConnector();
-    connector.setPaintStyle("{strokeStyle:'#787F57', lineWidth:3}");
+   /// connector.setPaintStyle("{strokeStyle: '#787F57', lineWidth:3, lineDash:5'}");
+    connector.setPaintStyle("{strokeStyle: '#585FFF', lineWidth:4}");
+    
+ 
     ;
     model.setDefaultConnector(connector);
 
@@ -187,8 +192,14 @@ public class PModeServiceGraphView extends AbstractAdminJSFView<Action> {
     Connection conn = null;
     if (Objects.equals(act.getInvokeRole(), ActionRole.Executor.getValue())) {
       conn = new Connection(to, from);
+    
     } else {
       conn = new Connection(from, to);
+    }
+    if (act.getMessageType()!=null &&  Objects.equals(MessageType.SignalMessage.getValue(),  act.getMessageType())){
+       StraightConnector connector = new StraightConnector();
+        connector.setPaintStyle("{strokeStyle: '#989FAF', lineWidth:2, lineDash:5}");
+        conn.setConnector(connector);
     }
 
     if (act.getName() != null) {

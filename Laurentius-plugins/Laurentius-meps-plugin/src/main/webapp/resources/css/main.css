@@ -194,6 +194,34 @@
 
 
 
+.searchDate input {
+    width: 120px;
+
+}
+
+.ui-panel-Header{
+    color: whitesmoke;
+    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.8);
+    width:100%;
+    padding: 2px 15px;
+    background-color: #3d3c40;
+    margin: 0 20px    
+}
+.ui-gp-header{
+    color: whitesmoke;
+    background-color: #3d3c40;
+    font-weight: bold;
+
+
+}
+
+.ui-gp-label{
+    width: 120px !important; 
+    background: lightsteelblue;
+    text-align: right !important;
+
+}
+
 
 
 

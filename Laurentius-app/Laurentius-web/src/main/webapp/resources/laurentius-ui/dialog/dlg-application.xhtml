@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      xmlns:dlg="http://java.sun.com/jsf/composite/laurentius-ui/dialog"
+      >
+    <composite:interface>
+    </composite:interface>
+
+    <composite:implementation >      
+        <dlg:dlg-abstract   id="applDialog"
+                            formId="applDialogForm"
+                            dialogTitle="#{msg['SEDApplicationDialog']}" 
+                            editable="#{adminSEDApplicationView.editable}"
+                            width="800"
+                            height="300"
+                            updateOnSave=":forms:SettingsAppls:applPanel:TblSedAppl"
+                            onConfirmAction="#{adminSEDApplicationView.addOrUpdateEditable()}" >
+            <p:layout>
+                <p:layoutUnit position="center">
+                    <p:panelGrid  id= "intrcRule" columns="2" columnClasses="grid-label, value"
+                                  style="width:100%;">
+
+                        <h:outputText value="#{msg['ApplicationId']}:" />
+                        <h:inputText value="#{adminSEDApplicationView.editable.applicationId}" 
+                                     disabled="#{empty adminSEDApplicationView.new}"  style="width:100%;" />
+
+
+                        <h:outputText value="#{msg['Name']}:" />
+                        <h:inputText value="#{adminSEDApplicationView.editable.name}" style="width:100%;" />
+
+                        <h:outputText value="#{msg['Description']}:" />
+                        <h:inputTextarea value="#{adminSEDApplicationView.editable.desc}" style="width:100%;" />
+
+                        <h:outputText value="#{msg['EMail']}:" />
+                        <h:inputText value="#{adminSEDApplicationView.editable.email}"  style="width:100%;"/>
+
+                        <h:outputText value="#{msg['ActiveFromDate']}:"  />
+                        <p:calendar styleClass="searchDate" value="#{adminSEDApplicationView.editable.activeFromDate}"
+                                    pattern="dd.MM.yyyy" mask="true" navigator="true" showOn="button" 
+                                    style="width:100%;"/>
+
+                        <h:outputText value="#{msg['ActiveToDate']}:"/>
+                        <p:calendar styleClass="searchDate" value="#{adminSEDApplicationView.editable.activeToDate}" 
+                                    pattern="dd.MM.yyyy" mask="true" navigator="true" showOn="button" 
+                                    style="width:100%;" />
+                    </p:panelGrid>
+                </p:layoutUnit>
+                <p:layoutUnit position="east" size="350" maxSize="350" minSize="350">
+                    <h:outputText class="label" value="#{msg['SED-Boxes']}:" style="width:100% !important;" />
+                    <p:pickList id="ApplBoxPickList" 
+                                value="#{adminSEDApplicationView.currentPickupDualSEDBoxList}" 
+                                var="sbox"                                                 
+                                itemValue="#{sbox}" 
+                                itemLabel="#{sbox.localBoxName}" 
+                                showSourceControls="false"
+                                showTargetControls="false" showCheckbox="false" responsive="true"
+                                showSourceFilter="false" showTargetFilter="false" 
+                                converter="userSedBoxPickListConverter"
+                                style="width: 100%"
+                                >
+                        <f:facet name="sourceCaption">#{msg['Available']}</f:facet>
+                        <f:facet name="targetCaption">#{msg['Appl sed-boxes']}</f:facet>
+                        <p:column >
+                            <h:outputText value="#{sbox.localBoxName}" />
+                        </p:column>
+                    </p:pickList>
+                </p:layoutUnit>
+            </p:layout>
+
+        </dlg:dlg-abstract>
+    </composite:implementation>
+
+</html>

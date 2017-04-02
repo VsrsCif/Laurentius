@@ -85,7 +85,7 @@ public class EBMSInInterceptorTest {
         mTestInstance.mCertUtils= new SEDTestCertBean();
             
       setLogger(EBMSInInterceptorTest.class.getSimpleName());
-    } catch (PModeException | IOException | JAXBException ex) {
+    } catch ( IOException | JAXBException ex) {
       LOG.error("ERROR startClass", ex);
     }
   }

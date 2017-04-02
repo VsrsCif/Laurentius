@@ -14,7 +14,6 @@
  */
 package si.laurentius.msh.web.admin;
 
-import java.math.BigInteger;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;

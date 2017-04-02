@@ -266,8 +266,10 @@ public class EBMSBuilder {
             new org.oasis_open.docs.ebxml_msg.ebms.v3_0.ns.core._200704.Service());
     usgMsg.getCollaborationInfo().getService().setValue(ctx.getService().
             getServiceName());
-    usgMsg.getCollaborationInfo().getService().setType(ctx.getService().
-            getServiceType());
+    if (!Utils.isEmptyString(ctx.getService().getServiceType())) {
+      usgMsg.getCollaborationInfo().getService().setType(ctx.getService().
+              getServiceType());
+    }
     usgMsg.getCollaborationInfo().setAction(mo.getAction());
     usgMsg.getCollaborationInfo().setConversationId(mo.getConversationId());
 
@@ -280,9 +282,10 @@ public class EBMSBuilder {
     }
 
     List<Property> lstProperties = new ArrayList<>();
-    if (ctx.getService().getUseSEDProperties()==null || ctx.getService().getUseSEDProperties()) {
+    if (ctx.getService().getUseSEDProperties() == null || ctx.getService().
+            getUseSEDProperties()) {
 
-      if (mo.getSubject() != null) {
+      if (!Utils.isEmptyString(mo.getSubject())) {
         Property p = new Property();
         p.setName(EBMSConstants.EBMS_PROPERTY_DESC);
         p.setValue(mo.getSubject());
@@ -297,6 +300,14 @@ public class EBMSBuilder {
         p.setName(EBMSConstants.EBMS_PROPERTY_SUBMIT_DATE);
         p.setValue(DatatypeConverter.printDateTime(cal));
         lstProperties.add(p);
+      }
+      
+      if (!Utils.isEmptyString(mo.getSenderMessageId())) {
+        Property p = new Property();
+        p.setName(EBMSConstants.EBMS_PROPERTY_SENDER_MSG_ID);
+        p.setValue(mo.getSenderMessageId());
+        lstProperties.add(p);
+
       }
     }
     // add aditional properties
@@ -363,7 +374,8 @@ public class EBMSBuilder {
           fp.setValue(mp.getMimeType());
           fileProp.add(fp);
         }
-        if (ctx.getService().getUseSEDProperties()==null || ctx.getService().getUseSEDProperties()) {
+        if (ctx.getService().getUseSEDProperties() == null || ctx.getService().
+                getUseSEDProperties()) {
           if (!Utils.isEmptyString(mp.getName())) {
             Property fp = new Property();
             fp.setName(EBMSConstants.EBMS_PAYLOAD_PROPERTY_NAME);

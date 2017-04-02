@@ -17,6 +17,7 @@ package si.laurentius.commons.interfaces;
 import java.math.BigInteger;
 import java.util.List;
 import javax.ejb.Local;
+import si.laurentius.application.SEDApplication;
 import si.laurentius.cron.SEDCronJob;
 import si.laurentius.ebox.SEDBox;
 import si.laurentius.interceptor.SEDInterceptor;
@@ -51,6 +52,8 @@ public interface SEDLookupsInterface {
    * @return
    */
   boolean addSEDUser(SEDUser sb);
+  
+  boolean addSEDApplication(SEDApplication sb);
 
   /**
    *
@@ -119,6 +122,8 @@ public interface SEDLookupsInterface {
    * @return
    */
   SEDUser getSEDUserByUserId(String userId);
+  
+  SEDApplication getSEDApplicationById(String id);
 
   /**
    *
@@ -143,6 +148,10 @@ public interface SEDLookupsInterface {
    * @return
    */
   List<SEDUser> getSEDUsers();
+  
+  List<SEDApplication> getSEDApplications();
+  
+
 
   /**
    *
@@ -164,6 +173,10 @@ public interface SEDLookupsInterface {
    * @return
    */
   boolean removeSEDUser(SEDUser sb);
+  
+  boolean removeSEDApplication(SEDApplication sb);
+  
+  
 
 
 
@@ -201,7 +214,10 @@ public interface SEDLookupsInterface {
    * @return
    */
   boolean updateSEDUser(SEDUser sb);
-
+  
+  boolean updateSEDApplication(SEDApplication sb);
+  
+  
 
   /**
    *
@@ -220,5 +236,6 @@ public interface SEDLookupsInterface {
   
   void clearAllCache();
   void clearCache(Class cls);
+  
 
 }

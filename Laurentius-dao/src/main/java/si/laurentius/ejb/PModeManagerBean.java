@@ -37,7 +37,7 @@ import si.laurentius.commons.utils.SEDLogger;
  */
 @Startup
 @Singleton
-  @AccessTimeout(value = 60000)
+@AccessTimeout(value = 60000)
 public class PModeManagerBean implements PModeInterface {
 
   protected final static SEDLogger LOG = new SEDLogger(PModeManagerBean.class);
@@ -69,48 +69,56 @@ public class PModeManagerBean implements PModeInterface {
   public void addService(Service val) {
     getPModeManager().addService(val);
   }
+
   @Override
   public EBMSMessageContext createMessageContextForOutMail(MSHOutMail mail)
           throws PModeException {
     return getPModeManager().createMessageContextForOutMail(mail);
   }
+
   @Override
-  public PMode getByAgreementRef(String agrRef, String agrRefType, String agrPMode)
+  public PMode getByAgreementRef(String agrRef, String agrRefType,
+          String agrPMode)
           throws PModeException {
     return getPModeManager().getByAgreementRef(agrRef, agrRefType, agrPMode);
   }
 
   @Override
   public PMode getPModeById(String pmodeId)
-      throws PModeException {
+          throws PModeException {
     return getPModeManager().getPModeById(pmodeId);
   }
+
   @Override
-  public PMode getPModeForExchangePartyAsSender(String senderRefId, String actionSendingRole,
+  public PMode getPModeForExchangePartyAsSender(String senderRefId,
+          String actionSendingRole,
           String receiverRefId, String serviceId)
           throws PModeException {
-    return getPModeManager().getPModeForExchangePartyAsSender(senderRefId, actionSendingRole,
+    return getPModeManager().getPModeForExchangePartyAsSender(senderRefId,
+            actionSendingRole,
             receiverRefId, serviceId);
   }
+
   @Override
-  public PMode getPModeForLocalPartyAsSender(String senderRefId, String actionSendingRole,
+  public PMode getPModeForLocalPartyAsSender(String senderRefId,
+          String actionSendingRole,
           String receiverRefId, String serviceId)
           throws PModeException {
-    return getPModeManager().getPModeForLocalPartyAsSender(senderRefId, actionSendingRole,
+    return getPModeManager().getPModeForLocalPartyAsSender(senderRefId,
+            actionSendingRole,
             receiverRefId,
             serviceId);
-    
+
   }
+
   private FilePModeManager getPModeManager() {
-    
-    if (m_iLastRefreshTime + m_iRefreshInterval < Calendar.getInstance().getTimeInMillis()) {
+
+    if (m_iLastRefreshTime + m_iRefreshInterval < Calendar.getInstance().
+            getTimeInMillis()) {
       long l = LOG.logStart();
-      try {
-        
-        mPModeManager.reload();
-      } catch (PModeException ex) {
-        LOG.logError(l, ex);
-      }
+
+      mPModeManager.reload();
+
       LOG.logEnd(l);
       m_iLastRefreshTime = Calendar.getInstance().getTimeInMillis();
     }
@@ -119,22 +127,24 @@ public class PModeManagerBean implements PModeInterface {
 
   @Override
   public List<PMode> getPModes()
-      throws PModeException {
+          {
     return getPModeManager().getPModes();
   }
 
-
   @Override
   public PartyIdentitySet getPartyIdentitySetById(String partyIdentiySetId)
-      throws PModeException {
+          throws PModeException {
     return getPModeManager().getPartyIdentitySetById(partyIdentiySetId);
   }
 
   @Override
-  public PartyIdentitySet getPartyIdentitySetForPartyId(String partyType, String partyIdValue)
-      throws PModeException {
-    return getPModeManager().getPartyIdentitySetForPartyId(partyType, partyIdValue);
+  public PartyIdentitySet getPartyIdentitySetForPartyId(String partyType,
+          String partyIdValue)
+          throws PModeException {
+    return getPModeManager().getPartyIdentitySetForPartyId(partyType,
+            partyIdValue);
   }
+
   @Override
   public PartyIdentitySet getPartyIdentitySetForSEDAddress(String address)
           throws PModeException {
@@ -142,52 +152,50 @@ public class PModeManagerBean implements PModeInterface {
   }
 
   @Override
-  public List<PartyIdentitySet> getPartyIdentitySets()
-      throws PModeException {
+  public List<PartyIdentitySet> getPartyIdentitySets() {
     return getPModeManager().getPartyIdentitySets();
   }
+
   @Override
-  public ReceptionAwareness getReceptionAwarenessById(String raId)
-          throws PModeException {
+  public ReceptionAwareness getReceptionAwarenessById(String raId){
     return getPModeManager().getReceptionAwarenessById(raId);
   }
 
   @Override
-  public List<ReceptionAwareness> getReceptionAwarenesses()
-      throws PModeException {
+  public List<ReceptionAwareness> getReceptionAwarenesses() {
     return getPModeManager().getReceptionAwarenesses();
   }
 
   @Override
-  public List<Security> getSecurities()
-      throws PModeException {
+  public List<Security> getSecurities(){
     return getPModeManager().getSecurities();
   }
+
   @Override
-  public Security getSecurityById(String securityId)
-          throws PModeException {
+  public Security getSecurityById(String securityId){
     return getPModeManager().getSecurityById(securityId);
   }
 
   @Override
-  public Service getServiceById(String serviceId)
-      throws PModeException {
+  public Service getServiceById(String serviceId) {
     return getPModeManager().getServiceById(serviceId);
   }
+
   @Override
-  public Service getServiceByNameAndTypeAndAction(String serviceName, String serviceType,
+  public Service getServiceByNameAndTypeAndAction(String serviceName,
+          String serviceType,
           String action)
           throws PModeException {
-    return getPModeManager().getServiceByNameAndTypeAndAction(serviceName, serviceType,
+    return getPModeManager().getServiceByNameAndTypeAndAction(serviceName,
+            serviceType,
             action);
   }
 
-
   @Override
-  public List<Service> getServices()
-      throws PModeException {
+  public List<Service> getServices(){
     return getPModeManager().getServices();
   }
+
   @Override
   public boolean partyIdentitySetExists(String id) {
     return getPModeManager().partyIdentitySetExists(id);
@@ -243,5 +251,4 @@ public class PModeManagerBean implements PModeInterface {
     getPModeManager().updateService(val);
   }
 
-  
 }

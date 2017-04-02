@@ -36,8 +36,11 @@
                         <h:outputText value="#{msg['MimeType']}:" />
                         <p:selectOneMenu value="#{pModeActionPayloadView.editable.MIME}" 
                                  style="width:100%" 
+                                 filter="true"
+                                 filterMatchMode="contains"
                                  >
-                            <f:selectItems value="#{LookupsData.mimeValues}" var="ar" 
+                       
+                            <f:selectItems  value="#{LookupsData.mimeValues}" var="ar" 
                                            itemLabel="#{ar.mimeType}" itemValue="#{ar.mimeType}"/>
                         </p:selectOneMenu>
                         

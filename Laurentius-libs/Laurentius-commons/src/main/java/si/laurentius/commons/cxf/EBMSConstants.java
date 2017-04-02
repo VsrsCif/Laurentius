@@ -129,6 +129,11 @@ public class EBMSConstants {
    *
    */
   public static final String EBMS_PROPERTY_DESC = "description";
+  
+  /**
+   *
+   */
+  public static final String EBMS_PROPERTY_SENDER_MSG_ID = "sender_msg_id";
 
   /**
    *

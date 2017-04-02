@@ -58,7 +58,7 @@
                                 <p:column><h:outputText value="#{msg['Service']}" /></p:column>
                                 <p:column>
                                     <p:selectOneMenu id="cmpService" value="#{OutMailDataView.newMailService}" style="width:250px" >
-                                        <p:ajax update="dlgCompose:mailComposeForm:cmpAction"/>
+                                        <p:ajax update=":dlgCompose:mailComposeForm:cmpAction"/>
                                         <f:selectItem noSelectionOption="false"  />
                                         <f:selectItems value="#{pModeServiceView.list}" var="srv" itemLabel="#{srv.id}" itemValue="#{srv.id}"/>
                                     </p:selectOneMenu></p:column>

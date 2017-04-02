@@ -44,6 +44,11 @@ public class AppConstant {
      *
      */
   public static final String S_PANEL_ADMIN_USERS = "PANEL_ADMIN_USERS";
+  
+   /**
+     *
+     */
+  public static final String S_PANEL_ADMIN_APPL = "PANEL_ADMIN_APPL";
 
   /**
      *
@@ -144,7 +149,13 @@ public class AppConstant {
   public String getS_PANEL_ADMIN_USERS() {
     return S_PANEL_ADMIN_USERS;
   }
+  
+   public String getS_PANEL_ADMIN_APPL() {
+    return S_PANEL_ADMIN_APPL;
+  }
 
+  
+  
   /**
    *
    * @return

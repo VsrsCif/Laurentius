@@ -20,6 +20,7 @@ import si.laurentius.commons.interfaces.SEDCertStoreInterface;
 import si.laurentius.commons.interfaces.SEDLookupsInterface;
 import si.laurentius.commons.interfaces.SEDPluginManagerInterface;
 import si.laurentius.commons.pmode.enums.ActionRole;
+import si.laurentius.commons.pmode.enums.MessageType;
 import si.laurentius.commons.utils.ReflectUtils;
 import si.laurentius.commons.utils.Utils;
 import si.laurentius.ebox.SEDBox;
@@ -41,8 +42,7 @@ public class LookupsData extends AbstractJSFView {
   @EJB(mappedName = SEDJNDI.JNDI_PLUGIN)
   private SEDPluginManagerInterface mPlgManager;
 
-  @EJB(mappedName = SEDJNDI.JNDI_PMODE)
-  private PModeInterface mPMode;
+  
   @EJB(mappedName = SEDJNDI.JNDI_DBCERTSTORE)
   private SEDCertStoreInterface mdbCertStore;
 
@@ -113,6 +113,10 @@ public class LookupsData extends AbstractJSFView {
 
   public ActionRole[] getPModeActionRoles() {
     return ActionRole.values();
+  }
+  
+  public MessageType[] getPModeMessageTypes() {
+    return MessageType.values();
   }
 
   public MimeValue[] getMimeValues() {
