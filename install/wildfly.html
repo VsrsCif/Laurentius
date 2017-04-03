@@ -3,7 +3,7 @@
 
         <h1 id="install/wildfly:start">Namestitev na aplikacijski strežnik wildfly</h1>
         Navodila vsebujejo opis sprememb "default" nastavitev aplikacijskega strežnika
-        <b>wildfly-10.1.0.Final</b> za demo nastavitev Laurentius. 
+        <b>wildfly-10.1.0.Final</b>, ki so bili izvedeni za  demo nastavitev Laurentius. 
         Namen opisa sprememb je olajšati delo sistemskim administratorjev za pripravo produkcijskih 
         nastavitev, ki so  prilagojene konkretnemu produkcijskemu okolju.<br /> Opis je lahko tudi 
         v pomoč pri razumevanju delovanja aplikacijskega strežnika <b>Wildfly</b>.
@@ -151,15 +151,20 @@
         naredi tekstovni datoteki:<br /> 
 
         laurentius-users.properties
-        <pre><code>
-#uporabnisko ime=geslo
-sed=sed1234
-admin=admin1234</code></pre>
+        <pre><code>#WEB GUI USERS
+user=user1234
+admin=admin1234
+
+# web service application authentication - role WEBSERVICE
+appl_1=appl1234
+appl_2=appl1234</code></pre>
         laurentius-roles.properties
-        <pre><code>
-#uporabnisko ime=role1,rola1
-sed=USER
-admin=ADMIN,USER</code></pre>
+        <pre><code>user=USER
+admin=USER,ADMIN
+
+# webservice application authentication
+appl_1=WEBSERVICE
+appl_2=WEBSERVICE</code></pre>
 
 
         <h1 id="install/wildfly:db">Dostop do baze (SQL - DMBS)</h1>
