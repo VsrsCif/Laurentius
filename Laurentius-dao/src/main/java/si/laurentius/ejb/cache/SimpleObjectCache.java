@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package si.laurentius.ejb;
+package si.laurentius.ejb.cache;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -14,15 +14,25 @@ import java.util.HashMap;
  */
 public class SimpleObjectCache {
 
-  public static final long S_UPDATE_TIMEOUT = 10 * 60 * 1000; // 10 minutes
+  private long mlUpdateTimeout = 10 * 60 * 1000; // 10 minutes
   private final HashMap<Object, Object> mlstCacheObject = new HashMap<>();
   private final HashMap<Object, Long> mlstCachedObjectTime = new HashMap<>();
 
-  synchronized public <T> void cacheObject(T lst, Object c) {
+  public SimpleObjectCache() {
+    mlUpdateTimeout = 10 * 60 * 1000;
+  }
+  
+  public SimpleObjectCache(long timeout) {
+    mlUpdateTimeout = timeout;
+  }
+
+  
+  
+  synchronized public <T> void cacheObject(T obj, Object c) {
     if (mlstCacheObject.containsKey(c)) {
-      mlstCacheObject.replace(c, lst);
+      mlstCacheObject.replace(c, obj);
     } else {
-      mlstCacheObject.put(c, lst);
+      mlstCacheObject.put(c, obj);
     }
 
     if (mlstCachedObjectTime.containsKey(c)) {
@@ -54,7 +64,7 @@ public class SimpleObjectCache {
   public <T> boolean cacheObjectTimeout(Object c) {
     return !mlstCachedObjectTime.containsKey(c)
             || (Calendar.getInstance().getTimeInMillis() - mlstCachedObjectTime.
-            get(c)) > S_UPDATE_TIMEOUT;
+            get(c)) > mlUpdateTimeout;
   }
 
   public <T> boolean cacheObjectTimeout(Object c, long lAfter) {

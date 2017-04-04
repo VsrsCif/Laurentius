@@ -294,13 +294,13 @@ public class SEDInitData implements SEDInitDataInterface {
               getSEDProperties());
 
     }
-    // overide system settings!
+    // overide by system settings!
     if (!Utils.isEmptyString(sysDomain)){
       mdbSettings.setSEDProperty(SEDSystemProperties.SYS_PROP_LAU_DOMAIN,
               sysDomain,DBSettingsInterface.SYSTEM_SETTINGS);
     }
     
-    // overide system settings!
+    // overide by system settings!
     if (!Utils.isEmptyString(sysHomeDir)){
       mdbSettings.setSEDProperty(SEDSystemProperties.SYS_PROP_HOME_DIR,
               sysHomeDir,DBSettingsInterface.SYSTEM_SETTINGS);

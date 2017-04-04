@@ -44,9 +44,9 @@
                             dialogVar="pModePartyDialog"
                             updateDialog=":dlgPModeParty:pModePartyDialog:pModePartyDialogForm"
                             updateTable=":forms:SettingsPModesParties:pmodePartyPanel:TblPModeParties"
-                            addActionListener="#{pModeView.createEditable()}"
-                            editActionListener="#{pModeView.startEditSelected()}"
-                            removeActionListener="#{pModeView.removeSelectedWithWarning(':forms:SettingsPModesParties:pmodePartyPanel:TblPModeParties')}"                            
+                            addActionListener="#{pModePartyView.createEditable()}"
+                            editActionListener="#{pModePartyView.startEditSelected()}"
+                            removeActionListener="#{pModePartyView.removeSelectedWithWarning(':forms:SettingsPModesParties:pmodePartyPanel:TblPModeParties')}"                            
                             />   
                         </f:facet>
                         <p:column headerText="#{msg['Id']}" width="200">

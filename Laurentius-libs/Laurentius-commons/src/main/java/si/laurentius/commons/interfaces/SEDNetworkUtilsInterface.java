@@ -14,56 +14,24 @@
  */
 package si.laurentius.commons.interfaces;
 
-import java.util.List;
 import javax.ejb.Local;
 import javax.ejb.Lock;
 import javax.ejb.LockType;
-import si.laurentius.property.SEDProperty;
 
 /**
  *
  * @author Jože Rihtaršič
  */
 @Local
-public interface DBSettingsInterface {
+public interface SEDNetworkUtilsInterface {
 
-  public static final String SYSTEM_SETTINGS = "SYSTEM";
-  public static final String LAU_SETTINGS = "SED";
-
-  /**
-   *
-   * @param prps
-   */
   @Lock(value = LockType.READ)
-  void setSEDProperties(List<SEDProperty> prps);
+  Boolean isConnectedToNetwork();
 
-  /**
-   *
-   * @param key
-   * @param value
-   * @param group
-   */
-  @Lock(value = LockType.WRITE)
-  void setSEDProperty(String key, String value, String group);
-
-  /**
-   *
-   * @param key
-   * @param value
-   * @param group
-   */
-  @Lock(value = LockType.WRITE)
-  void removeSEDProperty(String key, String group);
-
-  /**
-   *
-   *
-   *
-   * @return
-   */
-  List<SEDProperty> getSEDProperties();
-
-  @Lock(value = LockType.WRITE)
-  SEDProperty getSEDProperty(String key, String group);
+  @Lock(value = LockType.READ)
+  Boolean isConnectedToInternet();
+  
+  void setConnectedToNetwork(boolean isConNet);
+  void setConnectedToInternet(boolean iConInt);
 
 }

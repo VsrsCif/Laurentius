@@ -14,6 +14,7 @@
  */
 package si.laurentius.ejb;
 
+import si.laurentius.ejb.cache.SimpleListCache;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Objects;

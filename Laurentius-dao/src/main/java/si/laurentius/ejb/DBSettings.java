@@ -14,10 +14,7 @@
  */
 package si.laurentius.ejb;
 
-
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import si.laurentius.ejb.cache.SimpleListCache;
 import java.util.List;
 import java.util.Objects;
 import javax.annotation.PostConstruct;
@@ -39,10 +36,10 @@ import javax.transaction.NotSupportedException;
 import javax.transaction.RollbackException;
 import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
+import si.laurentius.commons.SEDProperties;
 import si.laurentius.property.SEDProperty;
 import si.laurentius.commons.interfaces.DBSettingsInterface;
 import si.laurentius.commons.utils.SEDLogger;
-import si.laurentius.commons.utils.Utils;
 
 /**
  *
@@ -54,14 +51,12 @@ import si.laurentius.commons.utils.Utils;
 @AccessTimeout(value = 60000)
 @TransactionManagement(TransactionManagementType.BEAN)
 public class DBSettings implements DBSettingsInterface {
+
   
-  private static String S_KEY_TEST_NETOWRK = "laurentius.network.test.address"; 
-  private static String S_KEY_TEST_NETOWRK_DEF = "laurentius.network";
 
   protected static final SEDLogger LOG = new SEDLogger(DBSettings.class);
 
-  SimpleListCache mscache = new SimpleListCache();
-
+  SimpleListCache mListCache = new SimpleListCache();
   /**
    *
    */
@@ -73,11 +68,25 @@ public class DBSettings implements DBSettingsInterface {
    */
   @Resource
   public UserTransaction mutUTransaction;
-  
+
   @PostConstruct
   void init() {
     // init system properties
     getSEDProperties();
+    if (getSEDProperty(SEDProperties.S_KEY_TEST_NETOWRK, LAU_SETTINGS) == null) {
+      setData(SEDProperties.S_KEY_TEST_NETOWRK,SEDProperties.S_KEY_TEST_NETOWRK_DEF, LAU_SETTINGS);
+    }
+
+    /*
+    if (getSEDProperty(SEDSystemProperties.SYS_PROP_LAU_DOMAIN, SYSTEM_SETTINGS) == null) {
+      setData(SEDSystemProperties.SYS_PROP_LAU_DOMAIN, "no-domain.org",
+              SYSTEM_SETTINGS);
+    }
+    if (getSEDProperty(SEDSystemProperties.SYS_PROP_HOME_DIR, SYSTEM_SETTINGS) == null) {
+      setData(SEDSystemProperties.SYS_PROP_HOME_DIR, System.getProperty(
+              "user.home") + File.separator + "laurentius-home", SYSTEM_SETTINGS);
+    }*/
+
   }
 
   /**
@@ -88,10 +97,11 @@ public class DBSettings implements DBSettingsInterface {
   public List<SEDProperty> getSEDProperties() {
     List<SEDProperty> t;
     Class c = SEDProperty.class;
-    if (mscache.cacheListTimeout(c)) {
+    if (mListCache.cacheListTimeout(c)) {
       TypedQuery<SEDProperty> query = memEManager.createNamedQuery(
               c.getName() + ".getAll", c);
       t = query.getResultList();
+
       t.forEach((sd) -> {
         String key = sd.getKey();
         String val = sd.getValue();
@@ -100,14 +110,12 @@ public class DBSettings implements DBSettingsInterface {
           System.setProperty(key, val);
         }
       });
-      mscache.cacheList(t, c);
+      mListCache.cacheList(t, c);
     } else {
-      t = mscache.getFromCachedList(c);
+      t = mListCache.getFromCachedList(c);
     }
     return t;
   }
-
-
 
   /**
    *
@@ -121,7 +129,7 @@ public class DBSettings implements DBSettingsInterface {
       mutUTransaction.begin();
       memEManager.merge(o);
       mutUTransaction.commit();
-      mscache.clearCachedList(o.getClass());
+      mListCache.clearCachedList(o.getClass());
       if (SYSTEM_SETTINGS.equalsIgnoreCase(o.getGroup())) {
         System.setProperty(o.getKey(), o.getValue());
       }
@@ -158,7 +166,7 @@ public class DBSettings implements DBSettingsInterface {
     } else if (!Objects.equals(p.getValue(), value)) {
       p.setValue(value);
       replaceSEDProperty(p);
-    
+
     }
   }
 
@@ -214,7 +222,7 @@ public class DBSettings implements DBSettingsInterface {
       mutUTransaction.begin();
       memEManager.persist(o);
       mutUTransaction.commit();
-      mscache.clearCachedList(o.getClass());
+      mListCache.clearCachedList(o.getClass());
       if (Objects.equals(o.getGroup(), SYSTEM_SETTINGS)) {
         System.setProperty(o.getKey(), o.getValue());
       }
@@ -245,7 +253,7 @@ public class DBSettings implements DBSettingsInterface {
       if (Objects.equals(o.getGroup(), SYSTEM_SETTINGS)) {
         System.getProperties().remove(o.getKey());
       }
-      mscache.clearCachedList(o.getClass());
+      mListCache.clearCachedList(o.getClass());
       suc = true;
     } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException
             | HeuristicRollbackException | SecurityException | IllegalStateException ex) {
@@ -257,37 +265,6 @@ public class DBSettings implements DBSettingsInterface {
       }
     }
     return suc;
-  }
-
-
-
-  @Override
-  public boolean isNetworkConnected() {
-    
-    SEDProperty sp  = getSEDProperty(S_KEY_TEST_NETOWRK, LAU_SETTINGS);
-    String host = sp!=null?sp.getValue():S_KEY_TEST_NETOWRK_DEF;
-    if (sp== null || Utils.isEmptyString(host)) {
-      setSEDProperty(S_KEY_TEST_NETOWRK, S_KEY_TEST_NETOWRK_DEF, LAU_SETTINGS);
-      host = S_KEY_TEST_NETOWRK_DEF;
-    }   
-    boolean bSuc = false;
-    try {
-
-      int timeout = 2000;
-      InetAddress[] addresses = InetAddress.getAllByName(host);
-      for (InetAddress address : addresses) {
-        if (address.isReachable(timeout)) {
-          bSuc = true;
-          break;
-        }
-      }
-
-    } catch (UnknownHostException ex) {
-      LOG.logError("Unknown host " + host, ex);
-    } catch (IOException ex) {
-      LOG.logError("IOException from host " + host, ex);
-    }
-    return bSuc;
   }
 
 }

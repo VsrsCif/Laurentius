@@ -74,7 +74,7 @@
                                                  actionListener="#{OutMailDataView.composeNewMail()}"
                                                  update=":dlgCompose:mailComposeForm"
                                                  oncomplete="PF('mailComposeDialog').show()"/>
-                                 <p:commandButton value="#{msg['TestAddress']}" styleClass="toolbar-Button"  
+                                <p:commandButton value="#{msg['TestAddress']}" styleClass="toolbar-Button"  
                                                  rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_OUTBOX)}" 
                                                  icon="ui-icon-size-22 ui-icon-svg-mail-send"
                                                  actionListener="#{OutMailDataView.composeNewMail()}"
@@ -217,6 +217,16 @@
                     <p:layoutUnit position="south" resizable="false" size="32" minSize="32" maxSize="32">
                         <p:toolbar  id="status-bar" style="padding: 0; margin: 0; height: 24px; vertical-align: middle;">
                             <f:facet name="right">
+                                <p:outputLabel value="Network status:" />
+                                 <h:graphicImage rendered="#{not ApplicationData.networkConnected}" 
+                                                 value="#{resource['images:/network-discon.svg']}" width="18" height="18"  />
+                                 <h:graphicImage rendered="#{ApplicationData.networkConnected and not ApplicationData.internetConnected}" 
+                                                 value="#{resource['images:/internet-discon.svg']}" width="18" height="18"  />
+                                 <h:graphicImage rendered="#{ApplicationData.networkConnected and ApplicationData.internetConnected}" 
+                                                 value="#{resource['images:/internet-connected.svg']}" width="18" height="18"  />
+                                 
+
+                           
                                 <p:outputLabel value="AJAX Status:" />
                                 <p:ajaxStatus style="height:26px;width:30px;padding:0 5px;">
                                     <f:facet name="default">
@@ -265,7 +275,7 @@
                                         <f:selectItems itemLabel="#{ubox}" 
                                                        value="#{userSessionData.userEBoxesWithDomain}" var="ubox"  />
                                     </p:selectCheckboxMenu>
-           
+
 
                                     <h:outputText value="#{msg['SenderBox']}:" />
                                     <h:inputText value="#{InMailDataView.inMailModel.filter.senderEBox}" style="width: 100%" />
@@ -357,7 +367,7 @@
                                         <f:selectItems itemLabel="#{ubox}" 
                                                        value="#{userSessionData.userEBoxesWithDomain}" var="ubox" />
                                     </p:selectCheckboxMenu>
-                                        
+
                                     <h:outputText value="#{msg['Status']}:" />
 
                                     <p:selectCheckboxMenu id="outSts" filter="false"  label="Statusi" 
@@ -434,7 +444,7 @@
                                     </p:treeNode>
 
                                 </p:tree>
-                               
+
                             </p:tab>
                             <p:tab id="PANEL_SETT_CUSTOM" rendered="#{userSessionData.user.adminRole}">
 

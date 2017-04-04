@@ -35,6 +35,9 @@ public class SEDJNDI {
    */
   public static final String JNDI_DBSETTINGS =
       "java:global/Laurentius-dao/DBSettings!si.laurentius.commons.interfaces.DBSettingsInterface";
+  
+  public static final String JNDI_NETWORK =
+      "java:global/Laurentius-dao/SEDNetworkUtilsBean!si.laurentius.commons.interfaces.SEDNetworkUtilsInterface";
 
   /**
    *

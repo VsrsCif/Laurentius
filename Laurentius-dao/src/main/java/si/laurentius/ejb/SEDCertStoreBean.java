@@ -14,13 +14,11 @@
  */
 package si.laurentius.ejb;
 
+import si.laurentius.ejb.cache.SimpleListCache;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
-import java.net.URL;
 import java.net.UnknownHostException;
 import java.security.InvalidKeyException;
 import java.security.Key;
@@ -74,8 +72,8 @@ import si.laurentius.commons.enums.CertStatus;
 import si.laurentius.commons.exception.SEDSecurityException;
 import static si.laurentius.commons.exception.SEDSecurityException.SEDSecurityExceptionCode.CertificateException;
 import static si.laurentius.commons.exception.SEDSecurityException.SEDSecurityExceptionCode.ReadWriteFileException;
-import si.laurentius.commons.interfaces.DBSettingsInterface;
 import si.laurentius.commons.interfaces.SEDCertStoreInterface;
+import si.laurentius.commons.interfaces.SEDNetworkUtilsInterface;
 import si.laurentius.commons.utils.FileUtils;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.Utils;
@@ -96,8 +94,8 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
 
   private static final SEDLogger LOG = new SEDLogger(SEDCertStoreBean.class);
 
-  @EJB(mappedName = SEDJNDI.JNDI_DBSETTINGS)
-  private DBSettingsInterface mdbSettings;
+  @EJB(mappedName = SEDJNDI.JNDI_NETWORK)
+  private SEDNetworkUtilsInterface mdNetUtils;
 
   @PersistenceContext(unitName = "ebMS_LAU_PU", name = "ebMS_LAU_PU")
   public EntityManager memEManager;
@@ -776,20 +774,20 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
   @Override
   public void refreshCrlLists() {
     long l = LOG.logStart();
-    /*    mlstCertCRL.clear();
-    
+    mlstCertCRL.clear();
+
     try {
-    KeyStore ks = getCertStore();
-    Enumeration<String> alsEnum = ks.aliases();
-    while (alsEnum.hasMoreElements()) {
-    String alias = alsEnum.nextElement();
-    X509Certificate x509 = (X509Certificate) ks.getCertificate(alias);
-    // getCrlForCert(x509, false);
-    }
-    
+      KeyStore ks = getCertStore();
+      Enumeration<String> alsEnum = ks.aliases();
+      while (alsEnum.hasMoreElements()) {
+        String alias = alsEnum.nextElement();
+        X509Certificate x509 = (X509Certificate) ks.getCertificate(alias);
+        getCrlForCert(x509, false);
+      }
+
     } catch (SEDSecurityException | KeyStoreException ex) {
-    LOG.logError(ex.getMessage(), ex);
-    }*/
+      LOG.logError(ex.getMessage(), ex);
+    }
     LOG.logEnd(l);
   }
 
@@ -928,22 +926,30 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
     X509CRL cres = null;
     boolean bSuc = false;
 
-    if (!isConnectedToNetwork()) {
+    if (mdNetUtils != null && !mdNetUtils.isConnectedToNetwork()) {
       String msg = String.format(
-              "Could not retrieve CRL list network is not connected");
+              "Could not retrieve CRL list. Network is not connected");
+      LOG.logError(msg, null);
+      return false;
+    }
+
+    if (mdNetUtils != null && !mdNetUtils.isConnectedToInternet()) {
+      String msg = String.format(
+              "Could not retrieve CRL list. Internet is not reachable!");
       LOG.logError(msg, null);
       return false;
     }
 
     for (SEDCertCRL.Url u : crl.getUrls()) {
       try {
+
+        /* some CA does not allow ping!??
         URL ur = new URL(u.getValue());
-
         if (!isReachable(ur.getHost())) {
-          LOG.formatedWarning("CRL list %s is not reachable!", u.getValue());
+          LOG.formatedWarning("CRL list %s  (host: %s) is not reachable!", u.getValue(), ur.getHost());
           continue;
-        }
-
+        }*/
+        LOG.formatedWarning("Download CRL list %s.", u.getValue());
         cres = CRLVerifier.downloadCRL(u.getValue());
 
         /*
@@ -955,7 +961,7 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
         String msg = String.format(
                 "Error retrieving CRL Cache for %s url: error %s",
                 crl.getIssuerDN(), u.getValue(), ex.getMessage());
-        LOG.logError(msg, null);
+        LOG.logError(msg, ex);
       }
       if (cres != null) {
         break;
@@ -1023,7 +1029,7 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
   }
 
   public boolean isReachable(String host) {
-    int timeout = 2000;
+    int timeout = 5000;
     boolean bsuc = false;
     InetAddress[] addresses;
     try {
@@ -1049,21 +1055,4 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
     return bsuc;
   }
 
-  boolean isConnectedToNetwork() {
-    try {
-      Enumeration<NetworkInterface> interfaces = NetworkInterface.
-              getNetworkInterfaces();
-      while (interfaces.hasMoreElements()) {
-        NetworkInterface interf = interfaces.nextElement();
-
-        if (interf.isUp() && !interf.isLoopback()) {
-          return true;
-        }
-      }
-    } catch (SocketException ex) {
-      LOG.formatedWarning("Errror occured while checking network status %s.",
-              ex.getMessage());
-    }
-    return false;
-  }
 }

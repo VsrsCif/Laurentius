@@ -20,6 +20,7 @@ import javax.xml.ws.WebServiceContext;
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.interfaces.DBSettingsInterface;
+import si.laurentius.commons.interfaces.SEDNetworkUtilsInterface;
 import si.laurentius.msh.web.abst.AbstractJSFView;
 import si.laurentius.property.SEDProperty;
 
@@ -36,6 +37,9 @@ public class ApplicationData extends AbstractJSFView {
 
   @EJB(mappedName = SEDJNDI.JNDI_DBSETTINGS)
   private DBSettingsInterface mdbSettings;
+  
+   @EJB(mappedName = SEDJNDI.JNDI_NETWORK)
+  private SEDNetworkUtilsInterface mdNetUtils;
     
 
   public String getExportDataFolder() {
@@ -122,6 +126,14 @@ public class ApplicationData extends AbstractJSFView {
     UIViewRoot viewroot = viewHandler.createView(facesContext, refreshpage);
     viewroot.setViewId(refreshpage);
     facesContext.setViewRoot(viewroot);
+  }
+  
+  public boolean isNetworkConnected(){
+    return mdNetUtils.isConnectedToNetwork();
+  }
+  
+  public boolean isInternetConnected(){
+    return mdNetUtils.isConnectedToInternet();
   }
 
 }

@@ -35,6 +35,19 @@
     background-image: url("#{resource['images:/users.svg']}") !important;    
 }
 
+.ui-icon-svg-network-discon {
+    background-image: url("#{resource['images:/network-discon.svg']}") !important;    
+}
+
+.ui-icon-svg-internet-discon {
+    background-image: url("#{resource['images:/internet-discon.svg']}") !important;    
+}
+
+.ui-icon-svg-internet-connected {
+    background-image: url("#{resource['images:/internet-connected.svg']}") !important;    
+}
+
+
 .ui-icon-svg-exit {
     background-image: url("#{resource['images:/exit.svg']}") !important;    
 }
