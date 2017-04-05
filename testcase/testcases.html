@@ -1,384 +1,862 @@
-<div class ="sidebar" >    
-    <h2>Kazalo:</h2>
-    <ul>
-        <li><a href="#gui/Laurentius">Uporabniška navodila</a></li> 
-        <li><a href="#api/web-services">Spletne storitve</a></li> 
-        <li><a href="#testcase/testcases">Testni primeri</a></li> 
-    </ul>
-</div>
 <div class="main">
     <article class='content'>
+        <h1 id="testcases/testcase">Namen testiranja</h1>
+        Namen testnih primerov je opredeliti cilje, ki jih aplikacija Laurentius mora izpolnjevati. 
+        Na podlagi testnih primerov so nastali testni scenariji s katerimi lahko določimo ali ti cilji doseženi. 
+        Testni scenariji so izdelani na način, da služijo tudi za regresijsko testiranje aplikacije.<br />
+        Uspešno izvedeni testni scenariji so pogoj za vsako končno objavo nove različice aplikacije Laurentius.
+        <br /> <br /> 
+
+        <h1 id="testcases/testcase:list">Testni primeri</h1>
+        Aplikacija Laurentius je bila razvita v sodelovanju z Združenjem bank Slovenije (ZBS) z namenom vpeljave
+        elektronskega poslovanja med sodišči in bankami. Testni scenariji so nastali 
+        na podlagi opisov testnih primerov (ZapisnikTestiranjaVSrešitve.xlsx), 
+        ki jih je posredovala članica ZBS, za namena:
+        <ul>
+            <li>potrditev ustreznosti implementacije funkcionalnih zahtev, ki so bili posredovani s strani članice ZBS  
+                kot pogoj za uporabo aplikacije v bančnem okolju;</li>
+            <li>ugotavljanja sprejemljivosti aplikacije Laurentius za namestitev v bančno okolje.</li>
+        </ul>
+
+        * Zapisnik testiranja je povzet po testiranju aplikaciji ZBS-B2B, ki jo banke že uporabljajo 
+        za sprejemanje elektronske izvršbe FURS.
 
 
-        <h1 id="documentation:testcases">Testni primeri</h1>
-        Namen testnih primerov je določiti merljive cilje, ki jih aplikacija Laurentius mora izpolnjevati. Na podlagi testnih primerov 
-        so nastali tudi testni scenariji, ki služijo za regresijsko testiranje aplikacije. Trenutno je v teku avtomatizacija
-        vseh testnih scenarijev. Uspešno končani testni scenariji so pogoj za produkcijsko objavo nove različice aplikacije Laurentius. 
-        Uporabniki aplikacije Laurentius lahko tudi z lastnim izvajanjem posameznih testnih scenarijev preverjajo pravilnost namestitve in kvaliteto
-        izdelave integracije z zalednimi sistemi.
-        <br />
-
-        <h1>Seznam testnih primerov</h1>
-        <h2>Namestitev in osnovni testi povezljivosti</h2>
+        <h2 id="testcases/testcase:install">Namestitev, nastavitve in osnovni testi povezljivosti</h2>
         <table class="styled-table" style="font-size: 12px">
-            <tbody>
-                <tr>
-                    <th>Oznaka</th>
-                    <th>Opis testnega primera</th>
-                    <th>Testni scenarij</th>
-                </tr>
-                <tr>
-                    <td>TS_001</td>
-                    <td>Namestitev in konfiguracija demo aplikacije laurentius po navodilih za Windows OS platformo.</td>
-                    <td><a href="testcase/doc/pdf/TS_001-002.pdf">TS_001-002.pdf</a></td>
-                </tr>
-                <tr>
-                    <td>TS_002</td>
-                    <td>Namestitev in konfiguracija demo aplikacije laurentius po navodilih za Linux platformo.</td>
-                    <td><a href="testcase/doc/pdf/TS_001-002.pdf">TS_001-002.pdf</a></td>
-                </tr>
+            <tr>
+                <th>Oznaka</th>
+                <th>Opis testnega primera</th>
+                <th>Pričakovani rezultat</th>
+                <th>Testni scenarij</th>
+            </tr>
+            <tr>
+                <td><b>ZBS_001</b></td>
+                <td>Namestitev in konfiguracija Naslovnikovega MSH po
+                    navodilih za Windows Server platformo.</td>
+                <td>Paket za Naslovnikov MSH je pravilno nameščen.
+                    Vmesnik upošteva regionalne nastavitve OS (datum, čas). Ob
+                    namestitvi je možno vnesti domeno uporabnika namesto
+                    prednastavljene. Ob nastavitvah se pišejo parametri proxyja in
+                    se shranijo. Promet poteka normalno. Vsebovane so vse informacije,
+                    potrebne za namestitev, nastavitev in uporabo rešitve.</td>
+                <td><a href="testcase/zbs/TS-ZBS_001.odt">TS-ZBS_001.odt</a><br />
+                    <a href="testcase/zbs/pdf/TS-ZBS_001.pdf">TS-ZBS_001.pdf</a>
+                </td>
 
-                <tr>
-                    <td>TS_003</td>
-                    <td>Iz testne aplikacije se pošlje sporočilo v testni sistem sodišča po storitvi "Delivery with receipt"</td>
-                    <td><a href="testcase/doc/pdf/TS_003-004-005.pdf">TS_003-004-005.pdf</a></td>
-                </tr>
-                <tr>
-                    <td>TS_004</td>
-                    <td>Iz testnega sistema sodišča se pošlje sporočilo v testno aplikacijo po storitvi  "Delivery with receipt"</td>
-                    <td><a href="testcase/doc/pdf/TS_003-004-005.pdf">TS_003-004-005.pdf</a></td>
-                </tr>
-                <tr>
-                    <td>TS_005</td>
-                    <td>Iz testnega sistema sodišča se pošlje sporočilo v testno aplikacijo po storitvi ZPP (Legal_ZPP)</td>
-                    <td><a href="testcase/doc/pdf/TS_003-004-005.pdf">TS_003-004-005.pdf</a></td>
-                </tr>
-            </tbody>
+            </tr>
+            <tr>
+                <td><b>ZBS_002</b></td>
+                <td>Namestitev in konfiguracija Naslovnikovega MSH po
+                    navodilih za Linux platformo.</td>
+                <td>Paket za Naslovnikov MSH je pravilno nameščen.
+                    Vmesnik upošteva regionalne nastavitve OS (datum, čas). Ob
+                    namestitvi je možno Ob  namestitvi je možno vnesti domeno uporabnika namesto
+                    prednastavljene. Promet poteka normalno. Vsebovane so vse informacije,
+                    potrebne za namestitev, nastavitev in uporabo rešitve.</td>
+                <td><a href="testcase/zbs/TS-ZBS_002.odt">TS-ZBS_002.odt</a><br />
+                    <a href="testcase/zbs/pdf/TS-ZBS_002.pdf">TS-ZBS_002.pdf</a>
+                </td>						
+            </tr>
+            <tr>
+                <td><b>ZBS_003</b></td>
+                <td>Namestitev in nastavitev za vlogi Pošiljateljev
+                    MSH in Naslovnikov MSH po navodilih. Windows Server 2012 R2</td>
+                <td>Paket za vlogi Pošiljateljev MSH in Naslovnikov
+                    MSH je pravilno nameščen. Vmesnik upošteva regionalne
+                    nastavitve OS (datum, čas). Ob namestitvi je možno izbrati domeno
+                    uporabnika namesto prednastavljene. Promet poteka normalno.
+                    Dokumentacija vsebuje vse informacije, potrebne za namestitev,
+                    nastavitev in uporabo rešitve.</td>
+                <td> Aplikacija Laurentius je enaka tako za pošiljatelja kot za prejemnika.
+                    Glej: ZBS_001:
+                    <a href="testcase/zbs/TS-ZBS_001.odt">TS-ZBS_001.odt</a><br />
+                    <a href="testcase/zbs/pdf/TS-ZBS_001.pdf">TS-ZBS_001.pdf</a>
+
+                </td>
+            </tr>
+            <tr>
+                <td><b>ZBS_004</b></td>
+                <td>Namestitev in nastavitev za vlogi Pošiljateljev
+                    MSH in Naslovnikov MSH po navodilih. Linux</td>
+                <td>Paket za vlogi Pošiljateljev MSH in Naslovnikov
+                    MSH je pravilno nameščen. Vmesnik upošteva regionalne
+                    nastavitve OS (datum, čas). Ob namestitvi je možno izbrati domeno
+                    uporabnika namesto prednastavljene. Promet poteka normalno.
+                    Dokumentacija vsebuje vse informacije, potrebne za namestitev,
+                    nastavitev in uporabo rešitve.</td>
+                <td> Aplikacija Laurentius je enaka tako za pošiljatelja kot za prejemnika.
+                    Glej: ZBS_002:
+                    <a href="testcase/zbs/TS-ZBS_002.odt">TS-ZBS_002.odt</a><br />
+                    <a href="testcase/zbs/pdf/TS-ZBS_002.pdf">TS-ZBS_002.pdf</a>
+                </td>
+            </tr>
+            <tr>
+                <td><b>ZBS_016</b></td>
+                <td>Vnos Naslovnika in Pošiljatelja: vnos ID-ja,
+                    naziva, URL-ja ter digitalnega potrdila.</td>
+                <td>Podatki se lahko vnesejo in shranijo. Izvedene so
+                    osnovne kontrole. </td>
+                <td> 
+                    <a href="testcase/zbs/TS-ZBS_016_019-021_054.odt">TS-ZBS_016_019-021_054.odt</a><br />
+                    <a href="testcase/zbs/pdf/TS-ZBS_016_019-021_054.pdf">TS-ZBS_016_019-021_054.pdf</a>
+                </td>
+            </tr>
+            <tr>
+                <td><b>ZBS_019</b></td>
+                <td>Nastavitve Naslovnika na vmesniku Pošiljatelja -
+                    kontrola ID Pošiljatelja</td>
+                <td>ID Pošiljatelja/Naslovnika se lahko ponovi le
+                    enkrat. </td>
+                <td> 
+                    <a href="testcase/zbs/TS-ZBS_016_019-021_054.odt">TS-ZBS_016_019-021_054.odt</a><br />
+                    <a href="testcase/zbs/pdf/TS-ZBS_016_019-021_054.pdf">TS-ZBS_016_019-021_054.pdf</a>
+                </td>
+            </tr>
+            <tr>
+                <td><b>ZBS_020</b></td>
+                <td>Nastavitve Pošiljatelja na vmesniku ega
+                    Naslovnika - kontrola ID Pošiljatelja</td>
+                <td>ID Pošiljatelja/Naslovnika se lahko ponovi le
+                    enkrat. </td>
+                <td> 
+                    <a href="testcase/zbs/TS-ZBS_016_019-021_054.odt">TS-ZBS_016_019-021_054.odt</a><br />
+                    <a href="testcase/zbs/pdf/TS-ZBS_016_019-021_054.pdf">TS-ZBS_016_019-021_054.pdf</a>
+                </td>
+            </tr>
+            <tr>
+                <td><b>ZBS_021</b></td>
+                <td>Brisanje/spreminjanje Pošiljatelja/Naslovnika v
+                    vmesniku Naslovnikovega MSH/Pošiljateljevega MSG - kontrola ID
+                    Pošiljatelja</td>
+                <td>Možno spreminjanje ID-jev
+                    Pošiljateljev/Naslovnikov brez brisanja; spremembe se ustrezno
+                    odrazijo na datotekah, ki se prenašajo; v logih ni več zapisov,
+                    ki bi se nanašali na stare nastavitve </td>
+                <td> 
+                    <a href="testcase/zbs/TS-ZBS_016_019-021_054.odt">TS-ZBS_016_019-021_054.odt</a><br />
+                    <a href="testcase/zbs/pdf/TS-ZBS_016_019-021_054.pdf">TS-ZBS_016_019-021_054.pdf</a>
+                </td>
+            </tr>
+            <tr>
+                <td><b>ZBS_022</b></td>
+                <td>Nastavitve digitalnih potrdil za različne
+                    Pošiljatelje - različni Pošiljatelji, različna digitalna
+                    potrdila</td>
+                <td>Na strani Naslovnikovega MSH je omogočeno ločeno
+                    nastavljanje digitalnega potrdila za vsakega Pošiljatelja posebej
+                </td>
+                <td> 
+                    <a href="testcase/zbs/TS-ZBS_022-do-027-047_048.odt">TS-ZBS_022-do-027-047_048.odt</a><br />
+                    <a href="testcase/zbs/pdf/TS-ZBS_022-do-027-047_048.pdf">TS-ZBS_022-do-027-047_048.pdf</a>
+                </td>
+            </tr>
+            <tr>
+                <td><b>ZBS_023</b></td>
+                <td>Nastavitve digitalnih potrdil za različne
+                    Pošiljatelje - različni Pošiljatelji, isto digitalno potrdilo</td>
+                <td>Vmesnik Naslovnika dovoli vnesti isto digitalno
+                    potrdilo za vse Pošiljatelje ali pa različna potrdila za
+                    različne Pošiljatelje. </td>
+                 <td> 
+                    <a href="testcase/zbs/TS-ZBS_022-do-027-047_048.odt">TS-ZBS_022-do-027-047_048.odt</a><br />
+                    <a href="testcase/zbs/pdf/TS-ZBS_022-do-027-047_048.pdf">TS-ZBS_022-do-027-047_048.pdf</a>
+                </td>
+            </tr>
+            <tr>
+                <td><b>ZBS_024</b></td>
+                <td>Nastavitve digitalnih potrdil pri Pošiljatelju za
+                    različne Naslovnike - različni Naslovniki, isto digitalno
+                    potrdilo</td>
+                <td>Vmesnik Pošiljatelja NE sme dovoliti vnosa istega
+                    digitalnega potrdila s katerim se predstavljata dva različna
+                    Naslovnika. </td>
+                 <td> 
+                    <a href="testcase/zbs/TS-ZBS_022-do-027-047_048.odt">TS-ZBS_022-do-027-047_048.odt</a><br />
+                    <a href="testcase/zbs/pdf/TS-ZBS_022-do-027-047_048.pdf">TS-ZBS_022-do-027-047_048.pdf</a>
+                </td>
+            </tr>
+            <tr>
+                <td><b>ZBS_025</b></td>
+                <td>Nastavitve digitalnih potrdil: v vmesniku
+                    Pošiljatelja različno DP za različne Naslovnike</td>
+                <td>Vmesnik omogoča uporabo različnih DP za različne
+                    Naslovnike. </td>
+                 <td> 
+                    <a href="testcase/zbs/TS-ZBS_022-do-027-047_048.odt">TS-ZBS_022-do-027-047_048.odt</a><br />
+                    <a href="testcase/zbs/pdf/TS-ZBS_022-do-027-047_048.pdf">TS-ZBS_022-do-027-047_048.pdf</a>
+                </td>
+            </tr>
+            <tr>
+                <td><b>ZBS_026</b></td>
+                <td>Kontrola veljavnosti digitalnih potrdil.</td>
+                <td>Sistem javi napako v primeru da so nastavljena
+                    digitalna potrdila potekla. </td>
+                 <td> 
+                    <a href="testcase/zbs/TS-ZBS_022-do-027-047_048.odt">TS-ZBS_022-do-027-047_048.odt</a><br />
+                    <a href="testcase/zbs/pdf/TS-ZBS_022-do-027-047_048.pdf">TS-ZBS_022-do-027-047_048.pdf</a>
+                </td>
+            </tr>
+            <tr>
+                <td><b>ZBS_027</b></td>
+                <td>Uporaba različnih DP za podpisovanje in
+                    avtentikacijo.</td>
+                <td>Možna je uporaba različnih DP za podpisovanje in
+                    avtentikacijo. Lahko pa je tudi isto DP za oboje. </td>
+                 <td> 
+                    <a href="testcase/zbs/TS-ZBS_022-do-027-047_048.odt">TS-ZBS_022-do-027-047_048.odt</a><br />
+                    <a href="testcase/zbs/pdf/TS-ZBS_022-do-027-047_048.pdf">TS-ZBS_022-do-027-047_048.pdf</a>
+                </td>
+            </tr>
+            <tr>
+                <td><b>ZBS_033</b></td>
+                <td>Nastavitve - začasno onemogočanje določenih
+                    Pošiljateljev (na strani Naslovnika)</td>
+                <td>V nastavitvah je možno določene Pošiljatelje
+                    začasno izklopiti; poskus prenosa datoteke za izključenega
+                    Pošiljatelja ne deluje </td>
+                <td> 
+                    <a href="testcase/zbs/TS-ZBS_029-036.odt">TS-ZBS_029-036.odt</a><br />
+                    <a href="testcase/zbs/pdf/TS-ZBS_029-036.pdf">TS-ZBS_029-036.pdf</a>
+                </td>
+            </tr>
+            <tr>
+                <td><b>ZBS_046</b></td>
+                <td>DP za avtentikacijo in podpisovanje so shranjena
+                    na način, ki onemogoča dostop uporabnikom brez ustreznih pravic.</td>
+                <td>Uporabnik brez ustreznih pravic nima dostopa do
+                    privatnih ključev DP za delovanje sistema. </td>
+                <td><!-- <a href="testcase/zbs/TS-ZBS_.odt">TS-ZBS_.odt</a><br />
+<a href="testcase/zbs/TS-ZBS_.pdf">TS-ZBS_.pdf</a> -->
+                </td>
+            </tr>
+            <tr>
+                <td><b>ZBS_047</b></td>
+                <td>V vmesniku se poskuša uporabiti preteklo
+                    digitalno potrdilo za avtentikacijo ali podpisovanje.</td>
+                <td>Vmesnik poskus zavrne. </td>
+                 <td> 
+                    <a href="testcase/zbs/TS-ZBS_022-do-027-047_048.odt">TS-ZBS_022-do-027-047_048.odt</a><br />
+                    <a href="testcase/zbs/pdf/TS-ZBS_022-do-027-047_048.pdf">TS-ZBS_022-do-027-047_048.pdf</a>
+                </td>
+            </tr>
+            <tr>
+                <td><b>ZBS_048</b></td>
+                <td>Digitalno potrdilo Naslovnika poteče. Pripravi se
+                    DWR sporočilo za Pošiljatelja, uporabljeno digitalno potrdilo je
+                    veljavno. Sistemski uri se premakneta tako, da je digitalno
+                    potrdilo neveljavno. Sporočilo se ponovno pripravi za
+                    Pošiljatelja.</td>
+                <td>Prvič je sporočilo preneseno. Ob neveljavnem
+                    potrdilu sporočilo ni preneseno, v vmesniku je na voljo ustrezno
+                    sporočilo. </td>
+                 <td> 
+                    <a href="testcase/zbs/TS-ZBS_022-do-027-047_048.odt">TS-ZBS_022-do-027-047_048.odt</a><br />
+                    <a href="testcase/zbs/pdf/TS-ZBS_022-do-027-047_048.pdf">TS-ZBS_022-do-027-047_048.pdf</a>
+                </td>
+            </tr>
+            <tr>
+                <td><b>ZBS_049</b></td>
+                <td>CRL liste pri Naslovniku - samodejno
+                    pregledovanje, če je ustrezno odprt FW</td>
+                <td>Aplikacija se v primeru ustrezno odprtih vrat
+                    (glej dokumentacijo) samodejno sklicuje na CRL liste (njihovo
+                    nameščanje ni potrebno) in dopušča prijavo z digitalnimi
+                    potrdili. </td>
+                <td><!-- <a href="testcase/zbs/TS-ZBS_.odt">TS-ZBS_.odt</a><br />
+<a href="testcase/zbs/TS-ZBS_.pdf">TS-ZBS_.pdf</a> -->
+                </td>
+            </tr>
+            <tr>
+                <td><b>ZBS_050</b></td>
+                <td>CRL liste pri Pošiljatelju - samodejno
+                    pregledovanje veljavnosti DP partnerjev, če je ustrezno odprt FW</td>
+                <td>Aplikacija se v primeru ustrezno odprtih vrat
+                    (glej dokumentacijo) samodejno sklicuje na CRL liste (njihovo
+                    nameščanje ni potrebno) in dopušča prijavo z digitalnimi
+                    potrdili. </td>
+                <td><!-- <a href="testcase/zbs/TS-ZBS_.odt">TS-ZBS_.odt</a><br />
+<a href="testcase/zbs/TS-ZBS_.pdf">TS-ZBS_.pdf</a> -->
+                </td>
+            </tr>
+            <tr>
+                <td><b>ZBS_054</b></td>
+                <td>Uporaba proxy strežnika za dostopanje rešitve
+                    navzven.</td>
+                <td>Možno je vnesti podatke proxy strežnika (naslov,
+                    vrata, uporabniško ime ter geslo). Prehod deluje. </td>
+                <td> 
+                    <a href="testcase/zbs/TS-ZBS_016_019-021_054.odt">TS-ZBS_016_019-021_054.odt</a><br />
+                    <a href="testcase/zbs/pdf/TS-ZBS_016_019-021_054.pdf">TS-ZBS_016_019-021_054.pdf</a>
+                </td>
+            </tr>
+            <tr>
+                <td><b>ZBS_055</b></td>
+                <td>Določanje uporabnikov vmesnika.</td>
+                <td>Doda je nov uporabnik v vmesniku &quot;Sistemske
+                    nastavitve&quot; - Uporabniki. Zagon in uporaba uporabniškega
+                    vmesnika je z novim uporabnikom možna, z nenavedenim uporabnikom
+                    pa ne. </td>
+                <td><!-- <a href="testcase/zbs/TS-ZBS_.odt">TS-ZBS_.odt</a><br />
+<a href="testcase/zbs/TS-ZBS_.pdf">TS-ZBS_.pdf</a> -->
+                </td>
+            </tr>
         </table>
-         <h2>Robustnost prenosa sporočil</h2>
+
+        <h2 id="testcases/testcase:delivery">Testi povezljivosti, robustnost, urniki prenosa</h2>
         <table class="styled-table" style="font-size: 12px">
-            <tbody>
-                <tr>
-                    <th>Oznaka</th>
-                    <th>Opis testnega primera</th>
-                    <th>Testni scenarij</th>
-                </tr>
-                <tr>
-                    <td>TS_010</td>
-                    <td>Robustnost pošiljanja po DWR iz testnega sistema sodišča v testirano aplikacijo.</td>
-                    <td><a href="testcase/doc/pdf/TS_010-011.pdf">TS_010-011.pdf</a></td>
-                </tr>
-                <tr>
-                    <td>TS_011</td>
-                    <td>Robustnost pošiljanja po ZPP iz testnega sistema sodišča v testirano aplikacijo.</td>
-                    <td><a href="testcase/doc/pdf/TS_010-011.pdf">TS_010-011.pdf</a></td>
-                </tr>
-                 </tbody>
-        </table>
-        <!-- tr>
-            <td>TS_006</td>
-            <td>Pošiljatelj prenese sporočilo k Naslovniku v načinu "Delivery with receipt"</td>
-            <td>Sporočilo je preneseno. Vmesnik to odraža na obeh straneh. </td>
-        </tr>
-        <tr>
-            <td>TS_007</td>
-            <td>Pošiljatelj vroči sporočilo k Naslovniku v načinu "ZPP" preko vročevalca skladno z ZPP.</td>
-            <td>Sporočilo je vročeno. Vmesnik to odraža na obeh straneh. Celoten postopek ZPP (priprava obvestil, podpisovanje vročilnice z obeh strani, dostava vročilnice, pridobitev ključa, dešifriranje, odlaganje v predal) je spoštovan. </td>
-        </tr>
-        <tr>
-            <td>TS_008</td>
-            <td>Pošiljatelj vroči sporočilo k Naslovniku v načinu "ZPP" preko vročevalca skladno z ZPP s pomočjo fikcije.</td>
-            <td>Na prejemnikovem predalu se nastavi "fikcija". Pošiljatelj začne z vročevanjem pisanja. Vročevalec dobi sporočilo vendar ga zaradi fikcije ne vroči prejemniku. Po poteku nastavljenega časa za fikcijo Vročevalec podpiše vročilnico in jo z ustreznim statusom vrne Pošiljatelju. Ta vrne šifrirni ključ in sporočilo se odloži v prejemnikov varni predal. </td>
-        </tr>
-        <tr>
-            <td>TS_009</td>
-            <td>Pošiljatelj vroči sporočilo k Naslovniku v načinu "ZPP" preko vročevalca skladno z ZPP z zamikom zaradi umaknjene fikcije.</td>
-            <td>Na prejemnikovem predalu se nastavi "fikcija". Pošiljatelj začne z vročevanjem pisanja. Vročevalec dobi sporočilo vendar ga zaradi fikcije ne vroči prejemniku. Pred potekom fikcije Naslovnik izključi fikcijo. Vročevalec da v podpis vročilnico in jo podpisano z obeh strani vrne Pošiljatelju. Ta vrne šifrirni ključ in sporočilo se odloži v prejemnikov varni predal. </td>
-        </tr>
-        <tr>
-            <td>TS_010</td>
-            <td>Robustnost pošiljanja vročilnice po ZPP.</td>
-            <td>Pri pošiljanju vročilnice Pošiljatelju po ZPP pride do zastoja zaradi nedostopnosti Pošiljateljevega sistema. Ko je Pošiljateljev sistem znova dostopen se vročilnica dostavi in dokonča postopek vročanja. </td>
-        </tr>
-        <tr>
-            <td>TS_011</td>
-            <td>Robustnost pošiljanja po DWR. Od Naslovnika k Pošiljatelju.</td>
-            <td>Pošiljateljeva storitev ni na voljo, zato pride pri pošiljanju po načinu DWR do zastoja pošiljanja. Uporabniški vmesnik vsebuje zapis poskusa dostave. Ko je Pošiljateljeva storitev znova na voljo, se sporočilo uspešno dostavi. </td>
-        </tr>
-        <tr>
-            <td>TS_012</td>
-            <td>Test urnika: na Naslovnikovem MSH se nastavi urnik Pošiljatelja, ki je 5 min pred trenutnim testnim časom. Pripravi se sporočilo v načinu DWR za Pošiljatelja.</td>
-            <td>Sporočilo se prenese  znotraj urnika. </td>
-        </tr>
-        <tr>
-            <td>TS_013</td>
-            <td>Test urnika: Naslovnik pošlje v načinu DWR sporočilo, ki je zunaj veljavnega urnika Pošiljatelja. </td>
-            <td>Sistem vrne ustrezno napako, ki je vidna v dnevniških zapisih. Sporočilo se ne prenese. </td>
-        </tr>
-        <tr>
-            <td>TS_014</td>
-            <td>Politika dostave: možno je nastaviti maksimalni čas poizkusov dostave sporočila.</td>
-            <td>Obstaja parameter v nastavitvah, ki ga je možno nastaviti. </td>
-        </tr>
-        <tr>
-            <td>TS_015</td>
-            <td>Politika dostave: Naslovnik pripravi sporočilo za nedelujočega Pošiljatelja v načinu DWR - servis ni dostopen, druga možnost da spletna storitev ne deluje.</td>
-            <td>Pošiljateljev servis se začasno ustavi. Naslovnikova sistemska ura se premakne naprej čez nastavljeni rok maksimalne dostave. Vmesnik sporočilo premakne v Outbox Error  oziroma umakne. </td>
-        </tr>
-        <tr>
-            <td>TS_016</td>
-            <td>Vnos Naslovnika in Pošiljatelja: vnos ID-ja, naziva, URL-ja ter digitalnega potrdila.</td>
-            <td>Podatki se lahko vnesejo in shranijo.  Izvedene so osnovne kontrole. </td>
-        </tr>
-        <tr>
-            <td>TS_017</td>
-            <td>Brisanje starih podatkov. V vmesniku se nastavi krajši čas hranjenja podatkov. Po poteku tega časa se pogleda mape in dnevniške zapise.  Naslovnik na Windows server.</td>
-            <td>V mapah so samo datoteke novejše od nastavljene vrednosti. V dnevniških zapisih velja isto. </td>
-        </tr>
-        <tr>
-            <td>TS_018</td>
-            <td>Brisanje starih podatkov. V vmesniku se nastavi krajši čas hranjenja podatkov. Po poteku tega časa se pogleda mape in dnevniške zapise. i Naslovnik na Linux</td>
-            <td>V mapah so samo datoteke novejše od nastavljene vrednosti. V dnevniških zapisih velja isto. </td>
-        </tr>
-        <tr>
-            <td>TS_019</td>
-            <td>Nastavitve Naslovnika na vmesniku Pošiljatelja - kontrola ID Pošiljatelja</td>
-            <td>ID Pošiljatelja/Naslovnika se lahko ponovi le enkrat. </td>
-        </tr>
-        <tr>
-            <td>TS_020</td>
-            <td>Nastavitve Pošiljatelja na vmesniku ega Naslovnika - kontrola ID Pošiljatelja</td>
-            <td>ID Pošiljatelja/Naslovnika se lahko ponovi le enkrat. </td>
-        </tr>
-        <tr>
-            <td>TS_021</td>
-            <td>Brisanje/spreminjanje Pošiljatelja/Naslovnika v vmesniku  Naslovnikovega MSH/Pošiljateljevega MSG - kontrola ID Pošiljatelja</td>
-            <td>Možno spreminjanje ID-jev Pošiljateljev/Naslovnikov brez brisanja; spremembe se ustrezno odrazijo na datotekah, ki se prenašajo; v logih ni več zapisov, ki bi se nanašali na stare nastavitve </td>
-        </tr>
-        <tr>
-            <td>TS_022</td>
-            <td>Nastavitve digitalnih potrdil za različne Pošiljatelje - različni Pošiljatelji, različna digitalna potrdila</td>
-            <td>Na strani Naslovnikovega MSH je omogočeno ločeno nastavljanje digitalnega potrdila za vsakega Pošiljatelja posebej </td>
-        </tr>
-        <tr>
-            <td>TS_023</td>
-            <td>Nastavitve digitalnih potrdil za različne Pošiljatelje - različni Pošiljatelji, isto digitalno potrdilo</td>
-            <td>Vmesnik Naslovnika dovoli vnesti isto digitalno potrdilo za vse Pošiljatelje ali pa različna potrdila za različne Pošiljatelje. </td>
-        </tr>
-        <tr>
-            <td>TS_024</td>
-            <td>Nastavitve digitalnih potrdil pri Pošiljatelju za različne Naslovnike - različni Naslovniki, isto digitalno potrdilo</td>
-            <td>Vmesnik Pošiljatelja NE sme dovoliti vnosa istega digitalnega potrdila s katerim se predstavljata dva različna Naslovnika. </td>
-        </tr>
-        <tr>
-            <td>TS_025</td>
-            <td>Nastavitve digitalnih potrdil: v vmesniku Pošiljatelja različno DP za različne Naslovnike</td>
-            <td>Vmesnik omogoča uporabo različnih DP za različne Naslovnike. </td>
-        </tr>
-        <tr>
-            <td>TS_026</td>
-            <td>Kontrola veljavnosti digitalnih potrdil.</td>
-            <td>Sistem javi napako v primeru da so nastavljena digitalna potrdila potekla. </td>
-        </tr>
-        <tr>
-            <td>TS_027</td>
-            <td>Uporaba različnih DP za podpisovanje in avtentikacijo.</td>
-            <td>Možna je uporaba različnih DP za podpisovanje in avtentikacijo. Lahko pa je tudi isto DP za oboje. </td>
-        </tr>
-        <tr>
-            <td>TS_028</td>
-            <td>Vsak varni elektronski predal ima svoji V/I mapi v kateri so odloženi vsi dokumenti povezani s postopkov vročanja ali dostave.</td>
-            <td>Mapi sta ločeni za pošiljanje in za prejete dokumente. </td>
-        </tr>
-        <tr>
-            <td>TS_029</td>
-            <td>Prenos DWR sporočila k Pošiljatelju, ki ne obstaja + kontrola OutboxError</td>
-            <td>Prenos ne uspe, datoteka se iz Outbox prestavi v OutboxError oziroma ekvivalentno mapo. </td>
-        </tr>
-        <tr>
-            <td>TS_030</td>
-            <td>Log Naslovnika o prenosih preko vmesnika Naslovnika (vidne tudi datoteke, ki se skušajo prenesti)</td>
-            <td>Vsako sporočilo, ki se je preneslo oz. skušalo prenesti, ima razvidno vso zgodovino poskusov dostav, zabeleženo je tudi število poskusov prenosa. </td>
-        </tr>
-        <tr>
-            <td>TS_031</td>
-            <td>Log Naslovnika - gumb osveži (Naslovnik)</td>
-            <td>Naslovnik ima na strani vmesnika, kjer pregleduje log, ustrezen gumb za osvežitev podatkov. </td>
-        </tr>
-        <tr>
-            <td>TS_032</td>
-            <td>Log Naslovnika - gumb "Prenesi takoj" (Naslovnik)</td>
-            <td>Naslovnik ima na straneh vmesnika gumb za takojšnjo izmenjavo podatkov s Pošiljatelji. </td>
-        </tr>
-        <tr>
-            <td>TS_033</td>
-            <td>Nastavitve - začasno onemogočanje določenih Pošiljateljev (na strani Naslovnika)</td>
-            <td>V nastavitvah je možno določene Pošiljatelje začasno izklopiti; poskus prenosa datoteke za izključenega Pošiljatelja ne deluje </td>
-        </tr>
-        <tr>
-            <td>TS_034</td>
-            <td>Log Naslovnika - gumb osveži (Pošiljatelj)</td>
-            <td>Naslovnik ima na strani vmesnika, kjer pregleduje log, ustrezen gumb za osvežitev podatkov ki deluje. </td>
-        </tr>
-        <tr>
-            <td>TS_035</td>
-            <td>Log Naslovnika - gumb prenesi takoj (Pošiljatelj)</td>
-            <td>Naslovnik ima na straneh vmesnika gumb za takojšnjo izmenjavo podatkov s Pošiljatelji ki deluje. </td>
-        </tr>
-        <tr>
-            <td>TS_036</td>
-            <td>Nastavitve - začasno onemogočanje določenih Naslovnikov na strani Pošiljatelja</td>
-            <td>V nastavitvah je možno določene Naslovnike  začasno izklopiti; poskus prenosa datoteke zanje ne deluje. </td>
-        </tr>
-        <tr>
-            <td>TS_037</td>
-            <td>Izpis aktivnosti prenosa sporočil. Možno je vnesti iskalne kriterije, ki se uporabijo za filtriranje seznama dogodkov.</td>
-            <td>Vnos kriterijev datuma prikaže ustrezne zadetke v kolikor ti obstajajo. </td>
-        </tr>
-        <tr>
-            <td>TS_038</td>
-            <td>Ročni izvoz podatkov o izmenjavi sporočil</td>
-            <td>Po opravljenih nekaj izmenjavah se v vmesniku lahko izvozi te informacije v .CSV obliki. </td>
-        </tr>
-        <tr>
-            <td>TS_039</td>
-            <td>Avtomatsko arhiviranje podatkov o izmenjavi sporočil.</td>
-            <td>Možno je nastaviti interval avtomatskega arhiviranja. Po poteku intervala sistem izvozi podatke o izmenjava v nastavljeno mesto. V seznamu dogodkov se ti podatki izbrišejo v kolikor je tako nastavljeno. </td>
-        </tr>
-        <tr>
-            <td>TS_040</td>
-            <td>Naslovnik pripravi 1.000 sporočil za Pošiljatelja v načinu DWR in mu jih dostavi. Zaželena je uporaba večih jeder.</td>
-            <td>Sporočila se prenesejo, v vmesniku na obeh straneh je status izpisan. Iz logov je razvidno hkratno oddajanje večih sporočil. </td>
-        </tr>
-        <tr>
-            <td>TS_041</td>
-            <td>Pošiljatelj hkrati pripravi 2.000 sporočil za  Naslovnika in mu jih  pošlje v načinu ZPP. Zaželena je uporaba večih jeder.</td>
-            <td>Sporočila se prenesejo, v vmesniku na obeh straneh je status izpisan. </td>
-        </tr>
-        <tr>
-            <td>TS_042</td>
-            <td>Pošiljatelj hkrati pripravi 2.000 sporočil za  Naslovnika in mu jih  pošlje v načinu DWR. Zaželena je uporaba večih jeder.</td>
-            <td>Sporočila se prenesejo, v vmesniku na obeh straneh je status izpisan. </td>
-        </tr>
-        <tr>
-            <td>TS_043</td>
-            <td>Obremenitveni test: 2 Naslovnika hkrati pošljeta sporočila v načinu DWR. Eden pošlje 5 večjih (nekaj MB) drugi več manjših (vsaj 100). Zaželena je uporaba večih jeder na strani Naslovnikov in Pošiljatelja.</td>
-            <td>Vmesnik zna hkrati sprejemati sporočila vseh Naslovnikov - kar je vidno tudi v zapisih. </td>
-        </tr>
-        <tr>
-            <td>TS_044</td>
-            <td>Naslovnik pripravi 10 velikih datotek (25Mb) in jih prenese k Pošiljatelju v načinu DWR.</td>
-            <td>Datoteke se uspešno prenesejo brez ponavljanja in napak. Logi pri Naslovniku in Pošiljatelju odražajo isto stanje. Velikost največje dovoljene datoteke je navedena v dokumentaciji in ali informacijski rešitvi. </td>
-        </tr>
-        <tr>
-            <td>TS_045</td>
-            <td>Pošiljatelj pripravi 10 velikih datotek (25Mb), Naslovnik pa jih prevzame v načinu DWR.</td>
-            <td>Datoteke se uspešno prenesejo brez ponavljanja in napak. Logi pri Naslovniku in Pošiljatelju odražajo isto stanje. </td>
-        </tr>
-        <tr>
-            <td>TS_046</td>
-            <td>DP za avtentikacijo in podpisovanje so shranjena na način, ki onemogoča dostop uporabnikom brez ustreznih pravic.</td>
-            <td>Uporabnik brez ustreznih pravic nima dostopa do privatnih ključev DP za delovanje sistema. </td>
-        </tr>
-        <tr>
-            <td>TS_047</td>
-            <td>V vmesniku se poskuša uporabiti preteklo digitalno potrdilo za avtentikacijo ali podpisovanje.</td>
-            <td>Vmesnik poskus zavrne. </td>
-        </tr>
-        <tr>
-            <td>TS_048</td>
-            <td>Digitalno potrdilo Naslovnika poteče. Pripravi se DWR sporočilo za Pošiljatelja, uporabljeno digitalno potrdilo je veljavno.  Sistemski uri se premakneta tako, da je digitalno potrdilo neveljavno. Sporočilo se ponovno pripravi za Pošiljatelja.</td>
-            <td>Prvič je sporočilo preneseno. Ob neveljavnem potrdilu sporočilo ni preneseno, v vmesniku je na voljo ustrezno sporočilo. </td>
-        </tr>
-        <tr>
-            <td>TS_049</td>
-            <td>CRL liste pri Naslovniku - samodejno pregledovanje, če je ustrezno odprt FW</td>
-            <td>Aplikacija se v primeru ustrezno odprtih vrat (glej dokumentacijo) samodejno sklicuje na CRL liste (njihovo nameščanje ni potrebno) in dopušča prijavo z digitalnimi potrdili. </td>
-        </tr>
-        <tr>
-            <td>TS_050</td>
-            <td>CRL liste pri Pošiljatelju - samodejno pregledovanje veljavnosti DP partnerjev, če je ustrezno odprt FW</td>
-            <td>Aplikacija se v primeru ustrezno odprtih vrat (glej dokumentacijo) samodejno sklicuje na CRL liste (njihovo nameščanje ni potrebno) in dopušča prijavo z digitalnimi potrdili. </td>
-        </tr>
-        <tr>
-            <td>TS_051</td>
-            <td>Integracija z zalednimi IS: exe; V vmesniku  Naslovnika se nastavi klic izvršnega programa ob prejemu (določene vrste) sporočila. Izvršni program naj vrne rezultat klica in parametre klica.</td>
-            <td>Ob dogodku nastavljeni izvršni program vrne rezultat v katerem so tudi vsi parametri kot v tehnični dokumentaciji. Preveriti zapis v vmesniku. V primeru nedelovanja/nedosegljivosti izvršnega programa mora biti napaka ustrezno navedena v dnevniškem zapisu. </td>
-        </tr>
-        <tr>
-            <td>TS_052</td>
-            <td>Pošiljanje statusnih sporočil po e-pošti: Nastavitev poštnega strežnika kamor naj se pošiljajo sporočila povezana s statusom delovanja: pošiljatelj, prejemnik(i), poštni strežnik, SSL, perioda, kateri dogodki ter varnostne nastavitve (uporabniško ime + geslo).</td>
-            <td>Vmesnik omogoča nastavitve, njihovo spreminjanje in shranjevanje. </td>
-        </tr>
-        <tr>
-            <td>TS_053</td>
-            <td>Pošiljanje statusnih sporočil po e-pošti: Prejemanje: Vmesniku nastavimo kratko periodo in počakamo na prenos statusa glede na pričakovano vrsto sporočil. Zamenjamo vrsto sporočil za prejem. Spremenimo tudi obliko HTML/TXT</td>
-            <td>V nastavljeni poštni predal pridejo sporočila glede na postavljene kriterije. </td>
-        </tr>
-        <tr>
-            <td>TS_054</td>
-            <td>Uporaba proxy strežnika za dostopanje rešitve navzven.</td>
-            <td>Možno je vnesti podatke proxy strežnika (naslov, vrata, uporabniško ime ter geslo). Prehod deluje. </td>
-        </tr>
-        <tr>
-            <td>TS_055</td>
-            <td>Določanje uporabnikov vmesnika.</td>
-            <td>Doda je nov uporabnik v vmesniku "Sistemske nastavitve" - Uporabniki. Zagon in uporaba uporabniškega vmesnika je z novim uporabnikom možna, z nenavedenim uporabnikom pa ne. </td>
-        </tr>
-        <tr>
-            <td>TS_056</td>
-            <td>Tehnična dokumentacija: Ali je opredeljen pomen napak v log datotekah</td>
-            <td>Problematika je opisana. </td>
-        </tr>
-        <tr>
-            <td>TS_057</td>
-            <td>Tehnična dokumentacija: Ali je opredeljeno dodajanje in brisanje Pošiljatelja in/oziroma (ega) Naslovnika</td>
-            <td>Problematika je opisana. </td>
-        </tr>
-        <tr>
-            <td>TS_058</td>
-            <td>Tehnična dokumentacija: Ali je opredeljeno kje se nahajajo nastavitveni parametri programa.</td>
-            <td>Problematika je opisana. </td>
-        </tr>
-        <tr>
-            <td>TS_059</td>
-            <td>Tehnična dokumentacija: Ali je opredeljeno kako se nastavlja obveščanje - pomen vseh nastavitvenih parametrov.</td>
-            <td>Problematika je opisana. </td>
-        </tr>
-        <tr>
-            <td>TS_060</td>
-            <td>Tehnična dokumentacija: Ali je opredeljeno kaj in na kakšen način se upravlja s konfiguracijo vmesnika (privzeti urniki, perioda prenosa podatkov,…).</td>
-            <td>Problematika je opisana. </td>
-        </tr>
-        <tr>
-            <td>TS_061</td>
-            <td>Tehnična dokumentacija: Ali je opredeljeno kako se izvaja brisanje podatkov.</td>
-            <td>Problematika je opisana. </td>
-        </tr>
-        <tr>
-            <td>TS_062</td>
-            <td>Tehnična dokumentacija: Ali je opredeljeno poimenovanje datotek za pošiljanje ali prejem.</td>
-            <td>Problematika je opisana. </td>
-        </tr>
-        <tr>
-            <td>TS_063</td>
-            <td>Pošiljatelj posreduje 100  pošiljk v načinu ZPP. Pošiljateljev strežnik postane nedostopen za sprejem vročilnic.  </td>
-            <td>Naslovnikov sistem povratnico poskuša večkrat oddati. V naslovnikov sistem.  Vse neoddane vročilnice so v statusu „Napaka“ - prejete pošiljke pa so označene, da so v procesu vročanja.  Ko  je pošiljateljev sistem zopet dostopen nato ponovno pošiljanje vročilnic v pošiljateljev sistem uspe. Pošiljatelj prejme vse povratnice, naslovniku so omogočene vse pošiljke za pregled vsebine.</td>
-        </tr>
-        <tr>
-            <td>TS_064</td>
-            <td>Dodatek 'ZPP' ni pravilno nameščen na strani pošiljatelja.    </td>
-            <td>Ker je lahko nepravilna nameščenost dodatka posledica zakasnjenega vzpostavitve  dodatka pri zagonu aplikacijskega strežnika, Pošiljateljev sistem skladno s pravili večkratnega prenosa pošiljk, poskuša odposlati pošiljko v naslovnikov sistem. Ko je ZPP dodatek delujoč se pošiljka odpravi BP.</td>
-        </tr>
-        <tr>
-            <td>TS_065</td>
-            <td>Dodatek 'ZPP' ni pravilno nameščen na strani naslovnika.    </td>                    
-            <td>Ker je lahko nepravilna nameščenost dodatka posledica zakasnjenega vzpostavitve  dodatka pri zagonu aplikacijskega strežnika, Pošiljateljev sistem skladno s pravili večkratnega prenosa pošiljk, poskuša odposlati pošiljko v naslovnikov sistem. Ko je ZPP dodatek delujoč se pošiljka odpravi BP.</td>
-        </tr -->    
-        </tbody>
+            <tr>
+                <th>Oznaka</th>
+                <th>Opis testnega primera</th>
+                <th>Pričakovani rezultat</th>
+                <th>Testni scenarij</th>
+            </tr>
+            <tr>
+                <td><b>ZBS_005</b></td>
+                <td>Naslovnik prenese sporočilo k Pošiljatelju v
+                    načinu &quot;Delivery with receipt&quot;</td>
+                <td>Sporočilo je preneseno. Vmesnik to odraža na
+                    obeh straneh. </td>
+                <td><a href="testcase/zbs/TS-ZBS_005-006-007.odt">TS-ZBS_005-006-007.odt</a><br />
+                    <a href="testcase/zbs/pdf/TS-ZBS_005-006-007.pdf">TS-ZBS_005-006-007.pdf</a>
+                </td>
+            </tr>
+            <tr>
+                <td><b>ZBS_006</b></td>
+                <td>Pošiljatelj prenese sporočilo k Naslovniku v
+                    načinu &quot;Delivery with receipt&quot;</td>
+                <td>Sporočilo je preneseno. Vmesnik to odraža na
+                    obeh straneh. </td>
+                <td><a href="testcase/zbs/TS-ZBS_005-006-007.odt">TS-ZBS_005-006-007.odt</a><br />
+                    <a href="testcase/zbs/pdf/TS-ZBS_005-006-007.pdf">TS-ZBS_005-006-007.pdf</a>
+                </td>
+            </tr>
+            <tr>
+                <td><b>ZBS_010</b></td>
+                <td>Robustnost pošiljanja vročilnice po ZPP.</td>
+                <td>Pri pošiljanju vročilnice Pošiljatelju po ZPP
+                    pride do zastoja zaradi nedostopnosti Pošiljateljevega sistema.
+                    Ko je Pošiljateljev sistem znova dostopen se vročilnica dostavi
+                    in dokonča postopek vročanja. </td>
+                <td><a href="testcase/zbs/TS-ZBS_010_011.odt">TS-ZBS_010_011.odt</a><br />
+                    <a href="testcase/zbs/pdf/TS-ZBS_010_011.pdf">TS-ZBS_010_011.pdf</a>
+                </td>
+                
+                
+            </tr>
+            <tr>
+                <td><b>ZBS_011</b></td>
+                <td>Robustnost pošiljanja po DWR. Od Naslovnika k
+                    Pošiljatelju.</td>
+                <td>Pošiljateljeva storitev ni na voljo, zato pride
+                    pri pošiljanju po načinu DWR do zastoja pošiljanja. Uporabniški
+                    vmesnik vsebuje zapis poskusa dostave. Ko je Pošiljateljeva
+                    storitev znova na voljo, se sporočilo uspešno dostavi. </td>
+                <td><a href="testcase/zbs/TS-ZBS_010_011.odt">TS-ZBS_010_011.odt</a><br />
+                    <a href="testcase/zbs/pdf/TS-ZBS_010_011.pdf">TS-ZBS_010_011.pdf</a>
+                </td>
+            </tr>
+            <tr>
+                <td><b>ZBS_012</b></td>
+                <td>Test urnika: na Naslovnikovem MSH se nastavi urnik
+                    Pošiljatelja, ki je 5 min pred trenutnim testnim časom. Pripravi
+                    se sporočilo v načinu DWR za Pošiljatelja.</td>
+                <td>Sporočilo se prenese znotraj urnika. </td>
+                <td><!-- <a href="testcase/zbs/TS-ZBS_.odt">TS-ZBS_.odt</a><br />
+<a href="testcase/zbs/TS-ZBS_.pdf">TS-ZBS_.pdf</a> -->
+                </td>
+            </tr>
+            <tr>
+                <td><b>ZBS_013</b></td>
+                <td>Test urnika: Naslovnik pošlje v načinu DWR
+                    sporočilo, ki je zunaj veljavnega urnika Pošiljatelja. </td>
+                <td>Sistem vrne ustrezno napako, ki je vidna v
+                    dnevniških zapisih. Sporočilo se ne prenese. </td>
+                <td><!-- <a href="testcase/zbs/TS-ZBS_.odt">TS-ZBS_.odt</a><br />
+<a href="testcase/zbs/TS-ZBS_.pdf">TS-ZBS_.pdf</a> -->
+                </td>
+            </tr>
+            <tr>
+                <td><b>ZBS_014</b></td>
+                <td>Politika dostave: možno je nastaviti maksimalni
+                    čas poizkusov dostave sporočila.</td>
+                <td>Obstaja parameter v nastavitvah, ki ga je možno
+                    nastaviti. </td>
+                <td><!-- <a href="testcase/zbs/TS-ZBS_.odt">TS-ZBS_.odt</a><br />
+<a href="testcase/zbs/TS-ZBS_.pdf">TS-ZBS_.pdf</a> -->
+                </td>
+            </tr>
+            <tr>
+                <td><b>ZBS_015</b></td>
+                <td>Politika dostave: Naslovnik pripravi sporočilo za
+                    nedelujočega Pošiljatelja v načinu DWR - servis ni dostopen,
+                    druga možnost da spletna storitev ne deluje.</td>
+                <td>Pošiljateljev servis se začasno ustavi.
+                    Naslovnikova sistemska ura se premakne naprej čez nastavljeni rok
+                    maksimalne dostave. Vmesnik sporočilo premakne v Outbox Error
+                    oziroma umakne. </td>
+                <td><!-- <a href="testcase/zbs/TS-ZBS_.odt">TS-ZBS_.odt</a><br />
+<a href="testcase/zbs/TS-ZBS_.pdf">TS-ZBS_.pdf</a> -->
+                </td>
+            </tr>
+            <tr>
+                <td><b>ZBS_040</b></td>
+                <td>Naslovnik pripravi 1.000 sporočil za Pošiljatelja
+                    v načinu DWR in mu jih dostavi. Zaželena je uporaba večih
+                    jeder.</td>
+                <td>Sporočila se prenesejo, v vmesniku na obeh
+                    straneh je status izpisan. Iz logov je razvidno hkratno oddajanje
+                    večih sporočil. </td>
+                <td><a href="testcase/zbs/TS-ZBS_040-041-042.odt">TS-ZBS_040-041-042.odt</a><br />
+                    <a href="testcase/zbs/pdf/TS-ZBS_040-041-042.pdf">TS-ZBS_040-041-042.pdf</a>
+                </td>
+            </tr>
+            <tr>
+                <td><b>ZBS_041</b></td>
+                <td>Pošiljatelj hkrati pripravi 2.000 sporočil za
+                    Naslovnika in mu jih pošlje v načinu ZPP. Zaželena je uporaba
+                    večih jeder.</td>
+                <td>Sporočila se prenesejo, v vmesniku na obeh
+                    straneh je status izpisan. </td>
+                <td><a href="testcase/zbs/TS-ZBS_040-041-042.odt">TS-ZBS_040-041-042.odt</a><br />
+                    <a href="testcase/zbs/pdf/TS-ZBS_040-041-042.pdf">TS-ZBS_040-041-042.pdf</a>
+                </td>
+            </tr>
+            <tr>
+                <td><b>ZBS_042</b></td>
+                <td>Pošiljatelj hkrati pripravi 2.000 sporočil za
+                    Naslovnika in mu jih pošlje v načinu DWR. Zaželena je uporaba
+                    večih jeder.</td>
+                <td>Sporočila se prenesejo, v vmesniku na obeh
+                    straneh je status izpisan. </td>
+                <td><a href="testcase/zbs/TS-ZBS_040-041-042.odt">TS-ZBS_040-041-042.odt</a><br />
+                    <a href="testcase/zbs/pdf/TS-ZBS_040-041-042.pdf">TS-ZBS_040-041-042.pdf</a>
+                </td>
+            </tr>
+            <tr>
+                <td><b>ZBS_043</b></td>
+                <td>Obremenitveni test: 2 Naslovnika hkrati pošljeta
+                    sporočila v načinu DWR. Eden pošlje 5 večjih (nekaj MB) drugi
+                    več manjših (vsaj 100). Zaželena je uporaba večih jeder na
+                    strani Naslovnikov in Pošiljatelja.</td>
+                <td>Vmesnik zna hkrati sprejemati sporočila vseh
+                    Naslovnikov - kar je vidno tudi v zapisih. </td>
+                <td><a href="testcase/zbs/TS-ZBS_043-044-045.odt">TS-ZBS_043-044-045.odt</a><br />
+                    <a href="testcase/zbs/pdf/TS-ZBS_043-044-045.pdf">TS-ZBS_043-044-045.pdf</a>
+                </td>
+            </tr>
+            <tr>
+                <td><b>ZBS_044</b></td>
+                <td>Naslovnik pripravi 10 velikih datotek (25Mb) in
+                    jih prenese k Pošiljatelju v načinu DWR.</td>
+                <td>Datoteke se uspešno prenesejo brez ponavljanja in
+                    napak. Logi pri Naslovniku in Pošiljatelju odražajo isto stanje.
+                    Velikost največje dovoljene datoteke je navedena v dokumentaciji
+                    in ali informacijski rešitvi. </td>
+                 <td><a href="testcase/zbs/TS-ZBS_043-044-045.odt">TS-ZBS_043-044-045.odt</a><br />
+                    <a href="testcase/zbs/pdf/TS-ZBS_043-044-045.pdf">TS-ZBS_043-044-045.pdf</a>
+                </td>
+            </tr>
+            <tr>
+                <td><b>ZBS_045</b></td>
+                <td>Pošiljatelj pripravi 10 velikih datotek (25Mb),
+                    Naslovnik pa jih prevzame v načinu DWR.</td>
+                <td>Datoteke se uspešno prenesejo brez ponavljanja in
+                    napak. Logi pri Naslovniku in Pošiljatelju odražajo isto stanje.
+                </td>
+                 <td><a href="testcase/zbs/TS-ZBS_043-044-045.odt">TS-ZBS_043-044-045.odt</a><br />
+                    <a href="testcase/zbs/pdf/TS-ZBS_043-044-045.pdf">TS-ZBS_043-044-045.pdf</a>
+                </td>
+            </tr>
         </table>
 
+        <h2 id="testcases/testcase:zpp">Vročanje po ZPP</h2>
+        <table class="styled-table" style="font-size: 12px">
+            <tr>
+                <th>Oznaka</th>
+                <th>Opis testnega primera</th>
+                <th>Pričakovani rezultat</th>
+                <th>Testni scenarij</th>
+            </tr>
+            <tr>
+                <td><b>ZBS_007</b></td>
+                <td>Pošiljatelj vroči sporočilo k Naslovniku v
+                    načinu &quot;ZPP&quot; preko vročevalca skladno z ZPP.</td>
+                <td>Sporočilo je vročeno. Vmesnik to odraža na obeh
+                    straneh. Celoten postopek ZPP (priprava obvestil, podpisovanje
+                    vročilnice z obeh strani, dostava vročilnice, pridobitev ključa,
+                    dešifriranje, odlaganje v predal) je spoštovan. </td>
+                <td><a href="testcase/zbs/TS-ZBS_005-006-007.odt">TS-ZBS_005-006-007.odt</a><br />
+                    <a href="testcase/zbs/pdf/TS-ZBS_005-006-007.pdf">TS-ZBS_005-006-007.pdf</a>
+                </td>
+            </tr>
+            <tr>
+                <td><b>ZBS_008</b></td>
+                <td>Pošiljatelj vroči sporočilo k Naslovniku v
+                    načinu &quot;ZPP&quot; skladno z ZPP s pomočjo
+                    fikcije.</td>
+                <td>Na prejemnikovem predalu prispe pošiljka. Ker je ta v zakonsko določenem 
+                    času ne prevzame se fiktivno vroči. Pošiljatelj dobi fiktivno vročilnico, 
+                    naslovnik pa dobi obvestilo o fiktivni vročitvi in možnost vpogleda v vsebino pošiljke.</td>
+                <td><!-- <a href="testcase/zbs/TS-ZBS_.odt">TS-ZBS_.odt</a><br />
+<a href="testcase/zbs/TS-ZBS_.pdf">TS-ZBS_.pdf</a> -->
+                </td>
+            </tr>
+            <tr>
+                <td><b>ZBS_009</b></td>
+                <td>Pošiljatelj vroči sporočilo k Naslovniku v
+                    načinu &quot;ZPP&quot; preko vročevalca skladno z ZPP z zamikom
+                    zaradi umaknjene fikcije.</td>
+                <td>Na prejemnikovem sistemu se izključi avtomatsko 
+                    prevzemanje (vročanje) dokumentov. 
+                    Pošiljatelj začne z pošiljanjem  pošiljk. Vročevalec dobi
+                    sporočilo vendar ga ne prevzame. Pred
+                    potekom fikcije Naslovnik izključi ponovno ključi prevzemanje. 
+                    Pošiljke se uspešno vročijo: pošiljatelj prejme podpisane povratnice, naslovnik pa možnost
+                    vpogleda v vsebine  pošiljk.</td>
+                 <td><a href="testcase/zbs/TS-ZBS_009.odt">TS-ZBS_009.odt</a><br />
+                    <a href="testcase/zbs/pdf/TS-ZBS_009.pdf">TS-ZBS_009.pdf</a>
+                </td>
+            </tr>
+            <tr>
+                <td><b>ZBS_063</b></td>
+                <td>Pošiljatelj posreduje 100 pošiljk v načinu ZPP.
+                    Pošiljateljev strežnik postane nedostopen za sprejem vročilnic.
+                </td>
+                <td>Naslovnikov sistem povratnico poskuša večkrat
+                    oddati. V naslovnikov sistem. Vse neoddane vročilnice so v
+                    statusu „Napaka“ - prejete pošiljke pa so označene, da so v
+                    procesu vročanja. Ko je pošiljateljev sistem zopet dostopen nato
+                    ponovno pošiljanje vročilnic v pošiljateljev sistem uspe.
+                    Pošiljatelj prejme vse povratnice, naslovniku so omogočene vse
+                    pošiljke za pregled vsebine.</td>
+                <td><a href="testcase/zbs/TS-ZBS_063.odt">TS-ZBS_063.odt</a><br />
+                    <a href="testcase/zbs/pdf/TS-ZBS_063.pdf">TS-ZBS_063.pdf</a>
+                </td>
+            </tr>
+            <tr>
+                <td><b>ZBS_064</b></td>
+                <td>>Dodatek 'ZPP' ni
+                    pravilno nameščen na strani pošiljatelja. 
+                </td>
+                <td>Ker je lahko nepravilna nameščenost dodatka
+                    posledica zakasnjenega vzpostavitve dodatka pri zagonu
+                    aplikacijskega strežnika, Pošiljateljev sistem skladno s pravili
+                    večkratnega prenosa pošiljk, poskuša odposlati pošiljko v
+                    naslovnikov sistem. Ko je ZPP dodatek delujoč se pošiljka
+                    odpravi BP.</td>
+                 <td><a href="testcase/zbs/TS-ZBS_064_065.odt">TS-ZBS_064_065.odt</a><br />
+                    <a href="testcase/zbs/pdf/TS-ZBS_064_065.pdf">TS-ZBS_064_065.pdf</a>
+                </td>
+            </tr>
+            <tr>
+                <td><b>ZBS_065</b></td>
+                <td>>Dodatek 'ZPP' ni
+                    pravilno nameščen na strani naslovnika. 
+                </td>
+                <td>Ker je lahko nepravilna nameščenost dodatka
+                    posledica zakasnjenega vzpostavitve dodatka pri zagonu
+                    aplikacijskega strežnika, Pošiljateljev sistem skladno s pravili
+                    večkratnega prenosa pošiljk, poskuša odposlati pošiljko v
+                    naslovnikov sistem. Ko je ZPP dodatek delujoč se pošiljka
+                    odpravi BP.</td>
+                 <td><a href="testcase/zbs/TS-ZBS_064_065.odt">TS-ZBS_064_065.odt</a><br />
+                    <a href="testcase/zbs/pdf/TS-ZBS_064_065.pdf">TS-ZBS_064_065.pdf</a>
+                </td>
+            </tr>
 
+        </table>
+        <h2 id="testcases/testcase:admin">Administracija</h2>
+        <table class="styled-table" style="font-size: 12px">
+            <tr>
+                <th>Oznaka</th>
+                <th>Opis testnega primera</th>
+                <th>Pričakovani rezultat</th>
+                <th>Testni scenarij</th>
+            </tr>
+            <tr>
+                <td><b>ZBS_017</b></td>
+                <td>Brisanje starih podatkov. V vmesniku se nastavi
+                    krajši čas hranjenja podatkov. Po poteku tega časa se pogleda
+                    mape in dnevniške zapise. Naslovnik na Windows server.</td>
+                <td>V mapah so samo datoteke novejše od nastavljene
+                    vrednosti. V dnevniških zapisih velja isto. </td>
+                <td><!-- <a href="testcase/zbs/TS-ZBS_.odt">TS-ZBS_.odt</a><br />
+<a href="testcase/zbs/TS-ZBS_.pdf">TS-ZBS_.pdf</a> -->
+                </td>
+            </tr>
+            <tr>
+                <td><b>ZBS_018</b></td>
+                <td>Brisanje starih podatkov. V vmesniku se nastavi
+                    krajši čas hranjenja podatkov. Po poteku tega časa se pogleda
+                    mape in dnevniške zapise. i Naslovnik na Linux</td>
+                <td>V mapah so samo datoteke novejše od nastavljene
+                    vrednosti. V dnevniških zapisih velja isto. </td>
+                <td><!-- <a href="testcase/zbs/TS-ZBS_.odt">TS-ZBS_.odt</a><br />
+<a href="testcase/zbs/TS-ZBS_.pdf">TS-ZBS_.pdf</a> -->
+                </td>
+            </tr>
+
+
+            <tr>
+                <td><b>ZBS_028</b></td>
+                <td>Vsak varni elektronski predal ima svoji V/I mapi v
+                    kateri so odloženi vsi dokumenti povezani s postopkov vročanja
+                    ali dostave.</td>
+                <td>Mapi sta ločeni za pošiljanje in za prejete
+                    dokumente. </td>
+                <td><!-- <a href="testcase/zbs/TS-ZBS_.odt">TS-ZBS_.odt</a><br />
+<a href="testcase/zbs/TS-ZBS_.pdf">TS-ZBS_.pdf</a> -->
+                </td>
+            </tr>
+            <tr>
+                <td><b>ZBS_039</b></td>
+                <td>Avtomatsko arhiviranje podatkov o izmenjavi
+                    sporočil.</td>
+                <td>Možno je nastaviti interval avtomatskega
+                    arhiviranja. Po poteku intervala sistem izvozi podatke o izmenjava
+                    v nastavljeno mesto. V seznamu dogodkov se ti podatki izbrišejo v
+                    kolikor je tako nastavljeno. </td>
+                <td><!-- <a href="testcase/zbs/TS-ZBS_.odt">TS-ZBS_.odt</a><br />
+<a href="testcase/zbs/TS-ZBS_.pdf">TS-ZBS_.pdf</a> -->
+                </td>
+            </tr>
+            <tr>
+                <td><b>ZBS_052</b></td>
+                <td>Pošiljanje statusnih sporočil po e-pošti:
+                    Nastavitev poštnega strežnika kamor naj se pošiljajo sporočila
+                    povezana s statusom delovanja: pošiljatelj, prejemnik(i), poštni
+                    strežnik, SSL, perioda, kateri dogodki ter varnostne nastavitve
+                    (uporabniško ime + geslo).</td>
+                <td>Vmesnik omogoča nastavitve, njihovo spreminjanje
+                    in shranjevanje. </td>
+                <td><!-- <a href="testcase/zbs/TS-ZBS_.odt">TS-ZBS_.odt</a><br />
+<a href="testcase/zbs/TS-ZBS_.pdf">TS-ZBS_.pdf</a> -->
+                </td>
+            </tr>
+            <tr>
+                <td><b>ZBS_053</b></td>
+                <td>Pošiljanje statusnih sporočil po e-pošti:
+                    Prejemanje: Vmesniku nastavimo kratko periodo in počakamo na
+                    prenos statusa glede na pričakovano vrsto sporočil. Zamenjamo
+                    vrsto sporočil za prejem. Spremenimo tudi obliko HTML/TXT</td>
+                <td>V nastavljeni poštni predal pridejo sporočila
+                    glede na postavljene kriterije. </td>
+                <td><!-- <a href="testcase/zbs/TS-ZBS_.odt">TS-ZBS_.odt</a><br />
+<a href="testcase/zbs/TS-ZBS_.pdf">TS-ZBS_.pdf</a> -->
+                </td>
+            </tr>
+        </table>
+        <h2 id="testcases/testcase:monitorDelivery">Nadzor nad pošiljanjem</h2>
+
+        <table class="styled-table" style="font-size: 12px">
+            <tr>
+                <th>Oznaka</th>
+                <th>Opis testnega primera</th>
+                <th>Pričakovani rezultat</th>
+                <th>Testni scenarij</th>
+            </tr>
+            <tr>
+                <td><b>ZBS_029</b></td>
+                <td>Prenos DWR sporočila k Pošiljatelju, ki ne
+                    obstaja + kontrola OutboxError</td>
+                <td>Prenos ne uspe, datoteka se iz Outbox prestavi v
+                    OutboxError oziroma ekvivalentno mapo. </td>
+                 <td> 
+                    <a href="testcase/zbs/TS-ZBS_029-036.odt">TS-ZBS_029-036.odt</a><br />
+                    <a href="testcase/zbs/pdf/TS-ZBS_029-036.pdf">TS-ZBS_029-036.pdf</a>
+                </td>
+            </tr>
+            <tr>
+                <td><b>ZBS_030</b></td>
+                <td>Log Naslovnika o prenosih preko vmesnika
+                    Naslovnika (vidne tudi datoteke, ki se skušajo prenesti)</td>
+                <td>Vsako sporočilo, ki se je preneslo oz. skušalo
+                    prenesti, ima razvidno vso zgodovino poskusov dostav, zabeleženo
+                    je tudi število poskusov prenosa. </td>
+                 <td> 
+                    <a href="testcase/zbs/TS-ZBS_029-036.odt">TS-ZBS_029-036.odt</a><br />
+                    <a href="testcase/zbs/pdf/TS-ZBS_029-036.pdf">TS-ZBS_029-036.pdf</a>
+                </td>
+            </tr>
+            <tr>
+                <td><b>ZBS_031</b></td>
+                <td>Log Naslovnika - gumb osveži (Naslovnik)</td>
+                <td>Naslovnik ima na strani vmesnika, kjer pregleduje
+                    log, ustrezen gumb za osvežitev podatkov. </td>
+                 <td> 
+                    <a href="testcase/zbs/TS-ZBS_029-036.odt">TS-ZBS_029-036.odt</a><br />
+                    <a href="testcase/zbs/pdf/TS-ZBS_029-036.pdf">TS-ZBS_029-036.pdf</a>
+                </td>
+            </tr>
+            <tr>
+                <td><b>ZBS_032</b></td>
+                <td>Log Naslovnika - gumb &quot;Prenesi takoj&quot;
+                    (Naslovnik)</td>
+                <td>Naslovnik ima na straneh vmesnika gumb za
+                    takojšnjo izmenjavo podatkov s Pošiljatelji. </td>
+                 <td> 
+                    <a href="testcase/zbs/TS-ZBS_029-036.odt">TS-ZBS_029-036.odt</a><br />
+                    <a href="testcase/zbs/pdf/TS-ZBS_029-036.pdf">TS-ZBS_029-036.pdf</a>
+                </td>
+            </tr>
+
+            <tr>
+                <td><b>ZBS_034</b></td>
+                <td>Log Naslovnika - gumb osveži (Pošiljatelj)</td>
+                <td>Naslovnik ima na strani vmesnika, kjer pregleduje
+                    log, ustrezen gumb za osvežitev podatkov ki deluje. </td>
+                 <td> 
+                    <a href="testcase/zbs/TS-ZBS_029-036.odt">TS-ZBS_029-036.odt</a><br />
+                    <a href="testcase/zbs/pdf/TS-ZBS_029-036.pdf">TS-ZBS_029-036.pdf</a>
+                </td>
+            </tr>
+            <tr>
+                <td><b>ZBS_035</b></td>
+                <td>Log Naslovnika - gumb prenesi takoj (Pošiljatelj)</td>
+                <td>Naslovnik ima na straneh vmesnika gumb za
+                    takojšnjo izmenjavo podatkov s Pošiljatelji ki deluje. </td>
+                 <td> 
+                    <a href="testcase/zbs/TS-ZBS_029-036.odt">TS-ZBS_029-036.odt</a><br />
+                    <a href="testcase/zbs/pdf/TS-ZBS_029-036.pdf">TS-ZBS_029-036.pdf</a>
+                </td>
+            </tr>
+            <tr>
+                <td><b>ZBS_036</b></td>
+                <td>Nastavitve - začasno onemogočanje določenih
+                    Naslovnikov na strani Pošiljatelja</td>
+                <td>V nastavitvah je možno določene Naslovnike
+                    začasno izklopiti; poskus prenosa datoteke zanje ne deluje. </td>
+                 <td> 
+                    <a href="testcase/zbs/TS-ZBS_029-036.odt">TS-ZBS_029-036.odt</a><br />
+                    <a href="testcase/zbs/pdf/TS-ZBS_029-036.pdf">TS-ZBS_029-036.pdf</a>
+                </td>
+            </tr>
+            <tr>
+                <td><b>ZBS_037</b></td>
+                <td>Izpis aktivnosti prenosa sporočil. Možno je
+                    vnesti iskalne kriterije, ki se uporabijo za filtriranje seznama
+                    dogodkov.</td>
+                <td>Vnos kriterijev datuma prikaže ustrezne zadetke v
+                    kolikor ti obstajajo. </td>
+                <td><!-- <a href="testcase/zbs/TS-ZBS_.odt">TS-ZBS_.odt</a><br />
+<a href="testcase/zbs/TS-ZBS_.pdf">TS-ZBS_.pdf</a> -->
+                </td>
+            </tr>
+            <tr>
+                <td><b>ZBS_038</b></td>
+                <td>Ročni izvoz podatkov o izmenjavi sporočil</td>
+                <td>Po opravljenih nekaj izmenjavah se v vmesniku
+                    lahko izvozi te informacije v .CSV obliki. </td>
+                <td><!-- <a href="testcase/zbs/TS-ZBS_.odt">TS-ZBS_.odt</a><br />
+<a href="testcase/zbs/TS-ZBS_.pdf">TS-ZBS_.pdf</a> -->
+                </td>
+            </tr>
+
+        </table>
+        <h2 id="testcases/testcase:integration">Integracija z zalednimi sistemi</h2>
+
+        <table class="styled-table" style="font-size: 12px">
+            <tr>
+                <th>Oznaka</th>
+                <th>Opis testnega primera</th>
+                <th>Pričakovani rezultat</th>
+                <th>Testni scenarij</th>
+            </tr>
+
+            <tr>
+                <td><b>ZBS_051</b></td>
+                <td>Integracija z zalednimi IS: exe; V vmesniku
+                    Naslovnika se nastavi klic izvršnega programa ob prejemu
+                    (določene vrste) sporočila. Izvršni program naj vrne rezultat
+                    klica in parametre klica.</td>
+                <td>Ob dogodku nastavljeni izvršni program vrne
+                    rezultat v katerem so tudi vsi parametri kot v tehnični
+                    dokumentaciji. Preveriti zapis v vmesniku. V primeru
+                    nedelovanja/nedosegljivosti izvršnega programa mora biti napaka
+                    ustrezno navedena v dnevniškem zapisu. </td>
+                <td><!-- <a href="testcase/zbs/TS-ZBS_.odt">TS-ZBS_.odt</a><br />
+<a href="testcase/zbs/TS-ZBS_.pdf">TS-ZBS_.pdf</a> -->
+                </td>
+            </tr>
+
+
+        </table>
+        <h2 id="testcases/testcase:documentation">Tehnična dokumentacija</h2>
+
+        <table class="styled-table" style="font-size: 12px">
+            <tr>
+                <th>Oznaka</th>
+                <th>Opis testnega primera</th>
+                <th>Pričakovani rezultat</th>
+                <th>Testni scenarij</th>
+            </tr>
+            <tr>
+                <td><b>ZBS_056</b></td>
+                <td>Tehnična dokumentacija: Ali je opredeljen pomen
+                    napak v log datotekah</td>
+                <td>Problematika je opisana. </td>
+                <td><!-- <a href="testcase/zbs/TS-ZBS_.odt">TS-ZBS_.odt</a><br />
+<a href="testcase/zbs/TS-ZBS_.pdf">TS-ZBS_.pdf</a> -->
+                </td>
+            </tr>
+            <tr>
+                <td><b>ZBS_057</b></td>
+                <td>Tehnična dokumentacija: Ali je opredeljeno
+                    dodajanje in brisanje Pošiljatelja in/oziroma (ega) Naslovnika</td>
+                <td>Problematika je opisana. </td>
+                <td><!-- <a href="testcase/zbs/TS-ZBS_.odt">TS-ZBS_.odt</a><br />
+<a href="testcase/zbs/TS-ZBS_.pdf">TS-ZBS_.pdf</a> -->
+                </td>
+            </tr>
+            <tr>
+                <td><b>ZBS_058</b></td>
+                <td>Tehnična dokumentacija: Ali je opredeljeno kje se
+                    nahajajo nastavitveni parametri programa.</td>
+                <td>Problematika je opisana. </td>
+                <td><!-- <a href="testcase/zbs/TS-ZBS_.odt">TS-ZBS_.odt</a><br />
+<a href="testcase/zbs/TS-ZBS_.pdf">TS-ZBS_.pdf</a> -->
+                </td>
+            </tr>
+            <tr>
+                <td><b>ZBS_059</b></td>
+                <td>Tehnična dokumentacija: Ali je opredeljeno kako
+                    se nastavlja obveščanje - pomen vseh nastavitvenih parametrov.</td>
+                <td>Problematika je opisana. </td>
+                <td><!-- <a href="testcase/zbs/TS-ZBS_.odt">TS-ZBS_.odt</a><br />
+<a href="testcase/zbs/TS-ZBS_.pdf">TS-ZBS_.pdf</a> -->
+                </td>
+            </tr>
+            <tr>
+                <td><b>ZBS_060</b></td>
+                <td>Tehnična dokumentacija: Ali je opredeljeno kaj in
+                    na kakšen način se upravlja s konfiguracijo vmesnika (privzeti
+                    urniki, perioda prenosa podatkov,…).</td>
+                <td>Problematika je opisana. </td>
+                <td><!-- <a href="testcase/zbs/TS-ZBS_.odt">TS-ZBS_.odt</a><br />
+<a href="testcase/zbs/TS-ZBS_.pdf">TS-ZBS_.pdf</a> -->
+                </td>
+            </tr>
+            <tr>
+                <td><b>ZBS_061</b></td>
+                <td>Tehnična dokumentacija: Ali je opredeljeno kako
+                    se izvaja brisanje podatkov.</td>
+                <td>Problematika je opisana. </td>
+                <td><!-- <a href="testcase/zbs/TS-ZBS_.odt">TS-ZBS_.odt</a><br />
+<a href="testcase/zbs/TS-ZBS_.pdf">TS-ZBS_.pdf</a> -->
+                </td>
+            </tr>
+            <tr>
+                <td><b>ZBS_062</b></td>
+                <td>Tehnična dokumentacija: Ali je opredeljeno
+                    poimenovanje datotek za pošiljanje ali prejem.</td>
+                <td>Problematika je opisana. </td>
+                <td><!-- <a href="testcase/zbs/TS-ZBS_.odt">TS-ZBS_.odt</a><br />
+<a href="testcase/zbs/TS-ZBS_.pdf">TS-ZBS_.pdf</a> -->
+                </td>
+            </tr>
+
+        </table>
 
     </article>  
 </div>

@@ -384,12 +384,14 @@ footer[role="contentinfo"] .inner p#copyright{
 }
 .styled-table  td {
     border: 1px solid #444 ; 
+    text-align: left;
     
 }
 
 .styled-table  th {
     border: 1px solid #444 ; 
-    background-color: lightsteelblue;   
+    background-color: lightsteelblue;
+    text-align: left;
 }
 
 
