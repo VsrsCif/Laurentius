@@ -41,6 +41,7 @@ import org.apache.cxf.staxutils.W3CDOMStreamWriter;
 import org.apache.cxf.transport.ConduitInitiatorManager;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
+import org.apache.cxf.transports.http.configuration.ProxyServerType;
 import si.laurentius.msh.outbox.mail.MSHOutMail;
 import si.laurentius.msh.pmode.PartyIdentitySet;
 import si.laurentius.msh.pmode.Protocol;
@@ -59,6 +60,7 @@ import si.jrc.msh.interceptor.MSHPluginOutFaultInterceptor;
 import si.jrc.msh.interceptor.MSHPluginOutInterceptor;
 import si.jrc.msh.transport.SMTPConduit;
 import si.jrc.msh.transport.SMTPTransportFactory;
+import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.enums.MimeValue;
 import si.laurentius.commons.cxf.SoapUtils;
 import si.laurentius.commons.exception.SEDSecurityException;
@@ -167,7 +169,6 @@ public class MshClient {
     cxfClient.getOutFaultInterceptors().add(new EBMSOutFaultInterceptor());
     cxfClient.getOutFaultInterceptors().add(new MSHPluginOutFaultInterceptor());
 
-    
     String url_protocol = u.getProtocol().toLowerCase();
     switch (url_protocol) {
       case "smtp": {// test smtp
@@ -197,20 +198,35 @@ public class MshClient {
         // --------------------------------------------------------------------
         // set http client policy
         HTTPClientPolicy httpClientPolicy = new HTTPClientPolicy();
-        /*
-        if (protocol.getProxy() != null && !Utils.isEmptyString(protocol.
-                getProxy().getHost())) {
-          httpClientPolicy.setProxyServer(protocol.getProxy().getHost());
-          if (protocol.getProxy().getPort() != null) {
-            httpClientPolicy.setProxyServerPort(protocol.getProxy().getPort());
+        String host = System.getProperty(
+                url_protocol.equals("http") ? SEDSystemProperties.PROXY_HTTP_HOST 
+                        : SEDSystemProperties.PROXY_HTTPS_HOST);
+        String port = System.getProperty(
+                url_protocol.equals("http") ? SEDSystemProperties.PROXY_HTTP_PORT
+                        : SEDSystemProperties.PROXY_HTTPS_PORT);
+        String noProxy = System.getProperty(
+                url_protocol.equals("http") ? SEDSystemProperties.PROXY_HTTP_NO_PROXY 
+                        : SEDSystemProperties.PROXY_HTTPS_NO_PROXY);
+
+        if (!Utils.isEmptyString(host)) {
+          int iport = 80;
+          try {
+            iport = Integer.parseInt(port);
+          } catch (NumberFormatException ex) {
+            LOG.formatedError(
+                    "Invalid proxy port number %s for proxy host %s. Check proxy configuration (port 80 is setted)!",
+                    port, host);
+
           }
-          httpClientPolicy.setProxyServerType(Utils.isEmptyString(protocol.
-                  getProxy().getType())
-                          ? ProxyServerType.HTTP
-                          : protocol.getProxy().getType().
-                                  equalsIgnoreCase("SOCKS")
-                          ? ProxyServerType.SOCKS : ProxyServerType.HTTP);
-        }*/
+          LOG.formatedDebug(
+                  "Proxy: '%s:%d' (no proxy: '%s') is setted for url: %s", host,
+                  iport, noProxy, url);
+          httpClientPolicy.setProxyServer(host);
+          httpClientPolicy.setProxyServerPort(iport);
+          httpClientPolicy.setNonProxyHosts(noProxy);
+        } else {
+          LOG.formatedDebug("No proxy is setted for url: %s", url);
+        }
 
         httpClientPolicy.setConnectionTimeout(protocol.getAddress().
                 getConnectionTimeout() != null
@@ -227,9 +243,9 @@ public class MshClient {
         break;
       }
       default: {
-       throw new EBMSError(EBMSErrorCode.PModeConfigurationError, messageId,
-              "Invalid protocol: " + url_protocol + " for address: " + url,
-              SoapFault.FAULT_CODE_CLIENT);
+        throw new EBMSError(EBMSErrorCode.PModeConfigurationError, messageId,
+                "Invalid protocol: " + url_protocol + " for address: " + url,
+                SoapFault.FAULT_CODE_CLIENT);
       }
     }
 

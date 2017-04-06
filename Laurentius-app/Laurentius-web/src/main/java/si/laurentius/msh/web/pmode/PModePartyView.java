@@ -235,16 +235,7 @@ public class PModePartyView extends AbstractPModeJSFView<PartyIdentitySet> {
     return null;
   }
 
-  public Protocol.Proxy getCurrrentProxy() {
-    PartyIdentitySetType.TransportProtocol tc = getCurrentTransportProtocol();
-    if (tc != null) {
-      if (tc.getProxy() == null) {
-        tc.setProxy(new Protocol.Proxy());
-      }
-      return tc.getProxy();
-    }
-    return null;
-  }
+
 
   public Protocol.Address getCurrrentAddress() {
     PartyIdentitySetType.TransportProtocol tc = getCurrentTransportProtocol();

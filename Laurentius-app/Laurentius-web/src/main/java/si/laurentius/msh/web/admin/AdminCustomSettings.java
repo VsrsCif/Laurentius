@@ -64,18 +64,16 @@ public class AdminCustomSettings extends AbstractJSFView{
 
   public void updateProxyFromSystemProperties() {
 
-    mpsProxy.setHttpHost(System.getProperty(ProxySettings.HTTP_HOST));
-    mpsProxy.setHttpPort(getPort(System.getProperty(ProxySettings.HTTP_PORT)));
-    mpsProxy.setNoProxyHosts(System.getProperty(ProxySettings.HTTP_NO_PROXY));
+    mpsProxy.setHttpHost(System.getProperty(SEDSystemProperties.PROXY_HTTP_HOST));
+    mpsProxy.setHttpPort(getPort(System.getProperty(SEDSystemProperties.PROXY_HTTP_PORT)));
+    mpsProxy.setNoProxyHosts(System.getProperty(SEDSystemProperties.PROXY_HTTP_NO_PROXY));
 
-    mpsProxy.setHttpsHost(System.getProperty(ProxySettings.HTTPS_HOST));
-    mpsProxy.setHttpsPort(getPort(System.getProperty(ProxySettings.HTTPS_PORT)));
+    mpsProxy.setHttpsHost(System.getProperty(SEDSystemProperties.PROXY_HTTPS_HOST));
+    mpsProxy.setHttpsPort(getPort(System.getProperty(SEDSystemProperties.PROXY_HTTPS_PORT)));
 
-    mpsProxy.setFtpHost(System.getProperty(ProxySettings.FTP_HOST));
-    mpsProxy.setFtpPort(getPort(System.getProperty(ProxySettings.FTP_PORT)));
+    mpsProxy.setFtpHost(System.getProperty(SEDSystemProperties.PROXY_FTP_HOST));
+    mpsProxy.setFtpPort(getPort(System.getProperty(SEDSystemProperties.PROXY_FTP_PORT)));
 
-    mpsProxy.setSocksHost(System.getProperty(ProxySettings.SOCKS_HOST));
-    mpsProxy.setSocksPort(getPort(System.getProperty(ProxySettings.SOCKS_PORT)));
   }
 
   public void setHttpProxyToAllProtocols() {
@@ -91,64 +89,54 @@ public class AdminCustomSettings extends AbstractJSFView{
 
   public void updateProxyToSystemProperties() {
     if (Utils.isEmptyString(mpsProxy.getHttpHost())) {
-      msedSettingsData.removeSEDProperty(ProxySettings.HTTP_HOST,
+      msedSettingsData.removeSEDProperty(SEDSystemProperties.PROXY_HTTP_HOST,
               DBSettingsInterface.SYSTEM_SETTINGS);
-      msedSettingsData.removeSEDProperty(ProxySettings.HTTP_PORT,
+      msedSettingsData.removeSEDProperty(SEDSystemProperties.PROXY_HTTP_PORT,
               DBSettingsInterface.SYSTEM_SETTINGS);
-      msedSettingsData.removeSEDProperty(ProxySettings.HTTP_NO_PROXY,
+      msedSettingsData.removeSEDProperty(SEDSystemProperties.PROXY_HTTP_NO_PROXY,
               DBSettingsInterface.SYSTEM_SETTINGS);
     } else {
-      msedSettingsData.setSEDProperty(ProxySettings.HTTP_HOST, mpsProxy.
+      msedSettingsData.setSEDProperty(SEDSystemProperties.PROXY_HTTP_HOST, mpsProxy.
               getHttpHost(), DBSettingsInterface.SYSTEM_SETTINGS);
-      msedSettingsData.setSEDProperty(ProxySettings.HTTP_PORT, mpsProxy.
+      msedSettingsData.setSEDProperty(SEDSystemProperties.PROXY_HTTP_PORT, mpsProxy.
               getHttpPort() + "", DBSettingsInterface.SYSTEM_SETTINGS);
-      msedSettingsData.setSEDProperty(ProxySettings.HTTP_NO_PROXY, mpsProxy.
+      msedSettingsData.setSEDProperty(SEDSystemProperties.PROXY_HTTP_NO_PROXY, mpsProxy.
               getNoProxyHosts(), DBSettingsInterface.SYSTEM_SETTINGS);
     }
 
     if (Utils.isEmptyString(mpsProxy.getHttpsHost())) {
-      msedSettingsData.removeSEDProperty(ProxySettings.HTTPS_HOST,
+      msedSettingsData.removeSEDProperty(SEDSystemProperties.PROXY_HTTPS_HOST,
               DBSettingsInterface.SYSTEM_SETTINGS);
-      msedSettingsData.removeSEDProperty(ProxySettings.HTTPS_PORT,
+      msedSettingsData.removeSEDProperty(SEDSystemProperties.PROXY_HTTPS_PORT,
               DBSettingsInterface.SYSTEM_SETTINGS);
-      msedSettingsData.removeSEDProperty(ProxySettings.HTTPS_NO_PROXY,
+      msedSettingsData.removeSEDProperty(SEDSystemProperties.PROXY_HTTPS_NO_PROXY,
               DBSettingsInterface.SYSTEM_SETTINGS);
     } else {
-      msedSettingsData.setSEDProperty(ProxySettings.HTTPS_HOST, mpsProxy.
+      msedSettingsData.setSEDProperty(SEDSystemProperties.PROXY_HTTPS_HOST, mpsProxy.
               getHttpsHost(), DBSettingsInterface.SYSTEM_SETTINGS);
-      msedSettingsData.setSEDProperty(ProxySettings.HTTPS_PORT, mpsProxy.
+      msedSettingsData.setSEDProperty(SEDSystemProperties.PROXY_HTTPS_PORT, mpsProxy.
               getHttpsPort() + "", DBSettingsInterface.SYSTEM_SETTINGS);
-      msedSettingsData.setSEDProperty(ProxySettings.HTTPS_NO_PROXY, mpsProxy.
+      msedSettingsData.setSEDProperty(SEDSystemProperties.PROXY_HTTPS_NO_PROXY, mpsProxy.
               getNoProxyHosts(), DBSettingsInterface.SYSTEM_SETTINGS);
     }
 
     if (Utils.isEmptyString(mpsProxy.getFtpHost())) {
-      msedSettingsData.removeSEDProperty(ProxySettings.FTP_HOST,
+      msedSettingsData.removeSEDProperty(SEDSystemProperties.PROXY_FTP_HOST,
               DBSettingsInterface.SYSTEM_SETTINGS);
-      msedSettingsData.removeSEDProperty(ProxySettings.FTP_PORT,
+      msedSettingsData.removeSEDProperty(SEDSystemProperties.PROXY_FTP_PORT,
               DBSettingsInterface.SYSTEM_SETTINGS);
-      msedSettingsData.removeSEDProperty(ProxySettings.FTP_NO_PROXY,
+      msedSettingsData.removeSEDProperty(SEDSystemProperties.PROXY_FTP_NO_PROXY,
               DBSettingsInterface.SYSTEM_SETTINGS);
     } else {
-      msedSettingsData.setSEDProperty(ProxySettings.FTP_HOST, mpsProxy.
+      msedSettingsData.setSEDProperty(SEDSystemProperties.PROXY_FTP_HOST, mpsProxy.
               getFtpHost(), DBSettingsInterface.SYSTEM_SETTINGS);
-      msedSettingsData.setSEDProperty(ProxySettings.FTP_PORT, mpsProxy.
+      msedSettingsData.setSEDProperty(SEDSystemProperties.PROXY_FTP_PORT, mpsProxy.
               getFtpPort() + "", DBSettingsInterface.SYSTEM_SETTINGS);
-      msedSettingsData.setSEDProperty(ProxySettings.FTP_NO_PROXY, mpsProxy.
+      msedSettingsData.setSEDProperty(SEDSystemProperties.PROXY_FTP_NO_PROXY, mpsProxy.
               getNoProxyHosts(), DBSettingsInterface.SYSTEM_SETTINGS);
     }
 
-    if (Utils.isEmptyString(mpsProxy.getSocksHost())) {
-      msedSettingsData.removeSEDProperty(ProxySettings.SOCKS_HOST,
-              DBSettingsInterface.SYSTEM_SETTINGS);
-      msedSettingsData.removeSEDProperty(ProxySettings.SOCKS_PORT,
-              DBSettingsInterface.SYSTEM_SETTINGS);
-    } else {
-      msedSettingsData.setSEDProperty(ProxySettings.SOCKS_HOST, mpsProxy.
-              getSocksHost(), DBSettingsInterface.SYSTEM_SETTINGS);
-      msedSettingsData.setSEDProperty(ProxySettings.SOCKS_PORT, mpsProxy.
-              getSocksPort() + "", DBSettingsInterface.SYSTEM_SETTINGS);
-    }
+   
     
     addCallbackParam("saved", true);
     update(":forms:SettingsCustomPanel:settingsPanel:sysProperties", ":forms:SettingsCustomPanel:settingsPanel:sedProperties");
@@ -166,17 +154,7 @@ public class AdminCustomSettings extends AbstractJSFView{
 
   static public class ProxySettings {
 
-    public static String HTTP_HOST = "http.proxyHost";
-    public static String HTTP_PORT = "http.proxyPort";
-    public static String HTTP_NO_PROXY = "http.nonProxyHost";
-    public static String HTTPS_HOST = "https.proxyHost";
-    public static String HTTPS_PORT = "https.proxyPort";
-    public static String HTTPS_NO_PROXY = "https.nonProxyHosts";
-    public static String FTP_HOST = "ftp.proxHost";
-    public static String FTP_PORT = "ftp.proxyPort";
-    public static String FTP_NO_PROXY = "ftp.nonProxyHosts";
-    public static String SOCKS_HOST = "socksProxyHost";
-    public static String SOCKS_PORT = "socksProxyPort";
+    
 
     ;
 

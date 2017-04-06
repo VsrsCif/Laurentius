@@ -27,7 +27,7 @@
         </ns3:SEDInterceptor>
     </SEDInterceptors>
     <SEDProcessors>
-        <ns4:SEDProcessor id="5" name="proc_001" active="true" deliveredOnSuccess="true">
+        <ns4:SEDProcessor id="5" name="proc_001" active="false" deliveredOnSuccess="true">
             <ns4:SEDProcessorRule id="6" property="Service" predicate="=" value="DeliveryWithReceipt"/>
             <ns4:SEDProcessorInstance id="7" type="xslt" plugin="BasicTaskPlugin" pluginVersion="1.0.0">
                 <ns4:SEDProcessorProperty id="8" key="imp.xslt.instance">vsrs2zbs_001</ns4:SEDProcessorProperty>

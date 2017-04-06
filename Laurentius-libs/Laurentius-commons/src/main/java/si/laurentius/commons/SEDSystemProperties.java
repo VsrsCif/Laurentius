@@ -116,9 +116,23 @@ public class SEDSystemProperties {
    * System property storage folder .
    */
   public static final String SYS_PROP_STORAGE_DIR = "laurentius.storage.dir";
+
+  /**
+   * JAVA SYSTEM PROXY SETTINGS
+   */
+  public static final String PROXY_HTTP_HOST = "http.proxyHost";
+  public static final String PROXY_HTTP_PORT = "http.proxyPort";
+  public static final String PROXY_HTTP_NO_PROXY = "http.nonProxyHost";
+  public static final String PROXY_HTTPS_HOST = "https.proxyHost";
+  public static final String PROXY_HTTPS_PORT = "https.proxyPort";
+  public static final String PROXY_HTTPS_NO_PROXY = "https.nonProxyHosts";
+  public static final String PROXY_FTP_HOST = "ftp.proxHost";
+  public static final String PROXY_FTP_PORT = "ftp.proxyPort";
+  public static final String PROXY_FTP_NO_PROXY = "ftp.nonProxyHosts";
+
+
   private static final Map<String, String> S_DEF_VALUES = new HashMap<>();
   private static final Map<String, File> S_INIT_FILES_FOLDERS = new HashMap<>();
-
 
   static {
     S_DEF_VALUES.put(SYS_PROP_HOME_DIR, System.getProperty(
@@ -145,8 +159,9 @@ public class SEDSystemProperties {
     }
 
   }
+
   public static synchronized void clear() {
-    
+
     System.getProperties().remove(SYS_PROP_CONF_DIR);
     System.getProperties().remove(SYS_PROP_HOME_DIR);
     System.getProperties().remove(SYS_PROP_INIT_DIR);
@@ -155,10 +170,12 @@ public class SEDSystemProperties {
     System.getProperties().remove(SYS_PROP_STORAGE_DIR);
     S_INIT_FILES_FOLDERS.clear();
   }
+
   public static File getCRLFolder() {
     return getFile(SYS_PROP_CRL_DIR, true);
 
   }
+
   public static File getCertstoreFile() {
     return getFile(getSecurityFolder(), SYS_PROP_KEYSTORE_FILE,
             false);
@@ -168,13 +185,16 @@ public class SEDSystemProperties {
     return getFile(SYS_PROP_CONF_DIR, true);
 
   }
+
   public static String getDefValue(String key) {
     return S_DEF_VALUES.get(key);
   }
+
   private static synchronized File getFile(String property,
           boolean isFolder) {
     return getFile(null, property, isFolder);
   }
+
   private static synchronized File getFile(File parent, String property,
           boolean isFolder) {
 
@@ -210,20 +230,22 @@ public class SEDSystemProperties {
     }
     return S_INIT_FILES_FOLDERS.get(property);
   }
+
   public static File getHomeFolder() {
     return getFile(SYS_PROP_HOME_DIR, true);
-    
-  }
 
+  }
 
   public static File getInitFolder() {
     return getFile(SYS_PROP_INIT_DIR, true);
 
   }
+
   public static String getLocalDomain() {
     return System.getProperty(SYS_PROP_LAU_DOMAIN,
             S_DEF_VALUES.get(SYS_PROP_LAU_DOMAIN));
   }
+
   public static File getLogFolder() {
     return getFile(SYS_PROP_LOG_DIR, true);
   }
@@ -232,23 +254,27 @@ public class SEDSystemProperties {
     return getFile(getConfFolder(), SYS_PROP_PMODE_FILE,
             false);
   }
+
   public static File getPluginsFolder() {
     return getFile(SYS_PROP_PLUGINS_DIR, true);
-    
+
   }
 
   public static File getRootCAStoreFile() {
     return getFile(getSecurityFolder(), SYS_PROP_ROOT_CA_FILE,
             false);
   }
+
   public static File getSecurityCRLFolder() {
     return getFile(SYS_PROP_CRL_DIR, true);
-    
+
   }
+
   public static File getSecurityFolder() {
     return getFile(SYS_PROP_SECURITY_DIR, true);
-    
+
   }
+
   public static File getStorageFolder() {
     return getFile(SYS_PROP_STORAGE_DIR, true);
   }

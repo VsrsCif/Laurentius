@@ -580,7 +580,8 @@
 					</xs:attribute>
 				</xs:complexType>
 			</xs:element>
-			<xs:element name="Proxy" minOccurs="0">
+			<!-- "java system proxy" is used instead 
+                    xs:element name="Proxy" minOccurs="0">
 				<xs:complexType>
 					<xs:attribute name="host" type="xs:anyURI" use="required"/>
 					<xs:attribute name="port" type="xs:int" use="required"/>
@@ -593,7 +594,7 @@
 						</xs:simpleType>
 					</xs:attribute>
 				</xs:complexType>
-			</xs:element>
+			</xs:element -->
 			<xs:element name="SOAPVersion" default="1.2" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation>this parameter indicates the SOAP version to be used (1.1

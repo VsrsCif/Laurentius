@@ -52,12 +52,7 @@
                             <p:column class="grid-label">#{msg['Port']}:</p:column>
                             <p:column><p:spinner value="#{adminCustomSettings.proxySettings.ftpPort}" min="0"  size="8"/></p:column>
                         </p:row>
-                        <p:row>
-                            <p:column class="grid-label">#{msg['SOCKSProxy']}:</p:column>
-                            <p:column><p:inputText value="#{adminCustomSettings.proxySettings.socksHost}" style="width: 100%"/></p:column>
-                            <p:column class="grid-label">#{msg['Port']}:</p:column>
-                            <p:column><p:spinner value="#{adminCustomSettings.proxySettings.socksPort}" min="0"  size="8"/></p:column>
-                        </p:row>
+                        
                         <p:row>
                             <p:column  colspan="4">#{msg['NoProxy']}:</p:column>
                         </p:row>

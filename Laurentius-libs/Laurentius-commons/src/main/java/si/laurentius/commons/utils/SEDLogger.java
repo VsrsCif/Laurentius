@@ -131,6 +131,12 @@ public class SEDLogger {
     mlgLogger.warn(getCurrentMethodName() + ":" + String.format(format, param));
     return mlTime;
   }
+  
+  public long formatedError(final String format, final Object... param) {
+    long mlTime = getTime();
+    mlgLogger.error(getCurrentMethodName() + ":" + String.format(format, param));
+    return mlTime;
+  }
 
   
   /**

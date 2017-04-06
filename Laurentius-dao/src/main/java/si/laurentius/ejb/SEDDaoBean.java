@@ -726,6 +726,7 @@ public class SEDDaoBean implements SEDDaoInterface {
         mail.setMessageId(Utils.getUUIDWithDomain(locadomain));
       }
 
+
       if (mail.getMSHOutPayload() != null) {
         for (MSHOutPart mp : mail.getMSHOutPayload().getMSHOutParts()) {
           if (Utils.isEmptyString(mp.getEbmsId())) {

@@ -74,12 +74,12 @@
                                                  actionListener="#{OutMailDataView.composeNewMail()}"
                                                  update=":dlgCompose:mailComposeForm"
                                                  oncomplete="PF('mailComposeDialog').show()"/>
-                                <p:commandButton value="#{msg['TestAddress']}" styleClass="toolbar-Button"  
-                                                 rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_OUTBOX)}" 
+                                <!-- p:commandButton value="# { msg['TestAddress']}" styleClass="toolbar-Button"  
+                                                 rendered="# {mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_OUTBOX)}" 
                                                  icon="ui-icon-size-22 ui-icon-svg-mail-send"
-                                                 actionListener="#{OutMailDataView.composeNewMail()}"
+                                                 actionListener="# {OutMailDataView.composeNewMail()}"
                                                  update=":dlgTestAddress:testAddressDialogForm"
-                                                 oncomplete="PF('testAddressDialog').show()"/>
+                                                 oncomplete="PF('testAddressDialog').show()"/ -->
 
                                 <p:commandButton value="#{msg['Resend selected']}" styleClass="toolbar-Button" 
                                                  rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_OUTBOX)}"
@@ -146,10 +146,11 @@
                                                  />
                             </f:facet>
                             <f:facet name="right"  >
-                                <p:outputLabel value="#{msg['User']}:" /> <b>#{userSessionData.user.userId}</b>
+                                <p:outputLabel value="#{msg['User']}: " /> <b>#{userSessionData.user.userId}</b>
                                 <span class="ui-separator">
                                     <span class="ui-icon ui-icon-grip-dotted-vertical " />
                                 </span>
+                                    <p:outputLabel value="#{msg['Domain']}:  " /> <b>#{ApplicationData.domain}</b>
 
 
 

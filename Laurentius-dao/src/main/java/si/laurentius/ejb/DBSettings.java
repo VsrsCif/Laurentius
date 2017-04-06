@@ -40,6 +40,7 @@ import si.laurentius.commons.SEDProperties;
 import si.laurentius.property.SEDProperty;
 import si.laurentius.commons.interfaces.DBSettingsInterface;
 import si.laurentius.commons.utils.SEDLogger;
+import si.laurentius.commons.utils.Utils;
 
 /**
  *
@@ -106,7 +107,7 @@ public class DBSettings implements DBSettingsInterface {
         String key = sd.getKey();
         String val = sd.getValue();
         String part = sd.getGroup();
-        if (SYSTEM_SETTINGS.equals(part)) {
+        if (!Utils.isEmptyString(key) && val != null && SYSTEM_SETTINGS.equals(part)) {
           System.setProperty(key, val);
         }
       });

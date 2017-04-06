@@ -15,7 +15,7 @@
         <property column="SENDER_MSG_ID" name="SenderMessageId"  length="64" type="java.lang.String"  index="idx_out_sender_msg_id" />
         <property column="SERVICE" name="Service"  length="256" type="java.lang.String" not-null="true"/>
         <property column="ACTION" name="Action"  length="256" type="java.lang.String" not-null="true"/>
-        <property column="CONV_Id" name="ConversationId"  length="64" type="java.lang.String" index="idx_out_conv_id" not-null="true"/>
+        <property column="CONV_Id" name="ConversationId"  length="64" type="java.lang.String" index="idx_out_conv_id" />
         <property column="SUBJECT" name="Subject"  length="512" type="java.lang.String" />
         <property column="RECEIVER_EBOX" name="ReceiverEBox"  length="128" type="java.lang.String" not-null="true"/>
         <property column="RECEIVER_NAME" name="ReceiverName"  length="256" type="java.lang.String" />
