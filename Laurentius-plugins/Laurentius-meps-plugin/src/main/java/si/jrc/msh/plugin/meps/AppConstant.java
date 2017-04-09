@@ -25,3 +25,4 @@ public class AppConstant {
   public String getS_PANEL_TEST() {
     return S_PANEL_TEST;
   }
+}

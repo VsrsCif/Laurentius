@@ -182,7 +182,7 @@ public class ZPPTask implements TaskExecutionInterface {
 
     CronTaskDef tt = new CronTaskDef();
     tt.setType("zpp-plugin");
-    tt.setName("ZPP plugin");
+    tt.setName("ZPP Sign AdviceOfDelivery");
     tt.setDescription("Create and Sign adviceOfDelivery for incomming mail");
     tt.getCronTaskPropertyDeves().add(createTTProperty(REC_SEDBOX,
             "Receiver sedbox (without domain).", true, PropertyType.List.
@@ -263,7 +263,7 @@ public class ZPPTask implements TaskExecutionInterface {
       mp.setDescription("DeliveryAdvice");
       mp.setMimeType(MimeValue.MIME_PDF.getMimeType());
       mout.getMSHOutPayload().getMSHOutParts().add(mp);
-      mp.setSha1Value(DigestUtils.getHexSha1Digest(fDNViz));
+      mp.setSha256Value(DigestUtils.getHexSha256Digest(fDNViz));
       mp.setSize(BigInteger.valueOf(fDNViz.length()));
       mp.setFilename(fDNViz.getName());
       mp.setFilepath(StorageUtils.getRelativePath(fDNViz));
@@ -288,12 +288,10 @@ public class ZPPTask implements TaskExecutionInterface {
    */
   public FOPUtils getFOP() {
     if (mfpFop == null) {
-      File fconf
-              = new File(SEDSystemProperties.getPluginsFolder(),
+      File fconf= new File(SEDSystemProperties.getPluginsFolder(),
                       ZPPConstants.SVEV_FOLDER + File.separator + ZPPConstants.FOP_CONFIG_FILENAME);
 
-      mfpFop
-              = new FOPUtils(fconf, SEDSystemProperties.getPluginsFolder()
+      mfpFop = new FOPUtils(fconf, SEDSystemProperties.getPluginsFolder()
                       + File.separator + ZPPConstants.SVEV_FOLDER + File.separator
                       + ZPPConstants.XSLT_FOLDER);
     }

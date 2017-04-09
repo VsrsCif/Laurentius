@@ -200,7 +200,7 @@ Copyright 2015, Supreme Court Republic of Slovenia
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
-		<xs:attribute name="sha1Value" use="required">
+		<xs:attribute name="sha256Value" use="required">
 			<xs:annotation>
 				<xs:documentation xml:lang="sl">Zgostitvena vrednost priponke</xs:documentation>
 			</xs:annotation>

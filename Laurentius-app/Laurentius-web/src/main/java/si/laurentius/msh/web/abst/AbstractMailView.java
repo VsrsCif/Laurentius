@@ -38,6 +38,7 @@ import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.StreamedContent;
 import si.laurentius.commons.utils.ReflectUtils;
 import si.laurentius.commons.utils.StringFormater;
+import si.laurentius.msh.mail.MSHMailType;
 import si.laurentius.msh.web.gui.OutMailDataView;
 
 /**
@@ -52,7 +53,7 @@ public abstract class AbstractMailView<T, S> {
    *
    */
   protected static final SimpleDateFormat SDF_DDMMYYY_HH_MM_SS = new SimpleDateFormat(
-      "dd.MM.YYYY HH:mm:ss");
+          "dd.MM.YYYY HH:mm:ss");
 
   /**
    *
@@ -76,7 +77,7 @@ public abstract class AbstractMailView<T, S> {
    */
   protected List<S> mlstMailEvents = null;
 
-  private DualListModel<String> msbCBExportDualList = new DualListModel<>();
+  private DualListModel<String> msbCBExportDualList = null;
 
   /**
    *
@@ -101,10 +102,12 @@ public abstract class AbstractMailView<T, S> {
       fw.flush();
       fw.close();
 
-      return new DefaultStreamedContent(new FileInputStream(f), "text/plain", "export-data.txt",
-          "utf-8");
+      return new DefaultStreamedContent(new FileInputStream(f), "text/plain",
+              "export-data.txt",
+              "utf-8");
     } catch (IOException ex) {
-      Logger.getLogger(OutMailDataView.class.getName()).log(Level.SEVERE, null, ex);
+      Logger.getLogger(OutMailDataView.class.getName()).log(Level.SEVERE, null,
+              ex);
     } finally {
 
     }
@@ -125,17 +128,17 @@ public abstract class AbstractMailView<T, S> {
    * @return
    */
   public T getCurrentMail() {
-    
-    return selected == null || selected.isEmpty()?null: selected.get(0);
+
+    return selected == null || selected.isEmpty() ? null : selected.get(0);
   }
-  
+
   public List<T> getSelected() {
-        return selected;
-    }
- 
-    public void setSelected(List<T> selected) {
-        this.selected = selected;
-    }
+    return selected;
+  }
+
+  public void setSelected(List<T> selected) {
+    this.selected = selected;
+  }
 
   /**
    *
@@ -143,8 +146,11 @@ public abstract class AbstractMailView<T, S> {
    */
   public DualListModel<String> getCurrentPickupDualExportData() {
 
-    List<String> sbIDs = new ArrayList<>();
-    List<String> sbTrg = ReflectUtils.getBeanProperties(mMailModel.getType());
+    if (msbCBExportDualList == null) {
+      List<String> sbIDs = new ArrayList<>();
+      List<String> sbTrg = new ArrayList<>();
+      sbIDs.addAll(ReflectUtils.getBeanProperties(MSHMailType.class));
+      /*List<String> sbTrg = ReflectUtils.getBeanProperties(mMailModel.getType());
     if (sbTrg.contains("MSHOutProperties")) {
       sbTrg.remove("MSHOutProperties");
     }
@@ -156,9 +162,10 @@ public abstract class AbstractMailView<T, S> {
     }
     if (sbTrg.contains("MSHInPayload")) {
       sbTrg.remove("MSHInPayload");
+    }*/
+      msbCBExportDualList = new DualListModel<>(sbIDs, sbTrg);
     }
-
-    return msbCBExportDualList = new DualListModel<>(sbIDs, sbTrg);
+    return msbCBExportDualList;
   }
 
   /**
@@ -223,7 +230,7 @@ public abstract class AbstractMailView<T, S> {
    * @param event
    */
   public void onRowUnselect(UnselectEvent event) {
-    
+
     setCurrentMail(null);
   }
 
@@ -288,8 +295,8 @@ public abstract class AbstractMailView<T, S> {
      *
      */
   abstract public void updateEventList();
-  
-   /**
+
+  /**
    *
    * @return
    */

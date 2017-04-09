@@ -27,21 +27,23 @@ import javax.annotation.Resource;
 import javax.faces.application.ViewHandler;
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.ws.WebServiceContext;
-import org.primefaces.event.RowEditEvent;
 import si.jrc.msh.plugin.meps.AppConstant;
+import si.laurentius.commons.SEDGUIConstants;
 import si.laurentius.commons.SEDSystemProperties;
+import si.laurentius.user.SEDUser;
 
 /**
  *
  * @author Jože Rihtaršič
  */
-@ApplicationScoped
+@SessionScoped
 @ManagedBean(name = "MEPSPluginData")
 public class MEPSPluginData {
 
@@ -192,4 +194,10 @@ public class MEPSPluginData {
     this.showNavigator = showNavigator;
   }
 
+   public SEDUser getUser() {
+    FacesContext context = facesContext();
+    ExternalContext externalContext = context.getExternalContext();
+    return (SEDUser) externalContext.getSessionMap()
+        .get(SEDGUIConstants.SESSION_USER_VARIABLE_NAME);
+  }
 }

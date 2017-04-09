@@ -46,6 +46,13 @@ public enum CertStatus {
    return iSt | miCode;
  }
  
+ public boolean hasCode(Integer iSt){
+    if(iSt == null){
+     return false;
+   }
+   return (iSt & miCode) !=0;
+ }
+ 
  public Integer removeCode(Integer iSt){
    if(iSt == null){
      return 0;
@@ -53,7 +60,7 @@ public enum CertStatus {
    return iSt & ~miCode;
  }
  
- public boolean hasCode(Integer iSt){
+ public boolean containsCode(Integer iSt){
    if(iSt == null){
      return false;
    }

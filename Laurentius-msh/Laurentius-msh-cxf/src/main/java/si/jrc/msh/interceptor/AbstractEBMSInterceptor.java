@@ -15,6 +15,8 @@
 package si.jrc.msh.interceptor;
 
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.xml.namespace.QName;
@@ -230,8 +232,14 @@ public abstract class AbstractEBMSInterceptor extends AbstractSoapInterceptor {
       String encAlias = lps.getSignatureKeyAlias();
      
 
-      Map<String, Object> penc = getCertUtilsStore().
-              createCXFEncryptionConfiguration(enc,encAlias);
+      Map<String, Object> penc;
+      try {
+        penc = getCertUtilsStore().
+                createCXFEncryptionConfiguration(enc,encAlias);
+      } catch (SEDSecurityException ex) {
+        throw new EBMSError(EBMSErrorCode.PolicyNoncompliance, msgId, ex.getMessage(),
+                sv);
+      }
 
       if (enc == null) {
         LOG.logWarn(l,
@@ -283,7 +291,12 @@ public abstract class AbstractEBMSInterceptor extends AbstractSoapInterceptor {
       X509.Signature sig = sc.getX509().getSignature();
       String sigAliasProp = eps.getSignatureCertAlias();
      
-      outProps = getCertUtilsStore().createCXFSignatureValidationConfiguration(sig, sigAliasProp);
+      try {
+        outProps = getCertUtilsStore().createCXFSignatureValidationConfiguration(sig, sigAliasProp);
+      } catch (SEDSecurityException ex) {
+         throw new EBMSError(EBMSErrorCode.PolicyNoncompliance, msgId, ex.getMessage(),
+                sv);
+      }
       if (outProps == null) {
         LOG.logWarn(l,
                 "Sending not signed message. Incomplete configuration: X509/Signature for message:  "

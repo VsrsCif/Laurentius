@@ -47,7 +47,7 @@ public class SEDScheduler {
   }
 
   // do not lock thread!
-  @Schedule(second = "*/30", minute = "*", hour = "*", persistent = false)
+  @Schedule(info = "network test", second = "*/30", minute = "*", hour = "*", persistent = false)
   public void testNetwork() {
     long l = LOG.logStart();
     // because method is not locked
@@ -79,7 +79,6 @@ public class SEDScheduler {
               SEDProperties.S_KEY_TEST_NETOWRK, DBSettingsInterface.LAU_SETTINGS);
       if (sp != null && !Utils.isEmptyString(sp.getValue())) {
         String[] lstNtw = sp.getValue().split(",");
-        //String[] lstNtw = SEDProperties.S_KEY_TEST_NETOWRK_DEF.split(",");
         for (String ntw : lstNtw) {
           if (testWebSite(ntw)) {
             iConInt = true;

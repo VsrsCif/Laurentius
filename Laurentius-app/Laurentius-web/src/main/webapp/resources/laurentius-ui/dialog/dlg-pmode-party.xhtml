@@ -98,10 +98,11 @@
                                                          >
                                             <f:selectItem noSelectionOption="true" />
                                             <f:selectItems value="#{adminSEDKeystoreView.list}" var="cs" 
-                                                           class="#{adminSEDKeystoreView.getRowClass(cs)}"
+
                                                            itemLabel="#{cs.alias}" itemValue="#{cs.alias}" 
                                                            itemDisabled="#{!cs.keyEntry}" /> 
 
+                                            
                                         </p:selectOneMenu>
                                     </p:column>
                                     <p:column>                                    
@@ -112,14 +113,13 @@
                                                          value="#{pModePartyView.currrentLocalPartySecurity.decryptionKeyAlias}"
                                                          style="width:160px"
                                                          disabled="#{!pModePartyView.editableLocalIdentity}"
+                                                         
                                                          >
                                             <f:selectItem noSelectionOption="true" />
                                             <f:selectItems value="#{adminSEDKeystoreView.list}" var="cs"  
                                                            itemLabel="#{cs.alias}" itemValue="#{cs.alias}"
-                                                           class="#{adminSEDKeystoreView.getRowClass(cs)}"
                                                            itemDisabled="#{!cs.keyEntry}" />
-
-
+                                  
                                         </p:selectOneMenu>
 
 
@@ -143,8 +143,9 @@
                                             <f:selectItem noSelectionOption="true" />
                                             <f:selectItems value="#{adminSEDKeystoreView.list}" 
                                                            var="cs" itemLabel="#{cs.alias}" 
-                                                           class="#{adminSEDKeystoreView.getRowClass(cs)}"
+
                                                            itemValue="#{cs.alias}" /> 
+                                            
                                         </p:selectOneMenu>
                                     </p:column>
                                     <p:column>                                    
@@ -157,8 +158,9 @@
                                             <f:selectItem noSelectionOption="true" />
                                             <f:selectItems value="#{adminSEDKeystoreView.list}" 
                                                            var="cs" itemLabel="#{cs.alias}"
-                                                           class="#{adminSEDKeystoreView.getRowClass(cs)}"
+
                                                            itemValue="#{cs.alias}" /> 
+                                           
                                         </p:selectOneMenu>
                                     </p:column>
                                 </p:row>
@@ -268,7 +270,7 @@
                                 </p:row>
                             </p:panelGrid>
                             <hr />                                
-                                                        
+
                             <b><h:outputText value="#{msg['TLS']}" /></b>
 
                             <p:panelGrid >
@@ -282,8 +284,7 @@
                                                          style="width: 160px" >
                                             <f:selectItem noSelectionOption="true" />
                                             <f:selectItems value="#{adminSEDKeystoreView.list}" 
-                                                           var="cs" itemLabel="#{cs.alias}"
-                                                           class="#{adminSEDKeystoreView.getRowClass(cs)}"
+                                                           var="cs" itemLabel="#{cs.alias}"                                                        
                                                            itemValue="#{cs.alias}" 
                                                            /> 
 
@@ -308,8 +309,7 @@
                                             <f:selectItem noSelectionOption="true" />
                                             <f:selectItems value="#{adminSEDKeystoreView.list}" 
                                                            var="cs" itemLabel="#{cs.alias}"
-                                                           itemValue="#{cs.alias}" 
-                                                           class="#{adminSEDKeystoreView.getRowClass(cs)}"
+                                                           itemValue="#{cs.alias}"                                                           
                                                            itemDisabled="#{!cs.keyEntry}"/> 
 
                                         </p:selectOneMenu>

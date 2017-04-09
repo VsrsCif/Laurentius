@@ -138,6 +138,8 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
     KeyStore ks = getRootCAStore();
     mku.addCertificateToStore(ks, crt, alias, false);
     saveKeystore(ks, ROOTCA_NAME);
+    validateCertificates();
+
     LOG.logEnd(l, alias);
   }
 
@@ -662,9 +664,12 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
     Boolean bRes = null;
     SEDCertCRL crlData = getCrlForCert(x509Cert, false);
     X509CRL crl = null;
-    if (crlData != null) {
-      crl = CRLVerifier.getCRLFromFile(crlData.getFilePath());
+    if (crlData == null) {       
+      LOG.formatedWarning("Certificate %s does not have CLR extension!", x509Cert.getSubjectX500Principal().getName());
+      return false;
     }
+    crl = CRLVerifier.getCRLFromFile(crlData.getFilePath());
+    
 
     if (crl != null) {
       bRes = crl.isRevoked(x509Cert);
@@ -768,6 +773,17 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
     LOG.logEnd(l);
   }
 
+  private void validateCertificates() throws SEDSecurityException {
+    long l = LOG.logStart();
+    List<SEDCertificate> lst = getCertificates();
+    for (SEDCertificate c : lst) {
+      X509Certificate xc = getX509CertForAlias(c.getAlias());
+      validateCertificate(xc, c);
+    }
+
+    LOG.logEnd(l);
+  }
+
   /**
    *
    */
@@ -832,6 +848,7 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
     }
 
     saveKeystore(ks, ROOTCA_NAME);
+    validateCertificates();
     LOG.logEnd(l);
   }
 

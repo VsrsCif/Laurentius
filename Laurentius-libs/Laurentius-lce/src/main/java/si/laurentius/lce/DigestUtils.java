@@ -20,6 +20,29 @@ import si.laurentius.commons.utils.SEDLogger;
 public class DigestUtils {
 
   private static final SEDLogger LOG = new SEDLogger(DigestUtils.class);
+  
+  public static String getHexSha256Digest(byte[] buff) {
+    assert buff != null : "Byte parameter is null";
+    try {
+      return getHexDigest(buff, DigestMethodCode.SHA256.getJcaCode());
+    } catch (NoSuchAlgorithmException ex) {
+      LOG.logError(String.format("Error caclulating digest for code %s",
+              DigestMethodCode.SHA1.getJcaCode()), ex);
+    }
+    return null;
+  }
+  
+  public static String getHexSha256Digest(File f) {
+    assert f != null : "File parameter is null";
+    try {
+      return getHexDigest(f, DigestMethodCode.SHA256.getJcaCode());
+    } catch (NoSuchAlgorithmException | IOException ex) {
+      LOG.logError(String.format(
+              "Error caclulating digest for code %s and file %s",
+              DigestMethodCode.SHA1.getJcaCode(), f.getAbsolutePath()), ex);
+    }
+    return null;
+  }
 
   public static String getHexSha1Digest(byte[] buff) {
     assert buff != null : "Byte parameter is null";

@@ -1,4 +1,4 @@
-package si.jrc.msh.plugin.meps.web;
+package si.jrc.msh.plugin.tc.web;
 
 
 /*
@@ -21,7 +21,7 @@ import java.util.Date;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.faces.bean.SessionScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.RequestDispatcher;
@@ -35,7 +35,7 @@ import si.laurentius.commons.utils.SEDLogger;
  *
  * @author Jože Rihtaršič
  */
-@ViewScoped
+@SessionScoped
 @ManagedBean(name = "loginManager")
 public class LoginManager {
 
@@ -45,8 +45,8 @@ public class LoginManager {
 
   private static final SEDLogger mLog = new SEDLogger(LoginManager.class);
   private String mstrForwardUrl;
-  private String mstrPassword = "sed1234";
-  private String mstrUsername = "sed";
+  private String mstrPassword = "";
+  private String mstrUsername = "";
 
   private ExternalContext externalContext() {
     return facesContext().getExternalContext();
@@ -241,17 +241,3 @@ public class LoginManager {
   }
 
 }
-/*
- * Copyright 2016, Supreme Court Republic of Slovenia
- * 
- * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by the European
- * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work except in
- * compliance with the Licence. You may obtain a copy of the Licence at:
- * 
- * https://joinup.ec.europa.eu/software/page/eupl
- * 
- * Unless required by applicable law or agreed to in writing, software distributed under the Licence
- * is distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
- * or implied. See the Licence for the specific language governing permissions and limitations under
- * the Licence.
- */

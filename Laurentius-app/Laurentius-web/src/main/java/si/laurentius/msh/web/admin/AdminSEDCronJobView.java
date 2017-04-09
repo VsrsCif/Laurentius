@@ -74,6 +74,9 @@ public class AdminSEDCronJobView extends AbstractAdminJSFView<SEDCronJob> {
   @Override
   public boolean validateData() {
     SEDCronJob cj = getEditable();
+     if (cj==null){
+       return false;
+     }
     if (Utils.isEmptyString(cj.getName())) {
       addError("Name must not be null ");
       return false;

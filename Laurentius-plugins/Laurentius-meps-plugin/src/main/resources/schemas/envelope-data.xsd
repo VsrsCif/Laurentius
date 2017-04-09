@@ -67,7 +67,7 @@ Copyright 2015, Supreme Court Republic of Slovenia
 			<xs:element name="ExecutorId" minOccurs="0"/>
                         <xs:element name="ExecutorContractId" minOccurs="0"/>
 			<xs:element name="ReceiverAddress" type="ns1:PhysicalAddressType"/>
-			<xs:element name="SenderAdderss" type="ns1:PhysicalAddressType"/>
+			<xs:element name="SenderAddress" type="ns1:PhysicalAddressType"/>
 			<xs:element name="PostalData" type="ns1:PostalData"/>
 			<xs:element name="SenderMailData" type="ns1:SenderMailData"/>
 			<xs:element name="PrintContent" type="ns1:PrintContent" maxOccurs="unbounded"/>

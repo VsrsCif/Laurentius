@@ -30,6 +30,9 @@
     float: left;
 }
 
+.ui-icon-svg-meps {
+    background-image: url("#{resource['images:/meps.svg']}") !important;    
+}
 .ui-icon-svg-add {
     background-image: url("#{resource['images:/add.svg']}") !important;    
 }

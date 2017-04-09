@@ -580,7 +580,7 @@ public class EBMSInInterceptor extends AbstractEBMSInterceptor {
     if (fout != null) {
       String relPath = StorageUtils.getRelativePath(fout);
       p.setFilepath(relPath);
-      p.setSha1Value(DigestUtils.getHexSha1Digest(fout));
+      p.setSha256Value(DigestUtils.getHexSha256Digest(fout));
       p.setSize(BigInteger.valueOf(fout.length()));
 
       if (Utils.isEmptyString(p.getFilename())) {

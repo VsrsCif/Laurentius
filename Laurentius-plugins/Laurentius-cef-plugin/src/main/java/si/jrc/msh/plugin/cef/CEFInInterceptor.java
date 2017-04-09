@@ -79,7 +79,7 @@ public class CEFInInterceptor implements SoapInterceptorInterface {
   @Resource
   public UserTransaction mutUTransaction;
 
- @Override
+  @Override
   public MailInterceptorDef getDefinition() {
     MailInterceptorDef def = new MailInterceptorDef();
     def.setType("CEFInInterceptor");
@@ -106,36 +106,40 @@ public class CEFInInterceptor implements SoapInterceptorInterface {
         switch (mInMail.getAction()) {
           case CEFConstants.S_ACTION_CONF_TEST_SUBMIT:
             LOG.formatedWarning(
-                "Got message to submit  service: %s, message id: %s, conversation %s ",
-                mInMail.getService(), mInMail.getMessageId(), mInMail.getConversationId());
+                    "Got message to submit  service: %s, message id: %s, conversation %s ",
+                    mInMail.getService(), mInMail.getMessageId(), mInMail.
+                    getConversationId());
 
             handleSubmiMessage(mInMail, inboxSb);
             break;
           case CEFConstants.S_ACTION_CONF_TEST_DELIVER:
             LOG.formatedWarning(
-                "Got delivery notification for service: %s, message id: %s, conversation %s ",
-                mInMail.getService(), mInMail.getMessageId(), mInMail.getConversationId());
+                    "Got delivery notification for service: %s, message id: %s, conversation %s ",
+                    mInMail.getService(), mInMail.getMessageId(), mInMail.
+                    getConversationId());
             break;
           case CEFConstants.S_ACTION_CONF_TEST_NOTIFY:
             LOG.formatedWarning(
-                "Got advice of delivery for service: %s, (ref)message: %s, conversation %s ",
-                mInMail.getService(), mInMail.getRefToMessageId(), mInMail.getConversationId());
+                    "Got advice of delivery for service: %s, (ref)message: %s, conversation %s ",
+                    mInMail.getService(), mInMail.getRefToMessageId(), mInMail.
+                    getConversationId());
             break;
           default:
-            LOG.logError(String.format("Action %s for service: %s is not exptected",
-                mInMail.getAction(), mInMail.getService()), null);
+            LOG.logError(String.format(
+                    "Action %s for service: %s is not exptected",
+                    mInMail.getAction(), mInMail.getService()), null);
         }
       } else {
         fireDeliveryNotification(mInMail, inboxSb);
       }
-    } else if (isBackChannel){
+    } else if (isBackChannel) {
       // !!!!!!!!!!!!!!!!!!!!!!!
-    // Receipt notification is handled by OutMailEventListnere
-     /* if (mOutMail != null) {
+      // Receipt notification is handled by OutMailEventListnere
+      /* if (mOutMail != null) {
         String type = "Receipt";
         fireAdviceOfDeliveryNotification(mOutMail, inboxSb, type);
       }
-    */
+       */
       LOG.log("TODO: Fire AdviceOfDelivery to MINDER - for as4 receipt");
     }
 
@@ -195,7 +199,7 @@ public class CEFInInterceptor implements SoapInterceptorInterface {
       mop.setFilepath(mip.getFilepath());
       mop.setMimeType(mip.getMimeType());
       mop.setName(mip.getName());
-        mop.setSha1Value(mip.getSha1Value());
+      mop.setSha256Value(mip.getSha256Value());
       mop.setSize(mip.getSize());
       mout.getMSHOutPayload().getMSHOutParts().add(mop);
     }
@@ -209,7 +213,7 @@ public class CEFInInterceptor implements SoapInterceptorInterface {
   }
 
   private void setValue(String prpName, Properties p, MSHOutMail mo)
-      throws PModeException {
+          throws PModeException {
     if (p.containsKey(prpName)) {
       String val = p.getProperty(prpName);
       p.remove(prpName);
@@ -232,7 +236,7 @@ public class CEFInInterceptor implements SoapInterceptorInterface {
         case CEFConstants.S_TO_PARTY_ID_PROP: {
           LOG.formatedlog("Get party for id %s", val);
           PartyIdentitySet pis = mPMode.getPartyIdentitySetForPartyId(
-              "urn:oasis:names:tc:ebcore:partyid-type:unregistered", val);
+                  "urn:oasis:names:tc:ebcore:partyid-type:unregistered", val);
 
           mo.setReceiverName(val);
           mo.setReceiverEBox(val + "@" + pis.getDomain());
@@ -272,24 +276,26 @@ public class CEFInInterceptor implements SoapInterceptorInterface {
     mout.setReceiverEBox(CEFConstants.S_MINDER_ADDRESS);
 
     mout.getMSHOutProperties().getMSHOutProperties().add(createMSHOutProperty(
-        CEFConstants.S_SERVICE_PROP, mInMail.getService()));
+            CEFConstants.S_SERVICE_PROP, mInMail.getService()));
 
     mout.getMSHOutProperties().getMSHOutProperties().add(createMSHOutProperty(
-        CEFConstants.S_ACTION_PROP, mInMail.getAction()));
+            CEFConstants.S_ACTION_PROP, mInMail.getAction()));
     mout.getMSHOutProperties().getMSHOutProperties().add(createMSHOutProperty(
-        CEFConstants.S_CONV_ID, mInMail.getConversationId()));
+            CEFConstants.S_CONV_ID, mInMail.getConversationId()));
     mout.getMSHOutProperties().getMSHOutProperties().add(createMSHOutProperty(
-        CEFConstants.S_FROM_PARTY_ID_PROP, mInMail.getSenderEBox().substring(0,
-            mInMail.getSenderEBox().indexOf("@"))));
+            CEFConstants.S_FROM_PARTY_ID_PROP, mInMail.getSenderEBox().
+                    substring(0,
+                            mInMail.getSenderEBox().indexOf("@"))));
     mout.getMSHOutProperties().getMSHOutProperties().add(createMSHOutProperty(
-        CEFConstants.S_TO_PARTY_ID_PROP, mInMail.getReceiverEBox().substring(0,
-            mInMail.getReceiverEBox().indexOf("@"))));
-    
-       mout.getMSHOutProperties().getMSHOutProperties().add(createMSHOutProperty(
-        CEFConstants.S_REF_MESSAGE_ID, mInMail.getRefToMessageId()));
-       
-       mout.getMSHOutProperties().getMSHOutProperties().add(createMSHOutProperty(
-        CEFConstants.S_MESSAGE_ID, mInMail.getMessageId()));
+            CEFConstants.S_TO_PARTY_ID_PROP, mInMail.getReceiverEBox().
+                    substring(0,
+                            mInMail.getReceiverEBox().indexOf("@"))));
+
+    mout.getMSHOutProperties().getMSHOutProperties().add(createMSHOutProperty(
+            CEFConstants.S_REF_MESSAGE_ID, mInMail.getRefToMessageId()));
+
+    mout.getMSHOutProperties().getMSHOutProperties().add(createMSHOutProperty(
+            CEFConstants.S_MESSAGE_ID, mInMail.getMessageId()));
 
     // add payload
     mout.setMSHOutPayload(new MSHOutPayload());
@@ -304,7 +310,7 @@ public class CEFInInterceptor implements SoapInterceptorInterface {
       mop.setFilepath(mip.getFilepath());
       mop.setMimeType(mip.getMimeType());
       mop.setName(mip.getName());
-      mop.setSha1Value(mip.getSha1Value());
+      mop.setSha256Value(mip.getSha256Value());
       mop.setSize(mip.getSize());
 
       mout.getMSHOutPayload().getMSHOutParts().add(mop);
@@ -325,55 +331,47 @@ public class CEFInInterceptor implements SoapInterceptorInterface {
    *
    * @param mOutMail
    * @param sbInbox
-   * @param type
-   * /
-  public void fireAdviceOfDeliveryNotification(MSHOutMail mOutMail, SEDBox sbInbox, String type) {
-    long l = LOG.logStart();
-
-    // sender
-    // receiver
-    MSHOutMail mout = new MSHOutMail();
-    mout.setMSHOutProperties(new MSHOutProperties());
-    mout.setMessageId(Utils.getInstance().getGuidString());
-
-    mout.setService(CEFConstants.S_SERVICE_CONF_TEST_ID);
-    mout.setAction(CEFConstants.S_ACTION_CONF_TEST_NOTIFY);
-    mout.setConversationId(mOutMail.getConversationId());
-    mout.setRefToMessageId(mOutMail.getMessageId());
-    mout.setSenderName(mOutMail.getSenderName());
-    mout.setSenderEBox(mOutMail.getSenderEBox());
-    mout.setReceiverName(CEFConstants.S_MINDER_NAME);
-    mout.setReceiverEBox(CEFConstants.S_MINDER_ADDRESS);
-
-    mout.getMSHOutProperties().getMSHOutProperties().add(createMSHOutProperty(
-        CEFConstants.S_SERVICE_PROP, mOutMail.getService()));
-
-    mout.getMSHOutProperties().getMSHOutProperties().add(createMSHOutProperty(
-        CEFConstants.S_ACTION_PROP, mOutMail.getAction()));
-    mout.getMSHOutProperties().getMSHOutProperties().add(createMSHOutProperty(
-        CEFConstants.S_CONV_ID, mOutMail.getConversationId()));
-
-    mout.getMSHOutProperties().getMSHOutProperties().add(createMSHOutProperty(
-        CEFConstants.S_FROM_PARTY_ID_PROP, mOutMail.getSenderEBox().substring(0,
-            mOutMail.getSenderEBox().indexOf("@"))));
-    mout.getMSHOutProperties().getMSHOutProperties().add(createMSHOutProperty(
-        CEFConstants.S_TO_PARTY_ID_PROP, mOutMail.getReceiverEBox().substring(0,
-            mOutMail.getReceiverEBox().indexOf("@"))));
-
-    mout.getMSHOutProperties().getMSHOutProperties().add(createMSHOutProperty(
-        CEFConstants.S_REF_MESSAGE_ID, mOutMail.getMessageId()));
-    mout.getMSHOutProperties().getMSHOutProperties().add(createMSHOutProperty(
-        CEFConstants.S_SIGNAL_TYPE_ID, type));
-
-    try {
-      mDB.serializeOutMail(mout, "", "CEFInInterceptor", "");
-    } catch (StorageException ex) {
-      LOG.logError(l, ex);
-    }
-
-    LOG.logEnd(l);
-  }
-*/
+   * @param type / public void fireAdviceOfDeliveryNotification(MSHOutMail
+   * mOutMail, SEDBox sbInbox, String type) { long l = LOG.logStart();
+   *
+   * // sender // receiver MSHOutMail mout = new MSHOutMail();
+   * mout.setMSHOutProperties(new MSHOutProperties());
+   * mout.setMessageId(Utils.getInstance().getGuidString());
+   *
+   * mout.setService(CEFConstants.S_SERVICE_CONF_TEST_ID);
+   * mout.setAction(CEFConstants.S_ACTION_CONF_TEST_NOTIFY);
+   * mout.setConversationId(mOutMail.getConversationId());
+   * mout.setRefToMessageId(mOutMail.getMessageId());
+   * mout.setSenderName(mOutMail.getSenderName());
+   * mout.setSenderEBox(mOutMail.getSenderEBox());
+   * mout.setReceiverName(CEFConstants.S_MINDER_NAME);
+   * mout.setReceiverEBox(CEFConstants.S_MINDER_ADDRESS);
+   *
+   * mout.getMSHOutProperties().getMSHOutProperties().add(createMSHOutProperty(
+   * CEFConstants.S_SERVICE_PROP, mOutMail.getService()));
+   *
+   * mout.getMSHOutProperties().getMSHOutProperties().add(createMSHOutProperty(
+   * CEFConstants.S_ACTION_PROP, mOutMail.getAction()));
+   * mout.getMSHOutProperties().getMSHOutProperties().add(createMSHOutProperty(
+   * CEFConstants.S_CONV_ID, mOutMail.getConversationId()));
+   *
+   * mout.getMSHOutProperties().getMSHOutProperties().add(createMSHOutProperty(
+   * CEFConstants.S_FROM_PARTY_ID_PROP, mOutMail.getSenderEBox().substring(0,
+   * mOutMail.getSenderEBox().indexOf("@"))));
+   * mout.getMSHOutProperties().getMSHOutProperties().add(createMSHOutProperty(
+   * CEFConstants.S_TO_PARTY_ID_PROP, mOutMail.getReceiverEBox().substring(0,
+   * mOutMail.getReceiverEBox().indexOf("@"))));
+   *
+   * mout.getMSHOutProperties().getMSHOutProperties().add(createMSHOutProperty(
+   * CEFConstants.S_REF_MESSAGE_ID, mOutMail.getMessageId()));
+   * mout.getMSHOutProperties().getMSHOutProperties().add(createMSHOutProperty(
+   * CEFConstants.S_SIGNAL_TYPE_ID, type));
+   *
+   * try { mDB.serializeOutMail(mout, "", "CEFInInterceptor", ""); } catch
+   * (StorageException ex) { LOG.logError(l, ex); }
+   *
+   * LOG.logEnd(l); }
+   */
   private MSHOutProperty createMSHOutProperty(String prpName, String val) {
     MSHOutProperty mop = new MSHOutProperty();
     mop.setName(prpName);

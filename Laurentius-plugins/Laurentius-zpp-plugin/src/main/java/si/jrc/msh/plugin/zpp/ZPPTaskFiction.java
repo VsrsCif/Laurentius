@@ -65,6 +65,8 @@ import si.laurentius.commons.interfaces.SEDCertStoreInterface;
 import si.laurentius.lce.DigestUtils;
 import si.laurentius.plugin.crontask.CronTaskDef;
 import si.laurentius.plugin.crontask.CronTaskPropertyDef;
+import si.laurentius.plugin.interfaces.PropertyListType;
+import si.laurentius.plugin.interfaces.PropertyType;
 import si.laurentius.plugin.interfaces.TaskExecutionInterface;
 import si.laurentius.plugin.interfaces.exception.TaskException;
 
@@ -78,9 +80,7 @@ public class ZPPTaskFiction implements TaskExecutionInterface {
 
   private static final SEDLogger LOG = new SEDLogger(ZPPTaskFiction.class);
   private static final String SIGN_ALIAS = "zpp.sign.key.alias";
-  private static final String SIGN_KEYSTORE = "zpp.sign.keystore";
-  private static final String SEND_SEDBOX = "zpp.senderbox";
-  private static final String PROCESS_MAIL_COUNT = "zpp.max.mail.count";
+   private static final String PROCESS_MAIL_COUNT = "zpp.max.mail.count";
 
   SEDCrypto mSedCrypto = new SEDCrypto();
   DocumentSodBuilder dsbSodBuilder = new DocumentSodBuilder();
@@ -122,46 +122,16 @@ public class ZPPTaskFiction implements TaskExecutionInterface {
     long l = LOG.logStart();
     StringWriter sw = new StringWriter();
     sw.append("Start zpp plugin task: \n");
-
-    String signKeyAlias = "";
-    String keystore = "";
-
-    String sedBoxPart = "";
-    if (!p.containsKey(SEND_SEDBOX)) {
-      throw new TaskException(TaskException.TaskExceptionCode.InitException,
-          "Missing parameter:  '" + SEND_SEDBOX + "'!");
-    } else {
-      sedBoxPart = p.getProperty(SEND_SEDBOX);
-    }
-    String sedBox = sedBoxPart + "@" + SEDSystemProperties.getLocalDomain();
-
-    PartyIdentitySet pis;
-    try {
-      pis = mpModeManager.getPartyIdentitySetForSEDAddress(sedBox);
-    } catch (PModeException ex) {
-      throw new TaskException(TaskException.TaskExceptionCode.InitException, 
-          ex.getMessage());
-    }
-    if (pis == null) {
-      throw new TaskException(TaskException.TaskExceptionCode.InitException,
-          "Sedbox:  '" + sedBox + "' is not defined in PMode settings!");
-    }
-    if (pis.getLocalPartySecurity() == null) {
-      throw new TaskException(TaskException.TaskExceptionCode.InitException,
-          "Sedbox:  '" + sedBox + "' does not have defined Local party serurity!");
-    }
     
-    signKeyAlias = pis.getLocalPartySecurity().getSignatureKeyAlias();
-
-    if (Utils.isEmptyString(keystore) || Utils.isEmptyString(signKeyAlias)) {
+     String signKeyAlias = "";
+    if (!p.containsKey(SIGN_ALIAS)) {
       throw new TaskException(TaskException.TaskExceptionCode.InitException,
-          "Sedbox:  '" + sedBox + "' does not have certificate for signing!");
+              "Missing parameter:  '" + SIGN_ALIAS + "'!");
+    } else {
+      signKeyAlias = p.getProperty(SIGN_ALIAS);
     }
-    //SEDCertStore sc = msedLookup.getSEDCertStoreByName(keystore);
-     // SEDCertStore sc= null;
-    //  SEDCertificate scc = mCertBean.getSEDCertificatForAlias(signKeyAlias, true);
-     
-   
+
+  
     int maxMailProc = 100;
     if (p.containsKey(PROCESS_MAIL_COUNT)) {
       String val = p.getProperty(PROCESS_MAIL_COUNT);
@@ -184,13 +154,11 @@ public class ZPPTaskFiction implements TaskExecutionInterface {
     // get all not delivered mail
     ZPPMailFilter mi = new ZPPMailFilter();
     mi.setStatus(SEDOutboxMailStatus.SENT.getValue());
-    mi.setSenderEBox(sedBox);
     mi.setAction(ZPPConstants.S_ZPP_ACTION_DELIVERY_NOTIFICATION);
     mi.setService(ZPPConstants.S_ZPP_SERVICE);
     mi.setSentDateTo(cDatFict.getTime());
-
     List<MSHOutMail> lst = mDB.getDataList(MSHOutMail.class, -1, maxMailProc, "Id", "ASC", mi);
-    sw.append("got " + lst.size() + " mails for sedbox: '" + sedBox + "'!");
+    sw.append("got " + lst.size() + " mail!");
 
     for (MSHOutMail m : lst) {
       try {
@@ -216,15 +184,16 @@ public class ZPPTaskFiction implements TaskExecutionInterface {
   public CronTaskDef getDefinition() {
     CronTaskDef tt = new CronTaskDef();
     tt.setType("zpp-fiction-plugin");
-    tt.setName("zpp fiction plugin");
+    tt.setName("ZPP fiction delivery");
     tt.setDescription(
         "Create FictionAdviceOfDelivery for outgoing mail and send ficiton notification to " +
         "receiver");
-    tt.getCronTaskPropertyDeves().add(createTTProperty(SEND_SEDBOX, "Sender sedbox."));
-    tt.getCronTaskPropertyDeves().add(createTTProperty(SIGN_ALIAS, "Signature key alias."));
-    tt.getCronTaskPropertyDeves().add(createTTProperty(SIGN_KEYSTORE, "Keystore name."));
+    tt.getCronTaskPropertyDeves().add(createTTProperty(SIGN_ALIAS,
+            "Signature key alias defined in keystore.", true, PropertyType.List.
+                    getType(), null, PropertyListType.KeystoreCertKeys.getType()));
     tt.getCronTaskPropertyDeves().add(createTTProperty(PROCESS_MAIL_COUNT,
-        "Max mail count proccesed."));
+            "Max mail count proccesed.", true, PropertyType.Integer.getType(),
+            null, null));
     return tt;
   }
 
@@ -269,7 +238,7 @@ public class ZPPTaskFiction implements TaskExecutionInterface {
     mDB.serializeOutMail(fn, null, "ZPP-plugin", null);
     mOutMail.setDeliveredDate(Calendar.getInstance().getTime());
     mDB.setStatusToOutMail(mOutMail, SEDOutboxMailStatus.DELIVERED, "Fiction ", "ZPP plugin", "");
-
+    LOG.logEnd(l);
   }
 
   private MSHOutMail createZPPFictionNotification(MSHOutMail mOutMail,String sigAlias)
@@ -304,7 +273,7 @@ public class ZPPTaskFiction implements TaskExecutionInterface {
     // create vizualization
     try {
       // vizualization
-      fDNViz = StorageUtils.getNewStorageFile("pdf", "AdviceOfDeliveryFiction");
+      fDNViz = StorageUtils.getNewStorageFile("pdf", "AdviceOfDeliveryNotification");
       fEncryptedKey = StorageUtils.getNewStorageFile("xml", "EncryptedKey");
 
     } catch (StorageException ex) {
@@ -314,7 +283,7 @@ public class ZPPTaskFiction implements TaskExecutionInterface {
 
     try {
       getFOP().generateVisualization(mOutMail, fDNViz,
-          FOPUtils.FopTransformations.AdviceOfDeliveryFiction,
+          FOPUtils.FopTransformations.AdviceOfDeliveryFictionNotification,
           MimeConstants.MIME_PDF);
 
       
@@ -351,7 +320,7 @@ public class ZPPTaskFiction implements TaskExecutionInterface {
       // create signed delivery advice
       mp.setDescription("AdviceOfDeliveryNotification");
       mp.setFilepath(StorageUtils.getRelativePath(fDNViz));
-      mp.setSha1Value(DigestUtils.getHexSha1Digest(fDNViz));
+      mp.setSha256Value(DigestUtils.getHexSha256Digest(fDNViz));
       mp.setSize(BigInteger.valueOf(fDNViz.length()));
       mp.setFilename(fDNViz.getName());
       mp.setName(mp.getFilename().substring(0, mp.getFilename().lastIndexOf(".")));
@@ -414,7 +383,7 @@ public class ZPPTaskFiction implements TaskExecutionInterface {
       ptencKey.setFilepath(StorageUtils.getRelativePath(fEncryptedKey));
       ptencKey.setFilename(fEncryptedKey.getName());
       ptencKey.setIsEncrypted(Boolean.FALSE);
-      ptencKey.setSha1Value(DigestUtils.getHexSha1Digest(fEncryptedKey));
+      ptencKey.setSha256Value(DigestUtils.getHexSha256Digest(fEncryptedKey));
       ptencKey.setSize(BigInteger.valueOf(fEncryptedKey.length()));
       
       moFNotification.getMSHOutPayload().getMSHOutParts().add(ptencKey);
@@ -486,7 +455,7 @@ public class ZPPTaskFiction implements TaskExecutionInterface {
       mp.setDescription("AdviceOfDeliveryFiction");
 
       mp.setFilepath(StorageUtils.getRelativePath(fDNViz));
-      mp.setSha1Value(DigestUtils.getHexSha1Digest(fDNViz));
+      mp.setSha256Value(DigestUtils.getHexSha256Digest(fDNViz));
       mp.setSize(BigInteger.valueOf(fDNViz.length()));
       
       mp.setFilename(fDNViz.getName());
@@ -506,15 +475,13 @@ public class ZPPTaskFiction implements TaskExecutionInterface {
    * @return
    */
   public FOPUtils getFOP() {
-    if (mfpFop == null) {
-      File fconf =
-          new File(System.getProperty(SEDSystemProperties.SYS_PROP_HOME_DIR) + File.separator +
-              ZPPConstants.SVEV_FOLDER + File.separator + ZPPConstants.FOP_CONFIG_FILENAME);
+   if (mfpFop == null) {
+      File fconf= new File(SEDSystemProperties.getPluginsFolder(),
+                      ZPPConstants.SVEV_FOLDER + File.separator + ZPPConstants.FOP_CONFIG_FILENAME);
 
-      mfpFop =
-          new FOPUtils(fconf, System.getProperty(SEDSystemProperties.SYS_PROP_HOME_DIR) +
-              File.separator + ZPPConstants.SVEV_FOLDER + File.separator +
-              ZPPConstants.XSLT_FOLDER);
+      mfpFop = new FOPUtils(fconf, SEDSystemProperties.getPluginsFolder()
+                      + File.separator + ZPPConstants.SVEV_FOLDER + File.separator
+                      + ZPPConstants.XSLT_FOLDER);
     }
     return mfpFop;
   }

@@ -171,7 +171,7 @@ public class StringFormater {
     properties.stream().forEach(
             (mth) -> {
               try {
-                Method md = cls.getDeclaredMethod("get" + mth);
+                Method md = cls.getMethod("get" + mth);
                 Object res = md.invoke(obj, EMPTY_ARRAY);
 
                 String value = object2String(res);

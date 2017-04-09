@@ -319,8 +319,8 @@ public class OutMailDataView extends AbstractMailView<MSHOutMail, MSHOutEvent>
       mp.setFilepath(StorageUtils.getRelativePath(f));
       mp.setMimeType(MimeValue.getMimeTypeByFileName(fileName));
 
-      String hashValue = DigestUtils.getHexSha1Digest(f);
-      mp.setSha1Value(hashValue);
+      String hashValue = DigestUtils.getHexSha256Digest(f);
+      mp.setSha256Value(hashValue);
       mp.setSize(BigInteger.valueOf(f.length()));
       getNewOutMail().getMSHOutPayload().getMSHOutParts().add(mp);
 
@@ -436,8 +436,8 @@ public class OutMailDataView extends AbstractMailView<MSHOutMail, MSHOutEvent>
 
         String relPath = StorageUtils.getRelativePath(fout);
         p.setFilepath(relPath);
-        String hashValue = DigestUtils.getHexSha1Digest(fout);
-        p.setSha1Value(hashValue);
+        String hashValue = DigestUtils.getHexSha256Digest(fout);
+        p.setSha256Value(hashValue);
         p.setSize(BigInteger.valueOf(fout.length()));
 
         if (Utils.isEmptyString(p.getFilename())) {

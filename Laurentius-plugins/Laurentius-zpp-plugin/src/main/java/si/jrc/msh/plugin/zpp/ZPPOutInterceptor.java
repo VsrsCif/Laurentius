@@ -181,7 +181,7 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
       ptNew.setFilepath(StorageUtils.getRelativePath(fOut));
       ptNew.setDescription(ZPPConstants.MSG_DOC_PREFIX_DESC + pt.
               getDescription());
-      ptNew.setSha1Value(DigestUtils.getHexSha1Digest(fOut));
+      ptNew.setSha256Value(DigestUtils.getHexSha256Digest(fOut));
       ptNew.setSize(BigInteger.valueOf(fOut.length()));
       ptNew.setName(pt.getName());
       ptNew.setFilename(fOut.getName());

@@ -6,68 +6,46 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:p="http://primefaces.org/ui"
       xmlns:composite="http://java.sun.com/jsf/composite"
-
+      xmlns:pnl="http://java.sun.com/jsf/composite/gui/panel"
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <composite:interface>
     </composite:interface>
 
+
     <composite:implementation >
-        <p:layout   widgetVar="ImpXSLT" style="min-width:400px;min-height:400px;height: 100%;width: 100%"  >
-            <p:layoutUnit  position="north" resizable="true" closable="true" collapsible="true"
-                           size="38" minSize="38" maxSize="400" style="width:100%;height:100%;padding: 0px; margin: 0px"
-                           gutter="0">
-                <h1><h:outputLink id="growPanelDesc" value="#">
-                        <span class="ui-icon-panel-Header ui-icon ui-icon-svg-xslt"  />#{msg['InMailXSLTProcessView']}
-                    </h:outputLink>
-                </h1>
-                <p:tooltip id="toolTipGrow" for="growPanelDesc" position="bottom">
-                    <h:outputText value="#{msg['InMailXSLTProcessView']}"></h:outputText>
-                </p:tooltip>                
-            </p:layoutUnit>
+        <pnl:pnl-settings id="mepsTestPanel"
+                          title="#{msg['MEPS Test panel']}" 
+                          description="#{msg['MEPS Test panel']}"
+                          icon="ui-icon-svg-envelope"
+                          >
 
-           <p:layoutUnit position="center" style="width:100%;height:100%;padding: 0px; margin: 0px" gutter="0" >
-                <p:scrollPanel mode="native" style="width:100%;height:100%">                 
-
-                    <p:dataTable id="TblXslt" 
-                                 var="sp" 
-                                 value="#{adminIMPXsltView.list}"
-                                 selectionMode="single"
-                                 selection="#{adminIMPXsltView.selected}"
-                                 rowKey="#{sp.instance}"
-                                 style="padding: 0px; margin: 0px"
-                                 scrollable="true" 
-                                 scrollHeight="100%"
-                                 rows="100"  >
+            <p:layout   style="min-width:400px;min-height:400px;height: 100%;width: 100%"  >
 
 
-                        <f:facet name="header">
-                            <p:commandButton value="#{msg['Add']}" styleClass="toolbar-Button" icon="ui-icon-svg-add ui-icon-size-22"  
-                                             update=":dlgXslt:xsltDialogForm:xsltDetails" 
-                                             actionListener="#{adminIMPXsltView.createEditable()}"
-                                             oncomplete="PF('xsltDialog').show()"  />
-                            <p:commandButton value="#{msg['Edit']}" styleClass="toolbar-Button" icon="ui-icon-svg-edit ui-icon-size-22"  
-                                             update=":dlgXslt:xsltDialogForm:xsltDetails" 
-                                             actionListener="#{adminIMPXsltView.startEditSelected()}"
-                                             oncomplete="PF('xsltDialog').show()" />
-                            <p:commandButton value="#{msg['Delete']}" styleClass="toolbar-Button" icon="ui-icon-svg-remove ui-icon-size-22"  
-                                             actionListener="#{adminIMPXsltView.removeSelected()}"
-                                             update=":bscform:PanelXslt:TblXslt" />
+                <p:layoutUnit position="center" style="width:100%;height:100%;padding: 0px; margin: 0px" gutter="0" >
+                    <p:panelGrid style="width: 100%">
 
-                        </f:facet>
-                        <p:ajax event="rowDblselect" update=":dlgXslt:xsltDialogForm:xsltDetails" 
-                                             listener="#{adminIMPXsltView.startEditSelected()}"
-                                             oncomplete="PF('xsltDialog').show()"/>
+                        <p:row>
+                            <p:column colspan="2" styleClass="ui-gp-header" >Test tool</p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column colspan="2">Custom mail</p:column>
+                        </p:row>                
 
-                        <p:column headerText="#{msg['Instance']}" width="120">
-                            <h:outputText value="#{sp.instance}"  />                
-                        </p:column>
-                       
-                    </p:dataTable>
-                </p:scrollPanel>
-            </p:layoutUnit> 
-           
+                        <p:row>
+                            <p:column>
+                                <p:commandButton value="#{msg['Compose mail']}"   
+                                                 actionListener="#{dialogComposeMailView.createNewMail()}"
+                                                 oncomplete="PF('mailComposeDialog').show()"
+                                                 update=":dlgCompose:mailComposeDialog:mailComposeDialogForm"
+                                                 />
+                            </p:column>
+                        </p:row>
+                    </p:panelGrid>
+                </p:layoutUnit>
+            </p:layout>
 
-        </p:layout>
+        </pnl:pnl-settings>
     </composite:implementation>
 
 </html>

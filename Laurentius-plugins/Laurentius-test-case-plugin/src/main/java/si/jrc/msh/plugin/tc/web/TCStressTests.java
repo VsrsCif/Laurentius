@@ -12,7 +12,6 @@ import org.primefaces.context.RequestContext;
 import si.jrc.msh.plugin.tc.web.dlg.DialogProgress;
 import si.jrc.msh.plugin.tc.web.tc.ProcessLAOM;
 import si.jrc.msh.plugin.tc.web.tc.ProcessLM;
-import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.utils.SEDLogger;
 
 @SessionScoped
@@ -45,7 +44,7 @@ public class TCStressTests extends TestCaseAbstract implements Serializable {
     RequestContext context = RequestContext.getCurrentInstance();
     context.execute("PF('dlgPrgBar').start();");
     context.execute("PF('dialogProgress').show();");    
-    context.update(":dlgProgress:dlgProgressForm");
+    context.update(":dlgProgress:dlgProgressForm:pnlProgress");
     
     testLAOM.executeStressTest();
   }
@@ -63,7 +62,7 @@ public class TCStressTests extends TestCaseAbstract implements Serializable {
     RequestContext context = RequestContext.getCurrentInstance();
     context.execute("PF('dlgPrgBar').start();");
     context.execute("PF('dialogProgress').show();");    
-    context.update(":dlgProgress:dlgProgressForm");
+    context.update(":dlgProgress:dlgProgressForm:pnlProgress");
     testLM.executeStressTest();
   }
  

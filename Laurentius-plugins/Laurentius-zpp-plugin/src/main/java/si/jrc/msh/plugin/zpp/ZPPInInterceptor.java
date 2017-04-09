@@ -532,7 +532,7 @@ public class ZPPInInterceptor implements SoapInterceptorInterface {
               miDec.setIsEncrypted(Boolean.FALSE);
 
          
-              miDec.setSha1Value(DigestUtils.getHexSha1Digest(fNew));
+              miDec.setSha256Value(DigestUtils.getHexSha256Digest(fNew));
               miDec.setSize(BigInteger.valueOf(fNew.length()));
 
               miDec.setFilepath(StorageUtils.getRelativePath(fNew));

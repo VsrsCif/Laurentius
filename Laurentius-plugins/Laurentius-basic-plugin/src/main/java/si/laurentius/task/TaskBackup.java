@@ -42,6 +42,7 @@ import si.laurentius.plugin.crontask.CronTaskDef;
 import si.laurentius.plugin.crontask.CronTaskPropertyDef;
 import si.laurentius.plugin.interfaces.TaskExecutionInterface;
 import si.laurentius.plugin.interfaces.exception.TaskException;
+import static si.laurentius.task.TaskArchive.STORAGE_FOLDER;
 
 /**
  *
@@ -133,6 +134,11 @@ public class TaskBackup implements TaskExecutionInterface {
    * @throws TaskException
    */
   public String backupInMails(Date to, File f, int iChunkSize) throws TaskException {
+    
+     File flStorage = new File(f, STORAGE_FOLDER) ;
+     if (!flStorage.exists()){
+     flStorage.mkdirs();
+     }
     StringWriter sw = new StringWriter();
     MSHInMailList noList = new MSHInMailList();
     SearchParameters sp = new SearchParameters();
@@ -157,7 +163,7 @@ public class TaskBackup implements TaskExecutionInterface {
             for (MSHInPart p : m.getMSHInPayload().getMSHInParts()) {
               if (p.getFilepath() != null) {
                 try {
-                  mSU.copyFileToFolder(p.getFilepath(), f);
+                  mSU.copyFileToFolder(p.getFilepath(), flStorage);
                 } catch ( StorageException ex) {
                   throw new TaskException(TaskException.TaskExceptionCode.ProcessException,
                           "Error occured while copying  file : '" + p.getFilepath() + "'!", ex);
@@ -197,6 +203,11 @@ public class TaskBackup implements TaskExecutionInterface {
    * @return
    */
   public String backupOutMails(Date to, File f, int iChunkSize) throws TaskException {
+    
+     File flStorage = new File(f, STORAGE_FOLDER) ;
+     if (!flStorage.exists()){
+     flStorage.mkdirs();
+     }
     StringWriter sw = new StringWriter();
     MSHOutMailList noList = new MSHOutMailList();
     SearchParameters sp = new SearchParameters();
@@ -221,7 +232,7 @@ public class TaskBackup implements TaskExecutionInterface {
             for (MSHOutPart p : m.getMSHOutPayload().getMSHOutParts()) {
               if (p.getFilepath() != null) {
                 try {
-                  mSU.copyFileToFolder(p.getFilepath(), f);
+                  mSU.copyFileToFolder(p.getFilepath(), flStorage);
                 } catch ( StorageException ex) {
                   throw new TaskException(TaskException.TaskExceptionCode.ProcessException,
                       "Error occured while copying  file : '" + p.getFilepath() + "'!", ex);
@@ -253,7 +264,7 @@ public class TaskBackup implements TaskExecutionInterface {
 
 
   private CronTaskPropertyDef createTTProperty(String key, String desc, boolean mandatory,
-      String type, String valFormat, String valList) {
+      String type, String valFormat, String valList, String defValue) {
     CronTaskPropertyDef ttp = new CronTaskPropertyDef();
     ttp.setKey(key);
     ttp.setDescription(desc);
@@ -261,12 +272,11 @@ public class TaskBackup implements TaskExecutionInterface {
     ttp.setType(type);
     ttp.setValueFormat(valFormat);
     ttp.setValueList(valList);
+    ttp.setDefValue(defValue);
     return ttp;
   }
 
-  private CronTaskPropertyDef createTTProperty(String key, String desc) {
-    return createTTProperty(key, desc, true, "string", null, null);
-  }
+ 
   /**
    *
    * @param p
@@ -366,16 +376,18 @@ public class TaskBackup implements TaskExecutionInterface {
     tt.setType("backup");
     tt.setName("Backup data");
     tt.setDescription("Backup data to 'xml' and files to backup-storage");
-    tt.getCronTaskPropertyDeves().add(createTTProperty(KEY_EXPORT_FOLDER, "Archive folder"));
+    tt.getCronTaskPropertyDeves().add(createTTProperty(KEY_EXPORT_FOLDER, 
+            "Backup folder", true,
+                    "string", null, null, "${laurentius.home}/test-backup/"));
     tt.getCronTaskPropertyDeves().add(
-            createTTProperty(KEY_CHUNK_SIZE, "Max mail count in chunk", true, "int", null, null));
+            createTTProperty(KEY_CHUNK_SIZE, "Max mail count in chunk", true, "int", null, null, "5000"));
     tt.getCronTaskPropertyDeves().add(
             createTTProperty(KEY_DELETE_OLD, "Clear backup folder (true/false)", true, "boolean", null,
-                    null));
+                    null, "true"));
     
     tt.getCronTaskPropertyDeves().add(
             createTTProperty(KEY_BACKUP_PASSWORD, "Backup passwords (true/false)", true, "boolean", null,
-                    null));
+                    null, "false"));
     
     return tt;
   }

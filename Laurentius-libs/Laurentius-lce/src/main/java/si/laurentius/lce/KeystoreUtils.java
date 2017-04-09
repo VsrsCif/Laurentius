@@ -46,12 +46,15 @@ import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StringFormater;
 import static java.security.KeyStore.getInstance;
 import java.security.cert.CertificateEncodingException;
+import java.security.cert.CertificateExpiredException;
 import java.security.cert.CertificateFactory;
+import java.security.cert.CertificateNotYetValidException;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Objects;
 import javax.net.ssl.X509KeyManager;
+import si.laurentius.commons.enums.CertStatus;
 import si.laurentius.commons.utils.Utils;
 import si.laurentius.lce.tls.X509KeyManagerForAlias;
 
@@ -313,6 +316,12 @@ public class KeystoreUtils {
           ec.setSubjectDN(xc.getSubjectDN().getName());
           ec.setSerialNumber(xc.getSerialNumber() + "");
           ec.setHexSHA1Digest(DigestUtils.getHexSha1Digest(xc.getEncoded()));
+          
+          try {
+            xc.checkValidity();
+          } catch (CertificateExpiredException | CertificateNotYetValidException ex) {
+            ec.setStatus(CertStatus.INVALID_BY_DATE.getCode());
+          }
         }
 
         lst.add(ec);

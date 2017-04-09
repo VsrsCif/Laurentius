@@ -42,6 +42,7 @@ import si.laurentius.commons.interfaces.SEDLookupsInterface;
 import si.laurentius.commons.interfaces.SEDPluginManagerInterface;
 import si.laurentius.commons.interfaces.SEDSchedulerInterface;
 import si.laurentius.commons.utils.SEDLogger;
+import si.laurentius.commons.utils.Utils;
 import si.laurentius.plugin.crontask.CronTaskDef;
 import si.laurentius.plugin.def.Plugin;
 
@@ -92,7 +93,7 @@ public class MSHScheduler implements SEDSchedulerInterface {
             cb.getName());
     boolean bScu = false;
     for (Timer t : getServices().getAllTimers()) {
-      if (t.getInfo().equals(cb.getName())) {
+      if (t.getInfo()!= null &&  t.getInfo().equals(cb.getName())) {
         t.cancel();
         bScu = true;
         break;

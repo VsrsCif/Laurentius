@@ -156,8 +156,11 @@ public class TaskArchive implements TaskExecutionInterface {
    * @throws TaskException
    * @throws IOException
    */
-  public String archiveInMails(Date to, File f, int iChunkSize, Writer fw) throws TaskException,
+  public String archiveInMails(Date to, File fArchFolder, int iChunkSize, Writer fw) throws TaskException,
           IOException {
+    
+    File flStorage = new File(fArchFolder, STORAGE_FOLDER) ;
+            
     StringWriter sw = new StringWriter();
     MSHInMailList noList = new MSHInMailList();
     SearchParameters sp = new SearchParameters();
@@ -189,7 +192,10 @@ public class TaskArchive implements TaskExecutionInterface {
             for (MSHInPart p : m.getMSHInPayload().getMSHInParts()) {
               if (p.getFilepath() != null) {
                 try {
-                  mSU.copyFileToFolder(p.getFilepath(), f);
+                  
+                  
+                  mSU.copyFileToFolder(p.getFilepath(),flStorage );
+                  
                   fw.append(p.getFilepath());
                   fw.append(";");
                 } catch (IOException | StorageException ex) {
@@ -205,14 +211,14 @@ public class TaskArchive implements TaskExecutionInterface {
         }
 
         noList.getMSHInMails().addAll(lst);
-        File fout = new File(f, String.format(outFileFormat, "MSHInMail", iPage));
+        File fout = new File(fArchFolder, String.format(outFileFormat, "MSHInMail", iPage));
 
         try {
           XMLUtils.serialize(noList, fout);
         } catch (JAXBException | FileNotFoundException ex) {
           throw new TaskException(
                   TaskException.TaskExceptionCode.ProcessException,
-                  "Error occured while exporting out data : '" + f.
+                  "Error occured while exporting out data : '" + fArchFolder.
                           getFreeSpace() + "'!", ex);
         }
         String strVal
@@ -241,6 +247,7 @@ public class TaskArchive implements TaskExecutionInterface {
    */
   public String archiveOutMails(Date to, File f, int iChunkSize, Writer fw) throws TaskException,
           IOException {
+    File flStorage = new File(f, STORAGE_FOLDER) ;
     StringWriter sw = new StringWriter();
     MSHOutMailList noList = new MSHOutMailList();
     SearchParameters sp = new SearchParameters();
@@ -273,7 +280,7 @@ public class TaskArchive implements TaskExecutionInterface {
             for (MSHOutPart p : m.getMSHOutPayload().getMSHOutParts()) {
               if (p.getFilepath() != null) {
                 try {
-                  mSU.copyFileToFolder(p.getFilepath(), f);
+                  mSU.copyFileToFolder(p.getFilepath(), flStorage);
                   fw.append(p.getFilepath());
                   fw.append(";");
                 } catch (IOException | StorageException ex) {
@@ -314,7 +321,7 @@ public class TaskArchive implements TaskExecutionInterface {
 
   private CronTaskPropertyDef createTTProperty(String key, String desc,
           boolean mandatory,
-          String type, String valFormat, String valList) {
+          String type, String valFormat, String valList, String defVal) {
     CronTaskPropertyDef ttp = new CronTaskPropertyDef();
     ttp.setKey(key);
     ttp.setDescription(desc);
@@ -322,12 +329,11 @@ public class TaskArchive implements TaskExecutionInterface {
     ttp.setType(type);
     ttp.setValueFormat(valFormat);
     ttp.setValueList(valList);
+    ttp.setDefValue(defVal);
     return ttp;
   }
 
-  private CronTaskPropertyDef createTTProperty(String key, String desc) {
-    return createTTProperty(key, desc, true, "string", null, null);
-  }
+ 
 
   /**
    *
@@ -485,7 +491,7 @@ public class TaskArchive implements TaskExecutionInterface {
 
     }
 
-    sw.append("backup ends in : " + (l - LOG.getTime()) + " ms\n");
+    sw.append("Archive ends in : " + (l - LOG.getTime()) + " ms\n");
     LOG.logEnd(l);
     return sw.toString();
   }
@@ -496,23 +502,25 @@ public class TaskArchive implements TaskExecutionInterface {
     tt.setType("archive");
     tt.setName("Archive data");
     tt.setDescription("Archive data to 'xml' and files to archive-storage");
-    tt.getCronTaskPropertyDeves().add(createTTProperty(KEY_EXPORT_FOLDER,
-            "Archive folder"));
+    tt.getCronTaskPropertyDeves().add(
+            createTTProperty(KEY_EXPORT_FOLDER,
+            "Archive folder", true,
+                    "string", null, null, "${laurentius.home}/test-archive/"));
     tt.getCronTaskPropertyDeves().add(
             createTTProperty(KEY_CHUNK_SIZE, "Max mail count in chunk", true,
-                    "int", null, null));
+                    "int", null, null, "5000"));
     tt.getCronTaskPropertyDeves().add(
             createTTProperty(KEY_DELETE_RECORDS,
                     "Delete exported records (true/false)", true,
-                    "boolean", null, null));
+                    "boolean", null, null, "true"));
     tt.getCronTaskPropertyDeves().add(
             createTTProperty(KEY_ARCHIVE_PASSWORD,
                     "Archive passwords (true/false)", false,
-                    "boolean", null, null));
+                    "boolean", null, null, "false"));
     tt.getCronTaskPropertyDeves().add(
             createTTProperty(KEY_ARCHIVE_OFFSET,
                     "Archive records older than [n] days", true, "int",
-                    null, null));
+                    null, null, "30"));
 
     return tt;
   }

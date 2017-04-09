@@ -107,7 +107,11 @@
 
     <build>
         <finalName>${war.final.name}</finalName>
-        <plugins>            
+        <plugins>     
+             <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jaxb2-maven-plugin</artifactId>
+            </plugin>       
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
             </plugin>           
@@ -121,7 +125,7 @@
                         <manifestEntries>                            
                             <implementation-version>${project.version}</implementation-version>             
                             <Implementation-Build>${buildNumber}</Implementation-Build>                            
-                            <Dependencies>org.apache.cxf,org.apache.cxf.impl,org.apache.commons.io, org.apache.ws.security, org.apache.santuario.xmlsec,si.laurentius</Dependencies>
+                            <Dependencies>org.apache.cxf,org.apache.cxf.impl,si.laurentius</Dependencies>
                         </manifestEntries>
                     </archive>                                 
                 </configuration>                 

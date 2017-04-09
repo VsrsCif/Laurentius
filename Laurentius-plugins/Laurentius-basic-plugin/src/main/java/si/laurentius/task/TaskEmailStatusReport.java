@@ -119,7 +119,7 @@ public class TaskEmailStatusReport extends TaskEmailReport {
     CronTaskDef tt = super.getDefinition();
     tt.setType("statusreport");
     tt.setName("Status report");
-    tt.setDescription("Incoming outcomming mail report from sed box");
+    tt.setDescription("Incoming outcomming mail report for sed box");
     return tt;
   }
 

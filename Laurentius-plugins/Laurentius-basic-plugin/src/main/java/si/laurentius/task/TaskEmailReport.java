@@ -19,6 +19,8 @@ import si.laurentius.commons.interfaces.SEDReportInterface;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.plugin.crontask.CronTaskDef;
 import si.laurentius.plugin.crontask.CronTaskPropertyDef;
+import si.laurentius.plugin.interfaces.PropertyListType;
+import si.laurentius.plugin.interfaces.PropertyType;
 import si.laurentius.plugin.interfaces.TaskExecutionInterface;
 import si.laurentius.plugin.interfaces.exception.TaskException;
 
@@ -76,7 +78,7 @@ public abstract class TaskEmailReport implements TaskExecutionInterface
    * @return
    */
   protected CronTaskPropertyDef createTTProperty(String key, String desc, boolean mandatory,
-      String type, String valFormat, String valList) {
+      String type, String valFormat, String valList, String defValue) {
     CronTaskPropertyDef ttp = new CronTaskPropertyDef();
     ttp.setKey(key);
     ttp.setDescription(desc);
@@ -84,17 +86,8 @@ public abstract class TaskEmailReport implements TaskExecutionInterface
     ttp.setType(type);
     ttp.setValueFormat(valFormat);
     ttp.setValueList(valList);
+     ttp.setDefValue(defValue);
     return ttp;
-  }
-
-  /**
-   *
-   * @param key
-   * @param desc
-   * @return
-   */
-  protected CronTaskPropertyDef createTTProperty(String key, String desc) {
-    return createTTProperty(key, desc, true, "string", null, null);
   }
 
   /**
@@ -150,18 +143,29 @@ public abstract class TaskEmailReport implements TaskExecutionInterface
    *
    * @return
    */
+  @Override
   public CronTaskDef getDefinition() {
     CronTaskDef tt = new CronTaskDef();
     tt.setType("");
     tt.setName("");
     tt.setDescription("");
-    tt.getCronTaskPropertyDeves().add(createTTProperty(KEY_SEDBOX, "SED-BOX"));
+    tt.getCronTaskPropertyDeves().add(createTTProperty(KEY_SEDBOX, 
+            "Receiver sedbox (without domain).", true, PropertyType.List.
+                    getType(), null, PropertyListType.LocalBoxes.getType(), null));
     tt.getCronTaskPropertyDeves().add(
-        createTTProperty(KEY_EMAIL_TO, "Receiver email addresses, separated by comma."));
-    tt.getCronTaskPropertyDeves().add(createTTProperty(KEY_EMAIL_FROM, "Sender email address."));
-    tt.getCronTaskPropertyDeves().add(createTTProperty(KEY_EMAIL_SUBJECT, "EMail subject."));
+        createTTProperty(KEY_EMAIL_TO, "Receiver email addresses, separated by comma.", true,
+                    PropertyType.String.
+                    getType(), null, null, "receiver.one@not.exists.com,receiver.two@not.exists.com"));
+    tt.getCronTaskPropertyDeves().add(createTTProperty(KEY_EMAIL_FROM, "Sender email address", true,
+                    PropertyType.String.
+                    getType(), null, null, "change.me@not.exists.com"));
+    tt.getCronTaskPropertyDeves().add(createTTProperty(KEY_EMAIL_SUBJECT, "EMail subject.", true,
+                    PropertyType.String.
+                    getType(), null, null, "[Laurentius] test mail"));
     tt.getCronTaskPropertyDeves().add(
-        createTTProperty(KEY_MAIL_CONFIG_JNDI, "Mail config jndi(def: java:jboss/mail/Default)"));
+        createTTProperty(KEY_MAIL_CONFIG_JNDI, 
+                "Mail config jndi (def: java:jboss/mail/Default)", true,
+                    "string", null, null, "java:jboss/mail/Default"));
     return tt;
   }
 

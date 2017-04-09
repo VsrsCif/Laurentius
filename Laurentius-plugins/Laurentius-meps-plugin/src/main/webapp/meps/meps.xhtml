@@ -18,7 +18,7 @@
             <f:viewParam name="page" value="#{MEPSPluginData.currentPanel}" />
             <f:viewParam name="navigator" value="#{MEPSPluginData.showNavigator}" />
         </f:metadata>
-        <h:form id="bscform" >
+        <h:form id="mepsform" >
             <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
             <!-- main window -->    
             <p:layout  style="min-width:400px;min-height:400px;"  fullPage="true" >
@@ -29,8 +29,8 @@
                         <p:tab id="Instances"  >
                             <f:facet name="title">
 
-                                <h:graphicImage value="#{resource['images:/process.svg']}" width="22" height="22" />
-                                <h:outputText value="#{msg['InMailProcess']}" />                                 
+                                <h:graphicImage value="#{resource['images:/meps.svg']}" width="22" height="22" />
+                                <h:outputText value="#{msg['MEPS']}" />                                 
 
                             </f:facet>
 
@@ -38,10 +38,10 @@
 
 
 
-                                <p:menuitem value="#{msg['tEST']}" 
-                                            icon="ui-icon-svg-xslt ui-icon-size-22" 
+                                <p:menuitem value="#{msg['Test']}" 
+                                            icon="ui-icon-svg-meps ui-icon-size-22" 
                                             actionListener="#{MEPSPluginData.onToolbarButtonAction}" 
-                                            update=":bscform:MainPanel"
+                                            update=":mepsform:MainPanel"
                                             >
                                     <f:attribute name="panel" value="#{AppConstant.s_PANEL_TEST}" />
                                 </p:menuitem>
@@ -61,5 +61,6 @@
             </p:layout>
         </h:form>
         <dlg:dlg-compose id="dlgCompose" />
-
+       
     </h:body>
+</html>

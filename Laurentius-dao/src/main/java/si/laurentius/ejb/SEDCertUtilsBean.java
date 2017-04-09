@@ -36,6 +36,7 @@ import si.laurentius.cert.SEDCertPassword;
 import si.laurentius.cert.SEDCertificate;
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.SEDSystemProperties;
+import si.laurentius.commons.enums.CertStatus;
 import si.laurentius.commons.exception.SEDSecurityException;
 import si.laurentius.commons.interfaces.SEDCertStoreInterface;
 import si.laurentius.commons.interfaces.SEDCertUtilsInterface;
@@ -105,18 +106,14 @@ public class SEDCertUtilsBean implements SEDCertUtilsInterface {
   public Properties getCXFKeystoreProperties(String alias) throws SEDSecurityException {
     long l = LOG.logStart();
     SEDCertificate aliasCrt = mdbCertStore.getSEDCertificatForAlias(alias);
+    validateCertificate(aliasCrt);
     if (aliasCrt == null) {
       String msg = "Key for alias '" + alias + "' do not exists!";
       throw new SEDSecurityException(
               SEDSecurityException.SEDSecurityExceptionCode.CertificateException,
               msg);
     }
-    if (!KeystoreUtils.isCertValid(aliasCrt)) {
-      String msg = "Key for alias '" + alias + " is not valid!";
-      throw new SEDSecurityException(
-              SEDSecurityException.SEDSecurityExceptionCode.CertificateException,
-              msg);
-    }
+
     SEDCertPassword cp = mdbCertStore.getKeyPassword(
             SEDCertStoreInterface.KEYSTORE_NAME);
     if (cp == null) {
@@ -140,8 +137,12 @@ public class SEDCertUtilsBean implements SEDCertUtilsInterface {
    * @return
    */
   @Override
-  public Properties getCXFTruststoreProperties(String alias) {
+  public Properties getCXFTruststoreProperties(String alias) throws SEDSecurityException {
     long l = LOG.logStart();
+    
+    SEDCertificate aliasCrt = mdbCertStore.getSEDCertificatForAlias(alias);
+    validateCertificate(aliasCrt);
+    
     SEDCertPassword cp = mdbCertStore.getKeyPassword(
             SEDCertStoreInterface.KEYSTORE_NAME);
     if (cp == null) {
@@ -214,8 +215,6 @@ public class SEDCertUtilsBean implements SEDCertUtilsInterface {
     return tm;
   }
 
-
-
   /**
    * Method creates signature property configuration for WSS4JOutInterceptor
    * inteceptor
@@ -226,12 +225,10 @@ public class SEDCertUtilsBean implements SEDCertUtilsInterface {
    * @return
    */
   public Map<String, Object> createCXFSignatureConfiguration(X509.Signature sig,
-         String sigAlias) throws SEDSecurityException {
-    
-    
-     Properties cpKeyStore = getCXFKeystoreProperties(sigAlias);
-     SEDCertPassword keyPasswd = mdbCertStore.getKeyPassword(sigAlias);
-     
+          String sigAlias) throws SEDSecurityException {
+
+    Properties cpKeyStore = getCXFKeystoreProperties(sigAlias);
+    SEDCertPassword keyPasswd = mdbCertStore.getKeyPassword(sigAlias);
 
     Map<String, Object> prps = null;
 
@@ -279,12 +276,11 @@ public class SEDCertUtilsBean implements SEDCertUtilsInterface {
    */
   public Map<String, Object> createCXFEncryptionConfiguration(
           X509.Encryption enc,
-           String alias) {
+          String alias) throws SEDSecurityException{
     Map<String, Object> prps = null;
 
-    
     Properties cpTrust = getCXFTruststoreProperties(alias);
-    
+
     if (enc == null || enc.getReference() == null) {
       return prps;
     }
@@ -360,11 +356,9 @@ public class SEDCertUtilsBean implements SEDCertUtilsInterface {
           X509.Encryption enc,
           String decAlias) throws SEDSecurityException {
 
-    
-    
     Properties ksProp = getCXFKeystoreProperties(decAlias);
-    SEDCertPassword keyPasswd =  mdbCertStore.getKeyPassword(decAlias);
-    
+    SEDCertPassword keyPasswd = mdbCertStore.getKeyPassword(decAlias);
+
     Map<String, Object> prps = null;
     if (enc == null || enc.getReference() == null) {
       return prps;
@@ -395,11 +389,10 @@ public class SEDCertUtilsBean implements SEDCertUtilsInterface {
   @Override
   public Map<String, Object> createCXFSignatureValidationConfiguration(
           X509.Signature sig,
-          String sigAliasProp) {
-    
-    
+          String sigAliasProp) throws SEDSecurityException{
+
     Map<String, Object> prps = null;
-    
+
     Properties tstCP = getCXFTruststoreProperties(sigAliasProp);
 
     if (sig == null || sig.getReference() == null) {
@@ -428,5 +421,37 @@ public class SEDCertUtilsBean implements SEDCertUtilsInterface {
     }
 
     return prps;
+  }
+
+  private void validateCertificate(SEDCertificate sc) throws SEDSecurityException {
+    String alias = sc.getAlias();
+    if (CertStatus.INVALID_BY_ROOTCA.containsCode(sc.getStatus())) {
+      String msg = "Certificate for alias '" + alias + "' is not signed by trusted RootCA!";
+      throw new SEDSecurityException(
+              SEDSecurityException.SEDSecurityExceptionCode.CertificateException,
+              msg);
+    }
+
+    if (CertStatus.INVALID_BY_DATE.containsCode(sc.getStatus())) {
+      String msg = "Certificate for alias '" + alias + "' is expired or not valid yet!";
+      throw new SEDSecurityException(
+              SEDSecurityException.SEDSecurityExceptionCode.CertificateException,
+              msg);
+    }
+
+    if (CertStatus.CRL_REVOKED.containsCode(sc.getStatus())) {
+      String msg = "Certificate for alias '" + alias + "' is revoked!";
+      throw new SEDSecurityException(
+              SEDSecurityException.SEDSecurityExceptionCode.CertificateException,
+              msg);
+    }
+
+    if (!KeystoreUtils.isCertValid(sc)) {
+      String msg = "Certificate for alias '" + alias + " is not valid!";
+      throw new SEDSecurityException(
+              SEDSecurityException.SEDSecurityExceptionCode.CertificateException,
+              msg);
+    }
+
   }
 }

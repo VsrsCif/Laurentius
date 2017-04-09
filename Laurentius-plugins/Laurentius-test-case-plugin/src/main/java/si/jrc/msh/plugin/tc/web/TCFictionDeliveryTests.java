@@ -26,7 +26,7 @@ public class TCFictionDeliveryTests extends TestCaseAbstract implements Serializ
   private static final SEDLogger LOG = new SEDLogger(TCFictionDeliveryTests.class);
   
   BigInteger mailId;
-  Integer daysBeforeNow = 15;
+  Integer daysBeforeNow = 16;
 
   public BigInteger getMailId() {
     return mailId;

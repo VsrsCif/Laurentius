@@ -95,7 +95,7 @@ public class TaskFileSubmitter implements TaskExecutionInterface {
   @EJB (mappedName = SEDJNDI.JNDI_PMODE)
   protected PModeInterface mpModeManager;
   private CronTaskPropertyDef createTTProperty(String key, String desc, boolean mandatory,
-          String type, String valFormat, String valList) {
+          String type, String valFormat, String valList, String defValue) {
     CronTaskPropertyDef ttp = new CronTaskPropertyDef();
     ttp.setKey(key);
     ttp.setDescription(desc);
@@ -103,11 +103,10 @@ public class TaskFileSubmitter implements TaskExecutionInterface {
     ttp.setType(type);
     ttp.setValueFormat(valFormat);
     ttp.setValueList(valList);
+    ttp.setDefValue(defValue);
     return ttp;
   }
-  private CronTaskPropertyDef createTTProperty(String key, String desc) {
-    return createTTProperty(key, desc, true, "string", null, null);
-  }
+
 
   /**
    *
@@ -140,11 +139,9 @@ public class TaskFileSubmitter implements TaskExecutionInterface {
           fRoot.listFiles((File dir, String name) -> name.startsWith(OUTMAIL_FILENAME) &&
                name.endsWith(OUTMAIL_SUFFIX));
       for (File file : flst) {
-        LOG.log("check file data: " + file.getName());
-
         try {
           if (isFileLocked(file)) {
-            LOG.log("check file: " + file.getName() + " is locked! - abort submitting file");
+            LOG.formatedDebug("File: " + file.getName() + " is locked or submitted: abort submitting file");
           }
           else  {
             Properties lock = new Properties();
@@ -159,29 +156,24 @@ public class TaskFileSubmitter implements TaskExecutionInterface {
             Properties pmail = new Properties();
 
             try (FileInputStream fp = new FileInputStream(file)) {
-              LOG.log("Read file: " + file.getName() + "");
+              LOG.formatedDebug("Read file: '%s'. " ,file.getName());
               pmail.load(fp);
               if (!pmail.containsKey(PROP_SERVICE) ){
                 pmail.setProperty(PROP_SERVICE, p.getProperty(PROP_SERVICE));
-                LOG.log("got service: " + p.getProperty(PROP_SERVICE) + "");
               }
               if (!pmail.containsKey(PROP_ACTION)){
                 pmail.setProperty(PROP_ACTION, p.getProperty(PROP_ACTION));
-                LOG.log("got action: " + p.getProperty(PROP_ACTION) + "");
               }
               if (!pmail.containsKey(PROP_RECEIVER_EBOX)){
                 pmail.setProperty(PROP_RECEIVER_EBOX, p.getProperty(PROP_RECEIVER_EBOX));
-                LOG.log("got receiver ebox: " + p.getProperty(PROP_RECEIVER_EBOX) + "");
               }
               if (!pmail.containsKey(PROP_SENDER_EBOX)){
                 pmail.setProperty(PROP_SENDER_EBOX, p.getProperty(PROP_SENDER_EBOX));
-                LOG.log("got sender ebox: " + p.getProperty(PROP_SENDER_EBOX) + "");                
+          
               }
-              
 
-              LOG.log("submit mail");
               BigInteger bi = processOutMail(pmail, fMetaData);
-              LOG.formatedlog("got rsponse mail %d", bi);
+              LOG.formatedDebug("Submit file %s. MailId %d", file.getName(),  bi);
               File fewFMetaData = new File(file.getAbsolutePath() + OUTMAIL_SUFFIX_SUBMITTED);
               if (fMetaData.renameTo(fewFMetaData)) {
                 fMetaData = fewFMetaData;
@@ -248,11 +240,16 @@ public class TaskFileSubmitter implements TaskExecutionInterface {
     tt.setName("File subbmiter");
     tt.setDescription(
             "Task submits mail in given folder. '");
-    tt.getCronTaskPropertyDeves().add(createTTProperty(KEY_EXPORT_FOLDER, "Submit folder"));
-    tt.getCronTaskPropertyDeves().add(createTTProperty(PROP_SERVICE, "Service"));
-    tt.getCronTaskPropertyDeves().add(createTTProperty(PROP_ACTION, "Action"));
-    tt.getCronTaskPropertyDeves().add(createTTProperty(PROP_RECEIVER_EBOX, "Receiver box"));
-    tt.getCronTaskPropertyDeves().add(createTTProperty(PROP_SENDER_EBOX, "Sender box"));
+    tt.getCronTaskPropertyDeves().add(createTTProperty(KEY_EXPORT_FOLDER, "Submit folder", true,
+                    "string", null, null, "${laurentius.home}/submit/dwr/"));
+    tt.getCronTaskPropertyDeves().add(createTTProperty(PROP_SERVICE, "Service", false,
+                    "string", null, null, "DeliveryWithReceipt"));
+    tt.getCronTaskPropertyDeves().add(createTTProperty(PROP_ACTION, "Action", false,
+                    "string", null, null, "Delivery"));
+    tt.getCronTaskPropertyDeves().add(createTTProperty(PROP_RECEIVER_EBOX, "Receiver box", false,
+                    "string", null, null, null));
+    tt.getCronTaskPropertyDeves().add(createTTProperty(PROP_SENDER_EBOX, "Sender box", false,
+                    "string", null, null, null));
     
     return tt;
   }

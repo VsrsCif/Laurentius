@@ -1,5 +1,28 @@
 #!/bin/sh
 
+# Set database dialect
+# choose appropriate from page 
+# https://docs.jboss.org/hibernate/orm/5.2/javadocs/org/hibernate/dialect/package-summary.html
+# examples:
+# DB_DIALECT='org.hibernate.dialect.H2Dialect'
+# DB_DIALECT='org.hibernate.dialect.Oracle10gDialect'
+# DB_DIALECT='org.hibernate.dialect.Oracle12cDialect'
+# DB_DIALECT='org.hibernate.dialect.PostgreSQL9Dialect'
+# DB_DIALECT='org.hibernate.dialect.PostgreSQL95Dialect'
+# DB_DIALECT='org.hibernate.dialect.SQLServer2008Dialect'
+DB_DIALECT='org.hibernate.dialect.H2Dialect'
+
+# set db action where init parameter is true.
+# only validate (validate), 'update' or recreate (create) database objects.
+# recreate  - delete all data in a tables.
+#https://docs.jboss.org/hibernate/orm/5.0/manual/en-US/html/ch03.html
+
+#DB_INI_ACTION='validate'
+DB_INI_ACTION='create'
+#DB_INI_ACTION='update'
+
+# inet mask for access 0.0.0.0 - all access
+LISTEN_MASK=0.0.0.0
 
 quit () {
 	echo "\nUsage:\n"
@@ -42,7 +65,6 @@ done
 
 
 
-
 DIRNAME=`dirname "$0"`
 RESOLVED_WILDFLY_HOME=`cd "$DIRNAME/.." >/dev/null; pwd`
 if [ "x$WILDFLY_HOME" = "x" ]; then
@@ -78,12 +100,28 @@ fi
 LAU_OPTS=" -c standalone-laurentius.xml -Dlaurentius.home=$LAU_HOME/";
 
 if [ "$INIT" = "TRUE" ]; then
+	read -p "Init will recreate database tables if exists. All data in tables will be lost. Do you want to continue? (Enter Y to continue) " answer
+
+	# (2) handle the command line argument we were given
+	while true
+	do
+	  case $answer in
+	   [yY]* ) 
+		       break;;
+
+	   [nN]* ) exit;;
+
+	   * )     exit;;
+	  esac
+	done
+
+
+
 	if [ "x$LAU_DOMAIN" = "x" ]; then
 		echo "Missing domain for initialization! Put domain after --init parameter. Ex.: laurentios-demo.sh --init -d test-company.org"
 		quit;
 	fi
-
-	LAU_OPTS="$LAU_OPTS -Dlaurentius.hibernate.hbm2ddl.auto=create -Dlaurentius.hibernate.dialect=org.hibernate.dialect.H2Dialect -Dlaurentius.init=true -Dlaurentius.domain=$LAU_DOMAIN";
+	LAU_OPTS="$LAU_OPTS -Dlaurentius.hibernate.hbm2ddl.auto=$DB_INI_ACTION -Dlaurentius.hibernate.dialect=$DB_DIALECT -Dlaurentius.init=true -Dlaurentius.domain=$LAU_DOMAIN";
 fi
 
 echo "*********************************************************************************************************************************"
@@ -94,7 +132,7 @@ echo "* LAU_OPTS     =  $LAU_OPTS"
 echo "*********************************************************************************************************************************"
 
 #org.hibernate.dialect.H2Dialect
-$WILDFLY_HOME/bin/standalone.sh $LAU_OPTS -b 0.0.0.0
+$WILDFLY_HOME/bin/standalone.sh $LAU_OPTS -b $LISTEN_MASK
 
 
 

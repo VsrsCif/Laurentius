@@ -16,6 +16,8 @@ import si.laurentius.commons.exception.StorageException;
 import si.laurentius.cron.SEDTaskExecution;
 import si.laurentius.msh.inbox.mail.MSHInMail;
 import si.laurentius.plugin.crontask.CronTaskDef;
+import si.laurentius.plugin.interfaces.PropertyListType;
+import si.laurentius.plugin.interfaces.PropertyType;
 import si.laurentius.plugin.interfaces.TaskExecutionInterface;
 import si.laurentius.plugin.interfaces.exception.TaskException;
 import si.laurentius.task.filter.InMailFilter;
@@ -153,18 +155,13 @@ public class TaskEmailInboxMailReport extends TaskEmailReport {
     tt.setDescription("Incomings mail list from sed box");
 
     tt.getCronTaskPropertyDeves().add(
-        createTTProperty(KEY_NoMail, "Supress if not Mail ", true, "boolean", null, null));
+        createTTProperty(KEY_NoMail, "Suppress if not Mail ", true, PropertyType.Boolean.
+                    getType(), null, null, "false"));
     tt.getCronTaskPropertyDeves().add(
-        createTTProperty(KEY_OnlyNew, "Only if new mail ", true, "boolean", null, null));
-    // tt.getSEDTaskTypeProperties().add(createTTProperty(KEY_ListLine, "List line"));
-
-    String strLst = "";
-    for (SEDInboxMailStatus c : SEDInboxMailStatus.values()) {
-      strLst = (strLst.isEmpty() ? "" : ",") + c.getValue();
-    }
-
+        createTTProperty(KEY_OnlyNew, "Only if new mail ", true, PropertyType.Boolean.
+                    getType(), null, null, "true"));
     tt.getCronTaskPropertyDeves().add(
-        createTTProperty(KEY_MAIL_STATUS, "Status list", true, "list", null, strLst));
+        createTTProperty(KEY_MAIL_STATUS, "Status list", true, PropertyType.List.getType(), null, PropertyListType.InMailStatus.getType(), "RECEIVED"));
 
     return tt;
   }

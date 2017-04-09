@@ -12,12 +12,16 @@ import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateEncodingException;
+import java.security.cert.CertificateExpiredException;
+import java.security.cert.CertificateNotYetValidException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -31,6 +35,7 @@ import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 import si.laurentius.cert.SEDCertificate;
 import si.laurentius.commons.SEDJNDI;
+import si.laurentius.commons.enums.CertStatus;
 import si.laurentius.commons.exception.SEDSecurityException;
 import si.laurentius.commons.interfaces.SEDCertStoreInterface;
 import si.laurentius.commons.utils.SEDLogger;
@@ -213,6 +218,13 @@ public class DialogImportCert {
           ec.setHexSHA1Digest(DigestUtils.getHexSha1Digest(selectedX509Cert.
                   getEncoded()));
 
+         
+          try {
+            selectedX509Cert.checkValidity();
+          } catch (CertificateExpiredException | CertificateNotYetValidException ex) {
+            ec.setStatus(CertStatus.INVALID_BY_DATE.getCode());
+          }
+          
           getCertificates().add(ec);
           selectedCertificate = ec;
 

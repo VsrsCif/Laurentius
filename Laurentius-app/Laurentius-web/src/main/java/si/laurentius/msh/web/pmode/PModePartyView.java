@@ -16,6 +16,8 @@ package si.laurentius.msh.web.pmode;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -23,6 +25,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import org.primefaces.event.CellEditEvent;
 import si.laurentius.commons.SEDJNDI;
+import si.laurentius.commons.exception.PModeException;
 import si.laurentius.commons.interfaces.PModeInterface;
 import si.laurentius.commons.interfaces.SEDLookupsInterface;
 import si.laurentius.commons.utils.SEDLogger;
@@ -69,12 +72,23 @@ public class PModePartyView extends AbstractPModeJSFView<PartyIdentitySet> {
    */
   @Override
   public void createEditable() {
+
+    
     PartyIdentitySet pis = new PartyIdentitySet();
     pis.setLocalPartySecurity(
               new PartyIdentitySetType.LocalPartySecurity());
     pis.setExchangePartySecurity(
               new PartyIdentitySetType.ExchangePartySecurity());
-
+    
+    PartyIdentitySetType.PartyId piName = new PartyIdentitySetType.PartyId();
+    piName.setType("urn:oasis:names:tc:ebcore:partyid-type:unregistered:si-svev:sed-name");
+    piName.setValueSource("name");
+    PartyIdentitySetType.PartyId piAddress = new PartyIdentitySetType.PartyId();
+    piAddress.setType("urn:oasis:names:tc:ebcore:partyid-type:unregistered:si-svev:sed-box");
+    piAddress.setValueSource("address");
+    
+    pis.getPartyIds().add(piName);
+    pis.getPartyIds().add(piAddress);
     setNew(pis);
 
   }

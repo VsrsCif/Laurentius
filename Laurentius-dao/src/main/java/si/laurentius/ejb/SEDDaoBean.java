@@ -14,6 +14,7 @@
  */
 package si.laurentius.ejb;
 
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -65,11 +66,14 @@ import static si.laurentius.commons.SEDSystemProperties.SYS_PROP_JNDI_JMS_PREFIX
 import static si.laurentius.commons.SEDSystemProperties.SYS_PROP_JNDI_PREFIX;
 import si.laurentius.commons.enums.SEDTaskStatus;
 import si.laurentius.commons.SEDValues;
+import si.laurentius.commons.enums.MimeValue;
 import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.interfaces.JMSManagerInterface;
 import si.laurentius.commons.interfaces.SEDDaoInterface;
 import si.laurentius.commons.utils.SEDLogger;
+import si.laurentius.commons.utils.StorageUtils;
 import si.laurentius.commons.utils.Utils;
+import si.laurentius.lce.DigestUtils;
 import si.laurentius.msh.outbox.payload.MSHOutPart;
 
 /**
@@ -731,7 +735,12 @@ public class SEDDaoBean implements SEDDaoInterface {
         for (MSHOutPart mp : mail.getMSHOutPayload().getMSHOutParts()) {
           if (Utils.isEmptyString(mp.getEbmsId())) {
             mp.setEbmsId(Utils.getUUIDWithDomain(locadomain));
-
+          }
+          File f = StorageUtils.getFile(mp.getFilepath());
+          mp.setSize(BigInteger.valueOf(f.length()));
+          mp.setSha256Value(DigestUtils.getHexSha256Digest(f));
+          if (Utils.isEmptyString(mp.getMimeType())){
+            mp.setMimeType(MimeValue.getMimeTypeByFileName(f.getName()));
           }
         }
       }

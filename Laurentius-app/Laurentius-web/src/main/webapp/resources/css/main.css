@@ -132,6 +132,7 @@ h1 {
 
 .ui-datatable-cell-red {
     background-color: indianred;
+    background: indianred;
     color: black;
 }
 .ui-selectonemenu-label-red {

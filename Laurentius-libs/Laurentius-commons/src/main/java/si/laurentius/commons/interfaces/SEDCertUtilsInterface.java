@@ -24,10 +24,10 @@ public interface SEDCertUtilsInterface {
 
   Properties getCXFTruststoreProperties(String alias) throws SEDSecurityException;
   Map<String, Object> createCXFEncryptionConfiguration(X509.Encryption enc,
-           String alias);
+           String alias) throws SEDSecurityException;
   Map<String, Object> createCXFSignatureValidationConfiguration(
           X509.Signature sig,
-          String sigAliasProp);
+          String sigAliasProp) throws SEDSecurityException;
   Map<String, Object> createCXFSignatureConfiguration(X509.Signature sig,
          String sigAlias) throws SEDSecurityException;
   Map<String, Object> createCXFDecryptionConfiguration(
