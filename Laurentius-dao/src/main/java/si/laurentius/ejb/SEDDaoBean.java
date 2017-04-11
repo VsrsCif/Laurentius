@@ -729,6 +729,16 @@ public class SEDDaoBean implements SEDDaoInterface {
       if (Utils.isEmptyString(mail.getMessageId())) {
         mail.setMessageId(Utils.getUUIDWithDomain(locadomain));
       }
+      
+      // set message id
+      if (Utils.isEmptyString(mail.getSenderName())) {
+        mail.setSenderName(mail.getSenderEBox());
+      }
+      
+      // set message id
+      if (Utils.isEmptyString(mail.getReceiverName())) {
+        mail.setSenderName(mail.getReceiverEBox());
+      }
 
 
       if (mail.getMSHOutPayload() != null) {
@@ -848,10 +858,13 @@ public class SEDDaoBean implements SEDDaoInterface {
       updq.setParameter("statusDate", mail.getStatusDate());
       updq.setParameter("status", mail.getStatus());
 
+      // limit desc.
+      String strDsc = desc == null ? status.getDesc() : desc;
+      strDsc = strDsc.length()>=512?strDsc.substring(0, 512):strDsc;
       // persist mail event
       MSHInEvent me = new MSHInEvent();
       me.setMailId(mail.getId());
-      me.setDescription(desc == null ? status.getDesc() : desc);
+      me.setDescription(strDsc);
       me.setStatus(mail.getStatus());
       me.setDate(mail.getStatusDate());
       me.setUserId(userID);

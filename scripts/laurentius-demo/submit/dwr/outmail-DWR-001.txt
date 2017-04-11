@@ -1,4 +1,5 @@
 senderMessageId=001
-receiverEBox=a.department
+senderEBox=a.department
+receiverEBox=b.department@[DOMAIN]
 payload=test-1.pdf;test-2.pdf
 

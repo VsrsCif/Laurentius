@@ -150,7 +150,7 @@ public class DecisionRuleAssertion {
       case NOT_EQUALS:
         return !value.equals(expected);
       case STARTS_WITH:
-        return value.startsWith(value);
+        return value.startsWith(expected);
       case ENDS_WITH:
         return value.endsWith(expected);
       case CONTAINS:

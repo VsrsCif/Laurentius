@@ -18,7 +18,7 @@
                             dialogTitle="#{msg['SEDProcessRuleDialog']}" 
                             editable="#{adminSEDInMailProcessView.editable}"
                             width="1000"
-                            height="360"
+                            height="400"
                             updateOnSave=":forms:InMailProcess:procPanel:TblInMailProcessRule"
                             onConfirmAction="#{adminSEDInMailProcessView.addOrUpdateEditable()}"
                             >
@@ -39,7 +39,8 @@
                         <h:selectBooleanCheckbox id="dos" value="#{adminSEDInMailProcessView.editable.deliveredOnSuccess}"  />
                         
                     </p:panelGrid>
-
+                    
+                    
                     <p:dataTable id="TblDecisionRule" 
                                  var="sp" 
                                  value="#{adminSEDInMailProcessRuleView.list}"                                     
@@ -52,6 +53,7 @@
                                  >
 
                         <f:facet name="header">
+                            <h1>#{msg['Rules']}:</h1>
                             <pnl:pnl-table-control 
                                 dialogVar="procRuleDialog"
                                 updateDialog=":dlgprocrule:procRuleDialog:procRuleDialogForm"
@@ -78,7 +80,7 @@
                     </p:dataTable>   
                 </p:layoutUnit>
 
-                <p:layoutUnit header="#{msg['ProcessSetInstances']}" position="east" 
+                <p:layoutUnit position="east" 
                               rendered="#{not empty adminSEDInMailProcessView.editable}" 
                               size="500" minSize="500" maxSize="500"  >
                     <p:dataTable id="TblProcessSetInstaces" 
@@ -89,11 +91,12 @@
                                  selectionMode="single"
                                  selection="#{adminSEDInMailProcessInstanceView.selected}"
                                  scrollable="true" 
-                                 scrollHeight="210"
+                                 scrollHeight="250"
 
 
                                  >
                         <f:facet name="header">
+                            <h1>#{msg['ProcessSetInstances']}:</h1>
                             <pnl:pnl-table-control 
                                 dialogVar="procInstanceDialog"
                                 updateDialog=":dlgprocinstance:procInstanceDialog:procInstanceDialogForm"

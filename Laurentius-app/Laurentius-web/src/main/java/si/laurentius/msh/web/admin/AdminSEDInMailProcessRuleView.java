@@ -36,18 +36,21 @@ public class AdminSEDInMailProcessRuleView extends AbstractAdminJSFView<SEDProce
           AdminSEDInMailProcessRuleView.class);
 
   @ManagedProperty(value = "#{adminSEDInMailProcessView}")
-  private AdminSEDInMailProcessView admRuleView;
+  private AdminSEDInMailProcessView admProcessorView;
 
-  public AdminSEDInMailProcessView getAdmRuleView() {
-    return admRuleView;
+  public AdminSEDInMailProcessView getAdmProcessorView() {
+    return admProcessorView;
   }
 
-  public void setAdmRuleView(AdminSEDInMailProcessView admRuleView) {
-    this.admRuleView = admRuleView;
+  public void setAdmProcessorView(AdminSEDInMailProcessView admProcessorView) {
+    this.admProcessorView = admProcessorView;
   }
+
+
 
   @Override
   public boolean validateData() {
+    
 
     return true;
   }
@@ -57,7 +60,8 @@ public class AdminSEDInMailProcessRuleView extends AbstractAdminJSFView<SEDProce
    */
   @Override
   public void createEditable() {
-    SEDProcessor sps = admRuleView.getEditable();
+    SEDProcessor sps = admProcessorView.getEditable();
+    // test is exists selected processor
     if (sps != null) {
       SEDProcessorRule spi = new SEDProcessorRule();
 
@@ -74,7 +78,7 @@ public class AdminSEDInMailProcessRuleView extends AbstractAdminJSFView<SEDProce
     boolean bSuc = false;
     SEDProcessorRule ecj = getSelected();
     if (ecj != null) {
-      bSuc = admRuleView.removeRuleFromEditable(ecj);
+      bSuc = admProcessorView.removeRuleFromEditable(ecj);
       setSelected(null);
 
     } else {
@@ -92,7 +96,7 @@ public class AdminSEDInMailProcessRuleView extends AbstractAdminJSFView<SEDProce
 
     SEDProcessorRule ecj = getEditable();
     if (ecj != null) {
-      bsuc = admRuleView.addRuleToEditable(ecj);
+      bsuc = admProcessorView.addRuleToEditable(ecj);
     } else {
       addError("No editable process instance!");
     }
@@ -107,7 +111,7 @@ public class AdminSEDInMailProcessRuleView extends AbstractAdminJSFView<SEDProce
     SEDProcessorRule ecj = getEditable();
     boolean bsuc = false;
     if (ecj != null) {
-      bsuc = admRuleView.updateRuleFromEditable(getSelected(), ecj);
+      bsuc = admProcessorView.updateRuleFromEditable(getSelected(), ecj);
 
     }
     return bsuc;
@@ -120,7 +124,7 @@ public class AdminSEDInMailProcessRuleView extends AbstractAdminJSFView<SEDProce
   @Override
   public List<SEDProcessorRule> getList() {
     long l = LOG.logStart();
-    List<SEDProcessorRule> lst = admRuleView.getEditable() != null ? admRuleView.
+    List<SEDProcessorRule> lst = admProcessorView.getEditable() != null ? admProcessorView.
             getEditable().getSEDProcessorRules() : null;
     LOG.logEnd(l, lst != null ? lst.size() : "null");
     return lst;

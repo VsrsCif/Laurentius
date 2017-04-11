@@ -10,5 +10,6 @@ package si.laurentius.process;
  * @author sluzba
  */
 public class ProcessConstants {
-    public static final String MP_EXPORT_FILES ="imp.export.files";
+    public static final String MP_EXPORT_FILES ="imp.exported.files";
+     
 }

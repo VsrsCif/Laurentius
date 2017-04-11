@@ -17,7 +17,7 @@
                             dialogTitle="#{msg['MailCompose']}" 
                             editable="#{dialogComposeMailView.newOutMail}"
                             width="1050"
-                            height="600"
+                            height="650"
                             updateOnSave=":mepsform:MainPanel"
                             onConfirmAction="#{dialogComposeMailView.sendComposedMail()}"
                             >
@@ -30,8 +30,15 @@
                     </p:row>
                 </f:facet>
                 <p:row>
+                    <p:column>#{msg['Service']}</p:column>
+                    <p:column >
+                        <p:selectOneMenu id="srvice" value="#{dialogComposeMailView.postalData.mepsService}" effect="fold" editable="true">
+                             <p:ajax  update="upnPrefix upnSuffix upnCode upnControl"/>
+                            <f:selectItems value="#{MEPSLookups.services}" var="srv" itemLabel="#{srv.name}" />
+                        </p:selectOneMenu>
+                    </p:column>
                     <p:column>#{msg['EnvelopeType']}</p:column>
-                    <p:column colspan="3">
+                    <p:column >
                         <p:inputText  style="width: 100%" value="#{dialogComposeMailView.postalData.envelopeType}"/>
                     </p:column>
                 </p:row>
@@ -64,15 +71,11 @@
                 </p:row>
                 <p:row>
                     <p:column>#{msg['UPNCode']}</p:column>
-                    <p:column >
-                        <p:inputText  style="width: 100%" value="#{dialogComposeMailView.postalData.UPNCode.prefix}"/>
-                    </p:column>
-                    <p:column >
-                        <p:inputText  style="width: 100%" value="#{dialogComposeMailView.postalData.UPNCode.code}"/>
-                    </p:column>
-
-                    <p:column >
-                        <p:inputText  style="width: 100%" value="#{dialogComposeMailView.postalData.UPNCode.control}"/>
+                    <p:column colspan="2">
+                        <p:inputText id="upnPrefix" style="width: 40px" maxlength="2" disabled="true" value="#{dialogComposeMailView.postalData.UPNCode.prefix}"/>
+                        <p:spinner   id="upnCode" style="width: 80px" maxlength="8" min="0" max="99999999"  value="#{dialogComposeMailView.postalData.UPNCode.code}"/>
+                        <p:inputText id="upnControl" style="width: 30px" maxlength="1" disabled="true" value="#{dialogComposeMailView.postalData.UPNCode.control}"/>
+                        <p:inputText id="upnSuffix" style="width: 40px" maxlength="2" disabled="true" value="#{dialogComposeMailView.postalData.UPNCode.suffix}"/>
                     </p:column>
 
 
@@ -170,7 +173,7 @@
                 </p:row>
             </p:panelGrid>
 
-            <p:panelGrid columns="2">
+            <p:panelGrid columns="2" style="width: 100%">
                 <f:facet name="header">
                     #{msg['MailContent']}
                 </f:facet>

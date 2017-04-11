@@ -65,8 +65,8 @@ public class EBMSParser {
 
   /**
    * Method parses UserMessage. Message is exptected to be valid by schema
-   * http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/core/ebms-header-3_0-200704.xsd. else
-   * nullpointer exception could be trown
+   * http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/core/ebms-header-3_0-200704.xsd.
+   * else nullpointer exception could be trown
    *
    * @param um
    * @param ectx
@@ -74,8 +74,9 @@ public class EBMSParser {
    * @return
    * @throws EBMSError
    */
-  public MSHInMail parseUserMessage(UserMessage um, EBMSMessageContext ectx, QName sv)
-      throws EBMSError {
+  public MSHInMail parseUserMessage(UserMessage um, EBMSMessageContext ectx,
+          QName sv)
+          throws EBMSError {
     long l = LOG.logStart();
 
     MessageInfo mi = um.getMessageInfo();
@@ -90,7 +91,8 @@ public class EBMSParser {
     mshmail.setMessageId(mi.getMessageId());
 
     // parse properties
-    if (um.getMessageProperties() != null && !um.getMessageProperties().getProperties().isEmpty()) {
+    if (um.getMessageProperties() != null && !um.getMessageProperties().
+            getProperties().isEmpty()) {
       List<MSHInProperty> lstProp = new ArrayList<>();
       for (Property p : um.getMessageProperties().getProperties()) {
         if (p.getName() != null) {
@@ -102,8 +104,8 @@ public class EBMSParser {
               Date dt = DatatypeConverter.parseDateTime(p.getValue()).getTime();
               mshmail.setSubmittedDate(dt);
               break;
-               case EBMSConstants.EBMS_PROPERTY_SENDER_MSG_ID:
-               mshmail.setSenderMessageId(p.getValue());
+            case EBMSConstants.EBMS_PROPERTY_SENDER_MSG_ID:
+              mshmail.setSenderMessageId(p.getValue());
               break;
             default:
               MSHInProperty mp = new MSHInProperty();
@@ -140,19 +142,21 @@ public class EBMSParser {
             break;
           default: {
             if (Utils.isEmptyString(mshmail.getSenderEBox())) {
-              if (val.endsWith("@" + ectx.getSenderPartyIdentitySet().getDomain())) {
+              if (val.endsWith("@" + ectx.getSenderPartyIdentitySet().
+                      getDomain())) {
                 mshmail.setSenderEBox(val);
               } else {
-                mshmail.setSenderEBox(val + "@" + ectx.getSenderPartyIdentitySet().getDomain());
+                mshmail.setSenderEBox(val + "@" + ectx.
+                        getSenderPartyIdentitySet().getDomain());
               }
             }
             if (Utils.isEmptyString(mshmail.getSenderName())) {
               mshmail.setSenderName(val);
             }
 
-            String msgwrn =
-                "Unknown type '" + pi.getType() + "' for From/PartyId: with value:'" +
-                pi.getValue() + "'. Value is setted as sender address!";
+            String msgwrn
+                    = "Unknown type '" + pi.getType() + "' for From/PartyId: with value:'"
+                    + pi.getValue() + "'. Value is setted as sender address!";
             LOG.logWarn(l, msgwrn, null);
 
             break;
@@ -161,19 +165,21 @@ public class EBMSParser {
       } else {
         String val = pi.getValue();
         if (Utils.isEmptyString(mshmail.getSenderEBox())) {
-              if (val.endsWith("@" + ectx.getSenderPartyIdentitySet().getDomain())) {
-                mshmail.setSenderEBox(val);
-              } else {
-                mshmail.setSenderEBox(val + "@" + ectx.getSenderPartyIdentitySet().getDomain());
-              }
-            }
-            if (Utils.isEmptyString(mshmail.getSenderName())) {
-              mshmail.setSenderName(val);
-            }
-            
-        String msgwrn =
-            "Missing type for From/PartyId: with value:'" + pi.getValue() + "'. Value is setted as sender address!!";
+          if (val.endsWith("@" + ectx.getSenderPartyIdentitySet().getDomain())) {
+            mshmail.setSenderEBox(val);
+          } else {
+            mshmail.setSenderEBox(val + "@" + ectx.getSenderPartyIdentitySet().
+                    getDomain());
+          }
+        }
+
+        String msgwrn
+                = "Missing type for From/PartyId: with value:'" + pi.getValue() + "'. Value is setted as sender address!!";
         LOG.logWarn(l, msgwrn, null);
+      }
+      // test if sender is empty set sender box as name
+      if (Utils.isEmptyString(mshmail.getSenderName())) {
+        mshmail.setSenderName(mshmail.getSenderEBox());
       }
     }
 
@@ -190,13 +196,14 @@ public class EBMSParser {
             String msgwrn;
             if (Utils.isEmptyString(mshmail.getReceiverEBox())) {
               mshmail.setReceiverEBox(pi.getValue());
-              msgwrn =
-                  "Unknown type '" + pi.getType() + "' for To/PartyId: with value:'" + pi.getValue() +
-                  "'. Value is setted as receiver address!";
+              msgwrn
+                      = "Unknown type '" + pi.getType() + "' for To/PartyId: with value:'" + pi.
+                      getValue()
+                      + "'. Value is setted as receiver address!";
             } else {
-              msgwrn =
-                  "Unknown type '" + pi.getType() + "'  for To/PartyId: with value:'" +
-                  pi.getValue() + "'. Value is ignored!";
+              msgwrn
+                      = "Unknown type '" + pi.getType() + "'  for To/PartyId: with value:'"
+                      + pi.getValue() + "'. Value is ignored!";
             }
             LOG.logWarn(l, msgwrn, null);
 
@@ -206,12 +213,12 @@ public class EBMSParser {
         String msgwrn;
         if (Utils.isEmptyString(mshmail.getReceiverEBox())) {
           mshmail.setReceiverEBox(pi.getValue());
-          msgwrn =
-              "Missing type for To/PartyId: with value:'" + pi.getValue() +
-              "'. Value is setted as receiver address!";
+          msgwrn
+                  = "Missing type for To/PartyId: with value:'" + pi.getValue()
+                  + "'. Value is setted as receiver address!";
         } else {
-          msgwrn =
-              "Missing type for To/PartyId: with value:'" + pi.getValue() + "'. Value is ignored!";
+          msgwrn
+                  = "Missing type for To/PartyId: with value:'" + pi.getValue() + "'. Value is ignored!";
         }
         LOG.logWarn(l, msgwrn, null);
 
@@ -220,10 +227,20 @@ public class EBMSParser {
 
     if (mshmail.getReceiverEBox() == null) {
       String errmsg = "Missing receipt type: '" + EBMSConstants.EBMS_PARTY_TYPE_EBOX + "' ";
-      throw new EBMSError(EBMSErrorCode.MissingReceipt, mshmail.getMessageId(), errmsg, sv);
+      throw new EBMSError(EBMSErrorCode.MissingReceipt, mshmail.getMessageId(),
+              errmsg, sv);
+
+    }
+    // test if sender is empty set sender box as name
+    if (Utils.isEmptyString(mshmail.getReceiverName())) {
+      mshmail.setReceiverName(mshmail.getReceiverEBox());
+    }
+    if (Utils.isEmptyString(mshmail.getSenderName())) {
+      mshmail.setSenderName(mshmail.getSenderEBox());
     }
 
-    if (um.getPayloadInfo() != null && !um.getPayloadInfo().getPartInfos().isEmpty()) {
+    if (um.getPayloadInfo() != null && !um.getPayloadInfo().getPartInfos().
+            isEmpty()) {
       List<MSHInPart> lstParts = new ArrayList<>();
 
       for (PartInfo pi : um.getPayloadInfo().getPartInfos()) {
@@ -238,8 +255,10 @@ public class EBMSParser {
             part.setEbmsId(pi.getHref());
           }
         }
-        part.setDescription(pi.getDescription() != null ? pi.getDescription().getValue() : null);
-        if (pi.getPartProperties() != null && !pi.getPartProperties().getProperties().isEmpty()) {
+        part.setDescription(pi.getDescription() != null ? pi.getDescription().
+                getValue() : null);
+        if (pi.getPartProperties() != null && !pi.getPartProperties().
+                getProperties().isEmpty()) {
           for (Property p : pi.getPartProperties().getProperties()) {
             if (p.getName() != null) {
               switch (p.getName()) {
@@ -259,7 +278,8 @@ public class EBMSParser {
                   part.setType(p.getValue());
                   break;
                 case EBMSConstants.EBMS_PAYLOAD_PROPERTY_IS_ENCRYPTED:
-                  part.setIsEncrypted(p.getValue() != null && p.getValue().equalsIgnoreCase("true"));
+                  part.setIsEncrypted(p.getValue() != null && p.getValue().
+                          equalsIgnoreCase("true"));
                   break;
                 default:
                   IMPartProperty prop = new IMPartProperty();
@@ -282,8 +302,9 @@ public class EBMSParser {
     return mshmail;
   }
 
-  public static EBMSMessageContext createEBMSContextFromUserMessage(final SoapMessage soap,
-      final UserMessage um, final PModeInterface pmdManager) {
+  public static EBMSMessageContext createEBMSContextFromUserMessage(
+          final SoapMessage soap,
+          final UserMessage um, final PModeInterface pmdManager) {
     long l = LOG.logStart();
 
     // UserMessage was validated by schema so this values should not be null
@@ -295,17 +316,18 @@ public class EBMSParser {
     // get local entites
     PartyIdentitySet pisFrom = null;
     try {
-      pisFrom = getPartyIdentityFromPartyId(ebmsFromParty.getPartyIds(), pmdManager);
+      pisFrom = getPartyIdentityFromPartyId(ebmsFromParty.getPartyIds(),
+              pmdManager);
     } catch (PModeException ex) {
       String msg = "Error reading sender (from) partyID: " + ex.getMessage();
       throw new EBMSError(EBMSErrorCode.ValueNotRecognized, embsMessageId,
-          msg, ex, SoapFault.FAULT_CODE_SERVER);
+              msg, ex, SoapFault.FAULT_CODE_SERVER);
     }
 
     if (pisFrom == null) {
       String msg = "No party found for sender (from) partyID";
       throw new EBMSError(EBMSErrorCode.ValueNotRecognized, embsMessageId,
-          msg, SoapFault.FAULT_CODE_SERVER);
+              msg, SoapFault.FAULT_CODE_SERVER);
     }
 
     PartyIdentitySet pisTo;
@@ -314,55 +336,58 @@ public class EBMSParser {
     } catch (PModeException ex) {
       String msg = "Error reading sender (from) partyID: " + ex.getMessage();
       throw new EBMSError(EBMSErrorCode.ValueNotRecognized, embsMessageId,
-          msg, ex, SoapFault.FAULT_CODE_SERVER);
+              msg, ex, SoapFault.FAULT_CODE_SERVER);
     }
     if (pisTo == null) {
       String msg = EBMSErrorMessage.INVALID_HEADER_DATA + "No party found for receiver (to) partyID";
       throw new EBMSError(EBMSErrorCode.ValueNotRecognized, embsMessageId,
-          msg, SoapFault.FAULT_CODE_SERVER);
+              msg, SoapFault.FAULT_CODE_SERVER);
     }
 
     EBMSMessageContext ebctx = new EBMSMessageContext();
     try {
       // get service
-      si.laurentius.msh.pmode.Service srv =
-          pmdManager.getServiceByNameAndTypeAndAction(
-              ebmsService.getValue(), ebmsService.getType(), ebmsAction);
+      si.laurentius.msh.pmode.Service srv
+              = pmdManager.getServiceByNameAndTypeAndAction(
+                      ebmsService.getValue(), ebmsService.getType(), ebmsAction);
 
       // get pmode
       PMode pmd = pmdManager.getPModeForExchangePartyAsSender(pisFrom.getId(),
-          ebmsFromParty.getRole(),
-          pisTo.getId(), srv.getId());
+              ebmsFromParty.getRole(),
+              pisTo.getId(), srv.getId());
 
       PModeUtils.fillTransportMEPForAction(ebctx, ebmsAction, pmd);
 
       Security security = null;
       // retrieve security
-      if (ebctx.getTransportChannelType() != null &&
-          !Utils.isEmptyString(ebctx.getTransportChannelType().getSecurityIdRef())) {
+      if (ebctx.getTransportChannelType() != null
+              && !Utils.isEmptyString(ebctx.getTransportChannelType().
+                      getSecurityIdRef())) {
 
         security = pmdManager.getSecurityById(
-            ebctx.getTransportChannelType().getSecurityIdRef());
+                ebctx.getTransportChannelType().getSecurityIdRef());
 
       } else {
         LOG.logWarn(String.format(
-            "Action '%s' for mail '%s' has no security defined  in pmode (id: '%s') configuration.",
-            ebmsAction, embsMessageId, pmd.getId()), null);
+                "Action '%s' for mail '%s' has no security defined  in pmode (id: '%s') configuration.",
+                ebmsAction, embsMessageId, pmd.getId()), null);
       }
-      
-      
+
       ReceptionAwareness ra = null;
       // retrieve security
-      if (ebctx.getTransportChannelType() != null 
-          && ebctx.getTransportChannelType().getReceptionAwareness() != null
-          && !Utils.isEmptyString(ebctx.getTransportChannelType().getReceptionAwareness().getRaPatternIdRef()) ) {
-        
-        ra = pmdManager.getReceptionAwarenessById(ebctx.getTransportChannelType().getReceptionAwareness().getRaPatternIdRef());
+      if (ebctx.getTransportChannelType() != null
+              && ebctx.getTransportChannelType().getReceptionAwareness() != null
+              && !Utils.isEmptyString(ebctx.getTransportChannelType().
+                      getReceptionAwareness().getRaPatternIdRef())) {
+
+        ra = pmdManager.getReceptionAwarenessById(ebctx.
+                getTransportChannelType().getReceptionAwareness().
+                getRaPatternIdRef());
 
       } else {
         LOG.logWarn(String.format(
-            "Action '%s' for mail '%s' has no ReceptionAwareness defined  in pmode (id: '%s') configuration.",
-            ebmsAction, embsMessageId, pmd.getId()), null);
+                "Action '%s' for mail '%s' has no ReceptionAwareness defined  in pmode (id: '%s') configuration.",
+                ebmsAction, embsMessageId, pmd.getId()), null);
       }
 
       ebctx.setSecurity(security);
@@ -376,30 +401,31 @@ public class EBMSParser {
     } catch (PModeException ex) {
       String msg = EBMSErrorMessage.INVALID_HEADER_DATA + ex.getMessage();
       throw new EBMSError(EBMSErrorCode.ValueNotRecognized, embsMessageId,
-          msg, ex, SoapFault.FAULT_CODE_SERVER);
+              msg, ex, SoapFault.FAULT_CODE_SERVER);
     }
 
     AgreementRef ar = um.getCollaborationInfo().getAgreementRef();
     if (ar != null && !Utils.isEmptyString(ar.getValue())) {
       PMode arl;
       try {
-        arl =
-            pmdManager.getByAgreementRef(ar.getValue(),
-                ar.getType(), ar.getPmode());
+        arl
+                = pmdManager.getByAgreementRef(ar.getValue(),
+                        ar.getType(), ar.getPmode());
       } catch (PModeException ex) {
         String msg = "Error reading agreement: " + ex.getMessage();
         throw new EBMSError(EBMSErrorCode.ValueNotRecognized, embsMessageId,
-            msg, ex, SoapFault.FAULT_CODE_SERVER);
+                msg, ex, SoapFault.FAULT_CODE_SERVER);
       }
 
       if (Objects.equal(arl.getId(), ebctx.getPMode().getId())) {
         String msg = String.format(
-            "Agreement '%s' for message '%s' does not match agreement for sender, receiver and service.",
-            ar.getValue(), embsMessageId);
-        LOG.logError(0, msg + String.format(" Agrement pmode: '%s', selected pmodet '%s' ",
-            arl.getId(), ebctx.getPMode().getId()), null);
+                "Agreement '%s' for message '%s' does not match agreement for sender, receiver and service.",
+                ar.getValue(), embsMessageId);
+        LOG.logError(0, msg + String.format(
+                " Agrement pmode: '%s', selected pmodet '%s' ",
+                arl.getId(), ebctx.getPMode().getId()), null);
         throw new EBMSError(EBMSErrorCode.ValueNotRecognized, embsMessageId,
-            msg, null, SoapFault.FAULT_CODE_SERVER);
+                msg, null, SoapFault.FAULT_CODE_SERVER);
       }
     }
     return ebctx;
@@ -407,12 +433,14 @@ public class EBMSParser {
   }
 
   public static PartyIdentitySet getPartyIdentityFromPartyId(List<PartyId> lstPI,
-      final PModeInterface pmdManager)
-      throws PModeException {
+          final PModeInterface pmdManager)
+          throws PModeException {
     PartyIdentitySet pis = null;
     for (PartyId pi : lstPI) {
-      LOG.formatedlog("getPartyIdentityFromPartyId for id: %s, type %s", pi.getValue(), pi.getType());
-      pis = pmdManager.getPartyIdentitySetForPartyId(pi.getType(), pi.getValue());
+      LOG.formatedlog("getPartyIdentityFromPartyId for id: %s, type %s", pi.
+              getValue(), pi.getType());
+      pis = pmdManager.
+              getPartyIdentitySetForPartyId(pi.getType(), pi.getValue());
       if (pis != null) {
         break;
       }

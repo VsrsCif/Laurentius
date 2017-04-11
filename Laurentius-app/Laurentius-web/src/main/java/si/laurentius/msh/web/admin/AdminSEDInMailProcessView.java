@@ -105,18 +105,8 @@ public class AdminSEDInMailProcessView extends AbstractAdminJSFView<SEDProcessor
   @Override
   public boolean persistEditable() {
     boolean bsuc = false;
-    String sbname = "proc_%03d";
-    int i = 1;
-
-    while (mdbLookups.getSEDProcessorByName(String.format(sbname, i)) != null) {
-      i++;
-    }
-
-    SEDProcessor ecj = getEditable();
-    ecj.setName(String.format(sbname, i));
-    ecj.setActive(true);
-    ecj.setDeliveredOnSuccess(true);
-
+   SEDProcessor ecj = getEditable();
+   
     if (ecj != null) {
       mdbLookups.addSEDProcessor(ecj);
 

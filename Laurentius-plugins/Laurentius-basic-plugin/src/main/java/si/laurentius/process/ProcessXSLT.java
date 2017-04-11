@@ -15,7 +15,10 @@
 package si.laurentius.process;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +42,7 @@ import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StorageUtils;
 import si.laurentius.commons.utils.Utils;
 import si.laurentius.commons.utils.xml.XMLUtils;
+import si.laurentius.lce.DigestUtils;
 import si.laurentius.msh.inbox.mail.MSHInMail;
 import si.laurentius.msh.inbox.payload.MSHInPart;
 
@@ -106,6 +110,13 @@ public class ProcessXSLT extends AbstractMailProcessor {
     boolean suc = false;
     IMPXslt ix = mDB.getXSLT(instance);
 
+    if (ix == null) {
+      throw new InMailProcessException(
+              InMailProcessException.ProcessExceptionCode.ProcessException,
+              String.format("XSLT instance %s do not exist!", instance), null,
+              false, true);
+    }
+
     tranformPayloads(ix, mi);
     suc = true;
 
@@ -137,11 +148,15 @@ public class ProcessXSLT extends AbstractMailProcessor {
       File fXSLT = getXSLTFile(xpr.getTransformation());
       // new payloads  holder
       List<MSHInPart> mipNewPayload = new ArrayList<>();
-
+      boolean transExecuted = false;
       for (MSHInPart mip : miplst) {
         // check if file is mimetype
         if (!Objects.equals(mip.getMimeType(), MimeValue.MIME_XML.
                 getMimeType())) {
+          continue;
+        }
+        // skip already transformed objects
+        if (Objects.equals(mip.getSource(), FILE_SOURCE)){
           continue;
         }
 
@@ -163,22 +178,43 @@ public class ProcessXSLT extends AbstractMailProcessor {
             // transform
             XSLTUtils.transform(doc, fXSLT, fRes);
 
+            if (!Utils.isEmptyString(xpr.getValidateSchema())) {
+              validateBySchema(xpr.getValidateSchema(), fRes);
+            }
+
             String resultName = xpr.getResultFilename();
             resultName = Utils.isEmptyString(resultName) ? "Transformation" : resultName;
+            MSHInPart mipt = null;
+            // test if transformation already exists
+            for (MSHInPart mp : miplst) {
+              if (Objects.equals(mp.getSource(), FILE_SOURCE)
+                      && Objects.equals(mp.getName(), resultName)) {
+                mipt = mp;
+                break;
+              }
+            }
 
-            MSHInPart mipt = new MSHInPart();
+            if (mipt == null) {
+              mipt = new MSHInPart();
+              mipNewPayload.add(mipt);
+            }
             mipt.setDescription(String.format(
                     "Transform of '%s' with xslt: '%s'", mip.
                             getFilename(), xpr.getTransformation()));
 
-            mipt.setMimeType(MimeValue.MIME_XML.getMimeType());
-            mipt.setFilename(resultName.toLowerCase().endsWith(
+            String filename = resultName.toLowerCase().endsWith(
                     MimeValue.MIME_XML.getSuffix()) ? resultName
-                    : resultName + "." +MimeValue.MIME_XML.getSuffix());
-            mipt.setSource(FILE_SOURCE);
-            mipt.setFilepath(StorageUtils.getRelativePath(fRes));
+                    : resultName + "." + MimeValue.MIME_XML.getSuffix();
             mipt.setName(resultName);
-            mipNewPayload.add(mipt);
+            mipt.setSource(FILE_SOURCE);
+            mipt.setMimeType(MimeValue.MIME_XML.getMimeType());
+            mipt.setFilename(filename);
+
+            mipt.setSize(BigInteger.valueOf(fRes.length()));
+            mipt.setSha256Value(DigestUtils.getHexSha256Digest(fRes));
+            mipt.setFilepath(StorageUtils.getRelativePath(fRes));
+          
+            transExecuted = true;
           } catch (JAXBException | TransformerException | StorageException ex) {
             String errMsg = String.format(
                     "XSLT transformation failed %s!",
@@ -202,8 +238,10 @@ public class ProcessXSLT extends AbstractMailProcessor {
       }
 
       // add new payloads
-      if (!mipNewPayload.isEmpty()) {
-        mim.getMSHInPayload().getMSHInParts().addAll(mipNewPayload);
+      if (transExecuted) {
+        if (!mipNewPayload.isEmpty()) {
+          mim.getMSHInPayload().getMSHInParts().addAll(mipNewPayload);
+        }
         try {
           mDBDao.updateInMail(mim, "transform", "");
         } catch (StorageException ex) {
@@ -219,6 +257,36 @@ public class ProcessXSLT extends AbstractMailProcessor {
     }
   }
 
+  private void validateBySchema(String schemaName, File fXML) throws InMailProcessException {
+    File fXSD = getXSDFile(schemaName);
+    if (!fXSD.exists()) {
+      String errMsg = String.format(
+              "XSD file not exists %s!",
+              schemaName);
+      throw new InMailProcessException(
+              InMailProcessException.ProcessExceptionCode.ProcessException,
+              errMsg, null, false, true);
+    }
+    try (InputStream xml = new FileInputStream(fXML); InputStream xsd = new FileInputStream(
+            fXSD)) {
+      String msg = XMLUtils.validateBySchemaInputStream(xml, xsd, fXSD.
+              getParent());
+      if (!Utils.isEmptyString(msg)) {
+        throw new InMailProcessException(
+                InMailProcessException.ProcessExceptionCode.ProcessException,
+                msg, null, false, true);
+      }
+    } catch (IOException ex) {
+      String errMsg = String.format(
+              "XSD validation error %s!",
+              ex.getMessage());
+      throw new InMailProcessException(
+              InMailProcessException.ProcessExceptionCode.ProcessException,
+              errMsg, ex, false, true);
+    }
+
+  }
+
   private File getXSLTFile(String xsltFileName) throws InMailProcessException {
     File fXSLT = new File(PlgSystemProperties.getXSLTFolder(), xsltFileName);
     if (!fXSLT.exists()) {
@@ -230,6 +298,19 @@ public class ProcessXSLT extends AbstractMailProcessor {
               errMsg, null, false, true);
     }
     return fXSLT;
+  }
+
+  private File getXSDFile(String xsdFileName) throws InMailProcessException {
+    File fXSD = new File(PlgSystemProperties.getSchemaFolder(), xsdFileName);
+    if (!fXSD.exists()) {
+      String errMsg = String.format(
+              "Schema file %s not exist!", fXSD.
+                      getAbsolutePath());
+      throw new InMailProcessException(
+              InMailProcessException.ProcessExceptionCode.InitException,
+              errMsg, null, false, true);
+    }
+    return fXSD;
   }
 
 }

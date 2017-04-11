@@ -25,7 +25,6 @@ import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 import javax.annotation.Resource;
 import javax.faces.application.ViewHandler;
-import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.component.UIViewRoot;

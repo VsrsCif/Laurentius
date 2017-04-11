@@ -7,8 +7,6 @@ package si.jrc.msh.plugin.meps.web;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -34,6 +32,7 @@ import si.laurentius.meps.envelope.SenderMailData;
 import si.laurentius.msh.outbox.mail.MSHOutMail;
 import si.laurentius.msh.outbox.payload.MSHOutPart;
 import si.laurentius.msh.outbox.payload.MSHOutPayload;
+import si.laurentius.plugin.meps.ServiceType;
 
 /**
  *
@@ -42,26 +41,37 @@ import si.laurentius.msh.outbox.payload.MSHOutPayload;
 @SessionScoped
 @ManagedBean(name = "dialogComposeMailView")
 public class DialogComposeMailView {
-  
+
   private static final SEDLogger LOG = new SEDLogger(DialogComposeMailView.class);
-  
+
   @EJB(mappedName = SEDJNDI.JNDI_SEDDAO)
   SEDDaoInterface mDB;
-  
+
+  @ManagedProperty(value = "#{MEPSLookups}")
+  private MEPSLookups pluginLookups;
+
   @ManagedProperty(value = "#{MEPSPluginData}")
-  private MEPSPluginData mPluginData;
-  
-  MSHOutMail newOutMail ; 
+  private MEPSPluginData pluginData;
+
+  MSHOutMail newOutMail;
   EnvelopeData envelopeData;
-  
+
   MSHOutPart selectedNewOutMailAttachment;
 
-  public MEPSPluginData getmPluginData() {
-    return mPluginData;
+  public MEPSLookups getPluginLookups() {
+    return pluginLookups;
   }
 
-  public void setmPluginData(MEPSPluginData mPluginData) {
-    this.mPluginData = mPluginData;
+  public void setPluginLookups(MEPSLookups pluginLookups) {
+    this.pluginLookups = pluginLookups;
+  }
+
+  public MEPSPluginData getPluginData() {
+    return pluginData;
+  }
+
+  public void setPluginData(MEPSPluginData pluginData) {
+    this.pluginData = pluginData;
   }
 
   public MSHOutMail getNewOutMail() {
@@ -88,7 +98,7 @@ public class DialogComposeMailView {
           MSHOutPart selectedNewOutMailAttachment) {
     this.selectedNewOutMailAttachment = selectedNewOutMailAttachment;
   }
-  
+
   public void handleNewOutMailAttachmentUpload(FileUploadEvent event) {
     long l = LOG.logStart();
     UploadedFile uf = event.getFile();
@@ -117,18 +127,18 @@ public class DialogComposeMailView {
       mp.setFilepath(StorageUtils.getRelativePath(f));
       mp.setMimeType(MimeValue.getMimeTypeByFileName(fileName));
 
-      
       getNewOutMail().getMSHOutPayload().getMSHOutParts().add(mp);
 
       // FacesMessage message = new FacesMessage("Succesful", event.getFile().getFileName() +
       // " is uploaded.");
       // FacesContext.getCurrentInstance().addMessage(null, message);
     } catch (StorageException | IOException ex) {
-      Logger.getLogger(DialogComposeMailView.class.getName()).log(Level.SEVERE, null,
+      Logger.getLogger(DialogComposeMailView.class.getName()).log(Level.SEVERE,
+              null,
               ex);
     }
   }
-  
+
   public List<MSHOutPart> getNewOutMailAttachmentList() {
     List<MSHOutPart> lst = new ArrayList<>();
     if (getNewOutMail() != null && getNewOutMail().getMSHOutPayload() != null
@@ -137,8 +147,8 @@ public class DialogComposeMailView {
     }
     return lst;
   }
-  
-   /**
+
+  /**
    *
    */
   public void removeselectedNewOutMailAttachment() {
@@ -154,7 +164,7 @@ public class DialogComposeMailView {
 
   }
 
-   public void sendComposedMail() {
+  public void sendComposedMail() {
     if (newOutMail != null) {
       try {
 
@@ -169,11 +179,10 @@ public class DialogComposeMailView {
 
         // mp.setValue();
         StorageUtils su = new StorageUtils();
-        File fout = su.storeFile("tst_", "txt","<test xml>".getBytes());
+        File fout = su.storeFile("tst_", "txt", "<test xml>".getBytes());
 
         String relPath = StorageUtils.getRelativePath(fout);
         p.setFilepath(relPath);
-       
 
         if (Utils.isEmptyString(p.getFilename())) {
           p.setFilename(fout.getName());
@@ -191,65 +200,102 @@ public class DialogComposeMailView {
 
         newOutMail.setSubmittedDate(Calendar.getInstance().getTime());
 
-        mDB.serializeOutMail(newOutMail, mPluginData.getUser().getUserId(),
+        mDB.serializeOutMail(newOutMail, pluginData.getUser().getUserId(),
                 "meps-plugin",
                 pmodeId);
-      } catch ( StorageException ex) {
+      } catch (StorageException ex) {
         LOG.logError(0, ex);
       }
     }
   }
-   
-   public void createNewMail(){
-     newOutMail = new MSHOutMail();
-     envelopeData = new EnvelopeData();
-  
-   
-   }
-   
-   public PhysicalAddressType getSenderAddress(){
-     if (envelopeData==null){
-        envelopeData = new EnvelopeData();
-     }
-     if (envelopeData.getSenderAddress()==null){
-        envelopeData.setSenderAddress(new PhysicalAddressType()); ;
-     }
-     return envelopeData.getSenderAddress();
-   }
-   
-      
-   public PhysicalAddressType getReceiverAddress(){
-     if (envelopeData==null){
-        envelopeData = new EnvelopeData();
-     }
-     if (envelopeData.getReceiverAddress()==null){
-        envelopeData.setReceiverAddress(new PhysicalAddressType()); ;
-     }
-     return envelopeData.getReceiverAddress();
-   }
-   
-    public SenderMailData getSenderData(){
-     if (envelopeData==null){
-        envelopeData = new EnvelopeData();
-     }
-     if (envelopeData.getSenderMailData()==null){
-        envelopeData.setSenderMailData(new SenderMailData()); ;
-     }
-     return envelopeData.getSenderMailData();
-   }
-    
-     public PostalData getPostalData(){
-     if (envelopeData==null){
-        envelopeData = new EnvelopeData();
-     }
-     if (envelopeData.getPostalData()==null){
-        envelopeData.setPostalData(new PostalData());
-     }
-      if (envelopeData.getPostalData().getUPNCode()==null){
-        envelopeData.getPostalData().setUPNCode(new PostalData.UPNCode());
-     }
-     return envelopeData.getPostalData();
-   }
-   
+
+  public void createNewMail() {
+    newOutMail = new MSHOutMail();
+    envelopeData = new EnvelopeData();
+    envelopeData.setExecutorContractId("Contrat id");
+    envelopeData.setExecutorId("meps1");
+    envelopeData.setPostalData(new PostalData());
+    envelopeData.getPostalData().setUPNCode(new PostalData.UPNCode());
+    if (!pluginLookups.getServices().isEmpty()) {
+      ServiceType st = pluginLookups.getServices().get(0);
+      envelopeData.getPostalData().setMepsService(st.getName());
+      envelopeData.getPostalData().setEnvelopeType(st.getEnvelopeName());
+      if (st.isUseUPN()) {
+        envelopeData.getPostalData().getUPNCode().setPrefix(st.getUPNPrefix());
+        envelopeData.getPostalData().getUPNCode().setSuffix("SI");
+      } else {
+        envelopeData.getPostalData().getUPNCode().setPrefix("");
+        envelopeData.getPostalData().getUPNCode().setCode(null);
+        envelopeData.getPostalData().getUPNCode().setControl(null);
+        envelopeData.getPostalData().getUPNCode().setSuffix("");
+
+      }
+    }
+    envelopeData.getPostalData().setPostalContractId("1235-5-12-1102");
+    envelopeData.getPostalData().setSubmitPostalCode("1102");
+    envelopeData.getPostalData().setSubmitPostalName("Ljubljana");
+
+    envelopeData.setSenderAddress(new PhysicalAddressType());
+    envelopeData.getSenderAddress().setAddress(pluginLookups.getSenderAddress().
+            getAddress());
+    envelopeData.getSenderAddress().setCountry(pluginLookups.getSenderAddress().
+            getCountry());
+    envelopeData.getSenderAddress().setCountryCode(pluginLookups.
+            getSenderAddress().getCountryCode());
+    envelopeData.getSenderAddress().setName(pluginLookups.getSenderAddress().
+            getName());
+    envelopeData.getSenderAddress().setName2(pluginLookups.getSenderAddress().
+            getName2());
+    envelopeData.getSenderAddress().setPostalCode(pluginLookups.
+            getSenderAddress().getPostalCode());
+    envelopeData.getSenderAddress().setPostalName(pluginLookups.
+            getSenderAddress().getPostalName());
+    envelopeData.getSenderAddress().setTown(pluginLookups.getSenderAddress().
+            getTown());
+
+  }
+
+  public PhysicalAddressType getSenderAddress() {
+    if (envelopeData == null) {
+      envelopeData = new EnvelopeData();
+    }
+    if (envelopeData.getSenderAddress() == null) {
+      envelopeData.setSenderAddress(new PhysicalAddressType());;
+    }
+    return envelopeData.getSenderAddress();
+  }
+
+  public PhysicalAddressType getReceiverAddress() {
+    if (envelopeData == null) {
+      envelopeData = new EnvelopeData();
+    }
+    if (envelopeData.getReceiverAddress() == null) {
+      envelopeData.setReceiverAddress(new PhysicalAddressType());;
+    }
+    return envelopeData.getReceiverAddress();
+  }
+
+  public SenderMailData getSenderData() {
+    if (envelopeData == null) {
+      envelopeData = new EnvelopeData();
+    }
+    if (envelopeData.getSenderMailData() == null) {
+      envelopeData.setSenderMailData(new SenderMailData());;
+    }
+    return envelopeData.getSenderMailData();
+  }
+
+  public PostalData getPostalData() {
+    if (envelopeData == null) {
+      envelopeData = new EnvelopeData();
+    }
+    if (envelopeData.getPostalData() == null) {
+      envelopeData.setPostalData(new PostalData());
+    }
+    if (envelopeData.getPostalData().getUPNCode() == null) {
+      envelopeData.getPostalData().setUPNCode(new PostalData.UPNCode());
+    }
+    return envelopeData.getPostalData();
+  }
 
 }

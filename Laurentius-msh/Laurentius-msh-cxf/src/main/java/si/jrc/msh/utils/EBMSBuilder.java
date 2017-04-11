@@ -204,7 +204,7 @@ public class EBMSBuilder {
             pi.setValue(address);
             break;
           case PModeConstants.PARTY_ID_SOURCE_TYPE_NAME:
-            pi.setValue(name);
+            pi.setValue(Utils.isEmptyString(name)?address:name);
             break;
           case PModeConstants.PARTY_ID_SOURCE_TYPE_IDENTIFIER:
             String identifier = address.substring(0, address.indexOf('@'));

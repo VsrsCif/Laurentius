@@ -36,7 +36,7 @@ public class SchemaResourceResolver implements LSResourceResolver {
   private static final String XML_NAMESPACE = "http://www.w3.org/TR/REC-xml";
   private static final String XSD_NAMESPACE = "http://www.w3.org/2001/XMLSchema";
 
-  private static URI getTargetURI(String baseURI, String relativePath) {
+  private URI getTargetURI(String baseURI, String relativePath) {
     URI targetURI = null;
 
     try {

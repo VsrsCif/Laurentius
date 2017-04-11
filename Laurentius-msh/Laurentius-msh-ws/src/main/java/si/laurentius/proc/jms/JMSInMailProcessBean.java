@@ -115,10 +115,9 @@ public class JMSInMailProcessBean implements MessageListener {
     try {
       if (lstPrc.size() > 0) {
         boolean setDelivered = false;
-        String procDelivered="";
         for (SEDProcessor prc : lstPrc) {
-          if (prc.getDeliveredOnSuccess()){
-            procDelivered = prc.getName();
+          if (!prc.getActive()) {
+            continue;
           }
           setDelivered |= prc.getDeliveredOnSuccess();
           Map<String, Object> mp = new HashMap<>();
@@ -133,26 +132,24 @@ public class JMSInMailProcessBean implements MessageListener {
             bContinue = processMail(spi, mail, mp);
 
             if (!bContinue) {
-              setStatusToInMail(mail, SEDInboxMailStatus.RECEIVED, String.format(
-                  "Stoped by  %s (plugin: %s and type %s)", prc.getName(), spi.
-                    getPlugin(), spi.getType()));
+              setStatusToInMail(mail, SEDInboxMailStatus.RECEIVED, String.
+                      format(
+                              "Stopped by %s (plugin: %s and type %s)", prc.
+                                      getName(), spi.
+                                      getPlugin(), spi.getType()));
               break;
             }
 
           }
+
           if (!bContinue) {
-            
-            
             break;
+          } else {
+            setStatusToInMail(mail,
+                    setDelivered ? SEDInboxMailStatus.DELIVERED : SEDInboxMailStatus.RECEIVED,
+                    String.format("Processed by %s processor.", prc.getName()));
           }
-        }
-        if (setDelivered && bContinue) {
-          setStatusToInMail(mail, SEDInboxMailStatus.DELIVERED, String.format(
-                  "Executed by %d processors. %s sets it to Delivered", lstPrc.size(), procDelivered));
-        } else if(bContinue) {
-          setStatusToInMail(mail, SEDInboxMailStatus.RECEIVED, String.format(
-                  "Processed by %d processors", lstPrc.size()));
-        }
+        }      
       }
 
     } catch (NamingException ex) {
@@ -180,11 +177,11 @@ public class JMSInMailProcessBean implements MessageListener {
   }
 
   public List<SEDProcessor> getProcessSetsForMail(MSHInMail inMail) {
-    assert inMail!=null: "inmail is null";
-            
+    assert inMail != null : "inmail is null";
+
     List<SEDProcessor> lstResult = new ArrayList<>();
     List<SEDProcessor> lstPrcAll = msedLookup.getSEDProcessors();
-     
+
     boolean process = true;
     for (SEDProcessor prc : lstPrcAll) {
       if (prc.getActive() == null || !prc.getActive()) {
@@ -214,11 +211,11 @@ public class JMSInMailProcessBean implements MessageListener {
     spi.getSEDProcessorProperties().
             forEach((sp) -> {
               mp.put(sp.getKey(), sp.getValue());
-    });
+            });
     // get proc instance
     InMailProcessorDef mi = mPluginManager.getInMailProcessor(spi.
             getPlugin(), spi.getType());
- 
+
     // get inMail processor
     InMailProcessorInterface ipi = InitialContext.doLookup(mi.getJndi());
     // process

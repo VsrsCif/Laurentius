@@ -52,7 +52,7 @@ public class ProcessExport extends AbstractMailProcessor {
   private static final SEDLogger LOG = new SEDLogger(ProcessExport.class);
   private static final String FORMAT_PART_NS = "PART-";
 
-  public static final String KEY_EXPORTED_FILES = "imp.exported.files";
+ 
   public static final String KEY_EXPORT_METADATA = "imp.export.metadata";
   public static final String KEY_EXPORT_OVERWRITE = "imp.export.overwrite";
   public static final String KEY_EXPORT_METADATA_FILENAME = "imp.export.metadata.filename";
@@ -107,7 +107,7 @@ public class ProcessExport extends AbstractMailProcessor {
     boolean suc = false;
 
     List<String> lst = exportMail(map, mi);
-    map.put(KEY_EXPORTED_FILES, lst);
+    map.put(ProcessConstants.MP_EXPORT_FILES, lst);
     suc = true;
 
     LOG.logEnd(l, mi.getId());
