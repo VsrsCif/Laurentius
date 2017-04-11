@@ -1,0 +1,42 @@
+<div class ="sidebar" >    
+    <h2>Kazalo:</h2>
+    <ul>
+        <li><a href="#documentation:webservices">Spletne storitve</a></li> 
+    </ul>
+</div>
+<div class="main">
+<article class='content'>
+
+<h1>Meta podatki pošiljke</h1>
+Shema : <a href="api/wsdl/entities/inbox-mail.xsd">inbox-mail.xsd</a><br /><br />
+<div class="jrcxslt" data-xml="api/wsdl/entities/inbox-mail.xsd" data-xslt="xslt/mshinmail2table.xslt"></div>
+<h2>Primer poizvedbe</h2>
+
+<pre><code>&lt;soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:laur="http://laurentius.si">
+   &lt;soapenv:Header/>
+   &lt;soapenv:Body>
+      &lt;laur:GetInMailRequest>
+      &lt;Control userId="TestUser" applicationId="CMS"/>
+         &lt;Data receiverEBox="ezk@court-laurentius.si" mailId="53" />
+      &lt;/laur:GetInMailRequest>
+   &lt;/soapenv:Body>
+&lt;/soapenv:Envelope>
+</code></pre>
+
+<h2>Primer</h2>
+ <pre><code>
+            &lt;ns6:InMail id="53" messageId="d017d23c-f468-4e36-b477-9bdd28315c43@court-laurentius.si" service="DeliveryWithReceipt" action="Delivery" conversationId="cms-conv-00001" subject="Fist test mail" submittedDate="2016-11-27T18:27:04.952+01:00" sentDate="2016-11-27T18:27:05.449+01:00" receivedDate="2016-11-27T18:27:06.790+01:00" receiverEBox="ezk@court-laurentius.si" receiverName="Department A" senderEBox="izvrsba@court-laurentius.si" senderName="Department B" status="ERROR" statusDate="2016-11-27T18:27:06.919+01:00">
+               &lt;ns4:InProperties>
+                  &lt;ns4:InProperty id="54" name="Opr. St.">VL 1/20016&lt;/ns4:InProperty>
+                  &lt;ns4:InProperty id="55" name="SodiSif">S20&lt;/ns4:InProperty>
+               &lt;/ns4:InProperties>
+               &lt;ns5:InPayload>
+                  &lt;ns5:InPart id="56" name="test" description="testnaDatoteka" type="1" filename="testnaDatoteka.xml" mimeType="plain/xml" encoding="UTF-8" md5="0af345bb400583971e7e8c9185730446" filepath="storage/2016/11/27/001/IN_5316187207804920749.bin">
+                     &lt;ns5:Bin>VGVzdG5vIHNwb3JvY2lsbw==&lt;/ns5:Bin>
+                  &lt;/ns5:InPart>
+               &lt;/ns5:InPayload>
+            &lt;/ns6:InMail>
+         
+</code></pre>
+</article>  
+</div>

@@ -1,0 +1,48 @@
+<div class="main">
+    <article class='content'>
+         <h2 id="gui/task-zpp:zpp-plugin">Dodatek XSLT transformacija</h2>
+        Namen dodatka je konfiguracija različnih nastavitev XSLT transformacij, ki 
+        se nato uporabljajo pri procesiranju dohodne pošte. Nastavitve so dostopne
+        v sklopu orodij <b>Nastavitve</b> orodje <b>Dodatki/Procesi dohodne pošte/XSLT</b>.
+        
+         <h2 >Seznam nastavitev xslt transformacij</h2>
+        
+        V orodni vrstici seznama so gumbi za dodajanje spreminjanje in brisanje nastavitev XSLT procesov.<br /><br />
+        <img class="img-locale" src="img/gui/plugin-xslt-en.png" alt="Process list" width="680"/> <br />
+        <br />
+        
+        <br />
+        Ob kliki na gumb <b>Dodaj</b>(add),  <b>Uredi</b>(Edit) ali dvojnem kliku na izbrano 
+        vstico se prikaže dialog za dodajanje/urejanje procesa XSLT nastavite.
+        <br /><br />
+        XSLT nastavitve so vsebujejo seznam XSLT transformacij, ki 
+        se izvajajo v odvisnosti od vrednosti posameznih atributev v izvornem XML-ja (navadno version).
+        Aplikacija tako omogoča enostavno dodajanje novih transformacij, če se spremeni/nadgradi izvorna shema.
+        <br /><br />
+        
+        
+        
+        <center>
+            <img class="img-locale" src="img/gui/plugin-xslt-settings-en.png" alt="XSLT trans. list" width="680"/> <br />
+        </center><br />
+        
+        
+        <h2 >XSLT transforamcija</h2>
+                    
+        Ob kliki na gumb <b>Dodaj</b>(add),  <b>Uredi</b>(Edit) ali dvojnem kliku na izbrano 
+        vstico se prikaže dialog za dodajanje/urejanje XSLT transforamacije.
+        <br /><br />
+        
+         <center>
+            <img class="img-locale" src="img/gui/plugin-xslt-trans-en.png" alt="XSLT trans." width="480"/> <br />
+        </center><br />
+        
+         Urejanje xslt transformacije ima naslednje lastnosti:
+        <ul>
+            <li><b>Transformation</b>: izbira transformacije, ki je nameščena v mapo: <code>${laurentius-home}/plugins/base-plugin/xslt</code>.</li>
+            <li><b>Result name</b>: ime datoteke rezultata transformacije.</li>            
+            <li><b>Validate by schema</b>: preverjanje rezultata po shemi. V primeru, da rezultat ni skladen s shemo se pošiljki nastavi status v "napaki".</li>            
+            <li><b>xpath</b>: XPot do atributa za preverjanje zagona transformacije</li>            
+            <li><b>XPath value</b>: Vrednost elementa/atributa, ki ga označuje xpot.</li>            
+        </ul>
+</div>

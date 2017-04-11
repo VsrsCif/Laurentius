@@ -1,0 +1,104 @@
+<div class="main">
+    <article class='content'>
+        <h1 id="gui/admin-sed-in-process:admin">Procesi dohodne pošte</h1>
+        Procesi dohodne pošte so opravila, ki se izvršijo ob prejemu dohodne pošte. 
+        Namen procesov je avtomtizacija sprejema dohodnih sporočil. Laurentius omogoča 
+        dodajanje poljubnih java dodatkov za procesiranje dohodne pošte. Osnovna namestitev 
+        pa že vsebuj procesiranje dohodne pošte tipa:
+        <ul>            
+            <li>izvozi;</li>
+            <li>poženi zunanji program/skripto;</li>
+            <li>XSLT trasformacija xml vsebin.</li>
+        </ul>
+        
+        Administracija <b>seznama procesov dohodne pošte</b> se nahaja v sklopu orodij <b>Nastavitve</b>
+        orodje <b>Dodatki/Procesi dohodne pošte</b>. Urejanje seznama omogoča dodajanje 
+        novih procesov dohodne pošte ter urejane in brisanje obstoječih procesov. 
+        
+        <h2 id="gui/admin-sed-in-process:list">Seznam procesov dohodne pošte</h2>        
+        V orodni vrstici seznama so gumbi za dodajanje spreminjanje in brisanje tipa opravila.<br /><br />
+        <img class="img-locale" src="img/gui/inprocess-list-en.png" alt="Process list" width="680"/> <br />
+        <br />
+        Ob kliki na gumb <b>Dodaj</b>(add),  <b>Uredi</b>(Edit) ali dvojnem kliku na izbrano 
+        vstico se prikaže dialog za dodajanje/urejanje procesa dohodne pošte.
+        <br /><br />
+        <center>
+            <img class="img-locale" src="img/gui/inprocess-edit-en.png" alt="Process edit" width="680"/> <br />
+        </center><br />
+        Urejanje procesa je razdeljeno v tri razdelke:
+        <ul>
+            <li><b>Splošni podatki:</b>: enolični naziv procesa, aktivnost procesa in končni status procesa.</li>
+            <li><b>Pravila:</b>: seznam pravil, ki določajo pogoje izvajanja procesa. Pogoji vezan na lastnosti <a href="#gui/mail-data" >dohodne pošiljke</a>.</li>            
+            <li><b>Procesne enote</b>: seznam procesnih enot.</li>            
+        </ul>
+        
+        
+        <h3>Splošni podatki</h3>
+        <ul>
+            <li><b>Naziv:</b>: enolična oznaka procesa.</li>
+            <li><b>Aktivno:</b>: atribut določa aktinost obdelave dohodne pošte (V primeru, de polje neobkljukano, se procesi ne prožijo).</li>   
+            <li><b>Status 'Delivered' ob uspehu</b>: v primeru, da se uspešno izvedejo vse procesne enote, 
+                se pošiljka označi kot prevzeta v ciljn aplikacijo.</li>            
+        </ul>
+
+         <h3>Pravila:</h3>
+         Razdelek vsebuje seznam pogojev pri katerih se procesiranje proži. <br />
+         <center>
+            <img class="img-locale" src="img/gui/inprocess-rule-en.png" alt="Process rule" width="450"/> <br />
+        </center><br />
+         
+        <h3>Procesne enote</h3>
+         Procesne enote so programski dodatki za procesiranje dohodne pošte. Procesno enoto se določi tako,
+         da se ozbere programski dodatek (plugin) in oznako procesne enote. Pri tem se prikažejo lastnosti, 
+         ki jih lahko nastavimo za posamezni programski dodatek.
+         <center>
+            <img class="img-locale" src="img/gui/inprocess-instance-en.png" alt="Process instance" width="450"/> <br />
+        </center><br />
+        Aplikacija Laurentius vsebuje naslednje procesne enote (Dodatek Basic task plugin):
+        
+        <ul>
+            <li><b>Izvoz dohodne pošte</b>: enolična oznaka procesa.</li>
+            <li><b>Izvajanje zunanjih procesov</b>: atribut določa aktinost obdelave dohodne pošte (V primeru, de polje neobkljukano, se procesi ne prožijo).</li>   
+            <li><b>Xslt transformacija</b>: Dodatek za izvajanje xslt trasformacije xml vsebin.</li>            
+        </ul>
+        
+        <h2 id="gui/admin-sed-in-process:export">Izvoz dohodne pošte</h2>
+        Namen dodatka je izvoz priponk na datotečni sistem. Dodatek omogoča dinamično nastavljanje map,
+        imen datotek, metapodatkov. Procesni instanci je potrebno določiti naslednje atribute: 
+         <ul>
+             <li><b>Izvozi metapodatke</b> (<i>imp.export.metadata</i>): Obkljukana vrednost povzroči izvoz metakopodatkov.</li>
+             <li><b>Maska datoteke za metapodatke</b> (<i>imp.export.metadata.filename</i>): naziv datoteke.</li>
+            <li><b>Prepiši datoteko, če obstaja</b> (<i>imp.export.overwrite</i>): V primeru, da je lastnost obkljukana in dokument obstaja, ga prepiše. Sicer se proži napaka.</li>   
+            <li><b>Maksa izvoženih datotek</b> (<i>imp.export.filemask</i>): Maska imena datoteke v katero se izvozijo priponke pošiljke. 
+                V maski se lahko uporabijo lastnosti<a href="#gui/mail-data" >dohodne pošiljke</a>.</li>            
+            <li><b>Mapa</b> (<i>imp.export.folder</i>): Mapa (pot), kamo se izvozijo priponke. Deli maske so lahko ločeni z znakom '/', kar proži generiranje podmap.</li>            
+        </ul>
+
+        
+        <h2 id="gui/admin-sed-in-process:execute">Izvajanje zunanjih procesov</h2>
+        Namen dodatka je zaganjananje zunanjih aplikacij/skript, ki nato uvozijo pošiljke v zaledne sisteme. V primeru  da zunanji
+        proces ne vrne kodo 0. Se procesiranje konča z napako.
+         <ul>
+             <li><b>Ukaz</b> (<i>imp.execute.command</i>): Ukaz, ki proži zagon aplikacije</li>
+             <li><b>Parametri</b> (<i>imp.execute.parameters</i>): parametri, ki so dodani ukazu.
+                V maski se lahko uporabijo lastnosti<a href="#gui/mail-data" >dohodne pošiljke</a>. V primeru, da je pred zagonom izvršeno procesiranje za izvoz, je kot 
+             prvi parameter dodan seznam poti izvoženih datotek.</li>                        
+        </ul>
+        <center>
+            <img class="img-locale" src="img/gui/inprocess-execute-en.png" alt="Process execute" width="450"/> <br />
+        </center><br />
+  
+         <h2 id="gui/admin-sed-in-process:xslt">XSLT transformacija</h2>
+         Namen dodatka je izvajanje transformacije xml oblike pošiljatelja v obliko, kot jo razume ciljni/zaledni sistem. Dodatek omogoča manjše stroške
+         prilagajanja programske opreme, v primeru da izvajalec spremeni strukturo podatkov. Saj je potrebno samo dodatni novo transformacijo.
+         <ul>
+             <li><b>Ukaz</b> (<i>imp.execute.command</i>): Ukaz, ki proži zagon aplikacije</li>
+             <li><b>Parametri</b> (<i>imp.execute.parameters</i>): parametri, ki so dodani ukazu.
+                V maski se lahko uporabijo lastnosti<a href="#gui/mail-data" >dohodne pošiljke</a>. V primeru, da je pred zagonom izvršeno procesiranje za izvoz, je kot 
+             prvi parameter dodan seznam poti izvoženih datotek.</li>                        
+        </ul>
+        <center>
+            <img class="img-locale" src="img/gui/inprocess-execute-en.png" alt="Process execute" width="450"/> <br />
+        </center><br />
+    </article>  
+</div>
