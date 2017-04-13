@@ -2,6 +2,7 @@ package si.laurentius.msh.web.gui;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import javax.ejb.EJB;
@@ -15,7 +16,6 @@ import si.laurentius.commons.enums.SEDInterceptorRole;
 import si.laurentius.commons.enums.SEDOutboxMailStatus;
 import si.laurentius.commons.enums.SEDRulePredicate;
 import si.laurentius.commons.enums.SEDTaskStatus;
-import si.laurentius.commons.interfaces.PModeInterface;
 import si.laurentius.commons.interfaces.SEDCertStoreInterface;
 import si.laurentius.commons.interfaces.SEDLookupsInterface;
 import si.laurentius.commons.interfaces.SEDPluginManagerInterface;
@@ -42,7 +42,6 @@ public class LookupsData extends AbstractJSFView {
   @EJB(mappedName = SEDJNDI.JNDI_PLUGIN)
   private SEDPluginManagerInterface mPlgManager;
 
-  
   @EJB(mappedName = SEDJNDI.JNDI_DBCERTSTORE)
   private SEDCertStoreInterface mdbCertStore;
 
@@ -78,6 +77,8 @@ public class LookupsData extends AbstractJSFView {
         lstArr.add(st.getValue());
 
       }
+    } else {
+      lstArr.addAll(Arrays.asList(listType.split(",")));
     }
     return lstArr;
   }
@@ -114,7 +115,7 @@ public class LookupsData extends AbstractJSFView {
   public ActionRole[] getPModeActionRoles() {
     return ActionRole.values();
   }
-  
+
   public MessageType[] getPModeMessageTypes() {
     return MessageType.values();
   }

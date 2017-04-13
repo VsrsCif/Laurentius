@@ -14,27 +14,24 @@
  */
 package si.jrc.msh.plugin.meps.web;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.security.Principal;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Set;
-import java.util.jar.Attributes;
-import java.util.jar.Manifest;
+import java.util.Objects;
 import javax.ejb.EJB;
-import javax.faces.application.ViewHandler;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
-import javax.faces.component.UIViewRoot;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
-import javax.servlet.http.HttpServletRequest;
 import si.jrc.msh.plugin.meps.ejb.MEPSDataInterface;
 import si.laurentius.commons.SEDGUIConstants;
+import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.SEDSystemProperties;
+import si.laurentius.commons.interfaces.SEDLookupsInterface;
+import si.laurentius.commons.utils.SEDLogger;
+import si.laurentius.plugin.meps.MEPSData;
+import si.laurentius.plugin.meps.PartyType;
 import si.laurentius.plugin.meps.PhysicalAddressType;
 import si.laurentius.plugin.meps.ServiceType;
 import si.laurentius.user.SEDUser;
@@ -47,20 +44,56 @@ import si.laurentius.user.SEDUser;
 @ManagedBean(name = "MEPSLookups")
 public class MEPSLookups {
 
+  private static final SEDLogger LOG = new SEDLogger(MEPSLookups.class);
 
   @EJB(mappedName = "java:global/plugin-meps/MEPSDataBean!si.jrc.msh.plugin.meps.ejb.MEPSDataInterface")
   MEPSDataInterface mdata;
+
   
-  
-  public List<ServiceType> getServices(){
+
+  public String getLocalDomain() {
+    return SEDSystemProperties.getLocalDomain();
+  }
+
+  /**
+   *
+   * @return
+   */
+  protected FacesContext facesContext() {
+    return FacesContext.getCurrentInstance();
+  }
+
+  public List<ServiceType> getServices() {
     return mdata.getServices();
   }
   
-  public List<PhysicalAddressType> getAddresses(){
+  
+  public ServiceType getServiceByName(String name) {
+    List<ServiceType> tsLst = mdata.getServices();
+    for(ServiceType ts: tsLst ){
+      if (Objects.equals(ts.getName(), name)){
+        return ts;
+      }
+    }
+    return null;
+  }
+
+  public List<PhysicalAddressType> getAddresses() {
     return mdata.getAddresses();
   }
-          
-  public PhysicalAddressType getSenderAddress(){
+
+  public PhysicalAddressType getSenderAddress() {
     return mdata.getSenderAddress();
   }
+  
+  public PartyType.PostContract getPostContract() {
+    PartyType p = mdata.getParty();
+    return p!= null?p.getPostContract():null;
+  }
+  
+  public PartyType.ServiceProviderContract getServiceProviderContract() {
+    PartyType p = mdata.getParty();
+    return p!= null?p.getServiceProviderContract():null;
+  }
+  
 }

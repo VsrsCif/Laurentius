@@ -16,195 +16,247 @@
                             formId="mailComposeDialogForm"
                             dialogTitle="#{msg['MailCompose']}" 
                             editable="#{dialogComposeMailView.newOutMail}"
-                            width="1050"
-                            height="650"
+                            width="1200"
+                            height="600"
                             updateOnSave=":mepsform:MainPanel"
                             onConfirmAction="#{dialogComposeMailView.sendComposedMail()}"
                             >
-            <p:panelGrid style="width: 100%">
-                <f:facet name="header">
-                    <p:row>
-                        <p:column colspan="4">
-                            #{msg['PostalData']}
-                        </p:column>
-                    </p:row>
-                </f:facet>
-                <p:row>
-                    <p:column>#{msg['Service']}</p:column>
-                    <p:column >
-                        <p:selectOneMenu id="srvice" value="#{dialogComposeMailView.postalData.mepsService}" effect="fold" editable="true">
-                             <p:ajax  update="upnPrefix upnSuffix upnCode upnControl"/>
-                            <f:selectItems value="#{MEPSLookups.services}" var="srv" itemLabel="#{srv.name}" />
-                        </p:selectOneMenu>
-                    </p:column>
-                    <p:column>#{msg['EnvelopeType']}</p:column>
-                    <p:column >
-                        <p:inputText  style="width: 100%" value="#{dialogComposeMailView.postalData.envelopeType}"/>
-                    </p:column>
-                </p:row>
-                <p:row>
-                    <p:column>#{msg['PostalContractName']}</p:column>
-                    <p:column >
-                        <p:inputText  style="width: 100%" value="#{dialogComposeMailView.postalData.postalContractName}"/>
-                    </p:column>
+            <p:layout>
+                <p:layoutUnit position="center">
+                    <p:panelGrid  style="width: 100%">
+                        <f:facet name="header">
+                            <p:row>
+                                <p:column colspan="4">
+                                    #{msg['MEPSServiceProvider']}
+                                </p:column>
+                            </p:row>
+                        </f:facet>
 
-                    <p:column>#{msg['PostalContractCode']}</p:column>
-                    <p:column >
-                        <p:inputText  style="width: 100%" value="#{dialogComposeMailView.postalData.postalContractId}"/>
-                    </p:column>
+                        <p:row>
+                            <p:column styleClass="ui-gp-label">#{msg['ServiceRequestor']}</p:column>
+                            <p:column>
+                                <p:selectOneMenu id="eboxSSender" 
+                                                 value="#{dialogComposeMailView.serviceRequestor}" 
+                                                 style="width:150px"
 
+                                                 >
+                                    <f:selectItem noSelectionOption="false"  />
+                                    <f:selectItems value="#{MEPSPluginData.userEBoxes}"
+                                                   var="ebx"
+                                                   itemLabel="#{ebx}@#{MEPSLookups.localDomain}"
+                                                   itemValue="#{ebx}@#{MEPSLookups.localDomain}" />
+                                </p:selectOneMenu>                                    
 
-                </p:row>
+                            </p:column>
+                            <p:column styleClass="ui-gp-label">#{msg['ServiceProvider']}</p:column>
+                            <p:column>
+                                <p:selectOneMenu id="eboxRec" 
+                                                 value="#{dialogComposeMailView.serviceProvider}" 
+                                                 style="width:150px"
+                                                 editable="true">
 
-                <p:row>
-                    <p:column>#{msg['SubmitPostalName']}</p:column>
-                    <p:column >
-                        <p:inputText  style="width: 100%" value="#{dialogComposeMailView.postalData.submitPostalName}"/>
-                    </p:column>
-
-                    <p:column>#{msg['SubmitPostalCode']}</p:column>
-                    <p:column >
-                        <p:inputText  style="width: 100%" value="#{dialogComposeMailView.postalData.submitPostalCode}"/>
-                    </p:column>
+                                    <f:selectItems value="#{MEPSPluginData.userEBoxes}" 
+                                                   var="ebx" itemLabel="#{ebx}@#{MEPSLookups.localDomain}"
+                                                   itemValue="#{ebx}@#{MEPSLookups.localDomain}"
+                                                   />
+                                </p:selectOneMenu>    
+                            </p:column>
+                        </p:row>
+                    </p:panelGrid>
 
 
-                </p:row>
-                <p:row>
-                    <p:column>#{msg['UPNCode']}</p:column>
-                    <p:column colspan="2">
-                        <p:inputText id="upnPrefix" style="width: 40px" maxlength="2" disabled="true" value="#{dialogComposeMailView.postalData.UPNCode.prefix}"/>
-                        <p:spinner   id="upnCode" style="width: 80px" maxlength="8" min="0" max="99999999"  value="#{dialogComposeMailView.postalData.UPNCode.code}"/>
-                        <p:inputText id="upnControl" style="width: 30px" maxlength="1" disabled="true" value="#{dialogComposeMailView.postalData.UPNCode.control}"/>
-                        <p:inputText id="upnSuffix" style="width: 40px" maxlength="2" disabled="true" value="#{dialogComposeMailView.postalData.UPNCode.suffix}"/>
-                    </p:column>
+                    <p:panelGrid  style="width: 100%">
+                        <f:facet name="header">
+                            <p:row>
+                                <p:column colspan="4">
+                                    #{msg['PostalData']}
+                                </p:column>
+                            </p:row>
+                        </f:facet>
+                        <p:row>
+                            <p:column styleClass="ui-gp-label" >#{msg['PostalContractName']}</p:column>
+                            <p:column >
+                                <p:inputText  style="width: 100%" value="#{dialogComposeMailView.postalData.postalContractName}"/>
+                            </p:column>
+
+                            <p:column styleClass="ui-gp-label" >#{msg['PostalContractCode']}</p:column>
+                            <p:column >
+                                <p:inputText  style="width: 100%" value="#{dialogComposeMailView.postalData.postalContractId}"/>
+                            </p:column>
 
 
+                        </p:row>
+
+                        <p:row>
+                            <p:column styleClass="ui-gp-label" >#{msg['SubmitPostalName']}</p:column>
+                            <p:column >
+                                <p:inputText  style="width: 100%" value="#{dialogComposeMailView.postalData.submitPostalName}"/>
+                            </p:column>
+
+                            <p:column styleClass="ui-gp-label" >#{msg['SubmitPostalCode']}</p:column>
+                            <p:column >
+                                <p:inputText  style="width: 100%" value="#{dialogComposeMailView.postalData.submitPostalCode}"/>
+                            </p:column>
 
 
-                </p:row>
+                        </p:row>
+                        <p:row>
+                            <p:column styleClass="ui-gp-label" >#{msg['Service']}</p:column>
+                            <p:column >
+                                <p:selectOneMenu id="service" value="#{dialogComposeMailView.currentService}" >
+                                    <p:ajax  update="upnPrefix upnCode upnControl upnSuffix envelopeType" />
+                                    <f:selectItems value="#{MEPSLookups.services}" var="srv" itemLabel="#{srv.name}" itemValue="#{srv.name}" />
+                                </p:selectOneMenu>
+                            </p:column>
+                            <p:column styleClass="ui-gp-label" >#{msg['EnvelopeType']}</p:column>
+                            <p:column >
+                                <p:inputText id="envelopeType" readonly="true" style="width: 100%" value="#{dialogComposeMailView.postalData.envelopeType}"/>
+                            </p:column>
+                        </p:row>
+                        <p:row >
+                            <p:column styleClass="ui-gp-label" >#{msg['UPNCode']}</p:column>
+                            <p:column colspan="2">
+                                <p:panelGrid>
+                                    <p:row>
+                                        <p:column width="40" ><p:inputText id="upnPrefix" disabled="#{not dialogComposeMailView.hasUPNCode()}"  style="width: 40px" maxlength="2" readonly="true" value="#{dialogComposeMailView.postalData.UPNCode.prefix}"/></p:column>
+                                        <p:column width="80"><p:spinner   id="upnCode"  disabled="#{not dialogComposeMailView.hasUPNCode()}"  maxlength="8" min="0" max="99999999"  value="#{dialogComposeMailView.postalData.UPNCode.code}"/></p:column>
+                                        <p:column width="30"><p:inputText id="upnControl"  disabled="#{not dialogComposeMailView.hasUPNCode()}"  style="width: 30px" maxlength="1" readonly="true" value="#{dialogComposeMailView.postalData.UPNCode.control}"/></p:column>
+                                        <p:column width="40"><p:inputText id="upnSuffix"  disabled="#{not dialogComposeMailView.hasUPNCode()}"  style="width: 40px" maxlength="2" readonly="true" value="#{dialogComposeMailView.postalData.UPNCode.suffix}"/></p:column>
+                                    </p:row>
+                                </p:panelGrid>
+                            </p:column>
+                        </p:row>
 
-            </p:panelGrid>
+                    </p:panelGrid>
 
-            <p:panelGrid style="width: 100%">
+                    <p:panelGrid style="width: 100%">
 
-                <f:facet name="header">
-                    <p:row>
-                        <p:column colspan="4">
-                            #{msg['SenderData']}
-                        </p:column>
-                    </p:row>
-                </f:facet>
-                <p:row>
-                    <p:column>#{msg['MailContentDesc']}</p:column>
-                    <p:column colspan="3">
-                        <p:inputText  style="width: 100%" value="#{dialogComposeMailView.senderData.contentDescription}"/>
-                    </p:column>
-                </p:row>
-                <p:row>
-                    <p:column>#{msg['CaseNumber']}</p:column>
-                    <p:column >
-                        <p:inputText  style="width: 100%" value="#{dialogComposeMailView.senderData.caseCode}"/>
-                    </p:column>
+                        <f:facet name="header">
+                            <p:row>
+                                <p:column colspan="4">
+                                    #{msg['SenderData']}
+                                </p:column>
+                            </p:row>
+                        </f:facet>
+                        <p:row>
+                            <p:column styleClass="ui-gp-label" >#{msg['MailContentDesc']}</p:column>
+                            <p:column colspan="3">
+                                <p:inputText  style="width: 100%" value="#{dialogComposeMailView.senderData.contentDescription}"/>
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column styleClass="ui-gp-label" >#{msg['CaseNumber']}</p:column>
+                            <p:column >
+                                <p:inputText  style="width: 100%" value="#{dialogComposeMailView.senderData.caseCode}"/>
+                            </p:column>
 
-                    <p:column>#{msg['MailCode']}</p:column>
-                    <p:column>
-                        <p:inputText  style="width: 100%" value="#{dialogComposeMailView.senderData.senderMailCode}"/>
-                    </p:column>
-                </p:row>
+                            <p:column styleClass="ui-gp-label" >#{msg['MailCode']}</p:column>
+                            <p:column>
+                                <p:inputText  style="width: 100%" value="#{dialogComposeMailView.senderData.senderMailCode}"/>
+                            </p:column>
+                        </p:row>
 
-            </p:panelGrid>
+                    </p:panelGrid>
 
-            <p:panelGrid style="width: 100%">
-                <f:facet name="header">
-                    <p:row>
-                        <p:column colspan="4">#{msg['SenderAddress']}</p:column>
-                        <p:column colspan="4">#{msg['ReceiverAddress']}</p:column>
-                    </p:row>
-                </f:facet>
+                    <p:panelGrid style="width: 100%">
+                        <f:facet name="header">
+                            <p:row>
+                                <p:column colspan="4">#{msg['SenderAddress']}</p:column>
+                                <p:column colspan="4"><p:commandButton widgetVar="btnAddressar"
+                                                                       value="#{msg['Address']}"
+                                                                       styleClass="toolbar-Button"
+                                                                       icon="ui-icon-svg-cancel ui-icon-size-22" 
+                                                                       onclick="PF('addressDialog').show();"
+                                                                       update=":dlgAddress:addressDialog:addressDialogForm:dialogLayout"
+                                                                       />#{msg['ReceiverAddress']}</p:column>
+                            </p:row>
+                        </f:facet>
 
-                <p:row>
-                    <p:column>#{msg['Name']}</p:column>
-                    <p:column colspan="3">
-                        <p:inputText  style="width: 100%" value="#{dialogComposeMailView.senderAddress.name}"/>
-                    </p:column>
-                    <p:column >#{msg['Name']}</p:column>
-                    <p:column colspan="3">
-                        <p:inputText style="width: 100%" value="#{dialogComposeMailView.receiverAddress.name}"/>
-                    </p:column>
-                </p:row>
-                <p:row>
-                    <p:column>#{msg['Name2']}</p:column>
-                    <p:column colspan="3">
-                        <p:inputText  style="width: 100%" value="#{dialogComposeMailView.senderAddress.name2}"/>
-                    </p:column>
-                    <p:column >#{msg['Name2']}</p:column>
-                    <p:column colspan="3">
-                        <p:inputText  style="width: 100%" value="#{dialogComposeMailView.receiverAddress.name2}"/>
-                    </p:column>
-                </p:row>
-                <p:row>
-                    <p:column>#{msg['Address']}</p:column>
-                    <p:column colspan="3">
-                        <p:inputText  style="width: 100%" value="#{dialogComposeMailView.senderAddress.address}"/>
-                    </p:column>
-                    <p:column >#{msg['Address']}</p:column>
-                    <p:column colspan="3">
-                        <p:inputText  style="width: 100%" value="#{dialogComposeMailView.receiverAddress.address}"/>
-                    </p:column>
-                </p:row>
-                <p:row>
-                    <p:column>#{msg['PostalCode']}</p:column>
-                    <p:column>
-                        <p:inputText  style="width: 100%" value="#{dialogComposeMailView.senderAddress.postalCode}"/>
-                    </p:column>
-                    <p:column>#{msg['PostalName']}</p:column>
-                    <p:column>
-                        <p:inputText  style="width: 100%" value="#{dialogComposeMailView.senderAddress.postalName}"/>
-                    </p:column>
+                        <p:row>
+                            <p:column styleClass="ui-gp-label" >#{msg['Name']}</p:column>
+                            <p:column colspan="3">
+                                <p:inputText  style="width: 100%" value="#{dialogComposeMailView.senderAddress.name}"/>
+                            </p:column>
+                            <p:column styleClass="ui-gp-label" >#{msg['Name']}</p:column>
+                            <p:column colspan="3">
+                                <p:inputText style="width: 100%" value="#{dialogComposeMailView.receiverAddress.name}"/>
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column styleClass="ui-gp-label" >#{msg['Name2']}</p:column>
+                            <p:column colspan="3">
+                                <p:inputText  style="width: 100%" value="#{dialogComposeMailView.senderAddress.name2}"/>
+                            </p:column>
+                            <p:column styleClass="ui-gp-label">#{msg['Name2']}</p:column>
+                            <p:column colspan="3">
+                                <p:inputText  style="width: 100%" value="#{dialogComposeMailView.receiverAddress.name2}"/>
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column styleClass="ui-gp-label" >#{msg['Address']}</p:column>
+                            <p:column colspan="3">
+                                <p:inputText  style="width: 100%" value="#{dialogComposeMailView.senderAddress.address}"/>
+                            </p:column>
+                            <p:column styleClass="ui-gp-label">#{msg['Address']}</p:column>
+                            <p:column colspan="3">
+                                <p:inputText  style="width: 100%" value="#{dialogComposeMailView.receiverAddress.address}"/>
+                            </p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column styleClass="ui-gp-label" >#{msg['PostalCode']}</p:column>
+                            <p:column>
+                                <p:inputText  style="width: 100%" value="#{dialogComposeMailView.senderAddress.postalCode}"/>
+                            </p:column>
+                            <p:column styleClass="ui-gp-label" >#{msg['PostalName']}</p:column>
+                            <p:column>
+                                <p:inputText  style="width: 100%" value="#{dialogComposeMailView.senderAddress.postalName}"/>
+                            </p:column>
 
-                    <p:column>#{msg['PostalCode']}</p:column>
-                    <p:column >
-                        <p:inputText  style="width: 100%" value="#{dialogComposeMailView.receiverAddress.postalCode}"/>
-                    </p:column>
-                    <p:column>#{msg['PostalName']}</p:column>
-                    <p:column >
-                        <p:inputText  style="width: 100%" value="#{dialogComposeMailView.receiverAddress.postalName}"/>
-                    </p:column>
-                </p:row>
-            </p:panelGrid>
+                            <p:column styleClass="ui-gp-label" >#{msg['PostalCode']}</p:column>
+                            <p:column >
+                                <p:inputText  style="width: 100%" value="#{dialogComposeMailView.receiverAddress.postalCode}"/>
+                            </p:column>
+                            <p:column styleClass="ui-gp-label" >#{msg['PostalName']}</p:column>
+                            <p:column >
+                                <p:inputText  style="width: 100%" value="#{dialogComposeMailView.receiverAddress.postalName}"/>
+                            </p:column>
+                        </p:row>
+                    </p:panelGrid>
+                </p:layoutUnit>
+                <p:layoutUnit position="east" size="250" minSize="250" maxSize="250">
 
-            <p:panelGrid columns="2" style="width: 100%">
-                <f:facet name="header">
-                    #{msg['MailContent']}
-                </f:facet>
-                <p:fileUpload fileUploadListener="#{dialogComposeMailView.handleNewOutMailAttachmentUpload}"
-                              mode="advanced" skinSimple="true" dragDropSupport="false"
-                              uploadLabel="#{msg['Add']}" 
-                              cancelLabel="#{msg['Cancel']}" 
-                              label="#{msg['Choose']}" 
-
-                              multiple="true"
-                              update=":dlgCompose:mailComposeDialog:mailComposeDialogForm:mailComposeAttachments" sizeLimit="100000000" 
-                              style="height: 200px"/>
-
-
-                <p:dataList id="mailComposeAttachments" value="#{dialogComposeMailView.getNewOutMailAttachmentList()}"
-                            var="prp" type="unordered"
-                            style="height: 200px">
                     <f:facet name="header">
-                        Priponke:
+                        #{msg['MailContent']}
                     </f:facet>
-                    <p:commandLink update=":dlgCompose:mailComposeDialog:mailComposeDialogForm:mailComposeAttachments" 
-                                   oncomplete="#{dialogComposeMailView.removeselectedNewOutMailAttachment()}" 
-                                   title="#{msg['Delete']}" styleClass="ui-icon ui-icon-remove" style="float:left;">
-                        <f:setPropertyActionListener value="#{prp}" target="#{dialogComposeMailView.selectedNewOutMailAttachment}" />
-                    </p:commandLink>
+                    <p:fileUpload fileUploadListener="#{dialogComposeMailView.handleNewOutMailAttachmentUpload}"
+                                  mode="advanced" skinSimple="true" dragDropSupport="false"
+                                  uploadLabel="#{msg['Add']}" 
+                                  cancelLabel="#{msg['Cancel']}" 
+                                  label="#{msg['Choose']}" 
+
+                                  multiple="true"
+                                  update=":dlgCompose:mailComposeDialog:mailComposeDialogForm:mailComposeAttachments" sizeLimit="100000000" 
+                                  style="height: 80px"/>
 
 
-                    <h:outputText value="#{prp.name}" style="display:inline-block"/>
-                </p:dataList>
-            </p:panelGrid>
+                    <p:dataList id="mailComposeAttachments" value="#{dialogComposeMailView.getNewOutMailAttachmentList()}"
+                                var="prp" type="unordered"
+                                style="height: 80px">
+                        <f:facet name="header">
+                            Priponke:
+                        </f:facet>
+                        <p:commandLink update=":dlgCompose:mailComposeDialog:mailComposeDialogForm:mailComposeAttachments" 
+                                       oncomplete="#{dialogComposeMailView.removeselectedNewOutMailAttachment()}" 
+                                       title="#{msg['Delete']}" styleClass="ui-icon ui-icon-remove" style="float:left;">
+                            <f:setPropertyActionListener value="#{prp}" target="#{dialogComposeMailView.selectedNewOutMailAttachment}" />
+                        </p:commandLink>
 
+
+                        <h:outputText value="#{prp.name}" style="display:inline-block"/>
+                    </p:dataList>
+
+                </p:layoutUnit>
+            </p:layout>
 
         </dlg:dlg-abstract>
 

@@ -109,7 +109,7 @@ public class TestCaseMainView {
     List<String> lst = new ArrayList<>();
     SEDUser usr = getUser();
     if (usr != null) {
-      getUser().getSEDBoxes().stream().forEach((sb) -> {
+      usr.getSEDBoxes().stream().forEach((sb) -> {
         lst.add(sb.getLocalBoxName());
       });
     }

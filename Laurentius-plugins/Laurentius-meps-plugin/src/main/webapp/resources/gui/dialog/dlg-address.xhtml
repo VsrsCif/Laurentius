@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      xmlns:dlg="http://java.sun.com/jsf/composite/gui/dialog"
+      >
+    <composite:interface>
+    </composite:interface>
+
+    <composite:implementation >
+        <dlg:dlg-abstract   id="addressDialog"
+                            formId="addressDialogForm"
+                            dialogTitle="#{msg['Address']}" 
+                            editable="#{dialogComposeMailView.newOutMail}"
+                            width="800"
+                            height="600"
+                            updateOnSave=":dlgCompose:mailComposeDialog:mailComposeDialogForm:dialogLayout"
+                            onConfirmAction="#{dialogComposeMailView.setSelectedAddressToMail()}"
+                            >
+           
+            
+                <p:dataTable id="TblAddress" 
+                             var="sp" 
+                             value="#{MEPSLookups.addresses}"
+                             selectionMode="single"
+                             selection="#{dialogComposeMailView.selectedAddress}"
+                             rowKey="#{sp.name}"
+                             currentPageReportTemplate="#{msg['Showing']} {startRecord}-{endRecord} #{msg['OutOf']} {totalRecords}"
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             rowsPerPageTemplate="25,50,100,200" 
+                             paginator="true" 
+                             style="padding: 0px; margin: 0px"
+                             scrollable="true" 
+                             scrollHeight="100%"
+                             rows="100"  >
+
+                    <p:ajax event="rowDblselect" 
+                            listener="#{dialogComposeMailView.setSelectedAddressToMail()}" 
+                            update=":dlgCompose:mailComposeDialog:mailComposeDialogForm:dialogLayout"
+                            oncomplete="PF('addressDialog').hide()"/>
+
+                    <f:facet name="header">
+                             
+                    </f:facet>
+
+                   
+                    <p:column headerText="#{msg['Name']}" >
+                        <h:outputText value="#{sp.name}" />
+                    </p:column>              
+                    <p:column headerText="#{msg['Name2']}" width="180">
+                        <h:outputText value="#{sp.name2}" ><f:convertDateTime pattern="dd.MM.yyyy"  timeZone="CET" /></h:outputText>                
+                    </p:column>
+                    <p:column headerText="#{msg['Address']}" width="180">
+                        <h:outputText value="#{sp.address}" ><f:convertDateTime pattern="dd.MM.yyyy" timeZone="CET" /></h:outputText>                
+                    </p:column>
+                    <p:column headerText="#{msg['Town']}" width="180">
+                        <h:outputText value="#{sp.town}" ><f:convertDateTime pattern="dd.MM.yyyy" timeZone="CET" /></h:outputText>                
+                    </p:column>
+                   
+                </p:dataTable>
+        </dlg:dlg-abstract>
+
+
+    </composite:implementation>
+
+</html>

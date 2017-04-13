@@ -1,0 +1,486 @@
+<MSHSetings xmlns="http://msh.laurentius.si/pmode">
+	<Services>
+		<Service id="DeliveryWithReceipt" serviceName="DeliveryWithReceipt" useSEDProperties="true">
+			<Initiator role="Sender"/>
+			<Executor role="Receiver"/>
+			<Action name="Delivery" invokeRole="initiator">
+				<Properties>
+					<Property name="originalSender" required="true"/>
+					<Property name="finalRecipient" required="true"/>
+				</Properties>
+				<PayloadProfiles maxSize="10000">
+					<PayloadProfile name="test" maxSize="10000" maxOccurs="1"/>
+				</PayloadProfiles>
+			</Action>
+		</Service>
+		<Service id="PrintAndEnvelope-LegalZPP" serviceName="PrintAndEnvelope-LegalZPP" serviceType="" useSEDProperties="true">
+			<Initiator role="ServiceRequestor"/>
+			<Executor role="ServiceProvider"/>
+			<Action name="AddMail" invokeRole="initiator" messageType="userMessage">
+				<PayloadProfiles maxSize="10485760">
+					<PayloadProfile name="envelope-data" MIME="application/xml" maxSize="10485760" maxOccurs="1" minOccurs="1"/>
+					<PayloadProfile name="pdf-content" MIME="application/pdf" maxSize="10485760" maxOccurs="100" minOccurs="1"/>
+				</PayloadProfiles>
+			</Action>
+			<Action name="RemoveMail" invokeRole="initiator" messageType="signalMessage">
+				<PayloadProfiles maxSize="10485760">
+					<PayloadProfile name="RemoveRequest" MIME="application/xml" maxSize="10485760" maxOccurs="1" minOccurs="1"/>
+				</PayloadProfiles>
+			</Action>
+			<Action name="MailProcessed" invokeRole="executor" messageType="userMessage">
+				<PayloadProfiles maxSize="10485760">
+					<PayloadProfile name="report" MIME="application/octet-stream" maxSize="10485760" maxOccurs="1" minOccurs="1"/>
+				</PayloadProfiles>
+			</Action>
+		</Service>
+		<Service id="PrintAndEnvelope-LegalZPP-NP" serviceName="PrintAndEnvelope-LegalZPP-NP" serviceType="" useSEDProperties="true">
+			<Initiator role="ServiceRequestor"/>
+			<Executor role="ServiceProvider"/>
+			<Action name="AddMail" invokeRole="initiator" messageType="userMessage">
+				<PayloadProfiles maxSize="10485760">
+					<PayloadProfile name="envelope-data" MIME="application/xml" maxSize="10485760" maxOccurs="1" minOccurs="1"/>
+					<PayloadProfile name="pdf-content" MIME="application/pdf" maxSize="10485760" maxOccurs="100" minOccurs="1"/>
+				</PayloadProfiles>
+			</Action>
+			<Action name="RemoveMail" invokeRole="initiator" messageType="signalMessage">
+				<PayloadProfiles maxSize="10485760">
+					<PayloadProfile name="RemoveRequest" MIME="application/xml" maxSize="10485760" maxOccurs="1" minOccurs="1"/>
+				</PayloadProfiles>
+			</Action>
+			<Action name="MailProcessed" invokeRole="executor" messageType="userMessage">
+				<PayloadProfiles maxSize="10485760">
+					<PayloadProfile name="report" MIME="application/xml" maxSize="10485760" maxOccurs="1" minOccurs="1"/>
+				</PayloadProfiles>
+			</Action>
+		</Service>
+		<Service id="PrintAndEnvelope-LegalZUP" serviceName="PrintAndEnvelope-LegalZUP" serviceType="" useSEDProperties="true">
+			<Initiator role="ServiceRequestor"/>
+			<Executor role="ServiceProvider"/>
+			<Action name="AddMail" invokeRole="initiator" messageType="userMessage">
+				<PayloadProfiles maxSize="10485760">
+					<PayloadProfile name="envelope-data" MIME="application/xml" maxSize="10485760" maxOccurs="1" minOccurs="1"/>
+					<PayloadProfile name="pdf-content" MIME="application/pdf" maxSize="10485760" maxOccurs="100" minOccurs="1"/>
+				</PayloadProfiles>
+			</Action>
+			<Action name="RemoveMail" invokeRole="initiator" messageType="signalMessage">
+				<PayloadProfiles maxSize="10485760">
+					<PayloadProfile name="RemoveRequest" MIME="application/xml" maxSize="10485760" maxOccurs="1" minOccurs="1"/>
+				</PayloadProfiles>
+			</Action>
+			<Action name="MailProcessed" invokeRole="executor" messageType="userMessage">
+				<PayloadProfiles maxSize="10485760">
+					<PayloadProfile name="report" MIME="application/xml" maxSize="10485760" maxOccurs="1" minOccurs="1"/>
+				</PayloadProfiles>
+			</Action>
+		</Service>
+		<Service id="PrintAndEnvelope-C5-Registred" serviceName="PrintAndEnvelope-C5-Registred" serviceType="" useSEDProperties="true">
+			<Initiator role="ServiceRequestor"/>
+			<Executor role="ServiceProvider"/>
+			<Action name="AddMail" invokeRole="initiator" messageType="userMessage">
+				<PayloadProfiles maxSize="10485760">
+					<PayloadProfile name="envelope-data" MIME="application/xml" maxSize="10485760" maxOccurs="1" minOccurs="1"/>
+					<PayloadProfile name="pdf-content" MIME="application/pdf" maxSize="10485760" maxOccurs="100" minOccurs="1"/>
+				</PayloadProfiles>
+			</Action>
+			<Action name="RemoveMail" invokeRole="initiator" messageType="signalMessage">
+				<PayloadProfiles maxSize="10485760">
+					<PayloadProfile name="RemoveRequest" MIME="application/xml" maxSize="10485760" maxOccurs="1" minOccurs="1"/>
+				</PayloadProfiles>
+			</Action>
+			<Action name="MailProcessed" invokeRole="executor" messageType="userMessage">
+				<PayloadProfiles maxSize="10485760">
+					<PayloadProfile name="report" MIME="application/xml" maxSize="10485760" maxOccurs="1" minOccurs="1"/>
+				</PayloadProfiles>
+			</Action>
+		</Service>
+		<Service id="PrintAndEnvelope-C5" serviceName="PrintAndEnvelope-C5" serviceType="" useSEDProperties="true">
+			<Initiator role="ServiceRequestor"/>
+			<Executor role="ServiceProvider"/>
+			<Action name="AddMail" invokeRole="initiator" messageType="userMessage">
+				<PayloadProfiles maxSize="10485760">
+					<PayloadProfile name="envelope-data" MIME="application/xml" maxSize="10485760" maxOccurs="1" minOccurs="1"/>
+					<PayloadProfile name="pdf-content" MIME="application/pdf" maxSize="10485760" maxOccurs="100" minOccurs="1"/>
+				</PayloadProfiles>
+			</Action>
+			<Action name="RemoveMail" invokeRole="initiator" messageType="signalMessage">
+				<PayloadProfiles maxSize="10485760">
+					<PayloadProfile name="RemoveRequest" MIME="application/xml" maxSize="10485760" maxOccurs="1" minOccurs="1"/>
+				</PayloadProfiles>
+			</Action>
+			<Action name="MailProcessed" invokeRole="executor" messageType="userMessage">
+				<PayloadProfiles maxSize="10485760">
+					<PayloadProfile name="report" MIME="application/xml" maxSize="10485760" maxOccurs="1" minOccurs="1"/>
+				</PayloadProfiles>
+			</Action>
+		</Service>
+	</Services>
+	<Parties>
+		<PartyIdentitySet id="test-laurentius" isLocalIdentity="true">
+			<PartyId type="urn:oasis:names:tc:ebcore:partyid-type:unregistered:si-svev:name" valueSource="name"/>
+			<PartyId type="urn:oasis:names:tc:ebcore:partyid-type:unregistered:si-svev:sed-box" valueSource="address"/>
+			<TransportProtocol id="defalut" isTwoWayProtocol="true">
+				<Address connectionTimeout="120000" receiveTimeout="180000" chunked="false">https://127.0.0.1:8443/laurentius/msh</Address>
+				<TLS serverTrustCertAlias="test-tls" disableCNAndHostnameCheck="true"/>
+				<Proxy host=""/>
+				<SOAPVersion>1.2</SOAPVersion>
+			</TransportProtocol>
+			<LocalPartySecurity signatureKeyAlias="test-laurentius" decryptionKeyAlias="test-laurentius"/>
+			<ExchangePartySecurity signatureCertAlias="test-laurentius" encryptionCertAlias="test-laurentius"/>
+		</PartyIdentitySet>
+		<PartyIdentitySet id="court-laurentius" domain="court-laurentius.si" isLocalIdentity="false" active="true">
+			<PartyId type="urn:oasis:names:tc:ebcore:partyid-type:unregistered:si-svev:name" valueSource="name"/>
+			<PartyId type="urn:oasis:names:tc:ebcore:partyid-type:unregistered:si-svev:sed-box" valueSource="address"/>
+			<TransportProtocol id="court-https" isTwoWayProtocol="true">
+				<Address connectionTimeout="120000" receiveTimeout="180000" chunked="false">https://b2g-test.sodisce.si/laurentius/msh</Address>
+				<TLS clientKeyAlias="test-tls" serverTrustCertAlias="b2g-test.sodisce.si" disableCNAndHostnameCheck="false"/>
+				<Proxy host=""/>
+				<SOAPVersion>1.2</SOAPVersion>
+			</TransportProtocol>
+			<LocalPartySecurity/>
+			<ExchangePartySecurity signatureCertAlias="court-laurentius"/>
+		</PartyIdentitySet>
+	</Parties>
+	<SecurityPolicies>
+		<Security id="sign_sha256" WSSVersion="1.1">
+			<X509>
+				<Signature hashFunction="http://www.w3.org/2001/04/xmlenc#sha256" algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256">
+					<Reference allAttachments="true">
+						<Elements>
+							<XPath xpath="env:Header/eb3:Messaging">
+								<Namespace prefix="eb3" namespace="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/"/>
+								<Namespace prefix="env" namespace="http://www.w3.org/2003/05/soap-envelope"/>
+							</XPath>
+						</Elements>
+					</Reference>
+				</Signature>
+			</X509>
+		</Security>
+	</SecurityPolicies>
+	<ReceptionAwarenessPatterns>
+		<ReceptionAwareness id="AS4ReceiptResponse" replyPattern="response" receiptType="AS4Receipt">
+			<Retry maxRetries="3" multiplyPeriod="3" period="5678"/>
+			<DuplicateDetection windowPeriode="P1Y" eliminate="true"/>
+		</ReceptionAwareness>
+	</ReceptionAwarenessPatterns>
+	<PMode id="DeliveryWithReceipt">
+		<ServiceIdRef>DeliveryWithReceipt</ServiceIdRef>
+		<LocalPartyInfo partyIdentitySetIdRef="test-laurentius">
+			<Role>Sender</Role>
+			<Role>Receiver</Role>
+		</LocalPartyInfo>
+		<ExchangeParties>
+			<PartyInfo partyIdentitySetIdRef="test-laurentius" partyDefTransportIdRef="defalut">
+				<Role>Sender</Role>
+				<Role>Receiver</Role>
+			</PartyInfo>
+			<PartyInfo partyIdentitySetIdRef="court-laurentius" partyDefTransportIdRef="court-https">
+				<Role>Sender</Role>
+				<Role>Receiver</Role>
+			</PartyInfo>
+		</ExchangeParties>
+		<MEP>
+			<MEPType>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/oneWay</MEPType>
+			<MEPChannelBinding>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/push</MEPChannelBinding>
+			<MEPInitiatorRole>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/initiator</MEPInitiatorRole>
+			<Leg>
+				<MPC xmlns:tns="http://msh.laurentius.si/pmode" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/defaultMPC</MPC>
+				<Transport>
+					<ForeChannel action="Delivery" securityIdRef="sign_sha256">
+						<ReceptionAwareness raPatternIdRef="AS4ReceiptResponse"/>
+					</ForeChannel>
+					<BackChannel securityIdRef="sign_sha256"/>
+				</Transport>
+			</Leg>
+		</MEP>
+	</PMode>
+	<PMode id="PrintAndEnvelope-LegalZPP">
+		<ServiceIdRef>PrintAndEnvelope-LegalZPP</ServiceIdRef>
+		<LocalPartyInfo partyIdentitySetIdRef="court-laurentius" partyDefTransportIdRef="default">
+			<Role>ServiceRequestor</Role>
+			<Role>ServiceProvider</Role>
+		</LocalPartyInfo>
+		<ExchangeParties>
+			<PartyInfo partyIdentitySetIdRef="test-laurentius" partyDefTransportIdRef="default">
+				<Role>ServiceRequestor</Role>
+				<Role>ServiceProvider</Role>
+			</PartyInfo>
+			<PartyInfo partyIdentitySetIdRef="court-laurentius" partyDefTransportIdRef="default">
+				<Role>ServiceRequestor</Role>
+				<Role>ServiceProvider</Role>
+			</PartyInfo>
+		</ExchangeParties>
+		<MEP>
+			<MEPType>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/oneWay</MEPType>
+			<MEPChannelBinding>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/push</MEPChannelBinding>
+			<MEPInitiatorRole>ServiceRequestor</MEPInitiatorRole>
+			<Leg>
+				<MPC xmlns:tns="http://msh.laurentius.si/pmode" xmlns:ns2="http://msh.laurentius.si/pmode" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/defaultMPC</MPC>
+				<Transport>
+					<ForeChannel action="AddMail" securityIdRef="sign_sha256">
+						<ReceptionAwareness raPatternIdRef="AS4ReceiptResponse"/>
+					</ForeChannel>
+					<BackChannel securityIdRef="sign_sha256"/>
+				</Transport>
+			</Leg>
+		</MEP>
+		<MEP>
+			<MEPType>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/twoWay</MEPType>
+			<MEPChannelBinding>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/sync</MEPChannelBinding>
+			<MEPInitiatorRole>ServiceRequestor</MEPInitiatorRole>
+			<Leg>
+				<MPC xmlns:tns="http://msh.laurentius.si/pmode" xmlns:ns2="http://msh.laurentius.si/pmode" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/defaultMPC</MPC>
+				<Transport>
+					<ForeChannel action="RemoveMail" securityIdRef="sign_sha256">
+						<ReceptionAwareness raPatternIdRef="AS4ReceiptResponse"/>
+					</ForeChannel>
+				</Transport>
+			</Leg>
+		</MEP>
+		<MEP>
+			<MEPType>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/twoWay</MEPType>
+			<MEPChannelBinding>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/sync</MEPChannelBinding>
+			<MEPInitiatorRole>ServiceProvider</MEPInitiatorRole>
+			<Leg>
+				<MPC xmlns:tns="http://msh.laurentius.si/pmode" xmlns:ns2="http://msh.laurentius.si/pmode" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/defaultMPC</MPC>
+				<Transport>
+					<ForeChannel action="MailProcessed" securityIdRef="sign_sha256">
+						<ReceptionAwareness raPatternIdRef="AS4ReceiptResponse"/>
+					</ForeChannel>
+					<BackChannel action="EncryptedKey" securityIdRef="sign_sha256"/>
+				</Transport>
+			</Leg>
+		</MEP>
+	</PMode>
+	<PMode id="PrintAndEnvelope-LegalZPP-NP">
+		<ServiceIdRef>PrintAndEnvelope-LegalZPP-NP</ServiceIdRef>
+		<LocalPartyInfo partyIdentitySetIdRef="court-laurentius" partyDefTransportIdRef="default">
+			<Role>ServiceRequestor</Role>
+			<Role>ServiceProvider</Role>
+		</LocalPartyInfo>
+		<ExchangeParties>
+			<PartyInfo partyIdentitySetIdRef="test-laurentius" partyDefTransportIdRef="default">
+				<Role>ServiceRequestor</Role>
+				<Role>ServiceProvider</Role>
+			</PartyInfo>
+			<PartyInfo partyIdentitySetIdRef="court-laurentius" partyDefTransportIdRef="default">
+				<Role>ServiceRequestor</Role>
+				<Role>ServiceProvider</Role>
+			</PartyInfo>
+		</ExchangeParties>
+		<MEP>
+			<MEPType>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/oneWay</MEPType>
+			<MEPChannelBinding>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/push</MEPChannelBinding>
+			<MEPInitiatorRole>ServiceRequestor</MEPInitiatorRole>
+			<Leg>
+				<MPC xmlns:tns="http://msh.laurentius.si/pmode" xmlns:ns2="http://msh.laurentius.si/pmode" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/defaultMPC</MPC>
+				<Transport>
+					<ForeChannel action="AddMail" securityIdRef="sign_sha256">
+						<ReceptionAwareness raPatternIdRef="AS4ReceiptResponse"/>
+					</ForeChannel>
+					<BackChannel securityIdRef="sign_sha256"/>
+				</Transport>
+			</Leg>
+		</MEP>
+		<MEP>
+			<MEPType>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/twoWay</MEPType>
+			<MEPChannelBinding>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/sync</MEPChannelBinding>
+			<MEPInitiatorRole>ServiceRequestor</MEPInitiatorRole>
+			<Leg>
+				<MPC xmlns:tns="http://msh.laurentius.si/pmode" xmlns:ns2="http://msh.laurentius.si/pmode" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/defaultMPC</MPC>
+				<Transport>
+					<ForeChannel action="RemoveMail" securityIdRef="sign_sha256">
+						<ReceptionAwareness raPatternIdRef="AS4ReceiptResponse"/>
+					</ForeChannel>
+				</Transport>
+			</Leg>
+		</MEP>
+		<MEP>
+			<MEPType>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/twoWay</MEPType>
+			<MEPChannelBinding>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/sync</MEPChannelBinding>
+			<MEPInitiatorRole>ServiceProvider</MEPInitiatorRole>
+			<Leg>
+				<MPC xmlns:tns="http://msh.laurentius.si/pmode" xmlns:ns2="http://msh.laurentius.si/pmode" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/defaultMPC</MPC>
+				<Transport>
+					<ForeChannel action="MailProcessed" securityIdRef="sign_sha256">
+						<ReceptionAwareness raPatternIdRef="AS4ReceiptResponse"/>
+					</ForeChannel>
+					<BackChannel action="EncryptedKey" securityIdRef="sign_sha256"/>
+				</Transport>
+			</Leg>
+		</MEP>
+	</PMode>
+	<PMode id="PrintAndEnvelope-LegalZUP">
+		<ServiceIdRef>PrintAndEnvelope-LegalZUP</ServiceIdRef>
+		<LocalPartyInfo partyIdentitySetIdRef="court-laurentius" partyDefTransportIdRef="default">
+			<Role>ServiceRequestor</Role>
+			<Role>ServiceProvider</Role>
+		</LocalPartyInfo>
+		<ExchangeParties>
+			<PartyInfo partyIdentitySetIdRef="test-laurentius" partyDefTransportIdRef="default">
+				<Role>ServiceRequestor</Role>
+				<Role>ServiceProvider</Role>
+			</PartyInfo>
+			<PartyInfo partyIdentitySetIdRef="court-laurentius" partyDefTransportIdRef="default">
+				<Role>ServiceRequestor</Role>
+				<Role>ServiceProvider</Role>
+			</PartyInfo>
+		</ExchangeParties>
+		<MEP>
+			<MEPType>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/oneWay</MEPType>
+			<MEPChannelBinding>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/push</MEPChannelBinding>
+			<MEPInitiatorRole>ServiceRequestor</MEPInitiatorRole>
+			<Leg>
+				<MPC xmlns:tns="http://msh.laurentius.si/pmode" xmlns:ns2="http://msh.laurentius.si/pmode" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/defaultMPC</MPC>
+				<Transport>
+					<ForeChannel action="AddMail" securityIdRef="sign_sha256">
+						<ReceptionAwareness raPatternIdRef="AS4ReceiptResponse"/>
+					</ForeChannel>
+					<BackChannel securityIdRef="sign_sha256"/>
+				</Transport>
+			</Leg>
+		</MEP>
+		<MEP>
+			<MEPType>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/twoWay</MEPType>
+			<MEPChannelBinding>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/sync</MEPChannelBinding>
+			<MEPInitiatorRole>ServiceRequestor</MEPInitiatorRole>
+			<Leg>
+				<MPC xmlns:tns="http://msh.laurentius.si/pmode" xmlns:ns2="http://msh.laurentius.si/pmode" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/defaultMPC</MPC>
+				<Transport>
+					<ForeChannel action="RemoveMail" securityIdRef="sign_sha256">
+						<ReceptionAwareness raPatternIdRef="AS4ReceiptResponse"/>
+					</ForeChannel>
+				</Transport>
+			</Leg>
+		</MEP>
+		<MEP>
+			<MEPType>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/twoWay</MEPType>
+			<MEPChannelBinding>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/sync</MEPChannelBinding>
+			<MEPInitiatorRole>ServiceProvider</MEPInitiatorRole>
+			<Leg>
+				<MPC xmlns:tns="http://msh.laurentius.si/pmode" xmlns:ns2="http://msh.laurentius.si/pmode" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/defaultMPC</MPC>
+				<Transport>
+					<ForeChannel action="MailProcessed" securityIdRef="sign_sha256">
+						<ReceptionAwareness raPatternIdRef="AS4ReceiptResponse"/>
+					</ForeChannel>
+					<BackChannel action="EncryptedKey" securityIdRef="sign_sha256"/>
+				</Transport>
+			</Leg>
+		</MEP>
+	</PMode>
+	<PMode id="PrintAndEnvelope-C5-Registred">
+		<ServiceIdRef>PrintAndEnvelope-C5-Registred</ServiceIdRef>
+		<LocalPartyInfo partyIdentitySetIdRef="court-laurentius" partyDefTransportIdRef="default">
+			<Role>ServiceRequestor</Role>
+			<Role>ServiceProvider</Role>
+		</LocalPartyInfo>
+		<ExchangeParties>
+			<PartyInfo partyIdentitySetIdRef="test-laurentius" partyDefTransportIdRef="default">
+				<Role>ServiceRequestor</Role>
+				<Role>ServiceProvider</Role>
+			</PartyInfo>
+			<PartyInfo partyIdentitySetIdRef="court-laurentius" partyDefTransportIdRef="default">
+				<Role>ServiceRequestor</Role>
+				<Role>ServiceProvider</Role>
+			</PartyInfo>
+		</ExchangeParties>
+		<MEP>
+			<MEPType>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/oneWay</MEPType>
+			<MEPChannelBinding>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/push</MEPChannelBinding>
+			<MEPInitiatorRole>ServiceRequestor</MEPInitiatorRole>
+			<Leg>
+				<MPC xmlns:tns="http://msh.laurentius.si/pmode" xmlns:ns2="http://msh.laurentius.si/pmode" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/defaultMPC</MPC>
+				<Transport>
+					<ForeChannel action="AddMail" securityIdRef="sign_sha256">
+						<ReceptionAwareness raPatternIdRef="AS4ReceiptResponse"/>
+					</ForeChannel>
+					<BackChannel securityIdRef="sign_sha256"/>
+				</Transport>
+			</Leg>
+		</MEP>
+		<MEP>
+			<MEPType>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/twoWay</MEPType>
+			<MEPChannelBinding>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/sync</MEPChannelBinding>
+			<MEPInitiatorRole>ServiceRequestor</MEPInitiatorRole>
+			<Leg>
+				<MPC xmlns:tns="http://msh.laurentius.si/pmode" xmlns:ns2="http://msh.laurentius.si/pmode" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/defaultMPC</MPC>
+				<Transport>
+					<ForeChannel action="RemoveMail" securityIdRef="sign_sha256">
+						<ReceptionAwareness raPatternIdRef="AS4ReceiptResponse"/>
+					</ForeChannel>
+				</Transport>
+			</Leg>
+		</MEP>
+		<MEP>
+			<MEPType>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/twoWay</MEPType>
+			<MEPChannelBinding>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/sync</MEPChannelBinding>
+			<MEPInitiatorRole>ServiceProvider</MEPInitiatorRole>
+			<Leg>
+				<MPC xmlns:tns="http://msh.laurentius.si/pmode" xmlns:ns2="http://msh.laurentius.si/pmode" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/defaultMPC</MPC>
+				<Transport>
+					<ForeChannel action="MailProcessed" securityIdRef="sign_sha256">
+						<ReceptionAwareness raPatternIdRef="AS4ReceiptResponse"/>
+					</ForeChannel>
+					<BackChannel action="EncryptedKey" securityIdRef="sign_sha256"/>
+				</Transport>
+			</Leg>
+		</MEP>
+	</PMode>
+	<PMode id="PrintAndEnvelope-C5">
+		<ServiceIdRef>PrintAndEnvelope-C5</ServiceIdRef>
+		<LocalPartyInfo partyIdentitySetIdRef="court-laurentius" partyDefTransportIdRef="default">
+			<Role>ServiceRequestor</Role>
+			<Role>ServiceProvider</Role>
+		</LocalPartyInfo>
+		<ExchangeParties>
+			<PartyInfo partyIdentitySetIdRef="test-laurentius" partyDefTransportIdRef="default">
+				<Role>ServiceRequestor</Role>
+				<Role>ServiceProvider</Role>
+			</PartyInfo>
+			<PartyInfo partyIdentitySetIdRef="court-laurentius" partyDefTransportIdRef="default">
+				<Role>ServiceRequestor</Role>
+				<Role>ServiceProvider</Role>
+			</PartyInfo>
+		</ExchangeParties>
+		<MEP>
+			<MEPType>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/oneWay</MEPType>
+			<MEPChannelBinding>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/push</MEPChannelBinding>
+			<MEPInitiatorRole>ServiceRequestor</MEPInitiatorRole>
+			<Leg>
+				<MPC xmlns:tns="http://msh.laurentius.si/pmode" xmlns:ns2="http://msh.laurentius.si/pmode" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/defaultMPC</MPC>
+				<Transport>
+					<ForeChannel action="AddMail" securityIdRef="sign_sha256">
+						<ReceptionAwareness raPatternIdRef="AS4ReceiptResponse"/>
+					</ForeChannel>
+					<BackChannel securityIdRef="sign_sha256"/>
+				</Transport>
+			</Leg>
+		</MEP>
+		<MEP>
+			<MEPType>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/twoWay</MEPType>
+			<MEPChannelBinding>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/sync</MEPChannelBinding>
+			<MEPInitiatorRole>ServiceRequestor</MEPInitiatorRole>
+			<Leg>
+				<MPC xmlns:tns="http://msh.laurentius.si/pmode" xmlns:ns2="http://msh.laurentius.si/pmode" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/defaultMPC</MPC>
+				<Transport>
+					<ForeChannel action="RemoveMail" securityIdRef="sign_sha256">
+						<ReceptionAwareness raPatternIdRef="AS4ReceiptResponse"/>
+					</ForeChannel>
+				</Transport>
+			</Leg>
+		</MEP>
+		<MEP>
+			<MEPType>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/twoWay</MEPType>
+			<MEPChannelBinding>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/sync</MEPChannelBinding>
+			<MEPInitiatorRole>ServiceProvider</MEPInitiatorRole>
+			<Leg>
+				<MPC xmlns:tns="http://msh.laurentius.si/pmode" xmlns:ns2="http://msh.laurentius.si/pmode" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/defaultMPC</MPC>
+				<Transport>
+					<ForeChannel action="MailProcessed" securityIdRef="sign_sha256">
+						<ReceptionAwareness raPatternIdRef="AS4ReceiptResponse"/>
+					</ForeChannel>
+					<BackChannel action="EncryptedKey" securityIdRef="sign_sha256"/>
+				</Transport>
+			</Leg>
+		</MEP>
+	</PMode>
+</MSHSetings>

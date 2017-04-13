@@ -19,93 +19,132 @@
                           icon="ui-icon-svg-envelope"
                           >
 
-            <p:layout   style="min-width:400px;min-height:400px;height: 100%;width: 100%"  >
+            <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
+            <p:panelGrid style="width: 100%">
+
+                <p:row>
+                    <p:column colspan="2" styleClass="ui-gp-header" >Custom mail</p:column>
+                </p:row>
+                <p:row>
+                    <p:column colspan="2">Click compose mail and enter mail data.</p:column>
+                </p:row>                
+
+                <p:row>
+                    <p:column>
+                        <p:commandButton value="#{msg['Compose mail']}"   
+                                         actionListener="#{dialogComposeMailView.createNewMail()}"
+                                         oncomplete="PF('mailComposeDialog').show()"
+                                         update=":dlgCompose:mailComposeDialog:mailComposeDialogForm"
+                                         />
+                    </p:column>
+                </p:row>
+            </p:panelGrid>
+
+            <p:panelGrid style="width: 100%">
+
+                <p:row>
+                    <p:column colspan="2" styleClass="ui-gp-header" >Stress test</p:column>
+                </p:row>
+                <p:row>
+                    <p:column colspan="2">Enter number of mail to generate and click Start.</p:column>
+                </p:row>
+                <p:row>
+                    <p:column styleClass="ui-gp-label">#{msg['SenderBox']}</p:column>
+                    <p:column>
+                        <p:selectOneMenu id="eboxSSender" 
+                                         value="#{mepsTestCase.testPackage.testSenderEBox}" 
+                                         style="width: 300px"
+
+                                         >
+                            <f:selectItem noSelectionOption="false"  />
+                            <f:selectItems value="#{MEPSPluginData.userEBoxes}"
+                                           var="ebx"
+                                           itemLabel="#{ebx}@#{MEPSLookups.localDomain}"
+                                           itemValue="#{ebx}@#{MEPSLookups.localDomain}" />
+                        </p:selectOneMenu>                                    
+
+                    </p:column>
+                </p:row>
+                <p:row>
+                    <p:column styleClass="ui-gp-label">#{msg['ReceiverBox']}</p:column>
+                    <p:column>
+                        <p:selectOneMenu id="eboxRec" 
+                                         value="#{mepsTestCase.testPackage.testReceiverEBox}" 
+                                         style="width: 300px"
+                                         editable="true">
+
+                            <f:selectItems value="#{MEPSPluginData.userEBoxes}" 
+                                           var="ebx" itemLabel="#{ebx}@#{MEPSLookups.localDomain}"
+                                           itemValue="#{ebx}@#{MEPSLookups.localDomain}"
+                                           />
+                        </p:selectOneMenu>    
+                    </p:column>
+                </p:row>
+                <p:row>
+                    <p:column  styleClass="ui-gp-label">#{msg['Service']}</p:column>
+                    <p:column colspan="3">
+                        <p:selectOneMenu id="lstService" value="#{mepsTestCase.testPackage.testService}" 
+                                         style="width: 300px" >
+
+                            <f:selectItem noSelectionOption="false"  />
+                            <f:selectItems value="#{MEPSLookups.services}" var="srv"
+                                           itemLabel="#{srv.name}" 
+                                           itemValue="#{srv.name}"
+                                           itemDescription="#{srv.envelopeName}"
+                                           />
+                        </p:selectOneMenu>                                    
+                    </p:column>
+                </p:row>
+                <p:row>
+                    <p:column  styleClass="ui-gp-label">#{msg['NumberOfMail']}</p:column>
+                    <p:column>
+                        <p:selectOneMenu value="#{mepsTestCase.testPackage.mailCount}"  
+                                         style="width: 300px !important" >
+                            <f:selectItem itemLabel="5" itemValue="5" />
+                            <f:selectItem itemLabel="10" itemValue="10" />
+                            <f:selectItem itemLabel="50" itemValue="50" />
+                            <f:selectItem itemLabel="100" itemValue="100" />
+                            <f:selectItem itemLabel="500" itemValue="500" />
+                            <f:selectItem itemLabel="1000" itemValue="1000" />
+                            <f:selectItem itemLabel="2000" itemValue="2000" />
+                            <f:selectItem itemLabel="5000" itemValue="5000" />
+                        </p:selectOneMenu>
+                    </p:column>
+                </p:row>
+                <p:row>
+                    <p:column>
+                        <p:commandButton value="#{msg['Generate']}"   
+                                         actionListener="#{mepsTestCase.executePackageTest()}"
+
+                                         />
+                    </p:column>
+                </p:row>
+            </p:panelGrid>
+
+            <p:panelGrid style="width: 100%">
+
+                <p:row>
+                    <p:column colspan="2" styleClass="ui-gp-header" >Remove mail</p:column>
+                </p:row>
+                <p:row>
+                    <p:column colspan="2">Enter mail id to remove</p:column>
+                </p:row>   
+                <p:row>
+                    <p:column colspan="2" styleClass="ui-gp-label" >Mail id</p:column>
+                    <p:column ></p:column>
+                </p:row>  
 
 
-                <p:layoutUnit position="center" style="width:100%;height:100%;padding: 0px; margin: 0px" gutter="0" >
-                    <h3>#{msg['MailData']}</h3>
-                    <pnl:pnl-mail-data maildata="#{tcStressTests}" />
-
-                    <p:panelGrid style="width: 100%">
-
-                        <p:row>
-                            <p:column colspan="2" styleClass="ui-gp-header" >Custom mail</p:column>
-                        </p:row>
-                        <p:row>
-                            <p:column colspan="2">Click compose mail and entere data.</p:column>
-                        </p:row>                
-
-                        <p:row>
-                            <p:column>
-                                <p:commandButton value="#{msg['Compose mail']}"   
-                                                 actionListener="#{dialogComposeMailView.createNewMail()}"
-                                                 oncomplete="PF('mailComposeDialog').show()"
-                                                 update=":dlgCompose:mailComposeDialog:mailComposeDialogForm"
-                                                 />
-                            </p:column>
-                        </p:row>
-                    </p:panelGrid>
-
-                    <p:panelGrid style="width: 100%">
-
-                        <p:row>
-                            <p:column colspan="2" styleClass="ui-gp-header" >Stress test</p:column>
-                        </p:row>
-                        <p:row>
-                            <p:column colspan="2">Enter number of mail to generate and click Start.</p:column>
-
-                            <p:row>
-                                <p:column  styleClass="ui-gp-label">#{msg['NumberOfMail']}</p:column>
-                                <p:column>
-                                    <p:selectOneMenu value="#{tcStressTests.testLAOM.mailCount}"  style="width: 200px !important" >
-                                        <f:selectItem itemLabel="5" itemValue="5" />
-                                        <f:selectItem itemLabel="10" itemValue="10" />
-                                        <f:selectItem itemLabel="50" itemValue="50" />
-                                        <f:selectItem itemLabel="100" itemValue="100" />
-                                        <f:selectItem itemLabel="500" itemValue="500" />
-                                        <f:selectItem itemLabel="1000" itemValue="1000" />
-                                        <f:selectItem itemLabel="2000" itemValue="2000" />
-                                        <f:selectItem itemLabel="5000" itemValue="5000" />
-                                    </p:selectOneMenu>
-                                </p:column>
-                            </p:row>
-                            <p:row>
-                                <p:column>
-                                    <p:commandButton value="#{msg['Create mail']}"   
-                                                     actionListener="#{dialogComposeMailView.createNewMail()}"
-                                                     oncomplete="PF('mailComposeDialog').show()"
-                                                     update=":dlgCompose:mailComposeDialog:mailComposeDialogForm"
-                                                     />
-                                </p:column>
-                            </p:row>
-                    </p:panelGrid>
-
-                    <p:panelGrid style="width: 100%">
-
-                        <p:row>
-                            <p:column colspan="2" styleClass="ui-gp-header" >Remove mail</p:column>
-                        </p:row>
-                        <p:row>
-                            <p:column colspan="2">Enter mail id to remove</p:column>
-                        </p:row>   
-                        <p:row>
-                            <p:column >Mail id</p:column>
-                            <p:column ></p:column>
-                        </p:row>  
-
-
-                        <p:row>
-                            <p:column>
-                                <p:commandButton value="#{msg['remove mail']}"   
-                                                 actionListener="#{dialogComposeMailView.createNewMail()}"
-                                                 oncomplete="PF('mailComposeDialog').show()"
-                                                 update=":dlgCompose:mailComposeDialog:mailComposeDialogForm"
-                                                 />
-                            </p:column>
-                        </p:row>
-                    </p:panelGrid>
-                </p:layoutUnit>
-            </p:layout>
+                <p:row>
+                    <p:column>
+                        <p:commandButton value="#{msg['RemoveMail']}"   
+                                         actionListener="#{dialogComposeMailView.createNewMail()}"
+                                         oncomplete="PF('mailComposeDialog').show()"
+                                         update=":dlgCompose:mailComposeDialog:mailComposeDialogForm"
+                                         />
+                    </p:column>
+                </p:row>
+            </p:panelGrid>
 
         </pnl:pnl-settings>
     </composite:implementation>

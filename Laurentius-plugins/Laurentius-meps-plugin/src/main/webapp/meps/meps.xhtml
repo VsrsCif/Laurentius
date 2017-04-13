@@ -19,7 +19,7 @@
             <f:viewParam name="navigator" value="#{MEPSPluginData.showNavigator}" />
         </f:metadata>
         <h:form id="mepsform" >
-            <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
+          
             <!-- main window -->    
             <p:layout  style="min-width:400px;min-height:400px;"  fullPage="true" >
 
@@ -61,6 +61,8 @@
             </p:layout>
         </h:form>
         <dlg:dlg-compose id="dlgCompose" />
+        <dlg:dlg-address id="dlgAddress" />
+        <dlg:dlg-progress id="dlgProgress" />
        
     </h:body>
 </html>

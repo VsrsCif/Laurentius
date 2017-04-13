@@ -44,7 +44,8 @@ public class MEPSPluginDescription extends  AbstractPluginDescription {
     try {
       // and log further application specific info
       registerPluginComponentInterface(MEPSTask.class);
-      //registerPluginComponentInterface(ExampleWebCronTask.class);
+      registerPluginComponentInterface(MEPSInInterceptor.class);
+      registerPluginComponentInterface(MEPSTask.class);
       
      // register plugin
       registerPlugin();

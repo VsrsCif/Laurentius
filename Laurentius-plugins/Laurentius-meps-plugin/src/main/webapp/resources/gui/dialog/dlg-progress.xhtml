@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      >
+    <composite:interface>
+    </composite:interface>
+
+    <composite:implementation >      
+        <composite:implementation >     
+            <p:dialog   widgetVar="dialogProgress" id="dialogProgress" 
+                        header="#{msg['ProgressDialogTitle']}"  modal="true" hideEffect="fade" 
+                        resizable="false" appendTo="@(body)" width="400"  >
+                <h:form id="dlgProgressForm">
+                    <p:messages id="messagesProgressDialog"
+                                autoUpdate="true"
+                                showDetail="true" />
+
+                    <p:layout id="pnlProgress" style="min-width:300px;height:100px;">
+                        <p:layoutUnit position="center"  >
+                            <p:outputLabel value="#{dialogProgress.title}" />
+                            
+                            <p:progressBar widgetVar="dlgPrgBar" 
+                                           ajax="true" 
+                                           value="#{dialogProgress.testProgress}" 
+                                           labelTemplate="{value}%" styleClass="animated" 
+                                           global="true"  > 
+                                <p:ajax event="complete" oncomplete="PF('dialogProgress').hide()"                  
+                                      />
+                               
+                            </p:progressBar>
+                        </p:layoutUnit>
+
+
+                        <p:layoutUnit position="south"  size="40" minSize="40" maxSize="40" >
+                            <p:toolbar 
+                                styleClass="dialogButtonBar" >
+                                <f:facet name="right"  >
+                                    <p:commandButton value="#{msg['Cancel']}"  
+                                                     styleClass="toolbar-Button" 
+                                                     icon="ui-icon-svg-cancel ui-icon-size-22" 
+                                                     actionListener="#{dialogProgress.stopExecuting()}"                                                     
+                                                     oncomplete="if (args &amp;&amp; args.stopped){ PF('dialogProgress').hide();PF('dlgPrgBar').cancel();}" 
+                                                     update="#{dialogProgress.updateTarget}"
+                                                     />                                                                         
+                                </f:facet>
+                            </p:toolbar>
+                        </p:layoutUnit>
+                    </p:layout>
+                </h:form>
+            </p:dialog>
+        </composite:implementation>
+
+
+    </composite:implementation>
+</html>

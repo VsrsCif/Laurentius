@@ -32,11 +32,7 @@ public class TCStressTests extends TestCaseAbstract implements Serializable {
   }
 
   public void executeLAOM() {
-    testLAOM.setProcessMessage("");
-    testLAOM.setProgress(0);
-    if (!validateData()) {
-      return;
-    }
+    
 
     // show progress dialog
     DialogProgress dlg = getDlgProgress();

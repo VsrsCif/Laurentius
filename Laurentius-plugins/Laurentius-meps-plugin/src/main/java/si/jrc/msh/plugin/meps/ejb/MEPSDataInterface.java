@@ -5,13 +5,11 @@
  */
 package si.jrc.msh.plugin.meps.ejb;
 
-import java.io.File;
-import java.util.Collections;
 import java.util.List;
 import javax.ejb.Local;
+import si.laurentius.plugin.meps.PartyType;
 import si.laurentius.plugin.meps.PhysicalAddressType;
 import si.laurentius.plugin.meps.ServiceType;
-
 
 /**
  *
@@ -20,18 +18,12 @@ import si.laurentius.plugin.meps.ServiceType;
 @Local
 public interface MEPSDataInterface {
 
-
   List<ServiceType> getServices();
-  List<PhysicalAddressType> getAddresses();
-  PhysicalAddressType getSenderAddress();
- 
- /*
-  IMPXslt getAddresses(String instance);
-  boolean addXSLT(IMPXslt sb);
-  List<IMPXslt> getAddresses();
-  boolean removeXSLT(IMPXslt sb);
-  boolean updateXSLT(IMPXslt sb);
-*/
 
+  List<PhysicalAddressType> getAddresses();
+
+  PhysicalAddressType getSenderAddress();
+
+  PartyType getParty();
 
 }

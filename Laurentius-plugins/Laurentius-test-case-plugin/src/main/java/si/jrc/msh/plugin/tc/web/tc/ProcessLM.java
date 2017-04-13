@@ -8,7 +8,6 @@ package si.jrc.msh.plugin.tc.web.tc;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import si.jrc.msh.plugin.tc.web.*;

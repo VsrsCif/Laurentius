@@ -29,6 +29,7 @@ import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.xml.XMLUtils;
 import si.laurentius.plugin.meps.MEPSData;
+import si.laurentius.plugin.meps.PartyType;
 import si.laurentius.plugin.meps.PhysicalAddressType;
 import si.laurentius.plugin.meps.ServiceType;
 
@@ -76,9 +77,15 @@ public class MEPSDataBean implements MEPSDataInterface {
 
   @Override
   public PhysicalAddressType getSenderAddress() {
-    return mepsData != null ? mepsData.getSenderAddress() : null;
+    return mepsData != null && mepsData.getParty()!=null?mepsData.getParty().getSenderAddress() : null;
   }
 
+  
+  @Override
+  public PartyType getParty() {
+    return mepsData != null ?mepsData.getParty() : null;
+  }
+  
   public void reload() {
 
     long l = LOG.logStart();

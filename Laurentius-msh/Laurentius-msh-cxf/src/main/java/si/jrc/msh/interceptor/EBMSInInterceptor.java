@@ -65,7 +65,6 @@ import si.laurentius.commons.enums.MimeValue;
 import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.cxf.SoapUtils;
 import si.laurentius.commons.exception.HashException;
-import si.laurentius.commons.exception.PModeException;
 import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.pmode.EBMSMessageContext;
 import si.laurentius.commons.utils.GZIPUtil;

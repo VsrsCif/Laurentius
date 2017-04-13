@@ -2,9 +2,8 @@ package si.jrc.msh.plugin.meps.web.dlg;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.event.ActionEvent;
 import org.primefaces.context.RequestContext;
-import si.jrc.msh.plugin.tc.web.TestCaseAbstract;
+
 import si.laurentius.commons.utils.SEDLogger;
 
 

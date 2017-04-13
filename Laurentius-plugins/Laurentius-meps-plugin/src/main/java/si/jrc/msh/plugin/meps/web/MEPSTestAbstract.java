@@ -7,52 +7,60 @@ package si.jrc.msh.plugin.meps.web;
 
 import java.io.File;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.xml.bind.JAXBException;
+import si.jrc.msh.plugin.meps.AppConstant;
+import si.jrc.msh.plugin.meps.utils.TestUtils;
 import si.jrc.msh.plugin.meps.web.dlg.DialogProgress;
-import si.jrc.msh.plugin.tc.utils.TestUtils;
 
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.exception.StorageException;
-import si.laurentius.commons.interfaces.PModeInterface;
 import si.laurentius.commons.interfaces.SEDDaoInterface;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.Utils;
 import si.laurentius.msh.outbox.mail.MSHOutMail;
-import si.laurentius.msh.pmode.Action;
-import si.laurentius.msh.pmode.Service;
+import si.laurentius.plugin.meps.ServiceType;
 
 /**
  *
  * @author sluzba
  */
-public class TestCaseAbstract {
+public class MEPSTestAbstract {
 
   TestUtils mtUtils = new TestUtils();
 
   @EJB(mappedName = SEDJNDI.JNDI_SEDDAO)
   SEDDaoInterface mDB;
-  @EJB(mappedName = SEDJNDI.JNDI_PMODE)
-  PModeInterface mPMode;
+  
 
-  private static final SEDLogger LOG = new SEDLogger(TestCaseAbstract.class);
 
-  String testAction;
+  private static final SEDLogger LOG = new SEDLogger(MEPSTestAbstract.class);
+
+
   String testReceiverEBox;
   String testSenderEBox;
-  String testService;
+  String testService = "PrintAndEnvelope-LegalZPP";
   String testSubject = "[StressTest] Test example %d";
 
-  public String getTestAction() {
-    return testAction;
+
+  @ManagedProperty(value = "#{MEPSLookups}")
+  private MEPSLookups pluginLookups;
+
+  public MEPSLookups getPluginLookups() {
+    return pluginLookups;
   }
 
+  public void setPluginLookups(MEPSLookups pluginLookups) {
+    this.pluginLookups = pluginLookups;
+  }
+  
   public String getTestReceiverEBox() {
     return testReceiverEBox;
   }
@@ -77,10 +85,6 @@ public class TestCaseAbstract {
 
   }
 
-  public void setTestAction(String testAction) {
-    this.testAction = testAction;
-  }
-
   public void setTestReceiverEBox(String testReceiverEBox) {
     this.testReceiverEBox = testReceiverEBox;
   }
@@ -94,42 +98,34 @@ public class TestCaseAbstract {
       return;
     }
     this.testService = ts;
-    if (!Utils.isEmptyString(testService)) {
-      List<Action> lst = getCurrentServiceActionList();
-      if (!lst.isEmpty()) {
-        setTestAction(lst.get(0).getName());
-      }else {
-      setTestAction(null);
-      }
-    } else {
-      setTestAction(null);
-    }
+    
   }
 
   public void setTestSubject(String testSubject) {
     this.testSubject = testSubject;
   }
-
-  public List<Action> getCurrentServiceActionList() {
-    String srvId = getTestService();
-    if (!Utils.isEmptyString(srvId)) {
-      Service srv = mPMode.getServiceById(srvId);
-      if (srv != null) {
-        return srv.getActions();
-      }
-    }
-    return Collections.emptyList();
+  
+  public ServiceType getServiceType(String name){
+    return getPluginLookups().getServiceByName(name);
+    
   }
 
-  public List<Service> getServiceList() {
-    return mPMode.getServices();
-  }
+ 
 
-  public void createOutMail(String userName, String senderBox, String recBox, String subject,
-          String service, String action, List<File> lstfiles) throws StorageException {
+  public void createOutMail(int indx,
+          String sndBox,
+          String rcBox,
+          String service,
+          String action,
+          ServiceType st,
+          String userName) throws StorageException, JAXBException {
 
-    MSHOutMail mom = mtUtils.createOutMail(senderBox, senderBox, recBox, recBox,
-            service, action, subject, lstfiles);
+    MSHOutMail mom = mtUtils.createOutMail(indx,
+          sndBox,
+          rcBox,
+          service,
+          action,
+          st);
     mDB.serializeOutMail(mom, userName, AppConstant.PLUGIN_NAME, "");
 
     
@@ -187,11 +183,6 @@ public class TestCaseAbstract {
       return false;
     }
 
-    if (Utils.isEmptyString(getTestAction())) {
-      addError("Missing data", "Missing action!");
-      return false;
-    }
-
     return true;
 
   }
@@ -208,4 +199,5 @@ public class TestCaseAbstract {
   public DialogProgress getDlgProgress() {
     return (DialogProgress) getBean("dialogProgress");
   }
+  
 }

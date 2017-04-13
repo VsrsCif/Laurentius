@@ -17,6 +17,7 @@ package si.jrc.msh.plugin.meps.web;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -24,6 +25,7 @@ import java.util.Set;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 import javax.annotation.Resource;
+import javax.ejb.EJB;
 import javax.faces.application.ViewHandler;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -35,7 +37,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.xml.ws.WebServiceContext;
 import si.jrc.msh.plugin.meps.AppConstant;
 import si.laurentius.commons.SEDGUIConstants;
+import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.SEDSystemProperties;
+import si.laurentius.commons.interfaces.SEDLookupsInterface;
+import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.user.SEDUser;
 
 /**
@@ -45,6 +50,11 @@ import si.laurentius.user.SEDUser;
 @SessionScoped
 @ManagedBean(name = "MEPSPluginData")
 public class MEPSPluginData {
+  
+   private static final SEDLogger LOG = new SEDLogger(MEPSPluginData.class);
+
+   @EJB(mappedName = SEDJNDI.JNDI_SEDLOOKUPS)
+  SEDLookupsInterface mDBLookUp;
 
   @Resource
   WebServiceContext context;
@@ -194,9 +204,36 @@ public class MEPSPluginData {
   }
 
    public SEDUser getUser() {
-    FacesContext context = facesContext();
-    ExternalContext externalContext = context.getExternalContext();
-    return (SEDUser) externalContext.getSessionMap()
-        .get(SEDGUIConstants.SESSION_USER_VARIABLE_NAME);
+    long l = LOG.logStart();
+
+    ExternalContext externalContext = facesContext().getExternalContext();
+    SEDUser su
+            = (SEDUser) externalContext.getSessionMap().get(
+                    SEDGUIConstants.SESSION_USER_VARIABLE_NAME);
+    if (su == null) {
+      Principal principal = facesContext().getExternalContext().
+              getUserPrincipal();
+      if (principal != null) {
+        LOG.formatedlog("User principal is %s", principal.getName());
+        su = mDBLookUp.getSEDUserByUserId(principal.getName());
+        externalContext.getSessionMap().put(
+                SEDGUIConstants.SESSION_USER_VARIABLE_NAME, su);
+
+      } else {
+        LOG.log("Principal is NULL");
+      }
+    }
+    return su;
+  }
+
+  public List<String> getUserEBoxes() {
+    List<String> lst = new ArrayList<>();
+    SEDUser usr = getUser();
+    if (usr != null) {
+      usr.getSEDBoxes().stream().forEach((sb) -> {
+        lst.add(sb.getLocalBoxName());
+      });
+    }
+    return lst;
   }
 }

@@ -21,6 +21,10 @@ public class AppConstant {
    *
    */
   public static final String S_PANEL_TEST = "S_PANEL_TEST";
+  
+  public static final String PLUGIN_NAME = "MEPS";
+  
+  
 
   public String getS_PANEL_TEST() {
     return S_PANEL_TEST;

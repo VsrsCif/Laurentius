@@ -10,12 +10,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
+import javax.xml.bind.JAXBException;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 import si.laurentius.commons.SEDJNDI;
@@ -25,6 +27,7 @@ import si.laurentius.commons.interfaces.SEDDaoInterface;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StorageUtils;
 import si.laurentius.commons.utils.Utils;
+import si.laurentius.commons.utils.xml.XMLUtils;
 import si.laurentius.meps.envelope.EnvelopeData;
 import si.laurentius.meps.envelope.PhysicalAddressType;
 import si.laurentius.meps.envelope.PostalData;
@@ -32,6 +35,7 @@ import si.laurentius.meps.envelope.SenderMailData;
 import si.laurentius.msh.outbox.mail.MSHOutMail;
 import si.laurentius.msh.outbox.payload.MSHOutPart;
 import si.laurentius.msh.outbox.payload.MSHOutPayload;
+import si.laurentius.plugin.meps.PartyType;
 import si.laurentius.plugin.meps.ServiceType;
 
 /**
@@ -40,7 +44,7 @@ import si.laurentius.plugin.meps.ServiceType;
  */
 @SessionScoped
 @ManagedBean(name = "dialogComposeMailView")
-public class DialogComposeMailView {
+public class DialogComposeMailView extends AbstractJSFView {
 
   private static final SEDLogger LOG = new SEDLogger(DialogComposeMailView.class);
 
@@ -57,6 +61,38 @@ public class DialogComposeMailView {
   EnvelopeData envelopeData;
 
   MSHOutPart selectedNewOutMailAttachment;
+
+  String serviceProvider;
+  String serviceRequestor;
+  
+  si.laurentius.plugin.meps.PhysicalAddressType selectedAddress;
+
+  public si.laurentius.plugin.meps.PhysicalAddressType getSelectedAddress() {
+    return selectedAddress;
+  }
+
+  public void setSelectedAddress(
+          si.laurentius.plugin.meps.PhysicalAddressType selectedAddress) {
+    this.selectedAddress = selectedAddress;
+  }
+
+  
+  
+  public String getServiceProvider() {
+    return serviceProvider;
+  }
+
+  public void setServiceProvider(String serviceProvider) {
+    this.serviceProvider = serviceProvider;
+  }
+
+  public String getServiceRequestor() {
+    return serviceRequestor;
+  }
+
+  public void setServiceRequestor(String serviceRequestor) {
+    this.serviceRequestor = serviceRequestor;
+  }
 
   public MEPSLookups getPluginLookups() {
     return pluginLookups;
@@ -148,6 +184,36 @@ public class DialogComposeMailView {
     return lst;
   }
 
+  public String getCurrentService() {
+    return getNewOutMail().getService();
+
+  }
+
+  public void setCurrentService(String srv) {
+    List<ServiceType> lst = pluginLookups.getServices();
+    for (ServiceType st : lst) {
+      if (Objects.equals(st.getName(), srv)) {
+        getPostalData().setMepsService(st.getName());
+        getPostalData().setEnvelopeType(st.getEnvelopeName());
+        getPostalData().getUPNCode().setPrefix(st.getUPNPrefix());
+        return;
+      }
+    }
+
+  }
+
+  public boolean hasUPNCode() {
+    List<ServiceType> lst = pluginLookups.getServices();
+    for (ServiceType st : lst) {
+      if (Objects.equals(st.getName(), getCurrentService())) {
+        return st.isUseUPN();
+
+      }
+    }
+    return true;
+
+  }
+
   /**
    *
    */
@@ -167,19 +233,31 @@ public class DialogComposeMailView {
   public void sendComposedMail() {
     if (newOutMail != null) {
       try {
-
-        String pmodeId = Utils.getPModeIdFromOutMail(newOutMail);
+        newOutMail.setId(null);
+        newOutMail.
+                setService(getEnvelopeData().getPostalData().getMepsService());
+        newOutMail.setAction("AddMail");
+        newOutMail.setSenderEBox(getServiceRequestor());
+        newOutMail.setReceiverEBox(getServiceProvider());
         newOutMail.setReceiverName(newOutMail.getReceiverEBox());
         newOutMail.setSenderName(newOutMail.getSenderEBox());
+        newOutMail.setSubject("Print and envelope: " + getEnvelopeData().
+                getSenderMailData().getCaseCode());
+
+        String pmodeId = Utils.getPModeIdFromOutMail(newOutMail);
+
+        StorageUtils su = new StorageUtils();
 
         MSHOutPart p = new MSHOutPart();
         p.setEncoding("UTF-8");
-        p.setDescription("Mail body");
-        p.setMimeType(MimeValue.MIME_TXT.getMimeType());
+        p.setDescription("EnvelopeData");
+        p.setName("EnvelopeData");
 
-        // mp.setValue();
-        StorageUtils su = new StorageUtils();
-        File fout = su.storeFile("tst_", "txt", "<test xml>".getBytes());
+        p.setMimeType(MimeValue.MIME_XML.getMimeType());
+
+        byte[] buff = XMLUtils.serialize(getEnvelopeData());
+
+        File fout = su.storeFile("envdata_", "xml", buff);
 
         String relPath = StorageUtils.getRelativePath(fout);
         p.setFilepath(relPath);
@@ -187,33 +265,47 @@ public class DialogComposeMailView {
         if (Utils.isEmptyString(p.getFilename())) {
           p.setFilename(fout.getName());
         }
-        if (Utils.isEmptyString(p.getName())) {
-          p.setName(p.getFilename().substring(0, p.getFilename().
-                  lastIndexOf(".")));
-        }
 
         if (newOutMail.getMSHOutPayload() == null) {
           newOutMail.setMSHOutPayload(new MSHOutPayload());
         }
-
         newOutMail.getMSHOutPayload().getMSHOutParts().add(0, p);
-
         newOutMail.setSubmittedDate(Calendar.getInstance().getTime());
-
         mDB.serializeOutMail(newOutMail, pluginData.getUser().getUserId(),
-                "meps-plugin",
+                "MEPS",
                 pmodeId);
-      } catch (StorageException ex) {
+        addCallbackParam(AbstractJSFView.CB_PARA_SAVED, true);
+      } catch (JAXBException | StorageException ex) {
+        addCallbackParam(AbstractJSFView.CB_PARA_SAVED, true);
+        addError(ex.getMessage());
         LOG.logError(0, ex);
       }
     }
   }
 
+  
+  public void setSelectedAddressToMail(){
+    if (selectedAddress!=null &&  getReceiverAddress()!=null){
+      getReceiverAddress().setName(getSelectedAddress().getName());
+      getReceiverAddress().setName2(getSelectedAddress().getName2());
+      getReceiverAddress().setAddress(getSelectedAddress().getAddress());
+      getReceiverAddress().setTown(getSelectedAddress().getTown());
+      getReceiverAddress().setPostalName(getSelectedAddress().getPostalName());
+      getReceiverAddress().setPostalCode(getSelectedAddress().getPostalCode());
+      getReceiverAddress().setCountry(getSelectedAddress().getCountry());
+      getReceiverAddress().setCountryCode(getSelectedAddress().getCountryCode());
+      
+    }
+    addCallbackParam(CB_PARA_SAVED, true);
+  }
+          
   public void createNewMail() {
+    PartyType.PostContract pc = pluginLookups.getPostContract();
     newOutMail = new MSHOutMail();
     envelopeData = new EnvelopeData();
-    envelopeData.setExecutorContractId("Contrat id");
-    envelopeData.setExecutorId("meps1");
+    PartyType.ServiceProviderContract spc = new PartyType.ServiceProviderContract();
+    envelopeData.setExecutorContractId(spc.getCode());
+    envelopeData.setExecutorId(spc.getName());
     envelopeData.setPostalData(new PostalData());
     envelopeData.getPostalData().setUPNCode(new PostalData.UPNCode());
     if (!pluginLookups.getServices().isEmpty()) {
@@ -231,9 +323,12 @@ public class DialogComposeMailView {
 
       }
     }
-    envelopeData.getPostalData().setPostalContractId("1235-5-12-1102");
-    envelopeData.getPostalData().setSubmitPostalCode("1102");
-    envelopeData.getPostalData().setSubmitPostalName("Ljubljana");
+    if (pc != null) {
+      envelopeData.getPostalData().setPostalContractName(pc.getName());
+      envelopeData.getPostalData().setPostalContractId(pc.getCode());
+      envelopeData.getPostalData().setSubmitPostalCode(pc.getSubmitPostalCode());
+      envelopeData.getPostalData().setSubmitPostalName(pc.getSubmitPostalName());
+    }
 
     envelopeData.setSenderAddress(new PhysicalAddressType());
     envelopeData.getSenderAddress().setAddress(pluginLookups.getSenderAddress().
