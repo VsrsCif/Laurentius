@@ -24,7 +24,7 @@
                             >     
             <p:panelGrid columns="2" columnClasses="grid-label, value">
                 <h:outputText value="#{msg['Plugin']}:" />
-                <p:selectOneMenu id="pluginType" value="#{adminSEDInMailProcessInstanceView.editable.plugin}" 
+                <p:selectOneMenu id="pluginType" value="#{adminSEDInMailProcessInstanceView.editableProcessorPluginType}" 
                                  style="width:150px" 
                                  >
                     <p:ajax update=":dlgprocinstance:procInstanceDialog:procInstanceDialogForm:impInstancetype 

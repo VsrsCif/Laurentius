@@ -294,6 +294,28 @@ public class AdminSEDInMailProcessInstanceView extends AbstractAdminJSFView<SEDP
    *
    * @return
    */
+  public String getEditableProcessorPluginType() {
+    SEDProcessorInstance t = getEditable();
+    return t == null ? null : t.getPlugin();
+  }
+
+  /**
+   * Set plugin for editable task
+   *
+   * @param strPlugin
+   */
+  public void setEditableProcessorPluginType(String strPlugin) {
+    SEDProcessorInstance t = getEditable();
+    if (t != null && !Objects.equals(strPlugin, t.getPlugin())) {
+      t.setPlugin(strPlugin);
+      // set type
+      Plugin plg = mPlgManager.getPluginByType(strPlugin);
+      setEditableProcessorType(
+              plg != null && !plg.getInMailProcessorDeves().isEmpty()
+              ? plg.getInMailProcessorDeves().get(0).getType() : null);
+
+    }
+  }
   public String getEditableProcessorType() {
     SEDProcessorInstance spi = getEditable();
     return spi == null ? null : spi.getType();

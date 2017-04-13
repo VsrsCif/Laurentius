@@ -27,7 +27,7 @@
             <p:column headerText="#{msg['Key']}"  width="150">
                 <h:outputText id="TblPluginTypePropKey" value="#{sp.propertyDef.key}" />
                 <p:tooltip for="#{cc.clientId}:#{cc.attrs.tableId}:#{rowIndex}:TblPluginTypePropKey"
-                           value="# {sp.propertyDef.description}"/>
+                           value="#{sp.propertyDef.description}"/>
             </p:column>
             <p:column headerText="#{msg['Mnd.']}" width="20">
                 <p:selectBooleanCheckbox value="#{sp.propertyDef.mandatory}" disabled="true" />
