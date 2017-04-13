@@ -88,7 +88,8 @@
         <b>V primeru, da do aplikacije ne dostopamo iz naslova, kjer je nameščena aplikacija 
             je potrebno primerno popraviti naslov "localhost" </b>
         
-        V demo aplikaciji sta nastavljena dva uporabnika:
+        V demo aplikaciji za dostop do <a href="http://localhost:8080/laurentius-web/">laurentius-web</a> 
+        sta izdelana dva testna uporabnika:
         <br /><br />
         <table class="styled-table">
             <tr><th>Uporabniško ime</th><th>geslo</th><th>vloge</th></tr>
@@ -96,6 +97,22 @@
             <tr><td>admin</td><td>admin1234</td><td>USER,ADMIN</td></tr>
         </table>
         
+        Ker aplikacija omogoča dostop iz večih zalednih sistemov, se morajo avtenticirati
+        tudi aplikacije. V demo aplikaciji sta za dostop do spletnih servisov 
+         <a href="http://localhost:8080/laurentius-ws/mailbox?wsdl">laurentius-ws/mailbox?wsdl</a><br />
+         sta nastavljena dva uporabnika:
+        <br /><br />
+        <table class="styled-table">
+            <tr><th>Uporabniško ime</th><th>geslo</th><th>vloge</th></tr>
+            <tr><td>appl_1</td><td>appl1234</td><td>WEBSERVICE</td></tr>
+            <tr><td>appl_2</td><td>appl1234</td><td>WEBSERVICE</td></tr>
+        </table>
+        
+        Dodajanje uporabnikov/aplikacije je opisano na spletni strani:
+        <a href="#install/wildfly:users" >Določanje uporabnikov</a><br />
+        Administracija dostopa do predalov pa na povezavah za
+        <a href="#gui/admin-sed-user" >uporabniki</a> in  za
+            <a href="#gui/admin-sed-appl" >aplikacije</a>.
         
          <h2  id="install/install:deploy-script">Parametri skripte deploy-laurentius.(bat|sh)</h2>
         <pre><code>deploy-laurentius.(bat|sh) --init -b [SED_BUNDLE] -w [WILDFLY_HOME] -l [LAURENTIUS_HOME]</code></pre>
