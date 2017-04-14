@@ -1,0 +1,119 @@
+<wsdl:definitions name="MjuDmsWebServiceService" targetNamespace="http://dms.mju.comtrade.com/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://dms.mju.comtrade.com/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns3="http://schemas.xmlsoap.org/soap/http" xmlns:ns1="http://nio.gov.si/cev/2015/">
+  <wsdl:import location="MjuDmsWSPortBinding.wsdl" namespace="http://nio.gov.si/cev/2015/"></wsdl:import>
+  <wsdl:binding name="MjuDmsWebServiceServiceSoapBinding" type="ns1:MjuDmsWSPortBinding">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="getMessageDeliveryForMail">
+      <soap:operation soapAction="http://nio.gov.si/cev/2015/getMessageDeliveryForMail" style="document"/>
+      <wsdl:input name="getMessageDeliveryForMail">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getMessageDeliveryForMailResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="DmsFault">
+        <soap:fault name="DmsFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="checkEBoxAddress">
+      <soap:operation soapAction="http://nio.gov.si/cev/2015/checkEBoxAddress" style="document"/>
+      <wsdl:input name="checkEBoxAddress">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="checkEBoxAddressResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="DmsFault">
+        <soap:fault name="DmsFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="deliverMessage">
+      <soap:operation soapAction="http://nio.gov.si/cev/2015/deliverMessage" style="document"/>
+      <wsdl:input name="deliverMessage">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="deliverMessageResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="DmsFault">
+        <soap:fault name="DmsFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getSigningRequests">
+      <soap:operation soapAction="http://nio.gov.si/cev/2015/getSigningRequests" style="document"/>
+      <wsdl:input name="getSigningRequests">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getSigningRequestsResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="DmsFault">
+        <soap:fault name="DmsFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getUndeliveredAdvice">
+      <soap:operation soapAction="http://nio.gov.si/cev/2015/getUndeliveredAdvice" style="document"/>
+      <wsdl:input name="getUndeliveredAdvice">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getUndeliveredAdviceResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="DmsFault">
+        <soap:fault name="DmsFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getUndeliveredMessages">
+      <soap:operation soapAction="http://nio.gov.si/cev/2015/getUndeliveredMessages" style="document"/>
+      <wsdl:input name="getUndeliveredMessages">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getUndeliveredMessagesResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="DmsFault">
+        <soap:fault name="DmsFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="acknowledgeAdviceDelivery">
+      <soap:operation soapAction="http://nio.gov.si/cev/2015/acknowledgeAdviceDelivery" style="document"/>
+      <wsdl:input name="acknowledgeAdviceDelivery">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="acknowledgeAdviceDeliveryResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="DmsFault">
+        <soap:fault name="DmsFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="acknowledgeMessagesDelivery">
+      <soap:operation soapAction="http://nio.gov.si/cev/2015/acknowledgeMessagesDelivery" style="document"/>
+      <wsdl:input name="acknowledgeMessagesDelivery">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="acknowledgeMessagesDeliveryResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="DmsFault">
+        <soap:fault name="DmsFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="acknowledgeSigningRequestsDelivery">
+      <soap:operation soapAction="http://nio.gov.si/cev/2015/acknowledgeSigningRequestsDelivery" style="document"/>
+      <wsdl:input name="acknowledgeSigningRequestsDelivery">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="acknowledgeSigningRequestsDeliveryResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="DmsFault">
+        <soap:fault name="DmsFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="MjuDmsWebServiceService">
+    <wsdl:port binding="tns:MjuDmsWebServiceServiceSoapBinding" name="MjuDmsWebServicePort">
+      <soap:address location="http://evrocanje.hermes.si:8080/EV.webservice/services/mjudms"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

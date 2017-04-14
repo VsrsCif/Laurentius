@@ -43,7 +43,7 @@ import static javax.xml.crypto.dsig.XMLSignatureFactory.getInstance;
  */
 public class XMLSignatureUtils {
 
-  private static final String ID_PREFIX_REF = "ref";
+ 
   private static final String ID_PREFIX_SIG = "sig";
   private static final String ID_PREFIX_SIG_VAL = "sig-val";
 

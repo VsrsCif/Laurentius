@@ -42,7 +42,8 @@ public class MJUPluginDescription extends  AbstractPluginDescription {
   @PostConstruct
   private void postConstruct() {    
     try {
-      // and log further application specific info
+      
+      registerPluginComponentInterface(MJUMailSubmitter.class);
       registerPluginComponentInterface(MJUProcessorInZPPMail.class);
       registerPluginComponentInterface(MJUCronTask.class);
       
@@ -114,7 +115,7 @@ public class MJUPluginDescription extends  AbstractPluginDescription {
    */
   @Override
   public String getType() {
-    return "MJUWebPlugin";
+    return AppConstants.PLUGIN_NAME;
   }
 
 }

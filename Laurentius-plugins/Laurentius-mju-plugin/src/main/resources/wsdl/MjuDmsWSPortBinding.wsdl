@@ -1,0 +1,393 @@
+<wsdl:definitions name="MjuDmsWSPortBinding" targetNamespace="http://nio.gov.si/cev/2015/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns2="http://nio.gov.si/cev/2015/Document" xmlns:ns1="http://nio.gov.si/cev/2015/">
+  <wsdl:types>
+    <xs:schema elementFormDefault="qualified" targetNamespace="http://nio.gov.si/cev/2015/Message" version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://nio.gov.si/cev/2015/Message">
+      <xs:element name="DeliveryNotification" type="xs:anyType"/>
+      <xs:element name="DeliveryResponse" type="tns:DeliveryResponseType"/>
+      <xs:element name="DeliveryType" type="xs:string"/>
+      <xs:element name="FormDocument" type="xs:anyType"/>
+      <xs:element name="Message" type="tns:MessageType"/>
+      <xs:element name="MessageId" type="xs:string"/>
+      <xs:element name="ReceiptAdvice" type="tns:ReceiptAdviceType"/>
+      <xs:complexType name="MessageType">
+        <xs:sequence>
+          <xs:element name="To" type="tns:AddressesType"/>
+          <xs:element name="From" type="tns:AddressType"/>
+          <xs:element name="Subject" type="xs:string"/>
+          <xs:element name="MessageId" type="xs:string"/>
+          <xs:element minOccurs="0" name="SenderDocumentId" type="xs:string"/>
+          <xs:element name="DocumentType" type="xs:string"/>
+          <xs:element minOccurs="0" name="Body" type="xs:string"/>
+          <xs:element name="DeliveryType" type="xs:string"/>
+          <xs:element minOccurs="0" name="RelatesTo" type="xs:anyURI"/>
+          <xs:element minOccurs="0" name="Content" type="tns:ContentType"/>
+          <xs:element minOccurs="0" name="DocumentInfo" type="tns:DocumentInfoType"/>
+        </xs:sequence>
+        <xs:attribute name="schemaVersion" type="xs:decimal" use="required"/>
+      </xs:complexType>
+      <xs:complexType name="AddressesType">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="Address" type="tns:AddressType"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="AddressType">
+        <xs:sequence>
+          <xs:element name="PoBoxId" type="xs:string"/>
+          <xs:element minOccurs="0" name="TaxNo" type="xs:string"/>
+          <xs:element minOccurs="0" name="URI" type="xs:anyURI"/>
+          <xs:element minOccurs="0" name="PhysicalAddress" type="tns:PhysicalAddressType"/>
+          <xs:element minOccurs="0" name="NotificationEmails">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element maxOccurs="unbounded" name="NotificationEmail" type="xs:string"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="PhysicalAddressType">
+        <xs:sequence>
+          <xs:element name="Name" type="xs:string"/>
+          <xs:element name="Street" type="xs:string"/>
+          <xs:element name="PostalCode" type="xs:string"/>
+          <xs:element name="City" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="ContentType">
+        <xs:sequence>
+          <xs:any namespace="##other" processContents="lax"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="ReceiptAdviceType">
+        <xs:sequence>
+          <xs:element name="DeliveryType" type="xs:string"/>
+          <xs:element name="Status" type="xs:string"/>
+          <xs:element name="EventTime" type="xs:dateTime"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="DeliveryResponseType">
+        <xs:sequence>
+          <xs:element name="DeliveryType" type="xs:string"/>
+          <xs:element name="Status" type="xs:string"/>
+          <xs:element name="EventTime" type="xs:dateTime"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="DocumentInfoType">
+        <xs:sequence>
+          <xs:element name="DocumentDate" type="xs:dateTime"/>
+          <xs:element name="DocumentId" type="xs:string"/>
+          <xs:element name="SubjectId" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+    </xs:schema>
+    <xs:schema elementFormDefault="qualified" targetNamespace="http://nio.gov.si/cev/2015/Document" version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://nio.gov.si/cev/2015/Document" xmlns:ns1="http://nio.gov.si/cev/2015/Message">
+      <xs:import namespace="http://nio.gov.si/cev/2015/Message"/>
+      <xs:element name="Document">
+        <xs:complexType>
+          <xs:complexContent>
+            <xs:extension base="tns:DocumentType">
+              <xs:sequence/>
+              <xs:attribute name="schemaVersion" type="xs:decimal" use="required"/>
+            </xs:extension>
+          </xs:complexContent>
+        </xs:complexType>
+      </xs:element>
+      <xs:complexType name="DocumentType">
+        <xs:sequence>
+          <xs:element name="Data" type="tns:DataType"/>
+          <xs:element name="Visualisations" type="tns:VisualisationsType"/>
+          <xs:element minOccurs="0" name="Attachments" type="tns:AttachmentsType"/>
+          <xs:element name="Signatures" type="tns:SignaturesType"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="DataType">
+        <xs:complexContent>
+          <xs:extension base="tns:MsgDataTypeBase">
+            <xs:sequence/>
+            <xs:attribute name="Id" type="xs:ID" use="required"/>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+      <xs:complexType name="MsgDataTypeBase">
+        <xs:sequence>
+          <xs:element name="DataFormat" type="tns:DataObjectFormatType"/>
+          <xs:element name="Description" type="xs:string"/>
+          <xs:element name="Content" type="tns:EmbeddedMsgDataType"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="DataObjectFormatType">
+        <xs:sequence>
+          <xs:element name="Identifier" type="xs:string"/>
+          <xs:element name="MimeType" type="xs:string"/>
+          <xs:element name="Encoding" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="EmbeddedMsgDataType">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" minOccurs="0" ref="ns1:Message"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="VisualisationsType">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="Visualisation" type="tns:VisualisationType"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="VisualisationType">
+        <xs:complexContent>
+          <xs:extension base="tns:DataTypeBase">
+            <xs:sequence/>
+            <xs:attribute name="Id" type="xs:ID" use="required"/>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+      <xs:complexType name="DataTypeBase">
+        <xs:sequence>
+          <xs:element name="DataFormat" type="tns:DataObjectFormatType"/>
+          <xs:element name="Description" type="xs:string"/>
+          <xs:element name="Content" type="tns:ContentType"/>
+          <xs:element minOccurs="0" name="FileName" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="ContentType">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="EmbeddedData" type="tns:EmbeddedDataType"/>
+          <xs:element minOccurs="0" name="ReferencedData" type="tns:ReferencedDataType"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType mixed="true" name="EmbeddedDataType">
+        <xs:sequence>
+          <xs:any maxOccurs="unbounded" minOccurs="0" namespace="##other" processContents="lax"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="AttachmentType">
+        <xs:complexContent>
+          <xs:extension base="tns:DataTypeBase">
+            <xs:sequence/>
+            <xs:attribute name="Id" type="xs:ID" use="required"/>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+      <xs:complexType name="AttachmentsType">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="Attachment" type="tns:AttachmentType"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="ReferencedDataType">
+        <xs:sequence>
+          <xs:element name="DigestMethod" type="xs:string"/>
+          <xs:element name="DigestValue" type="xs:base64Binary"/>
+          <xs:element name="URI" type="xs:anyURI"/>
+          <xs:element name="Size" type="xs:integer"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="SignaturesType">
+        <xs:sequence>
+          <xs:any maxOccurs="unbounded" minOccurs="0" namespace="##other" processContents="lax"/>
+        </xs:sequence>
+      </xs:complexType>
+    </xs:schema>
+    <xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://nio.gov.si/cev/2015/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://nio.gov.si/cev/2015/" xmlns:ns1="http://nio.gov.si/cev/2015/Document">
+      <xs:import namespace="http://nio.gov.si/cev/2015/Document"/>
+      <xs:element name="AcknowledgeAdviceDeliveryRequest">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="MessageUuid" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="AcknowledgeMessagesDeliveryRequest">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="MessageUuid" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="AcknowledgeSigningRequestsDeliveryRequest">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="MessageUuid" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="AddDeliveryAdviceResponse" type="xs:boolean"/>
+      <xs:element name="CheckEBoxAddressResponse">
+        <xs:complexType>
+          <xs:sequence/>
+          <xs:attribute name="eBoxAddress" type="xs:string"/>
+          <xs:attribute name="eBoxAddressExists" type="xs:boolean"/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="DmsException">
+        <xs:complexType>
+          <xs:sequence/>
+          <xs:attribute name="code" type="xs:int" use="required"/>
+          <xs:attribute name="subCode" type="xs:int" use="required"/>
+          <xs:attribute name="description" type="xs:string" use="required"/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetMessageDeliveryForMailResponse">
+        <xs:complexType mixed="true">
+          <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" ref="ns1:Document"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetSigningRequestsResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="Advice" type="tns:AdviceType"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetUndeliveredAdviceResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="MailMessage" type="tns:MailMessage"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetUndeliveredMessagesResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="MailMessage" type="tns:MailMessage"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:complexType name="AdviceType">
+        <xs:sequence>
+          <xs:element name="From" type="xs:string"/>
+          <xs:element name="To" type="xs:string"/>
+          <xs:element name="Subject" type="xs:string"/>
+          <xs:element name="MessageId" type="xs:string"/>
+          <xs:element minOccurs="0" name="SenderDocumentId" type="xs:string"/>
+          <xs:element name="DeliveryType" type="xs:string"/>
+          <xs:element minOccurs="0" name="RelatesTo" type="xs:string"/>
+          <xs:element minOccurs="0" name="MessageUuid" type="xs:string"/>
+          <xs:element name="SignLink" type="xs:anyURI"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="MailMessage">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="MessageUuid" type="xs:string"/>
+          <xs:element minOccurs="0" name="MailMessageContent" type="tns:MailMessageContentType"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType mixed="true" name="MailMessageContentType">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" minOccurs="0" ref="ns1:Document"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:element name="GetMessageDeliveryForMailRequest" nillable="true" type="xs:string"/>
+      <xs:element name="CheckEBoxAddressRequest" nillable="true" type="xs:string"/>
+      <xs:element name="GetSigningRequestsRequest" nillable="true" type="xs:int"/>
+      <xs:element name="GetUndeliveredMessagesRequest" nillable="true" type="xs:int"/>
+      <xs:element name="GetUndeliveredAdviceRequest" nillable="true" type="xs:int"/>
+      <xs:element name="AcknowledgeAdviceDeliveryResponse" nillable="true" type="xs:boolean"/>
+      <xs:element name="AcknowledgeMessagesDeliveryResponse" nillable="true" type="xs:boolean"/>
+      <xs:element name="AcknowledgeSigningRequestsDeliveryResponse" nillable="true" type="xs:boolean"/>
+    </xs:schema>
+  </wsdl:types>
+  <wsdl:message name="acknowledgeMessagesDelivery">
+    <wsdl:part element="ns1:AcknowledgeMessagesDeliveryRequest" name="AcknowledgeMessagesDeliveryRequest"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getUndeliveredAdviceResponse">
+    <wsdl:part element="ns1:GetUndeliveredAdviceResponse" name="GetUndeliveredAdviceResult"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getSigningRequests">
+    <wsdl:part element="ns1:GetSigningRequestsRequest" name="GetSigningRequestsRequest"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="checkEBoxAddress">
+    <wsdl:part element="ns1:CheckEBoxAddressRequest" name="CheckEBoxAddressRequest"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getUndeliveredMessagesResponse">
+    <wsdl:part element="ns1:GetUndeliveredMessagesResponse" name="GetUndeliveredMessagesResult"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="acknowledgeSigningRequestsDeliveryResponse">
+    <wsdl:part element="ns1:AcknowledgeSigningRequestsDeliveryResponse" name="AcknowledgeSigningRequestsDeliveryResult"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getUndeliveredAdvice">
+    <wsdl:part element="ns1:GetUndeliveredAdviceRequest" name="GetUndeliveredAdviceRequest"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getMessageDeliveryForMail">
+    <wsdl:part element="ns1:GetMessageDeliveryForMailRequest" name="GetMessageDeliveryForMailRequest"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getUndeliveredMessages">
+    <wsdl:part element="ns1:GetUndeliveredMessagesRequest" name="GetUndeliveredMessagesRequest"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="acknowledgeMessagesDeliveryResponse">
+    <wsdl:part element="ns1:AcknowledgeMessagesDeliveryResponse" name="AcknowledgeMessagesDeliveryResult"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="acknowledgeSigningRequestsDelivery">
+    <wsdl:part element="ns1:AcknowledgeSigningRequestsDeliveryRequest" name="AcknowledgeSigningRequestsDeliveryRequest"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="checkEBoxAddressResponse">
+    <wsdl:part element="ns1:CheckEBoxAddressResponse" name="checkEBoxAddressResult"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deliverMessage">
+    <wsdl:part element="ns2:Document" name="DeliverMessageRequest"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deliverMessageResponse">
+    <wsdl:part element="ns2:Document" name="DeliverMessageResult"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getSigningRequestsResponse">
+    <wsdl:part element="ns1:GetSigningRequestsResponse" name="GetSigningRequestsResult"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="acknowledgeAdviceDeliveryResponse">
+    <wsdl:part element="ns1:AcknowledgeAdviceDeliveryResponse" name="AcknowledgeAdviceDeliveryResult"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getMessageDeliveryForMailResponse">
+    <wsdl:part element="ns1:GetMessageDeliveryForMailResponse" name="GetMessageDeliveryForMailResult"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="DmsFault">
+    <wsdl:part element="ns1:DmsException" name="DmsFault"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="acknowledgeAdviceDelivery">
+    <wsdl:part element="ns1:AcknowledgeAdviceDeliveryRequest" name="AcknowledgeAdviceDeliveryRequest"></wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="MjuDmsWSPortBinding">
+    <wsdl:operation name="getMessageDeliveryForMail">
+      <wsdl:input message="ns1:getMessageDeliveryForMail" name="getMessageDeliveryForMail"></wsdl:input>
+      <wsdl:output message="ns1:getMessageDeliveryForMailResponse" name="getMessageDeliveryForMailResponse"></wsdl:output>
+      <wsdl:fault message="ns1:DmsFault" name="DmsFault"></wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="checkEBoxAddress">
+      <wsdl:input message="ns1:checkEBoxAddress" name="checkEBoxAddress"></wsdl:input>
+      <wsdl:output message="ns1:checkEBoxAddressResponse" name="checkEBoxAddressResponse"></wsdl:output>
+      <wsdl:fault message="ns1:DmsFault" name="DmsFault"></wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="deliverMessage">
+      <wsdl:input message="ns1:deliverMessage" name="deliverMessage"></wsdl:input>
+      <wsdl:output message="ns1:deliverMessageResponse" name="deliverMessageResponse"></wsdl:output>
+      <wsdl:fault message="ns1:DmsFault" name="DmsFault"></wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getSigningRequests">
+      <wsdl:input message="ns1:getSigningRequests" name="getSigningRequests"></wsdl:input>
+      <wsdl:output message="ns1:getSigningRequestsResponse" name="getSigningRequestsResponse"></wsdl:output>
+      <wsdl:fault message="ns1:DmsFault" name="DmsFault"></wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getUndeliveredMessages">
+      <wsdl:input message="ns1:getUndeliveredMessages" name="getUndeliveredMessages"></wsdl:input>
+      <wsdl:output message="ns1:getUndeliveredMessagesResponse" name="getUndeliveredMessagesResponse"></wsdl:output>
+      <wsdl:fault message="ns1:DmsFault" name="DmsFault"></wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="getUndeliveredAdvice">
+      <wsdl:input message="ns1:getUndeliveredAdvice" name="getUndeliveredAdvice"></wsdl:input>
+      <wsdl:output message="ns1:getUndeliveredAdviceResponse" name="getUndeliveredAdviceResponse"></wsdl:output>
+      <wsdl:fault message="ns1:DmsFault" name="DmsFault"></wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="acknowledgeAdviceDelivery">
+      <wsdl:input message="ns1:acknowledgeAdviceDelivery" name="acknowledgeAdviceDelivery"></wsdl:input>
+      <wsdl:output message="ns1:acknowledgeAdviceDeliveryResponse" name="acknowledgeAdviceDeliveryResponse"></wsdl:output>
+      <wsdl:fault message="ns1:DmsFault" name="DmsFault"></wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="acknowledgeMessagesDelivery">
+      <wsdl:input message="ns1:acknowledgeMessagesDelivery" name="acknowledgeMessagesDelivery"></wsdl:input>
+      <wsdl:output message="ns1:acknowledgeMessagesDeliveryResponse" name="acknowledgeMessagesDeliveryResponse"></wsdl:output>
+      <wsdl:fault message="ns1:DmsFault" name="DmsFault"></wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="acknowledgeSigningRequestsDelivery">
+      <wsdl:input message="ns1:acknowledgeSigningRequestsDelivery" name="acknowledgeSigningRequestsDelivery"></wsdl:input>
+      <wsdl:output message="ns1:acknowledgeSigningRequestsDeliveryResponse" name="acknowledgeSigningRequestsDeliveryResponse"></wsdl:output>
+      <wsdl:fault message="ns1:DmsFault" name="DmsFault"></wsdl:fault>
+    </wsdl:operation>
+  </wsdl:portType>
+</wsdl:definitions>

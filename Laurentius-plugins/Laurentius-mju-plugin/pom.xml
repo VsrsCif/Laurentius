@@ -62,6 +62,12 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
+            <artifactId>Laurentius-lce</artifactId>
+            <version>${project.version}</version>		
+            <scope>provided</scope>	
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
             <artifactId>Laurentius-plugin-interfaces</artifactId>
             <version>${project.version}</version>		
             <scope>provided</scope>
@@ -79,7 +85,7 @@
             <artifactId>cxf-rt-frontend-jaxws</artifactId>
             <scope>provided</scope>
         </dependency>
-        <!-- GUI uses prifeaces componens --> 
+        <!-- GUI uses primefaces componens --> 
         <dependency>
             <groupId>org.primefaces</groupId>
             <artifactId>primefaces</artifactId>
@@ -103,7 +109,31 @@
 
     <build>
         <finalName>${war.final.name}</finalName>
-        <plugins>            
+        <plugins>   
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jaxws-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>wsimport</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <bindingDirectory>${basedir}/src/main/resources/bindings</bindingDirectory>
+                    <wsdlDirectory>${basedir}/src/main/resources/wsdl</wsdlDirectory>
+                    <wsdlFiles>
+                        <wsdlFile>MjuDmsWebServiceService.wsdl</wsdlFile>
+                    </wsdlFiles>                    
+                    
+                    <vmArgs>
+                        <vmArg>-Djavax.xml.accessExternalDTD=all</vmArg>
+                        <vmArg>-Djavax.xml.accessExternalSchema=all</vmArg>
+                    </vmArgs>
+                </configuration>
+            </plugin>
+                 
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
             </plugin>           
@@ -117,9 +147,9 @@
                         <manifestEntries>                            
                             <implementation-version>${project.version}</implementation-version>             
                             <Implementation-Build>${buildNumber}</Implementation-Build>                            
-                             <!-- use common module and make deployment thinner
-                             org.apache.cxf - for interceptor
-                               -->
+                            <!-- use common module and make deployment thinner
+                          org.apache.cxf - for interceptor
+                            -->
                             <Dependencies>si.laurentius, org.apache.cxf, org.apache.cxf.impl, org.primefaces</Dependencies>
                         </manifestEntries>
                     </archive>                                 

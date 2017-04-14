@@ -5,8 +5,6 @@
  */
 package si.laurentius.lce.sign.xml;
 
-import si.laurentius.lce.sign.xml.XAdESignatureBuilder;
-import java.security.KeyStore;
 import java.security.cert.X509Certificate;
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
@@ -15,8 +13,6 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 import org.etsi.uri._01903.v1_1.QualifyingProperties;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import si.laurentius.lce.utils.TestUtils;
 import si.laurentius.commons.utils.Utils;
