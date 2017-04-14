@@ -104,7 +104,10 @@ public class SEDMailBoxTest extends TestUtils {
       // ---------------------------------
       // set system variables
       // create home dir in target
-      Files.createDirectory(Paths.get(LAU_HOME));
+      File f = new File(LAU_HOME);
+      if (!f.exists()) {
+        Files.createDirectory(Paths.get(LAU_HOME));
+      }
       System.getProperties().
               put(SEDSystemProperties.SYS_PROP_HOME_DIR, LAU_HOME);
       System.setProperty(SEDSystemProperties.SYS_PROP_JNDI_PREFIX, "");
@@ -116,7 +119,7 @@ public class SEDMailBoxTest extends TestUtils {
       // mTestInstance.JNDI_CONNECTION_FACTORY = JNDI_CONNECTION_FACTORY;
       // mTestInstance.JNDI_QUEUE_NAME = SEDValues.EBMS_QUEUE_JNDI;
       mTestInstance.mqMSHQueue = mshueue;
-      
+
       mTestInstance.mwsCtxt = new TestWebServiceContext("ApplicationId");
 
       // ---------------------------------
@@ -153,7 +156,6 @@ public class SEDMailBoxTest extends TestUtils {
   @AfterClass
   public static void tearDownClass() throws Exception {
   }
-
 
   StorageUtils msuStorageUtils = new StorageUtils();
 
@@ -444,7 +446,7 @@ public class SEDMailBoxTest extends TestUtils {
 
               String relPath = StorageUtils.getRelativePath(fout);
               p.setFilepath(relPath);
-              String hashValue =DigestUtils.getHexSha1Digest(fout);
+              String hashValue = DigestUtils.getHexSha1Digest(fout);
               p.setSha1Value(hashValue);
               p.setSize(BigInteger.valueOf(fout.length()));
 
@@ -750,7 +752,7 @@ public class SEDMailBoxTest extends TestUtils {
 
     om.setService(valTest);
     om.setAction(action);
-    
+
     om.setSenderEBox(senderBox);
     om.setReceiverEBox(UUID.randomUUID().toString() + "@test-sed.si");
     smr.getData().setOutMail(om); // create new mail
@@ -832,7 +834,7 @@ public class SEDMailBoxTest extends TestUtils {
     assertEquals("SubmittedDateFrom Response/RControl/@returnValue", mlr.
             getRControl()
             .getReturnValue().intValue(), SVEVReturnValue.OK.getValue());
-    assertEquals("Test SubmittedDateFrom parameter", TEST_CNT , mlr.
+    assertEquals("Test SubmittedDateFrom parameter", TEST_CNT, mlr.
             getRData().getOutMails()
             .size());
 
@@ -856,7 +858,7 @@ public class SEDMailBoxTest extends TestUtils {
     assertEquals("SubmittedDateFrom Response/RControl/@returnValue", mlr.
             getRControl()
             .getReturnValue().intValue(), SVEVReturnValue.OK.getValue());
-    assertEquals("service RControl/@ResultSize", TEST_CNT + iResCNt , mlr.
+    assertEquals("service RControl/@ResultSize", TEST_CNT + iResCNt, mlr.
             getRControl()
             .getResultSize().intValue());
     assertEquals("service RControl/@getResponseSize", TEST_CNT, mlr.

@@ -20,6 +20,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 import si.laurentius.application.SEDApplication;
+import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.utils.xml.XMLUtils;
 import si.laurentius.cron.SEDCronJob;
 import si.laurentius.cron.SEDTaskProperty;
@@ -56,6 +57,7 @@ public class SEDLookupsTest extends TestUtils {
     mTestInstance.memEManager = memfMSHFactory.createEntityManager();
     mTestInstance.mutUTransaction
             = new MockUserTransaction(mTestInstance.memEManager.getTransaction());
+    System.setProperty(SEDSystemProperties.SYS_PROP_LAU_DOMAIN,  LAU_TEST_DOMAIN);
 
   }
 
@@ -307,6 +309,7 @@ public class SEDLookupsTest extends TestUtils {
   @Test
   public void testGetSEDBoxByAddressName() throws Exception {
     System.out.println("getSEDBoxByAddressName");
+    
 
     SEDBox init = TestLookupUtils.createSEDBox();
     String strname = init.getLocalBoxName() + "@" + LAU_TEST_DOMAIN;
