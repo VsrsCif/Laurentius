@@ -19,15 +19,6 @@
         <url-pattern>*.xhtml</url-pattern>
     </servlet-mapping>
     <!-- Protected area definition -->  
-    <!-- security-constraint>
-    web-resource-collection>
-            <web-resource-name>Restricted Area - ADMIN Only</web-resource-name>
-            <url-pattern>/pages/protected/admin/*</url-pattern>
-        </web-resource-collection>
-        <auth-constraint>
-            <role-name>ADMIN</role-name>
-        </auth-constraint>
-    </security-constraint -->
     <security-constraint>
         <web-resource-collection>
             <web-resource-name>Restricted Area - USER and ADMIN</web-resource-name>
@@ -48,14 +39,7 @@
             <form-error-page>/public/login.xhtml</form-error-page>
         </form-login-config>
     </login-config>
-    <!-- error-page>
-        <error-code>403</error-code>
-        <location>/WEB-INF/error-pages/forbidden.xhtml</location>
-    </error-page>
-    <error-page>
-        <error-code>404</error-code>
-        <location>/WEB-INF/error-pages/notFound.xhtml</location>
-    </error-page -->
+
     <!-- System roles -->
     <security-role>
         <role-name>ADMIN</role-name>

@@ -150,7 +150,7 @@
                                 <span class="ui-separator">
                                     <span class="ui-icon ui-icon-grip-dotted-vertical " />
                                 </span>
-                                    <p:outputLabel value="#{msg['Domain']}:  " /> <b>#{ApplicationData.domain}</b>
+                                <p:outputLabel value="#{msg['Domain']}:  " /> <b>#{ApplicationData.domain}</b>
 
 
 
@@ -219,15 +219,15 @@
                         <p:toolbar  id="status-bar" style="padding: 0; margin: 0; height: 24px; vertical-align: middle;">
                             <f:facet name="right">
                                 <p:outputLabel value="Network status:" />
-                                 <h:graphicImage rendered="#{not ApplicationData.networkConnected}" 
-                                                 value="#{resource['images:/network-discon.svg']}" width="18" height="18"  />
-                                 <h:graphicImage rendered="#{ApplicationData.networkConnected and not ApplicationData.internetConnected}" 
-                                                 value="#{resource['images:/internet-discon.svg']}" width="18" height="18"  />
-                                 <h:graphicImage rendered="#{ApplicationData.networkConnected and ApplicationData.internetConnected}" 
-                                                 value="#{resource['images:/internet-connected.svg']}" width="18" height="18"  />
-                                 
+                                <h:graphicImage rendered="#{not ApplicationData.networkConnected}" 
+                                                value="#{resource['images:/network-discon.svg']}" width="18" height="18"  />
+                                <h:graphicImage rendered="#{ApplicationData.networkConnected and not ApplicationData.internetConnected}" 
+                                                value="#{resource['images:/internet-discon.svg']}" width="18" height="18"  />
+                                <h:graphicImage rendered="#{ApplicationData.networkConnected and ApplicationData.internetConnected}" 
+                                                value="#{resource['images:/internet-connected.svg']}" width="18" height="18"  />
 
-                           
+
+
                                 <p:outputLabel value="AJAX Status:" />
                                 <p:ajaxStatus style="height:26px;width:30px;padding:0 5px;">
                                     <f:facet name="default">
@@ -246,254 +246,256 @@
                         </p:toolbar>
                     </p:layoutUnit>
                     <p:layoutUnit position="west" resizable="false" size="320" minSize="320" maxSize="320">
-                        <p:accordionPanel id="toolbars" >
-                            <p:ajax event="tabChange" listener="#{mainWindow.onToolbarTabChange}" update=":forms:MainPanel :forms:toolbar" />
-                            <p:tab id="PANEL_INBOX"  >
-                                <f:facet name="title">
+                        <p:scrollPanel mode="native" style="width:100%;height:100%">
+                            <p:accordionPanel id="toolbars" >
+                                <p:ajax event="tabChange" listener="#{mainWindow.onToolbarTabChange}" update=":forms:MainPanel :forms:toolbar" />
+                                <p:tab id="PANEL_INBOX"  >
+                                    <f:facet name="title">
 
-                                    <span class="ui-iconui-icon-size-32 ui-icon-svg-status-green"  />
-                                    <h:graphicImage value="#{resource['images:/inbox.svg']}" width="22" height="22" />
-                                    <h:outputText value="#{msg['Inbox']}" />                                 
-                                </f:facet>
-                                <p:panelGrid class="filter-params" columns="2" columnClasses="label,value"  style="width: 100%">
-                                    <f:facet name="header">
-                                        <h:outputText value="#{msg['SearchParameters']}:" />
+                                        <span class="ui-iconui-icon-size-32 ui-icon-svg-status-green"  />
+                                        <h:graphicImage value="#{resource['images:/inbox.svg']}" width="22" height="22" />
+                                        <h:outputText value="#{msg['Inbox']}" />                                 
                                     </f:facet>
+                                    <p:panelGrid class="filter-params" columns="2" columnClasses="label,value"  style="width: 100%">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{msg['SearchParameters']}:" />
+                                        </f:facet>
 
-                                    <h:outputText  value="#{msg['ReceivedFromDate']}:" />
-                                    <p:calendar  value="#{InMailDataView.inMailModel.filter.receivedDateFrom}" pattern="dd.MM.yyyy HH:mm" 
-                                                 mask="true" navigator="true" showOn="button"   styleClass="searchDate" style="width: 100%" />
-
-
-                                    <h:outputText value="#{msg['ReceivedToDate']}:" />
-                                    <p:calendar  value="#{InMailDataView.inMailModel.filter.receivedDateTo}" pattern="dd.MM.yyyy HH:mm"
-                                                 mask="true" navigator="true" showOn="button" styleClass="searchDate" style="width: 100%"/>
-
-                                    <p:outputLabel for="recBox" value="#{msg['ReceiverBox']}:" />
-                                    <p:selectCheckboxMenu id="recBox"  label="ReceiverBoxes" 
-                                                          value="#{InMailDataView.inMailModel.filter.receiverEBoxList}"
-                                                          style="width:100%" >
-                                        <f:selectItems itemLabel="#{ubox}" 
-                                                       value="#{userSessionData.userEBoxesWithDomain}" var="ubox"  />
-                                    </p:selectCheckboxMenu>
+                                        <h:outputText  value="#{msg['ReceivedFromDate']}:" />
+                                        <p:calendar  value="#{InMailDataView.inMailModel.filter.receivedDateFrom}" pattern="dd.MM.yyyy HH:mm" 
+                                                     mask="true" navigator="true" showOn="button"   styleClass="searchDate" style="width: 100%" />
 
 
-                                    <h:outputText value="#{msg['SenderBox']}:" />
-                                    <h:inputText value="#{InMailDataView.inMailModel.filter.senderEBox}" style="width: 100%" />
+                                        <h:outputText value="#{msg['ReceivedToDate']}:" />
+                                        <p:calendar  value="#{InMailDataView.inMailModel.filter.receivedDateTo}" pattern="dd.MM.yyyy HH:mm"
+                                                     mask="true" navigator="true" showOn="button" styleClass="searchDate" style="width: 100%"/>
 
-                                    <h:outputText value="#{msg['Status']}:" />
-                                    <p:selectCheckboxMenu id="inSts" filter="false"  label="Statusi"  style="width: 100%"
-                                                          value="#{InMailDataView.inMailModel.filter.statusList}" >                                               
-                                        <f:selectItems value="#{LookupsData.inMailStatuses}" var="st" itemValue="#{st.value}" 
-                                                       itemLabel="#{st.value}" itemDescription="#{st.desc}"  />
-                                    </p:selectCheckboxMenu>
-
-                                    <h:outputText  value="#{msg['StatusChangeFromDate']}:" />
-                                    <p:calendar  value="#{InMailDataView.inMailModel.filter.statusDateFrom}" pattern="dd.MM.yyyy HH:mm" 
-                                                 mask="true" navigator="true" showOn="button"   styleClass="searchDate" style="width: 100%" />
+                                        <p:outputLabel for="recBox" value="#{msg['ReceiverBox']}:" />
+                                        <p:selectCheckboxMenu id="recBox"  label="ReceiverBoxes" 
+                                                              value="#{InMailDataView.inMailModel.filter.receiverEBoxList}"
+                                                              style="width:100%" >
+                                            <f:selectItems itemLabel="#{ubox}" 
+                                                           value="#{userSessionData.userEBoxesWithDomain}" var="ubox"  />
+                                        </p:selectCheckboxMenu>
 
 
-                                    <h:outputText value="#{msg['StatusChangeToDate']}:" />
-                                    <p:calendar  value="#{InMailDataView.inMailModel.filter.statusDateTo}" pattern="dd.MM.yyyy HH:mm"
-                                                 mask="true" navigator="true" showOn="button" styleClass="searchDate" style="width: 100%"/>
+                                        <h:outputText value="#{msg['SenderBox']}:" />
+                                        <h:inputText value="#{InMailDataView.inMailModel.filter.senderEBox}" style="width: 100%" />
 
-                                    <h:outputText value="#{msg['Service']}:" />
-                                    <p:selectOneMenu id="cmpService" value="#{InMailDataView.inMailModel.filter.service}"  style="width: 100% !important;min-width: 100% !important">
-                                        <p:ajax update=":forms:toolbars:InFilterAction"/>
-                                        <f:selectItem noSelectionOption="true"  />
-                                        <f:selectItems value="#{pModeServiceView.list}" var="srv" itemLabel="#{srv.id}" 
-                                                       itemValue="#{srv.id}"/>
-                                    </p:selectOneMenu>
+                                        <h:outputText value="#{msg['Status']}:" />
+                                        <p:selectCheckboxMenu id="inSts" filter="false"  label="Statusi"  style="width: 100%"
+                                                              value="#{InMailDataView.inMailModel.filter.statusList}" >                                               
+                                            <f:selectItems value="#{LookupsData.inMailStatuses}" var="st" itemValue="#{st.value}" 
+                                                           itemLabel="#{st.value}" itemDescription="#{st.desc}"  />
+                                        </p:selectCheckboxMenu>
 
-                                    <h:outputText value="#{msg['Action']}:" />
-                                    <p:selectOneMenu id="InFilterAction" value="#{InMailDataView.inMailModel.filter.action}" style="width: 100% !important;min-width: 100% !important" >
-                                        <f:selectItem noSelectionOption="false"  />
-                                        <f:selectItems value="#{InMailDataView.currentFilterServiceActionList}" var="act" 
-                                                       itemLabel="#{act.name}" itemValue="#{act.name}"/>
-                                    </p:selectOneMenu>
+                                        <h:outputText  value="#{msg['StatusChangeFromDate']}:" />
+                                        <p:calendar  value="#{InMailDataView.inMailModel.filter.statusDateFrom}" pattern="dd.MM.yyyy HH:mm" 
+                                                     mask="true" navigator="true" showOn="button"   styleClass="searchDate" style="width: 100%" />
 
-                                    <h:outputText value="#{msg['Transaction']}:" />
-                                    <h:inputText value="#{InMailDataView.inMailModel.filter.conversationId}" style="width: 100%"/>
 
-                                    <h:outputText value="#{msg['Id']}:" />
-                                    <p:inputNumber value="#{InMailDataView.inMailModel.filter.id}" decimalPlaces="0" style="width: 100%"/>
+                                        <h:outputText value="#{msg['StatusChangeToDate']}:" />
+                                        <p:calendar  value="#{InMailDataView.inMailModel.filter.statusDateTo}" pattern="dd.MM.yyyy HH:mm"
+                                                     mask="true" navigator="true" showOn="button" styleClass="searchDate" style="width: 100%"/>
 
-                                    <h:outputText value="#{msg['MessageId']}:" />
-                                    <h:inputText value="#{InMailDataView.inMailModel.filter.messageId}" style="width: 100%"/>
+                                        <h:outputText value="#{msg['Service']}:" />
+                                        <p:selectOneMenu id="cmpService" value="#{InMailDataView.inMailModel.filter.service}"  style="width: 100% !important;min-width: 100% !important">
+                                            <p:ajax update=":forms:toolbars:InFilterAction"/>
+                                            <f:selectItem noSelectionOption="true"  />
+                                            <f:selectItems value="#{pModeServiceView.list}" var="srv" itemLabel="#{srv.id}" 
+                                                           itemValue="#{srv.id}"/>
+                                        </p:selectOneMenu>
 
-                                    <h:outputText value="#{msg['RefMessageId']}:" />
-                                    <h:inputText value="#{InMailDataView.inMailModel.filter.refToMessageId}" style="width: 100%" />
+                                        <h:outputText value="#{msg['Action']}:" />
+                                        <p:selectOneMenu id="InFilterAction" value="#{InMailDataView.inMailModel.filter.action}" style="width: 100% !important;min-width: 100% !important" >
+                                            <f:selectItem noSelectionOption="false"  />
+                                            <f:selectItems value="#{InMailDataView.currentFilterServiceActionList}" var="act" 
+                                                           itemLabel="#{act.name}" itemValue="#{act.name}"/>
+                                        </p:selectOneMenu>
 
-                                    <h:outputText value="#{msg['SenderMessageId']}:" />
-                                    <h:inputText value="#{InMailDataView.inMailModel.filter.senderMessageId}" style="width: 100%" />
+                                        <h:outputText value="#{msg['Transaction']}:" />
+                                        <h:inputText value="#{InMailDataView.inMailModel.filter.conversationId}" style="width: 100%"/>
 
-                                    <h:outputText value="" />
-                                    <p:commandButton id="btnInRefresh"                                                     
-                                                     value="#{msg['Search']}" 
-                                                     icon="ui-icon-size-32 ui-icon-svg-search"                                             
-                                                     style="width: 100%; height: 36px"
-                                                     update=":forms:MainPanel"
-                                                     ajax="true"
+                                        <h:outputText value="#{msg['Id']}:" />
+                                        <p:inputNumber value="#{InMailDataView.inMailModel.filter.id}" decimalPlaces="0" style="width: 100%"/>
 
-                                                     />
-                                </p:panelGrid>
+                                        <h:outputText value="#{msg['MessageId']}:" />
+                                        <h:inputText value="#{InMailDataView.inMailModel.filter.messageId}" style="width: 100%"/>
 
-                            </p:tab>
-                            <p:tab id="PANEL_OUTBOX">
-                                <f:facet name="title">
-                                    <h:graphicImage value="#{resource['images:/outbox.svg']}" width="22" height="22" />
-                                    <h:outputText value="#{msg['Outbox']}" />                                 
-                                </f:facet>
-                                <p:panelGrid columns="2" columnClasses="label,value"  style="width: 100%">
-                                    <f:facet name="header">
-                                        <h:outputText value="#{msg['SearchParameters']}:" />
+                                        <h:outputText value="#{msg['RefMessageId']}:" />
+                                        <h:inputText value="#{InMailDataView.inMailModel.filter.refToMessageId}" style="width: 100%" />
+
+                                        <h:outputText value="#{msg['SenderMessageId']}:" />
+                                        <h:inputText value="#{InMailDataView.inMailModel.filter.senderMessageId}" style="width: 100%" />
+
+                                        <h:outputText value="" />
+                                        <p:commandButton id="btnInRefresh"                                                     
+                                                         value="#{msg['Search']}" 
+                                                         icon="ui-icon-size-32 ui-icon-svg-search"                                             
+                                                         style="width: 100%; height: 36px"
+                                                         update=":forms:MainPanel"
+                                                         ajax="true"
+
+                                                         />
+                                    </p:panelGrid>
+
+                                </p:tab>
+                                <p:tab id="PANEL_OUTBOX">
+                                    <f:facet name="title">
+                                        <h:graphicImage value="#{resource['images:/outbox.svg']}" width="22" height="22" />
+                                        <h:outputText value="#{msg['Outbox']}" />                                 
                                     </f:facet>
+                                    <p:panelGrid columns="2" columnClasses="label,value"  style="width: 100%">
+                                        <f:facet name="header">
+                                            <h:outputText value="#{msg['SearchParameters']}:" />
+                                        </f:facet>
 
-                                    <h:outputText value="#{msg['SubmittedFromDate']}:" />
-                                    <p:calendar  value="#{OutMailDataView.outMailModel.filter.submittedDateFrom}" pattern="dd.MM.yyyy HH:mm" 
-                                                 mask="true" navigator="true" showOn="button"   styleClass="searchDate" style="width: 100%"/>
-
-
-                                    <h:outputText value="#{msg['SubmittedToDate']}" />
-                                    <p:calendar  value="#{OutMailDataView.outMailModel.filter.submittedDateTo}" pattern="dd.MM.yyyy HH:mm"
-                                                 mask="true" navigator="true" showOn="button" styleClass="searchDate" style="width: 100%"/>
-
-                                    <h:outputText value="#{msg['ReceiverBox']}:" />
-                                    <h:inputText value="#{OutMailDataView.outMailModel.filter.receiverEBox}" style="width: 100%" />
-
-                                    <p:outputLabel for="sendBox" value="#{msg['SenderBox']}:" />
-                                    <p:selectCheckboxMenu id="sendBox" label="SenderBoxes" 
-                                                          value="#{OutMailDataView.outMailModel.filter.senderEBoxList}" 
-                                                          style="width:100%" >                                       
-                                        <f:selectItems itemLabel="#{ubox}" 
-                                                       value="#{userSessionData.userEBoxesWithDomain}" var="ubox" />
-                                    </p:selectCheckboxMenu>
-
-                                    <h:outputText value="#{msg['Status']}:" />
-
-                                    <p:selectCheckboxMenu id="outSts" filter="false"  label="Statusi" 
-                                                          value="#{OutMailDataView.outMailModel.filter.statusList}" 
-                                                          style="width: 100%" >
-                                        <f:selectItems value="#{LookupsData.outMailStatuses}" var="st" itemValue="#{st.value}" 
-                                                       itemLabel="#{st.value}" itemDescription="#{st.desc}"  />
-                                    </p:selectCheckboxMenu>
-
-                                    <h:outputText  value="#{msg['StatusChangeFromDate']}:" />
-                                    <p:calendar  value="#{OutMailDataView.outMailModel.filter.statusDateFrom}" pattern="dd.MM.yyyy HH:mm" 
-                                                 mask="true" navigator="true" showOn="button"   styleClass="searchDate" style="width: 100%"/>
+                                        <h:outputText value="#{msg['SubmittedFromDate']}:" />
+                                        <p:calendar  value="#{OutMailDataView.outMailModel.filter.submittedDateFrom}" pattern="dd.MM.yyyy HH:mm" 
+                                                     mask="true" navigator="true" showOn="button"   styleClass="searchDate" style="width: 100%"/>
 
 
-                                    <h:outputText value="#{msg['StatusChangeToDate']}:" />
-                                    <p:calendar  value="#{OutMailDataView.outMailModel.filter.statusDateTo}" pattern="dd.MM.yyyy HH:mm"
-                                                 mask="true" navigator="true" showOn="button" styleClass="searchDate" style="width: 100%" />
+                                        <h:outputText value="#{msg['SubmittedToDate']}" />
+                                        <p:calendar  value="#{OutMailDataView.outMailModel.filter.submittedDateTo}" pattern="dd.MM.yyyy HH:mm"
+                                                     mask="true" navigator="true" showOn="button" styleClass="searchDate" style="width: 100%"/>
 
-                                    <h:outputText value="#{msg['Service']}" />
-                                    <p:selectOneMenu id="OutFilterService" value="#{OutMailDataView.outMailModel.filter.service}" 
-                                                     style="width: 100% !important;min-width: 100% !important" >
-                                        <p:ajax update=":forms:toolbars:OutFilterAction"/>
-                                        <f:selectItem noSelectionOption="true"  />
-                                        <f:selectItems value="#{pModeServiceView.list}" var="srv" itemLabel="#{srv.id}" itemValue="#{srv.id}"/>
-                                    </p:selectOneMenu>
+                                        <h:outputText value="#{msg['ReceiverBox']}:" />
+                                        <h:inputText value="#{OutMailDataView.outMailModel.filter.receiverEBox}" style="width: 100%" />
 
-                                    <h:outputText value="#{msg['Action']}" />
-                                    <p:selectOneMenu id="OutFilterAction" value="#{OutMailDataView.outMailModel.filter.action}"  style="width: 100% !important;min-width: 100% !important" >
-                                        <f:selectItem noSelectionOption="false"  />
-                                        <f:selectItems value="#{OutMailDataView.currentFilterServiceActionList}" var="act" 
-                                                       itemLabel="#{act.name}" itemValue="#{act.name}"/>
-                                    </p:selectOneMenu>
+                                        <p:outputLabel for="sendBox" value="#{msg['SenderBox']}:" />
+                                        <p:selectCheckboxMenu id="sendBox" label="SenderBoxes" 
+                                                              value="#{OutMailDataView.outMailModel.filter.senderEBoxList}" 
+                                                              style="width:100%" >                                       
+                                            <f:selectItems itemLabel="#{ubox}" 
+                                                           value="#{userSessionData.userEBoxesWithDomain}" var="ubox" />
+                                        </p:selectCheckboxMenu>
 
-                                    <h:outputText value="#{msg['Transaction']}:" />
-                                    <h:inputText value="#{OutMailDataView.outMailModel.filter.conversationId}" style="width: 100%"/>
+                                        <h:outputText value="#{msg['Status']}:" />
 
-                                    <h:outputText value="#{msg['Id']}:" />
-                                    <p:inputNumber value="#{OutMailDataView.outMailModel.filter.id}" decimalPlaces="0" style="width: 100%"/>
+                                        <p:selectCheckboxMenu id="outSts" filter="false"  label="Statusi" 
+                                                              value="#{OutMailDataView.outMailModel.filter.statusList}" 
+                                                              style="width: 100%" >
+                                            <f:selectItems value="#{LookupsData.outMailStatuses}" var="st" itemValue="#{st.value}" 
+                                                           itemLabel="#{st.value}" itemDescription="#{st.desc}"  />
+                                        </p:selectCheckboxMenu>
 
-                                    <h:outputText value="#{msg['MessageId']}:" />
-                                    <h:inputText value="#{OutMailDataView.outMailModel.filter.messageId}" style="width: 100%"/>
-
-                                    <h:outputText value="#{msg['RefMessageId']}:" />
-                                    <h:inputText value="#{OutMailDataView.outMailModel.filter.refToMessageId}" style="width: 100%"/>
-
-                                    <h:outputText value="#{msg['SenderMessageId']}:" />
-                                    <h:inputText value="#{OutMailDataView.outMailModel.filter.senderMessageId}" style="width: 100%"/>
-
-                                    <h:outputText value="" />
-                                    <p:commandButton id="btnOutRefresh" 
-                                                     value="#{msg['Search']}" 
-                                                     icon="ui-icon-size-32 ui-icon-svg-search"                                             
-                                                     style="width: 100%; height: 36px"
-                                                     update=":forms:MainPanel" ajax="true"     
-                                                     />
-                                </p:panelGrid>
-                            </p:tab>
+                                        <h:outputText  value="#{msg['StatusChangeFromDate']}:" />
+                                        <p:calendar  value="#{OutMailDataView.outMailModel.filter.statusDateFrom}" pattern="dd.MM.yyyy HH:mm" 
+                                                     mask="true" navigator="true" showOn="button"   styleClass="searchDate" style="width: 100%"/>
 
 
+                                        <h:outputText value="#{msg['StatusChangeToDate']}:" />
+                                        <p:calendar  value="#{OutMailDataView.outMailModel.filter.statusDateTo}" pattern="dd.MM.yyyy HH:mm"
+                                                     mask="true" navigator="true" showOn="button" styleClass="searchDate" style="width: 100%" />
 
-                            <p:tab id="PANEL_PLUGIN" >
-                                <f:facet name="title">
-                                    <h:graphicImage value="#{resource['images:/plugin.svg']}" width="22" height="22" />
-                                    <h:outputText value="#{msg['Plugins']}" />                                 
-                                </f:facet>
-                                <p:tree id="PluginMenu" value="#{pluginMenuView.root}" var="mnitem" selectionMode="single"
-                                        selection="#{pluginMenuView.selectedNode}" 
-                                        dynamic="true"
-                                        >
-                                    <p:ajax event="select" listener="#{pluginMenuView.onSelection()}" 
-                                            update=":forms:MainPanel" />
-                                    <p:treeNode icon="#{mnitem.icon}"  >
-                                        <h:outputText value="#{mnitem.name}"/>
-                                    </p:treeNode>
+                                        <h:outputText value="#{msg['Service']}" />
+                                        <p:selectOneMenu id="OutFilterService" value="#{OutMailDataView.outMailModel.filter.service}" 
+                                                         style="width: 100% !important;min-width: 100% !important" >
+                                            <p:ajax update=":forms:toolbars:OutFilterAction"/>
+                                            <f:selectItem noSelectionOption="true"  />
+                                            <f:selectItems value="#{pModeServiceView.list}" var="srv" itemLabel="#{srv.id}" itemValue="#{srv.id}"/>
+                                        </p:selectOneMenu>
 
-                                </p:tree>
+                                        <h:outputText value="#{msg['Action']}" />
+                                        <p:selectOneMenu id="OutFilterAction" value="#{OutMailDataView.outMailModel.filter.action}"  style="width: 100% !important;min-width: 100% !important" >
+                                            <f:selectItem noSelectionOption="false"  />
+                                            <f:selectItems value="#{OutMailDataView.currentFilterServiceActionList}" var="act" 
+                                                           itemLabel="#{act.name}" itemValue="#{act.name}"/>
+                                        </p:selectOneMenu>
 
-                            </p:tab>
-                            <p:tab id="PANEL_SETT_CUSTOM" rendered="#{userSessionData.user.adminRole}">
+                                        <h:outputText value="#{msg['Transaction']}:" />
+                                        <h:inputText value="#{OutMailDataView.outMailModel.filter.conversationId}" style="width: 100%"/>
 
-                                <f:facet name="title">
-                                    <h:graphicImage value="#{resource['images:/settings.svg']}" width="22" height="22" />
-                                    <h:outputText value="#{msg['SettingsCustom']}" />                                 
-                                </f:facet>
-                                <p:tree id="SettPanel" value="#{settingsMenuView.root}" var="mnitem" selectionMode="single"
-                                        selection="#{settingsMenuView.selectedNode}" 
-                                        dynamic="true"
-                                        >
-                                    <p:ajax event="select" listener="#{settingsMenuView.onSelection()}" 
-                                            update=":forms:MainPanel" />
-                                    <p:treeNode icon="#{mnitem.icon}" >
-                                        <h:outputText value="#{msg[mnitem.name]}"/>
-                                    </p:treeNode>
+                                        <h:outputText value="#{msg['Id']}:" />
+                                        <p:inputNumber value="#{OutMailDataView.outMailModel.filter.id}" decimalPlaces="0" style="width: 100%"/>
 
-                                </p:tree>
+                                        <h:outputText value="#{msg['MessageId']}:" />
+                                        <h:inputText value="#{OutMailDataView.outMailModel.filter.messageId}" style="width: 100%"/>
 
+                                        <h:outputText value="#{msg['RefMessageId']}:" />
+                                        <h:inputText value="#{OutMailDataView.outMailModel.filter.refToMessageId}" style="width: 100%"/>
 
-                            </p:tab>
-                            <p:tab id="PANEL_CRON_EXEC" rendered="#{userSessionData.user.adminRole}">
+                                        <h:outputText value="#{msg['SenderMessageId']}:" />
+                                        <h:inputText value="#{OutMailDataView.outMailModel.filter.senderMessageId}" style="width: 100%"/>
 
-                                <f:facet name="title">
-                                    <h:graphicImage value="#{resource['images:/monitor.svg']}" width="22" height="22" />
-                                    <h:outputText value="#{msg['Monitor']}" />                                 
-                                </f:facet>
-                                <p:menu class="ui-accordion-button" style="width: 100%">
-
-                                    <p:menuitem value="#{msg['CronExecutions']}" 
-                                                icon="ui-icon-svg-cron-exec ui-icon-size-22" 
-                                                actionListener="#{mainWindow.onToolbarButtonAction}"  
-                                                update=":forms:MainPanel">
-                                        <f:attribute name="panel" value="PANEL_CRON_EXEC" />
-                                    </p:menuitem>
-                                    <p:menuitem value="#{msg['MonitorJMS']}" 
-                                                icon="ui-icon-svg-cron-exec ui-icon-size-22" 
-                                                actionListener="#{mainWindow.onToolbarButtonAction}"  
-                                                update=":forms:MainPanel">
-                                        <f:attribute name="panel" value="PANEL_SETT_JMS" />
-                                    </p:menuitem>
-                                </p:menu>
+                                        <h:outputText value="" />
+                                        <p:commandButton id="btnOutRefresh" 
+                                                         value="#{msg['Search']}" 
+                                                         icon="ui-icon-size-32 ui-icon-svg-search"                                             
+                                                         style="width: 100%; height: 36px"
+                                                         update=":forms:MainPanel" ajax="true"     
+                                                         />
+                                    </p:panelGrid>
+                                </p:tab>
 
 
 
-                            </p:tab>
+                                <p:tab id="PANEL_PLUGIN" >
+                                    <f:facet name="title">
+                                        <h:graphicImage value="#{resource['images:/plugin.svg']}" width="22" height="22" />
+                                        <h:outputText value="#{msg['Plugins']}" />                                 
+                                    </f:facet>
+                                    <p:tree id="PluginMenu" value="#{pluginMenuView.root}" var="mnitem" selectionMode="single"
+                                            selection="#{pluginMenuView.selectedNode}" 
+                                            dynamic="true"
+                                            >
+                                        <p:ajax event="select" listener="#{pluginMenuView.onSelection()}" 
+                                                update=":forms:MainPanel" />
+                                        <p:treeNode icon="#{mnitem.icon}"  >
+                                            <h:outputText value="#{mnitem.name}"/>
+                                        </p:treeNode>
 
-                        </p:accordionPanel>
+                                    </p:tree>
+
+                                </p:tab>
+                                <p:tab id="PANEL_SETT_CUSTOM" rendered="#{userSessionData.user.adminRole}">
+
+                                    <f:facet name="title">
+                                        <h:graphicImage value="#{resource['images:/settings.svg']}" width="22" height="22" />
+                                        <h:outputText value="#{msg['SettingsCustom']}" />                                 
+                                    </f:facet>
+                                    <p:tree id="SettPanel" value="#{settingsMenuView.root}" var="mnitem" selectionMode="single"
+                                            selection="#{settingsMenuView.selectedNode}" 
+                                            dynamic="true"
+                                            >
+                                        <p:ajax event="select" listener="#{settingsMenuView.onSelection()}" 
+                                                update=":forms:MainPanel" />
+                                        <p:treeNode icon="#{mnitem.icon}" >
+                                            <h:outputText value="#{msg[mnitem.name]}"/>
+                                        </p:treeNode>
+
+                                    </p:tree>
+
+
+                                </p:tab>
+                                <p:tab id="PANEL_CRON_EXEC" rendered="#{userSessionData.user.adminRole}">
+
+                                    <f:facet name="title">
+                                        <h:graphicImage value="#{resource['images:/monitor.svg']}" width="22" height="22" />
+                                        <h:outputText value="#{msg['Monitor']}" />                                 
+                                    </f:facet>
+                                    <p:menu class="ui-accordion-button" style="width: 100%">
+
+                                        <p:menuitem value="#{msg['CronExecutions']}" 
+                                                    icon="ui-icon-svg-cron-exec ui-icon-size-22" 
+                                                    actionListener="#{mainWindow.onToolbarButtonAction}"  
+                                                    update=":forms:MainPanel">
+                                            <f:attribute name="panel" value="PANEL_CRON_EXEC" />
+                                        </p:menuitem>
+                                        <p:menuitem value="#{msg['MonitorJMS']}" 
+                                                    icon="ui-icon-svg-cron-exec ui-icon-size-22" 
+                                                    actionListener="#{mainWindow.onToolbarButtonAction}"  
+                                                    update=":forms:MainPanel">
+                                            <f:attribute name="panel" value="PANEL_SETT_JMS" />
+                                        </p:menuitem>
+                                    </p:menu>
+
+
+
+                                </p:tab>
+
+                            </p:accordionPanel>
+                        </p:scrollPanel>
                     </p:layoutUnit>
                 </p:layout>
             </h:form>
