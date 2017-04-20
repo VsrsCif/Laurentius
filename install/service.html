@@ -1,0 +1,54 @@
+<div class="main">
+    <article class='content'>
+
+        <h1>Zagon aplikacijskega strežnika</h1>
+        Demo paket vsebuje zagonsko skripto: "laurentius-demo.(bat|sh)" za zagon 
+        aplikacijskega strežnika. Namen demo skripte je olajšati prvi zagon
+        strežnika za preizkušanje in testiranje aplikacije Laurentius. 
+        Za pomoč pri produkcijski namestivi so spodaj opisani koraki
+        namestitev aplikacijskega strežnika wildfly kot sistemska storitev 
+        ("windows service" oz. "linux service").
+
+        <h1 id="install/service:windows">Wildfly kot MS Windows storitev</h1>
+        Aplikacijski strežnik vsebuje v mapi:
+        <code>${WILDFLY_HOME}/docs/contrib/scripts/service</code> 
+        pripravljene skripte in orodja za namestitev kot "MS Windows storitev".<br />         
+        <br />
+        Vsebino mape:
+        <code>${WILDFLY_HOME}/docs/contrib/scripts/service</code><br /> 
+        kopiraj v bin mapo:
+        <code>${WILDFLY_HOME}/bin</code> <br /> <br /> 
+        
+        Po kopiranju je najprej je potreben izdelati manjši<a href="https://issues.jboss.org/browse/WFCORE-1719">popravek skripte (wildfly 10.1.0.Final)</a>:
+        <code>${WILDFLY_HOME}/bin/service.bat</code>
+        V vrstici odstrani znak ": 
+        <pre><code>set DESCRIPTION="WildFly Application Server"</code></pre>
+        v vrstico:
+        <pre><code>set DESCRIPTION=WildFly Application Server</code></pre>
+        V primeru, da so se v nastavitveni datoteki <code>standalone-laurentius.xml</code>
+         spremenila tudi vrata (port) za nastavitev   ${jboss.management.http.port} oz. ${jboss.socket.binding.port-offset}
+         <pre><code>&lt;socket-binding name="management-http" interface="management" port="${jboss.management.http.port:9990}"/></code></pre>
+        je potrebno ustrezno popraviti tudi vrstico
+        <pre><code>set CONTROLLER=localhost:9990</code></pre>
+        <br /><br />
+        
+        V datoteki: <code>${WILDFLY_HOME}/bin/standalone.conf.bat</code><br /> 
+        Spremeni vrstico za <a href="http://docs.oracle.com/javase/7/docs/technotes/tools/solaris/java.html">-Xmx</a> na 2G:         
+        <pre><code>set "JAVA_OPTS=-Xms64M -Xmx512M -XX:MetaspaceSize=96M -XX:MaxMetaspaceSize=256m"</code></pre>
+        tako da se rezervira vsaj 2G spomina.
+        <pre><code>set "JAVA_OPTS=-Xms128M -Xmx2048M -XX:MetaspaceSize=96M -XX:MaxMetaspaceSize=256m"</code></pre>
+        
+        ter dodaj vrstico s katero se določi nastavitve strežnika: <code>-c standalone-laurentius.xml</code>:
+        <pre><code>set "JAVA_OPTS=-Xms128M -Xmx2048M -XX:MetaspaceSize=96M -XX:MaxMetaspaceSize=256m"
+rem # Set base configuration
+set "JAVA_OPTS=%JAVA_OPTS% -c standalone-laurentius.xml" 
+        </code></pre>
+       
+        Nato se v CMD konzoli postavi v mapo <code>${WILDFLY_HOME}/bin/</code>
+        ter poženi ukaz:
+        <pre><code>service install</code></pre>
+        
+
+
+    </article>  
+</div>
