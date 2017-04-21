@@ -170,7 +170,8 @@ public class WSClientExample {
       // example get in mail list
       // because "in process" in demo laurentius sets inmail status to DELIVERED - search is done by this status
       // else default is RECEIVED
-      List<InMail> lstIM = wc.getInMailList(RECEIVER_BOX, "DELIVERED");
+      Thread.sleep(2000);
+      List<InMail> lstIM = wc.getInMailList(RECEIVER_BOX, "RECEIVED");
       // search for corresponding in mail
       InMail im = null;
       for (InMail m : lstIM) {
@@ -180,11 +181,15 @@ public class WSClientExample {
           break;
         }
       }
+      
+    
 
       // example get in mail
       wc.getInMail(im.getId(), RECEIVER_BOX);
       // example get in mail events
       wc.getInMailEventList(im.getId(), RECEIVER_BOX);
+      
+     Thread.sleep(1000);
       // example modify status for out mail
       wc.modifyInMail(im.getId(), RECEIVER_BOX);
 
