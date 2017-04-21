@@ -16,7 +16,7 @@
         <property column="PART_FILEPATH" name="Filepath"  length="1028" type="java.lang.String" />
         <property column="PART_MIME_TYPE" name="MimeType"  length="128" type="java.lang.String" />
         <property column="PART_ENCODING" name="Encoding"  length="128" type="java.lang.String" />
-        <property column="PART_SHA1_VALUE" name="Sha1Value"  length="128" type="java.lang.String" />
+        <property column="PART_SHA256_VALUE" name="Sha256Value"  length="256" type="java.lang.String" />
         <property column="PART_SIZE" name="Size"  type="java.math.BigInteger" scale="0" />
 
     </class>    

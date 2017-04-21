@@ -1165,7 +1165,7 @@ public class SEDMailBox implements SEDMailBoxWS {
             String strHashValue = DigestUtils.getHexSha1Digest(fout);
             String relPath = StorageUtils.getRelativePath(fout);
             p.setFilepath(relPath);
-            p.setSha1Value(strHashValue);
+            p.setSha256Value(strHashValue);
             p.setSize(BigInteger.valueOf(fout.length()));
 
             if (Utils.isEmptyString(p.getFilename())) {

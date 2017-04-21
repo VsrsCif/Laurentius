@@ -352,7 +352,7 @@ public class SEDMailBoxTest extends TestUtils {
             String relPath = StorageUtils.getRelativePath(fout);
             p.setFilepath(relPath);
             String hashValue = DigestUtils.getHexSha1Digest(fout);
-            p.setSha1Value(hashValue);
+            p.setSha256Value(hashValue);
             p.setSize(BigInteger.valueOf(fout.length()));
 
             if (Utils.isEmptyString(p.getFilename())) {
@@ -447,7 +447,7 @@ public class SEDMailBoxTest extends TestUtils {
               String relPath = StorageUtils.getRelativePath(fout);
               p.setFilepath(relPath);
               String hashValue = DigestUtils.getHexSha1Digest(fout);
-              p.setSha1Value(hashValue);
+              p.setSha256Value(hashValue);
               p.setSize(BigInteger.valueOf(fout.length()));
 
               if (Utils.isEmptyString(p.getFilename())) {
