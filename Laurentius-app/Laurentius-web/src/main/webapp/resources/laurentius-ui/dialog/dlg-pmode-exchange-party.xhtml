@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      xmlns:dlg="http://java.sun.com/jsf/composite/laurentius-ui/dialog"
+      xmlns:pnl="http://java.sun.com/jsf/composite/laurentius-ui/panel"
+      >
+    <composite:interface>
+    </composite:interface>
+
+    <composite:implementation >
+        <dlg:dlg-abstract   id="pModeExchangePartyDialog"
+                            formId="pModeExchangePartyDialogForm"
+                            dialogTitle="#{msg['pModeExchangePartyDialog']}" 
+                            editable="#{pModeExchangePartyView.editable}"
+                            width="500"
+                            height="200"
+                            updateOnSave=":dlgPModeInstance:pModeServiceInstanceDialog:pModeServiceInstanceDialogForm:TblExchangeParties"
+                            onConfirmAction="#{pModeExchangePartyView.addOrUpdateEditable()}" >
+
+            <p:layout>
+                <p:layoutUnit position="center">
+
+                    <p:panelGrid  columns="2" columnClasses="grid-label,value"  style="width: 100%">
+
+                        <h:outputText value="#{msg['Party']}:" />
+                        <p:selectOneMenu value="#{pModeExchangePartyView.editablePartyId}" 
+                                         style="width:100%" 
+                                         disabled="#{empty pModeExchangePartyView.new}" 
+                                         >
+                            <p:ajax update="defLocalTransport" />
+                            <f:selectItems value="#{pModePartyView.list}" var="pis" 
+                                           itemLabel="#{pis.id}" itemValue="#{pis.id}"
+                                           itemDisabled="#{pModeExchangePartyView.partyExists(pis.id)}"
+                                           />
+                        </p:selectOneMenu>
+
+                        <h:outputText value="#{msg['PartyDefTransport']}:" />
+                        <p:selectOneMenu id="defLocalTransport" value="#{pModeExchangePartyView.editablePartyId}" 
+                                         style="width: 100%"
+                                         >
+                            <f:selectItems value="#{pModeView.editableLocalParty.transportProtocols}" var="lpt" 
+                                           itemLabel="#{lpt.id}" itemValue="#{lpt.id}"
+
+                                           />
+                        </p:selectOneMenu>
+
+
+                        <p:selectBooleanCheckbox id="initiatorRole" itemLabel="#{msg['InitiatorRole']}:"                                                                
+                                                 value="#{pModeExchangePartyView.editablePartyHasInitiatorRole}" 
+                                                 style="width: 100%"
+                                                 >
+                        </p:selectBooleanCheckbox>
+                        <h:outputText id = "initiatorRoleLabel" value="#{pModeView.editableService.initiator.role}" />
+
+                        <p:selectBooleanCheckbox  id="requestorRole" itemLabel="#{msg['ExecutorRole']}:"                                                                
+                                                  value="#{pModeExchangePartyView.editablePartyHasExecutorRole}" 
+                                                  style="width: 100%"
+                                                  >
+                        </p:selectBooleanCheckbox>
+                        <h:outputText id="requestorRoleLabel" value="#{pModeView.editableService.executor.role}" />
+
+
+
+                    </p:panelGrid>   
+
+
+                </p:layoutUnit>
+
+            </p:layout>
+        </dlg:dlg-abstract>
+    </composite:implementation>
+
+</html>

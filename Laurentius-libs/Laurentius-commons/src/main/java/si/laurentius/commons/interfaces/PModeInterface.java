@@ -50,23 +50,22 @@ public interface PModeInterface {
       String receiverRefId, String serviceId) throws PModeException ;
 
   /**
-   * Method returs PMODE for given exchange sender Party. If pmode not exists or more than one PMode
-   * is defined for given parameters PModeException is thrown.
+   * Method returs PMODE for given exchange sender Party. If pmode not exist null is returned 
+   * 
    *
    * @param senderRefId - exchange sender party identity set id
    * @param actionSendingRole - bussines role sender must have in current action
    * @param receiverRefId - local receiver party idetity set id
    * @param serviceId - bussines service
    * @return PMode
-   * @throws PModeException
+
    */
   @Lock(value = LockType.READ)
   public PMode getPModeForExchangePartyAsSender(String senderRefId, String actionSendingRole,
       String receiverRefId, String serviceId) throws PModeException;
 
   @Lock(value = LockType.READ)
-  public PMode getPModeById(String pmodeId)
-      throws PModeException;
+  public PMode getPModeById(String pmodeId);
 
   
   /**

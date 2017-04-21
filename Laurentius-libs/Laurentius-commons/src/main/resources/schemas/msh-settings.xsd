@@ -206,7 +206,7 @@
 	<xs:complexType name="BusinessTransactionBinding"/>
 	<xs:complexType name="MEPLegType">
 		<xs:sequence>
-			<xs:element name="MPC"/>
+			<xs:element name="MPC" type="xs:string"/>
 			<xs:element name="Transport" type="tns:MEPTransportType"/>
 		</xs:sequence>
 	</xs:complexType>

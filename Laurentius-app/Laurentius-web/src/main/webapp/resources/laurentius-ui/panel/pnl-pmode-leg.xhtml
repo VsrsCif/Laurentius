@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:cc="http://java.sun.com/jsf/composite"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:pnl="http://java.sun.com/jsf/composite/laurentius-ui/panel"
+      >
+    <cc:interface>
+        <cc:attribute name="leg" type="si.laurentius.msh.pmode.MEPLegType" />
+        <cc:attribute name="title" type="java.lang.String" />
+    </cc:interface>
+    <cc:implementation >
+        <h2>#{cc.attrs.title}</h2>
+        <p:panelGrid  columns="2" columnClasses="grid-label, value" style="width: 100%"    >
+            <h:outputText value="#{msg['MPC']}:" />
+            <p:inputText  value="#{cc.attrs.leg.MPC}" style="width: 100%" />
+        </p:panelGrid>
+        <h3>Transport</h3>
+        <p:panelGrid  style="width:100%; margin: 0 0 0 20px"  >
+            <f:facet name="header">ForeChannel</f:facet>       
+            <p:row>
+                <p:column class="grid-label"><h:outputText value="#{msg['Action']}:" /></p:column>
+                <p:column><p:selectOneMenu value="#{cc.attrs.leg.transport.foreChannel.action}" 
+                                           style="width: 100%" >
+                        <f:selectItems value="#{pModeView.editableService.actions}" var="act" 
+                                       itemLabel="#{act.name}" itemValue="#{act.name}"
+                                       />
+                    </p:selectOneMenu></p:column>
+                <p:column class="grid-label"><h:outputText value="#{msg['SecurityPolicy']}:" /></p:column>
+                <p:column><p:selectOneMenu value="#{cc.attrs.leg.transport.foreChannel.securityIdRef}" 
+                                           style="width: 100%" >
+                        <f:selectItems value="#{pModeSecurityView.list}" var="sp" 
+                                       itemLabel="#{sp.id}" itemValue="#{sp.id}"
+                                       />
+                    </p:selectOneMenu></p:column>
+            </p:row>
+            <p:row>
+                <p:column class="grid-label"><h:outputText value="#{msg['ReceptionAwareness']}:" /></p:column>
+                <p:column colspan="3"><p:selectOneMenu value="#{cc.attrs.leg.transport.foreChannel.receptionAwareness.raPatternIdRef}" 
+                                                       style="width: 100%" >
+                        <f:selectItems value="#{pModeReceptionAwarenessView.list}" var="rap" 
+                                       itemLabel="#{rap.id}" itemValue="#{rap.id}"
+                                       />
+                    </p:selectOneMenu></p:column>
+            </p:row>
+            
+        </p:panelGrid>
+        <pnl:pnl-arrow lineType="solid" direction="right"/>
+        <p:panelGrid   style="width:100%; margin: 0 0 0 20px"  >
+            <f:facet name="header">BackChannel</f:facet>         
+            <p:row>
+                <p:column class="grid-label"><h:outputText value="#{msg['Action']}:" /></p:column>
+                <p:column><p:selectOneMenu value="#{cc.attrs.leg.transport.backChannel.action}" 
+                                           style="width: 100%" >
+
+                        <f:selectItems value="#{pModeView.editableService.actions}" var="act" 
+                                       itemLabel="#{act.name}" itemValue="#{act.name}"
+                                       />
+                    </p:selectOneMenu></p:column>
+
+                <p:column class="grid-label"><h:outputText value="#{msg['SecurityPolicy']}:" /></p:column>
+                <p:column><p:selectOneMenu value="#{cc.attrs.leg.transport.backChannel.securityIdRef}" 
+                                           style="width: 100%" >
+
+                        <f:selectItems value="#{pModeSecurityView.list}" var="sp" 
+                                       itemLabel="#{sp.id}" itemValue="#{sp.id}"
+                                       />
+                    </p:selectOneMenu></p:column>
+            </p:row>
+            
+        </p:panelGrid>
+        <pnl:pnl-arrow lineType="solid" direction="right" title="Back channel"/>
+    </cc:implementation>
+
+
+
+</html>

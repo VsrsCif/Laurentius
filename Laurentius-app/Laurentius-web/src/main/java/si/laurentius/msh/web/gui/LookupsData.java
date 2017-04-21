@@ -20,6 +20,8 @@ import si.laurentius.commons.interfaces.SEDCertStoreInterface;
 import si.laurentius.commons.interfaces.SEDLookupsInterface;
 import si.laurentius.commons.interfaces.SEDPluginManagerInterface;
 import si.laurentius.commons.pmode.enums.ActionRole;
+import si.laurentius.commons.pmode.enums.MEPChannelBindingType;
+import si.laurentius.commons.pmode.enums.MEPType;
 import si.laurentius.commons.pmode.enums.MessageType;
 import si.laurentius.commons.utils.ReflectUtils;
 import si.laurentius.commons.utils.Utils;
@@ -122,6 +124,13 @@ public class LookupsData extends AbstractJSFView {
 
   public MimeValue[] getMimeValues() {
     return MimeValue.values();
+  }
+  
+  public MEPChannelBindingType[] getMEPChannelBindingType() {
+    return MEPChannelBindingType.values();
+  }
+  public MEPType[] getMEPType() {
+    return MEPType.values();
   }
 
   public String getHumanReadableSize(BigInteger bi) {

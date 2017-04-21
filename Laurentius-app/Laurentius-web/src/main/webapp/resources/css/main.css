@@ -8,6 +8,18 @@ h1 {
     background: gray; 
     color: white; 
 }
+h2 {
+    padding: 0;
+    margin: 2px 0 0 0;
+    background: darkgray; 
+    color: whitesmoke; 
+}
+
+h3 {
+    padding: 0;
+    margin: 2px 0 0 0;
+}
+
 
 
 .ui-datatable-scrollable-body, 
@@ -353,5 +365,30 @@ td.ui-panelgrid-cell.label {
     background: whitesmoke;
     top: -1em;
     position: relative;
+    
+}
+
+.arrow-line-solid{
+    width: 100% !important  ;
+    height: 15px !important;
+    background: url("#{resource['images:/solid-line.svg']}") repeat-x 0px 100% !important;     
+    
+}
+.arrow-line-dashed{
+    width: 100% !important  ;
+    height: 15px !important;
+    background: url("#{resource['images:/solid-line.svg']}") repeat-x 0px 100% !important;     
+    
+}
+.arrow-right {   
+    height: 15px !important;
+    width: 20px !important;
+    background: url("#{resource['images:/right-arrow.svg']}")  no-repeat !important;     
+    
+}
+.arrow-left {   
+    height: 15px !important;
+    width: 20px !important;
+    background: url("#{resource['images:/left-arrow.svg']}")  no-repeat !important;     
     
 }

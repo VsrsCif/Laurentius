@@ -84,8 +84,7 @@ public class PModeManagerBean implements PModeInterface {
   }
 
   @Override
-  public PMode getPModeById(String pmodeId)
-          throws PModeException {
+  public PMode getPModeById(String pmodeId) {
     return getPModeManager().getPModeById(pmodeId);
   }
 

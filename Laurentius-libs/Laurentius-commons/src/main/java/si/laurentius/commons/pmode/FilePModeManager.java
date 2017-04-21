@@ -300,18 +300,16 @@ public class FilePModeManager implements PModeInterface {
    *
    * @param pModeId
    * @return
-   * @throws PModeException
    */
   @Override
-  public PMode getPModeById(String pModeId)
-          throws PModeException {
+  public PMode getPModeById(String pModeId) {
 
     for (PMode pm : getPModes()) {
       if (Objects.equals(pm.getId(), pModeId)) {
         return pm;
       }
     }
-    throw new PModeException(String.format("No pmode for id: '%s'.", pModeId));
+    return null;
   }
 
   /**

@@ -33,14 +33,14 @@ import si.laurentius.plugin.interfaces.exception.TaskException;
  */
 @Stateless
 @Local(TaskExecutionInterface.class)
-public class MJUCronTask implements TaskExecutionInterface {
+public class MJUAdviceOfDeliveryCronTask implements TaskExecutionInterface {
 
   public static final String KEY_FOLDER = "example.task.folder";
   public static final String KEY_PARAM_1 = "si.mjuparameter.001";
   public static final String KEY_PARAM_2 = "si.mjuparameter.002";
   public static final String KEY_PARAM_3 = "si.mjuparameter.003";
   public static final String KEY_PARAM_4 = "si.mjuparameter.004";
-  private static final SEDLogger LOG = new SEDLogger(MJUCronTask.class);
+  private static final SEDLogger LOG = new SEDLogger(MJUAdviceOfDeliveryCronTask.class);
 
   /**
    * execute metod

@@ -14,6 +14,7 @@
  */
 package si.laurentius.msh.web.pmode;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
@@ -191,12 +192,26 @@ public class PModePartyView extends AbstractPModeJSFView<PartyIdentitySet> {
   @Override
   public List<PartyIdentitySet> getList() {
     long l = LOG.logStart();
-    List<PartyIdentitySet> lst = null;
+    List<PartyIdentitySet> lst = mPModeInteface.getPartyIdentitySets();
+    LOG.logEnd(l);
+    return lst;
 
-    lst = mPModeInteface.getPartyIdentitySets();
+  }
+  
+  
+  public List<PartyIdentitySet> getLocalPartyList() {
+    long l = LOG.logStart();
+    List<PartyIdentitySet> lstLP = new ArrayList<>();
+
+     List<PartyIdentitySet>  lst = mPModeInteface.getPartyIdentitySets();
+    for (PartyIdentitySet lp: lst){
+        if (lp.getIsLocalIdentity()){
+          lstLP.add(lp);
+        }
+    }
 
     LOG.logEnd(l);
-    return lst == null ? Collections.emptyList() : lst;
+    return lstLP;
 
   }
 

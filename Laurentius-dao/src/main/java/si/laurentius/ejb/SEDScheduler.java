@@ -38,8 +38,8 @@ public class SEDScheduler {
   @EJB(mappedName = SEDJNDI.JNDI_NETWORK)
   SEDNetworkUtilsInterface networkUtils;
 
-  @EJB(mappedName = SEDJNDI.JNDI_DBSETTINGS)
-  private DBSettingsInterface mdbSettings;
+//  @EJB(mappedName = SEDJNDI.JNDI_DBSETTINGS)
+//  private DBSettingsInterface mdbSettings;
 
   @PostConstruct
   void init() {
@@ -75,16 +75,17 @@ public class SEDScheduler {
     // test internet
     if (iConNet) {
 
-      SEDProperty sp = mdbSettings.getSEDProperty(
+      /*SEDProperty sp = mdbSettings.getSEDProperty(
               SEDProperties.S_KEY_TEST_NETOWRK, DBSettingsInterface.LAU_SETTINGS);
       if (sp != null && !Utils.isEmptyString(sp.getValue())) {
-        String[] lstNtw = sp.getValue().split(",");
+        String[] lstNtw = sp.getValue().split(",");*/
+       String[] lstNtw = "www.sodisce.si,www.google.com".split(",");
         for (String ntw : lstNtw) {
           if (testWebSite(ntw)) {
             iConInt = true;
             break;
           }
-        }
+        //}
       }
     }
     networkUtils.setConnectedToNetwork(iConNet);

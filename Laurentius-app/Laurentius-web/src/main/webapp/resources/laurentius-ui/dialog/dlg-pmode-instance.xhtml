@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      xmlns:dlg="http://java.sun.com/jsf/composite/laurentius-ui/dialog"
+      xmlns:pnl="http://java.sun.com/jsf/composite/laurentius-ui/panel"
+      >
+    <composite:interface>
+    </composite:interface>
+
+    <composite:implementation >
+        <dlg:dlg-abstract   id="pModeServiceInstanceDialog"
+                            formId="pModeServiceInstanceDialogForm"
+                            dialogTitle="#{msg['PModes']}" 
+                            editable="#{pModeView.editable}"
+                            width="1000"
+                            height="600"
+                            updateOnSave=":forms:SettingsPModes:pmodePanel:TblPMode"
+                            onConfirmAction="#{pModeView.addOrUpdateEditable()}" >
+
+            <p:layout id="pModeInstance">
+                <p:layoutUnit position="north" size="130" minSize="120" maxSize="140">
+                    <p:panelGrid style="width:100%; height: 100% ">
+                        <f:facet name="header">
+                            <p:row>
+                                <p:column ><h:outputText value="#{msg['Id']}" /></p:column>
+                                <p:column colspan="3"><h:inputText value="#{pModeView.editable.id}" 
+                                                                   disabled="#{empty pModeView.new}"  style="width:100%;" /></p:column>
+                            </p:row>
+                        </f:facet>
+
+                        <p:row>
+                            <p:column class="grid-label"><h:outputText value="#{msg['ServiceId']}:" /></p:column>
+
+                            <p:column colspan="3">
+
+                                <p:selectOneMenu value="#{pModeView.editableServiceId}" 
+                                                 disabled="#{empty pModeView.new}" 
+                                                 style="width:100%"                                                   
+                                                 >
+                                    <p:ajax update="initiatorRole requestorRole requestorRoleLabel initiatorRoleLabel" />
+                                    <f:selectItems value="#{pModeServiceView.list}" var="sr" 
+                                                   itemLabel="#{sr.id} (#{sr.serviceType}:#{sr.serviceName})" itemValue="#{sr.id}"
+                                                   />
+                                </p:selectOneMenu></p:column>
+
+                        </p:row>
+                        <p:row>
+                            <p:column class="grid-label"><h:outputText value="#{msg['LocalPartyId']}:" /></p:column>
+                            <p:column><p:selectOneMenu value="#{pModeView.editableLocalPartyId}" 
+                                                       style="width:400px" 
+                                                       >
+                                    <p:ajax update="defLocalTransport" />
+                                    <f:selectItems value="#{pModePartyView.localPartyList}" var="pis" 
+                                                   itemLabel="#{pis.id}" itemValue="#{pis.id}"
+
+                                                   />
+                                </p:selectOneMenu></p:column>
+
+
+                            <p:column class="grid-label" >
+                                <p:selectBooleanCheckbox id="initiatorRole" itemLabel="#{msg['InitiatorRole']}:"                                                                
+                                                         value="#{pModeView.editableLocPartyHasInitiatorRole}" 
+                                                         style="width: 100%"
+                                                         >
+                                </p:selectBooleanCheckbox></p:column>
+                            <p:column><h:outputText id = "initiatorRoleLabel" value="#{pModeView.editableService.initiator.role}" /></p:column>
+
+
+                        </p:row>
+                        <p:row>
+                            <p:column class="grid-label"><h:outputText value="#{msg['LocalPartyDefTransport']}:" /></p:column>
+                            <p:column><p:selectOneMenu id="defLocalTransport" value="#{pModeView.editableLocalPartyIdentityInfo.partyDefTransportIdRef}" 
+                                                       style="width:400px" 
+                                                       >
+                                    <f:selectItems value="#{pModeView.editableLocalParty.transportProtocols}" var="lpt" 
+                                                   itemLabel="#{lpt.id}" itemValue="#{lpt.id}"/>
+                                </p:selectOneMenu></p:column>
+                            <p:column class="grid-label">
+                                <p:selectBooleanCheckbox  id="requestorRole" itemLabel="#{msg['ExecutorRole']}:"                                                                
+                                                          value="#{pModeView.editableLocPartyHasExecutorRole}" 
+                                                          style="width: 100%"
+
+                                                          >
+                                </p:selectBooleanCheckbox></p:column>
+                            <p:column><h:outputText id="requestorRoleLabel" value="#{pModeView.editableService.executor.role}" /></p:column>
+                        </p:row>
+
+
+                    </p:panelGrid>   
+
+                </p:layoutUnit>
+                <p:layoutUnit position="center"  header="#{msg['MEP']}">
+                    <p:scrollPanel mode="native" style="width:100%;height:100%"> 
+                        <p:dataTable id="TblPModeMEPs" 
+                                     var="mep" 
+                                     value="#{pModeMEPView.list}"                                     
+                                     rowKey="#{mep}"   
+                                     rowIndexVar="rowIndex"
+                                     selectionMode="single"
+                                     selection="#{pModeMEPView.selected}"
+                                     scrollable="true" 
+                                     scrollHeight="100%"
+                                     >
+                            <f:facet name="header">
+                                <pnl:pnl-table-control 
+                                    dialogVar="pModeMEPDialog"
+                                    updateDialog=":dlgPModeMEP:pModeMEPDialog:pModeMEPDialogForm"
+                                    updateTable=":dlgPModeInstance:pModeServiceInstanceDialog:pModeServiceInstanceDialogForm:TblExchangeParties"
+                                    addActionListener="#{pModeMEPView.createEditable()}"
+                                    editActionListener="#{pModeMEPView.startEditSelected()}"
+                                    removeActionListener="#{pModeMEPView.removeSelectedWithWarning(':dlgPModeInstance:pModeServiceInstanceDialog:pModeServiceInstanceDialogForm:TblExchangeParties')}"
+                                    />                                  
+                                <span class="ui-separator" style="display: inline-block;">
+                                    <span class="ui-icon ui-icon-grip-dotted-vertical " />
+                                </span>
+
+
+                            </f:facet>
+                            <p:ajax event="rowDblselect" 
+                                    listener="#{pModeMEPView.startEditSelected()}" 
+                                    oncomplete="PF('pModeMEPDialog').show()"    
+                                    update=":dlgPModeMEP:pModeMEPDialog:pModeMEPDialogForm"
+                                    />
+                            <p:column headerText="#{msg['MEP']}">
+                                <h:outputText value="#{mep.MEPType}" /></p:column>       
+                            <p:column headerText="#{msg['MEPChannelBinding']}">
+                                <h:outputText value="#{mep.MEPChannelBinding}" /></p:column>       
+                            <p:column headerText="#{msg['MEPInitiatorRole']}">
+                                <h:outputText value="#{mep.MEPInitiatorRole}" /></p:column>       
+                        </p:dataTable> 
+
+                    </p:scrollPanel>
+                </p:layoutUnit>
+                <p:layoutUnit header="#{msg['ExchangeParties']}" position="west" 
+                              size="300" minSize="300" maxSize="300"  >
+                    <p:scrollPanel mode="native" style="width:100%;height:100%"> <!-- p:dataTable scrollable does not resize when toogled south panel -->   
+                        <p:dataTable id="TblExchangeParties" 
+                                     var="sp" 
+                                     value="#{pModeExchangePartyView.list}"                                     
+                                     rowKey="#{sp}"   
+                                     rowIndexVar="rowIndex"
+                                     selectionMode="single"
+                                     selection="#{pModeExchangePartyView.selected}"
+                                     scrollable="true" 
+                                     scrollHeight="100%"
+
+
+                                     >
+                            <f:facet name="header">
+                                <pnl:pnl-table-control 
+                                    dialogVar="pModeExchangePartyDialog"
+                                    updateDialog=":dlgPModeExchangeParty:pModeExchangePartyDialog:pModeExchangePartyDialogForm:dialogLayout"
+                                    updateTable=":dlgPModeInstance:pModeServiceInstanceDialog:pModeServiceInstanceDialogForm:TblExchangeParties"
+                                    addActionListener="#{pModeExchangePartyView.createEditable()}"
+                                    editActionListener="#{pModeExchangePartyView.startEditSelected()}"
+                                    removeActionListener="#{pModeExchangePartyView.removeSelectedWithWarning(':dlgPModeInstance:pModeServiceInstanceDialog:pModeServiceInstanceDialogForm:TblExchangeParties')}"
+                                    />                                  
+                                <span class="ui-separator" style="display: inline-block;">
+                                    <span class="ui-icon ui-icon-grip-dotted-vertical " />
+                                </span>
+
+
+                            </f:facet>
+                            <p:ajax event="rowDblselect" 
+                                    listener="#{pModeExchangePartyView.startEditSelected()}" 
+                                    oncomplete="PF('pModeExchangePartyDialog').show()"    
+                                    update=":dlgPModeExchangeParty:pModeExchangePartyDialog:pModeExchangePartyDialogForm"
+                                    />
+
+                            <p:column style="width:16px">
+                                <p:rowToggler />
+                            </p:column>
+                            <p:column headerText="#{msg['Party']}"  width="120">
+                                <h:outputText value="#{sp.partyIdentitySetIdRef}" /></p:column>
+                            <p:column headerText="#{msg['DefTransport']}" width="80">
+                                <h:outputText value="#{sp.partyDefTransportIdRef}" />
+                            </p:column>
+
+                            <p:rowExpansion>
+                                <p:dataList value="#{sp.roles}" var="pl"  type="unordered" itemType="none" 
+                                            style="padding: 0; margin: 0 0 0 1em">#{pl}</p:dataList>
+                            </p:rowExpansion>
+
+                        </p:dataTable> 
+                    </p:scrollPanel>
+                </p:layoutUnit>  
+            </p:layout>
+        </dlg:dlg-abstract>
+    </composite:implementation>
+
+</html>

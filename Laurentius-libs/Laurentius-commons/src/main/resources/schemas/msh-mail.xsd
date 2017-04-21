@@ -206,7 +206,7 @@ Copyright 2015, Supreme Court Republic of Slovenia
 			</xs:annotation>
 			<xs:simpleType>
 				<xs:restriction base="xs:token">
-					<xs:maxLength value="128"/>
+					<xs:maxLength value="256"/>
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>

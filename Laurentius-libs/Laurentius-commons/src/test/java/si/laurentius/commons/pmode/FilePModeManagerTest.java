@@ -129,13 +129,8 @@ public class FilePModeManagerTest {
       return;
     }
 
-    PMode result;
-    try {
-      result = instance.getPModeById(pModeId);
-    } catch (PModeException ex) {
-      Assert.fail("Message: " + ex.getMessage());
-      return;
-    }
+    PMode result = instance.getPModeById(pModeId);
+   
     Assert.assertNotNull(result);
     Assert.assertEquals(pModeId, result.getId());
 

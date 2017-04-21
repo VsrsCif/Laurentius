@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      xmlns:dlg="http://java.sun.com/jsf/composite/laurentius-ui/dialog"
+      xmlns:pnl="http://java.sun.com/jsf/composite/laurentius-ui/panel"
+      >
+    <composite:interface>
+    </composite:interface>
+
+    <composite:implementation >
+        <dlg:dlg-abstract   id="pModeMEPDialog"
+                            formId="pModeMEPDialogForm"
+                            dialogTitle="#{msg['PModeMEPDialog']}" 
+                            editable="#{pModeMEPView.editable}"
+                            width="1000"
+                            height="600"
+                            updateOnSave=":dlgPModeInstance:pModeServiceInstanceDialog:pModeServiceInstanceDialogForm:TblPModeMEPs"
+                            onConfirmAction="#{pModeMEPView.addOrUpdateEditable()}" >
+
+            <p:layout>
+                <p:layoutUnit position="center">
+                    <p:panelGrid  style="width: 100%">
+                        <p:row>
+                            <p:column class="grid-label">#{msg['MEPInitiatorRole']}:</p:column>
+                            <p:column colspan="3"><p:selectOneMenu id="MEPInitiatorRole" value="#{pModeMEPView.editable.MEPInitiatorRole}" 
+                                                                   style="width: 100%"  >
+                                    
+                                    <f:selectItems value="#{pModeView.editableServiceRoles}" var="role" 
+                                                   itemLabel="#{role}" itemValue="#{role}" />
+                                </p:selectOneMenu></p:column>
+                        </p:row>
+                        <p:row>
+                            <p:column class="grid-label">#{msg['MEP']}:</p:column>
+                            <p:column><p:selectOneMenu 
+                                            id="mepChType"
+                                            value="#{pModeMEPView.editable.MEPType}" 
+                                                       style="width:100%"                          
+                                                       >
+                                    <p:ajax update="MEPChannelBinding legs" />
+                                    <f:selectItems value="#{LookupsData.MEPType}" var="mt" 
+                                                   itemLabel="#{mt.name}" itemValue="#{mt.value}"                                                                                              
+                                                   />
+                                </p:selectOneMenu></p:column>
+
+                            <p:column class="grid-label">#{msg['MEPChannelBinding']}:</p:column>
+                            <p:column><p:selectOneMenu id="MEPChannelBinding" value="#{pModeMEPView.editable.MEPChannelBinding}" 
+                                                       style="width: 100%" >
+                                    <p:ajax update="legs" />
+                                    <f:selectItems value="#{LookupsData.MEPChannelBindingType}" var="mcbt" 
+                                                   itemLabel="#{mcbt.name}" itemValue="#{mcbt.value}"
+                                                   itemDisabled="#{!pModeMEPView.enableMEPBinnding(mcbt)}"
+                                                   />
+                                </p:selectOneMenu></p:column>
+                        </p:row>
+
+
+                    </p:panelGrid>   
+                    <p:panel  id="legs">
+                        <pnl:pnl-pmode-leg id="firstLeg" title="First leg" leg="#{pModeMEPView.editableFirstLeg}" />
+                        <pnl:pnl-pmode-leg id="secondLeg"  title="Second leg" 
+                                           rendered="#{pModeMEPView.hasSecondLeg()}" leg="#{pModeMEPView.editableSecondLeg}" />
+                    </p:panel>
+
+                </p:layoutUnit>
+
+            </p:layout>
+        </dlg:dlg-abstract>
+    </composite:implementation>
+
+</html>

@@ -45,7 +45,7 @@ public class MJUPluginDescription extends  AbstractPluginDescription {
       
       registerPluginComponentInterface(MJUMailSubmitter.class);
       registerPluginComponentInterface(MJUProcessorInZPPMail.class);
-      registerPluginComponentInterface(MJUCronTask.class);
+      registerPluginComponentInterface(MJUAdviceOfDeliveryCronTask.class);
       
      // register plugin
       registerPlugin();
