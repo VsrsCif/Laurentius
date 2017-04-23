@@ -127,12 +127,15 @@
                                     oncomplete="PF('pModeMEPDialog').show()"    
                                     update=":dlgPModeMEP:pModeMEPDialog:pModeMEPDialogForm"
                                     />
-                            <p:column headerText="#{msg['MEP']}">
-                                <h:outputText value="#{mep.MEPType}" /></p:column>       
-                            <p:column headerText="#{msg['MEPChannelBinding']}">
-                                <h:outputText value="#{mep.MEPChannelBinding}" /></p:column>       
-                            <p:column headerText="#{msg['MEPInitiatorRole']}">
+                            <p:column headerText="#{msg['MEPInitiatorRole']}" width="80">
                                 <h:outputText value="#{mep.MEPInitiatorRole}" /></p:column>       
+                            <p:column headerText="#{msg['MEP']}" width="60">
+                                <h:outputText value="#{pModeMEPView.getMEPTypeName( mep.MEPType)}" /></p:column>       
+                            <p:column headerText="#{msg['MEPChannelBinding']}" width="80">
+                                <h:outputText value="#{pModeMEPView.getMEPChannelBindingName(mep.MEPChannelBinding)}" /></p:column>       
+                            
+                                <p:column headerText="#{msg['MEPActions']}">
+                                <h:outputText value="#{pModeMEPView.getMEPActions(mep)}" /></p:column>       
                         </p:dataTable> 
 
                     </p:scrollPanel>

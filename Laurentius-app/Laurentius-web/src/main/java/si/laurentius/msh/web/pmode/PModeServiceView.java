@@ -16,7 +16,6 @@ package si.laurentius.msh.web.pmode;
 
 import java.math.BigInteger;
 import java.util.List;
-import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;

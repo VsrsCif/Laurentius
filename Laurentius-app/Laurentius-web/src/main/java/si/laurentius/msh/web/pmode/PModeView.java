@@ -14,15 +14,23 @@
  */
 package si.laurentius.msh.web.pmode;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import javax.annotation.PostConstruct;
+import java.util.Objects;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import si.laurentius.commons.SEDJNDI;
+import si.laurentius.commons.exception.PModeException;
 import si.laurentius.commons.interfaces.PModeInterface;
 import si.laurentius.commons.utils.SEDLogger;
+import si.laurentius.commons.utils.Utils;
 import si.laurentius.msh.pmode.PMode;
+import si.laurentius.msh.pmode.PModePartyInfo;
+import si.laurentius.msh.pmode.PartyIdentitySet;
+import si.laurentius.msh.pmode.PartyIdentitySetType;
+import si.laurentius.msh.pmode.Service;
 
 /**
  *
@@ -40,18 +48,137 @@ public class PModeView extends AbstractPModeJSFView<PMode> {
   @EJB(mappedName = SEDJNDI.JNDI_PMODE)
   PModeInterface mPModeInteface;
 
-  /**
-   *
-   */
-  @PostConstruct
-  public void init() {
+  PartyIdentitySet editableLocalParty;
+  Service editableService;
+
+  public String getEditableLocalPartyId() {
+    PMode pme = getEditable();
+    return pme != null && pme.getLocalPartyInfo()!=null?pme.getLocalPartyInfo().getPartyIdentitySetIdRef():null;    
+  }
+
+  public void setEditableLocalPartyId(String elp) {
+    PMode pme = getEditable();
+    editableLocalParty = null;
+    if (pme != null) {
+      List<PartyIdentitySet> lstPs = mPModeInteface.getPartyIdentitySets();
+      for (PartyIdentitySet pis : lstPs) {
+        if (pis.getIsLocalIdentity() && Objects.equals(pis.getId(), elp)) {
+          editableLocalParty = pis;
+          pme.getLocalPartyInfo().setPartyIdentitySetIdRef(elp);
+          if (!pis.getTransportProtocols().isEmpty()){
+            pme.getLocalPartyInfo().setPartyDefTransportIdRef(pis.getTransportProtocols().get(0).getId());
+          }
+          break;
+        }
+
+      }
+    }
 
   }
 
+  public String getEditableServiceId() {
+    PMode pme = getEditable();
+    if (pme != null) {
+      pme.getServiceIdRef();
+    }
+    return null;
+  }
+
+  public void setEditableServiceId(String es) {
+    PMode pme = getEditable();
+    this.editableService = null;
+    if (pme != null && !Utils.isEmptyString(es)) {
+      List<Service> lstSrv = mPModeInteface.getServices();
+      
+
+      for (Service srv : lstSrv) {
+        if (Objects.equals(srv.getId(), es)) {
+          this.editableService = srv;
+          pme.setServiceIdRef(es);
+          break;
+        }
+      }
+    }
+  }
+
+  public PartyIdentitySet getEditableLocalParty() {
+    return editableLocalParty;
+  }
+
+  public void setEditableLocalParty(PartyIdentitySet editableLocalParty) {
+    this.editableLocalParty = editableLocalParty;
+  }
+
+  public Service getEditableService() {
+    return editableService;
+  }
+
+  public void setEditableService(Service editableService) {
+    this.editableService = editableService;
+  }
+
+  public  List<String>  getEditableServiceRoles(){
+    Service es = getEditableService();
+    List<String> lstRoles = null;
+    if (es!=null){
+      lstRoles= new ArrayList<>();
+      if (es.getInitiator()!=null){
+        lstRoles.add(es.getInitiator().getRole());
+      }
+      if (es.getExecutor()!=null){
+        lstRoles.add(es.getExecutor().getRole());
+      }
+    
+    } else {
+    lstRoles = Collections.emptyList();
+    }
+    return lstRoles;
+  
+  }
+          
   @Override
   public boolean validateData() {
 
     return true;
+  }
+
+  @Override
+  public void startEditSelected() {
+    super.startEditSelected();
+    updateDataFromEditable();
+  }
+
+  public void updateDataFromEditable() {
+    PMode pme = getEditable();
+    if (pme == null) {
+      return;
+    }
+    // update service
+    List<Service> lstSrv = mPModeInteface.getServices();
+    this.editableService = null;
+    for (Service srv : lstSrv) {
+      if (Objects.equals(srv.getId(), pme.getServiceIdRef())) {
+        this.editableService = srv;
+        break;
+      }
+    }
+
+    // update localParty
+    if (pme.getLocalPartyInfo() != null
+            && !Utils.isEmptyString(pme.getLocalPartyInfo().
+                    getPartyIdentitySetIdRef())) {
+      List<PartyIdentitySet> lstPrt = mPModeInteface.getPartyIdentitySets();
+      this.editableLocalParty = null;
+      for (PartyIdentitySet prt : lstPrt) {
+
+        if (prt.getIsLocalIdentity() && Objects.equals(prt.getId(),
+                pme.getLocalPartyInfo().getPartyIdentitySetIdRef())) {
+          this.editableLocalParty = prt;
+          break;
+        }
+      }
+    }
+
   }
 
   /**
@@ -59,9 +186,124 @@ public class PModeView extends AbstractPModeJSFView<PMode> {
    */
   @Override
   public void createEditable() {
-    PMode pmodePMode = new PMode();
-    setNew(pmodePMode);
 
+    String sbname = "pmode_%03d";
+    int i = 1;
+
+    while (mPModeInteface.getPModeById(String.format(sbname, i)) != null) {
+      i++;
+    }
+    String pmode = String.format(sbname, i);
+    PMode pm = new PMode();
+    pm.setId(pmode);
+
+    // -- set service
+    List<Service> lst = mPModeInteface.getServices();
+    if (!lst.isEmpty()) {
+      setEditableServiceId(lst.get(0).getId());
+    } else {
+      setEditableServiceId(null);
+    }
+
+    pm.setLocalPartyInfo(new PModePartyInfo());
+    pm.setExchangeParties(new PMode.ExchangeParties());
+
+    setNew(pm);
+  }
+
+  public PModePartyInfo getEditableLocalPartyIdentityInfo() {
+    PMode pm = getEditable();
+    if (pm != null) {
+      if (pm.getLocalPartyInfo() == null) {
+        pm.setLocalPartyInfo(new PModePartyInfo());
+      }
+      return pm.getLocalPartyInfo();
+
+    }
+    return null;
+  }
+
+  public boolean getEditableLocPartyHasInitiatorRole() {
+    Service srv = getEditableService();
+    boolean hasIR = false;
+    if (srv != null && srv.getInitiator() != null) {
+      hasIR = getEditableLocPartyHasRole(srv.getInitiator().getRole());
+    }
+    return hasIR;
+  }
+
+  public boolean getEditableLocPartyHasExecutorRole() {
+    Service srv = getEditableService();
+    boolean hasIR = false;
+    if (srv != null && srv.getExecutor() != null) {
+      hasIR = getEditableLocPartyHasRole(srv.getExecutor().getRole());
+    }
+    return hasIR;
+  }
+
+  public boolean getEditableLocPartyHasRole(String role) {
+
+    PModePartyInfo lp = getEditableLocalPartyIdentityInfo();
+
+    boolean hasIR = false;
+    if (lp != null && !Utils.isEmptyString(role)) {
+      hasIR = lp.getRoles().contains(role);
+    }
+
+    return hasIR;
+  }
+
+            
+  public void setEditableLocPartyHasInitiatorRole(boolean bVal) {
+    Service srv = getEditableService();
+    if (srv != null && srv.getInitiator() != null) {
+      setEditableLocPartyRole(bVal, srv.getInitiator().getRole());
+    }
+  }
+
+  public void setEditableLocPartyHasExecutorRole(boolean bVal) {
+    Service srv = getEditableService();
+    if (srv != null && srv.getExecutor() != null) {
+      setEditableLocPartyRole(bVal, srv.getExecutor().getRole());
+    }
+  }
+
+  public void setEditableLocPartyRole(boolean bVal, String role) {
+
+    PModePartyInfo lp = getEditableLocalPartyIdentityInfo();
+    if (lp != null && !Utils.isEmptyString(role)) {
+      if (bVal) {
+        if (!lp.getRoles().contains(role)) {
+          lp.getRoles().add(role);
+        }
+      } else {
+        if (lp.getRoles().contains(role)) {
+          lp.getRoles().remove(role);
+        }
+      }
+    }
+
+  }
+
+  public List<PartyIdentitySetType.TransportProtocol> getEditableLocalPartyTransports() {
+    PMode pm = getEditable();
+    String pis = pm != null && pm.getLocalPartyInfo() != null && !Utils.
+            isEmptyString(
+                    pm.getLocalPartyInfo().getPartyIdentitySetIdRef()) ? pm.
+            getLocalPartyInfo().getPartyIdentitySetIdRef() : null;
+    if (pis != null) {
+
+      try {
+        PartyIdentitySetType pist = mPModeInteface.getPartyIdentitySetById(pis);
+
+        return pist.getTransportProtocols();
+      } catch (PModeException ex) {
+        LOG.formatedWarning(
+                "Error %s occured while retrieving party identity set %s ", ex.
+                        getMessage(), pis);
+      }
+    }
+    return Collections.emptyList();
   }
 
   /**
@@ -126,10 +368,25 @@ public class PModeView extends AbstractPModeJSFView<PMode> {
 
   @Override
   public String getSelectedDesc() {
-     if (getSelected() != null) {
+    if (getSelected() != null) {
       return getSelected().getId();
     }
     return null;
+  }
+
+  public List<PartyIdentitySet> getLocalParties() {
+    List<PartyIdentitySet> lstLP = new ArrayList<>();
+    for (PartyIdentitySet ps : mPModeInteface.getPartyIdentitySets()) {
+      if (ps.getIsLocalIdentity()) {
+        lstLP.add(ps);
+      }
+    }
+    return lstLP;
+
+  }
+
+  public List<PartyIdentitySet> getParties() {
+    return mPModeInteface.getPartyIdentitySets();
   }
 
 }

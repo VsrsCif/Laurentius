@@ -9,10 +9,9 @@ h1 {
     color: white; 
 }
 h2 {
-    padding: 0;
     margin: 2px 0 0 0;
-    background: darkgray; 
-    color: whitesmoke; 
+    background: #cdcfcf; 
+    color: black; 
 }
 
 h3 {
@@ -20,7 +19,12 @@ h3 {
     margin: 2px 0 0 0;
 }
 
-
+.ui-panel .ui-panel-content {
+    border: 0 none;
+    padding: 0 !important;
+    
+    
+}
 
 .ui-datatable-scrollable-body, 
 .ui-accordion-content {
@@ -369,26 +373,33 @@ td.ui-panelgrid-cell.label {
 }
 
 .arrow-line-solid{
-    width: 100% !important  ;
+    
     height: 15px !important;
     background: url("#{resource['images:/solid-line.svg']}") repeat-x 0px 100% !important;     
     
 }
-.arrow-line-dashed{
-    width: 100% !important  ;
-    height: 15px !important;
-    background: url("#{resource['images:/solid-line.svg']}") repeat-x 0px 100% !important;     
+.arrow-line-dash{
+    
+    height: 20px !important;
+    background: url("#{resource['images:/dash-line.svg']}") repeat-x 0px 100% !important;  
+   
     
 }
 .arrow-right {   
-    height: 15px !important;
+    height: 2Opx !important;
     width: 20px !important;
     background: url("#{resource['images:/right-arrow.svg']}")  no-repeat !important;     
     
 }
 .arrow-left {   
-    height: 15px !important;
+    height: 20px !important;
     width: 20px !important;
     background: url("#{resource['images:/left-arrow.svg']}")  no-repeat !important;     
+    
+}
+.no-arrow {   
+    height: 20px !important;
+    width: 1px !important;
+   
     
 }

@@ -2,10 +2,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"   
-      xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:f="http://java.sun.com/jsf/core"
+     xmlns:f="http://java.sun.com/jsf/core"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:pe="http://primefaces.org/ui/extensions"
       xmlns:composite="http://java.sun.com/jsf/composite"
       xmlns:dlg="http://java.sun.com/jsf/composite/laurentius-ui/dialog"
       xmlns:pnl="http://java.sun.com/jsf/composite/laurentius-ui/panel"
@@ -37,7 +35,7 @@
                         </p:row>
                         <p:row>
                             <p:column class="grid-label">#{msg['MEP']}:</p:column>
-                            <p:column><p:selectOneMenu 
+                            <p:column ><p:selectOneMenu 
                                             id="mepChType"
                                             value="#{pModeMEPView.editable.MEPType}" 
                                                        style="width:100%"                          
@@ -62,11 +60,16 @@
 
                     </p:panelGrid>   
                     <p:panel  id="legs">
-                        <pnl:pnl-pmode-leg id="firstLeg" title="First leg" leg="#{pModeMEPView.editableFirstLeg}" />
+                        <pnl:pnl-pmode-leg id="firstLeg" title="First leg" 
+                                           legMEP="#{pModeMEPView.firstLegMEP()}"
+                                           legInitLeft="#{pModeMEPView.firstLegInitLeft()}" 
+                                           leg="#{pModeMEPView.editableFirstLeg}" />
                         <pnl:pnl-pmode-leg id="secondLeg"  title="Second leg" 
-                                           rendered="#{pModeMEPView.hasSecondLeg()}" leg="#{pModeMEPView.editableSecondLeg}" />
+                                           legMEP="#{pModeMEPView.secodLegMEP()}"
+                                           legInitLeft="#{pModeMEPView.secondLegInitLeft()}"                                           
+                                           rendered="#{pModeMEPView.hasSecondLeg()}" 
+                                           leg="#{pModeMEPView.editableSecondLeg}" />
                     </p:panel>
-
                 </p:layoutUnit>
 
             </p:layout>

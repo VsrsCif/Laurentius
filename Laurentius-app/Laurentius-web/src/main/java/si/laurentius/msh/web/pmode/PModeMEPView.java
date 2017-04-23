@@ -62,56 +62,62 @@ public class PModeMEPView extends AbstractPModeJSFView<MEPType> {
 
   }
 
-  
-  public MEPLegType getEditableFirstLeg(){
-    MEPType  mt =  getEditable();
-    if (mt!=null){
-      if (mt.getLegs().isEmpty()){
+  public MEPLegType getEditableFirstLeg() {
+    MEPType mt = getEditable();
+    if (mt != null) {
+      if (mt.getLegs().isEmpty()) {
         mt.getLegs().add(new MEPLegType());
       }
       MEPLegType mlt = mt.getLegs().get(0);
-     // build leg objects
+      // build leg objects
       buildLeg(mlt);
       return mlt;
     }
     return null;
   }
-  private void buildLeg(MEPLegType mlt){
-  if (Utils.isEmptyString(mlt.getMPC())){
-        mlt.setMPC("http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/defaultMPC");
-      }
-      if (mlt.getTransport() == null){
-        mlt.setTransport(new MEPTransportType());
-        
-      }
-      if (mlt.getTransport().getForeChannel() == null) {
-        mlt.getTransport().setForeChannel(new TransportChannelType());
-      }
-      if (mlt.getTransport().getBackChannel() == null) {
-        mlt.getTransport().setBackChannel(new TransportChannelType());
-      }
+
+  private void buildLeg(MEPLegType mlt) {
+    if (Utils.isEmptyString(mlt.getMPC())) {
+      mlt.setMPC(
+              "http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/defaultMPC");
+    }
+    if (mlt.getTransport() == null) {
+      mlt.setTransport(new MEPTransportType());
+
+    }
+    if (mlt.getTransport().getForeChannel() == null) {
+      mlt.getTransport().setForeChannel(new TransportChannelType());
+    }
+    if (mlt.getTransport().getBackChannel() == null) {
+      mlt.getTransport().setBackChannel(new TransportChannelType());
+    }
   }
-  public MEPLegType getEditableSecondLeg(){
-    MEPType  mt =  getEditable();
-    if (mt!=null){
-      while(mt.getLegs().size() < 2){
-       MEPLegType mlt =  new MEPLegType();
+
+  public MEPLegType getEditableSecondLeg() {
+    MEPType mt = getEditable();
+    if (mt != null) {
+      while (mt.getLegs().size() < 2) {
+        MEPLegType mlt = new MEPLegType();
         buildLeg(mlt);
         mt.getLegs().add(mlt);
-      }     
+      }
       return mt.getLegs().get(1);
     }
     return null;
   }
-  
-  public boolean hasSecondLeg(){
-    MEPType mt =  getEditable();
-    return mt!= null && Objects.equals(mt.getMEPType(), si.laurentius.commons.pmode.enums.MEPType.TwoWay.getValue())
-         && (Objects.equals(mt.getMEPChannelBinding(), MEPChannelBindingType.PullAndPush.getValue())
-          || Objects.equals(mt.getMEPChannelBinding(), MEPChannelBindingType.PushAndPull.getValue())
-          || Objects.equals(mt.getMEPChannelBinding(), MEPChannelBindingType.PushAndPush.getValue())
-      );          
+
+  public boolean hasSecondLeg() {
+    MEPType mt = getEditable();
+    return mt != null && Objects.equals(mt.getMEPType(),
+            si.laurentius.commons.pmode.enums.MEPType.TwoWay.getValue())
+            && (Objects.equals(mt.getMEPChannelBinding(),
+                    MEPChannelBindingType.PullAndPush.getValue())
+            || Objects.equals(mt.getMEPChannelBinding(),
+                    MEPChannelBindingType.PushAndPull.getValue())
+            || Objects.equals(mt.getMEPChannelBinding(),
+                    MEPChannelBindingType.PushAndPush.getValue()));
   }
+
   @Override
   public boolean validateData() {
     return true;
@@ -125,12 +131,10 @@ public class PModeMEPView extends AbstractPModeJSFView<MEPType> {
 
   }
 
-  
-
   @Override
   public List<MEPType> getList() {
-    return pModeView.getEditable() != null?pModeView.getEditable().getMEPS():
-            Collections.emptyList();    
+    return pModeView.getEditable() != null ? pModeView.getEditable().getMEPS()
+            : Collections.emptyList();
   }
 
   @Override
@@ -139,7 +143,6 @@ public class PModeMEPView extends AbstractPModeJSFView<MEPType> {
 
     MEPType ecj = getEditable();
     if (ecj != null && pModeView.getEditable() != null) {
-     
 
       bsuc = pModeView.getEditable().getMEPS().add(
               ecj);
@@ -153,23 +156,21 @@ public class PModeMEPView extends AbstractPModeJSFView<MEPType> {
   public boolean removeSelected() {
     boolean bSuc = false;
     MEPType ecj = getSelected();
-    
-    if (ecj != null && pModeView.getEditable() != null) {
-     /*
-        for (int i = 0; i < pModeView.getEditable().getMEPS().size(); i++) {
-          MEPType mt = pModeView.getEditable().getMEPS().get(i);
-          if (Objects.equals(pp.getPartyIdentitySetIdRef(), ecj.
-                  getPartyIdentitySetIdRef())) {
-            pModeView.getEditable().getExchangeParties().
-                    getPartyInfos().remove(i);
-            bSuc = true;
-            break;
-          }
 
-      } else {
-        addError("No editable payload!");
-      }*/
+    if (ecj != null && pModeView.getEditable() != null) {
+
+      for (int i = 0; i < pModeView.getEditable().getMEPS().size(); i++) {
+        MEPType mt = pModeView.getEditable().getMEPS().get(i);
+        if (mt.equals(ecj)) {
+          pModeView.getEditable().getMEPS().remove(i);
+          bSuc = true;
+          break;
+        }
+      }
+    } else {
+      addError("No editable payload!");
     }
+
     return bSuc;
   }
 
@@ -177,27 +178,22 @@ public class PModeMEPView extends AbstractPModeJSFView<MEPType> {
   public boolean updateEditable() {
     boolean bSuc = false;
     MEPType ecj = getEditable();
-    if (ecj != null && pModeView.getEditable() != null) {
-      /*
-      if (pModeView.getEditable().getExchangeParties() != null) {
-        for (int i = 0; i < pModeView.getEditable().getExchangeParties().
-                getPartyInfos().size(); i++) {
-          PMode.ExchangeParties.PartyInfo pp = pModeView.getEditable().
-                  getExchangeParties().getPartyInfos().get(i);
-          if (Objects.equals(pp.getPartyIdentitySetIdRef(), ecj.
-                  getPartyIdentitySetIdRef())) {
-            pModeView.getEditable().getExchangeParties().
-                    getPartyInfos().remove(i);
-            pModeView.getEditable().getExchangeParties().
-                    getPartyInfos().add(i, ecj);
-            bSuc = true;
-            break;
-          }
-        }
+    MEPType selct = getSelected();
+    if (selct != null && ecj != null && pModeView.getEditable() != null) {
+      // selected 
 
-      } else {
-        addError("No editable payload!");
-      }*/
+      for (int i = 0; i < pModeView.getEditable().getMEPS().size(); i++) {
+        MEPType mt = pModeView.getEditable().getMEPS().get(i);
+        if (mt.equals(selct)) {
+          pModeView.getEditable().getMEPS().remove(i);
+          pModeView.getEditable().getMEPS().add(i, ecj);
+          bSuc = true;
+          break;
+        }
+      }
+
+    } else {
+      addError("No editable payload!");
     }
     return bSuc;
   }
@@ -206,9 +202,105 @@ public class PModeMEPView extends AbstractPModeJSFView<MEPType> {
   public String getSelectedDesc() {
     return getSelected() != null ? getSelected().getMEPType() : "";
   }
-  
-  public boolean enableMEPBinnding(MEPChannelBindingType mt){
-    return Objects.equals(mt.getMepType().getValue(), getEditable().getMEPType());
+
+  public boolean enableMEPBinnding(MEPChannelBindingType mt) {
+    return Objects.
+            equals(mt.getMepType().getValue(), getEditable().getMEPType());
+  }
+
+  public boolean firstLegInitLeft() {
+    MEPType mt = getEditable();
+    return mt == null
+            || Objects.equals(mt.getMEPChannelBinding(),
+                    MEPChannelBindingType.Push.getValue())
+            || Objects.equals(mt.getMEPChannelBinding(),
+                    MEPChannelBindingType.Sync.getValue())
+            || Objects.equals(mt.getMEPChannelBinding(),
+                    MEPChannelBindingType.PushAndPull.getValue())
+            || Objects.equals(mt.getMEPChannelBinding(),
+                    MEPChannelBindingType.PushAndPush.getValue());
+  }
+
+  public String firstLegMEP() {
+    MEPType mt = getEditable();
+    String mep = "";
+    if (mt != null) {
+      if (Objects.equals(mt.getMEPChannelBinding(), MEPChannelBindingType.Push.
+              getValue())
+              || Objects.equals(mt.getMEPChannelBinding(),
+                      MEPChannelBindingType.PushAndPull.getValue())
+              || Objects.equals(mt.getMEPChannelBinding(),
+                      MEPChannelBindingType.PushAndPush.getValue())) {
+        mep = "push";
+      } else if (Objects.equals(mt.getMEPChannelBinding(),
+              MEPChannelBindingType.Pull.getValue())
+              || Objects.equals(mt.getMEPChannelBinding(),
+                      MEPChannelBindingType.PullAndPush.getValue())) {
+        mep = "pull";
+      } else if (Objects.equals(mt.getMEPChannelBinding(),
+              MEPChannelBindingType.Sync.getValue())) {
+        mep = "sync";
+      }
+
+    }
+    return mep;
+  }
+
+  public String secodLegMEP() {
+    MEPType mt = getEditable();
+    String mep = "";
+    if (mt != null) {
+      if (Objects.equals(mt.getMEPChannelBinding(),
+              MEPChannelBindingType.PullAndPush.getValue())
+              || Objects.equals(mt.getMEPChannelBinding(),
+                      MEPChannelBindingType.PushAndPush.getValue())) {
+        mep = "push";
+      } else if (Objects.equals(mt.getMEPChannelBinding(),
+              MEPChannelBindingType.PushAndPull.getValue())) {
+        mep = "pull";
+      }
+
+    }
+    return mep;
+  }
+
+  public boolean secondLegInitLeft() {
+    MEPType mt = getEditable();
+    return mt != null
+            && Objects.equals(mt.getMEPChannelBinding(),
+                    MEPChannelBindingType.PushAndPull.getValue());
+  }
+
+  public String getMEPTypeName(String strVal) {
+    si.laurentius.commons.pmode.enums.MEPType mt = si.laurentius.commons.pmode.enums.MEPType.
+            getByValue(strVal);
+    return mt != null ? mt.getName() : strVal;
+  }
+
+  public String getMEPChannelBindingName(String strVal) {
+    MEPChannelBindingType mt = MEPChannelBindingType.getByValue(strVal);
+    return mt != null ? mt.getName() : strVal;
+  }
+
+  public String getMEPActions(MEPType mt) {
+    String acts = "";
+    for (MEPLegType mlt : mt.getLegs()) {
+      MEPTransportType mtt = mlt.getTransport();
+      if (mtt == null) {
+        continue;
+      }
+      if (mtt.getForeChannel() != null && !Utils.isEmptyString(mtt.
+              getForeChannel().getAction())) {
+        acts += mtt.getForeChannel().getAction() + ",";
+      }
+
+      if (mtt.getBackChannel() != null && !Utils.isEmptyString(mtt.
+              getBackChannel().getAction())) {
+        acts += mtt.getBackChannel().getAction() + ",";
+      }
+    }
+    return acts;
+
   }
 
 }
