@@ -122,7 +122,7 @@ abstract public class AbstractAdminJSFView<T> extends AbstractJSFView {
     dlg.setCurrentJSFView(this, updateTarget);
     RequestContext context = RequestContext.getCurrentInstance();
     context.execute("PF('DlgDelete').show();");
-    context.update("dlgalert:deleteDialog");
+    context.update("dlgdelete:deleteDialog");
   };
   
   /**

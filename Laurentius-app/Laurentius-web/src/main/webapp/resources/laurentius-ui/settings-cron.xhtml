@@ -44,7 +44,15 @@
                             addActionListener="#{adminSEDCronJobView.createEditable()}"
                             editActionListener="#{adminSEDCronJobView.startEditSelected()}"
                             removeActionListener="#{adminSEDCronJobView.removeSelectedWithWarning(':forms:SettingsCron:cronPanel:TblCron')}"                            
-                            />       
+                            />    
+                        <span class="ui-separator" style="display: inline-block;">
+                            <span class="ui-icon ui-icon-grip-dotted-vertical " />
+                        </span>
+                        <p:commandButton  value="#{msg['Execute']}"  styleClass="toolbar-Button" 
+                                          icon="ui-icon-svg-execute ui-icon-size-22"  
+                                          actionListener="#{adminSEDCronJobView.executeSelectedWithWarning(':forms:SettingsCron:cronPanel:TblCron')}"
+                                          
+                                          />
                     </f:facet>
                     <p:column headerText="#{msg['Id']}" width="60">
                         <h:outputText value="#{sp.id}" /></p:column>

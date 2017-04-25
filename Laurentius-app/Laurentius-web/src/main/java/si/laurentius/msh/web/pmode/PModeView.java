@@ -79,7 +79,7 @@ public class PModeView extends AbstractPModeJSFView<PMode> {
   public String getEditableServiceId() {
     PMode pme = getEditable();
     if (pme != null) {
-      pme.getServiceIdRef();
+      return pme.getServiceIdRef();
     }
     return null;
   }

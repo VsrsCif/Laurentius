@@ -19,9 +19,13 @@ mkdir $ZIP_FILENAME
 
 # si.laurentius module libralies
 cp "$LAU_PROJECT/Laurentius-plugins/Laurentius-meps-plugin/target/plugin-meps.war" "$ZIP_FILENAME/" 	
-cp -r "$LAU_PROJECT/Laurentius-plugins/Laurentius-meps-plugin/src/main/resources/init" "$ZIP_FILENAME/" 	
+cp -r "$LAU_PROJECT/Laurentius-plugins/Laurentius-meps-plugin/src/main/resources/init" "$ZIP_FILENAME/" 
 
-zip -r "$ZIP_FILENAME.zip" $ZIP_FILENAME
+cd 	$ZIP_FILENAME
+
+zip -r "../$ZIP_FILENAME.zip" *
+
+cd ..
 # move "boudle folder to test folder fo test deploy"
 rm -rf $ZIP_FILENAME
 

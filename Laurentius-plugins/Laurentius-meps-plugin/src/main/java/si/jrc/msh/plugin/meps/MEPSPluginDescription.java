@@ -45,7 +45,6 @@ public class MEPSPluginDescription extends  AbstractPluginDescription {
       // and log further application specific info
       registerPluginComponentInterface(MEPSTask.class);
       registerPluginComponentInterface(MEPSInInterceptor.class);
-      registerPluginComponentInterface(MEPSTask.class);
       
      // register plugin
       registerPlugin();

@@ -47,12 +47,11 @@
                 </p:selectOneMenu>
 
             </p:panelGrid>
+            <h2>#{msg['MessageSignatureAndEcryption']}</h2>
             <p:panelGrid  style="width:100%;" >
 
                 <f:facet name="header">
-                    <p:row>
-                        <p:column colspan="5">#{msg['MessageSignatureAndEcryption']}:</p:column>
-                    </p:row>
+                   
                     <p:row>
                         <p:column colspan="2">
                             <p:selectBooleanCheckbox id="setSignature"
@@ -152,6 +151,7 @@
 
                 <p:row >
                     <p:column colspan="2" rowspan="7">
+                       
 
                         <p:dataTable id="TblSignElements" 
                                      var="sp" 
@@ -170,7 +170,7 @@
                                     />
 
                             <f:facet name="header">
-
+                                <h3>#{msg['SOAPMessage']}</h3>
                                 <pnl:pnl-table-control 
                                     dialogVar="pModeXPathDialog"
                                     updateDialog=":dlgPModeXPath:pModeXPathDialog:pModeXPathDialogForm"
@@ -204,7 +204,7 @@
                                     oncomplete="PF('pModeXPathDialog').show()"/>
 
                             <f:facet name="header">
-
+                                <h3>#{msg['SOAPMessage']}</h3>
                                 <pnl:pnl-table-control 
                                     dialogVar="pModeXPathDialog"
                                     updateDialog=":dlgPModeXPath:pModeXPathDialog:pModeXPathDialogForm"

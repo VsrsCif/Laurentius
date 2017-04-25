@@ -121,7 +121,7 @@
                 </p:row>
             </p:panelGrid>
 
-            <p:panelGrid style="width: 100%">
+            <!-- p:panelGrid style="width: 100%">
 
                 <p:row>
                     <p:column colspan="2" styleClass="ui-gp-header" >Remove mail</p:column>
@@ -137,14 +137,14 @@
 
                 <p:row>
                     <p:column>
-                        <p:commandButton value="#{msg['RemoveMail']}"   
-                                         actionListener="#{dialogComposeMailView.createNewMail()}"
+                        <p:commandButton value="# {msg['RemoveMail']}"   
+                                         actionListener="# {dialogComposeMailView.createNewMail()}"
                                          oncomplete="PF('mailComposeDialog').show()"
                                          update=":dlgCompose:mailComposeDialog:mailComposeDialogForm"
                                          />
                     </p:column>
                 </p:row>
-            </p:panelGrid>
+            </p:panelGrid -->
 
         </pnl:pnl-settings>
     </composite:implementation>

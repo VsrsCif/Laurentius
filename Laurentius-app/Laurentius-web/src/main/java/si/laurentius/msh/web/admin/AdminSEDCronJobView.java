@@ -25,6 +25,7 @@ import javax.ejb.EJB;
 import javax.ejb.Timer;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import org.primefaces.context.RequestContext;
 import si.laurentius.cron.SEDCronJob;
 import si.laurentius.cron.SEDTask;
 import si.laurentius.cron.SEDTaskProperty;
@@ -36,6 +37,7 @@ import si.laurentius.commons.interfaces.SEDSchedulerInterface;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.Utils;
 import si.laurentius.msh.web.abst.AbstractAdminJSFView;
+import si.laurentius.msh.web.gui.dlg.DialogExecute;
 import si.laurentius.msh.web.plugin.PluginPropertyModel;
 import si.laurentius.msh.web.plugin.PluginPropertyModelItem;
 import si.laurentius.plugin.crontask.CronTaskDef;
@@ -170,6 +172,29 @@ public class AdminSEDCronJobView extends AbstractAdminJSFView<SEDCronJob> {
     }
     return bSuc;
   }
+  
+  public DialogExecute getDlgExecute() {
+    return (DialogExecute)getBean("executeDialog");
+  }
+  
+  public void executeSelectedWithWarning(String updateTarget) {
+    DialogExecute  dlg = getDlgExecute();
+    dlg.setCurrentJSFView(this, updateTarget);
+    RequestContext context = RequestContext.getCurrentInstance();
+    context.execute("PF('executeDialog').show();");
+    context.update("dlgexecute:executeDialog");
+  };
+  
+   public String executeSelected() {
+ 
+    SEDCronJob cj = getSelected();
+    if (cj != null) {
+     return mshScheduler.executeContJob(cj);
+    }
+    return null;
+  }
+  
+  
 
   /**
    *

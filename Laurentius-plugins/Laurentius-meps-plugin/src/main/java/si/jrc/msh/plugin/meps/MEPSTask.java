@@ -26,9 +26,14 @@ import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
+import javax.mail.MessagingException;
+import javax.naming.NamingException;
 import javax.xml.bind.JAXBException;
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.SEDSystemProperties;
+import si.laurentius.commons.email.EmailAttachmentData;
+import si.laurentius.commons.email.EmailData;
+import si.laurentius.commons.email.EmailUtils;
 import si.laurentius.commons.enums.MimeValue;
 import si.laurentius.commons.enums.SEDInboxMailStatus;
 import si.laurentius.commons.exception.StorageException;
@@ -45,7 +50,6 @@ import si.laurentius.msh.inbox.mail.MSHInMail;
 import si.laurentius.msh.inbox.payload.MSHInPart;
 import si.laurentius.plugin.crontask.CronTaskDef;
 import si.laurentius.plugin.crontask.CronTaskPropertyDef;
-import si.laurentius.plugin.interfaces.PropertyListType;
 import si.laurentius.plugin.interfaces.PropertyType;
 import si.laurentius.plugin.interfaces.TaskExecutionInterface;
 import si.laurentius.plugin.interfaces.exception.TaskException;
@@ -63,6 +67,15 @@ public class MEPSTask implements TaskExecutionInterface {
   public static final String KEY_SENDER_SEDBOX = "meps.sender.sedbox";
   public static final String KEY_SENDER_SERVICE = "meps.service";
   public static final String KEY_MAX_MAIL_COUT = "meps.mail.max.count";
+
+  public static final String KEY_EMAIL_SUBJECT = "meps.email.subject";
+  public static final String KEY_EMAIL_FROM = "meps.email.from";
+  public static final String KEY_EMAIL_TO = "meps.email.to";
+
+  /**
+   *
+   */
+  public static final String KEY_MAIL_CONFIG_JNDI = "mail.config.jndi";
 
   private static final SEDLogger LOG = new SEDLogger(MEPSTask.class);
   @EJB(mappedName = SEDJNDI.JNDI_SEDDAO)
@@ -121,6 +134,27 @@ public class MEPSTask implements TaskExecutionInterface {
         }
       }
     }
+
+    String emailTo = null;
+    String emailFrom = null;
+    String emailSubject = null;
+    if (p.containsKey(KEY_EMAIL_TO)) {
+      emailTo = p.getProperty(KEY_EMAIL_TO);
+    }
+    if (p.containsKey(KEY_EMAIL_FROM)) {
+      emailFrom = p.getProperty(KEY_EMAIL_FROM);
+    }
+    if (p.containsKey(KEY_EMAIL_SUBJECT)) {
+      emailSubject = p.getProperty(KEY_EMAIL_SUBJECT);
+    }
+    String smtpConf = null;
+    if (p.containsKey(KEY_MAIL_CONFIG_JNDI)) {
+      smtpConf = p.getProperty(KEY_MAIL_CONFIG_JNDI);
+    }
+    if (smtpConf == null || smtpConf.trim().isEmpty()) {
+      smtpConf = "java:jboss/mail/Default";
+    }
+
     // ---------------------------
     // init
     File rootFolder = new File(StringFormater.replaceProperties(outFolder));
@@ -198,10 +232,42 @@ public class MEPSTask implements TaskExecutionInterface {
         }
       });
 
-      // export
+      // email
+      submitMail(smtpConf, emailSubject, emailFrom, emailTo,  metadata);
+      
     }
 
-    sw.append("End zpp plugin task");
+    sw.append("End meps plugin task");
+    return sw.toString();
+  }
+ 
+  public String submitMail(String smtpConf, String emailSubject, String emailFrom, String emailTo,  File metadata  ) throws TaskException {
+    long l = LOG.logStart();
+    EmailUtils memailUtil = new EmailUtils();
+    StringWriter sw = new StringWriter();
+    sw.append("Start report task: ");
+
+   
+    EmailData ed = new EmailData(emailTo, null, emailSubject, null);
+    ed.setEmailSenderAddress(emailFrom);
+    String strBody = "Test mail ";
+    if (strBody != null) {
+
+      ed.setBody(strBody);
+      EmailAttachmentData emd = new EmailAttachmentData("Mail report",MimeValue.MIME_TEXT.getMimeType(),metadata);
+      ed.getAttachments().add(emd);
+
+      try {
+        sw.append("Submit mail\n");
+        memailUtil.sendMailMessage(ed, smtpConf);
+      } catch (MessagingException | NamingException | IOException ex) {
+        LOG.logError(l, "Error submitting report", ex);
+        throw new TaskException(TaskException.TaskExceptionCode.ProcessException,
+            "Error submitting report: " + ex.getMessage(), ex);
+      }
+    } else {
+      sw.append("Mail not submitted - nothing to submit\n");
+    }
     return sw.toString();
   }
 
@@ -385,8 +451,8 @@ public class MEPSTask implements TaskExecutionInterface {
 
     tt.getCronTaskPropertyDeves().add(
             createTTProperty(KEY_SENDER_SEDBOX, "Sender box", true,
-                    PropertyType.List.getType(), null,
-                    PropertyListType.LocalBoxes.getType(), null));
+                    PropertyType.String.getType(), null,
+                    null, null));
 
     tt.getCronTaskPropertyDeves().add(
             createTTProperty(KEY_SENDER_SERVICE, "Service", true,
@@ -399,6 +465,21 @@ public class MEPSTask implements TaskExecutionInterface {
     tt.getCronTaskPropertyDeves().add(
             createTTProperty(KEY_MAX_MAIL_COUT, "Max mail count", true,
                     PropertyType.Integer.getType(), null, null, "15000"));
+    
+     tt.getCronTaskPropertyDeves().add(
+        createTTProperty(KEY_EMAIL_TO, "Receiver email addresses, separated by comma.", true,
+                    PropertyType.String.
+                    getType(), null, null, "receiver.one@not.exists.com,receiver.two@not.exists.com"));
+    tt.getCronTaskPropertyDeves().add(createTTProperty(KEY_EMAIL_FROM, "Sender email address", true,
+                    PropertyType.String.
+                    getType(), null, null, "change.me@not.exists.com"));
+    tt.getCronTaskPropertyDeves().add(createTTProperty(KEY_EMAIL_SUBJECT, "EMail subject.", true,
+                    PropertyType.String.
+                    getType(), null, null, "[Laurentius] test mail"));
+    tt.getCronTaskPropertyDeves().add(
+        createTTProperty(KEY_MAIL_CONFIG_JNDI, 
+                "Mail config jndi (def: java:jboss/mail/Default)", true,
+                    "string", null, null, "java:jboss/mail/Default"));
 
     return tt;
   }

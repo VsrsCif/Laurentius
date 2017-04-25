@@ -93,7 +93,7 @@ public class MSHScheduler implements SEDSchedulerInterface {
             cb.getName());
     boolean bScu = false;
     for (Timer t : getServices().getAllTimers()) {
-      if (t.getInfo()!= null &&  t.getInfo().equals(cb.getName())) {
+      if (t.getInfo() != null && t.getInfo().equals(cb.getName())) {
         t.cancel();
         bScu = true;
         break;
@@ -119,13 +119,28 @@ public class MSHScheduler implements SEDSchedulerInterface {
   @Override
   public void timeout(Timer timer) {
     long l = LOG.logStart();
-
     String name = (String) (timer.getInfo());
     // get cron job
     SEDCronJob mj = mdbLookups.getSEDCronJobByName(name);
+    if (mj == null) {
+      String logMsg = String.format(
+              "Timeout for cron job %s , but cronjob not exists!!", name);
+      LOG.logError(l, logMsg, null);
+    } else if (!mj.getActive()) {
+      LOG.formatedDebug("Cron job %s  not active!", name);
+    } else {
+      executeContJob(mj);
+    }
+    LOG.logEnd(l, String.format("Timeout for Cron job %s !'", name));
+  }
+
+  @Override
+  public String executeContJob(SEDCronJob mj) {
+    long l = LOG.logStart();
+    String result = "";
     SEDTaskExecution te = new SEDTaskExecution();
     te.setCronId(mj.getId());
-    te.setName(name);
+    te.setName(mj.getName());
     te.setType(mj.getSEDTask().getType());
     te.setPlugin(mj.getSEDTask().getPlugin());
     te.setPluginVersion(mj.getSEDTask().getPluginVersion());
@@ -135,29 +150,33 @@ public class MSHScheduler implements SEDSchedulerInterface {
     try {
       mdbDao.addExecutionTask(te);
     } catch (StorageException ex) {
-      LOG.logEnd(l, "Error storing task: '" + te.getType() + "' ", ex);
-      return;
+      result = String.format(
+              "Error occurred while executing task type %s!. Error: %s", te.
+                      getType(), ex.getMessage());
+      LOG.logEnd(l, result, ex);
+      return result; 
     }
 
     Plugin plg = mpmPluginManager.getPluginByType(mj.getSEDTask().getPlugin());
 
     if (plg == null) {
-      te.setStatus(SEDTaskStatus.ERROR.getValue());
-      te.setResult(String.format(
+      result =  String.format(
               "Not plugin %s!", mj.getSEDTask().
                       getPlugin(), mj.getSEDTask().
-                      getType()));
+                      getType());
+      te.setStatus(SEDTaskStatus.ERROR.getValue());
+      te.setResult(result);
       te.setEndTimestamp(Calendar.getInstance().getTime());
       try {
         mdbDao.updateExecutionTask(te);
       } catch (StorageException ex) {
         LOG.logEnd(l, "Error updating task: '" + te.getType() + "' ", ex);
       }
-      return;
+      return result;
     } else if (!Objects.equals(plg.getVersion(), mj.getSEDTask().
             getPluginVersion())) {
       LOG.formatedWarning("Plugin version mismatch for cron task execution %s",
-              name);
+              mj.getName());
       te.setPluginVersion(plg.getVersion());
     }
 
@@ -166,30 +185,19 @@ public class MSHScheduler implements SEDSchedulerInterface {
                     getType());
 
     if (ct == null) {
-      te.setStatus(SEDTaskStatus.ERROR.getValue());
-      te.setResult(String.format(
+      result = String.format(
               "Not task processor for plugin %s and  task %s!", mj.getSEDTask().
                       getPlugin(), mj.getSEDTask().
-                      getType()));
-      te.setEndTimestamp(Calendar.getInstance().getTime());
-      try {
-        mdbDao.updateExecutionTask(te);
-      } catch (StorageException ex) {
-        LOG.logEnd(l, "Error updating task: '" + te.getType() + "' ", ex);
-      }
-      return;
-    }
-
-    if (!mj.getActive()) {
+                      getType());
       te.setStatus(SEDTaskStatus.ERROR.getValue());
-      te.setResult(String.format("Task cron:  %s  not active!", name));
+      te.setResult(result);
       te.setEndTimestamp(Calendar.getInstance().getTime());
       try {
         mdbDao.updateExecutionTask(te);
       } catch (StorageException ex) {
         LOG.logEnd(l, "Error updating task: '" + te.getType() + "' ", ex);
       }
-      return;
+      return result;
     }
 
     // plugin  and task type
@@ -197,17 +205,18 @@ public class MSHScheduler implements SEDSchedulerInterface {
     try {
       tproc = InitialContext.doLookup(ct.getJndi());
     } catch (NamingException ex) {
-      te.setStatus(SEDTaskStatus.ERROR.getValue());
-      te.setResult(String.format("Error getting taskexecutor: %s. ERROR: %s",
+      result = String.format("Error getting taskexecutor: %s. ERROR: %s",
               ct.getJndi(),
-              ex.getMessage()));
+              ex.getMessage());
+      te.setStatus(SEDTaskStatus.ERROR.getValue());
+      te.setResult(result);
       te.setEndTimestamp(Calendar.getInstance().getTime());
       try {
         mdbDao.updateExecutionTask(te);
       } catch (StorageException ex2) {
         LOG.logEnd(l, "Error updating task: '" + te.getType() + "' ", ex2);
       }
-      return;
+      return result;
     }
     Properties p = new Properties();
     for (SEDTaskProperty tp : mj.getSEDTask().getSEDTaskProperties()) {
@@ -220,12 +229,15 @@ public class MSHScheduler implements SEDSchedulerInterface {
     try {
       mdbDao.updateExecutionTask(te);
     } catch (StorageException ex2) {
-      LOG.logEnd(l, "Error updating task: '" + te.getType() + "' ", ex2);
-      return;
+       result = "Error updating task: '" + te.getType() + "' ";
+      LOG.logEnd(l, result, ex2);
+      return result;
     }
 
     try {
-      String result = tproc.executeTask(p);
+      result = tproc.executeTask(p);
+      LOG.formatedDebug(result);
+      
       te.setStatus(SEDTaskStatus.SUCCESS.getValue());
       te.setResult(result);
       te.setEndTimestamp(Calendar.getInstance().getTime());
@@ -233,8 +245,11 @@ public class MSHScheduler implements SEDSchedulerInterface {
       try {
         mdbDao.updateExecutionTask(te);
       } catch (StorageException ex2) {
-        LOG.logEnd(l, "Error updating task: '" + te.getType() + "' ", ex2);
-        return;
+        result = String.format(
+              "Error occurred while updating task  type %s!. Error: %s. Task executed with result:", te.
+                      getType(), ex2.getMessage(), result);
+        LOG.logEnd(l, result, ex2);
+        return result;
       }
     } catch (TaskException ex) {
 
@@ -246,11 +261,16 @@ public class MSHScheduler implements SEDSchedulerInterface {
       try {
         mdbDao.updateExecutionTask(te);
       } catch (StorageException ex2) {
-        LOG.logEnd(l, "Error updating task: '" + te.getType() + "' ", ex2);
-        return;
+        result = String.format(
+              "Error occurred while updating task  type %s!. Error: %s. Task executed with result:", te.
+                      getType(), ex2.getMessage(), result);
+        LOG.logEnd(l, result, ex2);
+        return result;
       }
     }
     LOG.logEnd(l);
+    return result;
   }
+  
 
 }
