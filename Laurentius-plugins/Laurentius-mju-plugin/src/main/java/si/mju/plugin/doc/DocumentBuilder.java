@@ -20,7 +20,6 @@ import si.laurentius.lce.DigestMethodCode;
 import si.laurentius.lce.sign.xml.XMLSignatureUtils;
 import si.laurentius.msh.mail.MSHMailType;
 import si.laurentius.msh.mail.MSHPartType;
-import si.laurentius.msh.outbox.mail.MSHOutMail;
 
 /**
  *
@@ -144,8 +143,10 @@ public abstract class DocumentBuilder {
   /**
    *
    * @param dce
+   * @param lstPars
    * @param fos
    * @param key
+   * @return 
    * @throws SEDSecurityException
    */
   public abstract si.gov.nio.cev._2015.document.Document createMail(MSHMailType dce, List<MSHPartType> lstPars,

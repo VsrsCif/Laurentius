@@ -85,6 +85,12 @@
             <artifactId>cxf-rt-frontend-jaxws</artifactId>
             <scope>provided</scope>
         </dependency>
+        
+        <dependency>
+            <groupId>org.apache.santuario</groupId>
+            <artifactId>xmlsec</artifactId>
+            <scope>provided</scope>
+        </dependency>
         <!-- GUI uses primefaces componens --> 
         <dependency>
             <groupId>org.primefaces</groupId>

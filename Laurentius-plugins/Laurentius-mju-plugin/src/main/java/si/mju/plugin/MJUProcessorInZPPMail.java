@@ -18,17 +18,12 @@ import com.comtrade.mju.dms.DmsFault;
 import com.comtrade.mju.dms.MjuDmsWSPortBinding;
 import com.comtrade.mju.dms.MjuDmsWebServiceService;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableEntryException;
-import java.security.cert.CertificateException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -43,7 +38,7 @@ import si.laurentius.commons.exception.SEDSecurityException;
 import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StorageUtils;
-import si.laurentius.commons.utils.StringFormater;
+import si.laurentius.commons.utils.Utils;
 import si.laurentius.commons.utils.xml.XMLUtils;
 import si.laurentius.msh.inbox.mail.MSHInMail;
 import si.laurentius.msh.mail.MSHPartType;
@@ -54,6 +49,7 @@ import si.laurentius.plugin.processor.InMailProcessorDef;
 import si.laurentius.plugin.processor.MailProcessorPropertyDef;
 import si.mju.plugin.doc.DocumentBuilder;
 import si.mju.plugin.doc.DocumentMJUBuilder;
+import si.mju.plugin.doc.KeystoreUtils;
 
 /**
  *
@@ -76,6 +72,7 @@ public class MJUProcessorInZPPMail implements InMailProcessorInterface {
   private static final SEDLogger LOG = new SEDLogger(MJUProcessorInZPPMail.class);
 
   StorageUtils msStorageUtils = new StorageUtils();
+  KeystoreUtils mKeystoreUtils = new KeystoreUtils();
   DocumentBuilder mdbDocBuilder = new DocumentMJUBuilder();
 
   private static final String PLUGIN_ROOT_FOLDER = String.format("${%s}/%s/",
@@ -146,10 +143,15 @@ public class MJUProcessorInZPPMail implements InMailProcessorInterface {
     boolean bDelLogFiles = Boolean.getBoolean((String) map.get(
             KEY_MJU_SVEV1_DELETE_LOG_FILES));
 
-    // obvestilo o pošiljki v vročanju
-    KeyStore ks = getKeyStore(keystoreFilename, keystoreType, keystorePasswd);
-    KeyStore.PrivateKeyEntry pkKey = getPrivateKeyEntryForAlias(ks, keyAlias,
+    
+    // 
+    KeyStore.PrivateKeyEntry pkKey =  null;
+    if (!Utils.isEmptyString(keystoreFilename)
+        && !Utils.isEmptyString(keyAlias) ) {
+    KeyStore ks = mKeystoreUtils.getKeyStore(keystoreFilename, keystoreType, keystorePasswd);
+    pkKey = mKeystoreUtils.getPrivateKeyEntryForAlias(ks, keyAlias,
             keyPasswd);
+    }
 
     MSHPartType mpt = null;
     File fSVEV1DocRequest = null;
@@ -273,69 +275,7 @@ public class MJUProcessorInZPPMail implements InMailProcessorInterface {
     return mpt;
   }
 
-  protected KeyStore getKeyStore(String fileName, String type, String passwd) throws InMailProcessException {
 
-    File fKS = new File(StringFormater.replaceProperties(fileName));
-    if (!fKS.exists()) {
-      throw new InMailProcessException(
-              InMailProcessException.ProcessExceptionCode.InitException,
-              String.format("Keystore %s do not exist!", fileName));
-
-    }
-
-    KeyStore keyStore = null;
-    try (FileInputStream fis = new FileInputStream(fKS)) {
-
-      keyStore = KeyStore.getInstance(type);
-
-      keyStore.load(fis, passwd.toCharArray());
-    } catch (KeyStoreException ex) {
-
-      throw new InMailProcessException(
-              InMailProcessException.ProcessExceptionCode.InitException,
-              String.format("Keystore  %s access exception %s!", fileName, ex.
-                      getCause()), ex);
-    } catch (NoSuchAlgorithmException ex) {
-      throw new InMailProcessException(
-              InMailProcessException.ProcessExceptionCode.InitException,
-              String.format("Keystore  %s NoSuchAlgorithm Exception  %s!",
-                      fileName, ex.getCause()), ex);
-    } catch (CertificateException ex) {
-      throw new InMailProcessException(
-              InMailProcessException.ProcessExceptionCode.InitException,
-              String.format("Keystore  %s Certificate Exception  %s!", fileName,
-                      ex.getCause()), ex);
-
-    } catch (IOException ex) {
-      throw new InMailProcessException(
-              InMailProcessException.ProcessExceptionCode.InitException,
-              String.format("Keystore  %s IO Exception  %s!", fileName, ex.
-                      getCause()), ex);
-    }
-    return keyStore;
-  }
-
-  public KeyStore.PrivateKeyEntry getPrivateKeyEntryForAlias(KeyStore ks,
-          String alias,
-          String passwd)
-          throws InMailProcessException {
-    KeyStore.PrivateKeyEntry rsaKey;
-    try {
-      rsaKey
-              = (KeyStore.PrivateKeyEntry) ks.getEntry(alias,
-                      new KeyStore.PasswordProtection(passwd.toCharArray()));
-
-    } catch (KeyStoreException | NoSuchAlgorithmException
-            | UnrecoverableEntryException ex) {
-      throw new InMailProcessException(
-              InMailProcessException.ProcessExceptionCode.InitException,
-              String.format(
-                      "Error %s occured while retrieving key %s IO Exception  %s!",
-                      ex.getClass().getName(),
-                      alias, ex.getMessage()), ex);
-    }
-    return rsaKey;
-  }
 
   protected MailProcessorPropertyDef createProperty(String key, String defValue,
           String desc, boolean mandatory, String type, String valFormat,

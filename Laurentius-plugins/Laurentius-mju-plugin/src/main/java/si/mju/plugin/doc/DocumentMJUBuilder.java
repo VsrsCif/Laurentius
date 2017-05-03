@@ -3,14 +3,11 @@
  */
 package si.mju.plugin.doc;
 
-import java.io.FileOutputStream;
 import java.math.BigDecimal;
 import java.security.KeyStore;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.bind.JAXBException;
 import si.gov.nio.cev._2015.document.ContentType;
 import si.gov.nio.cev._2015.document.DataObjectFormatType;
@@ -30,11 +27,8 @@ import si.laurentius.commons.exception.SEDSecurityException;
 import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.utils.Utils;
 import si.laurentius.commons.utils.xml.XMLUtils;
-import si.laurentius.msh.inbox.mail.MSHInMail;
 import si.laurentius.msh.mail.MSHMailType;
 import si.laurentius.msh.mail.MSHPartType;
-import si.laurentius.msh.outbox.mail.MSHOutMail;
-import si.laurentius.msh.outbox.payload.MSHOutPart;
 
 /**
  *
@@ -151,7 +145,9 @@ public class DocumentMJUBuilder extends DocumentBuilder {
                       new Class[]{Document.class, Message.class});
 
       // sign document and return value
-      signDocument(dw3c, lstSignatureIDS, key);
+      if (key!= null) {
+        signDocument(dw3c, lstSignatureIDS, key);
+      }
     
       document =(Document) XMLUtils.deserialize(dw3c.getDocumentElement(), Document.class);
       mlgLogger.info(
@@ -166,5 +162,8 @@ public class DocumentMJUBuilder extends DocumentBuilder {
     } 
     return document;
   }
+  
+  
+  
 
 }
