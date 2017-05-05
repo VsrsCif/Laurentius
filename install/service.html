@@ -41,12 +41,12 @@
         ter dodaj vrstico s katero se določi nastavitve strežnika: <code>-c standalone-laurentius.xml</code>:
         <pre><code>set "JAVA_OPTS=-Xms128M -Xmx2048M -XX:MetaspaceSize=96M -XX:MaxMetaspaceSize=256m"
 rem # Set base configuration
-set "JAVA_OPTS=%JAVA_OPTS% -c standalone-laurentius.xml" 
+set "JAVA_OPTS=%JAVA_OPTS% JAVA_OPTS=-Djboss.bind.address=0.0.0.0 " 
         </code></pre>
        
         Nato se v CMD konzoli postavi v mapo <code>${WILDFLY_HOME}/bin/</code>
         ter poženi ukaz:
-        <pre><code>service install</code></pre>
+        <pre><code>service.bat install /CONFIG standalone-laurentius.xml</code></pre>
         
 
 
