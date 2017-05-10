@@ -118,7 +118,7 @@ a:active,a:focus{
 
 #content[role="main"]{
     background: #FFF;
-    border-top: 30px solid #0090D2;
+    border-top: 30px solid #348e93;
     margin: -35px auto 0;
     padding: 24px 0 0 0;
     width: 1020px;
@@ -179,7 +179,7 @@ header .logo h2{
 /*************************************************/
 /*Menu */
 .menu-top-nav{
-    color: #fff;
+    color: black;
     font-size: 14px;
     position: absolute;
     right: 0;
@@ -192,7 +192,7 @@ header .logo h2{
     text-decoration: none;
 }
 .menu-top-nav li a{
-    color: #000;
+    color: black;
     padding: 0 4px;
 }
 
@@ -223,8 +223,9 @@ header .inner nav {
 header .inner nav ul{
     color: #fff;
     float: left;
-    font-family: 'Helvetica Neue',Arial,sans-serif;
-    letter-spacing: 1px;
+    font-family: 'Helvetica Neuef5
+        ',Arial,sans-serif;
+    letter-spacing: 0;
     /*margin:0 0 0 -10px;
     background: #053b5b url(../img/menu.png) repeat-x;*/
 
@@ -234,8 +235,8 @@ header .inner nav ul li{
     padding:0 9px;
 }
 header .inner nav ul li a{
-    color: #fff;
-    font-size:14px;
+    color: black;
+    font-size:16px;
     padding: 15px 10px 13px;
 }
 header .inner nav ul li a:hover{
