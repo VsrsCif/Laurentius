@@ -57,22 +57,21 @@ Copyright 2015, Supreme Court Republic of Slovenia
         </xs:attribute>
         <xs:attribute name="returnCode" type="xs:int" use="required">
             <xs:annotation>
-                <xs:documentation>specifična koda napake (ko je returnValue ERROR) ali (delnega) uspeha (ko je
-                    returnValue OK ali WARNING)
+                <xs:documentation>specifična koda (delnega) rezultata (ko je
+                    returnValue OK ali WARNING). V primeru napake 
+                    (napačni parametri, neveljavna poizvedba) se vrača SEDException.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
         <xs:attribute name="returnText" type="xs:string" use="optional">
             <xs:annotation>
-                <xs:documentation>tekstovni opis napake (ko je returnValue ERROR) ali (delnega) uspeha (ko je
-                    returnValue OK ali WARNING)
+                <xs:documentation>tekstovni opis rezultata če je podan.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
         <xs:attribute name="errorDump" type="xs:string" use="optional">
             <xs:annotation>
-                <xs:documentation>dodatni podatki o napaki, npr. exception stack trace, uporabno v fazi razvoja
-                    servisev in za vzdrževanje
+                <xs:documentation>Deprecated - napake se vračajo v obliki: soapfault napake - glej SEDException.  
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
