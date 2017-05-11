@@ -530,6 +530,9 @@ public class ZPPInInterceptor implements SoapInterceptorInterface {
               miDec.setName(mip.getName());
               miDec.setType(mip.getType());
               miDec.setIsEncrypted(Boolean.FALSE);
+              miDec.setSource(ZPPConstants.S_ZPP_PLUGIN_TYPE);
+              miDec.setSourceRefId(mip.getId());
+              
 
          
               miDec.setSha256Value(DigestUtils.getHexSha256Digest(fNew));

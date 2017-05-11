@@ -6,7 +6,7 @@
         
         <groupId>si.vsrs.cif.sed</groupId>
         <artifactId>Laurentius</artifactId>
-        <version>1.0</version>
+        <version>1.1</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 

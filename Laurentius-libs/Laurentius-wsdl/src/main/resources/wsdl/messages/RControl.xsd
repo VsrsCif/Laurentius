@@ -65,15 +65,10 @@ Copyright 2015, Supreme Court Republic of Slovenia
         </xs:attribute>
         <xs:attribute name="returnText" type="xs:string" use="optional">
             <xs:annotation>
-                <xs:documentation>tekstovni opis rezultata če je podan.
+                <xs:documentation>tekstovni opis rezultata.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
-        <xs:attribute name="errorDump" type="xs:string" use="optional">
-            <xs:annotation>
-                <xs:documentation>Deprecated - napake se vračajo v obliki: soapfault napake - glej SEDException.  
-                </xs:documentation>
-            </xs:annotation>
-        </xs:attribute>
+        
     </xs:complexType>
 </xs:schema>

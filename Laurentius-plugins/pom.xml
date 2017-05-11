@@ -5,7 +5,7 @@
     <parent>
         <groupId>si.vsrs.cif.sed</groupId>
         <artifactId>Laurentius</artifactId>
-        <version>1.0</version>
+        <version>1.1</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -44,9 +44,9 @@
     <modules>
 	<module>Laurentius-basic-plugin</module>
         <module>Laurentius-zpp-plugin</module>
-        <!-- TODO module>Laurentius-meps-plugin</module -->
+       
         <module>Laurentius-cef-plugin</module>
 	<module>Laurentius-test-case-plugin</module>
-        <module>Laurentius-mju-plugin</module>
+
     </modules>
 </project>

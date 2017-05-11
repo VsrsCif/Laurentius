@@ -21,13 +21,14 @@
         <property column="PART_SIZE" name="Size"  type="java.math.BigInteger" scale="0" />
         <property column="PART_IS_ENCRYPTED" name="IsEncrypted" type="java.lang.Boolean" />
         <property column="PART_SOURCE" name="Source"  length="32" type="java.lang.String" /> 
-        
+        <property column="PART_SOURCE_REF_ID" name="SourceRefId"  scale="0"  type="java.math.BigInteger" /> 
+       
         <bag name="imPartProperties"  access="field" cascade="all" lazy="false" order-by="Id asc" >
             <key not-null="true">
                 <column name="INPART_ID" scale="0" />
             </key>
             <one-to-many class="si.laurentius.msh.inbox.payload.IMPartProperty" />
-        </bag>
+        </bag>  
     </class>    
     
    

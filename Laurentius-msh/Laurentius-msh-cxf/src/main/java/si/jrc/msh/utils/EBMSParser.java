@@ -238,10 +238,13 @@ public class EBMSParser {
     if (Utils.isEmptyString(mshmail.getSenderName())) {
       mshmail.setSenderName(mshmail.getSenderEBox());
     }
-
+    List<MSHInPart> lstParts = new ArrayList<>();
+    
     if (um.getPayloadInfo() != null && !um.getPayloadInfo().getPartInfos().
             isEmpty()) {
-      List<MSHInPart> lstParts = new ArrayList<>();
+     
+      // set soap valie
+      
 
       for (PartInfo pi : um.getPayloadInfo().getPartInfos()) {
         MSHInPart part = new MSHInPart();
@@ -293,11 +296,12 @@ public class EBMSParser {
 
         lstParts.add(part);
       }
-      if (!lstParts.isEmpty()) {
+      
+    }
+    if (!lstParts.isEmpty()) {
         mshmail.setMSHInPayload(new MSHInPayload());
         mshmail.getMSHInPayload().getMSHInParts().addAll(lstParts);
       }
-    }
 
     return mshmail;
   }

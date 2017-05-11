@@ -140,5 +140,22 @@ Copyright 2015, Supreme Court Republic of Slovenia
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
+
+		<xs:attribute name="source" default="mail">
+			<xs:annotation>
+				<xs:documentation xml:lang="sl">Vir priponke:- "mail"  je v primeru da je priponka del poslanega/prejete pošiljke;
+				sicer je opis dodatka, ki je generiral priponko kot npr XSLT, ZPP itd...</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="32"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="sourceRefId" type="xs:integer" use="optional">
+			<xs:annotation>
+				<xs:documentation xml:lang="sl">V primeru, da je priponka generirana ob prejemu, je vrednost atributa izvorna priponka. Npr. V primeru  xlst transformacije  je vrednost izvorne XML priponke, ki se je transformirala</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
 	</xs:complexType>
 </xs:schema>

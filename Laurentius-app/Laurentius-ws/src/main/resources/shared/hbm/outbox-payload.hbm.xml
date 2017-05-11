@@ -18,6 +18,8 @@
         <property column="PART_ENCODING" name="Encoding"  length="128" type="java.lang.String" />
         <property column="PART_SHA256_VALUE" name="Sha256Value"  length="256" type="java.lang.String" />
         <property column="PART_SIZE" name="Size"  type="java.math.BigInteger" scale="0" />
+        <property column="PART_SOURCE" name="Source"  length="32" type="java.lang.String" /> 
+        <property column="PART_SOURCE_REF_ID" name="SourceRefId"  scale="0"  type="java.math.BigInteger" /> 
         
         <bag name="properties"  access="field" cascade="all" lazy="false" order-by="Id asc" >
             <key not-null="true">

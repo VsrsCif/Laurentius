@@ -70,11 +70,11 @@ import si.laurentius.outbox.property.OutProperty;
  */
 public class WSClientExample {
 
-  public static final String APPL_ID = "appl_1";
-  public static final String APPL_PASSWORD = "appl1234";
+  public static final String APPL_ID = "testCMS";
+  public static final String APPL_PASSWORD = "test1234";
 
   public static String MAILBOX_ADDRESS
-          = "http://localhost:8080/laurentius-ws/mailbox?wsdl";
+          = "http://localhost:8580/laurentius-ws/mailbox?wsdl";
 
   public static final String DOMAIN = "mb-laurentius.si"; // CHANGE BOX DOMAIN!!!
   public static final String SENDER_BOX = "a.department@" + DOMAIN;

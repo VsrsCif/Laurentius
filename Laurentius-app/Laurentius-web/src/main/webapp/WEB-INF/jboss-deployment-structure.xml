@@ -2,7 +2,7 @@
     <deployment>
         <dependencies>
             <module name="si.laurentius" /> 
-             <module name="org.primefaces" meta-inf="export" />  
+            <module name="org.primefaces" meta-inf="export" />  
         </dependencies>
     </deployment>
 </jboss-deployment-structure>
