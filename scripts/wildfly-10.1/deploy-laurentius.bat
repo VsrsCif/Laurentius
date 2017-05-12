@@ -74,11 +74,11 @@ if not exist %WILDFLY_HOME%\modules\si\laurentius\main\ (
 	  
 
 rem  copy module libraries
-copy "%LAU_BUNDLE%\modules\Laurentius-msh-xsd-1.0.jar" "%WILDFLY_HOME%\modules\si\laurentius\main\"
-copy "%LAU_BUNDLE%\modules\Laurentius-wsdl-1.0.jar" "%WILDFLY_HOME%\modules\si\laurentius\main\"
-copy "%LAU_BUNDLE%\modules\Laurentius-commons-1.0.jar" "%WILDFLY_HOME%\modules\si\laurentius\main\"
-copy "%LAU_BUNDLE%\modules\Laurentius-lce-1.0.jar" "%WILDFLY_HOME%\modules\si\laurentius\main\"
-copy "%LAU_BUNDLE%\modules\Laurentius-plugin-interfaces-1.0.jar" "%WILDFLY_HOME%\modules\si\laurentius\main\"
+copy "%LAU_BUNDLE%\modules\Laurentius-msh-xsd-1.1.jar" "%WILDFLY_HOME%\modules\si\laurentius\main\"
+copy "%LAU_BUNDLE%\modules\Laurentius-wsdl-1.1.jar" "%WILDFLY_HOME%\modules\si\laurentius\main\"
+copy "%LAU_BUNDLE%\modules\Laurentius-commons-1.1.jar" "%WILDFLY_HOME%\modules\si\laurentius\main\"
+copy "%LAU_BUNDLE%\modules\Laurentius-lce-1.1.jar" "%WILDFLY_HOME%\modules\si\laurentius\main\"
+copy "%LAU_BUNDLE%\modules\Laurentius-plugin-interfaces-1.1.jar" "%WILDFLY_HOME%\modules\si\laurentius\main\"
 
 
 rem  copy module descriptor

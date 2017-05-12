@@ -89,11 +89,11 @@ fi
 # create module folder
 mkdir -p  "$WILDFLY_HOME/modules/si/laurentius/main/"
 # copy module libraries
-cp "$LAU_BUNDLE/modules/Laurentius-msh-xsd-1.0.jar" "$WILDFLY_HOME/modules/si/laurentius/main/"
-cp "$LAU_BUNDLE/modules/Laurentius-wsdl-1.0.jar" "$WILDFLY_HOME/modules/si/laurentius/main/"
-cp "$LAU_BUNDLE/modules/Laurentius-commons-1.0.jar" "$WILDFLY_HOME/modules/si/laurentius/main/"
-cp "$LAU_BUNDLE/modules/Laurentius-lce-1.0.jar" "$WILDFLY_HOME/modules/si/laurentius/main/"
-cp "$LAU_BUNDLE/modules/Laurentius-plugin-interfaces-1.0.jar" "$WILDFLY_HOME/modules/si/laurentius/main/"
+cp "$LAU_BUNDLE/modules/Laurentius-msh-xsd-1.1.jar" "$WILDFLY_HOME/modules/si/laurentius/main/"
+cp "$LAU_BUNDLE/modules/Laurentius-wsdl-1.1.jar" "$WILDFLY_HOME/modules/si/laurentius/main/"
+cp "$LAU_BUNDLE/modules/Laurentius-commons-1.1.jar" "$WILDFLY_HOME/modules/si/laurentius/main/"
+cp "$LAU_BUNDLE/modules/Laurentius-lce-1.1.jar" "$WILDFLY_HOME/modules/si/laurentius/main/"
+cp "$LAU_BUNDLE/modules/Laurentius-plugin-interfaces-1.1.jar" "$WILDFLY_HOME/modules/si/laurentius/main/"
 
 # copy module descriptor
 cp "$LAU_BUNDLE/modules/si.laurentius.module.xml" "$WILDFLY_HOME/modules/si/laurentius/main/module.xml"

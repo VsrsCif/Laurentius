@@ -7,7 +7,7 @@ if [ "x$LAU_PROJECT" = "x" ]; then
 fi
 
 
-ZIP_FILENAME="Laurentius-$(date +%Y%m%d_%H%M)"
+ZIP_FILENAME="Laurentius-1.1.$(date +%Y%m%d_%H%M)"
 ZIP_TEST="Laurentius-test"
 FOLDER_DEPLOY="test-deploy"
 
@@ -21,11 +21,11 @@ mkdir "$ZIP_FILENAME/deployments"
 mkdir "$ZIP_FILENAME/wildfly-10.1"
 mkdir $FOLDER_DEPLOY
 # si.laurentius module libralies
-cp "$LAU_PROJECT/Laurentius-libs/Laurentius-msh-xsd/target/Laurentius-msh-xsd-1.0.jar" "$ZIP_FILENAME/modules/" 	
-cp "$LAU_PROJECT/Laurentius-libs/Laurentius-wsdl/target/Laurentius-wsdl-1.0.jar" "$ZIP_FILENAME/modules/"
-cp "$LAU_PROJECT/Laurentius-libs/Laurentius-commons/target/Laurentius-commons-1.0.jar" "$ZIP_FILENAME/modules/"
-cp "$LAU_PROJECT/Laurentius-libs/Laurentius-lce/target/Laurentius-lce-1.0.jar" "$ZIP_FILENAME/modules/"
-cp "$LAU_PROJECT/Laurentius-libs/Laurentius-plugin-interfaces/target/Laurentius-plugin-interfaces-1.0.jar" "$ZIP_FILENAME/modules/"
+cp "$LAU_PROJECT/Laurentius-libs/Laurentius-msh-xsd/target/Laurentius-msh-xsd-1.1.jar" "$ZIP_FILENAME/modules/" 	
+cp "$LAU_PROJECT/Laurentius-libs/Laurentius-wsdl/target/Laurentius-wsdl-1.1.jar" "$ZIP_FILENAME/modules/"
+cp "$LAU_PROJECT/Laurentius-libs/Laurentius-commons/target/Laurentius-commons-1.1.jar" "$ZIP_FILENAME/modules/"
+cp "$LAU_PROJECT/Laurentius-libs/Laurentius-lce/target/Laurentius-lce-1.1.jar" "$ZIP_FILENAME/modules/"
+cp "$LAU_PROJECT/Laurentius-libs/Laurentius-plugin-interfaces/target/Laurentius-plugin-interfaces-1.1.jar" "$ZIP_FILENAME/modules/"
 
 cp "$LAU_PROJECT/scripts/wildfly-10.1/modules/si.laurentius.module.xml" "$ZIP_FILENAME/modules/"
 cp "$LAU_PROJECT/scripts/wildfly-10.1/modules/org.apache.ws.securitymodule.xml" "$ZIP_FILENAME/modules/"

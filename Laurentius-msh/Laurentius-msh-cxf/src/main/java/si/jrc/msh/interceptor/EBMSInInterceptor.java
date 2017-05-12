@@ -38,6 +38,11 @@ import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import org.apache.cxf.binding.soap.SoapFault;
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.binding.soap.SoapVersion;
@@ -65,6 +70,7 @@ import si.jrc.msh.utils.EBMSBuilder;
 import si.jrc.msh.utils.EBMSValidation;
 import si.laurentius.commons.cxf.EBMSConstants;
 import si.jrc.msh.utils.EBMSParser;
+import si.laurentius.commons.MailConstants;
 import si.laurentius.commons.enums.MimeValue;
 import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.cxf.SoapUtils;
@@ -442,12 +448,16 @@ public class EBMSInInterceptor extends AbstractEBMSInterceptor {
       fSoap = msuStorageUtils.getCreateEmptyInFile(MimeValue.MIME_SOAP.
               getMimeType());
 
-      XMLUtils.serialize(request.getSOAPPart(), true, fSoap);
+      TransformerFactory.newInstance().newTransformer().transform(
+        new DOMSource(request.getSOAPPart()),
+        new StreamResult(fSoap));
+      
+   
 
       MSHInPart mip = new MSHInPart();
       mip.setDescription("Soap message");
       mip.setName("SOAP");
-      mip.setSource("soap");
+      mip.setSource(MailConstants.PALYOAD_SOURCE_SOAP);
       mip.setSha256Value(msgId);
       mip.setFilename("soap-envelope.soap");
       mip.setMimeType(MimeValue.MIME_SOAP.
@@ -461,14 +471,14 @@ public class EBMSInInterceptor extends AbstractEBMSInterceptor {
         mMail.setMSHInPayload(new MSHInPayload());
       }
       mMail.getMSHInPayload().getMSHInParts().add(mip);
-    } catch (StorageException | IOException  ex) {
+    } catch (StorageException | TransformerException   ex) {
       String errmsg = "Error occured while processing message: " + ex.
               getMessage();
       LOG.logError(l, errmsg, ex);
       throw new EBMSError(EBMSErrorCode.ApplicationError, mMail.getMessageId(),
               errmsg,
               SoapFault.FAULT_CODE_SERVER);
-    }
+    } 
     // set in mail to context
     SoapUtils.setMSHInMail(mMail, msg);
     String receiverBox = mMail.getReceiverEBox();
