@@ -289,7 +289,7 @@ public class TaskFileSubmitter implements TaskExecutionInterface {
     
     if (senderBox.contains("@")){
       senderName = senderBox.substring(0,senderBox.indexOf('@') );
-      if (senderBox.endsWith("@"+SEDSystemProperties.getLocalDomain())){
+      if (!senderBox.endsWith("@"+SEDSystemProperties.getLocalDomain())){
          throw new FSException(String.format("Sender box '%s' do not match local domain '%s'", senderBox, SEDSystemProperties.getLocalDomain()));
       }
       if (mLookups.getSEDBoxByAddressName(senderBox)==null){
@@ -300,7 +300,7 @@ public class TaskFileSubmitter implements TaskExecutionInterface {
       senderBox +="@"+SEDSystemProperties.getLocalDomain();
     }
     if (receiverBox.contains("@")){
-      senderName = receiverBox.substring(0,receiverBox.indexOf('@') );
+      receiverName = receiverBox.substring(0,receiverBox.indexOf('@') );
     }else {
       receiverName = receiverBox;
       receiverBox +="@"+SEDSystemProperties.getLocalDomain();
@@ -310,7 +310,7 @@ public class TaskFileSubmitter implements TaskExecutionInterface {
       }
     }
     
-
+   
     if (lst.length == 0) {
       throw new FSException("No payload to submit");
     }

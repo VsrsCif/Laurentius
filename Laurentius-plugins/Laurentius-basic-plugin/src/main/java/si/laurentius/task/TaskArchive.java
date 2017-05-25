@@ -149,18 +149,20 @@ public class TaskArchive implements TaskExecutionInterface {
   /**
    *
    * @param to
-   * @param f
+   * @param fArchFolder
    * @param iChunkSize
    * @param fw
+   * @param fwLogErr
    * @return
    * @throws TaskException
    * @throws IOException
    */
-  public String archiveInMails(Date to, File fArchFolder, int iChunkSize, Writer fw) throws TaskException,
+  public String archiveInMails(Date to, File fArchFolder, int iChunkSize,
+          Writer fw, Writer fwLogErr) throws TaskException,
           IOException {
-    
-    File flStorage = new File(fArchFolder, STORAGE_FOLDER) ;
-            
+
+    File flStorage = new File(fArchFolder, STORAGE_FOLDER);
+
     StringWriter sw = new StringWriter();
     MSHInMailList noList = new MSHInMailList();
     SearchParameters sp = new SearchParameters();
@@ -192,12 +194,20 @@ public class TaskArchive implements TaskExecutionInterface {
             for (MSHInPart p : m.getMSHInPayload().getMSHInParts()) {
               if (p.getFilepath() != null) {
                 try {
-                  
-                  
-                  mSU.copyFileToFolder(p.getFilepath(),flStorage );
-                  
-                  fw.append(p.getFilepath());
-                  fw.append(";");
+                  File fp = StorageUtils.getFile(p.getFilepath());
+                  if (fp.exists()) {
+
+                    mSU.copyFileToFolder(p.getFilepath(), flStorage);
+
+                    fw.append(p.getFilepath());
+                    fw.append(";");
+                  } else {
+                    fwLogErr.append("\nPayload: ");
+                    fwLogErr.append(p.getFilepath());
+                    fwLogErr.append(
+                            " for inmail: " + m.getId() + " is missing!");
+                  }
+
                 } catch (IOException | StorageException ex) {
                   throw new TaskException(
                           TaskException.TaskExceptionCode.ProcessException,
@@ -211,7 +221,8 @@ public class TaskArchive implements TaskExecutionInterface {
         }
 
         noList.getMSHInMails().addAll(lst);
-        File fout = new File(fArchFolder, String.format(outFileFormat, "MSHInMail", iPage));
+        File fout = new File(fArchFolder, String.format(outFileFormat,
+                "MSHInMail", iPage));
 
         try {
           XMLUtils.serialize(noList, fout);
@@ -242,12 +253,15 @@ public class TaskArchive implements TaskExecutionInterface {
    * @param f
    * @param iChunkSize
    * @param fw
+   * @param fwLogErr
    * @return
+   * @throws si.laurentius.plugin.interfaces.exception.TaskException
    * @throws IOException
    */
-  public String archiveOutMails(Date to, File f, int iChunkSize, Writer fw) throws TaskException,
+  public String archiveOutMails(Date to, File f, int iChunkSize, Writer fw,
+          Writer fwLogErr) throws TaskException,
           IOException {
-    File flStorage = new File(f, STORAGE_FOLDER) ;
+    File flStorage = new File(f, STORAGE_FOLDER);
     StringWriter sw = new StringWriter();
     MSHOutMailList noList = new MSHOutMailList();
     SearchParameters sp = new SearchParameters();
@@ -280,9 +294,19 @@ public class TaskArchive implements TaskExecutionInterface {
             for (MSHOutPart p : m.getMSHOutPayload().getMSHOutParts()) {
               if (p.getFilepath() != null) {
                 try {
-                  mSU.copyFileToFolder(p.getFilepath(), flStorage);
-                  fw.append(p.getFilepath());
-                  fw.append(";");
+                  File fp = StorageUtils.getFile(p.getFilepath());
+                  if (fp.exists()) {
+
+                    mSU.copyFileToFolder(p.getFilepath(), flStorage);
+                    fw.append(p.getFilepath());
+                    fw.append(";");
+                  } else {
+                    fwLogErr.append("\nPayload: ");
+                    fwLogErr.append(p.getFilepath());
+                    fwLogErr.append(
+                            " for outmail: " + m.getId() + " is missing!");
+                  }
+
                 } catch (IOException | StorageException ex) {
                   throw new TaskException(
                           TaskException.TaskExceptionCode.ProcessException,
@@ -332,8 +356,6 @@ public class TaskArchive implements TaskExecutionInterface {
     ttp.setDefValue(defVal);
     return ttp;
   }
-
- 
 
   /**
    *
@@ -413,9 +435,11 @@ public class TaskArchive implements TaskExecutionInterface {
     long lst = LOG.getTime();
     File archFolder = initFolders(sfolder, backupFolder);
 
-    File fbackMails = new File(archFolder, "archive-mails.txt");
+    File fArhMail = new File(archFolder, "archive-mail.txt");
+    File ferrLogMail = new File(archFolder, "archive-error.txt");
 
-    try (FileWriter fw = new FileWriter(fbackMails)) {
+    try (FileWriter fwArhMail = new FileWriter(fArhMail); FileWriter fwErrLogMail = new FileWriter(
+            ferrLogMail)) {
 
       sw.append(" end: " + (lst - LOG.getTime()) + " ms\n");
 
@@ -426,28 +450,30 @@ public class TaskArchive implements TaskExecutionInterface {
 
       sw.append("---------------------\nArhive out mail\n");
       lst = LOG.getTime();
-      String rs = archiveOutMails(dtArhiveTo, archFolder, iChunkSize, fw);
+      String rs = archiveOutMails(dtArhiveTo, archFolder, iChunkSize, fwArhMail,
+              fwErrLogMail);
       sw.append(rs);
       sw.append(
               " end: " + (lst - LOG.getTime()) + " ms\n---------------------\n\n");
 
       sw.append("---------------------\nArhive in mail");
       lst = LOG.getTime();
-      rs = archiveInMails(dtArhiveTo, archFolder, iChunkSize, fw);
+      rs = archiveInMails(dtArhiveTo, archFolder, iChunkSize, fwArhMail, fwErrLogMail);
       sw.append(rs);
       sw.append(
               " end: " + (lst - LOG.getTime()) + " ms\n---------------------\n\n");
-      fw.flush();
+      fwArhMail.flush();
+      fwErrLogMail.flush();
     } catch (IOException ex) {
       throw new TaskException(TaskException.TaskExceptionCode.InitException,
-              "Error opening archive list file:  '" + fbackMails.
+              "Error opening archive list file:  '" + fArhMail.
                       getAbsolutePath() + "'!", ex);
     }
 
     // delete record if archive succedded
     if (bDelRecords) {
 
-      try (BufferedReader br = new BufferedReader(new FileReader(fbackMails))) {
+      try (BufferedReader br = new BufferedReader(new FileReader(fArhMail))) {
 
         String line;
         while ((line = br.readLine()) != null) {
@@ -474,7 +500,10 @@ public class TaskArchive implements TaskExecutionInterface {
           String[] files = data[2].split(";");
           for (String file : files) {
             try {
-              StorageUtils.removeFile(file);
+              File f = StorageUtils.getFile(file);
+              if (f.exists()) {
+                StorageUtils.removeFile(file);
+              }
             } catch (StorageException ex) {
               LOG.logError(0, "Error removing file: " + file, ex);
 
@@ -504,7 +533,7 @@ public class TaskArchive implements TaskExecutionInterface {
     tt.setDescription("Archive data to 'xml' and files to archive-storage");
     tt.getCronTaskPropertyDeves().add(
             createTTProperty(KEY_EXPORT_FOLDER,
-            "Archive folder", true,
+                    "Archive folder", true,
                     "string", null, null, "${laurentius.home}/test-archive/"));
     tt.getCronTaskPropertyDeves().add(
             createTTProperty(KEY_CHUNK_SIZE, "Max mail count in chunk", true,

@@ -38,9 +38,10 @@ public class TCStressTests extends TestCaseAbstract implements Serializable {
     DialogProgress dlg = getDlgProgress();
     dlg.setProcess(testLAOM);
     RequestContext context = RequestContext.getCurrentInstance();
+    context.update(":dlgProgress:dlgProgressForm:pnlProgress");
     context.execute("PF('dlgPrgBar').start();");
     context.execute("PF('dialogProgress').show();");    
-    context.update(":dlgProgress:dlgProgressForm:pnlProgress");
+    
     
     testLAOM.executeStressTest();
   }

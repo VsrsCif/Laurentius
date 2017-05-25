@@ -32,3 +32,11 @@
 .ui-icon-svg-cancel {
     background-image: url("#{resource['images:/cancel.svg']}") !important;    
 }
+
+.ui-icon-svg-add {
+    background-image: url("#{resource['images:/add.svg']}") !important;    
+}
+.ui-icon-svg-remove {
+    background-image: url("#{resource['images:/remove.svg']}") !important;    
+}
+

@@ -57,8 +57,7 @@ public class AdminSEDInterceptorView extends AbstractAdminJSFView<SEDInterceptor
   @EJB(mappedName = SEDJNDI.JNDI_PLUGIN)
   private SEDPluginManagerInterface mPlgManager;
 
-  @EJB(mappedName = SEDJNDI.JNDI_PMODE)
-  private PModeInterface mPMode;
+ 
 
   PluginPropertyModel mtpmPropertyModel = new PluginPropertyModel();
 

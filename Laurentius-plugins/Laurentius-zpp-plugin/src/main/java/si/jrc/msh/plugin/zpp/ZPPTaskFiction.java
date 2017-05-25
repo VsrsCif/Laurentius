@@ -262,7 +262,7 @@ public class ZPPTaskFiction implements TaskExecutionInterface {
           "' does not have defined party serurity!");
     }
 
-    String recSignKeyAlias = pis.getExchangePartySecurity().getSignatureCertAlias();
+    
 
    
   //  SEDCertStore recSc = mmsedLookup.getSEDCertStoreByName(recKeystore);
@@ -286,9 +286,9 @@ public class ZPPTaskFiction implements TaskExecutionInterface {
           FOPUtils.FopTransformations.AdviceOfDeliveryFictionNotification,
           MimeConstants.MIME_PDF);
 
-      
-      PrivateKey pk = mCertBean.getPrivateKeyForAlias(recSignKeyAlias);
-        X509Certificate xcert = mCertBean.getX509CertForAlias(recSignKeyAlias);
+      //Sign alias Key
+      PrivateKey pk = mCertBean.getPrivateKeyForAlias(sigAlias);
+      X509Certificate xcert = mCertBean.getX509CertForAlias(sigAlias);
       signPDFDocument(pk, xcert, fDNViz, true);
 
       moFNotification = new MSHOutMail();
@@ -329,26 +329,22 @@ public class ZPPTaskFiction implements TaskExecutionInterface {
       LOG.logError(l, msg, null);
       throw new ZPPException(msg);
     }
+    
+    
+    
     // --------------------------------------------------------
     // create encrypted key
     // get x509 keys
+    String recSignKeyAlias = pis.getExchangePartySecurity().getSignatureCertAlias();
     String convId = mOutMail.getConversationId();
     LOG.formatedlog("Get key for conversation : '%s'", convId);
     BigInteger moID = new BigInteger(convId.substring(0, convId.indexOf("@")));
     MSHOutMail mom = mDB.getMailById(MSHOutMail.class, moID);
     mom.setDeliveredDate(mOutMail.getSentDate());
 
-    X509Certificate recXc;
-     recXc = mCertBean.getX509CertForAlias(recSignKeyAlias);
-     /*
-    try {
-      //recXc = mkeyUtils.getTrustedCertForAlias(mCertBean.getCertificateStore(), recSignKeyAlias);
-      recXc = mCertBean.getX509CertForAlias(recSignKeyAlias);
-    } catch (SEDSecurityException ex) {
-      String msg = String.format("Key for alias '%s' do not exists keystore'!", recSignKeyAlias);
-      LOG.logError(l, msg, ex);
-      throw new ZPPException(msg);
-    }*/
+    
+    X509Certificate recXc = mCertBean.getX509CertForAlias(recSignKeyAlias);
+   
 
     LOG.formatedlog("Get key for conversation : '%s'", convId);
 
@@ -442,9 +438,10 @@ public class ZPPTaskFiction implements TaskExecutionInterface {
     moADF.setMSHInPayload(new MSHInPayload());
 
     try {
-      
+      // sign advice of delivery
       PrivateKey pk = mCertBean.getPrivateKeyForAlias(signAlias);
-        X509Certificate xcert = mCertBean.getX509CertForAlias(signAlias);
+      X509Certificate xcert = mCertBean.getX509CertForAlias(signAlias);
+        
       signPDFDocument(pk, xcert, fDNViz, true);
       MSHInPart mp = new MSHInPart();
       mp.setDescription(ZPPConstants.S_ZPP_ACTION_FICTION_NOTIFICATION);

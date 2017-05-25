@@ -100,20 +100,13 @@ fi
 LAU_OPTS=" -c standalone-laurentius.xml -Dlaurentius.home=$LAU_HOME/";
 
 if [ "$INIT" = "TRUE" ]; then
-	read -p "Init will recreate database tables if exists. All data in tables will be lost. Do you want to continue? (Enter Y to continue) " answer
-
-	# (2) handle the command line argument we were given
-	while true
-	do
-	  case $answer in
-	   [yY]* ) 
-		       break;;
-
-	   [nN]* ) exit;;
-
-	   * )     exit;;
-	  esac
-	done
+	read -r -p "Init will recreate database tables if exists. All data in tables will be lost. Do you want to continue? (Enter Y to continue) " answer
+	case "$answer" in
+    	[yY][eE][sS]|[yY]) 
+    	    break;;
+    	*)
+    	    exit;;
+	esac
 
 
 

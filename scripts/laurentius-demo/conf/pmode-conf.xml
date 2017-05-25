@@ -58,7 +58,7 @@
             <PartyId type="urn:oasis:names:tc:ebcore:partyid-type:unregistered:si-svev:sed-box" valueSource="address"/>
             <TransportProtocol id="court-https" isTwoWayProtocol="true">
                 <Address connectionTimeout="120000" receiveTimeout="180000" chunked="false">https://b2g-test.sodisce.si/laurentius/msh</Address>
-                <TLS clientKeyAlias="test-tls" serverTrustCertAlias="b2g-test.sodisce.si" disableCNAndHostnameCheck="false"/>
+                <TLS clientKeyAlias="test-tls" serverTrustCertAlias="b2g-test.sodisce.si" disableCNAndHostnameCheck="true"/>
                 <Proxy host=""/>
                 <SOAPVersion>1.2</SOAPVersion>
             </TransportProtocol>

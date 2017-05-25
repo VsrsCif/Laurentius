@@ -39,6 +39,10 @@ public class TestCasePluginDescription extends AbstractPluginDescription {
 
   private static final SEDLogger LOG = new SEDLogger(
           TestCasePluginDescription.class);
+  
+  public static final String S_PLUGIN_TYPE="TestCasePlugin";
+  public static final String S_PLUGIN_VERSION="1.0.0";
+  
   MenuItem miRoot = null;
 
   @PostConstruct
@@ -66,7 +70,7 @@ public class TestCasePluginDescription extends AbstractPluginDescription {
 
   @Override
   public String getVersion() {
-    return "1.0.0";
+    return S_PLUGIN_VERSION;
   }
 
   /**
@@ -98,7 +102,7 @@ public class TestCasePluginDescription extends AbstractPluginDescription {
    */
   @Override
   public String getType() {
-    return "TestCasePlugin";
+    return S_PLUGIN_TYPE;
   }
 
   @Override
@@ -119,15 +123,15 @@ public class TestCasePluginDescription extends AbstractPluginDescription {
       MenuItem customTest = new MenuItem();
       customTest.setName("Custom test");
       customTest.setPageId(AppConstant.S_PANEL_CUSTOM_TEST);
-/*
+
       MenuItem reliabilityTest = new MenuItem();
       reliabilityTest.setName("Reliability test");
       reliabilityTest.setPageId(AppConstant.S_PANEL_RELIABILITY_TEST);
-*/
+      
       miRoot.getMenuItems().add(stressTest);
       miRoot.getMenuItems().add(fictionTest);
       miRoot.getMenuItems().add(customTest);
-  //    miRoot.getMenuItems().add(reliabilityTest);
+      miRoot.getMenuItems().add(reliabilityTest);
     }
 
     return miRoot;

@@ -128,8 +128,13 @@ public abstract class AbstractMailView<T, S> {
    * @return
    */
   public T getCurrentMail() {
+    if (selected == null || selected.isEmpty()){
+      mlstMailEvents = null;
+      return null;
+    }else{
+      return  selected.get(0);
+    }
 
-    return selected == null || selected.isEmpty() ? null : selected.get(0);
   }
 
   public List<T> getSelected() {
@@ -138,6 +143,7 @@ public abstract class AbstractMailView<T, S> {
 
   public void setSelected(List<T> selected) {
     this.selected = selected;
+    
   }
 
   /**

@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.Local;
@@ -850,6 +852,9 @@ public class SEDDaoBean implements SEDDaoInterface {
     long l = LOG.logStart();
     try {
       mutUTransaction.begin();
+      
+      
+      
       mail.setStatusDate(Calendar.getInstance().getTime());
       mail.setStatus(status.getValue());
 
@@ -871,6 +876,10 @@ public class SEDDaoBean implements SEDDaoInterface {
       me.setApplicationId(applicationId);
       me.setEvidenceFilepath(filePath);
       me.setEvidenceMimeType(mime);
+      
+      
+      
+      
 
       int iVal = updq.executeUpdate();
       if (iVal != 1) {
@@ -887,6 +896,9 @@ public class SEDDaoBean implements SEDDaoInterface {
       }
       memEManager.persist(me);
       mutUTransaction.commit();
+      
+     
+      
     } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException
             | HeuristicRollbackException | SecurityException | IllegalStateException ex) {
       {

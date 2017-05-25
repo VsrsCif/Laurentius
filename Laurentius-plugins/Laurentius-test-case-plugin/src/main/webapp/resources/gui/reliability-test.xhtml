@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      xmlns:pnl="http://java.sun.com/jsf/composite/gui/panel"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+    <composite:interface>
+    </composite:interface>
+
+    <composite:implementation >
+        <pnl:pnl-settings id="tcReliabilityPanel"
+                          title="#{msg['StressTest']}" 
+                          description="#{msg['StressTest']}"
+                          icon="ui-icon-svg-test"
+                          >
+            <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
+
+
+            <p:scrollPanel mode="native" style="width:100%;height:100%"> <!-- p:dataTable scrollable does not resize when toogled south panel -->                
+                <p:dataTable id="TblInterceptor" 
+                             var="sp" 
+                             value="#{tcReliablityTests.list}"
+                             selectionMode="single"
+                             selection="#{tcReliablityTests.selected}"
+                             rowKey="#{sp.id}"
+                             currentPageReportTemplate="#{msg['Showing']} {startRecord}-{endRecord} #{msg['OutOf']} {totalRecords}"
+                             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             rowsPerPageTemplate="25,50,100,200" 
+                             paginator="true" 
+                             style="padding: 0px; margin: 0px"
+                             scrollable="true" 
+                             scrollHeight="100%"
+                             rows="100"  >
+
+
+                    <f:facet name="header">
+                        
+                        
+                        <p:panelGrid  style="width: 100%">    
+                <p:row>
+                    <p:column><p:commandButton  value="#{msg['Add']}"  styleClass="toolbar-Button"
+                                          icon="ui-icon-svg-add ui-icon-size-22"  
+                                          actionListener="#{tcReliablityTests.createEditable()}"                                         
+                                          update=":tcForm:PanelReliabilityTest:tcReliabilityPanel:TblInterceptor"     
+                                          />  </p:column>
+                    
+                    <p:column styleClass="ui-gp-label">#{msg['ReceiverBox']}</p:column>
+                    <p:column>
+                        <p:selectOneMenu id="eboxReceiver" 
+                                         value="#{tcReliablityTests.testReceiverEBox}" 
+                                         style="width:150px"
+
+                                         >
+                            <f:selectItem noSelectionOption="false"  />
+                            <f:selectItems value="#{TestCaseMainView.userEBoxes}"
+                                           var="ebx"
+                                           itemLabel="#{ebx}"
+                                           itemValue="#{ebx}@#{TestCaseMainView.localDomain}" />
+                        </p:selectOneMenu>                                    
+                        <h:outputText value="@#{TestCaseMainView.localDomain}" />
+                    </p:column>
+                    
+                    <p:column  styleClass="ui-gp-label">#{msg['Service']}</p:column>
+                    <p:column>
+                        <p:selectOneMenu id="lstService" value="#{tcReliablityTests.testService}" 
+                                         style="width:150px" >
+                            <p:ajax update="lstAction" />
+                            <f:selectItem noSelectionOption="false"  />
+                            <f:selectItems value="#{tcReliablityTests.serviceList}" var="srv"
+                                           itemLabel="#{srv.serviceName}" 
+                                           itemValue="#{srv.serviceName}"
+                                           itemDescription="#{srv.serviceType}"
+                                           />
+                        </p:selectOneMenu>                                    
+                    </p:column>
+                    <p:column  styleClass="ui-gp-label">#{msg['Action']}</p:column>
+                    <p:column>
+                        <p:selectOneMenu id="lstAction" value="#{tcReliablityTests.testAction}" 
+                                         style="width:150px" >
+
+                            <f:selectItem noSelectionOption="false"  />
+                            <f:selectItems value="#{tcReliablityTests.currentServiceActionList}" var="act"
+                                           itemLabel="#{act.name}" 
+                                           itemValue="#{act.name}"
+                                           />
+                        </p:selectOneMenu>     
+                    </p:column>
+                </p:row>
+                <p:row>
+                    <p:column><p:commandButton  value="#{msg['Remove']}"  styleClass="toolbar-Button"
+                                          icon="ui-icon-svg-remove ui-icon-size-22"  
+                                          actionListener="#{tcReliablityTests.removeSelected()}"                                         
+                                          update=":tcForm:PanelReliabilityTest:tcReliabilityPanel:TblInterceptor"     
+                                          />  </p:column>
+                </p:row>
+            </p:panelGrid>
+                        
+                        
+                        
+                        
+                </f:facet>
+                <p:column headerText="#{msg['Id']}" width="60">
+                    <h:outputText value="#{sp.id}" />
+                </p:column>
+                <p:column headerText="#{msg['Name']}" width="120" >
+                    <h:outputText value="#{sp.name}"></h:outputText>                
+                </p:column>
+                <p:column headerText="#{msg['Active']}" width="50" >
+                    <h:outputText value="#{sp.active}"></h:outputText>                
+                </p:column>   
+                <p:column headerText="#{msg['InterceptEvent']}" width="100">
+                    <h:outputText value="#{sp.interceptEvent}" ></h:outputText>                
+                </p:column>
+                <p:column headerText="#{msg['Plugin']}" width="120">
+                    <h:outputText value="#{sp.SEDInterceptorInstance.plugin}" ></h:outputText>                
+                </p:column>
+                <p:column headerText="#{msg['Type']}" width="120">
+                    <h:outputText value="#{sp.SEDInterceptorInstance.type}" ></h:outputText>                
+                </p:column>
+                <p:column headerText="#{msg['Rules']}" >
+                    <h:outputText value="#{tcReliablityTests.getRuleDesc(sp)}" ></h:outputText>                
+                </p:column>
+
+
+            </p:dataTable>
+        </p:scrollPanel>
+
+
+    </pnl:pnl-settings>
+</composite:implementation>
+</html>

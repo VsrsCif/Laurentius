@@ -1,4 +1,4 @@
-  /*
+/*
  * Copyright 2016, Supreme Court Republic of Slovenia
  * 
  * Licensed under the EUPL, Version 1.1 or – as soon they will be approved by the European
@@ -49,12 +49,14 @@ public class TestCaseInInterceptor implements SoapInterceptorInterface {
    */
   protected final SEDLogger LOG = new SEDLogger(TestCaseInInterceptor.class);
 
+  public static final String S_INTERCEPTOR_TYPE = "TestCaseInInterceptor";
+
   @Override
   public MailInterceptorDef getDefinition() {
     MailInterceptorDef mid = new MailInterceptorDef();
-    mid.setDescription("TestCaseInInterceptor");
-    mid.setName("TestCaseInInterceptor");
-    mid.setType("TestCaseInInterceptor");
+    mid.setDescription(S_INTERCEPTOR_TYPE);
+    mid.setName(S_INTERCEPTOR_TYPE);
+    mid.setType(S_INTERCEPTOR_TYPE);
     return mid;
   }
 
@@ -72,45 +74,37 @@ public class TestCaseInInterceptor implements SoapInterceptorInterface {
     LOG.formatedWarning("got inmail  %s is backchannel %s", im, isBackChannel);
     if (!msg.getExchange().isOneWay() && !isBackChannel) {
 
-      String service = im.getService();
-      String rb = im.getReceiverEBox();
-      String sb = im.getSenderEBox();
-      boolean bER = DisableServiceUtils.existsDisableService(service, sb, rb);
-      LOG.formatedWarning("exists rule  %s ", bER);
-      if (bER) {
+      Endpoint e = msg.getExchange().get(Endpoint.class);
 
-        Endpoint e = msg.getExchange().get(Endpoint.class);
+      Message responseMsg = new MessageImpl();
+      responseMsg.setExchange(msg.getExchange());
+      responseMsg = e.getBinding().createMessage(responseMsg);
+      msg.getExchange().setOutMessage(responseMsg);
 
-        Message responseMsg = new MessageImpl();
-        responseMsg.setExchange(msg.getExchange());
-        responseMsg = e.getBinding().createMessage(responseMsg);
-        msg.getExchange().setOutMessage(responseMsg);
+      MessageFactory mf;
+      try {
+        mf = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
+        SOAPMessage soapMessage = mf.createMessage();
 
-        MessageFactory mf;
-        try {
-          mf = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
-          SOAPMessage soapMessage = mf.createMessage();
+        responseMsg.setContent(SOAPMessage.class, soapMessage);
 
-          responseMsg.setContent(SOAPMessage.class, soapMessage);
+        InterceptorChain chainOut
+                = OutgoingChainInterceptor.getOutInterceptorChain(msg
+                        .getExchange());
+        chainOut.add(new CXFOutHttpErrorInterceptor(503));
 
-          InterceptorChain chainOut =
-              OutgoingChainInterceptor.getOutInterceptorChain(msg
-                  .getExchange());
-          chainOut.add(new CXFOutHttpErrorInterceptor(503));
+        LOG.logWarn("got out interceptor:" + chainOut, null);
+        responseMsg.setInterceptorChain(chainOut);
 
-          LOG.logWarn("got out interceptor:" + chainOut, null);
-          responseMsg.setInterceptorChain(chainOut);
+        chainOut.doIntercept(responseMsg);
 
-          chainOut.doIntercept(responseMsg);
-
-          msg.getInterceptorChain().abort();
-          return false;
-        } catch (SOAPException ex) {
-          LOG.logError(l, ex);
-        }
+        msg.getInterceptorChain().abort();
+        return false;
+      } catch (SOAPException ex) {
+        LOG.logError(l, ex);
       }
     }
-    
+
     LOG.logEnd(l);
     return true;
   }

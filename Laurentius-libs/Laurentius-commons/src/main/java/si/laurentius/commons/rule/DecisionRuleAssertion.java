@@ -9,8 +9,12 @@ import si.laurentius.commons.enums.SEDRulePredicate;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigInteger;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.rule.SEDDecisionRule;
 
@@ -19,6 +23,8 @@ import si.laurentius.rule.SEDDecisionRule;
  * @author sluzba
  */
 public class DecisionRuleAssertion {
+  
+  SimpleDateFormat  dateParser = new SimpleDateFormat("dd.MM.yyyy");
 
   private static final SEDLogger LOG = new SEDLogger(DecisionRuleAssertion.class);
 
@@ -46,9 +52,9 @@ public class DecisionRuleAssertion {
           bRes = assertFloat(SEDRulePredicate.getByValue(dr.getPredicate()),
                   Float.valueOf(dr.getValue()), (Float) val);
         } else if (val instanceof Date) {
-          // todo !!!
-          /* bRes = assertDate(SEDRulePredicate.getByValue(dr.getPredicate()),
-                  Float.valueOf(dr.getValue()), (Date) val);  */
+          
+          bRes = assertDate(SEDRulePredicate.getByValue(dr.getPredicate()),
+                  dateParser.parse(dr.getValue()), (Date) val);  
 
         } else {
           LOG.formatedWarning(
@@ -56,10 +62,10 @@ public class DecisionRuleAssertion {
                   obj.getClass().getName(), rt.getClass(), dr.getProperty());
         }
 
-      } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+      } catch (ParseException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
         LOG.formatedWarning("Object: %s does not contain property %s",
                 obj.getClass().getName(), dr.getProperty(), ex);
-      }
+      } 
 
       // get property type
     } catch (NoSuchMethodException | SecurityException ex) {
@@ -69,6 +75,8 @@ public class DecisionRuleAssertion {
 
     return bRes;
   }
+  
+  
 
   boolean assertInteger(SEDRulePredicate pred, Integer expected, Integer value) {
     switch (pred) {
@@ -89,6 +97,9 @@ public class DecisionRuleAssertion {
   }
 
   boolean assertDate(SEDRulePredicate pred, Date expected, Date value) {
+    if (pred == null ){
+      return false;
+    }
     switch (pred) {
       case EQUALS:
         return value.equals(expected);

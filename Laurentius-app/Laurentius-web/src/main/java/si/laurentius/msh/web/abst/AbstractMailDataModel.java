@@ -128,9 +128,12 @@ public abstract class AbstractMailDataModel<T> extends LazyDataModel<T> {
     String strSortOrder = "DESC";
     // validate data
     Object filterObject = externalFilters();
-    mDataList = getData(startingAt, maxPerPage, sortField, sortOrder, filterObject);
     long l = mDB.getDataListCount(type, filterObject);
     setRowCount((int) l);
+    
+    
+    mDataList = getData(startingAt, maxPerPage, sortField, sortOrder, filterObject);
+    
 
     setPageSize(maxPerPage);
     return mDataList;

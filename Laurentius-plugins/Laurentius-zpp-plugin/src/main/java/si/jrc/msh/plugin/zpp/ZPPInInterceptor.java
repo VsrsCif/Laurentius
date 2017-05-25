@@ -35,6 +35,8 @@ import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
+import javax.jms.JMSException;
+import javax.naming.NamingException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
@@ -495,22 +497,24 @@ public class ZPPInInterceptor implements SoapInterceptorInterface {
                     = oldFileName.substring(0, oldFileName.lastIndexOf(
                             ZPPConstants.S_ZPP_ENC_SUFFIX));
             String mime = null;
-            for (IMPartProperty mp:  mip.getIMPartProperties()){
-              if (Objects.equals(mp.getValue(), ZPPConstants.S_PART_PROPERTY_ORIGIN_MIMETYPE)){
+            for (IMPartProperty mp : mip.getIMPartProperties()) {
+              if (Objects.equals(mp.getValue(),
+                      ZPPConstants.S_PART_PROPERTY_ORIGIN_MIMETYPE)) {
                 mime = mp.getValue();
                 break;
               }
             }
-            if (Utils.isEmptyString(mime)){
+            if (Utils.isEmptyString(mime)) {
               mime = mip.getMimeType();
             }
-            
+
             File fNew;
             try (FileInputStream fis = new FileInputStream(StorageUtils.getFile(
                     mip.getFilepath()));
                     FileOutputStream bos
                     = new FileOutputStream(fNew = StorageUtils.
-                            getNewStorageFile(MimeValue.getSuffixBYMimeType(mime), "zpp-dec"))) {
+                            getNewStorageFile(MimeValue.
+                                    getSuffixBYMimeType(mime), "zpp-dec"))) {
 
               LOG.log("Decrypt file: " + newFileName);
 
@@ -531,13 +535,12 @@ public class ZPPInInterceptor implements SoapInterceptorInterface {
               miDec.setType(mip.getType());
               miDec.setIsEncrypted(Boolean.FALSE);
 
-         
               miDec.setSha256Value(DigestUtils.getHexSha256Digest(fNew));
               miDec.setSize(BigInteger.valueOf(fNew.length()));
 
               miDec.setFilepath(StorageUtils.getRelativePath(fNew));
               lstDec.add(miDec);
-            } catch (IOException | StorageException | SEDSecurityException  ex) {
+            } catch (IOException | StorageException | SEDSecurityException ex) {
               LOG.logError(l,
                       "Error occured while decrypting  file: '" + oldFileName
                       + "' for inmail:" + mi.getId(), ex);
@@ -552,6 +555,15 @@ public class ZPPInInterceptor implements SoapInterceptorInterface {
           mDB.updateInMail(mi, "Received secred key and decrypt payloads", null);
         } catch (StorageException ex) {
           LOG.logError(l, "Error updating mail :'" + mi.getId() + "'!", ex);
+        }
+        try {
+          LOG.formatedlog("EXPORT MAIL %d", mi.getId().longValue());
+          mJMS.exportInMail(mi.getId().longValue());
+        } catch (NamingException | JMSException ex) {
+          LOG.logError(l,
+                  "Error occured while submitting mail to export queue:'" + mi.
+                          getId() + "'!",
+                  ex);
         }
         /*
         if (sb.getExport() != null && sb.getExport().getActive() != null &&

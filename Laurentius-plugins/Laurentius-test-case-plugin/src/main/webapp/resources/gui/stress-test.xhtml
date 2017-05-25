@@ -51,7 +51,7 @@
                     <p:column>
                         <p:commandButton value="#{msg['Start']}"                                           
                                          actionListener="#{tcStressTests.executeLAOM()}"
-                                         
+                                         update=":dlgProgress:dlgProgressForm:pnlProgress"
                                          />
                     </p:column>
                 </p:row>
@@ -82,7 +82,8 @@
                 <p:row><p:column></p:column>
                     <p:column>
                         <p:commandButton value="#{msg['Start']}"                                           
-                                         actionListener="#{tcStressTests.executeLM()}"                                         
+                                         actionListener="#{tcStressTests.executeLM()}"   
+                                         update=":dlgProgress:dlgProgressForm:pnlProgress"
                                          />
                     </p:column>
                 </p:row>
