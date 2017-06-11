@@ -15,8 +15,10 @@
 package si.laurentius.ejb;
 
 import java.util.Calendar;
+import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.Local;
@@ -71,6 +73,17 @@ public class MSHScheduler implements SEDSchedulerInterface {
 
   @Resource
   private TimerService timerService;
+  
+  @PostConstruct
+  private void initCronJobs(){
+    List<SEDCronJob> lst = mdbLookups.getSEDCronJobs();
+    for (SEDCronJob cj: lst){
+      if (cj.getActive()!=null && cj.getActive()){
+        activateCronJob(cj);
+      }
+    }
+  }
+  
 
   @Override
   public boolean activateCronJob(SEDCronJob cb) {
