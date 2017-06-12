@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
@@ -59,6 +58,8 @@ public class ProcessExport extends AbstractMailProcessor {
   public static final String KEY_EXPORT_FILEMASK = "imp.export.filemask";
 
   public static final String KEY_EXPORT_FOLDER = "imp.export.folder";
+  public static final String KEY_EXPORT_SOURCE = "imp.export.source";
+  
 
   StorageUtils msStorageUtils = new StorageUtils();
 
@@ -91,6 +92,11 @@ public class ProcessExport extends AbstractMailProcessor {
             "${laurentius.home}/test-export/${SenderEBox}_${Service}_${Id}",
             "Export folder.", true,
             PropertyType.String.getType(), null, null));
+    impd.getMailProcessorPropertyDeves().add(createProperty(
+            KEY_EXPORT_SOURCE,
+            null,
+            "Export sources separated by comma  (mail,soap,xlst,...). If no comma is given all sources are exported", false,
+            PropertyType.String.getType(), null, null));
 
     return impd;
 
@@ -122,8 +128,18 @@ public class ProcessExport extends AbstractMailProcessor {
 
     String expFolderPath = (String) map.
             getOrDefault(KEY_EXPORT_FOLDER, "./");
-     String metaDataFileName = (String) map.
+    String metaDataFileName = (String) map.
             getOrDefault(KEY_EXPORT_METADATA_FILENAME, "metadata_${Id}.xml");
+    
+    String sources = (String) map.get(KEY_EXPORT_SOURCE);
+    List<String> lstSources=null;
+    if (!Utils.isEmptyString(sources)){
+      String[] srcTbl = sources.split(",");
+      lstSources = new ArrayList<>();
+      for (String vl: srcTbl){
+        lstSources.add(vl.trim());
+      }
+    }
     
     boolean overwriteFiles = ((String) map.getOrDefault(KEY_EXPORT_OVERWRITE,
             "false")).equalsIgnoreCase("true");
@@ -149,6 +165,14 @@ public class ProcessExport extends AbstractMailProcessor {
 
 
       for (MSHInPart mip : cpMail.getMSHInPayload().getMSHInParts()) {
+        
+        if (lstSources!= null 
+                && mip.getSource()!=null
+                && !lstSources.contains(mip.getSource())){
+          // do not export source
+          continue;
+        }
+        
         File f;
         String  fileName = null;
         if (Utils.isEmptyString(fileMask)){
@@ -174,8 +198,8 @@ public class ProcessExport extends AbstractMailProcessor {
       
       
     if (exportMetaData) {
-      File fn = new File(exportFolder, String.format(
-              "metadata_%06d.%s", cpMail.getId(), MimeValue.MIME_XML.getSuffix()));
+      String mdfFilename = StringFormater.format(metaDataFileName, cpMail); 
+      File fn = new File(exportFolder, mdfFilename);
       if (fn.exists() && overwriteFiles) {
         fn.delete();
       }

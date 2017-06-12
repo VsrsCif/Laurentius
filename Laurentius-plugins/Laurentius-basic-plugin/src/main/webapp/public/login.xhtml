@@ -3,12 +3,14 @@
     'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'>
 <html xmlns='http://www.w3.org/1999/xhtml'
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core">
     <h:head>
         <title>SED - Login page</title>
         <link href="public/login.css" rel="stylesheet" />
 
     </h:head>
+    <f:view locale="#{localeManager.locale}" transient="true">
     <h:body class="LoginPage">
 
         <div align='right' style="width: 100%">
@@ -54,4 +56,5 @@
         </h:form>
 
     </h:body>
+        </f:view>
 </html>

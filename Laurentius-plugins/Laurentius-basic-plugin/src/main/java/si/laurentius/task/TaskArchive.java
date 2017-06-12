@@ -458,7 +458,8 @@ public class TaskArchive implements TaskExecutionInterface {
 
       sw.append("---------------------\nArhive in mail");
       lst = LOG.getTime();
-      rs = archiveInMails(dtArhiveTo, archFolder, iChunkSize, fwArhMail, fwErrLogMail);
+      rs = archiveInMails(dtArhiveTo, archFolder, iChunkSize, fwArhMail,
+              fwErrLogMail);
       sw.append(rs);
       sw.append(
               " end: " + (lst - LOG.getTime()) + " ms\n---------------------\n\n");
@@ -497,23 +498,27 @@ public class TaskArchive implements TaskExecutionInterface {
           // delete record()
           // data[0] class
           // data[1] id
-          String[] files = data[2].split(";");
-          for (String file : files) {
-            try {
-              File f = StorageUtils.getFile(file);
-              if (f.exists()) {
-                StorageUtils.removeFile(file);
+          // data[2] file list: 
+          // if files deleted from storage data.length <2
+          if (data.length > 2) { 
+            String[] files = data[2].split(";");
+            for (String file : files) {
+              try {
+                File f = StorageUtils.getFile(file);
+                if (f.exists()) {
+                  StorageUtils.removeFile(file);
+                }
+              } catch (StorageException ex) {
+                LOG.logError(0, "Error removing file: " + file, ex);
+
               }
-            } catch (StorageException ex) {
-              LOG.logError(0, "Error removing file: " + file, ex);
-
             }
-          }
 
+          }
         }
-        // delete records
-        // delete files
+        
       } catch (IOException ex) {
+        LOG.logError(ex.getMessage(), ex);
         Logger.getLogger(TaskArchive.class.getName()).
                 log(Level.SEVERE, null, ex);
       }

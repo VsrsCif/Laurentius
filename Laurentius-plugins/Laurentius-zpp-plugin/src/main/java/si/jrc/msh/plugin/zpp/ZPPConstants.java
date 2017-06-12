@@ -74,6 +74,8 @@ public class ZPPConstants {
      *
      */
   public static final String S_ZPP_PLUGIN_TYPE = "LegalZPP";
+  
+  
 
   /**
      *

@@ -526,6 +526,7 @@ public class ZPPInInterceptor implements SoapInterceptorInterface {
                       ZPPConstants.MSG_DOC_PREFIX_DESC)) {
                 desc = desc.substring(ZPPConstants.MSG_DOC_PREFIX_DESC.length());
               }
+              miDec.setSource(ZPPConstants.S_ZPP_PLUGIN_TYPE);
               miDec.setDescription(desc);
               miDec.setEbmsId(mip.getEbmsId() + "-dec");
               miDec.setEncoding(mip.getEncoding());
