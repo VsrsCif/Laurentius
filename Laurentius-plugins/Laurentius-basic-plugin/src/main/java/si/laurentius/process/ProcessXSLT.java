@@ -172,7 +172,7 @@ public class ProcessXSLT extends AbstractMailProcessor {
           }
 
           try {
-
+            LOG.formatedlog("Start transformation for file: %s " , mip.getFilepath() );
             File fRes = StorageUtils.getNewStorageFile(
                     MimeValue.MIME_XML.getSuffix(), FILE_PREFIX);
             // transform

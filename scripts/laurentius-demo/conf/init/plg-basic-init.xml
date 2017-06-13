@@ -2,12 +2,12 @@
 <PlgBasicInit xmlns="http://laurentius.si/plugin/imp" exportDate="2017-04-10T20:05:04.220+02:00">
     <IMPXslts>
         <IMPXslt instance="vsrs2zbs_001">
-            <XSLTRule id="1" transformation="c2b_eizvrsba-demo_v01.xsl" validateSchema="xmlDSignature-core-schema.xsd" resultFilename="xslt-v11" xPathValue="1.1">
+            <XSLTRule id="1" transformation="c2b_eizvrsba-demo_v01.xsl" validateSchema="" resultFilename="xslt-v11" xPathValue="1.1">
                 <XPath xpath="/izv:OpisPosiljke/@schemaVersion">
                     <Namespace id="2" prefix="izv" namespace="http://sodisce.si/izvrsba"/>
                 </XPath>
             </XSLTRule>
-            <XSLTRule id="3" transformation="c2b_eizvrsba-demo_v01.xsl" validateSchema="xmlDSignature-core-schema.xsd" resultFilename="xslt-v10" xPathValue="1.0">
+            <XSLTRule id="3" transformation="c2b_eizvrsba-demo_v01.xsl" validateSchema="" resultFilename="xslt-v10" xPathValue="1.0">
                 <XPath xpath="/izv:OpisPosiljke/@schemaVersion">
                     <Namespace id="4" prefix="izv" namespace="http://sodisce.si/izvrsba"/>
                 </XPath>

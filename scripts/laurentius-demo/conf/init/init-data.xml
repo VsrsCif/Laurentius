@@ -103,7 +103,7 @@
                 <ns4:SEDProcessorProperty key="imp.export.metadata">true</ns4:SEDProcessorProperty>
                 <ns4:SEDProcessorProperty key="imp.export.overwrite">true</ns4:SEDProcessorProperty>
                 <ns4:SEDProcessorProperty key="imp.export.metadata.filename">metadata_${Id}.xml</ns4:SEDProcessorProperty>
-                <ns4:SEDProcessorProperty key="imp.export.filemask">${Id}_{PART-Id}_${PART-Filename}</ns4:SEDProcessorProperty>
+                <ns4:SEDProcessorProperty key="imp.export.filemask">${Id}_${PART-Id}_${PART-Filename}</ns4:SEDProcessorProperty>
                 <ns4:SEDProcessorProperty key="imp.export.folder">${laurentius.home}/test-export/${SenderEBox}_${Service}_${Id}</ns4:SEDProcessorProperty>
             </ns4:SEDProcessorInstance>
         </ns4:SEDProcessor>

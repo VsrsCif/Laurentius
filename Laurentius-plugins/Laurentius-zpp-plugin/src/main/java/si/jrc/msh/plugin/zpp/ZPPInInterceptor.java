@@ -498,7 +498,7 @@ public class ZPPInInterceptor implements SoapInterceptorInterface {
                             ZPPConstants.S_ZPP_ENC_SUFFIX));
             String mime = null;
             for (IMPartProperty mp : mip.getIMPartProperties()) {
-              if (Objects.equals(mp.getValue(),
+              if (Objects.equals(mp.getName(),
                       ZPPConstants.S_PART_PROPERTY_ORIGIN_MIMETYPE)) {
                 mime = mp.getValue();
                 break;

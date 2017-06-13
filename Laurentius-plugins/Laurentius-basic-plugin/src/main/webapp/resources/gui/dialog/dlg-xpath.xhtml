@@ -42,7 +42,7 @@
                 <p:selectOneMenu value="#{dialogXPath.editable.validateSchema}" 
                                  style="width:100%" 
                                  >
-                    <f:selectItems itemLabel="Select result schema" itemValue=""  noSelectionValue="true"/>
+                    <f:selectItem itemLabel="No schema" itemValue=""  noSelectionOption="true"/>
                     <f:selectItems  value="#{adminIMPXsltView.schemaFiles}"  var="file" itemLabel="#{file.name}" 
                                    itemValue="#{file.name}" itemDescription="#{plg.absolutePath}"
                                    />                    

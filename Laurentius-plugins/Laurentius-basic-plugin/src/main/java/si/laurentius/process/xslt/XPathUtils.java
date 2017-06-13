@@ -43,7 +43,7 @@ public class XPathUtils {
     LOG.formatedlog("doesRuleApply for expression %s, value %s ", expression, value);    
     Node node = (Node) path.evaluate(expression, doc, XPathConstants.NODE);
     if (node != null) {
-    LOG.formatedlog("Node valie: %s value %s", node.getNodeValue(), value);
+      LOG.formatedlog("Node value: '%s' value '%s'", node.getNodeValue(), value);
     } else {
       LOG.log("NODE IS NULL");
     }
