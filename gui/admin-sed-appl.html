@@ -5,11 +5,10 @@
          Servisi omogočajo dodajanje novih izhodnih pošiljk, 
          prevzemanje dohodnih pošiljk, poizvedovanje po statusih itd. Za možnost izdelave
          integracije z več zalednimi sistemi Laurentius vsebuje modul za administracijo
-         pravic posameznih aplikacija. Za dostop do spletnih servisov se aplikacija mora 
-         avtenticirato z uporabniškim imenom in geslom (glej primer: 
+         pravic posameznih aplikacij. Za dostop do spletnih servisov se mora aplikacija  
+         avtenticirati z uporabniškim imenom in geslom (glej primer: 
          <a href="https://github.com/VsrsCif/Laurentius/blob/master/Laurentius-examples/ws-client/src/main/java/si/laurentius/test/WSClientExample.java">
-            klient java
-        </a>)
+            klient java</a>)
          
         Aplikacijska "uporabniška imena" in gesla  se določa preko preko nastavitev
         "uporabniške domene" <b> sed-realm</b>, ki 
@@ -18,16 +17,16 @@
         za prevzemanje uporabnikov iz LDAP, eDirectory, relacijskih baz itd.<br /><br />
         
         Administracija <b>SED aplikacij</b> se nahaja v sklopu orodij <b>Nastavitve</b>
-       (Settings) orodje Aplikacije). Urejanje omogoča določanje obdobje aktivnosti in predale,
+       (Settings), orodje Aplikacije). Urejanje omogoča določanje obdobje aktivnosti in predale,
        do katerih ima aplikacija upravičenja.<br /><br />
        <img class="img-locale" src="img/gui/appl-list-en.png" alt="User list" width="680"/> <br />
        
        <h2 id="gui/admin-sed-appl:list">Seznam aplikacij</h2>
-       Orodje <b>Aplikacije</b> prikazuje seznam aplikacij, ki so določeni v Laurentius. Z klikom na 
+       Orodje <b>Aplikacije</b> prikazuje seznam aplikacij, ki so določeni v Laurentius. S klikom na 
        razširitveni gumb na začetku vrstice se prikažejo tudi predali, do katerih ima aplikacija opravičenja.<br />
-       V orodni vrstici seznama so gumbi za dodajanje spreminjanje in brisanje nastavitev.<br /><br />
+       V orodni vrstici seznama so gumbi za dodajanje, spreminjanje in brisanje nastavitev.<br /><br />
       
-        Ob kliki na gumb <b>Dodaj</b>(add),  <b>Uredi</b>(Edit) ali dvojnem kliku na izbrano 
+        Ob kliku na gumb <b>Dodaj</b> (Add),  <b>Uredi</b> (Edit) ali dvojnem kliku na izbrano 
        vstico se prikaže dialog za dodajanje/urejanje aplikacije.<br /><br />
        <center>
         <img class="img-locale" src="img/gui/appl-edit-en.png" alt="User  admin" width="500"/> <br />
@@ -35,10 +34,10 @@
        
        <h2 id="gui/admin-sed-appl:add-edit">Dodajanje, urejanje uporabnikov</h2>
        <ul>
-           <li><b>Aplikacija (Username):</b> ob dodajanju novega uporabnika se določi koda aplikacije, ki mora biti enak kot je v 
+           <li><b>Aplikacija (Username):</b> ob dodajanju novega uporabnika se določi koda aplikacije, ki mora biti enaka, kot je v 
                repozitoriju uporabnikov (LDAP, relacijska baza, property-datoteke), ki je določen v nastavitvah aplikacijskega strežnika.</li>
-           <li><b>Pričetek aktivnosti (Active from date):</b> parametere določa datum, ko je aplikacija postala aktivna</li>
-           <li><b>Konec aktivnosti (Active to date):</b> parametere določa datum, ko je aplikacija postala ne-aktiven. </li>
+           <li><b>Pričetek aktivnosti (Active from date):</b> parametere določa datum, ko je aplikacija postala aktivna.</li>
+           <li><b>Konec aktivnosti (Active to date):</b> parametere določa datum, ko je aplikacija postala neaktiven. </li>
            <li><b>Uporabniški predali:</b> Urejanje predalov, do katerih ima aplikacija dostop. Seznam se deli na dva dela. Na levi strani 
            so predali, do katerih uporabnik nima dostopa, na desni strani pa predali, do katerih ima uporabnik dostop.</li>
        </ul>

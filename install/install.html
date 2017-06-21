@@ -5,7 +5,7 @@
         Aplikacija  <b>Laurentius</b> je 'JEE' aplikacija, ki za svoje delovanje potrebuje:
         <ul>
         <li><b>minimalne zahteve strojne opreme: Pomnilnik (RAM) 2G in diskovna enota, ki je velika vsaj 10 GB</b>.
-            Namestitev aplikacije: cca. 300MB.</li>
+            Namestitev aplikacije: cca 300MB.</li>
         <li><b>izbira OS je omejena na delovanje "javanskega tolmača JRE 1.8+"</b> Aplikacija je testirana v OS Windows 8+in OS Linux.</li>
         <li><b>"javanski tolmač" JRE 1.8+</b>.</li>
         <li><b>aplikacijski strežnik:</b> Namestitev je prilagojena za namestitev na aplikacijski strežnik: <b><i>wildfly-10.1.0.Final</i></b>.</li>
@@ -21,20 +21,20 @@
         <b>Opozorilo: Hitra namestitev uporablja podatkovna bazo h2 in ni primerna za produkcijsko uporabo.</b>
         <br /><br />
 
-        Za delovanje aplikacije je potrebno namestiti <a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html">"javanski tolmač" JDK 1.8+</a> 
+        Za delovanje aplikacije je treba namestiti <a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html">"javanski tolmač" JDK 1.8+</a> 
         ali <a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html">javansko programsko okolje JDK 1.8+</a>.
         <br />       
         Ker aplikacija 
-        uporablja kriptografski dodatek: "Java Cryptography Extension (JCE), je potrebno namestiti dodatek z varnostnimi pravili
+        uporablja kriptografski dodatek: "Java Cryptography Extension (JCE), je treba namestiti dodatek z varnostnimi pravili
         <a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html">"Java Cryptography Extension (JCE) Unlimited Strength"</a>.
         
         <br /><br />
-        Aplikacija Laurentius je ti. JEE aplikacija in za svoje delovanje potrebuje aplikacijski strežnik wildfly-10.1.0.Final, ki je dosegljiv 
+        Aplikacija Laurentius je t.i. JEE aplikacija in za svoje delovanje potrebuje aplikacijski strežnik wildfly-10.1.0.Final, ki je dosegljiv 
         na povezavi <a href="http://wildfly.org/downloads/">wildfly aplikacijski strežnik</a>. Aplikacijski strežnik namestite tako, 
         da razširite (zip) vsebino namestitvenega paketa v mapo, v katero želite namestiti aplikacijski strežnik. Npr.: <br />
         Windows OS:<pre><code>c:\Server\</code></pre>
         Linux OS:<pre><code>/opt/Server/</code></pre>
-        Mapa strežnika ( primer: <code>c:\Server\wildfly-10.1.0.Final</code> in <code>/opt/Server/wildfly-10.1.0.Final</code>)  
+        Mapa strežnika (primer: <code>c:\Server\wildfly-10.1.0.Final</code> in <code>/opt/Server/wildfly-10.1.0.Final</code>)  
         je v nadaljevanju označena z: [WILDFLY_HOME].
         <br /><br />
 
@@ -46,7 +46,7 @@
 
 
         Za hitro namestitev aplikacije <b>Laurentius</b> potrebujete še namestitveni paket 
-        <a href="https://github.com/VsrsCif/Laurentius/releases">Laurentius-[date_time].zip</a>, ki je dosegljiv spletni strani github https://github.com/VsrsCif/Laurentius/releases. 
+        <a href="https://github.com/VsrsCif/Laurentius/releases">Laurentius-[date_time].zip</a>, ki je dosegljiv na spletni strani github <a href="https://github.com/VsrsCif/Laurentius/releases">https://github.com/VsrsCif/Laurentius/releases</a>. 
         Odpakirajte vsebino namestitvenega paketa npr.: v mapo:<br />
         Windows OS:<br /> <pre><code>c:\Server\</code></pre>
         Linux:<br /> <pre><code>/opt/Server/</code></pre>
@@ -76,7 +76,7 @@
         da se zagonska parametra (-init in -d) ponovno uporabita, se ponastavijo vsi podatki v aplikaciji na inicialne vrednosti.<br />
         Vsi parametri skripte laurentius-demo.(bat|sh) so opisani <a href="#install:start-script">na koncu poglavja.</a><br />
 
-        Dostop do spletnih storitev za povezovanje s drugimi ebMS 3.0 MSH sistemi je na naslovu:<br />
+        Dostop do spletnih storitev za povezovanje z drugimi ebMS 3.0 MSH sistemi je na naslovu:<br />
          <a href="https://localhost:8443/laurentius/msh?wsdl">https://localhost:8443/laurentius/msh?wsdl</a><br />
 
         
@@ -87,8 +87,8 @@
         Dostop do spletnega klienta za nadzor in nastavitve  Laurentius aplikacije je na naslovu:
         <a href="http://localhost:8080/laurentius-web/">http://localhost:8080/laurentius-web/</a><br /><br />
 
-        <b>V primeru, da do aplikacije ne dostopamo iz naslova, kjer je nameščena aplikacija 
-            je potrebno primerno popraviti naslov "localhost" </b>
+        <b>V primeru, da do aplikacije ne dostopamo z naslova, kjer je nameščena aplikacija, 
+            je treba primerno popraviti naslov "localhost". </b>
         
         V demo aplikaciji za dostop do <a href="http://localhost:8080/laurentius-web/">laurentius-web</a> 
         sta izdelana dva testna uporabnika:
@@ -111,8 +111,8 @@
         </table>
         
         Dodajanje uporabnikov/aplikacije je opisano na spletni strani:
-        <a href="#install/wildfly:users" >Določanje uporabnikov</a><br />
-        Administracija dostopa do predalov pa na povezavah za
+        <a href="#install/wildfly:users" >Določanje uporabnikov</a>.<br />
+        Administracija dostopa do predalov na povezavah za
         <a href="#gui/admin-sed-user" >uporabniki</a> in  za
             <a href="#gui/admin-sed-appl" >aplikacije</a>.
         
@@ -120,18 +120,18 @@
         <pre><code>deploy-laurentius.(bat|sh) --init -b [SED_BUNDLE] -w [WILDFLY_HOME] -l [LAURENTIUS_HOME]</code></pre>
         <ul><li>--init: parameter "inicializira" mapo [LAURENTIUS_HOME] in nastavitve wildfly strežnika.</li>
             <li>-w   WILDFLY_HOME - pot do wildfly aplikacijskega strežnika. Npr.: c:\temp\wildfly-10.1.0.Final</li>
-            <li>-b   SED_BUNDLE   - pot do "razširjenega" Laurentius paketa. če parameter ni podan je privzeta mapa: "..\".</li>
+            <li>-b   SED_BUNDLE   - pot do "razširjenega" Laurentius paketa. Če parameter ni podan je privzeta mapa: "..\".</li>
             <li>-l   LAURENTIUS_HOME     - pot do [LAURENTIUS_HOME] mape. Če ni podana je privzeta mapa '[WILDFLY_HOME]\standalone\data\laurentius-home'.</li>
         </ul>
         
          <h2  id="install/install:start-script">Parametri skripte laurentius-demo.(bat|sh)</h2>
         <pre><code>laurentius-demo.(bat|sh) --init -d [MOJA_DOMENA] -w [WILDFLY_HOME] -l [LAURENTIUS_HOME]</code></pre>
         <ul>
-            <li>--init parameter "inicializira" bazne objekte. V primeru, da so že izdelani se bazni objakti najprej izbrišejo. 
+            <li>--init parameter "inicializira" bazne objekte. V primeru, da so že izdelani, se bazni objekti najprej izbrišejo. 
                 Po izdelavi baznih objektov se tabele napolnijo z demo podatki določenimi v datoteki: <code>[LAURENTIUS_HOME]\init-data.xml</code></li>
-            <li>-d DOMENA - domena predalov, ki jih uporablja ta instanca Laurentius. Parametere se uporablja samo ob uporabi --init parametra. </li>   
-            <li>-w WILDFLY_HOME -  pot do wildfly aplikacijskega strežnika. V primeru da parametere ni podan je privzeta mapa "..\" .</li>   
-            <li>-l LAURENTIUS_HOME     - pot do [LAURENTIUS_HOME] mape. Če parameter ni podan je privzeta mapa '[WILDFLY_HOME]\standalone\data\laurentius-home'.</li>
+            <li>-d DOMENA - domena predalov, ki jih uporablja ta instanca Laurentius. Parametre se uporablja samo ob uporabi --init parametra. </li>   
+            <li>-w WILDFLY_HOME -  pot do wildfly aplikacijskega strežnika. V primeru, da parameter ni podan, je privzeta mapa "..\" .</li>   
+            <li>-l LAURENTIUS_HOME     - pot do [LAURENTIUS_HOME] mape. Če parameter ni podan, je privzeta mapa '[WILDFLY_HOME]\standalone\data\laurentius-home'.</li>
         </ul>
     </article>  
 </div>

@@ -7,7 +7,7 @@
     <article class='content'>
         <h1 id="testcases/testcase">Namen testiranja</h1>
         Namen testnih primerov je opredeliti cilje, ki jih aplikacija Laurentius mora izpolnjevati. 
-        Na podlagi testnih primerov so nastali testni scenariji s katerimi lahko določimo ali ti cilji doseženi. 
+        Na podlagi testnih primerov so nastali testni scenariji, s katerimi lahko določimo ali so ti cilji doseženi. 
         Testni scenariji so izdelani na način, da služijo tudi za regresijsko testiranje aplikacije.<br />
         Uspešno izvedeni testni scenariji so pogoj za vsako končno objavo nove različice aplikacije Laurentius.
         <br /> <br /> 
@@ -206,7 +206,7 @@
                     različne Naslovnike - različni Naslovniki, isto digitalno
                     potrdilo</td>
                 <td>Vmesnik Pošiljatelja NE sme dovoliti vnosa istega
-                    digitalnega potrdila s katerim se predstavljata dva različna
+                    digitalnega potrdila, s katerim se predstavljata dva različna
                     Naslovnika. </td>
                 <td>Aplikacija Laurentius je enaka tako za pošiljatelja 
                     kot za prejemnika (Glej: ZBS_023).
@@ -246,7 +246,7 @@
                     začasno izklopiti; poskus prenosa datoteke za izključenega
                     Pošiljatelja ne deluje.</td>
                 <td> 
-                    Aplikacija Laurentius ne omogoča selektivnega izklapljanja pošiljateljev ker
+                    Aplikacija Laurentius ne omogoča selektivnega izklapljanja pošiljateljev, ker
                     bi funkcionalnost omogočala manipulacijo sprejema sodnih pošiljk. 
                     Če ima pošiljatelj tehnične težave, potem pošiljke tako ali tako ne pošilja. 
                     Če imam naslovnik tehnične težave, potem lahko pošiljatelj začasno izklopi 
@@ -305,7 +305,7 @@
             <tr>
                 <td><b>ZBS_026</b></td>
                 <td>Kontrola veljavnosti digitalnih potrdil.</td>
-                <td>Sistem javi napako v primeru da so nastavljena
+                <td>Sistem javi napako v primeru, da so nastavljena
                     digitalna potrdila potekla. </td>
                 <td> 
                     <a target="_blank" href="testcase/zbs/TS-ZBS_026.odt">TS-ZBS_026.odt</a><br />
@@ -453,7 +453,7 @@
                 <td><b>ZBS_035</b></td>
                 <td>Log Naslovnika - gumb prenesi takoj (Pošiljatelj)</td>
                 <td>Naslovnik ima na straneh vmesnika gumb za
-                    takojšnjo izmenjavo podatkov s Pošiljatelji ki deluje. </td>
+                    takojšnjo izmenjavo podatkov s Pošiljatelji, ki deluje. </td>
                 <td> 
                     <a target="_blank" href="testcase/zbs/TS-ZBS_032_035.odt">TS-ZBS_032_035.odt</a><br />
                     <a target="_blank" href="testcase/zbs/pdf/TS-ZBS_032_035.pdf">TS-ZBS_032_035.pdf</a>
@@ -515,7 +515,7 @@
                     Pošiljatelja, ki je 5 min pred trenutnim testnim časom. Pripravi
                     se sporočilo v načinu DWR za Pošiljatelja.</td>
                 <td>Sporočilo se prenese znotraj urnika. </td>
-                <td>Standard ebms 3.0 ne predvideva urnika dostave. Laurentius posredno to omogoča z 
+                <td>Standard ebms 3.0 ne predvideva urnika dostave. Laurentius posredno to omogoča s 
                     <a href="https://vsrscif.github.io/Laurentius/#gui/task-filesubmitter">pošiljanjem preko datotečnega sistema</a>,
                     kjer se lahko nastavi urnik pošiljanja.
                 Glej: ZBS_028 in ZBS_051</td>
@@ -527,7 +527,7 @@
                     sporočilo, ki je zunaj veljavnega urnika Pošiljatelja. </td>
                 <td>Sistem vrne ustrezno napako, ki je vidna v
                     dnevniških zapisih. Sporočilo se ne prenese. </td>
-                <td>  Aplikacija Laurentius ne omogoča naslovniku nastavljanja urnika prejemanja ker
+                <td>  Aplikacija Laurentius ne omogoča naslovniku nastavljanja urnika prejemanja, ker
                     bi funkcionalnost omogočala manipulacijo sprejema sodnih pošiljk. 
                 </td>
                 <td style="width:30px; background-color: gray"></td>
@@ -666,7 +666,7 @@
                 <td>Na prejemnikovem sistemu se izključi avtomatsko 
                     prevzemanje (vročanje) dokumentov. 
                     Pošiljatelj začne z pošiljanjem  pošiljk. Vročevalec dobi
-                    sporočilo vendar ga ne prevzame. Pred
+                    sporočilo, vendar ga ne prevzame. Pred
                     potekom fikcije Naslovnik izključi ponovno ključi prevzemanje. 
                     Pošiljke se uspešno vročijo: pošiljatelj prejme podpisane povratnice, naslovnik pa možnost
                     vpogleda v vsebine  pošiljk.</td>
@@ -680,7 +680,7 @@
                 <td>Robustnost pošiljanja vročilnice po ZPP.</td>
                 <td>Pri pošiljanju vročilnice Pošiljatelju po ZPP
                     pride do zastoja zaradi nedostopnosti Pošiljateljevega sistema.
-                    Ko je Pošiljateljev sistem znova dostopen se vročilnica dostavi
+                    Ko je Pošiljateljev sistem znova dostopen, se vročilnica dostavi
                     in dokonča postopek vročanja. </td>
                 <td><a target="_blank" href="testcase/zbs/TS-ZBS_010.odt">TS-ZBS_010.odt</a><br />
                     <a target="_blank" href="testcase/zbs/pdf/TS-ZBS_010.pdf">TS-ZBS_010.pdf</a>
@@ -707,7 +707,7 @@
                 <td>Naslovnikov sistem povratnico poskuša večkrat
                     oddati. V naslovnikov sistem. Vse neoddane vročilnice so v
                     statusu „Napaka“ - prejete pošiljke pa so označene, da so v
-                    procesu vročanja. Ko je pošiljateljev sistem zopet dostopen nato
+                    procesu vročanja. Ko je pošiljateljev sistem zopet dostopen, nato
                     ponovno pošiljanje vročilnic v pošiljateljev sistem uspe.
                     Pošiljatelj prejme vse povratnice, naslovniku so omogočene vse
                     pošiljke za pregled vsebine.</td>
@@ -741,7 +741,7 @@
                     posledica zakasnjenega vzpostavitve dodatka pri zagonu
                     aplikacijskega strežnika, Pošiljateljev sistem skladno s pravili
                     večkratnega prenosa pošiljk, poskuša odposlati pošiljko v
-                    naslovnikov sistem. Ko je ZPP dodatek delujoč se pošiljka
+                    naslovnikov sistem. Ko je ZPP dodatek delujoč, se pošiljka
                     odpravi BP.</td>
                 <td><a target="_blank" href="testcase/zbs/TS-ZBS_064_065.odt">TS-ZBS_064_065.odt</a><br />
                     <a target="_blank" href="testcase/zbs/pdf/TS-ZBS_064_065.pdf">TS-ZBS_064_065.pdf</a>
@@ -793,7 +793,7 @@
                     sporočil.</td>
                 <td>Možno je nastaviti interval avtomatskega
                     arhiviranja. Po poteku intervala sistem izvozi podatke o izmenjava
-                    v nastavljeno mesto. V seznamu dogodkov se ti podatki izbrišejo v
+                    v nastavljeno mesto. V seznamu dogodkov se ti podatki izbrišejo, v
                     kolikor je tako nastavljeno. </td>
                 <td> <a target="_blank" href="testcase/zbs/TS-ZBS_017_018_039.odt">TS-ZBS_017_018_039.odt</a><br />
                     <a target="_blank" href="testcase/zbs/pdf/TS-ZBS_017_018_039.pdf">TS-ZBS_017_018_039.pdf</a>
@@ -842,7 +842,7 @@
 
             <tr>
                 <td><b>ZBS_028</b></td>
-                <td>Vsak varni elektronski predal ima svoji V/I mapi v
+                <td>Vsak varni elektronski predal ima svoji V/I mapi, v
                     kateri so odloženi vsi dokumenti povezani s postopkov vročanja
                     ali dostave.</td>
                 <td>Mapi sta ločeni za pošiljanje in za prejete
@@ -859,7 +859,7 @@
                     (določene vrste) sporočila. Izvršni program naj vrne rezultat
                     klica in parametre klica.</td>
                 <td>Ob dogodku nastavljeni izvršni program vrne
-                    rezultat v katerem so tudi vsi parametri kot v tehnični
+                    rezultat, v katerem so tudi vsi parametri kot v tehnični
                     dokumentaciji. Preveriti zapis v vmesniku. V primeru
                     nedelovanja/nedosegljivosti izvršnega programa mora biti napaka
                     ustrezno navedena v dnevniškem zapisu. </td>

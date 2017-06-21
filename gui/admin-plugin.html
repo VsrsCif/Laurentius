@@ -2,7 +2,7 @@
     <article class='content'>
        <h1 id="gui/admin-plugin:admin">Administracija dodatkov (plugins)</h1>
        Administracija <b>dodatkov</b> (se nahaja v sklopu orodij <b>Nastavitve</b>
-       (Settings) orodje Dodatki (Certificates). Orodje omogoča urejanje in dodajanje
+       (Settings), orodje Dodatki (Certificates). Orodje omogoča urejanje in dodajanje
        novih dodatkov.
        Dodatki omogočajo avtomatizacijo opravil pri sprejemu/pošiljanju sporočil pri posameznih vrstah storitev.
        Arhitektura tako omogoča poljubno dodajanje kode pri avtomatizaciji obdelave, preverjanju, ..., storitev. Kot primer je 
@@ -13,10 +13,10 @@
        Dodatki so v aplikacijo sklopljeni preko EJB 3.0+ tehnologije in morajo biti nameščeni v <code>deployment</code>
        mapo aplikacijskega strežnika. Dodatki morajo implementirati  vmesnike:
        <ul>
-           <li><b>PluginDescriptionInterface.java</b>: vmesnik določa tip, naziv, opis, ter jndi naslove ostalih storitev dodatka</li>
+           <li><b>PluginDescriptionInterface.java</b>: vmesnik določa tip, naziv, opis, ter jndi naslove ostalih storitev dodatka.</li>
            <li><b>SoapInterceptorInterface.java</b>: vmesnik določa omogoča obdelavo vhodnega/izhodnega sporočila. Implementacija 
                ebMS 3.0 protokola uporablja  <b>apache-cxf</b> tehnologijo. Prestrežnik <i>(interceptor)</i> za izhodno pošto 
-               se proži v fazi <b>Phase.USER_LOGICAL</b>. (Glej dokumentacijo: <i>apache-cxf bus</i>) za dohodno pošto pa v fazi <b>Phase.PRE_INVOKE</b>
+               se proži v fazi <b>Phase.USER_LOGICAL</b>. (Glej dokumentacijo: <i>apache-cxf bus</i>), za dohodno pošto pa v fazi <b>Phase.PRE_INVOKE.</b>
                Dodatki tako implementirajo vmesnik dvakrat: enega za prestrezanje vhodnih sporočil in enega za prestrezanje izhodnih sporočil. 
                Uporaba "prestreznika" se določi v konfiguraciji pmode v elementu: <i>BusinessInfo/Service</i> v lastnostih:
                <i>Service/@inPlugin</i> in <i>Service/@outPlugin</i>
@@ -38,26 +38,26 @@
        <img src="img/gui/plugin_list.png" alt="Plugin admin" width="680"/> <br />
        <br />
        
-       Ob kliki na gumb <b>Dodaj</b>(add),  <b>Uredi</b>(Edit) ali dvojnem kliku na izbrano 
-       vstico se prikaže dialog za dodajanje/urejanje dodatkov.<br /><br />
+       Ob kliku na gumb <b>Dodaj</b> (Add),  <b>Uredi</b> (Edit) ali dvojnem kliku na izbrano 
+       vstico, se prikaže dialog za dodajanje/urejanje dodatkov.<br /><br />
        <center>
         <img src="img/gui/plugin_edit.png" alt="Plugin admin" width="400"/> <br />
        </center><br />
        <h2 id="gui/admin-plugin:add-edit">Dodajanje, urejanje dodatkov</h2>      
        
        Arhitektura omogoča poljubno izdelavo dodatkov, ki se jih namesti v deploy mapo aplikacijskega strežnika.
-        V dialogu za urejanje dodatka je potrebno navesti <b>JNDI (EJB naslov)</b> do EJB instance opisa dodatka. Npr:
+        V dialogu za urejanje dodatka je treba navesti <b>JNDI (EJB naslov)</b> do EJB instance opisa dodatka. Npr:
         <code>java:global/plugin-zpp/ZPPPluginDescription!si.sed.commons.interfaces.PluginDescriptionInterface</code>.
-        Nato se klikom na gumb <i>Osveži (Refresh)</i>  preveri dostop do dodatka ter se osvežijo podatki:
+        Nato se s klikom na gumb <i>Osveži (Refresh)</i>  preveri dostop do dodatka ter se osvežijo podatki:
         <ul>
-            <li><b>Oznaka (Type)</b> je enolična oznaka dodatka</li>
+            <li><b>Oznaka (Type)</b> je enolična oznaka dodatka.</li>
             <li><b>Naziv (Name)</b> naziv dodatka. </li>
-            <li><b>Spletni naslov (web context)</b> spletni naslov za urejanje nastavitve dodatka</li>
-            <li><b>In-JNDI (In JNDI)</b> EJB naslov za prestreznik vhodne pošte</li>       
-            <li><b>Out-JNDI (Out JNDI)</b> EJB naslov za prestreznik izhodne pošte</li>       
-            <li><b>JNDI opravil (Tasks JNDI)</b> EJB naslovi za tipe opravil. Ob kliki na gumb potrdi se opravila dodajo 
+            <li><b>Spletni naslov (web context)</b> spletni naslov za urejanje nastavitve dodatka.</li>
+            <li><b>In-JNDI (In JNDI)</b> EJB naslov za prestreznik vhodne pošte.</li>       
+            <li><b>Out-JNDI (Out JNDI)</b> EJB naslov za prestreznik izhodne pošte.</li>       
+            <li><b>JNDI opravil (Tasks JNDI)</b> EJB naslovi za tipe opravil. Ob kliku na gumb potrdi, se opravila dodajo 
             v seznam tipov opravil.</li>       
-            <li><b>Opis (Description)</b> Opis dodatka</li>       
+            <li><b>Opis (Description)</b> Opis dodatka.</li>       
         </ul>
 
        <h2 id="gui/admin-plugin:desc-interface">Vmesnik: PluginDescriptionInterface</h2>    

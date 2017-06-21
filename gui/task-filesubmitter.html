@@ -2,14 +2,14 @@
     <article class='content'>
 
         <h2 id="gui/task-filesubmitter">Opravilo: Pošiljanje datotek </h2>
-        Opravilo "Pošiljanje datotek" je namenjen pošiljanju sporočil iz  map. 
-        Poleg časa izvajanja je  opravilu potrebno določiti parametre:
+        Opravilo "Pošiljanje datotek" je namenjen pošiljanju sporočil iz map. 
+        Poleg časa izvajanja je opravilu treba določiti parametre:
         <ul>
-            <li><b>Mapa varnostne kopije: (file.submit.folder)</b>. Mapa iz katere se pošilja sporočila določimo kot absolutno pot oz. z uporabo sistemskih spremenljivke: c:\archive\ ali ${sed.home}\archive </li>
-            <li><b>service</b>. Privzeta storitev pošiljanja pošiljk</li>
-            <li><b>action</b>. Privzeta akcija v kateri se pošiljko pošilja.</li>
-            <li><b>receiverBox</b>. Privzeti naslovnikov predal.</li>
-            <li><b>senderBox</b>. Privzeti pošiljateljev  predal.</li>
+            <li><b>Mapa varnostne kopije: (file.submit.folder)</b>. Mapa, iz katere se pošilja sporočila določimo kot absolutno pot oz. z uporabo sistemskih spremenljivke: c:\archive\ ali ${sed.home}\archive. </li>
+            <li><b>service</b>: Privzeta storitev pošiljanja pošiljk</li>
+            <li><b>action</b>: Privzeta akcija v kateri se pošiljko pošilja.</li>
+            <li><b>receiverBox</b>: Privzeti naslovnikov predal.</li>
+            <li><b>senderBox</b>: Privzeti pošiljateljev  predal.</li>
         </ul>
 
 
@@ -29,15 +29,15 @@
         <br /><br />Ime datoteke z metapodatki se mora pričeti z <b>outmail</b> ter kočnati z <b>.txt</b>.<br />
         Primeri datotek:<code>outmail-DWR-001.txt,outmail-DWR-002.txt, outmail-ZPP_12456.txt, , outmail-posebna-posiljka.txt,...</code>
 
-        Datoteka z metapodati ima po vrstica vsebovane podatke:
+        Datoteka z metapodati ima po vrsticah vsebovane podatke:
         <ul>
-            <li><b>payload</b>. Seznam relativnih poti do priponk, ki se pošiljajo v pošiljki. Priponke so ločene z znakom: ';'. <b>Parameter je obvezen</b>  </li>
-            <li><b>senderMessageId</b>. Id pošiljke pošiljatelja. Namen parametra je preprečevanje podvojenega pošiljanja pošiljk. V primeru, da je bila pošiljka z to vrednostjo
-                e oddana v pošiljanje. pošiljka preide v staus napaka!</li>
-            <li><b>service</b>. Storitev pošiljanja pošiljk. V primeru, da podatek ni podan se prevzame privzeta vrednost. </li>
-            <li><b>action</b>. Akcija v kateri se pošiljko pošilja. V primeru, da podatek ni podan se prevzame privzeta vrednost.</li>
-            <li><b>receiverEBox</b>. Naslovnikov predal.  V primeru, da podatek ni podan se prevzame privzeta vrednost.</li>
-            <li><b>senderEBox</b>. Pošiljateljev predal.  V primeru, da podatek ni podan se prevzame privzeta vrednost.</li>
+            <li><b>payload</b>: Seznam relativnih poti do priponk, ki se pošiljajo v pošiljki. Priponke so ločene z znakom: ';'. <b>Parameter je obvezen</b>  </li>
+            <li><b>senderMessageId</b>: Id pošiljke pošiljatelja. Namen parametra je preprečevanje podvojenega pošiljanja pošiljk. V primeru, da je bila pošiljka s to vrednostjo
+                že oddana v pošiljanje, pošiljka preide v staus napaka!</li>
+            <li><b>service</b>: Storitev pošiljanja pošiljk. V primeru, da podatek ni podan se prevzame privzeta vrednost. </li>
+            <li><b>action</b>: Akcija, v kateri se pošiljko pošilja. V primeru, da podatek ni podan se prevzame privzeta vrednost.</li>
+            <li><b>receiverEBox</b>: Naslovnikov predal.  V primeru, da podatek ni podan se prevzame privzeta vrednost.</li>
+            <li><b>senderEBox</b>: Pošiljateljev predal.  V primeru, da podatek ni podan se prevzame privzeta vrednost.</li>
         </ul>
         <br /><br />
         <h3>Primeri datotek:</h3>

@@ -22,7 +22,7 @@
     Standard ebMS 3.0 predpisuje komunikacijsko nevtralen mehanizem, ki temelji na SOAP sporočilih 
     in rešuje tehnična vprašanja glede naslavljanja, varnosti, zanesljivosti prenosa, preverjanja
     avtentičnosti sporočil itd. Osnovni koncept komunikacije oziroma vročanja temelji na implementaciji
-    transportnega modula, t. im. »Messaging Service Handler« (v nadaljevanju MSH). Par MSH modulov izvaja 
+    transportnega modula, t.i. »Messaging Service Handler« (v nadaljevanju MSH). Par MSH modulov izvaja 
     transport sporočil med prejemnikom in naslovnikom na varen in zanesljiv način. 
     Kako pošiljateljev oziroma naslovnikov informacijski sistem komunicira z MSH modulom, pa standard prepušča 
     posameznim implementacijam teh modulov. 
@@ -44,7 +44,7 @@
 
     ebMS 3.0 protokol loči dva tipa sporočil (OASIS, 2007b):
     <ul>
-        <li><b>ebMS uporabniška sporočila</b> so sporočila, ki prenašajo vsebino med pošiljateljem in prejemnikom;</li>
+        <li><b>ebMS uporabniška sporočila</b> so sporočila, ki prenašajo vsebino med pošiljateljem in prejemnikom.</li>
         <li><b>ebMS signalna sporočila</b>  za komunikacijo med MSH moduli so namenjena proženju prenosa uporabniških sporočil, sporočanju napak ali sporočanju potrdila o sprejemu pošiljke v naslovnikov IS in niso del vsebine, ki se prenaša.</li>
 
     </ul>   
@@ -57,9 +57,9 @@
         <li>Enosmerna komunikacija (angl. One-Way) pomeni, da se uporabniška sporočila prenašajo samo v eno smer. </li>
         <li>Dvosmerna (angl. Two-Way) izmenjava pomeni, da naslovnik odgovori z drugim uporabniškim sporočilom. </li>
     </ul>
-    Prvo uporabniško sporočilo se imenuje poizvedba (angl. request), drugo sporočilo pa je označeno kot odgovor
-    (angl. reply). Vzorec prenosa določa tudi, kako se prenos začne. V primeru potisni (angl. push) pošiljateljev
-    MSH ob prejemu pošiljke v vročanje le-to posreduje v naslovnikov MSH. V primeru izvleci (angl. pull) naslovnikov
+    Prvo uporabniško sporočilo se imenuje <i>poizvedba (angl. request)</i>, drugo sporočilo pa je označeno kot <i>odgovor
+    (angl. reply)</i>. Vzorec prenosa določa tudi, kako se prenos začne. V primeru <i>potisni (angl. push)</i>  pošiljateljev
+    MSH ob prejemu pošiljke v vročanje le-to posreduje v naslovnikov MSH. V primeru <i>izvleci (angl. pull)</i> naslovnikov
     MSH s signalnim sporočilom sporoči pošiljateljevemu MSH-ju, da je pripravljen sprejeti sporočilo. 
     Pošiljateljev MSH nato sporočilo dostavi v naslovnikov MSH. Takšno prevzemanje sporočil je primerno za
     pošiljanje sporočil na naslovnikov MSH, ki ni vedno dosegljiv ali nima statičnega naslova, kot je na primer 

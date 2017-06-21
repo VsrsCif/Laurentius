@@ -15,7 +15,7 @@
         Aplikacija Laurentius vsebuje spletni uporabniški vmesnik namenjen administraciji 
         uporabnikov, predalov, certifikatov in ključev, dodatkov (plugin-ov),  
         nastavitev povezovanja ti. "pmode" nastavitve, ...,
-        ter za pregled dohodne in izhodne pošte. Navodila za uporabno uporabniškega vmesnika se nahaja na naslovu:
+        ter za pregled dohodne in izhodne pošte. Navodila za uporabo uporabniškega vmesnika se nahaja na naslovu:
         <a href="#gui/Laurentius">uporabniška navodila</a>. 
 
 
@@ -25,7 +25,7 @@
         z zalednimi sistemi. Metode omogočajo pošiljanje izhodne pošte in prevzemanje dohodne pošte 
         ter poizvedovanju po statusih posamezne izhodne in dohodne pošiljke. Z izdelavo integracij je 
         končnim uporabnikom omogočena kontrola, pregled in sledenje nad izhodnimi in dohodnimi pošiljkami 
-        iz aplikacije v katerih pošiljka nastane oz. se prevzame v obdelavo. <br />   
+        iz aplikacije, v katerih pošiljka nastane oz. se prevzame v obdelavo. <br />   
         Podrobnejši opis spletnih servisov s primeri je dostopen na naslovu: <a href="#api/web-services">spletne storitve</a>.
         <br /><br />
         Primer izdelave java klienta s pomočjo spletnih servisov je dostopen na naslovu: 
@@ -34,8 +34,8 @@
         </a>.
         
          <h1 id="documentation:plugins">Dodatki</h1>
-         Aplikacija Laurentius omogoča izdelavo in enostavno registracijo javanski programski dodatkov (plugin).
-        Namen dodatkov je avtomatizacija izvajanja poslovnih procesov v katerih se pošiljanja 
+         Aplikacija Laurentius omogoča izdelavo in enostavno registracijo javanskih programskih dodatkov (plugin).
+        Namen dodatkov je avtomatizacija izvajanja poslovnih procesov, v katerih se pošilja 
         in sprejema pošto.<br />  Aplikacija Laurentius omogoča registracijo naslednjih 
         vrst komponent, ki jih dodatek lahko vsebuje:
          <ul>
@@ -44,7 +44,7 @@
              <li><b>Prestrezniki pošte</b>: namen dodatka je priprava izhodne pošiljke v trenutnku pošiljanja pošte in 
                  sinhrona obdelava dohodne pošte v trenutku prejema.</li>
              <li><b>Obdelava dohodne pošte</b>: namen dodatka je procesiranje in sprejem dohodne pošte v zaledne sisteme.</li>
-             <li><b>Dogodki izhodne pošte</b>: namen dodatka je proženje poslovnih pravil in posodabljanje  statusov izhodne pošte (Pošiljanje, poslano, sprejeto). </li>
+             <li><b>Dogodki izhodne pošte</b>: namen dodatka je proženje poslovnih pravil in posodabljanje statusov izhodne pošte (Pošiljanje, Poslano, Sprejeto). </li>
          </ul> 
           <img src="img/plugins.svg" alt="Plugins" width="680"/>
         Podrobnejši opis izdelave ter primeri programskih dodatkov so dostopni na naslovu: 
@@ -63,26 +63,26 @@
 
         <h1 id="documentation:testcases">Nastavitve PMode</h1>
         Namen aplikacije Laurentius je omogočiti izmenjavo sporočil po standardu <a href="#/ebms" >ebMS 3.0 (ebXML Messaging Service)</a>.
-        Nastavitve PMODE določajo vzorec izmenjave (one-way/push, one-way/pull, two-way/push-push,... ), nivo varnosti, zaneljivosti, 
+        Nastavitve PMODE določajo vzorec izmenjave (one-way/push, one-way/pull, two-way/push-push,... ), nivo varnosti, zanesljivosti, 
         vsebine priponk, naslavljanja sporočil,.. <br /> <br />
         PMode nastavitve so shranjene v datoteki <i>${laurentius.home}\pmode-conf.xml</i>.<br />
-        Nastavitve so razdeljeni v kategorije:
+        Nastavitve so razdeljene v kategorije:
         <ul>
-            <li><b>Storitve</b>: Kategorija določajo poslovne transakcije oz. koreografije izmenjave sporočil.
+            <li><b>Storitve</b>: Kategorija določa poslovne transakcije oz. koreografije izmenjave sporočil.
                 V demo primeru sta določeni poslovni transakciji: <i>DeliveryWithReceipt</i> in <i>Legal_ZPP</i>.</li> 
-            <li><b>Partnerji</b>: Kategorija določa identitete partnejev (digitalna potrdila za podpisovanje in enkripcijo) ter protokole (http,https, ftp,..), ki jih partner uporablja pri komunikaciji.</li>
-            <li><b>Varnostna pravila</b>: Kategorija določajo način zagotavljanja varnosti (podpisi in šifriranje posameznih delov sporočila). </li>
+            <li><b>Partnerji</b>: Kategorija določa identitete partnerjev (digitalna potrdila za podpisovanje in enkripcijo) ter protokole (http,https, ftp,..), ki jih partner uporablja pri komunikaciji.</li>
+            <li><b>Varnostna pravila</b>: Kategorija določa način zagotavljanja varnosti (podpisi in šifriranje posameznih delov sporočila). </li>
             <li><b>Zagotavljanje zanesljivost</b>: Kategorija določa pravila za zagotavljanje zanesljivosti in dokazljivosti prenosa sporočila.</li>
-            <li><b>PMode - nastavitve</b>: Kategorija povezujejo zgornja pravila v konkretne konfiguracija izmenjave sporočil s partnerji.</li>
+            <li><b>PMode - nastavitve</b>: Kategorija povezuje zgornja pravila v konkretne konfiguracije izmenjave sporočil s partnerji.</li>
         </ul>
-        Nabor atributov, opisi ter nabor vrednosti attriutov sledijo standardu: (APPENDIX D. Processing Modes):
+        Nabor atributov, opisi ter nabor vrednosti atributov sledijo standardu: (APPENDIX D. Processing Modes):
         <a href="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/core/ebms_core-3.0-spec.html">OASIS ebXML Messaging Services Version 3.0</a>
         in 
         <a href="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/profiles/AS4-profile/v1.0/AS4-profile-v1.0.html">AS4 Profile of ebMS 3.0 Version 1.0</a>
         Generirana dokumentacija se nahaja na povezavi: <a href="#pmode/pmode" >PMode shema</a>. <br />
         Shema datoteke dostopna na naslovu <a href="https://github.com/VsrsCif/Laurentius/blob/master/Laurentius-libs/Laurentius-commons/src/main/resources/schemas/msh-settings.xsd">msh-settings.xsd</a>.<br />
         <br />
-        <br />Aplikacijski vmesnik Laurentius (Vloga Administrator) trenutno vsebuje enostavna orodja za urejanje posameznih razdelkov v seznamu orodji PMODE.
+        <br />Aplikacijski vmesnik Laurentius (Vloga Administrator) trenutno vsebuje enostavna orodja za urejanje posameznih razdelkov v seznamu orodij PMODE.
         
         
         

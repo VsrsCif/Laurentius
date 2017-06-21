@@ -8,8 +8,8 @@
     <article class='content'>
 
         <h1 id="#/api/plugins:content">Programski dodatki</h1>
-        Aplikacija Laurentius omogoča izdelavo in enostavno registracijo javanski programski dodatkov (plugin).
-        Namen dodatkov je avtomatizacija izvajanja poslovnih procesov v katerih se pošiljanja 
+        Aplikacija Laurentius omogoča izdelavo in enostavno registracijo javanskih programskih dodatkov (plugin).
+        Namen dodatkov je avtomatizacija izvajanja poslovnih procesov, v katerih se pošilja 
         in sprejema pošto.<br />  Aplikacija Laurentius omogoča registracijo naslednjih 
         vrst komponent, ki jih dodatek lahko vsebuje:
         <ul>
@@ -18,17 +18,17 @@
             <li><b>Prestrezniki pošte</b>: namen dodatka je priprava izhodne pošiljke v trenutnku pošiljanja pošte in 
                 sinhrona obdelava dohodne pošte v trenutku prejema.</li>
             <li><b>Procesiranje dohodne pošte</b>: namen dodatka je procesiranje in sprejem dohodne pošte v zaledne sisteme.</li>
-            <li><b>Dogodki izhodne pošte</b>: namen dodatka je proženje poslovnih pravil in posodabljanje  statusov izhodne pošte (Pošiljanje, poslano, sprejeto). </li>
+            <li><b>Dogodki izhodne pošte</b>: namen dodatka je proženje poslovnih pravil in posodabljanje  statusov izhodne pošte (pošiljanje, poslano, sprejeto). </li>
         </ul> 
         <img src="img/plugins.svg" alt="Plugins" width="680"/>
 
         <br /><br />
 
         <h1 id="#/api/plugins:register">Namestitev programskih dodatkov</h1>
-        Programski dodatek je skupek EJB komponenta, ki jo je potrebno namestiti v 
+        Programski dodatek je skupek EJB komponente, ki jo je treba namestiti v 
         v "deploy" mapo aplikacijskega strežnika;
         <pre><code>[wildfly-home]\standalone\deployments\</code></pre>
-        Namestiveni paket dodatka mora vsebovati implementacijo vmesnika za opis dodatka, ki 
+        Namestitveni paket dodatka mora vsebovati implementacijo vmesnika za opis dodatka, ki 
         omogoča avtomatsko registracijo dodatka. 
         <br /><br />
         Primer: 
@@ -108,16 +108,16 @@ public class ExamplePluginDescription extends  AbstractPluginDescription {
 }</code></pre>
 
         <h1 id="#/api/plugins:component">Komponente dodatka</h1>
-        Dodatek vsebuje seznam implementacij posamezni vrst komponent. 
+        Dodatek vsebuje seznam implementacij posameznih vrst komponent. 
         Osnovni vmesnik vseh vrst komponent je <i>PluginComponentInterface</i>
         z metodo <i>ComponentBase getDefinition()</i>.
         <pre><code>public interface  PluginComponentInterface   {
             ComponentBase getDefinition();
         }</code></pre>
-        Metoda vrača osnovni opis vsakega komponente, ki vsebuje naslednje lastnosti:
+        Metoda vrača osnovni opis vsake komponente, ki vsebuje naslednje lastnosti:
         <table class="styled-table">
             <tr><th>Lastnost</th><th>Opis</th></tr>
-            <tr><td>type</td><td>Enolična oznaka tipa komponente dodatku</td></tr>
+            <tr><td>type</td><td>Enolična oznaka tipa komponente dodatka</td></tr>
             <tr><td>name</td><td>Naziv komponente</td></tr>
             <tr><td>description</td><td>Opis komponente</td></tr>
         </table>
@@ -129,7 +129,7 @@ public class ExamplePluginDescription extends  AbstractPluginDescription {
         ki proži izvajanje opravila.
         <pre><code>public String executeTask(Properties p)</code></pre>
 
-        ter metodo,ki določa opravilo: 
+        ter metodo, ki določa opravilo: 
         <pre><code>public CronTaskDef getDefinition()</code></pre>
 
         Parametri metode <b>String executeTask(Properties p)</b>, se določijo 
@@ -243,17 +243,17 @@ public class ExampleWebCronTask implements TaskExecutionInterface {
         avtomatizacija poslovnih procesov pošiljk v prejemu oz. pošiljanju. S prestrezniki izhodne 
         pošte lahko pošiljke ob samem pošiljanju dodatno kriptiramo, dodajamo splošna obvestila, ipd.   
         V času sprejema lahko pošiljke dodatno validiramo, ter v primeru napake pošiljke ne sprejmemo, ter 
-        v odgovoru vračamo napako. Prestrezniki  pošte omogočajo sinhrono 
+        v odgovoru vračamo napako. Prestrezniki pošte omogočajo sinhrono 
         proženje naslednje akcije v poslovni transakciji.
         <br /><br />
-        Prestreznik pošte implementirati EJB vmesnik <b>SoapInterceptorInterface'</b>, ki vsebuje metodi,
+        Prestreznik pošte implementira EJB vmesnik <b>SoapInterceptorInterface'</b>, ki vsebuje metodi,
         za procesiranje SOAP sporočila:
         <pre><code>public boolean handleMessage(SoapMessage t) throws Fault;</code></pre>
 
         ter metodo, za procesiranje SOAP napake: 
         <pre><code>handleFault(SoapMessage t)</code></pre>
         
-        Komponenta je implementacija apache CXF prestreznika, ki se  za dohodno sporočilo pošto
+        Komponenta je implementacija apache CXF prestreznika, ki se za dohodno sporočilo pošto
         proži v fazi <i>Phase.PRE_INVOKE</i> ter za izhodno pošto v fazi:<i>Phase.USER_LOGICAL</i>
         (Glej dokumentacijo <a href="">apache-CXF BUS</a>.<br /><br />
 
@@ -334,7 +334,7 @@ public class ExampleSoapInterceptor implements SoapInterceptorInterface {
             <li>Izvoz dohodne pošte na lokalni datotečni sistem;</li>
             <li>Proženje zunanjih procesov.</li>
         </ul>
-        Zaradi morebitne časovne zahtevnosti procesiranja dohodne pošte  se procesi 
+        Zaradi morebitne časovne zahtevnosti procesiranja dohodne pošte se procesi 
         prožijo preko vrste za procesiranje dohodne pošte.  
         
         

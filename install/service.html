@@ -19,7 +19,7 @@
         kopiraj v bin mapo:
         <code>${WILDFLY_HOME}/bin</code> <br /> <br /> 
         
-        Po kopiranju je najprej je potreben izdelati manjši<a href="https://issues.jboss.org/browse/WFCORE-1719">popravek skripte (wildfly 10.1.0.Final)</a>:
+        Po kopiranju je najprej treba izdelati manjši <a href="https://issues.jboss.org/browse/WFCORE-1719">popravek skripte (wildfly 10.1.0.Final)</a>:
         <code>${WILDFLY_HOME}/bin/service.bat</code>
         V vrstici odstrani znak ": 
         <pre><code>set DESCRIPTION="WildFly Application Server"</code></pre>
@@ -28,7 +28,7 @@
         V primeru, da so se v nastavitveni datoteki <code>standalone-laurentius.xml</code>
          spremenila tudi vrata (port) za nastavitev   ${jboss.management.http.port} oz. ${jboss.socket.binding.port-offset}
          <pre><code>&lt;socket-binding name="management-http" interface="management" port="${jboss.management.http.port:9990}"/></code></pre>
-        je potrebno ustrezno popraviti tudi vrstico
+        je treba ustrezno popraviti tudi vrstico
         <pre><code>set CONTROLLER=localhost:9990</code></pre>
         <br /><br />
         
@@ -38,7 +38,7 @@
         tako da se rezervira vsaj 2G spomina.
         <pre><code>set "JAVA_OPTS=-Xms128M -Xmx2048M -XX:MetaspaceSize=96M -XX:MaxMetaspaceSize=256m"</code></pre>
         
-        ter dodaj vrstico z katero se omogoči dostop:
+        ter dodaj vrstico, s katero se omogoči dostop:
         <pre><code>set "JAVA_OPTS=-Xms128M -Xmx2048M -XX:MetaspaceSize=96M -XX:MaxMetaspaceSize=256m"
 rem # Set bind addresses 
 set "JAVA_OPTS=%JAVA_OPTS% JAVA_OPTS=-Djboss.bind.address=0.0.0.0 " 
@@ -47,7 +47,7 @@ set "JAVA_OPTS=%JAVA_OPTS% JAVA_OPTS=-Djboss.bind.address=0.0.0.0 "
         <a href="https://docs.jboss.org/author/display/WFLY10/Interfaces+and+ports" >https://docs.jboss.org/author/display/WFLY10/Interfaces+and+ports</a>
        
         Nato se v CMD konzoli postavi v mapo <code>${WILDFLY_HOME}/bin/</code>
-        ter poženi ukaz kjer s parametrom določi nastavitve strežnika: <code>-c standalone-laurentius.xml</code>:
+        ter poženi ukaz, kjer s parametrom določi nastavitve strežnika: <code>-c standalone-laurentius.xml</code>:
         <pre><code>service.bat install /CONFIG standalone-laurentius.xml</code></pre>
         
 

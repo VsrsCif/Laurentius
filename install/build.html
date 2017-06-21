@@ -2,18 +2,18 @@
     <article class='content'>
         <h1 id="install/build:setEnv">Priprava okolja</h1>
 
-        Projekt Laurentius je sestavljen s pomočjo <a href="https://maven.apache.org/">maven 3.x</a> tehnologije. 
-        Za izgradnjo aplikacije je potrebno imeti nameščeno java 1.8+ in maven 3.x.<br /> Aplikacija uporablja 
-        Java Cryptography Extension (JCE). Za pravilno izgradnjo in delovanje je potrebno namestiti dodatek z varnostnimi pravili
+        Projekt Laurentius je sestavljen s pomočjo <a href="https://maven.apache.org/">Maven 3.x</a> tehnologije. 
+        Za izgradnjo aplikacije je treba imeti nameščeno java 1.8+ in Maven 3.x.<br /> Aplikacija uporablja 
+        Java Cryptography Extension (JCE). Za pravilno izgradnjo in delovanje je treba namestiti dodatek z varnostnimi pravili
         "Java Cryptography Extension (JCE) Unlimited Strength" v mapo: "<java-home>/lib/security".  <br />
-            Dodatek je za javo 1.8 dosegljiv na naslovu:  http://www.oracle.com/technetwork/java/javase/downloads/jce8-download-2133166.html.            
+            Dodatek je za javo 1.8 dosegljiv na naslovu: <a href="http://www.oracle.com/technetwork/java/javase/downloads/jce8-download-2133166.html"> http://www.oracle.com/technetwork/java/javase/downloads/jce8-download-2133166.html</a>.            
             <br /><br />
             
             
             Na spletnem naslovu:  <a href="https://github.com/VsrsCif/Laurentius">https://github.com/VsrsCif/Laurentius</a> prenesi izvorno kodo lokalno na disk. 
-            (Priporočamo z klikom na Gumb <b>DownloadZip</b>. Preneseni arhiv Laurentius-master.zip odpakiraj v mapo "Laurentius-master".)<br />
+            (Priporočamo s klikom na Gumb <b>DownloadZip</b>. Preneseni arhiv Laurentius-master.zip odpakiraj v mapo "Laurentius-master".)<br />
             <h1 id="install/build:build">Izgradnja</h1>
-            V ukazni vrstici (linux: bash, windows: cmd), se postavi v odpakirano mapo "Laurentius-master" in poženi maven ukaz za izgradjo aplikacije:
+            V ukazni vrstici (linux: bash, windows: cmd), se postavi v odpakirano mapo "Laurentius-master" in poženi Maven ukaz za izgradjo aplikacije:
             <pre><code>mvn clean install</code></pre>
             Komponente so uspešno izgrajene, ko se na zaslonu izpiše:
             <pre><code>    
@@ -44,7 +44,7 @@ BUILD SUCCESS
                 <li><b>Laurentius-dao.jar</b>: implementacija skupnih storitev za shranjevanje in branje entitet.            
                     <br />Modul se nahaja v podmapi:<br /><code>Laurentius-dao/target/Laurentius-dao.jar</code></li>                
                 <li><b>ebms-msh.ear</b>: implememntacija spletnih ebMS 3.0 storitev za izmenjavo ebMS 3.0 sporočil med MSH moduli. Sporočila so 
-                    podpisana/kriptirana skladno z p-mode konfiguracijo.<br />Po uspešni namestivti na lokalni računalnik, so storitve dostopne na naslovu:
+                    podpisana/kriptirana skladno s PMode konfiguracijo.<br />Po uspešni namestitvi na lokalni računalnik, so storitve dostopne na naslovu:
                     <a href="http://localhost:8080/Laurentius/ebms?wsdl">http://localhost:8080/Laurentius/ebms?wsdl</a>.
                     <br />Modul se nahaja v podmapi: <br /><code>ebms-msh-module/ebms-msh-ear/target/ebms-msh.ear</code>                
                 </li>
@@ -61,7 +61,7 @@ BUILD SUCCESS
                     <a href="http://localhost:8080/Laurentius-webgui/">http://localhost:8080/zpp-plugin/</a>.
                     <br />Modul se nahaja v podmapi:<br /><code>Laurentius-module/Laurentius-web/target/Laurentius-webgui.war</code></li>                
             </ul>
-            Po kočnani izgradnji so narejeni naslednje skupne knjižnice:
+            Po končani izgradnji so narejene naslednje skupne knjižnice:
             <ul>
                 <li><b>ebms-msh-xsd-1.0.jar</b>: v knjižnici so generirani java objekti izgrajenih iz shem: SOAP_1.1.xsd (http://schemas.xmlsoap.org/soap/envelope/)
                     ,SOAP_1.2.xsd (http://www.w3.org/2003/05/soap-envelope/), xml.xsd (http://www.w3.org/2001/03/xml.xsd)
@@ -72,7 +72,7 @@ BUILD SUCCESS
                     , xlink.xsd (http://www.w3.org/TR/xml-i18n-bp/xmlspec/xlink.xsd);
                     <br />knjižnica se nahaja v podmapi:<br /><code>Laurentius-libs/ebms-msh-xsd/target/ebms-msh-xsd-1.0.jar</code></li>    
                 <li><b>Laurentius-wsdl-1.0.jar</b>: v knjižnici je izgranjen java klient (API) spletnih storitev modula Laurentius-ws. 
-                    Knjižnica se lahko uporabi za izdelavo integracije  zalednih sitemov preko spletnih storitev z Laurentius aplikacijo ;
+                    Knjižnica se lahko uporabi za izdelavo integracije zalednih sitemov preko spletnih storitev z Laurentius aplikacijo ;
                     <br />knjižnica se nahaja v podmapi:<br /><code>Laurentius-libs/Laurentius-wsdl/target/Laurentius-wsdl-1.0.jar</code></li>  
                 <li><b>Laurentius-commons-1.0.jar</b>: Knjižnica združuje skupna orodja in statične šifrante;
                     <br />knjižnica se nahaja v podmapi:<br /><code>Laurentius-libs/Laurentius-commons-wsdl/target/Laurentius-commons-1.0.jar</code></li>  

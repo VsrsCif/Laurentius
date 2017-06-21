@@ -3,14 +3,14 @@
         <h1 id="gui/admin-sed-box:admin">Seznam tipov opravil</h1>
 
         Administracija <b>opravil</b> (Scheduler) se nahaja v sklopu orodij <b>Nastavitve</b>
-        (Settings) orodje Opravila (Scheduler). Urejanje omogoča spreminjanje in dodajanje 
+        (Settings), orodje Opravila (Scheduler). Urejanje omogoča spreminjanje in dodajanje 
         novih tipov opravil, ter določanje urnikov izvajanja opravil. 
         <h2 id="gui/admin-sed-tasks:list">Seznam tipov opravil</h2>
         Orodje <b>Opravila</b> prikazuje seznam tipov opravil in urnikov izvajanja opravil.
-        V orodni vrstici seznama so gumbi za dodajanje spreminjanje in brisanje tipa opravila.<br /><br />
+        V orodni vrstici seznama so gumbi za dodajanje, spreminjanje in brisanje tipa opravila.<br /><br />
         <img src="img/gui/task-type-list.png" alt="Task type" width="680"/> <br />
         <br />
-        Ob kliki na gumb <b>Dodaj</b>(add),  <b>Uredi</b>(Edit) ali dvojnem kliku na izbrano 
+        Ob kliku na gumb <b>Dodaj</b> (Add),  <b>Uredi</b> (Edit) ali dvojnem kliku na izbrano 
         vstico se prikaže dialog za dodajanje/urejanje tipa opravila.
         <br /><br />
         <center>
@@ -18,7 +18,7 @@
         </center><br />
 
         <h2 id="gui/admin-sed-tasks:add-edit">Dodajanje, urejanje tipa opravila</h2>      
-        Implementacija opravila je v obliki "stateless" EJB-ja ki implementira metodo <b>executeTask(Properties p)</b> vmesnika <br />
+        Implementacija opravila je v obliki "stateless" EJB-ja, ki implementira metodo <b>executeTask(Properties p)</b> vmesnika <br />
         <code>si.sed.commons.interfaces.TaskExecutionInterface</code>
         <pre><code>@Local
 public interface TaskExecutionInterface {
@@ -31,14 +31,14 @@ public interface TaskExecutionInterface {
 
 }</code></pre>
         Arhitektura omogoča poljubno izdelavo opravil, ki se jih namesti v deploy mapo aplikacijskega strežnika.
-        V konfiguraciji tipa opravila je tako potrebno navesti <b>JNDI (EJB naslov)</b> do instance tipa opravila. Npr:
-        <code>java:global/sed-basic-tasks/TaskBackup!si.sed.commons.interfaces.TaskExecutionInterface</code>.
-        Nato se klikom na gumb <i>Osveži (Refresh)</i>  preveri dostop do opravila, ter se osvežijo podatki:
+        V konfiguraciji tipa opravila je tako treba navesti <b>JNDI (EJB naslov)</b> do instance tipa opravila.<br>Npr:
+        <code>java:global/sed-basic-tasks/TaskBackup!si.sed.commons.interfaces.TaskExecutionInterface</code>.</br>
+        Nato se klikom na gumb <i>Osveži (Refresh)</i>  preveri dostop do opravila ter se osvežijo podatki:
         <ul>
-            <li><b>Enolična oznaka tipa opravila: (Type)</b> je enolična oznaka tipa opravila</li>
-            <li><b>Ime tipa opravila: (Name)</b> poimenovanje opravila</li>
-            <li><b>Opis opravila: (Desc)</b> Opis opravila </li>
-            <li><b>Parametri opravila (Task properties)</b>. Parametri opravila, ki se jih nastavi določi ob dodajanju opravila v urnik.</li>
+            <li><b>Enolična oznaka tipa opravila: (Type)</b> je enolična oznaka tipa opravila.</li>
+            <li><b>Ime tipa opravila: (Name)</b> poimenovanje opravila.</li>
+            <li><b>Opis opravila: (Desc)</b> Opis opravila. </li>
+            <li><b>Parametri opravila (Task properties)</b>: Parametri opravila, ki se jih nastavi določi ob dodajanju opravila v urnik.</li>
         </ul>
 
         <h2 id="gui/admin-sed-tasks:cron-add-edit">Dodajanje, urejanje urnika opravil</h2>      
@@ -46,8 +46,8 @@ public interface TaskExecutionInterface {
         V orodni vrstici seznama so gumbi za dodajanje spreminjanje in brisanje urnikov.<br /><br />
         <img src="img/gui/cron_list.png" alt="Task type" width="680"/> <br />
 
-        Ob kliki na gumb <b>Dodaj</b>(add),  <b>Uredi</b>(Edit) ali dvojnem kliku na izbrano 
-        vstico se prikaže dialog za dodajanje/urejanje urnika posameznega opravila.
+        Ob kliku na gumb <b>Dodaj</b> (Add),  <b>Uredi</b> (Edit) ali dvojnem kliku na izbrano 
+        vstico, se prikaže dialog za dodajanje/urejanje urnika posameznega opravila.
         <br /><br />
         <center>
             <img src="img/gui/task-backup-cron.png" alt="SEDBox admin" width="450"/> <br />
@@ -114,12 +114,12 @@ public interface TaskExecutionInterface {
         <p>Izraz 'zvedica' (<i>*</i>) pomeni vse možne vrednosti.</p>
 
         <p>Izraz pomeni vsako minuto:</p>
-        <pre>minute="*"</pre><p>Izraz pomeni vsa dni v tednu:</p>
+        <pre>minute="*"</pre><p>Izraz pomeni vse dni v tednu:</p>
 
         <pre>dayOfWeek="*"</pre>
 
         <a name="giqnd"></a><h5>Seznam vrednosti</h5>
-        <p>Za določanje seznama vrednosti se uporalja znak vejica (<i>,</i>).</p>
+        <p>Za določanje seznama vrednosti se uporablja znak vejica (<i>,</i>).</p>
 
         <p>Ponovitve vrednosti v seznamu se ingnorirajo.</p>
 
@@ -154,7 +154,7 @@ public interface TaskExecutionInterface {
 
         <pre>minute="*/10"</pre><p> je enako kot:</p>
 
-        <pre>minute="0,10,20,30,40,50"</pre><p>Primer izraza , ker se prične izvajati ob 12h vsake dve uri:</p>
+        <pre>minute="0,10,20,30,40,50"</pre><p>Primer izraza, kjer se prične izvajati ob 12h vsake dve uri:</p>
 
         <pre>hour="12/2"</pre>
 

@@ -5,31 +5,31 @@
         Laurentius. Aplikacija do uporabnikov in uporabniških pravic dostopa preko nastavitev
         "uporabniške domene" <b> sed-realm</b>, ki 
         mora biti določena na aplikacijskemu strežniku. <a href="#install:wf-users">Demo primer</a> uporabnike 
-        prevzema in datotek: sed-users.properties in sed-roles.properties. Aplikacijski strežnik se lahko nastavi
+        prevzema iz datotek: sed-users.properties in sed-roles.properties. Aplikacijski strežnik se lahko nastavi
         za prevzemanje uporabnikov iz LDAP, eDirectory, relacijskih baz itd.<br /><br />
         
         Administracija <b>SED uporabnikov</b> se nahaja v sklopu orodij <b>Nastavitve</b>
-       (Settings) orodje Uporabniki (Users). Urejanje omogoča določanje obdobje aktivnosti in predale,
+       (Settings), orodje <b>Uporabniki</b> (Users). Urejanje omogoča določanje obdobje aktivnosti in predale,
        do katerih ima uporabnik upravičenja.<br /><br />
        <img class="img-locale" src="img/gui/user-list-en.png" alt="User list" width="680"/> <br />
        
        <h2 id="gui/admin-sed-user:list">Seznam uporabnikov</h2>
-       Orodje <b>Uporabniki</b> prikazuje seznam uporabnikov, ki so določeni v Laurentius. Z klikom na 
+       Orodje <b>Uporabniki</b> prikazuje seznam uporabnikov, ki so določeni v Laurentius. S klikom na 
        razširitveni gumb na začetku vrstice se prikažejo tudi predali, do katerih ima uporabnik opravičenja.<br />
-       V orodni vrstici seznama so gumbi za dodajanje spreminjanje in brisanje uporanikov.<br /><br />
+       V orodni vrstici seznama so gumbi za dodajanje, spreminjanje in brisanje uporanikov.<br /><br />
       
-        Ob kliki na gumb <b>Dodaj</b>(add),  <b>Uredi</b>(Edit) ali dvojnem kliku na izbrano 
-       vstico se prikaže dialog za dodajanje/urejanje uporabnika.<br /><br />
+        Ob kliku na gumb <b>Dodaj</b> (Add),  <b>Uredi</b> (Edit) ali dvojnem kliku na izbrano 
+       vstico, se prikaže dialog za dodajanje/urejanje uporabnika.<br /><br />
        <center>
         <img class="img-locale" src="img/gui/user-edit-en.png" alt="User  admin" width="500"/> <br />
        </center><br />
        
        <h2 id="gui/admin-sed-user:add-edit">Dodajanje, urejanje uporabnikov</h2>
        <ul>
-           <li><b>Uporabniško ime (Username):</b> ob dodajanju novega uporabnika se določi uporabniško ime, ki mora biti enak kot je v 
+           <li><b>Uporabniško ime (Username):</b> ob dodajanju novega uporabnika se določi uporabniško ime, ki mora biti enako, kot je v 
                repozitoriju uporabnikov (LDAP, relacijska baza, property-datoteke), ki je določen v nastavitvah aplikacijskega strežnika.</li>
-           <li><b>Pričetek aktivnosti (Active from date):</b> parametere določa datum, ko je uporabnik postal aktiven</li>
-           <li><b>Konec aktivnosti (Active to date):</b> parametere določa datum, ko je postal uporabnik  ne-aktiven. </li>
+           <li><b>Pričetek aktivnosti (Active from date):</b> parametere določa datum, ko je uporabnik postal aktiven.</li>
+           <li><b>Konec aktivnosti (Active to date):</b> parametere določa datum, ko je postal uporabnik  neaktiven. </li>
            <li><b>Uporabniški predali:</b> seznam predalov, do katerih ima uporabnik dostop. Seznam se deli na dva dela. Na levi strani 
            so predali, do katerih uporabnik nima dostopa, na desni strani pa predali, do katerih ima uporabnik dostop.</li>
        </ul>

@@ -3,18 +3,18 @@
        
         <h2 id="gui/task-report:report">Opravilo: poročilo </h2>
         Opravilo "Poročilo" (sedboxreport) je namenjen sporočanju o statusih pošiljk za posamezni predal na email naslov. Z nastavitvijo
-        tega opravila lahko izdelamo dnevna poročila o prejeti in izhodni pošti
+        tega opravila lahko izdelamo dnevna poročila o prejeti in izhodni pošti.
         <ul>
-            <li><b>SED predal: (sedbox)</b>. Naslov SED predala za izdelavo poročila  </li>
-            <li><b>Naslov email sporočila (email.subject)</b>.  Naslov e-pošte sporočila </li>
+            <li><b>SED predal: (sedbox)</b>. Naslov SED predala za izdelavo poročila.  </li>
+            <li><b>Naslov email sporočila (email.subject)</b>.  Naslov e-pošte sporočila. </li>
             <li><b>Prejemnik sporočila (email.to) </b>. Elektronski naslov sporočila. V primeru, da je naslovnikov več se ločijo z vejico: ','.</li>
-            <li><b>Pošiljatelj sporočila (email.from)</b>. Naslov, ki je naveden kot pošiljatelj sporočila</li>
+            <li><b>Pošiljatelj sporočila (email.from)</b>. Naslov, ki je naveden kot pošiljatelj sporočila.</li>
             <li><b>Nastavitve SMTP (mail.config.jndi)</b>. Nastavitve SMTP strežnika na aplikacijskem strežniku. V primeru, da naslov 
-                vnesen je privzeta vrednost <code>mail.config.jndi</code></li>
+                vnesen je privzeta vrednost <code>mail.config.jndi.</code></li>
         </ul>
         <img src="img/gui/task-sedbox-report-cron.png" alt="Task sedbox report" width="680"/> <br />
         <b></b>
-        Za uspešno pošiljanje email pošiljk, je potrebno pravilno nastaviti aplikacijski strežnik. 
+        Za uspešno pošiljanje email pošiljk, je treba pravilno nastaviti aplikacijski strežnik. 
         V primeru "wildfly 8+" so nastavitve za izhodno pošto v datoteki standalone-ebms.xml v razdelku <code>urn:jboss:domain:mail</code>
         Spodnji primer je za uporabo gmail smtp strežnika. 
         <pre><code>

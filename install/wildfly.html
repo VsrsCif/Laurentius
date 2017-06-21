@@ -3,14 +3,14 @@
 
         <h1 id="install/wildfly:start">Namestitev na aplikacijski strežnik wildfly</h1>
         Navodila vsebujejo opis sprememb "default" nastavitev aplikacijskega strežnika
-        <b>wildfly-10.1.0.Final</b>, ki so bili izvedeni za  demo nastavitev Laurentius. 
+        <b>wildfly-10.1.0.Final</b>, ki so bili izvedeni za demo nastavitev Laurentius. 
         Namen opisa sprememb je olajšati delo sistemskim administratorjev za pripravo produkcijskih 
         nastavitev, ki so  prilagojene konkretnemu produkcijskemu okolju.<br /> Opis je lahko tudi 
         v pomoč pri razumevanju delovanja aplikacijskega strežnika <b>Wildfly</b>.
         Podrobnejša navodila namestitve aplikacijskega strežnika so opisana  
         na naslovu <a href="http://wildfly.org/">wildfly</a><br /><br />
 
-        Opozorilo: Aplikacijski strežnik wildfly za svoje delovanje potrebuje nameščeno java 1.8+!
+        <b>Opozorilo:</b> Aplikacijski strežnik wildfly za svoje delovanje potrebuje nameščeno java 1.8+!
 
         <h1 id="install/wildfly:install">Namestitev aplikacijskega strežnika</h1>
         Na povezavi <a href="http://wildfly.org/downloads/">wildfly downloads</a>  prenesi aplikacijski 
@@ -28,10 +28,10 @@
             <li>...</li>
         </ul>
 
-        V nadaljevanju so opisane spremembe osnovnih nastavitve, ki jih je potrebno 
+        V nadaljevanju so opisane spremembe osnovnih nastavitev, ki jih je treba 
         izvesti za namestitev aplikacije Laurentius.
 
-        Nastavite aplikacije laurentius se bodo nahajali v datoteki:
+        Nastavite aplikacije laurentius se bodo nahajale v datoteki:
         <code>[WILDFLY_HOME]standalone/configuration/standalone-laurentius.xml</code>.
         Zato v mapi: 
         <code>wildfly-10.1.0.Final/standalone/configuration</code>
@@ -127,10 +127,9 @@
 &lt;/mdb></code></pre>
 
         <h1 id="install/wildfly:users">Določanje uporabnikov</h1>
-        Aplikacijski strežnik wildfly omogoča uporabo različnih tehnologij ( 
-        kot so: OpenLDAP, eDirectory, bazne tabele, datoteke) za avtentikacijo in avtorizacijo. Uporaba modula:
+        Aplikacijski strežnik wildfly omogoča uporabo različnih tehnologij (kot so: OpenLDAP, eDirectory, bazne tabele, datoteke) za avtentikacijo in avtorizacijo. Uporaba modula:
         "urn:jboss:domain:security" omogoča enostavno menjavo mehanizmov avtentikacije brez spreminjanja aplikacije.
-        Tako lahko v produkcijskih nastavitvah uporabimo eDirectory ali bazne tabele, med tem 
+        Tako lahko v produkcijskih nastavitvah uporabimo eDirectory ali bazne tabele med tem, 
         ko so avtorizacijski podatki v testnem okolju v "property" datotekah. Demo nastavitev Laurentius uporablja
         predpripravljene "property" datoteke laurentius-users.properties in laurentius-roles.properties.
         <br /> <br />
