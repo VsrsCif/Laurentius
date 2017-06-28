@@ -14,7 +14,7 @@
         <code>${WILDFLY_HOME}/docs/contrib/scripts/service</code> 
         pripravljene skripte in orodja za namestitev kot "MS Windows storitev".<br />         
         <br />
-        Vsebino mape:
+        Mapo:
         <code>${WILDFLY_HOME}/docs/contrib/scripts/service</code><br /> 
         kopiraj v bin mapo:
         <code>${WILDFLY_HOME}/bin</code> <br /> <br /> 
@@ -46,7 +46,7 @@ set "JAVA_OPTS=%JAVA_OPTS% JAVA_OPTS=-Djboss.bind.address=0.0.0.0 "
         <b>Zaradi večje varnosti priporočamo omejitev dostop do strežnika.</b> Dodatna navodila so na strani: 
         <a href="https://docs.jboss.org/author/display/WFLY10/Interfaces+and+ports" >https://docs.jboss.org/author/display/WFLY10/Interfaces+and+ports</a>
        
-        Nato se v CMD konzoli postavi v mapo <code>${WILDFLY_HOME}/bin/</code>
+        Nato se v CMD konzoli postavi v mapo <code>${WILDFLY_HOME}/bin/service</code>
         ter poženi ukaz, kjer s parametrom določi nastavitve strežnika: <code>-c standalone-laurentius.xml</code>:
         <pre><code>service.bat install /CONFIG standalone-laurentius.xml</code></pre>
         
