@@ -1,0 +1,57 @@
+<div class="main">
+    <article class='content'>
+       
+        <h2 id="gui/task-statusreport:report">Opravilo: statusno poročilo </h2>
+        Opravilo "Statusno Poročilo" je namenjen sporočanju o statusih pošiljk za posamezni predal na email naslov. S poročilom lahko hitro ugotovimo 
+zastoje pri obdelavi poročil, pošiljke v napaki oz število pošiljk, ki čakajo na prevzem v zaledne sisteme. Ravno tako lahko s poročilom izdelamo dnevna poročila o številu
+dohodne/izhodne pošte.
+
+        Poročilo omogoča obveščanje samo za določene storitve in statuse dohodne in izhodne pošte. 
+        <ul>
+            <li><b>SED predal: (sedbox)</b>. Naslov SED predala za izdelavo poročila.  </li>
+            <li><b>Naslov email sporočila (email.subject)</b>.  Naslov e-pošte sporočila. </li>
+            <li><b>Prejemnik sporočila (email.to) </b>. Elektronski naslov sporočila. V primeru, da je naslovnikov več se ločijo z vejico: ','.</li>
+            <li><b>Pošiljatelj sporočila (email.from)</b>. Naslov, ki je naveden kot pošiljatelj sporočila.</li>
+            <li><b>Nastavitve SMTP (mail.config.jndi)</b>. Nastavitve SMTP strežnika na aplikacijskem strežniku. V primeru, da naslov 
+                vnesen je privzeta vrednost <code>mail.config.jndi.</code></li>
+			
+			<li><b>Seznam statusov dohodne pošte (report.status.in-list)</b>. Izbira statusov dohodne pošte za katere želimo izdelati poročilo</li>
+			<li><b>Seznam statusov izhodne pošte (report.status.out-list)</b>. Izbira statusov izhodne pošte za katere želimo izdelati poročilo</li>
+			<li><b>Seznam storitev(report.status.service-list)</b>. Izbira storitev za katere želimo izdelati poročilo</li>
+
+			<li><b>Pričetek časovnega okna spremembe statusa (report.status.change.start.interval)</b>. Pričetek časovnega okna spremembe statusa (v minutah od trenutnega časa)</li>
+			<li><b>Konec časovnega okna spremembe statusa (report.status.change.end.interval)</b>. Konec časovnega okna spremembe statusa (v minutah od trenutnega časa)</li>
+
+			<li><b>Oblika zapisa seznama (report.status.show.mail.list)</b>. Oblika zapisa seznama pošiljk. V primeru da oblika ni podana se seznami pošiljk ne izpišejo</li>
+<li><b>Ne pošlji če ni nobenih pošiljk (skip.on.NoMail)</b>. V primeru, da za podane kriterije ob času izdelave ni nobene pošiljke se v primeru vrednosti "true" poročilo ne izdela</li>
+<li><b>Shranjevanje poročila (report.status.write.folder)</b>. Lokalna mapa za shranjevanje poročil. </li>
+
+
+
+
+        </ul>
+        <img src="img/gui/task-report-status.png" alt="Task sedbox report" width="680"/> <br />
+        <b></b>
+        Za uspešno pošiljanje email pošiljk, je treba pravilno nastaviti aplikacijski strežnik. 
+        V primeru "wildfly 8+" so nastavitve za izhodno pošto v datoteki standalone-ebms.xml v razdelku <code>urn:jboss:domain:mail</code>
+        Spodnji primer je za uporabo gmail smtp strežnika. 
+        <pre><code>
+&lt;subsystem xmlns="urn:jboss:domain:mail:2.0">
+   &lt;mail-session name="default" jndi-name="java:jboss/mail/Default">       
+       &lt;smtp-server ssl="true" outbound-socket-binding-ref="mail-smtp" username="[USERNAME]" password="*****"/>
+   &lt;/mail-session>
+&lt;/subsystem>
+. . . .
+Razdelek socket-binding-group popravite na:
+
+    &lt;outbound-socket-binding name="mail-smtp">
+        &lt;remote-destination host="smtp.gmail.com" port="465"/>
+    &lt;/outbound-socket-binding>
+</code></pre>
+
+        
+        
+
+        
+    </article>  
+</div>
