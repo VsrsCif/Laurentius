@@ -46,31 +46,31 @@ certificate validation tools.</description>
             <groupId>${project.groupId}</groupId>
             <artifactId>Laurentius-commons</artifactId>
             <version>${project.version}</version>		
-            <scope>provided</scope>	
+            <!-- scope>provided</scope -->	
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>Laurentius-msh-xsd</artifactId>
             <version>${project.version}</version>		
-            <scope>provided</scope>	
+            <!-- scope>provided</scope -->	
         </dependency>
         
         <dependency>
             <groupId>org.apache.santuario</groupId>
             <artifactId>xmlsec</artifactId>
-            <scope>provided</scope>
+            <!-- scope>provided</scope -->
         </dependency>
         
         <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcprov-jdk15on</artifactId>            
-            <scope>provided</scope>
+            <!-- scope>provided</scope -->
         </dependency>
  
         <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcpkix-jdk15on</artifactId>            
-            <scope>provided</scope>
+            <!-- scope>provided</scope -->
         </dependency>
         
           <dependency>
@@ -81,7 +81,7 @@ certificate validation tools.</description>
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>		
-            <scope>provided</scope>
+            <!-- scope>provided</scope -->
         </dependency>
 
         <dependency>

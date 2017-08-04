@@ -48,7 +48,6 @@ public class XMLSignatureUtils {
   private static final String ID_PREFIX_SIG_VAL = "sig-val";
 
   private static final String ID_PREFIX_SIG_PROP = "sig-prop";
-  private static final String XADES_NS = "http://uri.etsi.org/01903/v1.1.1#";
 
   public static final String XML_SIGNATURE_PROVIDER_PROP = "jsr105Provider";
   public static final String XML_SIGNATURE_PROVIDER_VALUE_1 =

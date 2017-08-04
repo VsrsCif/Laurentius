@@ -16,6 +16,7 @@ import si.laurentius.commons.enums.SEDInterceptorRole;
 import si.laurentius.commons.enums.SEDOutboxMailStatus;
 import si.laurentius.commons.enums.SEDRulePredicate;
 import si.laurentius.commons.enums.SEDTaskStatus;
+import si.laurentius.commons.interfaces.PModeInterface;
 import si.laurentius.commons.interfaces.SEDCertStoreInterface;
 import si.laurentius.commons.interfaces.SEDLookupsInterface;
 import si.laurentius.commons.interfaces.SEDPluginManagerInterface;
@@ -27,6 +28,7 @@ import si.laurentius.commons.utils.ReflectUtils;
 import si.laurentius.commons.utils.Utils;
 import si.laurentius.ebox.SEDBox;
 import si.laurentius.msh.mail.MSHMailType;
+import si.laurentius.msh.pmode.Service;
 import si.laurentius.msh.web.abst.AbstractJSFView;
 import si.laurentius.plugin.interfaces.PropertyListType;
 
@@ -46,9 +48,13 @@ public class LookupsData extends AbstractJSFView {
 
   @EJB(mappedName = SEDJNDI.JNDI_DBCERTSTORE)
   private SEDCertStoreInterface mdbCertStore;
+  
+  @EJB(mappedName = SEDJNDI.JNDI_PMODE)
+  private PModeInterface mPMode;
 
   /**
    *
+   * @param listType
    * @return
    */
   public List<String> getListValuesForPluginListType(String listType) {
@@ -79,7 +85,16 @@ public class LookupsData extends AbstractJSFView {
         lstArr.add(st.getValue());
 
       }
-    } else {
+    } else if (listType.equalsIgnoreCase(PropertyListType.Services.
+            getType())) {
+      
+      for (Service st : mPMode.getServices()) {
+        lstArr.add(st.getServiceName());
+
+      }
+    }
+    
+    else {
       lstArr.addAll(Arrays.asList(listType.split(",")));
     }
     return lstArr;

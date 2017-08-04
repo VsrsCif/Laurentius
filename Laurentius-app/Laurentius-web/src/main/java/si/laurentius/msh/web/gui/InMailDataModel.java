@@ -15,7 +15,6 @@
 package si.laurentius.msh.web.gui;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
 import si.laurentius.commons.enums.SEDInboxMailStatus;
 import si.laurentius.msh.inbox.mail.MSHInMail;
 import si.laurentius.commons.interfaces.SEDDaoInterface;

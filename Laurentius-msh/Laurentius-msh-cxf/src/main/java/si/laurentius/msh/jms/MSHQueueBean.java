@@ -14,7 +14,9 @@
  */
 package si.laurentius.msh.jms;
 
+import java.io.File;
 import java.math.BigInteger;
+import java.util.List;
 import javax.ejb.ActivationConfigProperty;
 import javax.ejb.EJB;
 import javax.ejb.EJBException;
@@ -25,6 +27,7 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.persistence.NoResultException;
+import org.w3c.dom.Element;
 import si.jrc.msh.client.MSHPluginOutEventHandler;
 import si.laurentius.msh.outbox.mail.MSHOutMail;
 import si.laurentius.msh.pmode.ReceptionAwareness;
@@ -36,6 +39,7 @@ import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.enums.SEDOutboxMailStatus;
 import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.SEDValues;
+import si.laurentius.commons.cxf.SoapUtils;
 import si.laurentius.commons.exception.PModeException;
 import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.interfaces.PModeInterface;
@@ -45,6 +49,8 @@ import si.laurentius.commons.pmode.EBMSMessageContext;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StorageUtils;
 import si.laurentius.commons.utils.Utils;
+import si.laurentius.lce.DigestUtils;
+import si.laurentius.msh.outbox.payload.MSHOutPart;
 import si.laurentius.plugin.interfaces.OutMailEventInterface;
 
 /**
@@ -198,7 +204,6 @@ public class MSHQueueBean implements MessageListener {
       setStatusToOutMail(mail, SEDOutboxMailStatus.PUSHING,
               "Start pushing to receiver MSH");
 
-    
       Result sm = mmshClient.pushMessage(mail, sd, mCertBean);
 
       if (sm.getError() != null) {
@@ -210,7 +215,6 @@ public class MSHQueueBean implements MessageListener {
                 getSubMessage(),
                 sm.getResultFile(), sm.getMimeType());
 
-      
         if ((sm.getError().getEbmsErrorCode().equals(
                 EBMSErrorCode.ConnectionFailure)
                 || sm.getError().getEbmsErrorCode().equals(
@@ -237,12 +241,39 @@ public class MSHQueueBean implements MessageListener {
         }
 
       } else {
+        
+        String resPath = sm.getResultFile();
+        File fRes = StorageUtils.getFile(resPath);
+        /// TODO update causes deadlocks on h2 databse
+               /*
+        MSHOutPart mipt = new MSHOutPart();
+        mipt.setDescription("Soap response");
+
+        mipt.setName(fRes.getName());
+        mipt.setSource("embs");
+        mipt.setMimeType(MimeValue.MIME_XML.getMimeType());
+        mipt.setFilename(fRes.getName());
+
+        mipt.setSize(BigInteger.valueOf(fRes.length()));
+        mipt.setSha256Value(DigestUtils.getHexSha256Digest(fRes));
+        mipt.setFilepath(resPath);
+        mail.getMSHOutPayload().getMSHOutParts().add(mipt);
+        /*
+        try {
+          mail.setStatus(SEDOutboxMailStatus.SENT.getValue());
+         
+          mDB.updateOutMail(mail, "ebms", "Message sent to receiver MSH");
+          mPluginOutEventHandler.outEvent(mail, sd,
+                OutMailEventInterface.PluginOutEvent.SEND);
+        } catch (StorageException ex) {
+          LOG.logError(resPath, ex);
+        }
+*/
         setStatusToOutMail(mail, SEDOutboxMailStatus.SENT,
                 "Message sent to receiver MSH",
                 sm.getResultFile(), sm.getMimeType());
 
-        mPluginOutEventHandler.outEvent(mail, sd,
-                OutMailEventInterface.PluginOutEvent.SEND);
+        
       }
 
     }

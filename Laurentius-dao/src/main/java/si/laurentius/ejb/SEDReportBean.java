@@ -15,6 +15,8 @@
 package si.laurentius.ejb;
 
 import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 import javax.annotation.Resource;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
@@ -52,10 +54,16 @@ public class SEDReportBean implements SEDReportInterface {
   /**
    *
    * @param strSedBox
+   * @param fromDateChanged
+   * @param toDateChanged
+   * @param inStatuses
+   * @param services
+   * @param outStatuses
    * @return
    */
   @Override
-  public SEDReportBoxStatus getStatusReport(String strSedBox) {
+  public SEDReportBoxStatus getStatusReport(String strSedBox, Date fromDateChanged, Date toDateChanged, List<String> inStatuses,  
+          List<String> outStatuses, List<String> services) {
     SEDReportBoxStatus rbs = new SEDReportBoxStatus();
     rbs.setSedbox(strSedBox);
     rbs.setReportDate(Calendar.getInstance().getTime());
@@ -68,6 +76,17 @@ public class SEDReportBean implements SEDReportInterface {
         memEManager.createNamedQuery("si.laurentius.report.getOutMailStatusesByBox", Status.class);
     tqIn.setParameter("sedBox", strSedBox);
     tqOut.setParameter("sedBox", strSedBox);
+    
+    tqIn.setParameter("services", services);
+    tqOut.setParameter("services", services);
+    
+    tqIn.setParameter("fromDateChanged", fromDateChanged);
+    tqIn.setParameter("toDateChanged", toDateChanged);
+    tqOut.setParameter("fromDateChanged", fromDateChanged);
+    tqOut.setParameter("toDateChanged", toDateChanged);
+    
+    tqIn.setParameter("statuses", inStatuses);
+    tqOut.setParameter("statuses", outStatuses);
 
     rbs.getInMail().getStatuses().addAll(tqIn.getResultList());
     rbs.getOutMail().getStatuses().addAll(tqOut.getResultList());

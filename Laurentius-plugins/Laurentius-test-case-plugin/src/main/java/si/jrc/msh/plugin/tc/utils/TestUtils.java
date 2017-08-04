@@ -54,7 +54,12 @@ public class TestUtils {
   public static String GENERIC_METADATA = GENERIC_FOLDER + "/testcases.xml";
 
   public static File[] mTstFiles = null;
-
+  static long testCasesReloaded = 0;
+  static  MailTestCases mtc = null;
+  
+  
+  
+  
   StorageUtils mstrgUtils = new StorageUtils();
 
   public MSHOutMail createOutMail(int imsgs, String senderBox, String recName,
@@ -187,12 +192,16 @@ public class TestUtils {
   }
 
   public static MailTestCases getGenericTestCases() {
-    MailTestCases mtc = null;
+   
     File f = new File(SEDSystemProperties.getPluginsFolder(), GENERIC_METADATA);
+    if (testCasesReloaded < f.lastModified()) {
+     
     try {
       mtc = (MailTestCases) XMLUtils.deserialize(f, MailTestCases.class);
+      testCasesReloaded =  f.lastModified();
     } catch (JAXBException ex) {
       LOG.logError(ex.toString(), ex);
+    }
     }
     return mtc;
 

@@ -2,23 +2,37 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd" >
 <hibernate-mapping>    
     <class name="si.laurentius.report.Status" >      
-        <id column="status" name="Status" type="java.lang.String" />        
-        <property column="count" name="Count"   type="java.math.BigInteger" />        
+        <id column="ID" name="RowId" type="java.lang.String" />
+        
+        <property column="SERVICE" name="Service" type="java.lang.String" />
+        <property column="STATUS" name="Status" type="java.lang.String" />        
+        
+        <property column="COUNT" name="Count"   type="java.math.BigInteger" />        
     </class>    
     
     <sql-query name="si.laurentius.report.getInMailStatusesByBox">
-        <return  class="si.laurentius.report.Status"/>
-        SELECT status, count(id)
+        <return  class="si.laurentius.report.Status"/><![CDATA[
+        SELECT service || '-' || status as ID , service, status, count(id) as COUNT
         FROM lau_inbox
-        WHERE receiver_ebox = :sedBox
-        GROUP BY status                 
+        WHERE RECEIVER_EBOX = :sedBox
+        and  STATUS  in (:statuses)
+        and  SERVICE  in (:services)
+        and  DATE_STATUS >= :fromDateChanged
+        and  DATE_STATUS <= :toDateChanged
+        GROUP BY service, status                 
+        ORDER BY service, status]]>
     </sql-query>
     <sql-query name="si.laurentius.report.getOutMailStatusesByBox">
         <return  class="si.laurentius.report.Status"/>
-        SELECT status, count(id)
+        <![CDATA[SELECT service || '-' || status as ID , service, status, count(id) as COUNT
         FROM lau_outbox
-        WHERE sender_ebox = :sedBox
-        GROUP BY status                 
+        WHERE SENDER_EBOX = :sedBox
+        and  STATUS  in (:statuses)
+        and  SERVICE  in (:services)
+        and  DATE_STATUS >= :fromDateChanged
+        and  DATE_STATUS <= :toDateChanged
+        GROUP BY service, status
+        ORDER BY service, status]]>
     </sql-query>
 
 </hibernate-mapping>

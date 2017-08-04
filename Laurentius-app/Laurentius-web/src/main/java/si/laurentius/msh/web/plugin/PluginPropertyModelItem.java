@@ -6,6 +6,12 @@
 package si.laurentius.msh.web.plugin;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import javafx.print.Collation;
+import si.laurentius.commons.utils.Utils;
 import si.laurentius.plugin.component.PluginPropertyDef;
 
 /**
@@ -16,6 +22,7 @@ public class PluginPropertyModelItem implements Serializable {
 
     PluginPropertyDef mPluginPropDef;
     String mValue;
+    List<String> listValue = new ArrayList<>();
 
     /**
      *
@@ -87,5 +94,24 @@ public class PluginPropertyModelItem implements Serializable {
       this.mValue = v ? "true" : "false";
     }
 
+     /**
+     *
+     * @return
+     */
+    public List<String> getListValue() {
+      listValue.clear();
+      if (!Utils.isEmptyString(mValue)){
+        listValue.addAll(Arrays.asList(mValue.split(",")) );
+      } 
+      return listValue;
+    }
+
+    /**
+     *
+     * @param v
+     */
+    public void setListValue(List<String> v) {
+      this.mValue = v.isEmpty()? null :String.join(",", v);
+    }
    
   }

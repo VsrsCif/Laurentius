@@ -49,6 +49,8 @@ Copyright 2016, Supreme Court Republic of Slovenia
     </xs:complexType>
     <xs:element name="Status">
         <xs:complexType>
+            <xs:attribute name="rowId" type="xs:string" use="required"/>
+            <xs:attribute name="service" type="xs:string" use="required"/>
             <xs:attribute name="status" type="xs:string" use="required"/>
             <xs:attribute name="count" type="xs:integer" use="required"/>
         </xs:complexType>

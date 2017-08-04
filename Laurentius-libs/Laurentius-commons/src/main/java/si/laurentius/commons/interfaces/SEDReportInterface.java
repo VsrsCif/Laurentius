@@ -14,6 +14,8 @@
  */
 package si.laurentius.commons.interfaces;
 
+import java.util.Date;
+import java.util.List;
 import javax.ejb.Local;
 import si.laurentius.report.SEDReportBoxStatus;
 
@@ -27,7 +29,13 @@ public interface SEDReportInterface {
   /**
    *
    * @param strSedBox
+   * @param fromDateChanged
+   * @param toDateChanged
+   * @param inStatuses
+   * @param outStatuses
+   * @param services
    * @return
    */
-  SEDReportBoxStatus getStatusReport(String strSedBox);
+    SEDReportBoxStatus getStatusReport(String strSedBox, Date fromDateChanged, Date toDateChanged, List<String> inStatuses,  
+          List<String> outStatuses, List<String> services);
 }

@@ -13,13 +13,14 @@
         <cc:attribute name="header" />
     </cc:interface>
     <cc:implementation >
+
         <p:dataTable id="#{cc.attrs.tableId}" 
                      var="sp" 
                      value="#{cc.attrs.propertyList}"                                     
                      rowKey="#{sp.propertyDef.key}"   
                      rowIndexVar="rowIndex"
                      scrollable="true" 
-                     scrollHeight="100%"
+                     scrollHeight="200"
                      editable="true"
                      editMode="cell"
                      >
@@ -44,6 +45,16 @@
                                    var="tskDef" itemLabel="#{lv}" 
                                    itemValue="#{lv}" />
                 </p:selectOneMenu>
+
+                <p:selectCheckboxMenu rendered="#{sp.propertyDef.type  eq 'multiList' }"  
+                                      value="#{sp.listValue}"
+                                      style="width: 100%"
+                                      label="#{msg['Choose']}">             
+                    <f:selectItems value="#{LookupsData.getListValuesForPluginListType(sp.propertyDef.valueList)}"
+                                   var="tskDef" itemLabel="#{lv}" 
+                                   itemValue="#{lv}" />
+                </p:selectCheckboxMenu>
+
             </p:column>
         </p:dataTable>  
     </cc:implementation>

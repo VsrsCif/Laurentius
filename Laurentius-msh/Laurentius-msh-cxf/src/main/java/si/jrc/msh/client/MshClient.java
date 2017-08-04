@@ -299,6 +299,9 @@ public class MshClient {
             String respFilePath = StorageUtils.getRelativePath(file);
             r.setResultFile(respFilePath);
             r.setMimeType(MimeValue.MIME_XML.getMimeType());
+            
+            
+            
           } catch (IOException ex) {
             LOG.logError(l, "ERROR saving response to file!", ex);
           }

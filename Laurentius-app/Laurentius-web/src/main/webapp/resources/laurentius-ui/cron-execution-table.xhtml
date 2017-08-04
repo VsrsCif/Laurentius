@@ -125,13 +125,12 @@
                             <p:column headerText="#{msg['Type']}"  width="130" >
                                 <h:outputText value="#{taskExec.type}" />
                             </p:column>
-
                             
                             <p:column width="150" headerText="#{msg['StartDate']}">
-                                <h:outputText value="#{taskExec.startTimestamp}"  ><f:convertDateTime pattern="dd.MM.yyyy hh:mm:ss.SSS" timeZone="CET" /></h:outputText>
+                                <h:outputText value="#{taskExec.startTimestamp}"  ><f:convertDateTime pattern="dd.MM.yyyy HH:mm:ss.SSS" timeZone="CET" /></h:outputText>
                             </p:column>
                             <p:column width="150" headerText="#{msg['EndDate']}">
-                                <h:outputText value="#{taskExec.endTimestamp}"  ><f:convertDateTime pattern="dd.MM.yyyy hh:mm:ss.SSS" timeZone="CET" /></h:outputText>
+                                <h:outputText value="#{taskExec.endTimestamp}"  ><f:convertDateTime pattern="dd.MM.yyyy HH:mm:ss.SSS" timeZone="CET" /></h:outputText>
                             </p:column>
 
 

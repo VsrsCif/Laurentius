@@ -31,7 +31,16 @@
                 </p:row>
                 <p:row>
                     <p:column colspan="2">#{msg['LargeAmountOfMailDesc']}</p:column>
-                </p:row>                
+                </p:row>    
+                <p:row>
+                    <p:column >#{msg['MailTemplates']}:</p:column>
+                    <p:column ><p:selectCheckboxMenu id="inSts" filter="false"  label="MailTemplates"  style="width: 100%"
+                                                     value="#{tcStressTests.testLAOM.mailTemplates}" >                                               
+                            <f:selectItem itemLabel="Random payload mail" itemValue="randomMail"/>
+                            <f:selectItems value="#{customTestCases.testCases}" var="ctc" itemValue="#{ctc.name}" 
+                                           itemLabel="#{ctc.name}" itemDescription="#{ctc.description}"  />
+                                        </p:selectCheckboxMenu></p:column>
+                </p:row>    
                 <p:row>
                     <p:column  styleClass="ui-gp-label">#{msg['NumberOfMail']}</p:column>
                     <p:column>

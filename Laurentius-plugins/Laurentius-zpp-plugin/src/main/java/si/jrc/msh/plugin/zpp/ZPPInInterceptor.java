@@ -169,11 +169,7 @@ public class ZPPInInterceptor implements SoapInterceptorInterface {
         processInZPPFictionNotification(mInMail);
       }
 
-      /*
-      if (mInMail != null && ZPPConstants.S_ZPP_SERVICE.equals(mInMail.getService()) &&
-          ZPPConstants.S_ZPP_ACTION_ADVICE_OF_DELIVERY.equals(mInMail.getAction())) {
-        processInZPPAdviceOfDelivery(mInMail, msg);
-      }*/
+     
       if (sigAnies != null) {
         LOG.log("Proccess in signal elments");
         processSignalMessages((List<Element>) sigAnies, moutMail, sb);

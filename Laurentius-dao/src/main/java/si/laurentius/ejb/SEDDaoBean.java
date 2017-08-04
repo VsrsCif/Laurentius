@@ -612,10 +612,11 @@ public class SEDDaoBean implements SEDDaoInterface {
       }
 
       memEManager.persist(me);
-
-      sender.send(message);
-
+      // deadlocks  TODO
+      //sender.send(message);
       mutUTransaction.commit();
+      // transaction is not working TODO!!!
+      sender.send(message);
       session.commit();
 
       LOG.formatedlog(
