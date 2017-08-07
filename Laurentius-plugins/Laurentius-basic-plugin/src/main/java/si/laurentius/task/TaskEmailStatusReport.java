@@ -46,12 +46,11 @@ public class TaskEmailStatusReport extends TaskEmailReport {
   public static final String KEY_REPORT_STATUS_CHANGE_START_INTEVRAL = "report.status.change.start.interval";
   public static final String KEY_REPORT_STATUS_CHANGE_END_INTEVRAL = "report.status.change.end.interval";
   public static final String KEY_REPORT_STATUS_SERVICE_LIST = "report.status.service-list";
-  public static final String KEY_REPORT_WRITE_TO_FOLDER = "report.status.write.folder";
+  
   public static final String KEY_REPORT_SHOW_MAIL_LIST = "report.status.show.mail.list";
   public static final String KEY_REPORT_NO_MAIL = "skip.on.NoMail";
 
-  final SimpleDateFormat SDF_YYYYMMDD_HHMISS = new SimpleDateFormat(
-          "yyyyMMdd_HHmmss");
+  
 
   /**
    *
@@ -70,7 +69,7 @@ public class TaskEmailStatusReport extends TaskEmailReport {
     List<String> outStatuses = new ArrayList<>();
     List<String> services = new ArrayList<>();
     String showMailDataList = null;
-    String writeToFolder = null;
+   
 
     if (!p.containsKey(KEY_SEDBOX)) {
       throw new TaskException(TaskException.TaskExceptionCode.InitException,
@@ -80,13 +79,7 @@ public class TaskEmailStatusReport extends TaskEmailReport {
               getLocalDomain();
     }
 
-    if (p.containsKey(KEY_REPORT_WRITE_TO_FOLDER)) {
-
-      writeToFolder = p.getProperty(KEY_REPORT_WRITE_TO_FOLDER);
-      if (!Utils.isEmptyString(writeToFolder)) {
-        writeToFolder = StringFormater.replaceProperties(writeToFolder);
-      }
-    }
+    
 
     if (!p.containsKey(KEY_REPORT_NO_MAIL)) {
       throw new TaskException(TaskException.TaskExceptionCode.InitException,
@@ -240,7 +233,7 @@ public class TaskEmailStatusReport extends TaskEmailReport {
       StatusReportOutMailFilter sromf = new StatusReportOutMailFilter();
       sromf.setSenderEBox(sedbox);
       sromf.setServiceList(services);
-      sromf.setStatusList(inStatuses);
+      sromf.setStatusList(outStatuses);
       sromf.setStatusDateFrom(startDate);
       sromf.setStatusDateTo(endDate);
 
@@ -283,23 +276,7 @@ public class TaskEmailStatusReport extends TaskEmailReport {
     swBody.append(System.lineSeparator());
     String res = swBody.toString();
 
-    if (!Utils.isEmptyString(writeToFolder)) {
-      File f = new File(writeToFolder);
-      if (!f.exists()) {
-        f.mkdir();
-      }
-
-      File fRep = new File(f, "report_" + SDF_YYYYMMDD_HHMISS.format(Calendar.
-              getInstance().getTime()));
-      try (FileOutputStream fos = new FileOutputStream(fRep)) {
-        fos.write(res.getBytes());
-        fos.flush();
-      } catch (IOException ex) {
-        LOG.logError("Error occured while writting report to file", ex);
-      }
-
-    }
-
+    
     return res;
   }
 

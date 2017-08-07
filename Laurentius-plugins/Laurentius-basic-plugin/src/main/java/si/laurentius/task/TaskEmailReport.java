@@ -4,9 +4,12 @@
  */
 package si.laurentius.task;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Properties;
 import javax.ejb.EJB;
 import javax.mail.MessagingException;
@@ -17,6 +20,8 @@ import si.laurentius.commons.email.EmailUtils;
 import si.laurentius.commons.interfaces.SEDDaoInterface;
 import si.laurentius.commons.interfaces.SEDReportInterface;
 import si.laurentius.commons.utils.SEDLogger;
+import si.laurentius.commons.utils.StringFormater;
+import si.laurentius.commons.utils.Utils;
 import si.laurentius.plugin.crontask.CronTaskDef;
 import si.laurentius.plugin.crontask.CronTaskPropertyDef;
 import si.laurentius.plugin.interfaces.PropertyListType;
@@ -57,7 +62,10 @@ public abstract class TaskEmailReport implements TaskExecutionInterface
      */
   public static final  String KEY_SEDBOX = "sedbox";
   
+  public static final String KEY_REPORT_WRITE_TO_FOLDER = "report.status.write.folder";
   
+  final SimpleDateFormat SDF_YYYYMMDD_HHMISS = new SimpleDateFormat(
+          "yyyyMMdd_HHmmss");
   
 
   /**
@@ -104,6 +112,8 @@ public abstract class TaskEmailReport implements TaskExecutionInterface
     EmailUtils memailUtil = new EmailUtils();
     StringWriter sw = new StringWriter();
     sw.append("Start report task: ");
+    
+     String writeToFolder = null;
 
     String smtpConf = null;
     if (p.containsKey(KEY_MAIL_CONFIG_JNDI)) {
@@ -112,12 +122,38 @@ public abstract class TaskEmailReport implements TaskExecutionInterface
     if (smtpConf == null || smtpConf.trim().isEmpty()) {
       smtpConf = "java:jboss/mail/Default";
     }
+    
+    if (p.containsKey(KEY_REPORT_WRITE_TO_FOLDER)) {
+
+      writeToFolder = p.getProperty(KEY_REPORT_WRITE_TO_FOLDER);
+      if (!Utils.isEmptyString(writeToFolder)) {
+        writeToFolder = StringFormater.replaceProperties(writeToFolder);
+      }
+    }
 
     EmailData ed = validateMailParameters(p);
     String strBody = generateMailReport(p, sw);
-    if (strBody != null) {
-
+    if (Utils.isEmptyString(strBody)) {
       ed.setBody(strBody);
+      
+      if (!Utils.isEmptyString(writeToFolder)) {
+      File f = new File(writeToFolder);
+      if (!f.exists()) {
+        f.mkdir();
+      }
+
+      
+      File fRep = new File(f, "report_"+getDefinition().getType() + "_" + SDF_YYYYMMDD_HHMISS.format(Calendar.
+              getInstance().getTime()));
+      try (FileOutputStream fos = new FileOutputStream(fRep)) {
+        fos.write(strBody.getBytes());
+        fos.flush();
+      } catch (IOException ex) {
+        LOG.logError("Error occured while writting report to file", ex);
+      }
+
+    }
+
 
       try {
         sw.append("Submit mail\n");
@@ -135,13 +171,7 @@ public abstract class TaskEmailReport implements TaskExecutionInterface
 
   abstract String generateMailReport(Properties p, StringWriter sw) throws TaskException;
 
-  /*
-   * public Properties getMailProperties() { Properties p = new Properties();
-   * p.setProperty(KEY_SEDBOX, "Sedbox"); p.setProperty(KEY_EMAIL_TO, "Email address to.");
-   * p.setProperty(KEY_EMAIL_FROM, "Email address from"); p.setProperty(KEY_EMAIL_SUBJECT,
-   * "Email subject"); p.setProperty(KEY_MAIL_CONFIG_JNDI,
-   * "Mail config jndi(def: java:jboss/mail/Default)"); return p; }
-   */
+ 
   /**
    *
    * @return
@@ -169,6 +199,8 @@ public abstract class TaskEmailReport implements TaskExecutionInterface
         createTTProperty(KEY_MAIL_CONFIG_JNDI, 
                 "Mail config jndi (def: java:jboss/mail/Default)", true,
                     "string", null, null, "java:jboss/mail/Default"));
+    
+     
     return tt;
   }
 
@@ -183,6 +215,7 @@ public abstract class TaskEmailReport implements TaskExecutionInterface
     String emailTo = null;
     String emailFrom = null;
     String emailSubject = null;
+      String writeToFolder = null;
 
     if (!p.containsKey(KEY_EMAIL_TO)) {
       throw new TaskException(TaskException.TaskExceptionCode.InitException,
@@ -202,6 +235,7 @@ public abstract class TaskEmailReport implements TaskExecutionInterface
     } else {
       emailSubject = p.getProperty(KEY_EMAIL_SUBJECT);
     }
+    
 
     EmailData emd = new EmailData(emailTo, null, emailSubject, null);
     emd.setEmailSenderAddress(emailFrom);

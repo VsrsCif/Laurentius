@@ -72,8 +72,10 @@ public class SEDReportBean implements SEDReportInterface {
 
     TypedQuery<Status> tqIn =
         memEManager.createNamedQuery("si.laurentius.report.getInMailStatusesByBox", Status.class);
+    
     TypedQuery<Status> tqOut =
         memEManager.createNamedQuery("si.laurentius.report.getOutMailStatusesByBox", Status.class);
+    
     tqIn.setParameter("sedBox", strSedBox);
     tqOut.setParameter("sedBox", strSedBox);
     

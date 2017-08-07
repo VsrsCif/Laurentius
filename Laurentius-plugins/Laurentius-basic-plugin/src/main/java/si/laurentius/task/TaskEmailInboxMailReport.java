@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Properties;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
+import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.enums.SEDInboxMailStatus;
 import si.laurentius.commons.exception.StorageException;
 import si.laurentius.cron.SEDTaskExecution;
@@ -20,6 +21,7 @@ import si.laurentius.plugin.interfaces.PropertyListType;
 import si.laurentius.plugin.interfaces.PropertyType;
 import si.laurentius.plugin.interfaces.TaskExecutionInterface;
 import si.laurentius.plugin.interfaces.exception.TaskException;
+import static si.laurentius.task.TaskEmailReport.KEY_SEDBOX;
 import si.laurentius.task.filter.InMailFilter;
 
 /**
@@ -60,11 +62,12 @@ public class TaskEmailInboxMailReport extends TaskEmailReport {
     boolean bSkipNoMail = true;
     String mailStatus = "RECEIVED";
 
-    if (!p.containsKey(KEY_SEDBOX)) {
+     if (!p.containsKey(KEY_SEDBOX)) {
       throw new TaskException(TaskException.TaskExceptionCode.InitException,
-          "Missing parameter:  '" + KEY_SEDBOX + "'!");
+              "Missing parameter:  '" + KEY_SEDBOX + "'!");
     } else {
-      sedbox = p.getProperty(KEY_SEDBOX);
+      sedbox = p.getProperty(KEY_SEDBOX) + '@' + SEDSystemProperties.
+              getLocalDomain();
     }
 
     if (!p.containsKey(KEY_NoMail)) {
