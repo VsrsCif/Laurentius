@@ -1,57 +1,167 @@
+
 <div class="main">
     <article class='content'>
-       
+
         <h2 id="gui/task-statusreport:report">Opravilo: statusno poročilo </h2>
-        Opravilo "Statusno Poročilo" je namenjen sporočanju o statusih pošiljk za posamezni predal na email naslov. S poročilom lahko hitro ugotovimo 
-zastoje pri obdelavi poročil, pošiljke v napaki oz število pošiljk, ki čakajo na prevzem v zaledne sisteme. Ravno tako lahko s poročilom izdelamo dnevna poročila o številu
-dohodne/izhodne pošte.
-
-        Poročilo omogoča obveščanje samo za določene storitve in statuse dohodne in izhodne pošte. 
+        Opravilo "Statusno Poročilo" je namenjen poročanju o statusih pošiljk za posamezne predale na elektronsko pošto.<br /><br />
+        Poročilo je sestavljeno iz treh delov:
         <ul>
-            <li><b>SED predal: (sedbox)</b>. Naslov SED predala za izdelavo poročila.  </li>
-            <li><b>Naslov email sporočila (email.subject)</b>.  Naslov e-pošte sporočila. </li>
-            <li><b>Prejemnik sporočila (email.to) </b>. Elektronski naslov sporočila. V primeru, da je naslovnikov več se ločijo z vejico: ','.</li>
-            <li><b>Pošiljatelj sporočila (email.from)</b>. Naslov, ki je naveden kot pošiljatelj sporočila.</li>
-            <li><b>Nastavitve SMTP (mail.config.jndi)</b>. Nastavitve SMTP strežnika na aplikacijskem strežniku. V primeru, da naslov 
-                vnesen je privzeta vrednost <code>mail.config.jndi.</code></li>
-			
-			<li><b>Seznam statusov dohodne pošte (report.status.in-list)</b>. Izbira statusov dohodne pošte za katere želimo izdelati poročilo</li>
-			<li><b>Seznam statusov izhodne pošte (report.status.out-list)</b>. Izbira statusov izhodne pošte za katere želimo izdelati poročilo</li>
-			<li><b>Seznam storitev(report.status.service-list)</b>. Izbira storitev za katere želimo izdelati poročilo</li>
-
-			<li><b>Pričetek časovnega okna spremembe statusa (report.status.change.start.interval)</b>. Pričetek časovnega okna spremembe statusa (v minutah od trenutnega časa)</li>
-			<li><b>Konec časovnega okna spremembe statusa (report.status.change.end.interval)</b>. Konec časovnega okna spremembe statusa (v minutah od trenutnega časa)</li>
-
-			<li><b>Oblika zapisa seznama (report.status.show.mail.list)</b>. Oblika zapisa seznama pošiljk. V primeru da oblika ni podana se seznami pošiljk ne izpišejo</li>
-<li><b>Ne pošlji če ni nobenih pošiljk (skip.on.NoMail)</b>. V primeru, da za podane kriterije ob času izdelave ni nobene pošiljke se v primeru vrednosti "true" poročilo ne izdela</li>
-<li><b>Shranjevanje poročila (report.status.write.folder)</b>. Lokalna mapa za shranjevanje poročil. </li>
-
-
-
-
+            <li>Seznam parametrov uporabljenih pri pripravi poročila.</li>
+            <li>Tabela števila pošiljk po statusu za dohodno in izhodni pošto.</li>
+            <li>Seznam podatkov o pošiljkah, ki so zajeti v poročilu. (Izpiše se največ do 500 pošiljk).</li>
         </ul>
+
+
+        S poročilom lahko izdelamo dnevna poročila o številu dohodne/izhodne pošte, lahko pa ga tudi uporabimo za nadzor delovanja aplikacije za primere:
+        zaznavanje zastojev pri obdelavi dohodnih poročil, zaznavanje težav pri izhodnih pošiljk, število čakajočih pošiljk za prevzem v zaledne sisteme, ... <br />
+        Primeri konfiguracij so opisani v nadaljevanju.<br /><br />
+
+        <br />
+
         <img src="img/gui/task-report-status.png" alt="Task sedbox report" width="680"/> <br />
-        <b></b>
-        Za uspešno pošiljanje email pošiljk, je treba pravilno nastaviti aplikacijski strežnik. 
-        V primeru "wildfly 8+" so nastavitve za izhodno pošto v datoteki standalone-ebms.xml v razdelku <code>urn:jboss:domain:mail</code>
-        Spodnji primer je za uporabo gmail smtp strežnika. 
-        <pre><code>
-&lt;subsystem xmlns="urn:jboss:domain:mail:2.0">
-   &lt;mail-session name="default" jndi-name="java:jboss/mail/Default">       
-       &lt;smtp-server ssl="true" outbound-socket-binding-ref="mail-smtp" username="[USERNAME]" password="*****"/>
-   &lt;/mail-session>
-&lt;/subsystem>
-. . . .
-Razdelek socket-binding-group popravite na:
+        <br />
 
-    &lt;outbound-socket-binding name="mail-smtp">
-        &lt;remote-destination host="smtp.gmail.com" port="465"/>
-    &lt;/outbound-socket-binding>
-</code></pre>
+        <h2 id="gui/task-statusreport:report">Parametri poročila</h2>
+
+        Splošni Parametri za izdelavo elektronskega sporočila:
+        <ul>
+            <li><b>Nastavitve SMTP (mail.config.jndi)</b>. Nastavitve SMTP strežnika na aplikacijskem strežniku. V primeru, da naslov 
+                vnesen je privzeta vrednost <code>java:jboss/mail/Default.</code> <b>Pred prvim pošiljanjem je potrebno izdelati vsaj eno konfiguracijo poštnega strežnika v <a href="#install/wildfly:email">wildfly nastavitvah</a>.</b></li>
+
+            <li><b>Shranjevanje poročila (email.export.folder)</b>. Lokalna mapa za shranjevanje vsebine poročila. V primeru, da mapa  ni podana se poročila ne shranjujejo</li>
+            <li><b>Ne pošlji če ni nobenih pošiljk (email.skipOnNoData)</b>. V primeru, da za podane kriterije ob času izdelave ni nobene pošiljke se v primeru vrednosti "true" poročilo ne pošlje</li>
+            <li><b>Prejemnik sporočila (email.to) </b>. Elektronski naslov sporočila. V primeru, da je naslovnikov več se ločijo z vejico: ','.</li>
+            <li><b>Pošiljatelj sporočila (email.from)</b>. Naslov, ki je naveden kot pošiljatelj sporočila.</li>            
+            <li><b>Naslov email sporočila (email.subject)</b>.  Naslov e-pošte sporočila. </li>
+        </ul>
+
+        <br />
+        V nadaljevanju so parametri poročila:        
+        <ul>		
+            <li><b>Lokalni predali (report.status.sedboxes)</b>. Seznam predalov za katere želimo izdelati poročila. </li>
+            <li><b>Seznam storitev (report.status.service-list)</b>. Izbira storitev za katere želimo izdelati poročilo</li>
+            <li><b>Seznam statusov dohodne pošte (report.status.in-list)</b>. Seznam statusov dohodne pošte za katere želimo izdelati poročilo.</li>
+            <li><b>Seznam statusov izhodne pošte (report.status.out-list)</b>. Seznam statusov izhodne pošte za katere želimo izdelati poročilo.</li>
+		    <li><b>Tip časovnega intervala (report.status.time.interval.type)</b>. Podani časovni interval je lahko po: <ul><li><b>času prejema pošiljke v sistem (AddedTime)</b>, kar je za dohodno pošto čas prejema (ReceivedDate) in za izhodno pošto čas oddaje pošiljke v laurentius (SubmittedDate);</li>
+				<li><b>času zadnje spremembe statusa pošiljke(StatusChangeTime)>.</b> </li></ul> 
+			</li>
+
+            <li><b>Pričetek časovnega okna spremembe statusa (report.status.time.start.interval)</b>. S parametrom določimo maksimalni čas spremembe statusa pošiljk (v minutah od trenutnega časa).</li>
+            <li><b>Pričetek časovnega okna spremembe statusa od zadnjega uspešne izdelave poročila (report.status.time.startFromLastEI)</b>. 
+                V primeru, da želimo samo nove spremembe statusov od zadnjega poročila označimo to vrednost.  V primeru, da je čas (report.status.time.start.interval) večji od časa izdelave zadnjega poročila 
+                se upošteva vrednost: report.status.time.start.interval. </li>
+            <li><b>Konec časovnega okna spremembe statusa (report.status.time.end.interval)</b>.S parametrom določimo minimalni čas spremembe statusa pošiljk (v minutah od trenutnega časa). </li>
+
+            <li><b>Podatkovna maska izpisa seznamov izhodne in dohode pošte (report.status.show.mail.datamask )</b>.  Z masko določamo podatke pošiljke, ki se izpišejo v seznamu. 
+                V primeru, da maska ni podana, se seznami pošiljk zajetih v poročilu ne izpisuje.</li>
+        </ul>
+
+        <br />
+
+
 
         
-        
+                <h2 id="gui/task-statusreport:reportInmail">Primer poročila: nova dohodna pošta za predal a.department</h2>
+         Koledar izvajanja opravila nastavimo tako, da prejemamo obvestila med delovnim časom (Dan v tednu: 1-5, Ura: 7-16) vsakih 5 minut (Minute: */5). 
+V primeru, da ni nobenih novih pošiljk poročila ne želimo sprejeti, zato nastatvimo parameter poročila: <b>email.skipOnNoData:</b> true.<br/><br/>
+<br /><br />
+        <table class="styled-table" style="font-size: 12px">
 
-        
+            <tbody>
+                <tr>
+                    <th>Parameter</th>
+                    <th>Vrednost</th>
+                    <th>Opis</th>
+                </tr>
+
+                <tr><td>email.skipOnNoData</td><td>true</td><td>Izdelava poročila samo v primeru, da je prispela kakšna pošiljka v status RECEIVED</td></tr>
+                <tr><td>report.status.sedboxes</td><td>a.department</td><td>Prispele pošiljke za lokalni predal:  a.department</td></tr>
+                <tr><td>report.status.in-list</td><td>Izberemo vse statuse</td><td>Statusi dohodnih pošiljk</td></tr>
+                <tr><td>report.status.out-list</td><td>/</td><td>Poročilo brez izhodnih pošiljk</td></tr>
+                <tr><td>report.status.time.interval.type</td><td>AddedTime</td><td>Zajemi pošiljke po času prispetja v sistem.</td></tr>
+
+                <tr><td>report.status.service-list</td><td>DeliveryWithReceipt,LegalDelivery_ZPP</td><td>Poročilo je narejeno za storitve: DeliveryWithReceipt,LegalDelivery_ZPP</td></tr>
+                <tr><td>report.status.time.start.interval</td><td>4320</td><td>Pričetek intervala prispelih pošiljk (zadnje tri dni: 60*24*3) (upoštevamo konec tedna, ko se poročilo ne izdeluje) </td></tr>
+                <tr><td>report.status.start.from.last.end.interval</td><td>true</td><td>Vrni samo seznam pošiljk, ki so prispel po zadnjem uspešno poslanem poročilu.</td></tr>
+                <tr><td>report.status.time.end.interval</td><td>0</td><td> za vse pošilje do trenutnega časa.</td></tr>
+                <tr><td>report.status.show.mail.datamask</td><td>${SenderEBox} ${ReceivedDate} ${Subject} ${Service} ${Action} ${Status}</td><td>Izpis seznama pošiljk</td></tr>
+            </tbody></table><br />
+
+        <h2 id="gui/task-statusreport:reportInmail">Primer poročila: izhodne pošiljke v napaki </h2>
+ Koledar izvajanja opravila nastavimo tako, da prejemamo obvestila med delovnim časom (Dan v tednu: 1-5, Ura: 7-16) vsakih 5 minut (Minute: */5). 
+V primeru, da ni nobene pošiljke v napaki poročila ne želimo sprejeti, zato nastavimo parameter poročila: <b>email.skipOnNoData:</b> true. <br/><br/>
+
+<br /><br />
+
+        <table class="styled-table" style="font-size: 12px">
+
+            <tbody>
+                <tr>
+                    <th>Parameter</th>
+                    <th>Vrednost</th>
+                    <th>Opis</th>
+                </tr>
+                <tr><td>email.skipOnNoData</td><td>true</td><td>Izdelava poročila samo v primeru, da je kakšna pošiljka v napaki</td></tr>
+                <tr><td>report.status.sedboxes</td><td>a.department, b.department</td><td>Prispele pošiljke za lokalna predala:  a.departmen,b.departmentt</td></tr>
+                <tr><td>report.status.in-list</td><td>/</td><td>Poročilo brez dohodnih pošiljk</td></tr>
+                <tr><td>report.status.out-list</td><td>FAILED</td><td>Pošiljke, ki so v statusi FAILED</td></tr>
+                <tr><td>report.status.service-list</td><td>DeliveryWithReceipt,LegalDelivery_ZPP</td><td>Poročilo je narejeno za storitve: DeliveryWithReceipt,LegalDelivery_ZPP</td></tr>
+				<tr><td>report.status.time.interval.type</td><td>StatusChangeTime</td><td>Časovni interval je po času zadnje spremembe statusa pošiljke.</td></tr>
+
+                <tr><td>report.status.time.start.interval</td><td>129600</td><td>Pričetek intervala časa spremembe statusa v FAILED v zadnjih 30 dneh </td></tr>
+                <tr><td>report.status.start.from.last.end.interval</td><td>false</td><td>Vedno vrni vse pošiljke v napaki v danem časovnem intervalu.</td></tr>
+                <tr><td>report.status.time.end.interval</td><td>0</td><td>Za vse pošilje do trenutnega časa.</td></tr>
+                <tr><td>report.status.show.mail.datamask</td><td>${Id} ${Service} ${Action} ${Status} ${SenderEBox} ${ReceiverEBox}</td><td>Izpis seznama pošiljk</td></tr>
+            </tbody>
+        </table><br />
+
+        <h2 id="gui/task-statusreport:reportStuckedInMail">Primer poročila: dohodne pošiljke, ki se ne obdelajo v predvidenem roku 20 minut v delovnih dneh od 7h do 15h</h2>
+      Koledar izvajanja opravila nastavimo tako, da prejemamo obvestila med delovnim časom (Dan v tednu: 1-5, Ura: 7-15) vsakih 5 minut (Minute: */5). 
+V primeru, da ni nobene pošiljke, ki se ni obdelala v predvidenem roku 20 minut, poročila ne želimo sprejeti, zato nastatvimo parameter poročila: <b>email.skipOnNoData:</b> true.  <br/><br/>      
+
+
+        <table class="styled-table" style="font-size: 12px">
+
+            <tbody>
+                <tr>
+                    <th>Parameter</th>
+                    <th>Vrednost</th>
+                    <th>Opis</th>
+                </tr>
+                <tr><td>email.skipOnNoData</td><td>true</td><td>Izdelava poročila samo v primeru, da je kakšna pošiljka "nesprocesirana"</td></tr>
+                <tr><td>report.status.sedboxes</td><td>a.department, b.department</td><td>Prispele pošiljke za lokalna predala:  a.departmen,b.department</td></tr>
+                <tr><td>report.status.in-list</td><td>LOCKED, PROCESS, PLOCKED, PREADY, ERROR</td><td>Statusi v obdelavi</td></tr>
+                <tr><td>report.status.out-list</td><td>/</td><td></td></tr>
+                <tr><td>report.status.service-list</td><td>DeliveryWithReceipt,LegalDelivery_ZPP</td><td>Poročilo je narejeno za storitve: DeliveryWithReceipt,LegalDelivery_ZPP</td></tr>
+                <tr><td>report.status.time.start.interval</td><td>129600</td><td>Pričetek intervala časa spremembe statusa v "Obdelavi" v zadnjih 30 dneh </td></tr>
+                <tr><td>report.status.start.from.last.end.interval</td><td>false</td><td>Vedno vrni vse pošiljke, ki so še vedno v statusi "v obdelavi".</td></tr>
+                <tr><td>report.status.time.end.interval</td><td>20</td><td>Za vse pošiljke, katerim se je status spremenil v "Obdelavo" pred 20 minutami in je še vedno v tem statusu.</td></tr>
+                <tr><td>report.status.show.mail.datamask</td><td>${Id} ${Service} ${Action} ${Status} ${SenderEBox} ${ReceiverEBox}</td><td>Izpis seznama pošiljk</td></tr>
+            </tbody> </table><br />
+
+ <h2 id="gui/task-statusreport:reportStuckedInMail">Primer poročila: dnevno poročilo o prispelih in izhodnih pošiljkah</h2>
+      Koledar izvajanja opravila nastavimo tako, da prejemamo poročilo vsak dan ob 15:45 za preteklih 24 ur (Dan v tednu:*, Ura: 15, minuta 45. <br/><br/>
+
+
+        <table class="styled-table" style="font-size: 12px">
+
+            <tbody>
+                <tr>
+                    <th>Parameter</th>
+                    <th>Vrednost</th>
+                    <th>Opis</th>
+                </tr>
+                <tr><td>email.skipOnNoData</td><td>false</td><td>Poročilo se izdela v vsakem primeru</td></tr>
+                <tr><td>report.status.sedboxes</td><td>a.department, b.department</td><td>Prispele pošiljke za lokalna predala:  a.departmen,b.department</td></tr>
+                <tr><td>report.status.in-list</td><td>Izbira vseh statusov</td><td></td></tr>
+                <tr><td>report.status.out-list</td><td>Izbira vseh statusov</td><td></td></tr>
+                <tr><td>report.status.service-list</td><td>DeliveryWithReceipt,LegalDelivery_ZPP</td><td>Poročilo je narejeno za storitve: DeliveryWithReceipt,LegalDelivery_ZPP</td></tr>
+                <tr><td>report.status.time.start.interval</td><td>1440</td><td>Pričetek intervala časa spremembe statusa v zadnjih 24 urah (24*60) </td></tr>
+                <tr><td>report.status.start.from.last.end.interval</td><td>false</td><td>Vedno vrni vse pošiljke, ki so še vedno v statusi "v obdelavi".</td></tr>
+                <tr><td>report.status.time.end.interval</td><td>0</td><td>Za vse pošiljke, ki so prispele do trenutka izdelave poročila.</td></tr>
+                <tr><td>report.status.show.mail.datamask</td><td>${Id} ${Service} ${Action} ${Status} ${SenderEBox} ${ReceiverEBox}</td><td>Izpis seznama pošiljk</td></tr>
+            </tbody> </table><br />
+
+
     </article>  
 </div>

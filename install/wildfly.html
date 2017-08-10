@@ -166,6 +166,34 @@ appl_1=WEBSERVICE
 appl_2=WEBSERVICE</code></pre>
 
 
+<h1 id="install/wildfly:email">Pošiljanje elektronske pošte</h1>
+        Aplikacijski strežnik wildfly omogoča nastavitev SMTP strežnika za pošiljanje elektronske pošte. Funkcionalnost se uporablja pri pošiljanju 
+statusnih poročil in ostalih obvestil aplikacije laurentius.
+
+        <br /> <br />
+ <b></b>
+        
+        V primeru "wildfly 8+" so nastavitve za izhodno pošto v datoteki standalone-laurentius.xml v razdelku <code>urn:jboss:domain:mail</code>
+        Spodnji primer je za uporabo gmail smtp strežnika. 
+        <pre><code>
+&lt;subsystem xmlns="urn:jboss:domain:mail:2.0">
+   &lt;mail-session name="default" jndi-name="java:jboss/mail/Default">       
+       &lt;smtp-server ssl="true" outbound-socket-binding-ref="mail-smtp" username="[USERNAME]" password="*****"/>
+   &lt;/mail-session>
+&lt;/subsystem>
+. . . .
+Razdelek socket-binding-group popravite na:
+
+    &lt;outbound-socket-binding name="mail-smtp">
+        &lt;remote-destination host="smtp.gmail.com" port="465"/>
+    &lt;/outbound-socket-binding>
+</code></pre>
+<br/>
+
+<b>Za podrobnejšo razlago in opis ostalih funkcionalnosti glej "dokumentacijo za wildfly"</b>
+
+
+
 
     </article>  
 </div>
