@@ -15,7 +15,7 @@ public class StatusReportOutMailFilter {
 
 
 
-  protected String senderEBox;
+  protected List<String> senderEBoxList;
 
   protected List<String> serviceList;
 
@@ -23,13 +23,16 @@ public class StatusReportOutMailFilter {
 
   protected Date statusDateFrom;
   protected Date statusDateTo;
+  
+   protected Date submittedDateFrom;
+  protected Date submittedDateTo;
 
-  public String getSenderEBox() {
-    return senderEBox;
+  public List<String> getSenderEBoxList() {
+    return senderEBoxList;
   }
 
-  public void setSenderEBox(String senderEBox) {
-    this.senderEBox = senderEBox;
+  public void setSenderEBoxList(List<String> senderEBox) {
+    this.senderEBoxList = senderEBox;
   }
 
   public List<String> getServiceList() {
@@ -62,6 +65,22 @@ public class StatusReportOutMailFilter {
 
   public void setStatusDateTo(Date statusDateTo) {
     this.statusDateTo = statusDateTo;
+  }
+
+  public Date getSubmittedDateFrom() {
+    return submittedDateFrom;
+  }
+
+  public void setSubmittedDateFrom(Date submittedDateFrom) {
+    this.submittedDateFrom = submittedDateFrom;
+  }
+
+  public Date getSubmittedDateTo() {
+    return submittedDateTo;
+  }
+
+  public void setSubmittedDateTo(Date submittedDateTo) {
+    this.submittedDateTo = submittedDateTo;
   }
 
  

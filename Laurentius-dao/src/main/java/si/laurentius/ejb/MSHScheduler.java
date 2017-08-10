@@ -37,6 +37,7 @@ import si.laurentius.cron.SEDCronJob;
 import si.laurentius.cron.SEDTaskExecution;
 import si.laurentius.cron.SEDTaskProperty;
 import si.laurentius.commons.SEDJNDI;
+import si.laurentius.commons.SEDValues;
 import si.laurentius.commons.enums.SEDTaskStatus;
 import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.interfaces.SEDDaoInterface;
@@ -44,7 +45,6 @@ import si.laurentius.commons.interfaces.SEDLookupsInterface;
 import si.laurentius.commons.interfaces.SEDPluginManagerInterface;
 import si.laurentius.commons.interfaces.SEDSchedulerInterface;
 import si.laurentius.commons.utils.SEDLogger;
-import si.laurentius.commons.utils.Utils;
 import si.laurentius.plugin.crontask.CronTaskDef;
 import si.laurentius.plugin.def.Plugin;
 
@@ -60,6 +60,8 @@ import si.laurentius.plugin.interfaces.exception.TaskException;
 @Lock(LockType.READ)
 @Startup
 public class MSHScheduler implements SEDSchedulerInterface {
+  
+  
 
   private static final SEDLogger LOG = new SEDLogger(MSHScheduler.class);
   @EJB(mappedName = SEDJNDI.JNDI_SEDDAO)
@@ -232,6 +234,8 @@ public class MSHScheduler implements SEDSchedulerInterface {
       return result;
     }
     Properties p = new Properties();
+    p.setProperty(SEDValues.S_CRON_ID_PROPERTY, mj.getId().toString());
+    p.setProperty(SEDValues.S_CRON_NAME_PROPERTY, mj.getName());
     for (SEDTaskProperty tp : mj.getSEDTask().getSEDTaskProperties()) {
       if (tp.getValue() != null) {
         p.setProperty(tp.getKey(), tp.getValue());

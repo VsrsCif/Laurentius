@@ -7,7 +7,7 @@ FOLDER_DEPLOY="test-deploy"
 BOUNDLE_NAME="Laurentius-test"
 
 rm -rf "$FOLDER_DEPLOY/$WILDFLY_HOME"
-unzip -q "$WILDFLY_HOME.zip" -d $FOLDER_DEPLOY
+unzip -q "../../settings/$WILDFLY_HOME.zip" -d $FOLDER_DEPLOY
 
 
 cd "$FOLDER_DEPLOY/$BOUNDLE_NAME/wildfly-10.1"
@@ -17,3 +17,4 @@ cd "$FOLDER_DEPLOY/$BOUNDLE_NAME/wildfly-10.1"
 cd "../../$WILDFLY_HOME/bin"
 
 ./laurentius-demo.sh --init -d mb-laurentius.si
+

@@ -39,10 +39,9 @@ import si.laurentius.commons.interfaces.SEDReportInterface;
 @TransactionManagement(TransactionManagementType.BEAN)
 public class SEDReportBean implements SEDReportInterface {
 
-
   /**
-     *
-     */
+   *
+   */
   @PersistenceContext(unitName = "ebMS_LAU_PU", name = "ebMS_LAU_PU")
   public EntityManager memEManager;
   /**
@@ -62,38 +61,98 @@ public class SEDReportBean implements SEDReportInterface {
    * @return
    */
   @Override
-  public SEDReportBoxStatus getStatusReport(String strSedBox, Date fromDateChanged, Date toDateChanged, List<String> inStatuses,  
+  public SEDReportBoxStatus getReportForStatusChangeInterval(List<String> lstSedBoxes,
+          Date fromDateChanged, Date toDateChanged, List<String> inStatuses,
           List<String> outStatuses, List<String> services) {
     SEDReportBoxStatus rbs = new SEDReportBoxStatus();
-    rbs.setSedbox(strSedBox);
+    
     rbs.setReportDate(Calendar.getInstance().getTime());
     rbs.setOutMail(new SEDReportBoxStatus.OutMail());
     rbs.setInMail(new SEDReportBoxStatus.InMail());
+    
+    if (lstSedBoxes == null || lstSedBoxes.isEmpty()){
+      return rbs;
+    }
 
-    TypedQuery<Status> tqIn =
-        memEManager.createNamedQuery("si.laurentius.report.getInMailStatusesByBox", Status.class);
-    
-    TypedQuery<Status> tqOut =
-        memEManager.createNamedQuery("si.laurentius.report.getOutMailStatusesByBox", Status.class);
-    
-    tqIn.setParameter("sedBox", strSedBox);
-    tqOut.setParameter("sedBox", strSedBox);
-    
-    tqIn.setParameter("services", services);
-    tqOut.setParameter("services", services);
-    
-    tqIn.setParameter("fromDateChanged", fromDateChanged);
-    tqIn.setParameter("toDateChanged", toDateChanged);
-    tqOut.setParameter("fromDateChanged", fromDateChanged);
-    tqOut.setParameter("toDateChanged", toDateChanged);
-    
-    tqIn.setParameter("statuses", inStatuses);
-    tqOut.setParameter("statuses", outStatuses);
+    if (inStatuses != null && !inStatuses.isEmpty()) {
 
-    rbs.getInMail().getStatuses().addAll(tqIn.getResultList());
-    rbs.getOutMail().getStatuses().addAll(tqOut.getResultList());
+      TypedQuery<Status> tqIn
+              = memEManager.createNamedQuery(
+                      "si.laurentius.report.getInMailStatusesByBox",
+                      Status.class);
 
+      tqIn.setParameter("sedBoxes", lstSedBoxes);
+      tqIn.setParameter("services", services);
+      tqIn.setParameter("fromDateChanged", fromDateChanged);
+      tqIn.setParameter("toDateChanged", toDateChanged);
+      tqIn.setParameter("statuses", inStatuses);
+      rbs.getInMail().getStatuses().addAll(tqIn.getResultList());
+
+    }
+
+    if (outStatuses != null && !outStatuses.isEmpty()) {
+
+      TypedQuery<Status> tqOut
+              = memEManager.createNamedQuery(
+                      "si.laurentius.report.getOutMailStatusesByBox",
+                      Status.class);
+
+      tqOut.setParameter("sedBoxes", lstSedBoxes);
+      tqOut.setParameter("services", services);
+      tqOut.setParameter("fromDateChanged", fromDateChanged);
+      tqOut.setParameter("toDateChanged", toDateChanged);
+      tqOut.setParameter("statuses", outStatuses);
+      rbs.getOutMail().getStatuses().addAll(tqOut.getResultList());
+    }
     return rbs;
   }
 
+   @Override
+  public SEDReportBoxStatus getReportForAddMailnterval(List<String> lstSedBoxes,
+          Date fromAddMailDate, Date toAddMailDate, List<String> inStatuses,
+          List<String> outStatuses, List<String> services) {
+    SEDReportBoxStatus rbs = new SEDReportBoxStatus();
+    
+    rbs.setReportDate(Calendar.getInstance().getTime());
+    rbs.setOutMail(new SEDReportBoxStatus.OutMail());
+    rbs.setInMail(new SEDReportBoxStatus.InMail());
+    
+    if (lstSedBoxes == null || lstSedBoxes.isEmpty()){
+      return rbs;
+    }
+
+    if (inStatuses != null && !inStatuses.isEmpty()) {
+
+      TypedQuery<Status> tqIn
+              = memEManager.createNamedQuery(
+                      "si.laurentius.report.getInMailStatusesByBoxAndReceivedDate",
+                      Status.class);
+
+      tqIn.setParameter("sedBoxes", lstSedBoxes);
+      tqIn.setParameter("services", services);
+      tqIn.setParameter("fromReceivedDate", fromAddMailDate);
+      tqIn.setParameter("toReceivedDate", toAddMailDate);
+      tqIn.setParameter("statuses", inStatuses);
+      rbs.getInMail().getStatuses().addAll(tqIn.getResultList());
+
+    }
+
+    if (outStatuses != null && !outStatuses.isEmpty()) {
+
+      TypedQuery<Status> tqOut
+              = memEManager.createNamedQuery(
+                      "si.laurentius.report.getInMailStatusesByBoxAndSubmittedDate",
+                      Status.class);
+
+      tqOut.setParameter("sedBoxes", lstSedBoxes);
+      tqOut.setParameter("services", services);
+      tqOut.setParameter("fromSubmittedDate", fromAddMailDate);
+      tqOut.setParameter("toSubmittedDate", toAddMailDate);
+      tqOut.setParameter("statuses", outStatuses);
+      rbs.getOutMail().getStatuses().addAll(tqOut.getResultList());
+    }
+    return rbs;
+  }
+
+   
 }

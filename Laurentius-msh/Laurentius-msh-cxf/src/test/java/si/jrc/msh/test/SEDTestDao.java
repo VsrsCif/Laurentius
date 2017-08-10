@@ -45,7 +45,7 @@ public class SEDTestDao implements SEDDaoInterface{
   }
 
   @Override
-  public SEDTaskExecution getLastSuccesfullTaskExecution(String type)
+  public SEDTaskExecution getLastSuccesfullTaskExecution(BigInteger cronId, String type)
       throws StorageException {
     throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
   }

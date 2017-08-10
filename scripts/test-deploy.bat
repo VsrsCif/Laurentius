@@ -12,7 +12,7 @@ echo Clear wildfly folder.
 RMDIR "%FOLDER_DEPLOY%\%WILDFLY_HOME%" /S /Q
 echo Unzip wildfly.
 rem "C:\Program Files (X86)\7-Zip\7z.exe" x  "%WILDFLY_HOME%.zip"  -o%FOLDER_DEPLOY% > nul
-"C:\Program Files\7-Zip\7z.exe" x  "%WILDFLY_HOME%.zip"  -o%FOLDER_DEPLOY% > nul
+"C:\Program Files\7-Zip\7z.exe" x  "..\..\settings\%WILDFLY_HOME%.zip"  -o%FOLDER_DEPLOY% > nul
 
 
 
@@ -27,3 +27,4 @@ cd "%WILDFLY_HOME%\bin"
 
 echo "Run laurentius."
 call laurentius-demo.bat --init -d test-laurentius.org
+

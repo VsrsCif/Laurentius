@@ -261,5 +261,5 @@ public interface SEDDaoInterface {
    * @param type
    * @return
    */
-  SEDTaskExecution getLastSuccesfullTaskExecution(String type) throws StorageException;
+  SEDTaskExecution getLastSuccesfullTaskExecution(BigInteger cronId, String type) throws StorageException;
 }

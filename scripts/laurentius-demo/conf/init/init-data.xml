@@ -1,110 +1,165 @@
 
-<SedLookups xmlns:ns2="http://laurentius.si/cron" xmlns:ns3="http://laurentius.si/interceptor" xmlns:ns4="http://laurentius.si/process" xmlns:ns5="http://laurentius.si/ebox" xmlns:ns6="http://laurentius.si/property" xmlns:ns7="http://laurentius.si/user" xmlns:ns8="http://laurentius.si/application" xmlns:ns9="http://laurentius.si/cert" xmlns:ns10="http://laurentius.si/cert/crl" exportDate="2017-04-02T06:03:28.005+02:00">
+<SedLookups xmlns:ns2="http://laurentius.si/cron" xmlns:ns3="http://laurentius.si/interceptor" xmlns:ns4="http://laurentius.si/process" xmlns:ns5="http://laurentius.si/ebox" xmlns:ns6="http://laurentius.si/property" xmlns:ns7="http://laurentius.si/user" xmlns:ns8="http://laurentius.si/application" xmlns:ns9="http://laurentius.si/cert" xmlns:ns10="http://laurentius.si/cert/crl" exportDate="2017-08-10T09:13:55.242+02:00">
     <SEDCronJobs>
-        <ns2:SEDCronJob id="15" name="ZPPSign-B-Department" active="true" second="0" minute="*/5" hour="8-16" dayOfMonth="*" month="*" dayOfWeek="1-5">
+        <ns2:SEDCronJob id="29" name="ZPPSign-B-Department" active="true" second="0" minute="*/5" hour="8-16" dayOfMonth="*" month="*" dayOfWeek="1-5">
             <ns2:SEDTask plugin="LegalZPP" type="zpp-plugin" pluginVersion="1.0.0">
-                <ns2:SEDTaskProperty id="16" key="zpp.sedbox">b.department</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty id="17" key="zpp.sign.key.alias">test-zpp-sign</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty id="18" key="zpp.max.mail.count">100</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="30" key="zpp.sedbox">b.department</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="31" key="zpp.sign.key.alias">test-zpp-sign</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="32" key="zpp.max.mail.count">100</ns2:SEDTaskProperty>
             </ns2:SEDTask>
         </ns2:SEDCronJob>
-        <ns2:SEDCronJob id="19" name="ZPPSign-A-Department" active="true" second="0" minute="*/5" hour="8-16" dayOfMonth="*" month="*" dayOfWeek="1-5">
+        <ns2:SEDCronJob id="33" name="ZPPSign-A-Department" active="true" second="0" minute="*/5" hour="8-16" dayOfMonth="*" month="*" dayOfWeek="1-5">
             <ns2:SEDTask plugin="LegalZPP" type="zpp-plugin" pluginVersion="1.0.0">
-                <ns2:SEDTaskProperty id="20" key="zpp.sedbox">a.department</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty id="21" key="zpp.sign.key.alias">test-zpp-sign</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty id="22" key="zpp.max.mail.count">100</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="34" key="zpp.sedbox">a.department</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="35" key="zpp.sign.key.alias">test-zpp-sign</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="36" key="zpp.max.mail.count">100</ns2:SEDTaskProperty>
             </ns2:SEDTask>
         </ns2:SEDCronJob>
-			<ns2:SEDCronJob id="27" name="ZPPCreateFiction" active="true" second="0" minute="*/10" hour="*" dayOfMonth="*" month="*" dayOfWeek="*">
-						<ns2:SEDTask plugin="LegalZPP" type="zpp-fiction-plugin" pluginVersion="1.0.0">
-						    <ns2:SEDTaskProperty id="30" key="zpp.sign.key.alias">test-laurentius</ns2:SEDTaskProperty>
-						    <ns2:SEDTaskProperty id="31" key="zpp.max.mail.count">100</ns2:SEDTaskProperty>
-						</ns2:SEDTask>
-					</ns2:SEDCronJob>
-			 <ns2:SEDCronJob id="30" name="Archive" active="true" second="0" minute="10" hour="01" dayOfMonth="*" month="*" dayOfWeek="6">
+        <ns2:SEDCronJob id="37" name="ZPPCreateFiction" active="true" second="0" minute="*/10" hour="*" dayOfMonth="*" month="*" dayOfWeek="*">
+            <ns2:SEDTask plugin="LegalZPP" type="zpp-fiction-plugin" pluginVersion="1.0.0">
+                <ns2:SEDTaskProperty id="38" key="zpp.sign.key.alias">test-laurentius</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="39" key="zpp.max.mail.count">100</ns2:SEDTaskProperty>
+            </ns2:SEDTask>
+        </ns2:SEDCronJob>
+        <ns2:SEDCronJob id="40" name="Archive" active="true" second="0" minute="10" hour="01" dayOfMonth="*" month="*" dayOfWeek="6">
             <ns2:SEDTask plugin="BasicTaskPlugin" type="archive" pluginVersion="1.0.0">
-                <ns2:SEDTaskProperty id="56" key="archive.folder">${laurentius.home}/test-archive/</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty id="57" key="archive.chunk.size">5000</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty id="58" key="archive.delete.records">true</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty id="59" key="archive.passwords">false</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty id="60" key="archive.day.offset">30</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="41" key="archive.folder">${laurentius.home}/test-archive/</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="42" key="archive.chunk.size">5000</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="43" key="archive.delete.records">true</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="44" key="archive.passwords">false</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="45" key="archive.day.offset">30</ns2:SEDTaskProperty>
             </ns2:SEDTask>
         </ns2:SEDCronJob>
-        <ns2:SEDCronJob id="36" name="Backup" active="true" second="0" minute="10" hour="23" dayOfMonth="*" month="*" dayOfWeek="*">
+        <ns2:SEDCronJob id="46" name="Backup" active="true" second="0" minute="10" hour="23" dayOfMonth="*" month="*" dayOfWeek="*">
             <ns2:SEDTask plugin="BasicTaskPlugin" type="backup" pluginVersion="1.0.0">
-                <ns2:SEDTaskProperty id="37" key="backup.folder">${laurentius.home}/test-backup/</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty id="38" key="backup.chunk.size">5000</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty id="39" key="backup.clear.first">true</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty id="40" key="backup.passwords">false</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="47" key="backup.folder">${laurentius.home}/test-backup/</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="48" key="backup.chunk.size">5000</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="49" key="backup.clear.first">true</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="50" key="backup.passwords">false</ns2:SEDTaskProperty>
             </ns2:SEDTask>
         </ns2:SEDCronJob>
-        <ns2:SEDCronJob id="42" name="FileSubmitterDRW" active="true" second="30" minute="*/3" hour="*" dayOfMonth="*" month="*" dayOfWeek="*">
+        <ns2:SEDCronJob id="51" name="FileSubmitterDRW" active="true" second="30" minute="*/3" hour="*" dayOfMonth="*" month="*" dayOfWeek="*">
             <ns2:SEDTask plugin="BasicTaskPlugin" type="filesubmitter" pluginVersion="1.0.0">
-                <ns2:SEDTaskProperty id="50" key="file.submit.folder">${laurentius.home}/submit/dwr/</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty id="51" key="service">DeliveryWithReceipt</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty id="52" key="action">Delivery</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty id="53" key="receiverEBox"></ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty id="54" key="senderEBox"></ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="52" key="file.submit.folder">${laurentius.home}/submit/dwr/</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="53" key="service">DeliveryWithReceipt</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="54" key="action">Delivery</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="55" key="receiverEBox"></ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="56" key="senderEBox"></ns2:SEDTaskProperty>
             </ns2:SEDTask>
         </ns2:SEDCronJob>
-        <ns2:SEDCronJob id="365" name="StatusReport-A-Department" active="false" second="0" minute="0" hour="14" dayOfMonth="*" month="*" dayOfWeek="1-5">
+        <ns2:SEDCronJob id="57" name="Report-InMail-ADepartment" active="false" second="0" minute="*/5" hour="7-16" dayOfMonth="*" month="*" dayOfWeek="1-5">
             <ns2:SEDTask plugin="BasicTaskPlugin" type="statusreport" pluginVersion="1.0.0">
-                <ns2:SEDTaskProperty id="366" key="sedbox">a.department</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty id="367" key="email.to">receiver.one@not.exists.com,receiver.two@not.exists.com</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty id="368" key="email.from">change.me@not.exists.com</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty id="369" key="email.subject">[Laurentius] Status report for a.department</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty id="370" key="mail.config.jndi">java:jboss/mail/Default</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="125" key="mail.config.jndi">java:jboss/mail/Default</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="126" key="email.export.folder"></ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="127" key="email.skipOnNoData">true</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="128" key="email.to">receiver.one@not.exists.com,receiver.two@not.exists.com</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="129" key="email.from">change.me@not.exists.com</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="130" key="email.subject">[Laurentius] InMail for A-Department</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="131" key="report.status.sedboxes">a.department</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="132" key="report.status.service-list">DeliveryWithReceipt,LegalDelivery_ZPP</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="133" key="report.status.in-list">RECEIVED,PROCESS,PREADY,LOCKED,PLOCKED,DELIVERED,ERROR,DELETED</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="134" key="report.status.out-list"/>
+                <ns2:SEDTaskProperty id="135" key="report.status.time.interval.type">AddedTime</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="136" key="report.status.time.start.interval">1440</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="137" key="report.status.time.startFromLastEI">true</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="138" key="report.status.time.end.interval">5</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="139" key="report.status.show.mail.datamask">${SenderEBox} ${ReceivedDate} ${Subject} ${Service} ${Action} ${Status}</ns2:SEDTaskProperty>
             </ns2:SEDTask>
         </ns2:SEDCronJob>
-        <ns2:SEDCronJob id="373" name="InMailReport-A-Department" active="false" second="0" minute="*/10" hour="*" dayOfMonth="*" month="*" dayOfWeek="1-5">
-            <ns2:SEDTask plugin="BasicTaskPlugin" type="inboxreport" pluginVersion="1.0.0">
-                <ns2:SEDTaskProperty id="374" key="sedbox">a.department</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty id="375" key="email.to">receiver.one@not.exists.com,receiver.two@not.exists.com</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty id="376" key="email.from">change.me@not.exists.com</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty id="377" key="email.subject">[Laurentius] Incomming mail for a.Department</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty id="378" key="mail.config.jndi">java:jboss/mail/Default</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty id="379" key="skip.on.NoMail">true</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty id="380" key="new.only">true</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty id="381" key="mail.status">RECEIVED</ns2:SEDTaskProperty>
+        <ns2:SEDCronJob id="72" name="Report-DailyReport" active="false" second="0" minute="30" hour="15" dayOfMonth="*" month="*" dayOfWeek="*">
+            <ns2:SEDTask plugin="BasicTaskPlugin" type="statusreport" pluginVersion="1.0.0">
+                <ns2:SEDTaskProperty id="140" key="mail.config.jndi">java:jboss/mail/Default</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="141" key="email.export.folder">${laurentius.home}/reports/daily</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="142" key="email.skipOnNoData">false</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="143" key="email.to">receiver.one@not.exists.com,receiver.two@not.exists.com</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="144" key="email.from">change.me@not.exists.com</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="145" key="email.subject">[Laurentius] Daily status report</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="146" key="report.status.sedboxes">a.department,b.department</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="147" key="report.status.service-list">DeliveryWithReceipt,LegalDelivery_ZPP</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="148" key="report.status.in-list">RECEIVED,PROCESS,PREADY,LOCKED,PLOCKED,DELIVERED,ERROR,DELETED</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="149" key="report.status.out-list">SUBMITTED,PENDING,PUSHING,PULLREADY,SCHEDULE,SENT,DELIVERED,ERROR,PROCESS,FAILED,DELETED</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="150" key="report.status.time.interval.type">AddedTime</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="151" key="report.status.time.start.interval">1440</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="152" key="report.status.time.startFromLastEI">false</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="153" key="report.status.time.end.interval">5</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="154" key="report.status.show.mail.datamask">${Id} ${Service} ${Action} ${Status} ${SenderEBox} ${ReceiverEBox}</ns2:SEDTaskProperty>
+            </ns2:SEDTask>
+        </ns2:SEDCronJob>
+        <ns2:SEDCronJob id="87" name="Report-FailedOutMail" active="false" second="0" minute="*/5" hour="*" dayOfMonth="*" month="*" dayOfWeek="*">
+            <ns2:SEDTask plugin="BasicTaskPlugin" type="statusreport" pluginVersion="1.0.0">
+                <ns2:SEDTaskProperty id="186" key="mail.config.jndi">java:jboss/mail/Default</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="187" key="email.export.folder"></ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="188" key="email.skipOnNoData">true</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="189" key="email.to">receiver.one@not.exists.com,receiver.two@not.exists.com</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="190" key="email.from">change.me@not.exists.com</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="191" key="email.subject">[Laurentius] FailedOutMail</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="192" key="report.status.sedboxes">a.department,b.department</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="193" key="report.status.service-list">DeliveryWithReceipt,LegalDelivery_ZPP</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="194" key="report.status.in-list"/>
+                <ns2:SEDTaskProperty id="195" key="report.status.out-list">FAILED</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="196" key="report.status.time.interval.type">StatusChangedTime</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="197" key="report.status.time.start.interval">4320</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="198" key="report.status.time.startFromLastEI">false</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="199" key="report.status.time.end.interval">5</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="200" key="report.status.show.mail.datamask">${Id} ${Service}  ${SenderEBox} ${ReceiverEBox}</ns2:SEDTaskProperty>
+            </ns2:SEDTask>
+        </ns2:SEDCronJob>
+        <ns2:SEDCronJob id="102" name="Report-StuckedInMail" active="false" second="0" minute="*/5" hour="7-16" dayOfMonth="*" month="*" dayOfWeek="1-5">
+            <ns2:SEDTask plugin="BasicTaskPlugin" type="statusreport" pluginVersion="1.0.0">
+                <ns2:SEDTaskProperty id="171" key="mail.config.jndi">java:jboss/mail/Default</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="172" key="email.export.folder"></ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="173" key="email.skipOnNoData">true</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="174" key="email.to">receiver.one@not.exists.com,receiver.two@not.exists.com</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="175" key="email.from">change.me@not.exists.com</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="176" key="email.subject">[Laurentius] Stucked InMail</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="177" key="report.status.sedboxes">a.department,b.department</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="178" key="report.status.service-list">DeliveryWithReceipt,LegalDelivery_ZPP</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="179" key="report.status.in-list">PROCESS,PREADY,LOCKED,PLOCKED,ERROR</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="180" key="report.status.out-list"/>
+                <ns2:SEDTaskProperty id="181" key="report.status.time.interval.type">StatusChangedTime</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="182" key="report.status.time.start.interval">4320</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="183" key="report.status.time.startFromLastEI">false</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="184" key="report.status.time.end.interval">5</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="185" key="report.status.show.mail.datamask">${Id} ${Service} ${Action} ${Status} ${SenderEBox} ${ReceiverEBox}</ns2:SEDTaskProperty>
             </ns2:SEDTask>
         </ns2:SEDCronJob>
     </SEDCronJobs>
     <SEDInterceptors>
-        <ns3:SEDInterceptor id="23" name="ZPP_InMessages" active="true" interceptEvent="InMessage" interceptRole="All">
-            <ns3:SEDInterceptorRule id="24" property="Service" predicate="=" value="LegalDelivery_ZPP"/>
+        <ns3:SEDInterceptor id="117" name="ZPP_InMessages" active="true" interceptEvent="InMessage" interceptRole="All">
+            <ns3:SEDInterceptorRule id="118" property="Service" predicate="=" value="LegalDelivery_ZPP"/>
             <ns3:SEDInterceptorInstance plugin="LegalZPP" type="ZPPInInterceptor" pluginVersion="1.0.0"/>
         </ns3:SEDInterceptor>
-        <ns3:SEDInterceptor id="25" name="ZPP_OutMessages" active="true" interceptEvent="OutMessage" interceptRole="All">
-            <ns3:SEDInterceptorRule id="26" property="Service" predicate="=" value="LegalDelivery_ZPP"/>
+        <ns3:SEDInterceptor id="119" name="ZPP_OutMessages" active="true" interceptEvent="OutMessage" interceptRole="All">
+            <ns3:SEDInterceptorRule id="120" property="Service" predicate="=" value="LegalDelivery_ZPP"/>
             <ns3:SEDInterceptorInstance plugin="LegalZPP" type="ZPPOutInterceptor" pluginVersion="1.0.0"/>
         </ns3:SEDInterceptor>
     </SEDInterceptors>
     <SEDProcessors>
-        <ns4:SEDProcessor id="5" name="drw_001" active="false" deliveredOnSuccess="true">
-            <ns4:SEDProcessorRule id="6" property="Service" predicate="=" value="DeliveryWithReceipt"/>
-            <ns4:SEDProcessorInstance id="7" type="xslt" plugin="BasicTaskPlugin" pluginVersion="1.0.0">
-                <ns4:SEDProcessorProperty id="8" key="imp.xslt.instance">vsrs2zbs_001</ns4:SEDProcessorProperty>
+        <ns4:SEDProcessor id="8" name="drw_001" active="false" deliveredOnSuccess="true">
+            <ns4:SEDProcessorRule id="9" property="Service" predicate="=" value="DeliveryWithReceipt"/>
+            <ns4:SEDProcessorInstance id="10" type="xslt" plugin="BasicTaskPlugin" pluginVersion="1.0.0">
+                <ns4:SEDProcessorProperty id="11" key="imp.xslt.instance">vsrs2zbs_001</ns4:SEDProcessorProperty>
             </ns4:SEDProcessorInstance>
-            <ns4:SEDProcessorInstance id="9" type="export" plugin="BasicTaskPlugin" pluginVersion="1.0.0">
-                <ns4:SEDProcessorProperty id="10" key="imp.export.metadata">true</ns4:SEDProcessorProperty>
-                <ns4:SEDProcessorProperty id="11" key="imp.export.overwrite">true</ns4:SEDProcessorProperty>
-                <ns4:SEDProcessorProperty id="12" key="imp.export.metadata.filename">metadata_${Id}.xml</ns4:SEDProcessorProperty>
-                <ns4:SEDProcessorProperty id="13" key="imp.export.filemask">${Id}_{PART-Id}_${PART-Filename}</ns4:SEDProcessorProperty>
-                <ns4:SEDProcessorProperty id="14" key="imp.export.folder">${laurentius.home}/test-export/${SenderEBox}_${Service}_${Id}</ns4:SEDProcessorProperty>
+            <ns4:SEDProcessorInstance id="12" type="export" plugin="BasicTaskPlugin" pluginVersion="1.0.0">
+                <ns4:SEDProcessorProperty id="13" key="imp.export.metadata">true</ns4:SEDProcessorProperty>
+                <ns4:SEDProcessorProperty id="14" key="imp.export.overwrite">true</ns4:SEDProcessorProperty>
+                <ns4:SEDProcessorProperty id="15" key="imp.export.metadata.filename">metadata_${Id}.xml</ns4:SEDProcessorProperty>
+                <ns4:SEDProcessorProperty id="16" key="imp.export.filemask">${Id}_{PART-Id}_${PART-Filename}</ns4:SEDProcessorProperty>
+                <ns4:SEDProcessorProperty id="17" key="imp.export.folder">${laurentius.home}/test-export/${SenderEBox}_${Service}_${Id}</ns4:SEDProcessorProperty>
             </ns4:SEDProcessorInstance>
         </ns4:SEDProcessor>
-		<ns4:SEDProcessor  name="zpp_001" active="false" deliveredOnSuccess="true">
-            <ns4:SEDProcessorRule  property="Service" predicate="=" value="LegalDelivery_ZPP"/>
-            <ns4:SEDProcessorRule  property="Action" predicate="=" value="DeliveryNotification"/>
-            <ns4:SEDProcessorInstance  type="xslt" plugin="BasicTaskPlugin" pluginVersion="1.0.0">
-                <ns4:SEDProcessorProperty  key="imp.xslt.instance">vsrs2zbs_001</ns4:SEDProcessorProperty>
+        <ns4:SEDProcessor id="18" name="zpp_001" active="false" deliveredOnSuccess="true">
+            <ns4:SEDProcessorRule id="19" property="Service" predicate="=" value="LegalDelivery_ZPP"/>
+            <ns4:SEDProcessorRule id="20" property="Action" predicate="=" value="DeliveryNotification"/>
+            <ns4:SEDProcessorInstance id="21" type="xslt" plugin="BasicTaskPlugin" pluginVersion="1.0.0">
+                <ns4:SEDProcessorProperty id="22" key="imp.xslt.instance">vsrs2zbs_001</ns4:SEDProcessorProperty>
             </ns4:SEDProcessorInstance>
-            <ns4:SEDProcessorInstance type="export" plugin="BasicTaskPlugin" pluginVersion="1.0.0">
-                <ns4:SEDProcessorProperty key="imp.export.metadata">true</ns4:SEDProcessorProperty>
-                <ns4:SEDProcessorProperty key="imp.export.overwrite">true</ns4:SEDProcessorProperty>
-                <ns4:SEDProcessorProperty key="imp.export.metadata.filename">metadata_${Id}.xml</ns4:SEDProcessorProperty>
-                <ns4:SEDProcessorProperty key="imp.export.filemask">${Id}_${PART-Id}_${PART-Filename}</ns4:SEDProcessorProperty>
-                <ns4:SEDProcessorProperty key="imp.export.folder">${laurentius.home}/test-export/${SenderEBox}_${Service}_${Id}</ns4:SEDProcessorProperty>
+            <ns4:SEDProcessorInstance id="23" type="export" plugin="BasicTaskPlugin" pluginVersion="1.0.0">
+                <ns4:SEDProcessorProperty id="24" key="imp.export.metadata">true</ns4:SEDProcessorProperty>
+                <ns4:SEDProcessorProperty id="25" key="imp.export.overwrite">true</ns4:SEDProcessorProperty>
+                <ns4:SEDProcessorProperty id="26" key="imp.export.metadata.filename">metadata_${Id}.xml</ns4:SEDProcessorProperty>
+                <ns4:SEDProcessorProperty id="27" key="imp.export.filemask">${Id}_${PART-Id}_${PART-Filename}</ns4:SEDProcessorProperty>
+                <ns4:SEDProcessorProperty id="28" key="imp.export.folder">${laurentius.home}/test-export/${SenderEBox}_${Service}_${Id}</ns4:SEDProcessorProperty>
             </ns4:SEDProcessorInstance>
         </ns4:SEDProcessor>
     </SEDProcessors>
@@ -120,7 +175,7 @@
         </ns7:SEDUser>
         <ns7:SEDUser userId="admin" adminRole="true" activeFromDate="2010-04-20+02:00">
             <ns5:SEDBox localBoxName="a.department" activeFromDate="2010-04-20+02:00"/>
-            <ns5:SEDBox localBoxName="b.department" activeFromDate="20106-04-20+02:00"/>
+            <ns5:SEDBox localBoxName="b.department" activeFromDate="2010-04-20+02:00"/>
         </ns7:SEDUser>
     </SEDUsers>
     <SEDApplications>
@@ -139,5 +194,10 @@
         <ns9:SEDCertPassword alias="test-zpp-sign" password="key1234" keyPassword="false"/>
         <ns9:SEDCertPassword alias="test-tls" password="key1234" keyPassword="false"/>
     </SEDCertPassword>
-    <SEDCertCRLs/>
+    <SEDCertCRLs>
+        <ns10:SEDCertCRL issuerDN="OU=sigov-ca,O=state-institutions,C=si" issuerDigestValue="1baf153f06e9781bd7ef841e66cffb6a28d40f0f" effectiveDate="2017-08-09T14:23:36+02:00" nextUpdateDate="2017-08-12T14:23:36+02:00" retrievedDate="2017-08-10T09:08:22.083+02:00" filePath="/sluzba/code/SVEV2.0/Laurentius.1.0.bugfix/scripts/test-deploy/wildfly-10.1.0.Final/standalone/data/laurentius-home/conf/security/crl/CRL_7814475938087336750.crl">
+            <ns10:Url protocol="ldap">ldap://x500.gov.si/ou=sigov-ca,o=state-institutions,c=si?certificaterevocationlist?base</ns10:Url>
+            <ns10:Url protocol="http">http://www.sigov-ca.gov.si/crl/sigov-ca.crl</ns10:Url>
+        </ns10:SEDCertCRL>
+    </SEDCertCRLs>
 </SedLookups>

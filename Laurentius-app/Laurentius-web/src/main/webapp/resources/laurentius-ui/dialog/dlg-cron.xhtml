@@ -24,7 +24,7 @@
                     <p:layoutUnit position="center" rendered="#{empty adminSEDCronJobView.editable}" >
                         <h:outputText value="#{msg['SelectTableRow']}" />
                     </p:layoutUnit>
-                    <p:layoutUnit  header="Cron data" position="center" rendered="#{not empty adminSEDCronJobView.editable}"  >
+                    <p:layoutUnit  header="#{msg['CronData']}" position="center" rendered="#{not empty adminSEDCronJobView.editable}"  >
                         <p:panelGrid  columns="2" columnClasses="grid-label,value" style="width:100%; height: 220px ">
 
                             <h:outputText value="#{msg['Name']}:" />
@@ -56,7 +56,7 @@
                             <p:inputText value="#{adminSEDCronJobView.editable.dayOfWeek}" style="width: 120px" />
                         </p:panelGrid>
                     </p:layoutUnit>
-                    <p:layoutUnit header="task data" position="east" rendered="#{not empty adminSEDCronJobView.editable}" 
+                    <p:layoutUnit header="#{msg['TaskData']}" position="east" rendered="#{not empty adminSEDCronJobView.editable}" 
                                   size="450" minSize="450" maxSize="450"  >
 
                         <p:panelGrid  columns="4" columnClasses="grid-label,value,grid-label,value" style="width: 100%" >

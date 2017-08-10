@@ -10,11 +10,24 @@
         <property column="COUNT" name="Count"   type="java.math.BigInteger" />        
     </class>    
     
+    <sql-query name="si.laurentius.report.getInMailStatusesByBoxAndReceivedDate">
+        <return  class="si.laurentius.report.Status"/><![CDATA[
+        SELECT service || '-' || status as ID , service, status, count(id) as COUNT
+        FROM lau_inbox
+        WHERE RECEIVER_EBOX in (:sedBoxes) 
+        and  STATUS  in (:statuses)
+        and  SERVICE  in (:services)
+        and  DATE_RECEIVED>= :fromReceivedDate
+        and  DATE_RECEIVED <= :toReceivedDate
+        GROUP BY service, status                 
+        ORDER BY service, status]]>
+    </sql-query>
+    
     <sql-query name="si.laurentius.report.getInMailStatusesByBox">
         <return  class="si.laurentius.report.Status"/><![CDATA[
         SELECT service || '-' || status as ID , service, status, count(id) as COUNT
         FROM lau_inbox
-        WHERE RECEIVER_EBOX = :sedBox
+        WHERE RECEIVER_EBOX in (:sedBoxes) 
         and  STATUS  in (:statuses)
         and  SERVICE  in (:services)
         and  DATE_STATUS >= :fromDateChanged
@@ -22,11 +35,25 @@
         GROUP BY service, status                 
         ORDER BY service, status]]>
     </sql-query>
+    
+     <sql-query name="si.laurentius.report.getInMailStatusesByBoxAndSubmittedDate">
+        <return  class="si.laurentius.report.Status"/>
+        <![CDATA[SELECT service || '-' || status as ID , service, status, count(id) as COUNT
+        FROM lau_outbox
+        WHERE SENDER_EBOX in (:sedBoxes)
+        and  STATUS  in (:statuses)
+        and  SERVICE  in (:services)
+        and  DATE_SUBMITTED >= :fromSubmittedDate
+        and  DATE_SUBMITTED <= :toSubmittedDate
+        GROUP BY service, status
+        ORDER BY service, status]]>
+    </sql-query>
+    
     <sql-query name="si.laurentius.report.getOutMailStatusesByBox">
         <return  class="si.laurentius.report.Status"/>
         <![CDATA[SELECT service || '-' || status as ID , service, status, count(id) as COUNT
         FROM lau_outbox
-        WHERE SENDER_EBOX = :sedBox
+        WHERE SENDER_EBOX in (:sedBoxes)
         and  STATUS  in (:statuses)
         and  SERVICE  in (:services)
         and  DATE_STATUS >= :fromDateChanged

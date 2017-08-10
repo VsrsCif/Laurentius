@@ -1,5 +1,0 @@
-To test deployment in linux install 
- - 7z zip utils 
- - java
-
-wine cmd /c test-deploy.bat

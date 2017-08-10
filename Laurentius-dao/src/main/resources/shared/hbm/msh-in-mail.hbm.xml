@@ -26,7 +26,7 @@
         <property column="DATE_STATUS" name="StatusDate"   type="java.util.Date" index="Idx_date_status"/>
         <property column="DATE_SUBMITTED" name="SubmittedDate"   type="java.util.Date" index="Idx_date_submit" />
         <property column="DATE_SENT" name="SentDate"       type="java.util.Date" index="Idx_date_sent"/>
-        <property column="DATE_RECEIVED" name="ReceivedDate"   type="java.util.Date" index="Idx_date_received" />
+            <property column="DATE_RECEIVED" name="ReceivedDate"   type="java.util.Date" index="Idx_date_received" />
         <property column="DATE_DELIVERED" name="DeliveredDate"  type="java.util.Date" index="Idx_date_delivered" />
         
         <component name="MSHInProperties" class="si.laurentius.msh.inbox.property.MSHInProperties">

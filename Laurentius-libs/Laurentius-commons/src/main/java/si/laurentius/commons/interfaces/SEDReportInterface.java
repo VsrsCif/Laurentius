@@ -36,6 +36,11 @@ public interface SEDReportInterface {
    * @param services
    * @return
    */
-    SEDReportBoxStatus getStatusReport(String strSedBox, Date fromDateChanged, Date toDateChanged, List<String> inStatuses,  
+    SEDReportBoxStatus getReportForStatusChangeInterval(List<String> strSedBox, Date fromDateChanged, Date toDateChanged, List<String> inStatuses,  
           List<String> outStatuses, List<String> services);
+    
+     SEDReportBoxStatus getReportForAddMailnterval(List<String> strSedBox, Date fromAddMailDate, Date toAddMailDate, List<String> inStatuses,  
+          List<String> outStatuses, List<String> services);
+    
+    
 }

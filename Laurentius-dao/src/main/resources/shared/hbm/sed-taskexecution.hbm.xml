@@ -24,8 +24,8 @@
     </class>
     
     <query name="si.laurentius.cron.SEDTaskExecution.getAll" ><![CDATA[SELECT p FROM SEDTaskExecution p order by id asc]]></query>
-    <query name="si.laurentius.cron.SEDTaskExecution.getByStatusAndType" >
-        <![CDATA[SELECT p FROM SEDTaskExecution p  where p.Status=:status and p.Type=:type order by p.Id desc ]]></query>
+    <query name="si.laurentius.cron.SEDTaskExecution.getByStatusAndTypeAndCronJobId" >
+        <![CDATA[SELECT p FROM SEDTaskExecution p  where p.CronId=:cronId and p.Status=:status and p.Type=:type order by p.Id desc ]]></query>
     
 
 </hibernate-mapping>

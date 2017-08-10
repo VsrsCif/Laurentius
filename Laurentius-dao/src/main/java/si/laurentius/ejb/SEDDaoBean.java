@@ -23,8 +23,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.Local;
@@ -347,21 +345,24 @@ public class SEDDaoBean implements SEDDaoInterface {
 
   /**
    *
+   * @param cronId
    * @param type
    * @return
    */
   @Override
-  public SEDTaskExecution getLastSuccesfullTaskExecution(String type) {
+  public SEDTaskExecution getLastSuccesfullTaskExecution(BigInteger cronId, String type) {
     long l = LOG.logStart();
     SEDTaskExecution dt = null;
 
     TypedQuery<SEDTaskExecution> tq
             = memEManager.createNamedQuery(
-                    "si.laurentius.cron.SEDTaskExecution.getByStatusAndType",
+                    "si.laurentius.cron.SEDTaskExecution.getByStatusAndTypeAndCronJobId",
                     SEDTaskExecution.class);
 
     tq.setParameter("status", SEDTaskStatus.SUCCESS.getValue());
     tq.setParameter("type", type);
+    tq.setParameter("cronId", cronId);
+    
     tq.setMaxResults(1);
     try {
       dt = tq.getSingleResult();

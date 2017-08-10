@@ -88,6 +88,7 @@ public class SEDValues {
      */
   public static final String JNDI_QUEUE_IN_MAIL_PROCESS= "queue/MSHInMailProcessQueue";
 
-  
+  public static final String S_CRON_ID_PROPERTY = "cronjob.property.id";
+  public static final String S_CRON_NAME_PROPERTY = "cronjob.property.name";
 
 }

@@ -1,5 +1,5 @@
 
-<PlgBasicInit xmlns="http://laurentius.si/plugin/imp" exportDate="2017-04-10T20:05:04.220+02:00">
+<PlgBasicInit xmlns="http://laurentius.si/plugin/imp" exportDate="2017-08-10T09:13:55.292+02:00">
     <IMPXslts>
         <IMPXslt instance="vsrs2zbs_001">
             <XSLTRule id="1" transformation="c2b_eizvrsba-demo_v01.xsl" validateSchema="" resultFilename="xslt-v11" xPathValue="1.1">
@@ -14,12 +14,12 @@
             </XSLTRule>
         </IMPXslt>
         <IMPXslt instance="xslt_example">
-            <XSLTRule id="62" transformation="transform_v1.0.xslt" validateSchema="targetSchema.xsd" resultFilename="example" xPathValue="1.0">
+            <XSLTRule id="5" transformation="transform_v1.0.xslt" validateSchema="targetSchema.xsd" resultFilename="example" xPathValue="1.0">
                 <XPath xpath="/SourceXML/@version"/>
             </XSLTRule>
-            <XSLTRule id="63" transformation="transform_v2.0.xslt" validateSchema="targetSchema.xsd" resultFilename="example" xPathValue="2.0">
+            <XSLTRule id="6" transformation="transform_v2.0.xslt" validateSchema="targetSchema.xsd" resultFilename="example" xPathValue="2.0">
                 <XPath xpath="/ns1:SourceXML/@version">
-                    <Namespace id="131" prefix="ns1" namespace="http://www.laurentius.si/xslt"/>
+                    <Namespace id="7" prefix="ns1" namespace="http://www.laurentius.si/xslt"/>
                 </XPath>
             </XSLTRule>
         </IMPXslt>

@@ -19,12 +19,8 @@ import javax.ejb.Schedule;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import si.laurentius.commons.SEDJNDI;
-import si.laurentius.commons.SEDProperties;
-import si.laurentius.commons.interfaces.DBSettingsInterface;
 import si.laurentius.commons.interfaces.SEDNetworkUtilsInterface;
-import si.laurentius.commons.utils.Utils;
 import static si.laurentius.ejb.SEDNetworkUtilsBean.LOG;
-import si.laurentius.property.SEDProperty;
 
 /**
  *
