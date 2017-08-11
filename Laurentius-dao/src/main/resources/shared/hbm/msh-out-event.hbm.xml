@@ -10,7 +10,7 @@
             </generator>
         </id>
         <property column="MAIL_ID" name="MailId" type="java.math.BigInteger" scale="0" index="idx_oute_mid" />
-        <property column="SENDER_MSG_ID" name="SenderMessageId"  length="64" type="java.lang.String" index="idx_oute_smid" />
+        <property column="SENDER_MSG_ID" name="SenderMessageId"  length="256" type="java.lang.String" index="idx_oute_smid" />
         <!-- property column="SENDER_EBOX" name="SenderEBox"  length="64" type="java.lang.String" index="idx_oute_semid" / -->
         <property column="STATUS" name="Status"  length="32" type="java.lang.String" />
         <property column="EVENT_DATE" name="Date"   type="java.util.Date" />        

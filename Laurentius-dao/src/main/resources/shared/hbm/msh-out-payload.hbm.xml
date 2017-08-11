@@ -9,11 +9,11 @@
                 <param name="sequence">SEQ_LAU_OUTBOX_PAYLOAD</param>
             </generator>
         </id>
-        <property column="PART_EBMS_ID" name="EbmsId"  length="128" type="java.lang.String"  />
-        <property column="PART_NAME" name="name"  length="128" type="java.lang.String"  />
+        <property column="PART_EBMS_ID" name="EbmsId"  length="256" type="java.lang.String"  />
+        <property column="PART_NAME" name="name"  length="256" type="java.lang.String"  />
         <property column="PART_DESCRIPTION" name="Description"  length="512" type="java.lang.String"   />
         <property column="PART_TYPE" name="Type"  length="64" type="java.lang.String" />
-        <property column="PART_FILENAME" name="Filename"  length="128" type="java.lang.String" />
+        <property column="PART_FILENAME" name="Filename"  length="256" type="java.lang.String" />
         <property column="PART_FILEPATH" name="Filepath"  length="1028" type="java.lang.String" />
         <property column="PART_MIME_TYPE" name="MimeType"  length="128" type="java.lang.String" />
         <property column="PART_ENCODING" name="Encoding"  length="128" type="java.lang.String" />

@@ -67,7 +67,7 @@ import si.laurentius.outbox.property.OutProperty;
  *
  * @author Jože Rihtaršič
  */
-public class WSClientExample {
+public class WSZPPClientExample {
 
   public static final String APPL_ID = "appl_1";
   public static final String APPL_PASSWORD = "appl1234";
@@ -81,12 +81,12 @@ public class WSClientExample {
   public static final String SERVICE = "DeliveryWithReceipt";
   public static final String ACTION = "Delivery";
 
-  public static final Logger LOG = Logger.getLogger(WSClientExample.class);
+  public static final Logger LOG = Logger.getLogger(WSZPPClientExample.class);
 
   public File[] testFiles;
   SEDMailBoxWS mTestInstance = null;
 
-  public WSClientExample() {
+  public WSZPPClientExample() {
 
   }
 
@@ -118,7 +118,7 @@ public class WSClientExample {
 
     BasicConfigurator.configure();
 
-    WSClientExample wc = new WSClientExample();
+    WSZPPClientExample wc = new WSZPPClientExample();
 
     try {
       // example submit mail
