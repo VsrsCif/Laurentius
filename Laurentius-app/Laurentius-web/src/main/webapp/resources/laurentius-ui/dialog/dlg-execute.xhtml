@@ -13,7 +13,7 @@
     <composite:implementation >      
         <composite:implementation >     
             <p:dialog   widgetVar="executeDialog" id="executeDialog" 
-                        header="#{msg['DeleteSelectedRowTitle']}"  modal="true" hideEffect="fade" 
+                        header="#{msg['CronExecutions']}"  modal="true" hideEffect="fade" 
                         resizable="false" appendTo="@(body)" width="400"  >
                 <h:form id="executeDialogForm">
                     <p:messages id="messagesExecuteDialog"
@@ -35,7 +35,7 @@
                                 editMode="cell"
                                 >
                                 <f:facet name="header"> 
-                                    <h:outputText value="TaskProperties" /></f:facet>
+                                    <h:outputText value="#{msg['TaskProperties']}" /></f:facet>
                                 <p:column headerText="#{msg['Key']}"  width="150">
                                     <h:outputText id="TblPluginTypePropKey" value="#{sp.key}" />
 

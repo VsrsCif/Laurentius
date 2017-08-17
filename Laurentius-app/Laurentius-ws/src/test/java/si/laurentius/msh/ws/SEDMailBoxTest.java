@@ -65,6 +65,7 @@ import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.pmode.FilePModeManager;
 import si.laurentius.commons.utils.StorageUtils;
 import si.laurentius.commons.utils.Utils;
+import si.laurentius.commons.utils.xml.XMLUtils;
 import si.laurentius.lce.DigestUtils;
 import si.laurentius.msh.test.db.MockUserTransaction;
 import si.laurentius.msh.test.db.SEDTestLookup;
@@ -582,12 +583,6 @@ public class SEDMailBoxTest extends TestUtils {
     assertThrowErrorOnSubmit(smr, "Missing Data/OutMail/@service",
             SEDExceptionCode.MISSING_DATA);
     om.setService(value);
-    // check Data/OutMail/@ConversationId
-    value = om.getConversationId();
-    om.setConversationId(null);
-    assertThrowErrorOnSubmit(smr, "Missing Data/OutMail/@ConversationId",
-            SEDExceptionCode.MISSING_DATA);
-    om.setConversationId(value);
 
     // check Data/OutMail/@senderMessageId
     value = om.getSenderMessageId();
@@ -621,9 +616,37 @@ public class SEDMailBoxTest extends TestUtils {
             SEDExceptionCode.MISSING_DATA);
     om.setReceiverEBox(value);
 
+    // check Data/OutMail/@ConversationId
+    value = om.getConversationId();
+    om.setConversationId(null);
     SubmitMailResponse mr = mTestInstance.submitMail(smr);
-    assertEquals("Response/RControl/@returnValue", mr.getRControl().
+    assertEquals("Missing Data/OutMail/@SenderEBox", mr.getRControl().
             getReturnValue().intValue(),
+            SVEVReturnValue.WARNING.getValue());
+    om.setConversationId(value);
+
+    OutMail newOM = XMLUtils.deepCopyJAXB(om);
+    newOM.setId(null);
+    for (OutPart op : newOM.getOutPayload().getOutParts()) {
+      op.setId(null);
+      for (OutPart.Property opp : op.getProperties()) {
+        opp.setId(null);
+      }
+    }
+
+    smr.getData().setOutMail(newOM);
+    SubmitMailResponse mr1 = mTestInstance.submitMail(smr);
+    assertEquals("Response/RControl/@returnValue - submitted",
+            mr1.getRControl().
+                    getReturnValue().intValue(),
+            SVEVReturnValue.WARNING.getValue());
+
+    newOM.setSenderMessageId(UUID.randomUUID().toString());
+    SubmitMailResponse mr2 = mTestInstance.submitMail(smr);
+
+    assertEquals("Response/RControl/@returnValue - submitted",
+            mr2.getRControl().
+                    getReturnValue().intValue(),
             SVEVReturnValue.OK.getValue());
   }
 

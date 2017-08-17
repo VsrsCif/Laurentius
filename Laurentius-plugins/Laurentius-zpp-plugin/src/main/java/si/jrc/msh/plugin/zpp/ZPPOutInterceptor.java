@@ -382,6 +382,9 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
       pl.getMSHOutParts().add(0, ptNew);
       // set encrypted payloads
       outMail.setMSHOutPayload(pl);
+      // set conversation id
+      outMail.setConversationId(outMail.getId().toString() + "@" + SEDSystemProperties.getLocalDomain());
+      
       String str
               = "Added DeliveryNotification and encrypted parts: "
               + outMail.getMSHOutPayload().getMSHOutParts().size();

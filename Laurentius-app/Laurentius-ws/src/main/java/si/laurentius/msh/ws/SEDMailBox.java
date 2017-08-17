@@ -1442,7 +1442,7 @@ public class SEDMailBox implements SEDMailBoxWS {
     // get out mail
     OutMail mail = submitMailRequest.getData().getOutMail();
     // check for missing data
-    SEDRequestUtils.validateMailForMissingData(mail);
+    List<String> lstWarn = SEDRequestUtils.validateMailForMissingData(mail);
 
     
     validatePrincipalBox(mail.getSenderEBox());
@@ -1495,13 +1495,13 @@ public class SEDMailBox implements SEDMailBoxWS {
     SubmitMailResponse rsp = new SubmitMailResponse();
     rsp.setRControl(new RControl());
     rsp.getRControl().setReturnValue(
-            om != null ? SVEVReturnValue.WARNING.getValue() : SVEVReturnValue.OK.
+            om != null || !lstWarn.isEmpty() ? SVEVReturnValue.WARNING.getValue() : SVEVReturnValue.OK.
                     getValue());
     rsp.getRControl().setReturnText(
-            om != null ? String.format(
+            (om != null ? String.format(
                             "Mail with sender message id '%s' already sent before: %s",
                             om.getSenderMessageId(), msdfDDMMYYYY_HHMMSS.format(
-                            om.getSubmittedDate())) : "");
+                            om.getSubmittedDate())) : "") + String.join(", ",lstWarn));
     // set data
     rsp.setRData(new SubmitMailResponse.RData());
     rsp.getRData().setSubmittedDate(om != null ? om.getSubmittedDate() : mail.

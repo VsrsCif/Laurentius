@@ -14,7 +14,7 @@
 * See the Licence for the specific language governing permissions and  
 * limitations under the Licence.
  */
-package si.laurentius.test;
+package si.laurentius.test.zpp;
 
 import java.io.File;
 import java.io.StringWriter;
@@ -27,6 +27,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.logging.Level;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -56,18 +57,25 @@ import si.laurentius.SubmitMailRequest;
 import si.laurentius.SubmitMailResponse;
 import si.laurentius.control.Control;
 import si.laurentius.inbox.mail.InMail;
+import si.laurentius.inbox.payload.InPart;
 import si.laurentius.outbox.event.OutEvent;
 import si.laurentius.outbox.mail.OutMail;
 import si.laurentius.outbox.payload.OutPart;
 import si.laurentius.outbox.payload.OutPayload;
 import si.laurentius.outbox.property.OutProperties;
 import si.laurentius.outbox.property.OutProperty;
+import si.laurentius.test.zpp.fop.FOPException;
 
 /**
  *
  * @author Jože Rihtaršič
  */
 public class WSZPPClientExample {
+
+  public static final String S_KEY_ALIAS = "test-zpp-sign";
+  public static final String S_KEYSTORE = "/laurentius.jks";
+  public static final String S_KEYSTORE_PASSWD = "passwd1234";
+  public static final String S_KEY_PASSWD = "key1234";
 
   public static final String APPL_ID = "appl_1";
   public static final String APPL_PASSWORD = "appl1234";
@@ -78,8 +86,6 @@ public class WSZPPClientExample {
   public static final String DOMAIN = "mb-laurentius.si"; // CHANGE BOX DOMAIN!!!
   public static final String SENDER_BOX = "a.department@" + DOMAIN;
   public static final String RECEIVER_BOX = "b.department@" + DOMAIN;
-  public static final String SERVICE = "DeliveryWithReceipt";
-  public static final String ACTION = "Delivery";
 
   public static final Logger LOG = Logger.getLogger(WSZPPClientExample.class);
 
@@ -116,6 +122,12 @@ public class WSZPPClientExample {
 
   public static void main(String... args) throws InterruptedException {
 
+    /**
+     * To start test first disable task: ZPPSign-B-Department from web-gui Test
+     * procedure: 1. submit mail from a.department to b.department 2. retrieve
+     * inmail for b.deparmtnt in PLOCKED status 3. create, sign and submit
+     * AdviceOfDelivery 4. retrieve payloads for submitted mail
+     */
     BasicConfigurator.configure();
 
     WSZPPClientExample wc = new WSZPPClientExample();
@@ -124,8 +136,8 @@ public class WSZPPClientExample {
       // example submit mail
       BigInteger bi = wc.submitMail(createOutMail(RECEIVER_BOX, "Mr. Receiver",
               SENDER_BOX, "Mr. Sender",
-              SERVICE,
-              ACTION,
+              ZPPConstants.S_ZPP_SERVICE,
+              ZPPConstants.S_ZPP_ACTION_DELIVERY_NOTIFICATION,
               "Test message",
               "VL 1/2016"));
 
@@ -159,10 +171,6 @@ public class WSZPPClientExample {
         }
       }
 
-      // example modify status for out mail
-      // because mail is sent - soapfault is returned!
-      wc.modifyOutMail(bi, SENDER_BOX);
-
       //-----------------------------------------------------------------------
       // RECEIVED MAIL
       //-----------------------------------------------------------------------
@@ -170,29 +178,35 @@ public class WSZPPClientExample {
       // because "in process" in demo laurentius sets inmail status to DELIVERED - search is done by this status
       // else default is RECEIVED
       Thread.sleep(2000);
-      List<InMail> lstIM = wc.getInMailList(RECEIVER_BOX, "RECEIVED");
+      List<InMail> lstIM = wc.getInMailList(RECEIVER_BOX, "PLOCKED");
       // search for corresponding in mail
       InMail im = null;
       for (InMail m : lstIM) {
-        System.out.println(m.getSenderMessageId() + " - " + om.getSenderMessageId());
+        System.out.println(m.getSenderMessageId() + " - " + om.
+                getSenderMessageId());
         if (Objects.equals(m.getSenderMessageId(), om.getSenderMessageId())) {
           im = m;
           break;
         }
       }
-      
-    
 
-      // example get in mail
-      wc.getInMail(im.getId(), RECEIVER_BOX);
-      // example get in mail events
-      wc.getInMailEventList(im.getId(), RECEIVER_BOX);
-      
-     Thread.sleep(1000);
-      // example modify status for out mail
-      wc.modifyInMail(im.getId(), RECEIVER_BOX);
+      ZPPUtils zpp = new ZPPUtils();
+      OutMail omDA = zpp.createZppAdviceOfDelivery(im, S_KEYSTORE,
+              S_KEYSTORE_PASSWD, S_KEY_ALIAS, S_KEY_PASSWD);
 
-    } catch (JAXBException | SEDException_Exception ex) {
+      wc.serialize(omDA);
+      wc.submitMail(omDA);
+
+      Thread.sleep(1000);
+      
+       InMail imWithDecPayload = wc.getInMail(im.getId(), RECEIVER_BOX);
+       
+       for (InPart ip:imWithDecPayload.getInPayload().getInParts() ){
+         System.out.println( ip.getDescription());
+       
+       }
+
+    } catch (FOPException | ZPPException | JAXBException | SEDException_Exception ex) {
       LOG.error("Error occured while executing sample", ex);
     }
 
@@ -293,7 +307,7 @@ public class WSZPPClientExample {
     }
   }
 
-  public List<InMail> getInMailList(String receiverBox,String status)
+  public List<InMail> getInMailList(String receiverBox, String status)
           throws SEDException_Exception, JAXBException {
     InMailListRequest req = new InMailListRequest();
     Control c = createControl();
@@ -333,7 +347,7 @@ public class WSZPPClientExample {
 
   }
 
-  public void getInMail(BigInteger bi, String receiverBox)
+  public InMail getInMail(BigInteger bi, String receiverBox)
           throws SEDException_Exception, JAXBException {
     GetInMailRequest reg = new GetInMailRequest();
     Control c = createControl();
@@ -347,6 +361,7 @@ public class WSZPPClientExample {
     LOG.info("*****************************");
     LOG.info("Got 'getInMail' response:\n" + serialize(mler));
     LOG.info("*****************************");
+    return mler.getRData().getInMail();
 
   }
 

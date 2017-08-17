@@ -21,6 +21,7 @@ import java.util.regex.Pattern;
 import si.laurentius.SEDException;
 import si.laurentius.SEDExceptionCode;
 import si.laurentius.SEDException_Exception;
+import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.control.Control;
 import si.laurentius.outbox.mail.OutMail;
 import si.laurentius.outbox.payload.OutPart;
@@ -40,8 +41,10 @@ public class SEDRequestUtils {
    * @param mail
    * @throws SEDException_Exception
    */
-  public static void validateMailForMissingData(OutMail mail) throws SEDException_Exception {
+  public static List<String> validateMailForMissingData(OutMail mail) throws SEDException_Exception {
     List<String> errLst = new ArrayList<>();
+    List<String> warnLst = new ArrayList<>();
+    
     if (Utils.isEmptyString(mail.getSenderMessageId())) {
       errLst.add("SenderMessageId");
     }
@@ -73,18 +76,21 @@ public class SEDRequestUtils {
       errLst.add("SenderEBox");
     }
     if (Utils.isEmptyString(mail.getService())) {
-      errLst.add("Missing service!");
+      errLst.add("Service");
     }
     if (Utils.isEmptyString(mail.getAction())) {
-      errLst.add("Missing Action!");
+      errLst.add("Action");
     }
+    
     if (Utils.isEmptyString(mail.getConversationId())) {
-      errLst.add("ConversationId!");
+      warnLst.add("Missing ConversationId (new is created)"); 
+      mail.setConversationId(Utils.getUUIDWithDomain(SEDSystemProperties.getLocalDomain()));
     }
     if (!errLst.isEmpty()) {
       throw createSEDException("Missing data (" + errLst.size() + "):" + String.join(", ", errLst),
           SEDExceptionCode.MISSING_DATA);
     }
+    return warnLst;
 
   }
 

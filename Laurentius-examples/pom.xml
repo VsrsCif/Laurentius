@@ -43,6 +43,7 @@
 
     <modules>
         <module>ws-client</module>
+		<module>ws-zpp-client</module>
         <module>crontask-plugin</module>
 	<module>example-web-plugin</module>
     </modules>
