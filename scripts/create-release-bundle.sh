@@ -11,9 +11,11 @@ if [ ! -d "$LAU_RELEASE_FOLDER" ]; then
 fi
 
 
-ZIP_FILENAME="Laurentius-$(date +%Y%m%d_%H%M)"
+VERSION="2.0-SNAPSHOT"
+ZIP_FILENAME="Laurentius-$VERSION-$(date +%Y%m%d_%H%M)"
 ZIP_TEST="Laurentius-test"
 FOLDER_DEPLOY="test-deploy"
+
 
 rm -rf $LAU_RELEASE_FOLDER/$ZIP_FILENAME
 rm -rf $FOLDER_DEPLOY
@@ -25,13 +27,14 @@ mkdir "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/deployments"
 mkdir "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/wildfly-10.1"
 mkdir $FOLDER_DEPLOY
 # si.laurentius module libralies
-cp "$LAU_PROJECT/Laurentius-libs/Laurentius-msh-xsd/target/Laurentius-msh-xsd-1.0.jar" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/modules/" 	
-cp "$LAU_PROJECT/Laurentius-libs/Laurentius-wsdl/target/Laurentius-wsdl-1.0.jar" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/modules/"
-cp "$LAU_PROJECT/Laurentius-libs/Laurentius-commons/target/Laurentius-commons-1.0.jar" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/modules/"
-cp "$LAU_PROJECT/Laurentius-libs/Laurentius-lce/target/Laurentius-lce-1.0.jar" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/modules/"
-cp "$LAU_PROJECT/Laurentius-libs/Laurentius-plugin-interfaces/target/Laurentius-plugin-interfaces-1.0.jar" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/modules/"
+cp "$LAU_PROJECT/Laurentius-libs/Laurentius-msh-xsd/target/Laurentius-msh-xsd-$VERSION.jar" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/modules/" 	
+cp "$LAU_PROJECT/Laurentius-libs/Laurentius-wsdl/target/Laurentius-wsdl-$VERSION.jar" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/modules/"
+cp "$LAU_PROJECT/Laurentius-libs/Laurentius-commons/target/Laurentius-commons-$VERSION.jar" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/modules/"
+cp "$LAU_PROJECT/Laurentius-libs/Laurentius-lce/target/Laurentius-lce-$VERSION.jar" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/modules/"
+cp "$LAU_PROJECT/Laurentius-libs/Laurentius-plugin-interfaces/target/Laurentius-plugin-interfaces-$VERSION.jar" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/modules/"
 
 cp "$LAU_PROJECT/scripts/wildfly-10.1/modules/si.laurentius.module.xml" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/modules/"
+sed -i -- "s/VERSION/$VERSION/g" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/modules/si.laurentius.module.xml"
 cp "$LAU_PROJECT/scripts/wildfly-10.1/modules/org.apache.ws.securitymodule.xml" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/modules/"
 cp -r "$LAU_PROJECT/scripts/wildfly-10.1/modules/org"  "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/modules/"
 
@@ -51,8 +54,13 @@ cp "$LAU_PROJECT/Laurentius-examples/example-web-plugin/target/example-web-plugi
 cp -r "$LAU_PROJECT/scripts/wildfly-10.1/config"  "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/wildfly-10.1"
 # deploy script
 cp "$LAU_PROJECT/scripts/wildfly-10.1/deploy-laurentius.sh" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/wildfly-10.1"
+sed -i -- "s/VERSION/$VERSION/g" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/wildfly-10.1/deploy-laurentius.sh"
+
 cp "$LAU_PROJECT/scripts/wildfly-10.1/laurentius-demo.sh" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/wildfly-10.1"
+
 cp "$LAU_PROJECT/scripts/wildfly-10.1/deploy-laurentius.bat" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/wildfly-10.1"
+sed -i -- "s/VERSION/$VERSION/g" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/wildfly-10.1/deploy-laurentius.bat"
+
 cp "$LAU_PROJECT/scripts/wildfly-10.1/laurentius-demo.bat" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/wildfly-10.1"
 
 # init data:

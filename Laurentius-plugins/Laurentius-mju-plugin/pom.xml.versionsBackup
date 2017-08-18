@@ -6,15 +6,15 @@
     <parent>
         <groupId>si.vsrs.cif.sed</groupId>
         <artifactId>Laurentius</artifactId>
-        <version>2.0-SNAPSHOT</version>
+        <version>1.0</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>Laurentius-zpp-plugin</artifactId>
+    <artifactId>Laurentius-mju-plugin</artifactId>
     <packaging>war</packaging>
 
-    <name>Laurentius-zpp-plugin</name>
-    <description>ZPP delivery plugin</description>
+    <name>Laurentius-mju-plugin</name>
+    <description>MJU delivery plugin</description>
     <organization>
         <name>Supreme Court Republic of Slovenia</name>
         <url>http://www.sodisce.si/</url>
@@ -49,72 +49,49 @@
     </scm>
 
     <properties>
-        <war.final.name>plugin-zpp</war.final.name>
+        <war.final.name>plugin-mju</war.final.name>
     </properties>
 
     <dependencies>
         
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>Laurentius-msh-xsd</artifactId>
-            <version>${project.version}</version>	
-            <scope>provided</scope>	
-        </dependency>
-
-        <dependency>
-            <groupId>${project.groupId}</groupId>
             <artifactId>Laurentius-commons</artifactId>
             <version>${project.version}</version>		
             <scope>provided</scope>	
         </dependency>
-         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>Laurentius-plugin-interfaces</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>	        
-        </dependency>
-         <dependency>
+        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>Laurentius-lce</artifactId>
             <version>${project.version}</version>		
             <scope>provided</scope>	
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>Laurentius-plugin-interfaces</artifactId>
+            <version>${project.version}</version>		
+            <scope>provided</scope>
+        </dependency>
     
-      
-        <dependency>
-            <groupId>org.apache.santuario</groupId>
-            <artifactId>xmlsec</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <!-- PDF signature-->
-        <dependency>
-            <groupId>org.apache.pdfbox</groupId>
-            <artifactId>pdfbox</artifactId>       
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.bouncycastle</groupId>
-            <artifactId>bcprov-jdk15on</artifactId>
-            <scope>provided</scope>
-        </dependency>
- 
-        <dependency>
-            <groupId>org.bouncycastle</groupId>
-            <artifactId>bcpkix-jdk15on</artifactId>
-            <scope>provided</scope>
-        </dependency>
       
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>		
             <scope>provided</scope>
         </dependency>
+        <!-- Interceptor interface --> 
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-frontend-jaxws</artifactId>
             <scope>provided</scope>
         </dependency>
-        <!-- GUI uses prifeaces componens --> 
+        
+        <dependency>
+            <groupId>org.apache.santuario</groupId>
+            <artifactId>xmlsec</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <!-- GUI uses primefaces componens --> 
         <dependency>
             <groupId>org.primefaces</groupId>
             <artifactId>primefaces</artifactId>
@@ -126,18 +103,7 @@
             <artifactId>javaee-api</artifactId>            
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>org.apache.xmlgraphics</groupId>
-            <artifactId>fop</artifactId>
-            
-            <exclusions>
-                <exclusion>
-                    <artifactId>xalan</artifactId>
-                    <groupId>xalan</groupId>
-                </exclusion>
-            </exclusions>
-            <!-- scope>provided</scope --> 
-        </dependency>
+        
       
         <dependency>
             <groupId>junit</groupId>
@@ -149,15 +115,36 @@
 
     <build>
         <finalName>${war.final.name}</finalName>
-        <plugins>
+        <plugins>   
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
-                <artifactId>jaxb2-maven-plugin</artifactId>
+                <artifactId>jaxws-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>wsimport</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <bindingDirectory>${basedir}/src/main/resources/bindings</bindingDirectory>
+                    <wsdlDirectory>${basedir}/src/main/resources/wsdl</wsdlDirectory>
+                    <wsdlFiles>
+                        <wsdlFile>MjuDmsWebServiceService.wsdl</wsdlFile>
+                    </wsdlFiles>                    
+                    
+                    <vmArgs>
+                        <vmArg>-Djavax.xml.accessExternalDTD=all</vmArg>
+                        <vmArg>-Djavax.xml.accessExternalSchema=all</vmArg>
+                    </vmArgs>
+                </configuration>
             </plugin>
+                 
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
             </plugin>           
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <configuration> 
                     <!-- for missing WEB-INF/web.xml-->
@@ -166,8 +153,10 @@
                         <manifestEntries>                            
                             <implementation-version>${project.version}</implementation-version>             
                             <Implementation-Build>${buildNumber}</Implementation-Build>                            
-                            <Dependencies>org.apache.cxf,org.apache.cxf.impl,org.apache.commons.io, org.apache.ws.security, 
-                                org.apache.pdfbox,  org.apache.santuario.xmlsec,si.laurentius, org.primefaces</Dependencies>
+                            <!-- use common module and make deployment thinner
+                          org.apache.cxf - for interceptor
+                            -->
+                            <Dependencies>si.laurentius, org.apache.cxf, org.apache.cxf.impl, org.primefaces</Dependencies>
                         </manifestEntries>
                     </archive>                                 
                 </configuration>                 
