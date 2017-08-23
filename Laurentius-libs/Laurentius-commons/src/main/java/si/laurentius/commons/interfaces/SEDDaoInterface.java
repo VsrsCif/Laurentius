@@ -24,6 +24,8 @@ import si.laurentius.cron.SEDTaskExecution;
 import si.laurentius.commons.enums.SEDInboxMailStatus;
 import si.laurentius.commons.enums.SEDOutboxMailStatus;
 import si.laurentius.commons.exception.StorageException;
+import si.laurentius.msh.inbox.payload.MSHInPart;
+import si.laurentius.msh.outbox.payload.MSHOutPart;
 
 /**
  *
@@ -63,6 +65,15 @@ public interface SEDDaoInterface {
    * @return
    */
   <T> List<T> getMailEventList(Class<T> type, BigInteger mailId);
+  
+  /**
+   *
+   * @param <T>
+   * @param type
+   * @param mailId
+   * @return
+   */
+  <T> List<T> getMailPartList(Class<T> type, BigInteger mailId);
 
   /**
    *
@@ -247,6 +258,9 @@ public interface SEDDaoInterface {
    * @throws StorageException
    */
   boolean addExecutionTask(SEDTaskExecution ad) throws StorageException;
+  
+  boolean addInMailPayload(MSHInMail mi, List<MSHInPart> lstParts,  SEDInboxMailStatus status, String statusdesc, String userId, String applicationId) throws StorageException;
+  boolean addOutMailPayload(MSHOutMail mi, List<MSHOutPart> lstParts,  SEDOutboxMailStatus status, String statusdesc, String userId, String applicationId) throws StorageException;
 
   /**
    *

@@ -27,8 +27,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.activation.DataHandler;
 import javax.xml.datatype.Duration;
 import javax.xml.namespace.QName;
@@ -481,6 +479,7 @@ public class EBMSInInterceptor extends AbstractEBMSInterceptor {
          mMail.setMSHInPayload(new MSHInPayload());
        }
        MSHInPart p = new MSHInPart();
+       p.setEbmsId(msgId);
        p.setMimeType(soapPartMime.getMimeType());
        p.setDescription("SOAP Part");
        p.setName("SOAPPart");

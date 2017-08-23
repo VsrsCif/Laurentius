@@ -18,6 +18,7 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.msh.inbox.mail.MSHInMail;
 import si.laurentius.msh.outbox.mail.MSHOutMail;
 
@@ -112,6 +113,9 @@ public class Utils {
 
   public static String getUUIDWithDomain(String domain) {
     return UUID.randomUUID().toString() + "@" + domain;
+  }
+  public static String getUUIDWithLocalDomain() {
+    return getUUIDWithDomain(SEDSystemProperties.getLocalDomain());
   }
 
   public static String getInitCauseMessage(Throwable tw) {

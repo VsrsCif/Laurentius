@@ -5,10 +5,15 @@
  */
 package si.laurentius.ejb.utils;
 
+import java.io.File;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
+import java.util.UUID;
 import si.laurentius.application.SEDApplication;
+import si.laurentius.commons.enums.MimeValue;
+import si.laurentius.commons.exception.StorageException;
+import si.laurentius.commons.utils.StorageUtils;
 import si.laurentius.commons.utils.Utils;
 import si.laurentius.cron.SEDCronJob;
 import si.laurentius.cron.SEDTask;
@@ -18,6 +23,14 @@ import si.laurentius.interceptor.SEDInterceptorInstance;
 import si.laurentius.interceptor.SEDInterceptorProperty;
 import si.laurentius.interceptor.SEDInterceptor;
 import si.laurentius.interceptor.SEDInterceptorRule;
+import si.laurentius.msh.inbox.mail.MSHInMail;
+import si.laurentius.msh.inbox.payload.IMPartProperty;
+import si.laurentius.msh.inbox.payload.MSHInPart;
+import si.laurentius.msh.inbox.payload.MSHInPayload;
+import si.laurentius.msh.outbox.mail.MSHOutMail;
+import si.laurentius.msh.outbox.payload.MSHOutPart;
+import si.laurentius.msh.outbox.payload.MSHOutPayload;
+import si.laurentius.msh.outbox.payload.OMPartProperty;
 import si.laurentius.process.SEDProcessorInstance;
 import si.laurentius.process.SEDProcessorProperty;
 import si.laurentius.process.SEDProcessor;
@@ -31,6 +44,12 @@ import si.laurentius.user.SEDUser;
  * @author sluzba
  */
 public class TestLookupUtils {
+  
+  
+  public static final String FILEBLOB_1 = "Test content 1";
+  public static final String FILEBLOB_2 = "Test content 2";
+  
+  public static final StorageUtils S_STORAGE_UTIL  = new StorageUtils();
 
   public static Random RANDOM_VALUE = new Random(Calendar.getInstance().
           getTimeInMillis());
@@ -124,7 +143,7 @@ public class TestLookupUtils {
 
   static public SEDProcessor createSEDProcessor() {
     SEDProcessor sb = new SEDProcessor();
-    
+
     sb.setName(Utils.getUUID("PROC"));
     sb.setActive(true);
     sb.setDeliveredOnSuccess(true);
@@ -189,8 +208,8 @@ public class TestLookupUtils {
     }
     return sb;
   }
-  
-   static public SEDApplication createSEDApplication(boolean withBoxes) {
+
+  static public SEDApplication createSEDApplication(boolean withBoxes) {
     SEDApplication sb = new SEDApplication();
 
     Calendar c = Calendar.getInstance();
@@ -204,7 +223,7 @@ public class TestLookupUtils {
     sb.setApplicationId(Utils.getUUID("id"));
     sb.setDesc("Description");
     sb.setEmail("Email");
-    
+
     if (withBoxes) {
       int iboxSize = RANDOM_VALUE.nextInt(10) + 3;
       for (int i = 0; i < iboxSize; i++) {
@@ -213,6 +232,83 @@ public class TestLookupUtils {
       }
     }
     return sb;
+  }
+
+  public static MSHOutMail createOutMail() throws StorageException {
+
+    MSHOutMail om = new MSHOutMail();
+
+    om.setSenderMessageId("SM_ID-" + UUID.randomUUID().toString());
+    om.setAction("DeliveryNotification");
+    om.setService("LegalDelivery_ZPP");
+    om.setConversationId(UUID.randomUUID().toString());
+    om.setReceiverName("Mr. Receiver Name");
+    om.setReceiverEBox("receiver.name@test-sed.si");
+    om.setSenderName("Mr. Sender Name");
+    om.setSenderEBox("izvrsba@test-sed.si");
+
+    om.setMSHOutPayload(new MSHOutPayload());
+    MSHOutPart op = new MSHOutPart();
+    op.setFilename("Test.txt");
+    op.setDescription("test attachment");
+    
+    File f =  S_STORAGE_UTIL.storeOutFile(MimeValue.MIME_TXT.getMimeType(), FILEBLOB_1.getBytes());
+    op.setFilepath(StorageUtils.getRelativePath(f));
+    op.setMimeType(MimeValue.MIME_TEXI.getMimeType());
+
+    OMPartProperty iprop1 = new OMPartProperty();
+    iprop1.setName("Property 1");
+    iprop1.setValue("value");
+    OMPartProperty iprop2 = new OMPartProperty();
+    iprop2.setName("Property 2");
+    iprop2.setValue("value");
+
+    op.getOMPartProperties().add(iprop1);
+    op.getOMPartProperties().add(iprop2);
+
+    om.getMSHOutPayload().getMSHOutParts().add(op);
+
+    return om;
+
+  }
+  public static MSHInMail createInMail() throws StorageException {
+
+    MSHInMail im = new MSHInMail();
+
+    im.setMessageId("SM_ID-" + UUID.randomUUID().toString());
+    im.setSenderMessageId("SM_ID-" + UUID.randomUUID().toString());
+    im.setAction("DeliveryNotification");
+    im.setService("LegalDelivery_ZPP");
+    im.setConversationId(UUID.randomUUID().toString());
+    im.setReceiverName("Mr. Receiver Name");
+    im.setReceiverEBox("receiver.name@test-sed.si");
+    im.setSenderName("Mr. Sender Name");
+    im.setSenderEBox("izvrsba@test-sed.si");
+
+    im.setMSHInPayload(new MSHInPayload());
+    MSHInPart ip = new MSHInPart();
+    ip.setFilename("Test.txt");
+    ip.setDescription("test attachment");
+    
+    File f =  S_STORAGE_UTIL.storeOutFile(MimeValue.MIME_TXT.getMimeType(), FILEBLOB_1.getBytes());
+    ip.setFilepath(StorageUtils.getRelativePath(f));
+    ip.setMimeType(MimeValue.MIME_TEXI.getMimeType());
+    ip.setEbmsId("SM_ID-" + UUID.randomUUID().toString());
+
+    IMPartProperty iprop1 = new IMPartProperty();
+    iprop1.setName("Property 1");
+    iprop1.setValue("value");
+    IMPartProperty iprop2 = new IMPartProperty();
+    iprop2.setName("Property 2");
+    iprop2.setValue("value");
+
+    ip.getIMPartProperties().add(iprop1);
+    ip.getIMPartProperties().add(iprop2);
+
+    im.getMSHInPayload().getMSHInParts().add(ip);
+
+    return im;
+
   }
 
 }

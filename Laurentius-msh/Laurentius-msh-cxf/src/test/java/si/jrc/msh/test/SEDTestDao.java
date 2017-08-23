@@ -15,6 +15,8 @@ import si.laurentius.commons.enums.SEDInboxMailStatus;
 import si.laurentius.commons.enums.SEDOutboxMailStatus;
 import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.interfaces.SEDDaoInterface;
+import si.laurentius.msh.inbox.payload.MSHInPart;
+import si.laurentius.msh.outbox.payload.MSHOutPart;
 
 /**
  *
@@ -25,6 +27,18 @@ public class SEDTestDao implements SEDDaoInterface{
   @Override
   public boolean addExecutionTask(SEDTaskExecution ad)
       throws StorageException {
+    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+  }
+
+  @Override
+  public boolean addInMailPayload(MSHInMail mi, List<MSHInPart> lstParts,
+          SEDInboxMailStatus status, String statusdesc, String userId, String applicationId) throws StorageException {
+    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+  }
+
+  @Override
+  public boolean addOutMailPayload(MSHOutMail mi, List<MSHOutPart> lstParts,
+          SEDOutboxMailStatus status,  String statusdesc, String userId, String applicationId) throws StorageException {
     throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
   }
 
@@ -67,6 +81,11 @@ public class SEDTestDao implements SEDDaoInterface{
 
   @Override
   public <T> List<T> getMailEventList(Class<T> type, BigInteger mailId) {
+    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+  }
+
+  @Override
+  public <T> List<T> getMailPartList(Class<T> type, BigInteger mailId) {
     throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
   }
 

@@ -9,6 +9,7 @@
                 <param name="sequence">SEQ_LAU_INBOX_PAYLOAD</param>
             </generator>
         </id>
+        <property column="MAIL_ID" name="MailId" type="java.math.BigInteger" scale="0" index="idx_inpart_mid" />
         <property column="PART_EBMS_ID" name="EbmsId"  length="256" type="java.lang.String"  />
         <property column="PART_NAME" name="name"  length="256" type="java.lang.String"  />
         <property column="PART_DESCRIPTION" name="Description"  length="512" type="java.lang.String"   />
@@ -41,5 +42,9 @@
         <property column="NAME" name="Name" type="java.lang.String"  length="128" /> 
         <property column="VALUE" name="Value" type="java.lang.String" length="512" />         
     </class>
+    
+    <query name="si.laurentius.msh.inbox.payload.MSHInPart.getMailPartList">
+      <![CDATA[from MSHInPart p where p.MailId = :mailId]]>
+    </query> 
 
 </hibernate-mapping>

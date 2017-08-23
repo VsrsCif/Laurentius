@@ -6,14 +6,28 @@ package si.laurentius.ejb.utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.List;
+import javax.jms.Connection;
+import javax.jms.ConnectionFactory;
+import javax.jms.Destination;
+import javax.jms.JMSException;
+import javax.jms.Session;
+import org.apache.activemq.junit.EmbeddedActiveMQBroker;
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.FileAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
+import static org.junit.Assert.fail;
 import si.laurentius.commons.SEDSystemProperties;
+import si.laurentius.commons.utils.StorageUtils;
+import si.laurentius.ejb.SEDDaoBeanTest;
 
 /**
  *
@@ -24,10 +38,6 @@ public class TestUtils {
   /**
    *
    */
-  protected static final String JNDI_CONNECTION_FACTORY = "ConnectionFactory";
-  /**
-   *
-   */
   protected static final String PERSISTENCE_UNIT_NAME = "ebMS_PU";
 
   /**
@@ -35,6 +45,9 @@ public class TestUtils {
    */
   protected static final String LAU_HOME = "target/TEST-LAU_HOME";
   public static final String LAU_TEST_DOMAIN = "test.com";
+  
+  public static final String S_JMS_JNDI_CF ="java:/jboss/ConnectionFactory";
+  public static final String S_JMS_QUEUE ="queue/MSHQueue";
 
   static {
     if (!Paths.get(LAU_HOME).toFile().exists()) {
@@ -75,4 +88,55 @@ public class TestUtils {
     Logger.getRootLogger().addAppender(fa);
   }
 
+  public static void setUpStorage(String folder)
+          throws IOException {
+    System.setProperty(SEDSystemProperties.SYS_PROP_HOME_DIR, folder);
+
+    Path directory = StorageUtils.getStorageFolder().toPath();
+    if (Files.exists(directory)) {
+      Path p = Files.walkFileTree(directory, new SimpleFileVisitor<Path>() {
+        @Override
+        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs)
+                throws IOException {
+          Files.deleteIfExists(file);
+          return FileVisitResult.CONTINUE;
+        }
+
+        @Override
+        public FileVisitResult postVisitDirectory(Path dir, IOException exc)
+                throws IOException {
+          Files.delete(dir);
+          return FileVisitResult.CONTINUE;
+        }
+
+      });
+      if (p == null) {
+        fail();
+      }
+    }
+  }
+
+  public static void setupJMS(String jndiFac, String prefix, List<String> lstJndiQueue) {
+    EmbeddedActiveMQBroker broker = new EmbeddedActiveMQBroker();
+    broker.start();
+    
+    // Add ConnectionFactory to JNDI
+    ConnectionFactory connectionFactory = broker.createConnectionFactory();
+    InitialContextFactoryForTest.bind(jndiFac,connectionFactory);
+    // create destionation 
+    try {
+      Connection connection = connectionFactory.createConnection();
+      connection.start();   
+      for (String jndiQueue: lstJndiQueue) {
+      Destination dest = connection.createSession(false,
+              Session.AUTO_ACKNOWLEDGE).createQueue(jndiQueue);
+      InitialContextFactoryForTest.bind(prefix+ jndiQueue,
+              dest);
+      }
+    } catch (JMSException ex) {
+      java.util.logging.Logger.getLogger(SEDDaoBeanTest.class.getName()).log(
+              java.util.logging.Level.SEVERE, null,
+              ex);
+    }
+  }
 }

@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.Local;
@@ -51,6 +53,7 @@ import javax.transaction.HeuristicMixedException;
 import javax.transaction.HeuristicRollbackException;
 import javax.transaction.NotSupportedException;
 import javax.transaction.RollbackException;
+import javax.transaction.Status;
 import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 import si.laurentius.msh.inbox.event.MSHInEvent;
@@ -67,6 +70,7 @@ import static si.laurentius.commons.SEDSystemProperties.SYS_PROP_JNDI_PREFIX;
 import si.laurentius.commons.enums.SEDTaskStatus;
 import si.laurentius.commons.SEDValues;
 import si.laurentius.commons.enums.MimeValue;
+import si.laurentius.commons.enums.SEDMailPartSource;
 import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.interfaces.JMSManagerInterface;
 import si.laurentius.commons.interfaces.SEDDaoInterface;
@@ -74,6 +78,7 @@ import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StorageUtils;
 import si.laurentius.commons.utils.Utils;
 import si.laurentius.lce.DigestUtils;
+import si.laurentius.msh.inbox.payload.MSHInPart;
 import si.laurentius.msh.outbox.payload.MSHOutPart;
 
 /**
@@ -133,6 +138,129 @@ public class SEDDaoBean implements SEDDaoInterface {
         LOG.logWarn(l, "Rollback failed", ex1);
       }
     }
+    return suc;
+  }
+
+  @Override
+  public boolean addInMailPayload(MSHInMail mail, List<MSHInPart> lstParts,
+          SEDInboxMailStatus status, String statusdesc, String userId,
+          String applicationId) throws StorageException {
+    // persits parts
+    long l = LOG.logStart();
+    boolean suc = false;
+    try {
+      mutUTransaction.begin();
+      for (MSHInPart ip : lstParts) {
+        ip.setMailId(mail.getId());
+        memEManager.persist(ip);
+      }
+      mail.setStatus(status.getValue());
+      mail.setStatusDate(Calendar.getInstance().getTime());
+
+      Query updq = memEManager.createNamedQuery(SEDNamedQueries.UPDATE_INMAIL);
+      updq.setParameter("id", mail.getId());
+      updq.setParameter("statusDate", mail.getStatusDate());
+      updq.setParameter("status", mail.getStatus());
+
+      int iVal = updq.executeUpdate();
+      if (iVal != 1) {
+        try {
+          mutUTransaction.rollback();
+        } catch (IllegalStateException | SecurityException | SystemException ex1) {
+          LOG.logWarn(l, ex1.getMessage(), ex1);
+        }
+        String msg
+                = "Status not setted to MSHInMail:" + mail.getId() + " result: '" + iVal
+                + "'. Mail not exists or id duplicates?";
+        LOG.logError(l, msg, null);
+        throw new StorageException(msg, null);
+      }
+
+      // persist mail event
+      MSHInEvent me = new MSHInEvent();
+      me.setMailId(mail.getId());
+      me.setDescription(statusdesc);
+      me.setStatus(mail.getStatus());
+      me.setDate(mail.getStatusDate());
+      me.setUserId(userId);
+      me.setApplicationId(applicationId);
+      memEManager.persist(me);
+
+      mutUTransaction.commit();
+      suc = true;
+    } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException
+            | HeuristicRollbackException | SecurityException | IllegalStateException ex) {
+      try {
+        LOG.logError(l, ex.getMessage(), ex);
+        mutUTransaction.rollback();
+      } catch (IllegalStateException | SecurityException | SystemException ex1) {
+        LOG.logWarn(l, "Rollback failed", ex1);
+      }
+    }
+
+    return suc;
+  }
+
+  @Override
+  public boolean addOutMailPayload(MSHOutMail mail, List<MSHOutPart> lstParts,
+          SEDOutboxMailStatus status, String statusdesc, String userId,
+          String applicationId) throws StorageException {
+
+    // persits parts
+    long l = LOG.logStart();
+    boolean suc = false;
+    try {
+      mutUTransaction.begin();
+      for (MSHOutPart ip : lstParts) {
+        ip.setMailId(mail.getId());
+        memEManager.persist(ip);
+      }
+
+      mail.setStatusDate(Calendar.getInstance().getTime());
+      mail.setStatus(status.getValue());
+
+      Query updq = memEManager.createNamedQuery(SEDNamedQueries.UPDATE_OUTMAIL);
+      updq.setParameter("id", mail.getId());
+      updq.setParameter("statusDate", mail.getStatusDate());
+      updq.setParameter("status", mail.getStatus());
+
+      int iVal = updq.executeUpdate();
+      if (iVal != 1) {
+        try {
+          mutUTransaction.rollback();
+        } catch (IllegalStateException | SecurityException | SystemException ex1) {
+          LOG.logWarn(l, ex1.getMessage(), ex1);
+        }
+        String msg
+                = "Status not setted to MSHOutMail:" + mail.getId() + " result: '" + iVal
+                + "'. Mail not exists or id duplicates?";
+        LOG.logError(l, msg, null);
+        throw new StorageException(msg, null);
+      }
+
+      // persist mail event
+      MSHOutEvent me = new MSHOutEvent();
+      me.setMailId(mail.getId());
+      me.setSenderMessageId(mail.getSenderMessageId());
+      me.setDescription(statusdesc);
+      me.setStatus(mail.getStatus());
+      me.setDate(mail.getStatusDate());
+      me.setUserId(userId);
+      me.setApplicationId(applicationId);
+      memEManager.persist(me);
+
+      mutUTransaction.commit();
+      suc = true;
+    } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException
+            | HeuristicRollbackException | SecurityException | IllegalStateException ex) {
+      try {
+        LOG.logError(l, ex.getMessage(), ex);
+        mutUTransaction.rollback();
+      } catch (IllegalStateException | SecurityException | SystemException ex1) {
+        LOG.logWarn(l, "Rollback failed", ex1);
+      }
+    }
+
     return suc;
   }
 
@@ -228,7 +356,9 @@ public class SEDDaoBean implements SEDDaoInterface {
                       searchValue, fieldName);
             } else if (fieldName.endsWith("To") && searchValue instanceof Comparable) {
               lstPredicate.add(cb.lessThan(
-                      om.get(fieldName.substring(0, fieldName.lastIndexOf("To"))),
+                      om.
+                              get(fieldName.substring(0, fieldName.lastIndexOf(
+                                      "To"))),
                       (Comparable) searchValue));
               LOG.formatedDebug("Set interval parameter to %s  for method %s",
                       searchValue, fieldName);
@@ -350,7 +480,8 @@ public class SEDDaoBean implements SEDDaoInterface {
    * @return
    */
   @Override
-  public SEDTaskExecution getLastSuccesfullTaskExecution(BigInteger cronId, String type) {
+  public SEDTaskExecution getLastSuccesfullTaskExecution(BigInteger cronId,
+          String type) {
     long l = LOG.logStart();
     SEDTaskExecution dt = null;
 
@@ -362,7 +493,7 @@ public class SEDDaoBean implements SEDDaoInterface {
     tq.setParameter("status", SEDTaskStatus.SUCCESS.getValue());
     tq.setParameter("type", type);
     tq.setParameter("cronId", cronId);
-    
+
     tq.setMaxResults(1);
     try {
       dt = tq.getSingleResult();
@@ -441,6 +572,24 @@ public class SEDDaoBean implements SEDDaoInterface {
     long l = LOG.logStart(type, mailId);
     TypedQuery tq = memEManager.createNamedQuery(
             type.getName() + ".getMailEventList", type);
+    tq.setParameter("mailId", mailId);
+    List<T> mailEvents = tq.getResultList();
+    LOG.logEnd(l, type);
+    return mailEvents;
+  }
+
+  /**
+   *
+   * @param <T>
+   * @param type
+   * @param mailId
+   * @return
+   */
+  @Override
+  public <T> List<T> getMailPartList(Class<T> type, BigInteger mailId) {
+    long l = LOG.logStart(type, mailId);
+    TypedQuery tq = memEManager.createNamedQuery(
+            type.getName() + ".getMailPartList", type);
     tq.setParameter("mailId", mailId);
     List<T> mailEvents = tq.getResultList();
     LOG.logEnd(l, type);
@@ -560,6 +709,8 @@ public class SEDDaoBean implements SEDDaoInterface {
     Session session = null;
     String msgDesc = String.format(
             "Add mail to submit queue. Retry %d, delay %d ms", retry, delay);
+    Message message = null;
+    MessageProducer sender = null;
     try {
       // create JMS session
 
@@ -570,6 +721,26 @@ public class SEDDaoBean implements SEDDaoInterface {
       }
       connection = cf.createConnection();
       session = connection.createSession(true, Session.SESSION_TRANSACTED);
+      sender = session.createProducer(mqMSHQueue);
+      message = session.createMessage();
+      message.setLongProperty(SEDValues.EBMS_QUEUE_PARAM_MAIL_ID, mail.getId().
+              longValue());
+      // problem for duplicate detection on resending 
+      //message.setStringProperty(SEDValues.EBMS_QUEUE_DUPLICATE_DETECTION_ID_Artemis,  mail.getId().toString());
+      message.setIntProperty(SEDValues.EBMS_QUEUE_PARAM_RETRY, retry);
+      message.setLongProperty(SEDValues.EBMS_QUEUE_PARAM_DELAY, delay);
+      message.setLongProperty(SEDValues.EBMS_QUEUE_DELAY_AMQ, delay);
+      message.setLongProperty(SEDValues.EBMS_QUEUE_DELAY_Artemis,
+              delay + System.currentTimeMillis());
+    } catch (NamingException | JMSException ex) {
+      String msg
+              = "Error sending mail : '" + mail.getId() + "'! Err:" + ex.
+              getMessage();
+      LOG.logError(l, msg, ex);
+      throw new StorageException(msg, ex);
+    }
+
+    try {
 
       Query updq = memEManager.createNamedQuery(SEDNamedQueries.UPDATE_OUTMAIL);
       updq.setParameter("id", mail.getId());
@@ -585,17 +756,6 @@ public class SEDDaoBean implements SEDDaoInterface {
       me.setUserId(userId);
       me.setApplicationId(applicationId);
       // create message
-      MessageProducer sender = session.createProducer(mqMSHQueue);
-      Message message = session.createMessage();
-      message.setLongProperty(SEDValues.EBMS_QUEUE_PARAM_MAIL_ID, mail.getId().
-              longValue());
-      // problem for duplicate detection on resending 
-      //message.setStringProperty(SEDValues.EBMS_QUEUE_DUPLICATE_DETECTION_ID_Artemis,  mail.getId().toString());
-      message.setIntProperty(SEDValues.EBMS_QUEUE_PARAM_RETRY, retry);
-      message.setLongProperty(SEDValues.EBMS_QUEUE_PARAM_DELAY, delay);
-      message.setLongProperty(SEDValues.EBMS_QUEUE_DELAY_AMQ, delay);
-      message.setLongProperty(SEDValues.EBMS_QUEUE_DELAY_Artemis,
-              delay + System.currentTimeMillis());
 
       mutUTransaction.begin();
       int iVal = updq.executeUpdate();
@@ -624,14 +784,17 @@ public class SEDDaoBean implements SEDDaoInterface {
               "Message %d added to send queue with params: retry %d, delay %d",
               mail.getId().longValue(), retry, delay);
 
-    } catch (JMSException | NamingException | NotSupportedException | SystemException | RollbackException | HeuristicMixedException
+    } catch (JMSException | NotSupportedException | SystemException | RollbackException | HeuristicMixedException
             | HeuristicRollbackException | SecurityException | IllegalStateException ex) {
 
-      try {
-        mutUTransaction.rollback();
+      if (mutUTransaction != null) {
+        try {
 
-      } catch (IllegalStateException | SecurityException | SystemException ex1) {
-        LOG.logWarn(l, "Error rollback transaction", ex1);
+          mutUTransaction.rollback();
+
+        } catch (IllegalStateException | SecurityException | SystemException ex1) {
+          LOG.logWarn(l, "Error rollback transaction", ex1);
+        }
       }
 
       try {
@@ -674,9 +837,124 @@ public class SEDDaoBean implements SEDDaoInterface {
     long l = LOG.logStart();
     try {
 
+      if (Utils.isEmptyString(mail.getMessageId())) {
+        String msg = String.format(
+                "Missing mail ebms Id");
+        throw new StorageException(msg);
+      }
+      if (Utils.isEmptyString(mail.getSenderEBox())) {
+        String msg = String.format(
+                "Missing SenderEBox for mail (ebmsId)  %s", mail.getMessageId());
+        throw new StorageException(msg);
+      }
+      if (Utils.isEmptyString(mail.getReceiverEBox())) {
+        String msg = String.format(
+                "Missing ReceiverEBox for mail (ebmsId)  %s", mail.
+                        getMessageId());
+        throw new StorageException(msg);
+      }
+
+      if (Utils.isEmptyString(mail.getConversationId())) {
+        String msg = String.format(
+                "Missing ConversationId for mail (ebmsId)  %s", mail.
+                        getMessageId());
+        throw new StorageException(msg);
+      }
+      if (Utils.isEmptyString(mail.getService())) {
+        String msg = String.format(
+                "Missing Service for mail (ebmsId)  %s", mail.getMessageId());
+        throw new StorageException(msg);
+      }
+
+      if (Utils.isEmptyString(mail.getAction())) {
+        String msg = String.format(
+                "Missing Action for mail (ebmsId)  %s", mail.getMessageId());
+        throw new StorageException(msg);
+      }
+
+      // check mail parts
+      if (mail.getMSHInPayload() != null) {
+        for (MSHInPart mp : mail.getMSHInPayload().getMSHInParts()) {
+          if (Utils.isEmptyString(mp.getEbmsId())) {
+
+            String msg = String.format(
+                    "Missing Payload part's ebmsId (name %s, path %s)!", mp.
+                            getName(), mp.getFilepath());
+            throw new StorageException(msg);
+          }
+
+          File f = StorageUtils.getFile(mp.getFilepath());
+          if (!f.exists()) {
+            String msg = String.format(
+                    "Mail part: %s (path %s) does not exist in storage!", mp.
+                            getName(), mp.getFilepath());
+            throw new StorageException(msg);
+          }
+          if (mp.getSize() == null || mp.getSize().longValue() != f.length()) {
+            mp.setSize(BigInteger.valueOf(f.length()));
+            LOG.formatedWarning(
+                    "Mail has wrong payload part size (sender: %s, service %s, senderMessageId: %s, filepart %s) "
+                    + "size: %d, expected size %d!",
+                    mail.getSenderEBox(), mail.getService(), mail.
+                    getSenderMessageId(), mp.getEbmsId(),  mp.getSize() == null ? 0 : mp.
+                    getSize().longValue(), f.length());
+          }
+
+          String digest = DigestUtils.getHexSha256Digest(f);
+          if (Utils.isEmptyString(mp.getSha256Value())) {
+            mp.setSha256Value(digest);
+          } else if (!mp.getSha256Value().equals(digest)) {
+            mp.setSha256Value(digest);
+            LOG.formatedWarning(
+                    "Mail has wrong payload part digest (sender: %s, service %s, senderMessageId: %s, filepart %s) "
+                    + "digest: %s, expected digest %s!",
+                    mail.getSenderEBox(), mail.getService(), mail.
+                    getSenderMessageId(), mp.getFilepath(), mp.getSha256Value(),
+                    digest);
+          }
+
+          if (Utils.isEmptyString(mp.getMimeType())) {
+            mp.setMimeType(MimeValue.getMimeTypeByFileName(f.getName()));
+          }
+          if (Utils.isEmptyString(mp.getSource())) {
+            mp.setSource(SEDMailPartSource.MAIL.getValue());
+          }
+        }
+      } else {
+        LOG.formatedWarning(
+                "Serialize mail (sender: %s, service %s, senderMessageId: %s ) with no payload!",
+                mail.getSenderEBox(), mail.getService(), mail.
+                getSenderMessageId());
+      }
+      
+      Date dt = Calendar.getInstance().getTime();
+      
+      if (Utils.isEmptyString(mail.getStatus())){
+         mail.setStatus(SEDInboxMailStatus.RECEIVED.getValue());
+         mail.setReceivedDate(dt);
+         mail.setStatusDate(dt);
+      }
+      
+      if (mail.getStatusDate()==null){
+        mail.setStatusDate(dt);
+      }
+      
+      if (mail.getReceivedDate()==null){
+        mail.setReceivedDate(dt);
+      }
+      
+      
+
       mutUTransaction.begin();
       // persist mail
       memEManager.persist(mail);
+      
+      if (mail.getMSHInPayload() != null) {
+        for (MSHInPart mp : mail.getMSHInPayload().getMSHInParts()) {
+          mp.setMailId(mail.getId());
+          memEManager.persist(mp);
+        }
+      }
       // persist mail event
       MSHInEvent me = new MSHInEvent();
       me.setMailId(mail.getId());
@@ -684,6 +962,7 @@ public class SEDDaoBean implements SEDDaoInterface {
       me.setDescription("Mail stored to inbox");
       me.setApplicationId(applicationId);
       me.setDate(mail.getStatusDate());
+
       memEManager.persist(me);
       mutUTransaction.commit();
     } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException
@@ -704,6 +983,23 @@ public class SEDDaoBean implements SEDDaoInterface {
   }
 
   /**
+   * Method stores metadata for out mail. Message parts must already exists in
+   * Laurentius store. Path in element "part/filepath" must be relative path in
+   * laurentius store.
+   * <ul>
+   * <li>set ebms messageId if null</li>
+   * <li>set conversation id as mail id if null</li>
+   * <li>set ebms sender name from senderbox if null </li>
+   * <li>set ebms receiver name from receiverbox if null </li>
+   * <li>serialize payload to laurentius store:
+   * <ul>
+   * <li>sets ebms part messageId if null</li>
+   * <li>sets part's sha256 and size</li>
+   * <li>sets mimetype from filname if null</li>
+   * </ul></li>
+   * <li>sets status to submitted</li>
+   * <li><b>Add mail to submit queue</b></li>
+   * </ul>
    *
    * @param mail
    * @param userID
@@ -718,48 +1014,76 @@ public class SEDDaoBean implements SEDDaoInterface {
     long l = LOG.logStart();
     String locadomain = SEDSystemProperties.getLocalDomain();
     try {
-      mutUTransaction.begin();
-      // persist mail
-      if (mail.getStatusDate() == null) {
-        mail.setStatusDate(Calendar.getInstance().getTime());
-
-      }
-      if (mail.getStatus() == null) {
-        mail.setStatus(SEDOutboxMailStatus.SUBMITTED.getValue());
-        mail.setSubmittedDate(Calendar.getInstance().getTime());
-      }
-
-      // set message id
-      if (Utils.isEmptyString(mail.getMessageId())) {
-        mail.setMessageId(Utils.getUUIDWithDomain(locadomain));
-      }
-      
-      // set message id
-      if (Utils.isEmptyString(mail.getSenderName())) {
-        mail.setSenderName(mail.getSenderEBox());
-      }
-      
-      // set message id
-      if (Utils.isEmptyString(mail.getReceiverName())) {
-        mail.setSenderName(mail.getReceiverEBox());
-      }
-
-
+      // check mail parts
       if (mail.getMSHOutPayload() != null) {
         for (MSHOutPart mp : mail.getMSHOutPayload().getMSHOutParts()) {
           if (Utils.isEmptyString(mp.getEbmsId())) {
-            mp.setEbmsId(Utils.getUUIDWithDomain(locadomain));
+            mp.setEbmsId(Utils.getUUIDWithLocalDomain());
           }
           File f = StorageUtils.getFile(mp.getFilepath());
+          if (!f.exists()) {
+            String msg = String.format(
+                    "Mail part: %s (path %s) does not exist in storage!", mp.
+                            getName(), mp.getFilepath());
+            throw new StorageException(msg);
+          }
           mp.setSize(BigInteger.valueOf(f.length()));
-          mp.setSha256Value(DigestUtils.getHexSha256Digest(f));
-          if (Utils.isEmptyString(mp.getMimeType())){
+          String digest = DigestUtils.getHexSha256Digest(f);
+          if (Utils.isEmptyString(mp.getSha256Value())) {
+            mp.setSha256Value(digest);
+          } else if (!mp.getSha256Value().equals(digest)) {
+            mp.setSha256Value(digest);
+            LOG.formatedWarning(
+                    "Mail has wrong payload part digest (sender: %s, service %s, senderMessageId: %s, filepart %s) "
+                    + "digest: %s, expected digest %s!",
+                    mail.getSenderEBox(), mail.getService(), mail.
+                    getSenderMessageId(), mp.getFilepath(), mp.getSha256Value(),
+                    digest);
+          }
+
+          if (Utils.isEmptyString(mp.getMimeType())) {
             mp.setMimeType(MimeValue.getMimeTypeByFileName(f.getName()));
           }
+          if (Utils.isEmptyString(mp.getSource())) {
+            mp.setSource(SEDMailPartSource.MAIL.getValue());
+          }
         }
+      } else {
+        LOG.formatedWarning(
+                "Serialize mail (sender: %s, service %s, senderMessageId: %s ) with no payload!",
+                mail.getSenderEBox(), mail.getService(), mail.
+                getSenderMessageId());
       }
 
+      mail.setStatus(SEDOutboxMailStatus.SUBMITTED.getValue());
+      mail.setStatusDate(Calendar.getInstance().getTime());
+      mail.setSubmittedDate(mail.getStatusDate());
+
+      // set message id
+      if (Utils.isEmptyString(mail.getMessageId())) {
+        mail.setMessageId(Utils.getUUIDWithLocalDomain());
+      }
+
+      // set sender name
+      if (Utils.isEmptyString(mail.getSenderName())) {
+        mail.setSenderName(mail.getSenderEBox());
+      }
+
+      // set receiver id
+      if (Utils.isEmptyString(mail.getReceiverName())) {
+        mail.setReceiverName(mail.getReceiverEBox());
+      }
+
+      mutUTransaction.begin();
       memEManager.persist(mail);
+
+      if (mail.getMSHOutPayload() != null) {
+        for (MSHOutPart mp : mail.getMSHOutPayload().getMSHOutParts()) {
+
+          mp.setMailId(mail.getId());
+          memEManager.persist(mp);
+        }
+      }
 
       if (Utils.isEmptyString(mail.getConversationId())) {
         mail.setConversationId(mail.getId().toString() + "@" + locadomain);
@@ -854,9 +1178,7 @@ public class SEDDaoBean implements SEDDaoInterface {
     long l = LOG.logStart();
     try {
       mutUTransaction.begin();
-      
-      
-      
+
       mail.setStatusDate(Calendar.getInstance().getTime());
       mail.setStatus(status.getValue());
 
@@ -867,7 +1189,7 @@ public class SEDDaoBean implements SEDDaoInterface {
 
       // limit desc.
       String strDsc = desc == null ? status.getDesc() : desc;
-      strDsc = strDsc.length()>=512?strDsc.substring(0, 512):strDsc;
+      strDsc = strDsc.length() >= 512 ? strDsc.substring(0, 512) : strDsc;
       // persist mail event
       MSHInEvent me = new MSHInEvent();
       me.setMailId(mail.getId());
@@ -878,10 +1200,6 @@ public class SEDDaoBean implements SEDDaoInterface {
       me.setApplicationId(applicationId);
       me.setEvidenceFilepath(filePath);
       me.setEvidenceMimeType(mime);
-      
-      
-      
-      
 
       int iVal = updq.executeUpdate();
       if (iVal != 1) {
@@ -898,9 +1216,7 @@ public class SEDDaoBean implements SEDDaoInterface {
       }
       memEManager.persist(me);
       mutUTransaction.commit();
-      
-     
-      
+
     } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException
             | HeuristicRollbackException | SecurityException | IllegalStateException ex) {
       {

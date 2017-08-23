@@ -39,7 +39,12 @@ WHERE
   and (ev.mail_id = :mailId or :mailId is null)  
   order by id asc]]>
     </sql-query>     
-    <sql-query name="si.laurentius.msh.inbox.event.MSHInEvent.getMailEventList">
+    
+    <query name="si.laurentius.msh.inbox.event.MSHInEvent.getMailEventList">
+      <![CDATA[from MSHInEvent p where p.MailId = :mailId]]>
+    </query>
+    
+    <!-- sql-query name="si.laurentius.msh.inbox.event.MSHInEvent.getMailEventList">
         <return class="si.laurentius.msh.inbox.event.MSHInEvent" />	
    <![CDATA[SELECT 
   ev.*
@@ -47,5 +52,5 @@ FROM
   lau_inbox_event ev
 WHERE ev.mail_id = :mailId  
   order by id desc]]>
-    </sql-query>     
+    </sql-query -->
 </hibernate-mapping>

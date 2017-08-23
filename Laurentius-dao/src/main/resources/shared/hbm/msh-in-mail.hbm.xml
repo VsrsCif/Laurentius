@@ -38,9 +38,11 @@
             </bag>
         </component>
         <component name="MSHInPayload" class="si.laurentius.msh.inbox.payload.MSHInPayload">
-            <bag name="mshInParts"  access="field" cascade="all" lazy="false" order-by="Id asc" >
+            <bag name="mshInParts"  inverse="true" access="field" cascade="all" lazy="false" order-by="Id asc" >
+                
+                
                 <key not-null="true">
-                    <column name="MAIL_ID" scale="0" />
+                    <column name="MAIL_ID"/>
                 </key>
                 <one-to-many class="si.laurentius.msh.inbox.payload.MSHInPart" />
             </bag>

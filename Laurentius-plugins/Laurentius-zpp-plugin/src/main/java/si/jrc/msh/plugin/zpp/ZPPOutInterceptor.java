@@ -59,6 +59,7 @@ import si.laurentius.msh.outbox.payload.MSHOutPayload;
 import si.jrc.msh.plugin.zpp.doc.DocumentSodBuilder;
 import si.jrc.msh.plugin.zpp.exception.ZPPException;
 import si.jrc.msh.plugin.zpp.utils.FOPUtils;
+import si.jrc.msh.plugin.zpp.web.ZppPluginData;
 import si.laurentius.lce.enc.SEDCrypto;
 import si.laurentius.lce.enc.SEDKey;
 import si.laurentius.lce.sign.pdf.SignUtils;
@@ -82,6 +83,7 @@ import si.laurentius.commons.utils.StorageUtils;
 import si.laurentius.lce.KeystoreUtils;
 import si.laurentius.msh.inbox.mail.MSHInMail;
 import si.laurentius.commons.interfaces.SEDCertStoreInterface;
+import si.laurentius.commons.utils.Utils;
 import si.laurentius.lce.DigestUtils;
 import si.laurentius.msh.outbox.payload.OMPartProperty;
 import si.laurentius.plugin.interceptor.MailInterceptorDef;
@@ -174,17 +176,22 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
       omp.setName(ZPPConstants.S_PART_PROPERTY_ORIGIN_MIMETYPE);
       omp.setValue(pt.getMimeType());
       
-       ptNew.setMimeType(MimeValue.MIME_BIN.getMimeType());
+      OMPartProperty ompRef = new OMPartProperty();
+      ompRef.setName(ZPPConstants.S_PART_PROPERTY_REF_ID);
+      ompRef.setValue(pt.getEbmsId());
       
+           
       ptNew.getOMPartProperties().add(omp);
-      //ptNew.setMimeType(pt.getMimeType());
+      
+      ptNew.setMimeType(MimeValue.MIME_BIN.getMimeType());
+      ptNew.setSource(ZPPConstants.S_ZPP_PLUGIN_TYPE);
       ptNew.setFilepath(StorageUtils.getRelativePath(fOut));
       ptNew.setDescription(ZPPConstants.MSG_DOC_PREFIX_DESC + pt.
               getDescription());
       ptNew.setSha256Value(DigestUtils.getHexSha256Digest(fOut));
       ptNew.setSize(BigInteger.valueOf(fOut.length()));
       ptNew.setName(pt.getName());
-      ptNew.setFilename(fOut.getName());
+      ptNew.setFilename(Utils.isEmptyString(pt.getFilename())?fIn.getName():pt.getFilename() + ZPPConstants.S_ZPP_ENC_SUFFIX);
       ptNew.setIsEncrypted(Boolean.TRUE);
       op.getMSHOutParts().add(ptNew);
     }
@@ -367,13 +374,14 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
       String fPDFVizualization = StorageUtils.getRelativePath(fDNViz);
 
       MSHOutPart ptNew = new MSHOutPart();
+      ptNew.setSource(ZPPConstants.S_ZPP_PLUGIN_TYPE);
       ptNew.setEncoding(SEDValues.ENCODING_UTF8);
       ptNew.setMimeType(MimeValue.MIME_PDF.getMimeType());
       ptNew.setName(ZPPConstants.S_ZPP_ACTION_DELIVERY_NOTIFICATION);
       ptNew.setDescription(ZPPConstants.MSG_DELIVERY_NOTIFICATION_DESC);
       ptNew.setType(ZPPConstants.S_ZPP_ACTION_DELIVERY_NOTIFICATION);
       ptNew.setFilepath(fPDFVizualization);
-      ptNew.setFilename(fDNViz.getName());
+      ptNew.setFilename(ZPPConstants.S_ZPP_ACTION_DELIVERY_NOTIFICATION + ".pdf");
 
       ptNew.setIsEncrypted(Boolean.FALSE);
       // encrypt payloads

@@ -16,6 +16,7 @@ package si.laurentius.msh.jms;
 
 import java.io.File;
 import java.math.BigInteger;
+import java.util.Collections;
 import java.util.List;
 import javax.ejb.ActivationConfigProperty;
 import javax.ejb.EJB;
@@ -40,6 +41,7 @@ import si.laurentius.commons.enums.SEDOutboxMailStatus;
 import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.SEDValues;
 import si.laurentius.commons.cxf.SoapUtils;
+import si.laurentius.commons.enums.SEDMailPartSource;
 import si.laurentius.commons.exception.PModeException;
 import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.interfaces.PModeInterface;
@@ -244,13 +246,14 @@ public class MSHQueueBean implements MessageListener {
         
         String resPath = sm.getResultFile();
         File fRes = StorageUtils.getFile(resPath);
-        /// TODO update causes deadlocks on h2 databse
-               /*
+             
         MSHOutPart mipt = new MSHOutPart();
-        mipt.setDescription("Soap response");
 
+        mipt.setMailId(mail.getId());
+        mipt.setDescription("Soap response");
+        mipt.setEbmsId(Utils.getUUIDWithLocalDomain()); // set response id?
         mipt.setName(fRes.getName());
-        mipt.setSource("embs");
+        mipt.setSource(SEDMailPartSource.EBMS.getValue());
         mipt.setMimeType(MimeValue.MIME_XML.getMimeType());
         mipt.setFilename(fRes.getName());
 
@@ -258,21 +261,23 @@ public class MSHQueueBean implements MessageListener {
         mipt.setSha256Value(DigestUtils.getHexSha256Digest(fRes));
         mipt.setFilepath(resPath);
         mail.getMSHOutPayload().getMSHOutParts().add(mipt);
-        /*
+        
         try {
-          mail.setStatus(SEDOutboxMailStatus.SENT.getValue());
-         
-          mDB.updateOutMail(mail, "ebms", "Message sent to receiver MSH");
+          
+          mDB.addOutMailPayload(mail, Collections.singletonList(mipt), SEDOutboxMailStatus.SENT, "Message sent to receiver MSH", null, "ebms"
+                  );
           mPluginOutEventHandler.outEvent(mail, sd,
                 OutMailEventInterface.PluginOutEvent.SEND);
         } catch (StorageException ex) {
           LOG.logError(resPath, ex);
         }
-*/
+
+               
+               /*
         setStatusToOutMail(mail, SEDOutboxMailStatus.SENT,
                 "Message sent to receiver MSH",
                 sm.getResultFile(), sm.getMimeType());
-
+*/
         
       }
 

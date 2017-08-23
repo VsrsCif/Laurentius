@@ -164,6 +164,9 @@
                                 <p:column width="60" headerText="#{msg['Encrypted']}">
                                     <h:outputText value="#{plpart.isEncrypted}" />
                                 </p:column>
+                                <p:column width="60" headerText="#{msg['Source']}">
+                                    <h:outputText value="#{plpart.source}" />
+                                </p:column>
                                 <p:column width="70" headerText="#{msg['Download']}">
                                     <p:commandButton ajax="false" value="#{msg['Download']}"
                                                      onclick="PrimeFaces.monitorDownload(start, stop);" icon="ui-icon-arrowthick-1-s">

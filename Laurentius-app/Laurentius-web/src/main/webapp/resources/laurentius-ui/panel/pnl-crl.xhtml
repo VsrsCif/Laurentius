@@ -57,11 +57,11 @@
                     <p:column headerText="#{msg['filePath']}" width="120">
                         <h:outputText value="#{sp.filePath}" ></h:outputText>                
                     </p:column>
-                     <p:rowExpansion>
-                         <p:dataList value="#{sp.urls}" var="crlUrl"  type="unordered" itemType="none">
-                            #{crlUrl.value}
+                     <!-- p:rowExpansion>
+                         <p:dataList value="# { sp.urls}" var="crlUrl"  type="unordered" itemType="none">
+                            # { crlUrl.value}
                         </p:dataList>
-                    </p:rowExpansion>
+                    </p:rowExpansion -->
 
                 </p:dataTable>
 

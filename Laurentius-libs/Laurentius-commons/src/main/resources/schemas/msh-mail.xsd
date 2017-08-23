@@ -136,6 +136,11 @@ Copyright 2015, Supreme Court Republic of Slovenia
 				<xs:documentation xml:lang="sl">interna enolična oznaka priponke</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
+                <xs:attribute name="mailId" type="xs:integer">
+			<xs:annotation>
+				<xs:documentation xml:lang="sl">Id  pošiljke</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
 		<xs:attribute name="ebmsId" use="optional">
 			<xs:annotation>
 				<xs:documentation xml:lang="sl">ebMS ID </xs:documentation>
@@ -235,12 +240,12 @@ Copyright 2015, Supreme Court Republic of Slovenia
 			<xs:annotation>
 				<xs:documentation>Source of payload: 
 - "mail" is orignial payload received or submitted;
-- "generated" is generated during transmission</xs:documentation>
+- "soap" delivery dependand part (hader, AS4 reciept etc))
+                               </xs:documentation>
 			</xs:annotation>
 			<xs:simpleType>
 				<xs:restriction base="xs:token">
-					<xs:enumeration value="mail"/>
-					<xs:enumeration value="generated"/>
+					<xs:maxLength value="32"/>
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
