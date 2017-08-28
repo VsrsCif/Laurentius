@@ -56,42 +56,82 @@
                             <p:inputText value="#{adminSEDCronJobView.editable.dayOfWeek}" style="width: 120px" />
                         </p:panelGrid>
                     </p:layoutUnit>
-                    <p:layoutUnit header="#{msg['TaskData']}" position="east" rendered="#{not empty adminSEDCronJobView.editable}" 
-                                  size="450" minSize="450" maxSize="450"  >
+                    
+                    
+                     <p:layoutUnit position="east" 
+                                   rendered="#{not empty adminSEDCronJobView.editable}" 
+                              size="500" minSize="500" maxSize="500"  >
+                    <p:dataTable id="TblTasks" 
+                                 var="sp" 
+                                 value="#{adminSEDCronTaskView.list}"                                     
+                                 rowKey="#{sp}"   
+                                 rowIndexVar="rowIndex"
+                                 selectionMode="single"
+                                 selection="#{adminSEDCronTaskView.selected}"
+                                 scrollable="true" 
+                                 scrollHeight="250"
 
-                        <p:panelGrid  columns="4" columnClasses="grid-label,value,grid-label,value" style="width: 100%" >
-                            <h:outputText value="#{msg['Plugin']}" />
-                            <p:selectOneMenu id="pluginType" value="#{adminSEDCronJobView.editableTaskPluginType}" 
-                                             style="width:150px" 
-                                             disabled="#{!adminSEDCronJobView.isEditableNew()}"
-                                             >
-                                <p:ajax   update=":dlgcron:cronDialogForm:taskType :dlgcron:cronDialogForm:PropertyPanel:PropertyPanelTable" />    
 
-                                <f:selectItems value="#{adminSEDPluginView.list}"  var="plg" itemLabel="#{plg.name}" 
-                                               itemValue="#{plg.type}" itemDescription="#{plg.description}"
-                                               itemDisabled="#{plg.cronTaskDeves.size() eq 0}"
-                                               />
-                            </p:selectOneMenu>
+                                 >
+                        <f:facet name="header">
+                            <h1>#{msg['TaskInstances']}:</h1>
+                            <pnl:pnl-table-control 
+                                dialogVar="cronTaskDialog"
+                                updateDialog=":dlgcrontask:cronTaskDialog:cronTaskDialogForm"
+                                updateTable=":dlgcron:cronDialogForm:TblTasks"
+                                addActionListener="#{adminSEDCronTaskView.createEditable()}"
+                                editActionListener="#{adminSEDCronTaskView.startEditSelected()}"
+                                removeActionListener="#{adminSEDCronTaskView.removeSelectedWithWarning(':dlgcron:cronDialogForm:TblTasks')}"                            
+                                />                                  
+                            <span class="ui-separator" style="display: inline-block;">
+                                <span class="ui-icon ui-icon-grip-dotted-vertical " />
+                            </span>
+                            <p:commandButton  styleClass="toolbar-Button" 
+                                              icon="ui-icon-svg-top ui-icon-size-22"  
+                                              actionListener="#{adminSEDCronTaskView.selectedTaskToTop()}"
+                                              update=":dlgcron:cronDialogForm:TblTasks"
+                                              />
+                            <p:commandButton  styleClass="toolbar-Button" 
+                                              icon="ui-icon-svg-up ui-icon-size-22"  
+                                              actionListener="#{adminSEDCronTaskView.selectedTaskUp()}"
+                                              update=":dlgcron:cronDialogForm:TblTasks"
+                                              />
+                            <p:commandButton styleClass="toolbar-Button" 
+                                             icon="ui-icon-svg-down ui-icon-size-22"  
+                                             actionListener="#{adminSEDCronTaskView.selectedTaskDown()}"
+                                             update=":dlgcron:cronDialogForm:TblTasks"
+                                             />
+                            <p:commandButton styleClass="toolbar-Button" 
+                                             icon="ui-icon-svg-bottom ui-icon-size-22"  
+                                             actionListener="#{adminSEDCronTaskView.selectedTaskToBottom()}"
+                                             update=":dlgcron:cronDialogForm:TblTasks"
+                                             />
 
-                            <h:outputText value="#{msg['Task']}" />
-                            <p:selectOneMenu id="taskType" value="#{adminSEDCronJobView.editableTaskType}" 
-                                             style="width:150px"
-                                             disabled="#{!adminSEDCronJobView.isEditableNew()}"
-                                             >
-                                <p:ajax update=":dlgcron:cronDialogForm:PropertyPanel:PropertyPanelTable" />                               
-                                <f:selectItems value="#{adminSEDCronJobView.editablePluginCronTaskDeves}"
-                                               var="tskDef" itemLabel="#{tskDef.name}" 
-                                               itemValue="#{tskDef.type}" itemDescription="#{tskDef.description}"/>
 
-                            </p:selectOneMenu>
+                        </f:facet>
+                        <p:ajax event="rowDblselect" 
+                                listener="#{adminSEDCronTaskView.startEditSelected()}" 
+                                oncomplete="PF('cronTaskDialog').show()"    
+                                update=":dlgcrontask:cronTaskDialog:cronTaskDialogForm"
+                                />
 
-                        </p:panelGrid>
-                        <pnl:pnl-plugin-properties id="PropertyPanel"
-                                                   tableId="PropertyPanelTable"
-                                                   propertyList="#{adminSEDCronJobView.taskItems}" 
-                                                   header="#{msg['TaskProperties']}"  />                                         
-                    </p:layoutUnit>  
+                         <p:column headerText="#{msg['Name']}"  >
+                             <h:outputText value="#{sp.name}" /></p:column>
+                             <p:column headerText="#{msg['Active']}"  width="40">
+                                 <h:outputText value="#{sp.active}" /></p:column>
+                            
+                        <p:column headerText="#{msg['Plugin']}"  width="120">
+                            <h:outputText value="#{sp.plugin}" /></p:column>
+                        <p:column headerText="#{msg['Type']}" width="120">
+                            <h:outputText value="#{sp.type}" />
+                        </p:column>
 
+
+                    </p:dataTable>                        
+                </p:layoutUnit> 
+                    
+                    
+           
                     <p:layoutUnit position="south"  size="40" minSize="40" maxSize="40" >
                         <p:toolbar 
                             styleClass="dialogButtonBar" >

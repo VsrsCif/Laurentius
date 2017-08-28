@@ -26,8 +26,8 @@
 
                             <p:dataTable 
                                 var="sp" 
-                                value="#{executeDialog.selectedProperties}"
-                                rowKey="#{sp.key}"   
+                                value="#{executeDialog.getTasks()}"
+                                rowKey="#{sp.id}"   
                                 rowIndexVar="rowIndex"
                                 scrollable="true" 
                                 scrollHeight="100%"
@@ -35,14 +35,39 @@
                                 editMode="cell"
                                 >
                                 <f:facet name="header"> 
-                                    <h:outputText value="#{msg['TaskProperties']}" /></f:facet>
-                                <p:column headerText="#{msg['Key']}"  width="150">
-                                    <h:outputText id="TblPluginTypePropKey" value="#{sp.key}" />
+                                    <h:outputText value="#{msg['Task']}" /></f:facet>
 
+                                <p:column style="width:16px">
+                                    <p:rowToggler />
                                 </p:column>
-                                <p:column headerText="#{msg['Value']}">
-                                    <h:outputText  value="#{sp.value}" />
+                                <p:column headerText="#{msg['Active']}"  width="150">
+                                    <h:outputText  value="#{sp.active}" />
                                 </p:column>
+
+
+                                <p:column headerText="#{msg['Name']}" >
+                                    <h:outputText value="#{sp.name}" />
+                                </p:column>
+
+                                <p:rowExpansion>
+                                    <p:dataTable var="taksprop" 
+                                                 value="#{sp.SEDTaskProperties}"
+                                                 scrollable="true"
+                                                 scrollHeight="135"
+                                                 >
+                                        <f:facet name="header"> 
+                                            <h:outputText value="#{msg['TaskProperties']}" /></f:facet>
+                                        <p:column headerText="#{msg['Key']}"  width="150">
+                                            <h:outputText id="TblPluginTypePropKey" value="#{taksprop.key}" />
+
+                                        </p:column>
+                                        <p:column headerText="#{msg['Value']}">
+                                            <h:outputText  value="#{taksprop.value}" />
+                                        </p:column>
+                                    </p:dataTable>
+                                </p:rowExpansion>
+
+
                             </p:dataTable>  
 
                         </p:layoutUnit>

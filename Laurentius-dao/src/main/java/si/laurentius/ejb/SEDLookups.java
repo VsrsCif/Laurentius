@@ -161,7 +161,7 @@ public class SEDLookups implements SEDLookupsInterface {
 
   @Override
   public void clearAllCache() {
-    mscache.clearAllCache();   
+    mscache.clearAllCache();  
   }
 
   @Override
@@ -560,18 +560,23 @@ public class SEDLookups implements SEDLookupsInterface {
    */
   @Override
   public boolean updateSEDCronJob(SEDCronJob sb) {
-
+    
+    boolean bsuc;
     SEDCronJob st = getById(SEDCronJob.class, sb.getId());
-    if (!Objects.deepEquals(st, sb) && st.getSEDTask() != null) {
+    if (!Objects.deepEquals(st, sb) && st.getSEDTasks().size() > 0) {
       // delete connected property list and insert new rows
-      sb.getSEDTask().getSEDTaskProperties().forEach(tp -> {
+      sb.getSEDTasks().forEach(tp -> {
         tp.setId(null);
+        tp.getSEDTaskProperties().forEach(pp->{pp.setId(null);});
       });
 
-      return update(sb, st.getSEDTask().getSEDTaskProperties());
+      bsuc = update(sb, st.getSEDTasks());
     } else {
-      return update(sb);
+      bsuc = update(sb);
     }
+    return bsuc;
+
+   
   }
 
   @Override
@@ -612,7 +617,7 @@ public class SEDLookups implements SEDLookupsInterface {
 
   @Override
   public boolean updateSEDProcessor(SEDProcessor sb) {
-    boolean bsuc = false;
+    boolean bsuc;
     SEDProcessor st = getById(SEDProcessor.class, sb.getId());
     if (!Objects.deepEquals(st, sb) && st.getSEDProcessorInstances().size() > 0) {
       // delete connected property list and insert new rows

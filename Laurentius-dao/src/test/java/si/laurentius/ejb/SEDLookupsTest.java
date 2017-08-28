@@ -23,6 +23,7 @@ import si.laurentius.application.SEDApplication;
 import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.utils.xml.XMLUtils;
 import si.laurentius.cron.SEDCronJob;
+import si.laurentius.cron.SEDTask;
 import si.laurentius.cron.SEDTaskProperty;
 import si.laurentius.ebox.SEDBox;
 import si.laurentius.ejb.db.MockUserTransaction;
@@ -57,7 +58,7 @@ public class SEDLookupsTest extends TestUtils {
     mTestInstance.memEManager = memfMSHFactory.createEntityManager();
     mTestInstance.mutUTransaction
             = new MockUserTransaction(mTestInstance.memEManager.getTransaction());
-    System.setProperty(SEDSystemProperties.SYS_PROP_LAU_DOMAIN,  LAU_TEST_DOMAIN);
+    System.setProperty(SEDSystemProperties.SYS_PROP_LAU_DOMAIN, LAU_TEST_DOMAIN);
 
   }
 
@@ -99,7 +100,7 @@ public class SEDLookupsTest extends TestUtils {
 
     assertNotNull(res);
     assertNotNull(res.getId());
-    assertNotNull(res.getSEDTask());
+    assertEquals(init.getSEDTasks().size(), res.getSEDTasks().size());
     assertEquals(init.getActive(), res.getActive());
     assertEquals(init.getDayOfMonth(), res.getDayOfMonth());
     assertEquals(init.getDayOfWeek(), res.getDayOfWeek());
@@ -108,25 +109,29 @@ public class SEDLookupsTest extends TestUtils {
     assertEquals(init.getMonth(), res.getMonth());
     assertEquals(init.getName(), res.getName());
 
-    assertEquals(init.getSEDTask().getPlugin(), res.getSEDTask().getPlugin());
-    assertEquals(init.getSEDTask().getPluginVersion(), res.getSEDTask().
-            getPluginVersion());
-    assertEquals(init.getSEDTask().getType(), res.getSEDTask().getType());
+    for (int it = 0; it < init.getSEDTasks().size(); it++) {
+      SEDTask initTask = init.getSEDTasks().get(it);
+      SEDTask resTask = res.getSEDTasks().get(it);
 
-    assertEquals(init.getSEDTask().getSEDTaskProperties().size(), res.
-            getSEDTask().getSEDTaskProperties().size());
-    for (int i = 0; i < init.getSEDTask().
-            getSEDTaskProperties().size(); i++) {
-      assertNotNull(res.getSEDTask().
-              getSEDTaskProperties().get(i).getId());
-      assertEquals(init.getSEDTask().
-              getSEDTaskProperties().get(i).getKey(), res.
-              getSEDTask().getSEDTaskProperties().get(i).
-              getKey());
-      assertEquals(init.getSEDTask().
-              getSEDTaskProperties().get(i).getValue(), res.
-              getSEDTask().getSEDTaskProperties().get(i).
-              getValue());
+      assertEquals(initTask.getPlugin(), resTask.getPlugin());
+      assertEquals(initTask.getPluginVersion(), resTask.
+              getPluginVersion());
+      assertEquals(initTask.getType(), resTask.getType());
+      assertEquals(initTask.getActive(), resTask.getActive());
+      assertEquals(initTask.getName(), resTask.getName());
+
+      assertEquals(initTask.getSEDTaskProperties().size(), resTask.
+              getSEDTaskProperties().size());
+      for (int i = 0; i < initTask.getSEDTaskProperties().size(); i++) {
+        assertNotNull(resTask.
+                getSEDTaskProperties().get(i).getId());
+        assertEquals(initTask.
+                getSEDTaskProperties().get(i).getKey(),
+                resTask.getSEDTaskProperties().get(i).getKey());
+        assertEquals(initTask.
+                getSEDTaskProperties().get(i).getValue(),
+                resTask.getSEDTaskProperties().get(i).getValue());
+      }
     }
 
   }
@@ -275,7 +280,6 @@ public class SEDLookupsTest extends TestUtils {
     assertEquals(init.getSEDBoxes().size(), res.getSEDBoxes().size());
   }
 
-  
   @Test
   public void testSEDApplication() throws Exception {
     System.out.println("addSEDApplication");
@@ -292,7 +296,8 @@ public class SEDLookupsTest extends TestUtils {
     mTestInstance.clearAllCache();
     mTestInstance.memEManager.clear();
 
-    SEDApplication res = mTestInstance.getSEDApplicationById(init.getApplicationId());
+    SEDApplication res = mTestInstance.getSEDApplicationById(init.
+            getApplicationId());
     assertNotEquals(init, res);
     assertNotNull(res);
     assertEquals(init.getName(), res.getName());
@@ -304,12 +309,10 @@ public class SEDLookupsTest extends TestUtils {
     assertEquals(init.getEmail(), res.getEmail());
     assertEquals(init.getSEDBoxes().size(), res.getSEDBoxes().size());
   }
-  
-  
+
   @Test
   public void testGetSEDBoxByAddressName() throws Exception {
     System.out.println("getSEDBoxByAddressName");
-    
 
     SEDBox init = TestLookupUtils.createSEDBox();
     String strname = init.getLocalBoxName() + "@" + LAU_TEST_DOMAIN;
@@ -434,8 +437,7 @@ public class SEDLookupsTest extends TestUtils {
     assertEquals(init.getUserId(), res.getUserId());
 
   }
-  
-  
+
   @Test
   public void testGetSEDApplicationById() throws Exception {
     System.out.println("testGetSEDApplicationById");
@@ -443,7 +445,8 @@ public class SEDLookupsTest extends TestUtils {
     boolean result = mTestInstance.addSEDApplication(init);
     assertTrue(result);
 
-    SEDApplication res = mTestInstance.getSEDApplicationById(init.getApplicationId());
+    SEDApplication res = mTestInstance.getSEDApplicationById(init.
+            getApplicationId());
 
     assertNotNull(res);
     assertEquals(init.getName(), res.getName());
@@ -457,11 +460,12 @@ public class SEDLookupsTest extends TestUtils {
     int iSize = mTestInstance.getSEDApplications().size();
     int iCnt = 4;
     for (int i = 0; i < iCnt; i++) {
-      mTestInstance.addSEDApplication(TestLookupUtils.createSEDApplication(false));
+      mTestInstance.addSEDApplication(TestLookupUtils.
+              createSEDApplication(false));
     }
     assertEquals(iSize + iCnt, mTestInstance.getSEDApplications().size());
   }
-  
+
   @Test
   public void testGetSEDUsers() throws Exception {
     System.out.println("getSEDUsers");
@@ -472,8 +476,6 @@ public class SEDLookupsTest extends TestUtils {
     }
     assertEquals(iSize + iCnt, mTestInstance.getSEDUsers().size());
   }
-  
-  
 
   @Test
   public void testRemoveSEDBox() throws Exception {
@@ -492,8 +494,6 @@ public class SEDLookupsTest extends TestUtils {
     assertNull(sb3);
 
   }
-  
-  
 
   @Test
   public void testRemoveSEDCronJob() throws Exception {
@@ -569,7 +569,7 @@ public class SEDLookupsTest extends TestUtils {
     assertNull(sb3);
 
   }
-  
+
   @Test
   public void testRemoveSEDApplication() throws Exception {
     System.out.println("testRemoveSEDApplication");
@@ -578,19 +578,18 @@ public class SEDLookupsTest extends TestUtils {
     boolean result = mTestInstance.addSEDApplication(init);
     assertTrue(result);
 
-    SEDApplication sb2 = mTestInstance.getSEDApplicationById(init.getApplicationId());
+    SEDApplication sb2 = mTestInstance.getSEDApplicationById(init.
+            getApplicationId());
     assertNotNull(sb2);
 
     result = mTestInstance.removeSEDApplication(sb2);
     assertTrue(result);
 
-    SEDApplication sb3 = mTestInstance.getSEDApplicationById(init.getApplicationId());
+    SEDApplication sb3 = mTestInstance.getSEDApplicationById(init.
+            getApplicationId());
     assertNull(sb3);
 
   }
-  
-  
-  
 
   @Test
   public void testUpdateSEDBox() throws Exception {
@@ -639,11 +638,13 @@ public class SEDLookupsTest extends TestUtils {
       String hour = init.getHour() + "_test";
       String month = init.getMonth() + "_test";
 
-      String taskPlugin = init.getSEDTask().getPlugin() + "_test";
-      String taskPluginVersion = init.getSEDTask().getPluginVersion() + "_test";
-      String taskType = init.getSEDTask().getType() + "_test";
+      String taskPlugin = init.getSEDTasks().get(0).getPlugin() + "_test";
+      String taskPluginVersion = init.getSEDTasks().get(0).getPluginVersion() + "_test";
+      String taskType = init.getSEDTasks().get(0).getType() + "_test";
+      String taskName = init.getSEDTasks().get(0).getName() + "_test";
+      Boolean taskActive = !init.getSEDTasks().get(0).getActive();
+
       String propertyValue = "New propertyValue";
-      int iPropSize = res.getSEDTask().getSEDTaskProperties().size();
 
       res.setActive(active);
       res.setMinute(minute);
@@ -651,28 +652,33 @@ public class SEDLookupsTest extends TestUtils {
       res.setMonth(month);
       res.setDayOfMonth(dayOfMonth);
       res.setDayOfWeek(dayOfWeek);
-      res.getSEDTask().setPlugin(taskPlugin);
-      res.getSEDTask().setPluginVersion(taskPluginVersion);
-      res.getSEDTask().setType(taskType);
+      for (int iTsk = 0; iTsk < res.getSEDTasks().size(); iTsk++) {
+        SEDTask tsk = res.getSEDTasks().get(iTsk);
 
-      // remove or add  one element
-      if (ind < 2) {
-        res.getSEDTask().
-                getSEDTaskProperties().remove(0);
-        iPropSize--;
-      } else {
-        SEDTaskProperty stp = new SEDTaskProperty();
-        stp.setKey("new.key");
-        stp.setValue(propertyValue);
-        res.getSEDTask().
-                getSEDTaskProperties().add(stp);
-        iPropSize++;
-      }
-      // change values
-      for (int i = 0; i < res.getSEDTask().
-              getSEDTaskProperties().size(); i++) {
-        res.getSEDTask().getSEDTaskProperties().get(i).setValue(propertyValue);
+        tsk.setPlugin(taskPlugin + iTsk);
+        tsk.setPluginVersion(taskPluginVersion + iTsk);
+        tsk.setType(taskType + iTsk);
+        tsk.setName(taskName + iTsk);
+        tsk.setActive(taskActive);
 
+        int iPropSize = tsk.getSEDTaskProperties().size();
+
+        // remove or add  one element
+        if (ind < 2) {
+          tsk.getSEDTaskProperties().remove(0);
+          iPropSize--;
+        } else {
+          SEDTaskProperty stp = new SEDTaskProperty();
+          stp.setKey("new.key");
+          stp.setValue(propertyValue);
+          tsk.getSEDTaskProperties().add(stp);
+          iPropSize++;
+        }
+        // change values
+        for (int i = 0; i < tsk.getSEDTaskProperties().size(); i++) {
+          tsk.getSEDTaskProperties().get(i).setValue(propertyValue);
+
+        }
       }
       result = mTestInstance.updateSEDCronJob(res);
       assertTrue(result);
@@ -680,26 +686,36 @@ public class SEDLookupsTest extends TestUtils {
       SEDCronJob res2 = mTestInstance.getSEDCronJobByName(init.getName());
       assertNotNull(res2);
       assertNotNull(res2.getId());
-      assertNotNull(res2.getSEDTask());
+      assertEquals(res.getSEDTasks().size(), res2.getSEDTasks().size());
       assertEquals(active, res2.getActive());
       assertEquals(dayOfMonth, res2.getDayOfMonth());
       assertEquals(dayOfWeek, res2.getDayOfWeek());
       assertEquals(hour, res2.getHour());
       assertEquals(minute, res2.getMinute());
       assertEquals(month, res2.getMonth());
-
-      assertEquals(taskPlugin, res2.getSEDTask().getPlugin());
-      assertEquals(taskPluginVersion, res2.getSEDTask().
-              getPluginVersion());
-      assertEquals(taskType, res2.getSEDTask().getType());
-
-      assertEquals(iPropSize, res2.getSEDTask().
+      
+      
+      for (int itsk =0; itsk < res.getSEDTasks().size(); itsk++) {
+       SEDTask tsk = res.getSEDTasks().get(itsk);
+       SEDTask tsk2 = res2.getSEDTasks().get(itsk);
+       
+      assertEquals(tsk.getPlugin(), tsk2.getPlugin());
+      assertEquals(tsk.getPluginVersion(), tsk2.getPluginVersion());
+      assertEquals(tsk.getName(), tsk2.getName());
+      assertEquals(tsk.getType(), tsk2.getType());
+      assertEquals(tsk.getActive(), tsk2.getActive());
+      
+      assertEquals(tsk.getSEDTaskProperties().size(), tsk2.
               getSEDTaskProperties().size());
 
-      for (int i = 0; i < res2.getSEDTask().
+      for (int i = 0; i < tsk.
               getSEDTaskProperties().size(); i++) {
-        assertEquals(propertyValue, res2.getSEDTask().
-                getSEDTaskProperties().get(i).getValue());
+        
+        assertEquals(tsk.getSEDTaskProperties().get(i).getKey(),
+                tsk2.getSEDTaskProperties().get(i).getKey());
+        assertEquals(tsk.getSEDTaskProperties().get(i).getValue(),
+                tsk2.getSEDTaskProperties().get(i).getValue());
+      }
       }
     }
 
@@ -742,7 +758,7 @@ public class SEDLookupsTest extends TestUtils {
       res.setActive(active);
       res.setInterceptEvent(interceptEvent);
       res.setInterceptRole(interceptRole);
-      
+
       for (int i = 0; i < res.getSEDInterceptorRules().size(); i++) {
         res.getSEDInterceptorRules().get(i).setProperty(ruleProperty);
         res.getSEDInterceptorRules().get(i).setPredicate(rulePredicate);
@@ -759,7 +775,7 @@ public class SEDLookupsTest extends TestUtils {
                 getSEDInterceptorProperties().remove(0);
 
         iPropSize--;
-        
+
         res.getSEDInterceptorRules().remove(0);
         iRuleSize--;
       } else {
@@ -769,14 +785,14 @@ public class SEDLookupsTest extends TestUtils {
         res.getSEDInterceptorInstance().
                 getSEDInterceptorProperties().add(stp);
         iPropSize++;
-        
+
         SEDInterceptorRule sir = new SEDInterceptorRule();
         sir.setPredicate(rulePredicate);
         sir.setProperty(ruleProperty);
         sir.setValue(ruleValue);
         res.getSEDInterceptorRules().add(sir);
         iRuleSize++;
-                
+
       }
       // change values
       for (int i = 0; i < res.getSEDInterceptorInstance().
@@ -843,20 +859,18 @@ public class SEDLookupsTest extends TestUtils {
       if (ind % 2 == 0) {
         res = XMLUtils.deepCopyJAXB(res);
       }
-      
-     
-     
-      String name = res.getName()+"_test";
+
+      String name = res.getName() + "_test";
       boolean bActive = !res.getActive();
       boolean bDOS = !res.getDeliveredOnSuccess();
-      
+
       String ruleProperty = "NewRule";
       String rulePredicate = "!=";
       String ruleValue = "New Value";
 
       int iInstSize = res.getSEDProcessorInstances().size();
       int iRuleSize = res.getSEDProcessorRules().size();
-      
+
       res.setName(name);
       res.setActive(bActive);
       res.setDeliveredOnSuccess(bDOS);
@@ -871,14 +885,14 @@ public class SEDLookupsTest extends TestUtils {
       if (ind < 2) {
         res.getSEDProcessorInstances().remove(0);
         iInstSize--;
-        
+
         res.getSEDProcessorRules().remove(0);
         iRuleSize--;
       } else {
         SEDProcessorInstance stp = TestLookupUtils.createSEDProcessorInstance();
         res.getSEDProcessorInstances().add(stp);
         iInstSize++;
-        
+
         SEDProcessorRule sir = new SEDProcessorRule();
         sir.setPredicate(rulePredicate);
         sir.setProperty(ruleProperty);
@@ -891,11 +905,11 @@ public class SEDLookupsTest extends TestUtils {
       assertTrue(result);
       SEDProcessor res2 = mTestInstance.getSEDProcessor(res.getId());
       assertNotNull(res2);
-      
+
       assertEquals(name, res2.getName());
       assertEquals(bActive, res2.getActive());
       assertEquals(bDOS, res2.getDeliveredOnSuccess());
-      
+
       assertEquals(iInstSize, res2.getSEDProcessorInstances().size());
 
       assertEquals(iRuleSize, res2.getSEDProcessorRules().size());
@@ -1061,8 +1075,8 @@ public class SEDLookupsTest extends TestUtils {
     assertEquals(init.getSEDBoxes().size(), res3.getSEDBoxes().size());
 
   }
-  
-   @Test
+
+  @Test
   public void testUpdateSEDApplication() throws Exception {
     System.out.println("testUpdateSEDApplication");
     SEDApplication init = TestLookupUtils.createSEDApplication(true);
@@ -1074,7 +1088,8 @@ public class SEDLookupsTest extends TestUtils {
     boolean result = mTestInstance.addSEDApplication(init);
     assertTrue(result);
 
-    SEDApplication res = mTestInstance.getSEDApplicationById(init.getApplicationId());
+    SEDApplication res = mTestInstance.getSEDApplicationById(init.
+            getApplicationId());
     res = XMLUtils.deepCopyJAXB(res);
     String name = res.getName() + "_test";
     String desc = res.getDesc() + "_test";

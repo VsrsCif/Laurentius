@@ -16,11 +16,7 @@ package si.laurentius.msh.web.admin;
 
 import java.math.BigInteger;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import javax.ejb.EJB;
 import javax.ejb.Timer;
 import javax.faces.bean.ManagedBean;
@@ -28,7 +24,6 @@ import javax.faces.bean.SessionScoped;
 import org.primefaces.context.RequestContext;
 import si.laurentius.cron.SEDCronJob;
 import si.laurentius.cron.SEDTask;
-import si.laurentius.cron.SEDTaskProperty;
 
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.interfaces.SEDLookupsInterface;
@@ -38,10 +33,6 @@ import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.Utils;
 import si.laurentius.msh.web.abst.AbstractAdminJSFView;
 import si.laurentius.msh.web.gui.dlg.DialogExecute;
-import si.laurentius.msh.web.plugin.PluginPropertyModel;
-import si.laurentius.msh.web.plugin.PluginPropertyModelItem;
-import si.laurentius.plugin.crontask.CronTaskDef;
-import si.laurentius.plugin.def.Plugin;
 
 /**
  *
@@ -59,10 +50,6 @@ public class AdminSEDCronJobView extends AbstractAdminJSFView<SEDCronJob> {
   @EJB(mappedName = SEDJNDI.JNDI_SEDSCHEDLER)
   private SEDSchedulerInterface mshScheduler;
 
-  @EJB(mappedName = SEDJNDI.JNDI_PLUGIN)
-  private SEDPluginManagerInterface mPlgManager;
-
-  PluginPropertyModel mtpmPropertyModel = new PluginPropertyModel();
 
   /**
    *
@@ -88,14 +75,14 @@ public class AdminSEDCronJobView extends AbstractAdminJSFView<SEDCronJob> {
       return false;
     }
 
-    for (PluginPropertyModelItem tmi : mtpmPropertyModel.getPluginProperties()) {
+/*    for (PluginPropertyModelItem tmi : mtpmPropertyModel.getPluginProperties()) {
       if (tmi.getPropertyDef().getMandatory() && Utils.isEmptyString(tmi.
               getValue())) {
         addError(
                 "Property value: '" + tmi.getPropertyDef().getKey() + "' is required!");
         return false;
       }
-    }
+    }*/
 
     return true;
   }
@@ -123,6 +110,8 @@ public class AdminSEDCronJobView extends AbstractAdminJSFView<SEDCronJob> {
     ecj.setMonth("*");
     ecj.setDayOfWeek("*");
 
+    
+    /*
     SEDTask tsk = new SEDTask();
     ecj.setSEDTask(tsk);
     // set  first cront task;
@@ -142,21 +131,12 @@ public class AdminSEDCronJobView extends AbstractAdminJSFView<SEDCronJob> {
                 getCronTaskPropertyDeves());
         break;
       }
-    }
+    }*/
     setNew(ecj);
 
   }
 
-  @Override
-  public void setEditable(SEDCronJob edtbl) {
-    super.setEditable(edtbl);
-    mtpmPropertyModel.clear();
-    SEDTask t = getEditableSEDTask();
-    if (t != null) {
-      updateTaskPropertyModel(t);
-    }
-
-  }
+ 
 
   /**
    *
@@ -204,12 +184,7 @@ public class AdminSEDCronJobView extends AbstractAdminJSFView<SEDCronJob> {
     boolean bsuc = false;
     SEDCronJob ecj = getEditable();
     if (ecj != null) {
-      setPropertyDataToTaskInstance(ecj.getSEDTask());
-
       mdbLookups.addSEDCronJob(ecj);
-      if (ecj.getActive() != null && ecj.getActive()) {
-        mshScheduler.activateCronJob(ecj);
-      }
       bsuc = true;
     }
     return bsuc;
@@ -223,8 +198,7 @@ public class AdminSEDCronJobView extends AbstractAdminJSFView<SEDCronJob> {
   public boolean updateEditable() {
     SEDCronJob ecj = getEditable();
     boolean bsuc = false;
-    if (ecj != null) {
-      setPropertyDataToTaskInstance(ecj.getSEDTask());
+    if (ecj != null) {    
       bsuc = mdbLookups.updateSEDCronJob(ecj);
       if (bsuc) {
         mshScheduler.stopCronJob(ecj);
@@ -248,107 +222,44 @@ public class AdminSEDCronJobView extends AbstractAdminJSFView<SEDCronJob> {
     return lst;
   }
 
-  public String getEditableTaskPluginType() {
-    SEDTask t = getEditableSEDTask();
-    return t == null ? null : t.getPlugin();
-  }
-
-  /**
-   * Set plugin for editable task
-   *
-   * @param strPlugin
-   */
-  public void setEditableTaskPluginType(String strPlugin) {
-    SEDTask t = getEditableSEDTask();
-    if (t != null && !Objects.equals(strPlugin, t.getPlugin())) {
-      t.setPlugin(strPlugin);
-      // set type
-      Plugin plg = mPlgManager.getPluginByType(strPlugin);
-      setEditableTaskType(
-              plg != null && !plg.getCronTaskDeves().isEmpty()
-              ? plg.getCronTaskDeves().get(0).getType() : null);
-
+  
+  
+  public boolean addTaskToEditable(SEDTask spi) {
+    boolean bsuc = false;
+    SEDCronJob pr = getEditable();
+    if (pr != null) {
+      bsuc = pr.getSEDTasks().add(spi);
+    } else {
+      addError("No editable task!");
     }
+    return bsuc;
   }
 
-  public List<CronTaskDef> getEditablePluginCronTaskDeves() {
-
-    SEDTask t = getEditableSEDTask();
-    Plugin plg = null;
-    if (t != null && !Utils.
-            isEmptyString(t.getPlugin())) {
-      plg = mPlgManager.getPluginByType(t.getPlugin());
+  public boolean removeTaskFromEditable(SEDTask spi) {
+    boolean bsuc = false;
+    SEDCronJob pr = getEditable();
+    if (pr != null) {
+      bsuc = pr.getSEDTasks().remove(spi);
+    } else {
+      addError("No editable task!");
     }
-    return plg != null ? plg.getCronTaskDeves() : Collections.emptyList();
+    return bsuc;
   }
 
-  /**
-   * Set Task type from selected plugin
-   *
-   * @param strTaskType
-   */
-  public void setEditableTaskType(String strTaskType) {
-    SEDTask t = getEditableSEDTask();
-    if (t != null && !Objects.equals(t.getType(), strTaskType)) {
-      t.setType(strTaskType);
-      updateTaskPropertyModel(t);
+  public boolean updateTaskFromEditable(SEDTask spiOld,
+          SEDTask spiNew) {
+    boolean bsuc = false;
+    SEDCronJob pr = getEditable();
+    if (pr != null) {
+      int i = pr.getSEDTasks().indexOf(spiOld);
+      pr.getSEDTasks().remove(i);
+      pr.getSEDTasks().add(i, spiNew);
+      bsuc = true;
 
+    } else {
+      addError("No editable process rule!");
     }
-  }
-
-  public String getEditableTaskType() {
-    SEDTask t = getEditableSEDTask();
-    return t == null ? null : t.getType();
-  }
-
-  private void updateTaskPropertyModel(SEDTask t) {
-    mtpmPropertyModel.clear();
-    if (t == null
-            || Utils.isEmptyString(t.getPlugin())
-            || Utils.isEmptyString(t.getType())) {
-      LOG.formatedWarning("Null plugin or type!");
-      return;
-    }
-
-    CronTaskDef ctd = mPlgManager.getCronTaskDef(t.getPlugin(), t.getType());
-    if (ctd == null) {
-      LOG.formatedWarning("Plugin '%s' and cron type '%s' not found!", t.
-              getPlugin(), t.getType());
-      return;
-    }
-
-    Map<String, String> tpv = new HashMap<>();
-    t.getSEDTaskProperties().forEach((tp) -> {
-      tpv.put(tp.getKey(), tp.getValue());
-    });
-    mtpmPropertyModel.setPluginProperties(tpv, ctd.
-            getCronTaskPropertyDeves());
-
-  }
-
-  public SEDTask getEditableSEDTask() {
-    if (getEditable() != null) {
-      if (getEditable().getSEDTask() == null) {
-        getEditable().setSEDTask(new SEDTask());
-
-      }
-      return getEditable().getSEDTask();
-    }
-    return null;
-  }
-
-  public List<PluginPropertyModelItem> getTaskItems() {
-    return mtpmPropertyModel.getPluginProperties();
-  }
-
-  public void setPropertyDataToTaskInstance(SEDTask inst) {
-    inst.getSEDTaskProperties().clear();
-    for (PluginPropertyModelItem tmi : mtpmPropertyModel.getPluginProperties()) {
-      SEDTaskProperty stp = new SEDTaskProperty();
-      stp.setKey(tmi.getPropertyDef().getKey());
-      stp.setValue(tmi.getValue());
-      inst.getSEDTaskProperties().add(stp);
-    }
+    return bsuc;
   }
 
   public Collection<Timer> getRegisredTimers() {
@@ -364,4 +275,7 @@ public class AdminSEDCronJobView extends AbstractAdminJSFView<SEDCronJob> {
     }
     return null;
   }
+  
+  
+  
 }

@@ -6,7 +6,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import org.primefaces.context.RequestContext;
 import si.laurentius.commons.utils.SEDLogger;
-import si.laurentius.cron.SEDTaskProperty;
+import si.laurentius.cron.SEDTask;
 import si.laurentius.msh.web.abst.AbstractJSFView;
 import si.laurentius.msh.web.admin.AdminSEDCronJobView;
 
@@ -27,17 +27,20 @@ public class DialogExecute {
     return currentJSFView;
   }
 
-  public void setCurrentJSFView(AdminSEDCronJobView currentJSFView, String update) {
+  public void setCurrentJSFView(AdminSEDCronJobView currentJSFView,
+          String update) {
     this.currentJSFView = currentJSFView;
     updateTarget = update;
   }
-  
-  public List<SEDTaskProperty> getSelectedProperties(){
-    if (currentJSFView != null && currentJSFView.getSelected() != null 
-            && currentJSFView.getSelected().getSEDTask()!=null) {
-      return currentJSFView.getSelected().getSEDTask().getSEDTaskProperties();
-    
+
+  public List<SEDTask> getTasks() {
+
+    if (currentJSFView != null && currentJSFView.getSelected() != null
+            && !currentJSFView.getSelected().getSEDTasks().isEmpty()) {
+      return currentJSFView.getSelected().getSEDTasks();
+
     }
+
     return Collections.emptyList();
   }
 
@@ -63,12 +66,11 @@ public class DialogExecute {
   }
 
   public String getTargetTable() {
-    return  updateTarget;
+    return updateTarget;
   }
 
   public void addCallbackParam(String val, boolean bval) {
     RequestContext.getCurrentInstance().addCallbackParam(val, bval);
   }
-  
 
 }

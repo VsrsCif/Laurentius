@@ -34,7 +34,7 @@ Copyright 2015, Supreme Court Republic of Slovenia
 			<xs:documentation xml:lang="sl">Cron opravila</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element name="SEDTask" type="ns1:SEDTask"/>
+			<xs:element name="SEDTask" type="ns1:SEDTask" maxOccurs="unbounded"/>
 		</xs:sequence>
 		<xs:attribute name="id" type="xs:integer">
 			<xs:annotation>
@@ -138,7 +138,10 @@ Copyright 2015, Supreme Court Republic of Slovenia
 				<xs:documentation xml:lang="en">  </xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
-	</xs:complexType>	
+		<xs:attribute name="id" type="xs:integer"/>
+		<xs:attribute name="name" type="xs:string"/>
+		<xs:attribute name="active" type="xs:boolean"/>
+	</xs:complexType>
 	<xs:complexType name="SEDTaskExecution">
 		<xs:annotation>
 			<xs:documentation xml:lang="sl"/>
@@ -162,7 +165,7 @@ Copyright 2015, Supreme Court Republic of Slovenia
 		</xs:attribute>
 		<xs:attribute name="name" use="required">
 			<xs:annotation>
-				<xs:documentation xml:lang="sl">Naziv lastnosti </xs:documentation>
+				<xs:documentation xml:lang="sl">Naziv </xs:documentation>
 			</xs:annotation>
 			<xs:simpleType>
 				<xs:restriction base="xs:string">

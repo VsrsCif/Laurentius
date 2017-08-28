@@ -59,9 +59,7 @@
                     <p:column headerText="#{msg['Name']}" >
                         <h:outputText value="#{sp.name}"></h:outputText>                
                     </p:column>
-                    <p:column headerText="#{msg['TaskType']}" width="120">
-                        <h:outputText value="#{sp.SEDTask.type}" ></h:outputText>                
-                    </p:column>
+                    
                     <p:column headerText="#{msg['Active']}" width="60">
                         <h:selectBooleanCheckbox value="#{sp.active}" disabled="true" />
                     </p:column>

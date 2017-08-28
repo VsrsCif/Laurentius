@@ -18,21 +18,44 @@
         <property column="CRON_DAY_OF_MONTH" name="DayOfMonth"  length="64" type="java.lang.String"/>
         <property column="CRON_MONTH" name="Month"  length="64" type="java.lang.String"/>
         <property column="CRON_DAY_OF_WEEK" name="DayOfWeek"  length="64" type="java.lang.String"/>
+        
+         <list name="sedTasks" access="field" cascade="all, delete-orphan" lazy="false" >
+            <key column="CRON_ID" />
+            <list-index column="IDX"/>
+            <one-to-many class="si.laurentius.cron.SEDTask"/>
+        </list>
 
         
-        <component name="SEDTask" class="si.laurentius.cron.SEDTask">
-            <property column="TASK_TYPE" name="Type"  length="64" type="java.lang.String"/>
+       
+        
+    </class>    
+    
+     <class name="si.laurentius.cron.SEDTask" table="LAU_TASK_INSTANCE">
+        <id name="Id" type="java.math.BigInteger">
+            <column name="TASK_ID" scale="0" />
+            <generator class="sequence">
+                <param name="sequence">SEQ_LAU_TASK_INSTANCE</param>                
+            </generator>
+        </id>		
+        
+        <property column="TASK_TYPE" name="Type"  length="64" type="java.lang.String"/>
             <property column="TASK_PLUGIN" name="Plugin"  length="64" type="java.lang.String"/>
             <property column="TASK_PLUGIN_VERSION" name="PluginVersion"  length="32" type="java.lang.String"/>
+            <property column="TASK_NAME" name="Name"  length="128" type="java.lang.String" />
+            <property column="TASK_ACTIVE" name="Active"   type="java.lang.Boolean"/>
+        
             <bag name="sedTaskProperties"  access="field" cascade="all, delete-orphan" lazy="false" order-by="Id asc" >
                 <key not-null="true">
-                    <column name="CRON_ID" scale="0" />
+                    <column name="TASK_ID" scale="0" />
                 </key>
                 <one-to-many class="si.laurentius.cron.SEDTaskProperty" />
             </bag>
-        </component>
         
-    </class>    
+        
+        
+       
+    </class>
+    
     
     <class name="si.laurentius.cron.SEDTaskProperty" table="LAU_TASK_PROPERTY">
         <id name="Id" type="java.math.BigInteger">

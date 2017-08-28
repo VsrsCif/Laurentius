@@ -206,15 +206,19 @@ public class SEDInitData implements SEDInitDataInterface {
 
     if (cls.getSEDCronJobs() != null && !cls.getSEDCronJobs().
             getSEDCronJobs().isEmpty()) {
+      
+      
       cls.getSEDCronJobs().getSEDCronJobs().stream().forEach(
               (cb) -> {
                 cb.setId(null);
-                if (cb.getSEDTask() != null) {
-                  cb.getSEDTask().getSEDTaskProperties().
+                
+                cb.getSEDTasks().forEach(pr ->{
+                  pr.getSEDTaskProperties().
                           stream().forEach((c) -> {
                             c.setId(null);
                           });
-                }
+                  }
+                );
                 mdbLookups.addSEDCronJob(cb);
                 if (cb.getActive() != null && cb.getActive()) {
                   mshScheduler.activateCronJob(cb);

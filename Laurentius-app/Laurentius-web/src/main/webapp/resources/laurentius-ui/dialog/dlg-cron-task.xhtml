@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      xmlns:dlg="http://java.sun.com/jsf/composite/laurentius-ui/dialog"
+      xmlns:pnl="http://java.sun.com/jsf/composite/laurentius-ui/panel"
+      >
+    <composite:interface>
+    </composite:interface>
+
+    <composite:implementation >      
+        <dlg:dlg-abstract   id="cronTaskDialog"
+                            formId="cronTaskDialogForm"
+                            dialogTitle="#{msg['SEDCronTaskDialog']}" 
+                            editable="#{adminSEDCronTaskView.editable}"
+                            width="800"
+                            height="400"
+                            updateOnSave=":dlgcron:cronDialogForm:TblTasks"
+                            onConfirmAction="#{adminSEDCronTaskView.addOrUpdateEditable()}"
+                            >     
+            <p:panelGrid columns="4" columnClasses="grid-label, value">
+
+                <h:outputText value="#{msg['Name']}:" />
+                <p:inputText id="cname" value="#{adminSEDCronTaskView.editable.name}" 
+                             disabled="#{!adminSEDCronTaskView.isEditableNew()}"
+                             style="width: 120px"  
+                             />
+
+
+                <h:outputText value="#{msg['Active']}:" />
+                <h:selectBooleanCheckbox id="cActive" value="#{adminSEDCronTaskView.editable.active}"  />
+
+
+                <h:outputText value="#{msg['Plugin']}:" />
+                <p:selectOneMenu id="pluginType" value="#{adminSEDCronTaskView.editablePluginType}" 
+                                 disabled="#{!adminSEDCronTaskView.isEditableNew()}"
+                                 style="width:150px" 
+                                 >
+                    <p:ajax update=":dlgcrontask:cronTaskDialog:cronTaskDialogForm:tasktype 
+                            :dlgcrontask:cronTaskDialog:cronTaskDialogForm:PropertyPanel:PropertyPanelTable"/>    
+
+                    <f:selectItems value="#{adminSEDPluginView.list}"  var="plg" itemLabel="#{plg.name}" 
+                                   itemValue="#{plg.type}" itemDescription="#{plg.description}"
+                                   itemDisabled="#{plg.cronTaskDeves.size() eq 0}"
+
+                                   />
+                </p:selectOneMenu>
+
+
+                <h:outputText value="#{msg['Type']}:" />
+
+                <p:selectOneMenu id="tasktype" value="#{adminSEDCronTaskView.editableTaskType}" 
+                                 disabled="#{!adminSEDCronTaskView.isEditableNew()}"
+                                 style="width:150px" 
+                                 >
+                    <p:ajax   update=":dlgcrontask:cronTaskDialog:cronTaskDialogForm:PropertyPanel:PropertyPanelTable" />    
+                    <f:selectItems value="#{adminSEDCronTaskView.selectedCronTaskList()}" 
+                                   var="prc" itemLabel="#{prc.name}" 
+                                   itemValue="#{prc.type}" itemDescription="#{prc.description}"
+                                   />
+                </p:selectOneMenu>
+            </p:panelGrid>
+
+            <pnl:pnl-plugin-properties id="PropertyPanel"
+                                       tableId="PropertyPanelTable"
+                                       propertyList="#{adminSEDCronTaskView.selectedTaskItems}" 
+                                       header="#{msg['Properties']}"  />
+
+        </dlg:dlg-abstract>
+    </composite:implementation>
+</html>

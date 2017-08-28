@@ -79,12 +79,25 @@ public class TestLookupUtils {
     sb.setHour("3");
     sb.setMinute("4");
     sb.setMonth("5");
+    
+     int iInstSize = RANDOM_VALUE.nextInt(10) + 3;
+    for (int i = 0; i < iInstSize; i++) {
+      SEDTask tsk = createSEDTask();
+      sb.getSEDTasks().add(tsk);
+    }
 
+   
+    return sb;
+
+  }
+  
+  public static SEDTask createSEDTask() {
     SEDTask st = new SEDTask();
     st.setPlugin("PLUGIN");
     st.setPluginVersion("VERSION");
     st.setType("TYPE");
-
+    st.setActive(Boolean.TRUE);
+    st.setName("Name task");
     int iPropSize = RANDOM_VALUE.nextInt(10) + 3;
 
     for (int i = 0; i < iPropSize; i++) {
@@ -93,11 +106,7 @@ public class TestLookupUtils {
       sp.setValue(String.format("value_%02d", i));
       st.getSEDTaskProperties().add(sp);
     }
-
-    sb.setSEDTask(st);
-
-    return sb;
-
+    return st;
   }
 
   public static <T> T fillDecisionRule(String prp, T drule) {
