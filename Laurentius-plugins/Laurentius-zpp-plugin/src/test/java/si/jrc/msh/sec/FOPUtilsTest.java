@@ -32,6 +32,7 @@ import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import si.jrc.msh.plugin.zpp.ZPPOutInterceptor;
+import si.jrc.msh.plugin.zpp.enums.FopTransformation;
 import si.jrc.msh.plugin.zpp.utils.FOPUtils;
 import si.laurentius.commons.enums.MimeValue;
 import si.laurentius.commons.SEDSystemProperties;
@@ -114,12 +115,12 @@ Naša oznaka
     FOPUtils instance = new FOPUtils(new File(FOP_CONFIG_FILE), XSLT_FO_FOLDER);
     File ftxt = new File(LAU_HOME + "DeliveryNotification.txt");
     File fpdf = new File(LAU_HOME + "DeliveryNotification.pdf");
-    instance.generateVisualization(om, ftxt, FOPUtils.FopTransformations.DeliveryNotification,
+    instance.generateVisualization(om, ftxt, FopTransformation.DeliveryNotification,
         MimeConstants.MIME_PLAIN_TEXT);
     String strRes = null;
 
 //    OBVESTILO O PRISPELI POŠILJKI
-    instance.generateVisualization(om, fpdf, FOPUtils.FopTransformations.DeliveryNotification,
+    instance.generateVisualization(om, fpdf, FopTransformation.DeliveryNotification,
         MimeConstants.MIME_PDF);
 
   }
@@ -152,10 +153,10 @@ Naša oznaka
     FOPUtils instance = new FOPUtils(new File(FOP_CONFIG_FILE), XSLT_FO_FOLDER);
     File ftxt = new File(LAU_HOME + "AdviceOfDelivery.txt");
     File fpdf = new File(LAU_HOME + "AdviceOfDelivery.pdf");
-    instance.generateVisualization(im, ftxt, FOPUtils.FopTransformations.AdviceOfDelivery,
+    instance.generateVisualization(im, ftxt, FopTransformation.AdviceOfDelivery,
         MimeConstants.MIME_PLAIN_TEXT);
 
-    instance.generateVisualization(im, fpdf, FOPUtils.FopTransformations.AdviceOfDelivery,
+    instance.generateVisualization(im, fpdf, FopTransformation.AdviceOfDelivery,
         MimeConstants.MIME_PDF);
 
   }
@@ -194,10 +195,10 @@ Datum opravljene storitve : <Datum opravljene storitve>
     FOPUtils instance = new FOPUtils(new File(FOP_CONFIG_FILE), XSLT_FO_FOLDER);
     File ftxt = new File(LAU_HOME + "DeliveryReciept.txt");
     File fpdf = new File(LAU_HOME + "DeliveryReciept.pdf");
-    instance.generateVisualization(im, ftxt, FOPUtils.FopTransformations.DeliveryReciept,
+    instance.generateVisualization(im, ftxt, FopTransformation.DeliveryReciept,
         MimeConstants.MIME_PLAIN_TEXT);
 
-    instance.generateVisualization(im, fpdf, FOPUtils.FopTransformations.DeliveryReciept,
+    instance.generateVisualization(im, fpdf, FopTransformation.DeliveryReciept,
         MimeConstants.MIME_PDF);
 
   }
@@ -223,12 +224,12 @@ Datum opravljene storitve : <Datum opravljene storitve>
     FOPUtils instance = new FOPUtils(new File(FOP_CONFIG_FILE), XSLT_FO_FOLDER);
     File ftxt = new File(LAU_HOME + "AdviceOfDeliveryFictionNotification.txt");
     File fpdf = new File(LAU_HOME + "AdviceOfDeliveryFictionNotification.pdf");
-    instance.generateVisualization(om, ftxt, FOPUtils.FopTransformations.AdviceOfDeliveryFictionNotification,
+    instance.generateVisualization(om, ftxt, FopTransformation.AdviceOfDeliveryFictionNotification,
         MimeConstants.MIME_PLAIN_TEXT);
     String strRes = null;
 
 //    OBVESTILO O PRISPELI POŠILJKI
-    instance.generateVisualization(om, fpdf, FOPUtils.FopTransformations.AdviceOfDeliveryFictionNotification,
+    instance.generateVisualization(om, fpdf, FopTransformation.AdviceOfDeliveryFictionNotification,
         MimeConstants.MIME_PDF);
   }
 
@@ -262,10 +263,10 @@ Datum opravljene storitve : <Datum opravljene storitve>
     FOPUtils instance = new FOPUtils(new File(FOP_CONFIG_FILE), XSLT_FO_FOLDER);
     File ftxt = new File(LAU_HOME + "AdviceOfDeliveryFiction.txt");
     File fpdf = new File(LAU_HOME + "AdviceOfDeliveryFiction.pdf");
-    instance.generateVisualization(om, ftxt, FOPUtils.FopTransformations.AdviceOfDeliveryFiction,
+    instance.generateVisualization(om, ftxt, FopTransformation.AdviceOfDeliveryFiction,
         MimeConstants.MIME_PLAIN_TEXT);
 
-    instance.generateVisualization(om, fpdf, FOPUtils.FopTransformations.AdviceOfDeliveryFiction,
+    instance.generateVisualization(om, fpdf, FopTransformation.AdviceOfDeliveryFiction,
         MimeConstants.MIME_PDF);
 
   }
@@ -291,12 +292,12 @@ Datum opravljene storitve : <Datum opravljene storitve>
 
     try (FileOutputStream fos = new FileOutputStream(LAU_HOME + "test.txt")) {
       instance.generateVisualization(source, fos, new StreamSource(XSLT_FO_FOLDER +
-          FOPUtils.FopTransformations.DeliveryNotification.getFileName()),
+          FopTransformation.DeliveryNotification.getFileName()),
           MimeConstants.MIME_PLAIN_TEXT);
     }
     try (FileOutputStream fos = new FileOutputStream(LAU_HOME + "test.pdf")) {
       instance.generateVisualization(source, fos, new StreamSource(XSLT_FO_FOLDER +
-          FOPUtils.FopTransformations.DeliveryNotification.getFileName()),
+          FopTransformation.DeliveryNotification.getFileName()),
           MimeConstants.MIME_PDF);
     }
 

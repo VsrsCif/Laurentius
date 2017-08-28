@@ -49,14 +49,14 @@ Copyright 2015, Supreme Court Republic of Slovenia
                         <xs:documentation xml:lang="sl">Enolična oznaka lastnosti</xs:documentation>
                     </xs:annotation>
                 </xs:attribute>
-                <xs:attribute name="name" use="optional">
+                <xs:attribute name="name" use="required">
                     <xs:annotation>
                         <xs:documentation xml:lang="sl">Naziv lastnosti </xs:documentation>
                     </xs:annotation>
                     <xs:simpleType>
                         <xs:restriction base="xs:string">
                             <xs:minLength value="1"/>
-                            <xs:maxLength value="64"/>
+                            <xs:maxLength value="128"/>
                         </xs:restriction>
                     </xs:simpleType>
                 </xs:attribute>

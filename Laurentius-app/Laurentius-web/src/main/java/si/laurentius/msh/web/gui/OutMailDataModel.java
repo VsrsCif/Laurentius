@@ -15,6 +15,7 @@
 package si.laurentius.msh.web.gui;
 
 import java.math.BigInteger;
+import java.util.Calendar;
 import si.laurentius.commons.enums.SEDOutboxMailStatus;
 import si.laurentius.msh.outbox.mail.MSHOutMail;
 import si.laurentius.commons.interfaces.SEDDaoInterface;
@@ -89,6 +90,13 @@ public class OutMailDataModel extends AbstractMailDataModel<MSHOutMail> {
       outFilter = new OutMailTableFilter();
       outFilter.getSenderEBoxList().addAll(getUserSessionData().getUserEBoxesWithDomain());
       outFilter.getStatusList().addAll(SEDOutboxMailStatus.listOfValues());
+      Calendar c = Calendar.getInstance();
+      c.add(Calendar.DATE, -30);
+      c.clear(Calendar.MILLISECOND);
+      c.clear(Calendar.SECOND);
+      c.clear(Calendar.MINUTE);
+      c.clear(Calendar.HOUR);
+      outFilter.setSubmittedDateFrom(c.getTime());
     }
     return outFilter;
   }

@@ -15,6 +15,7 @@
 package si.laurentius.msh.web.gui;
 
 import java.math.BigInteger;
+import java.util.Calendar;
 import si.laurentius.commons.enums.SEDInboxMailStatus;
 import si.laurentius.msh.inbox.mail.MSHInMail;
 import si.laurentius.commons.interfaces.SEDDaoInterface;
@@ -75,9 +76,8 @@ public class InMailDataModel extends AbstractMailDataModel<MSHInMail> {
    */
   @Override
   public Object externalFilters() {
-    
-  
-    return  getFilter();
+
+    return getFilter();
   }
 
   /**
@@ -85,11 +85,18 @@ public class InMailDataModel extends AbstractMailDataModel<MSHInMail> {
    * @return
    */
   public InMailTableFilter getFilter() {
-     if (imtFilter == null) {
+    if (imtFilter == null) {
       imtFilter = new InMailTableFilter();
       imtFilter.getReceiverEBoxList().addAll(getUserSessionData().
               getUserEBoxesWithDomain());
       imtFilter.getStatusList().addAll(SEDInboxMailStatus.listOfValues());
+      Calendar c = Calendar.getInstance();
+      c.add(Calendar.DATE, -30);
+      c.clear(Calendar.MILLISECOND);
+      c.clear(Calendar.SECOND);
+      c.clear(Calendar.MINUTE);
+      c.clear(Calendar.HOUR);
+      imtFilter.setReceivedDateFrom(c.getTime());
     }
     return imtFilter;
   }

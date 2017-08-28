@@ -19,6 +19,7 @@ import javax.xml.transform.stream.StreamSource;
 import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.FopFactory;
 import org.xml.sax.SAXException;
+import si.jrc.msh.plugin.zpp.enums.FopTransformation;
 import si.laurentius.commons.exception.FOPException;
 
 /**
@@ -50,7 +51,7 @@ public class FOPUtils {
    * @param mime
    * @throws FOPException
    */
-  public void generateVisualization(Object outMail, File f, FopTransformations xslt, String mime)
+  public void generateVisualization(Object outMail, File f, FopTransformation xslt, String mime)
       throws FOPException {
 
     File fxslt = getTransformatinoFile(xslt);
@@ -137,7 +138,7 @@ public class FOPUtils {
   }
 
   
-  private File getTransformatinoFile(FopTransformations xslt) {
+  private File getTransformatinoFile(FopTransformation xslt) {
     if (mTransformationFolder == null) {
       return new File(xslt.getFileName());
     }
@@ -145,33 +146,5 @@ public class FOPUtils {
 
   }
 
-  /**
-   *
-   */
-  public enum FopTransformations {
-
-    /**
-     *
-     */
-    DeliveryNotification("LegalDelivery_ZPP-DeliveryNotification.fo"),
-    AdviceOfDelivery("LegalDelivery_ZPP-AdviceOfDelivery.fo"),
-    AdviceOfDeliveryFictionNotification("LegalDelivery_ZPP-AdviceOfDeliveryFictionNotification.fo"),
-    AdviceOfDeliveryFiction("LegalDelivery_ZPP-AdviceOfDeliveryFiction.fo"),
-    DeliveryReciept("LegalDelivery_ZPP-DeliveryReciept.fo");
-
-    private final String mstrfileName;
-
-    FopTransformations(String filename) {
-      mstrfileName = filename;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public String getFileName() {
-      return mstrfileName;
-    }
-  }
-
+  
 }

@@ -28,8 +28,10 @@ import si.laurentius.msh.outbox.mail.MSHOutMail;
 import si.laurentius.msh.outbox.payload.MSHOutPart;
 import si.laurentius.msh.outbox.payload.MSHOutPayload;
 import si.jrc.msh.plugin.zpp.doc.DocumentSodBuilder;
+import si.jrc.msh.plugin.zpp.enums.FopTransformation;
 import si.jrc.msh.plugin.zpp.exception.ZPPException;
 import si.jrc.msh.plugin.zpp.utils.FOPUtils;
+import si.jrc.msh.plugin.zpp.utils.ZPPUtils;
 import si.laurentius.lce.enc.SEDCrypto;
 import si.laurentius.lce.sign.pdf.SignUtils;
 import si.laurentius.commons.enums.MimeValue;
@@ -72,13 +74,6 @@ public class ZPPTask implements TaskExecutionInterface {
   private static final String REC_SEDBOX = "zpp.sedbox";
   private static final String PROCESS_MAIL_COUNT = "zpp.max.mail.count";
 
-  SEDCrypto mSedCrypto = new SEDCrypto();
-  DocumentSodBuilder dsbSodBuilder = new DocumentSodBuilder();
-  KeystoreUtils mkeyUtils = new KeystoreUtils();
-
-  FOPUtils mfpFop = null;
-  StringFormater msfFormat = new StringFormater();
-
   @EJB(mappedName = SEDJNDI.JNDI_SEDDAO)
   SEDDaoInterface mDB;
 
@@ -87,6 +82,9 @@ public class ZPPTask implements TaskExecutionInterface {
 
   @EJB(mappedName = SEDJNDI.JNDI_DBCERTSTORE)
   SEDCertStoreInterface mCertBean;
+
+  KeystoreUtils mkeyUtils = new KeystoreUtils();
+  ZPPUtils mzppZPPUtils = new ZPPUtils();
 
   /**
    *
@@ -117,6 +115,7 @@ public class ZPPTask implements TaskExecutionInterface {
     } else {
       sedBox = p.getProperty(REC_SEDBOX);
     }
+    
     int maxMailProc = 100;
     if (p.containsKey(PROCESS_MAIL_COUNT)) {
       String val = p.getProperty(PROCESS_MAIL_COUNT);
@@ -211,14 +210,13 @@ public class ZPPTask implements TaskExecutionInterface {
 
   /**
    *
-   * @param mInMail
+   * @param inMail
    * @param signAlias
-   * @param keystore
    * @throws FOPException
    * @throws HashException
    * @throws si.jrc.msh.plugin.zpp.exception.ZPPException
    */
-  public void processInZPPDelivery(MSHInMail mInMail, String signAlias)
+  public void processInZPPDelivery(MSHInMail inMail, String signAlias)
           throws FOPException,
           HashException,
           ZPPException {
@@ -229,12 +227,12 @@ public class ZPPTask implements TaskExecutionInterface {
     mout.setMessageId(Utils.getInstance().getGuidString());
     mout.setService(ZPPConstants.S_ZPP_SERVICE);
     mout.setAction(ZPPConstants.S_ZPP_ACTION_ADVICE_OF_DELIVERY);
-    mout.setConversationId(mInMail.getConversationId());
-    mout.setSenderEBox(mInMail.getReceiverEBox());
-    mout.setSenderName(mInMail.getReceiverName());
-    mout.setRefToMessageId(mInMail.getMessageId());
-    mout.setReceiverEBox(mInMail.getSenderEBox());
-    mout.setReceiverName(mInMail.getSenderName());
+    mout.setConversationId(inMail.getConversationId());
+    mout.setSenderEBox(inMail.getReceiverEBox());
+    mout.setSenderName(inMail.getReceiverName());
+    mout.setRefToMessageId(inMail.getMessageId());
+    mout.setReceiverEBox(inMail.getSenderEBox());
+    mout.setReceiverName(inMail.getSenderName());
     mout.setSubject(ZPPConstants.S_ZPP_ACTION_ADVICE_OF_DELIVERY);
     // prepare mail to persist
     Date dt = new Date();
@@ -243,35 +241,19 @@ public class ZPPTask implements TaskExecutionInterface {
     mout.setSubmittedDate(dt);
     mout.setStatusDate(dt);
 
-    File fDNViz = null;
+   
     try {
-      fDNViz = StorageUtils.getNewStorageFile("pdf", "AdviceOfDelivery");
-
-      getFOP().generateVisualization(mInMail, fDNViz,
-              FOPUtils.FopTransformations.AdviceOfDelivery,
-              MimeConstants.MIME_PDF);
-
+      
       // sign with receiver certificate 
       PrivateKey pk = mCertBean.getPrivateKeyForAlias(signAlias);
       X509Certificate xcert = mCertBean.getX509CertForAlias(signAlias);
-
-      signPDFDocument(pk, xcert, fDNViz);
-      // sign with systemCertificate
-
+      
+      MSHOutPart mp  = mzppZPPUtils.createSignedAdviceOfDelivery(inMail, pk, xcert);
       mout.setMSHOutPayload(new MSHOutPayload());
-      MSHOutPart mp = new MSHOutPart();
-      mp.setDescription("DeliveryAdvice");
-      mp.setMimeType(MimeValue.MIME_PDF.getMimeType());
       mout.getMSHOutPayload().getMSHOutParts().add(mp);
-      mp.setSha256Value(DigestUtils.getHexSha256Digest(fDNViz));
-      mp.setSize(BigInteger.valueOf(fDNViz.length()));
-      mp.setFilename(fDNViz.getName());
-      mp.setFilepath(StorageUtils.getRelativePath(fDNViz));
-      mp.setName(mp.getFilename().
-              substring(0, mp.getFilename().lastIndexOf(".")));
-
+      
       mDB.serializeOutMail(mout, "", "ZPPDeliveryPlugin", "");
-      mDB.setStatusToInMail(mInMail, SEDInboxMailStatus.PREADY,
+      mDB.setStatusToInMail(inMail, SEDInboxMailStatus.PREADY,
               "AdviceOfDelivery created and submitted to out queue");
     } catch (SEDSecurityException | StorageException ex) {
       String msg = ex.getMessage();
@@ -282,34 +264,5 @@ public class ZPPTask implements TaskExecutionInterface {
     LOG.logEnd(l);
   }
 
-  /**
-   *
-   * @return
-   */
-  public FOPUtils getFOP() {
-    if (mfpFop == null) {
-      File fconf= new File(SEDSystemProperties.getPluginsFolder(),
-                      ZPPConstants.SVEV_FOLDER + File.separator + ZPPConstants.FOP_CONFIG_FILENAME);
-
-      mfpFop = new FOPUtils(fconf, SEDSystemProperties.getPluginsFolder()
-                      + File.separator + ZPPConstants.SVEV_FOLDER + File.separator
-                      + ZPPConstants.XSLT_FOLDER);
-    }
-    return mfpFop;
-  }
-
-  private void signPDFDocument(PrivateKey pk, X509Certificate xcert, File f) {
-    try {
-      File ftmp = File.createTempFile("tmp_sign", ".pdf");
-
-      SignUtils su = new SignUtils(pk, xcert);
-      su.signPDF(f, ftmp, true);
-      Files.move(ftmp.toPath(), f.toPath(), StandardCopyOption.REPLACE_EXISTING);
-
-    } catch (IOException ex) {
-      Logger.getLogger(ZPPOutInterceptor.class
-              .getName()).
-              log(Level.SEVERE, null, ex);
-    }
-  }
+  
 }

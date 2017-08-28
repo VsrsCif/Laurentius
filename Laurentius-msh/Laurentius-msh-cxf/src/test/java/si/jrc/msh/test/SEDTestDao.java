@@ -177,5 +177,13 @@ public class SEDTestDao implements SEDDaoInterface{
   public void updateOutMail(MSHOutMail mail, String statusDesc, String userID)
       throws StorageException {
     }
+
+  @Override
+  public boolean updateOutMailPayload(MSHOutMail mi,
+          List<MSHOutPart> lstAddParts, List<MSHOutPart> lstUpdateParts,
+          List<MSHOutPart> lstDeleteParts, SEDOutboxMailStatus status,
+          String statusdesc, String userId, String applicationId) throws StorageException {
+    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+  }
   
 }

@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- edited with XMLSpy v2008 (http://www.altova.com) by XMLSpy 2007 Professional Ed., Installed for 5 users (with SMP from 2007-02-06 to 2008-02-07) (CIF VSRS) -->
 <!--Metadata: 
 Owner: Supreme Court Republic of Slovenia 
 Product: SVEV-MSH
@@ -46,7 +45,17 @@ Copyright 2015, Supreme Court Republic of Slovenia
 					<xs:simpleContent>
 						<xs:extension base="xs:string">
 							<xs:attribute name="id" type="xs:integer" use="optional"/>
-							<xs:attribute name="name" type="xs:string" use="required"/>
+							<xs:attribute name="name" use="required">
+								<xs:annotation>
+									<xs:documentation xml:lang="sl">Naziv lastnosti </xs:documentation>
+								</xs:annotation>
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:minLength value="1"/>
+										<xs:maxLength value="128"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:attribute>
 						</xs:extension>
 					</xs:simpleContent>
 				</xs:complexType>
@@ -128,10 +137,10 @@ Copyright 2015, Supreme Court Republic of Slovenia
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
-                <xs:attribute name="size" type="xs:integer">                
+		<xs:attribute name="size" type="xs:integer">
 			<xs:annotation>
 				<xs:documentation xml:lang="sl">velikost priponke</xs:documentation>
-			</xs:annotation>			
+			</xs:annotation>
 		</xs:attribute>
 		<xs:attribute name="filepath">
 			<xs:simpleType>
@@ -140,7 +149,7 @@ Copyright 2015, Supreme Court Republic of Slovenia
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
-                <xs:attribute name="source" default="mail">
+		<xs:attribute name="source" default="mail">
 			<xs:annotation>
 				<xs:documentation>Source of payload: 
 - "mail" is orignial payload received or submitted;

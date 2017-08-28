@@ -261,6 +261,8 @@ public interface SEDDaoInterface {
   
   boolean addInMailPayload(MSHInMail mi, List<MSHInPart> lstParts,  SEDInboxMailStatus status, String statusdesc, String userId, String applicationId) throws StorageException;
   boolean addOutMailPayload(MSHOutMail mi, List<MSHOutPart> lstParts,  SEDOutboxMailStatus status, String statusdesc, String userId, String applicationId) throws StorageException;
+  boolean updateOutMailPayload(MSHOutMail mi, List<MSHOutPart> lstAddParts, List<MSHOutPart> lstUpdateParts, List<MSHOutPart> lstDeleteParts,  
+          SEDOutboxMailStatus status, String statusdesc, String userId, String applicationId) throws StorageException;
 
   /**
    *

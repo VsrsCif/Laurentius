@@ -68,6 +68,7 @@ public class ZPPConstants {
   
   public static final String S_PART_PROPERTY_ORIGIN_MIMETYPE = "OriginMimeType";
   public static final String S_PART_PROPERTY_REF_ID = "REF_ID";
+
   
   
 
@@ -75,6 +76,8 @@ public class ZPPConstants {
      *
      */
   public static final String S_ZPP_PLUGIN_TYPE = "LegalZPP";
+  
+
   
   
 

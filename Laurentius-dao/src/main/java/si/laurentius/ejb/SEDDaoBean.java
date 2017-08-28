@@ -21,10 +21,9 @@ import java.lang.reflect.Modifier;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.Local;
@@ -53,7 +52,6 @@ import javax.transaction.HeuristicMixedException;
 import javax.transaction.HeuristicRollbackException;
 import javax.transaction.NotSupportedException;
 import javax.transaction.RollbackException;
-import javax.transaction.Status;
 import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 import si.laurentius.msh.inbox.event.MSHInEvent;
@@ -206,18 +204,39 @@ public class SEDDaoBean implements SEDDaoInterface {
           SEDOutboxMailStatus status, String statusdesc, String userId,
           String applicationId) throws StorageException {
 
-    // persits parts
+   return updateOutMailPayload(mail, lstParts, Collections.emptyList(), Collections.emptyList(), status,
+           statusdesc, userId, applicationId);
+  }
+  
+  
+   public boolean updateOutMailPayload(MSHOutMail mail, List<MSHOutPart> lstAddParts, List<MSHOutPart> lstUpdateParts, List<MSHOutPart> lstDeleteParts,  
+          SEDOutboxMailStatus status, String statusdesc, String userId, String applicationId) throws StorageException{
+     // persits parts
     long l = LOG.logStart();
     boolean suc = false;
     try {
       mutUTransaction.begin();
-      for (MSHOutPart ip : lstParts) {
+      for (MSHOutPart ip : lstAddParts) {
         ip.setMailId(mail.getId());
         memEManager.persist(ip);
       }
+      for (MSHOutPart ip : lstUpdateParts) {
+        ip.setMailId(mail.getId());
+        memEManager.merge(ip);
+      }
+      
+      for (MSHOutPart ip : lstDeleteParts) {
+        ip.setMailId(mail.getId());
+        memEManager.remove(l);
+      }
+      
+      String  strMsg = String.format("a: %d, u: %d, d %d", lstAddParts.size(),lstUpdateParts.size(),lstDeleteParts.size());
+      LOG.logWarn(strMsg,null);
 
-      mail.setStatusDate(Calendar.getInstance().getTime());
-      mail.setStatus(status.getValue());
+// cause locking
+     mail.setStatusDate(Calendar.getInstance().getTime());
+     mail.setStatus(status.getValue());
+//      memEManager.merge(mail);
 
       Query updq = memEManager.createNamedQuery(SEDNamedQueries.UPDATE_OUTMAIL);
       updq.setParameter("id", mail.getId());
@@ -242,7 +261,7 @@ public class SEDDaoBean implements SEDDaoInterface {
       MSHOutEvent me = new MSHOutEvent();
       me.setMailId(mail.getId());
       me.setSenderMessageId(mail.getSenderMessageId());
-      me.setDescription(statusdesc);
+      me.setDescription(statusdesc + " " +strMsg);
       me.setStatus(mail.getStatus());
       me.setDate(mail.getStatusDate());
       me.setUserId(userId);
@@ -250,6 +269,9 @@ public class SEDDaoBean implements SEDDaoInterface {
       memEManager.persist(me);
 
       mutUTransaction.commit();
+  
+      
+      
       suc = true;
     } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException
             | HeuristicRollbackException | SecurityException | IllegalStateException ex) {
@@ -262,7 +284,8 @@ public class SEDDaoBean implements SEDDaoInterface {
     }
 
     return suc;
-  }
+  
+   }
 
   /**
    *

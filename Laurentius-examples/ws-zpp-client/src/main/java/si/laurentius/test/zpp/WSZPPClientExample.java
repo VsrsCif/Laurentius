@@ -73,6 +73,8 @@ import si.laurentius.test.zpp.fop.FOPException;
 public class WSZPPClientExample {
 
   public static final String S_KEY_ALIAS = "test-zpp-sign";
+  public static final String S_KEY_NOT_REGISTRED_ALIAS = "test-zpp-sign-not-registred";
+
   public static final String S_KEYSTORE = "/laurentius.jks";
   public static final String S_KEYSTORE_PASSWD = "passwd1234";
   public static final String S_KEY_PASSWD = "key1234";
@@ -122,92 +124,105 @@ public class WSZPPClientExample {
 
   public static void main(String... args) throws InterruptedException {
 
-    /**
-     * To start test first disable task: ZPPSign-B-Department from web-gui Test
-     * procedure: 1. submit mail from a.department to b.department 2. retrieve
-     * inmail for b.deparmtnt in PLOCKED status 3. create, sign and submit
-     * AdviceOfDelivery 4. retrieve payloads for submitted mail
-     */
+    
+      /**
+       * To start test first disable task: ZPPSign-B-Department from web-gui Test
+       * procedure: 1. submit mail from a.department to b.department 2. retrieve
+       * inmail for b.deparmtnt in PLOCKED status 3. create, sign and submit
+       * AdviceOfDelivery 4. retrieve payloads for submitted mail
+       *
+       */
+    try {
+      // 1. test: AdviceOfDelivery is signed with key registred in laurentius
+      testAdviceOfDelivery(S_KEY_ALIAS);
+    } catch (SEDException_Exception | JAXBException | FOPException | ZPPException ex) {
+       LOG.error("Signature failed: " + ex.getMessage(), ex);
+    }
+    
+     try {
+      // 2. test: AdviceOfDelivery is signed with a key NOT registred in laurentius
+      testAdviceOfDelivery(S_KEY_NOT_REGISTRED_ALIAS);
+    } catch (SEDException_Exception | JAXBException | FOPException | ZPPException ex) {
+      LOG.error("Signature failed: " + ex.getMessage(), ex);
+    }
+  }
+
+  private static void testAdviceOfDelivery(String singatureKey) throws SEDException_Exception, JAXBException, InterruptedException, FOPException, ZPPException {
     BasicConfigurator.configure();
 
     WSZPPClientExample wc = new WSZPPClientExample();
 
-    try {
-      // example submit mail
-      BigInteger bi = wc.submitMail(createOutMail(RECEIVER_BOX, "Mr. Receiver",
-              SENDER_BOX, "Mr. Sender",
-              ZPPConstants.S_ZPP_SERVICE,
-              ZPPConstants.S_ZPP_ACTION_DELIVERY_NOTIFICATION,
-              "Test message",
-              "VL 1/2016"));
+    // example submit mail
+    BigInteger bi = wc.submitMail(createOutMail(RECEIVER_BOX, "Mr. Receiver",
+            SENDER_BOX, "Mr. Sender",
+            ZPPConstants.S_ZPP_SERVICE,
+            ZPPConstants.S_ZPP_ACTION_DELIVERY_NOTIFICATION,
+            "Test message",
+            "VL 1/2016"));
 
-      // example list all out mail
-      List<OutMail> lstOm = wc.getOutMailList(SENDER_BOX);
-      OutMail om = null;
-      // get out mail data
-      for (OutMail m : lstOm) {
-        if (Objects.equals(m.getId(), bi)) {
-          om = m;
-          break;
-        }
+    // example list all out mail
+    List<OutMail> lstOm = wc.getOutMailList(SENDER_BOX);
+    OutMail om = null;
+    // get out mail data
+    for (OutMail m : lstOm) {
+      if (Objects.equals(m.getId(), bi)) {
+        om = m;
+        break;
       }
+    }
 
-      boolean msgSent = false;
-      int iCnt = 0;
-      while (!msgSent) {
-        Thread.sleep(1000);
-        // example list events for  out mail
-        List<OutEvent> lstOE = wc.getOutMailEventList(bi, SENDER_BOX);
-        for (OutEvent e : lstOE) {
-          if (Objects.equals(e.getStatus(), "SENT")) {
-            msgSent = true;
-            break;
-          }
-
-        }
-        if (++iCnt > 5) {
-          LOG.error("Message is not sent in 5 seconds! - check url connection");
-          return;
-        }
-      }
-
-      //-----------------------------------------------------------------------
-      // RECEIVED MAIL
-      //-----------------------------------------------------------------------
-      // example get in mail list
-      // because "in process" in demo laurentius sets inmail status to DELIVERED - search is done by this status
-      // else default is RECEIVED
-      Thread.sleep(2000);
-      List<InMail> lstIM = wc.getInMailList(RECEIVER_BOX, "PLOCKED");
-      // search for corresponding in mail
-      InMail im = null;
-      for (InMail m : lstIM) {
-        System.out.println(m.getSenderMessageId() + " - " + om.
-                getSenderMessageId());
-        if (Objects.equals(m.getSenderMessageId(), om.getSenderMessageId())) {
-          im = m;
-          break;
-        }
-      }
-
-      ZPPUtils zpp = new ZPPUtils();
-      OutMail omDA = zpp.createZppAdviceOfDelivery(im, S_KEYSTORE,
-              S_KEYSTORE_PASSWD, S_KEY_ALIAS, S_KEY_PASSWD);
-
-      wc.serialize(omDA);
-      wc.submitMail(omDA);
-
+    boolean msgSent = false;
+    int iCnt = 0;
+    while (!msgSent) {
       Thread.sleep(1000);
-      
-       InMail imWithDecPayload = wc.getInMail(im.getId(), RECEIVER_BOX);
-       
-       for (InPart ip:imWithDecPayload.getInPayload().getInParts() ){
-         System.out.println( ip.getDescription());
-       
-       }
+      // example list events for  out mail
+      List<OutEvent> lstOE = wc.getOutMailEventList(bi, SENDER_BOX);
+      for (OutEvent e : lstOE) {
+        if (Objects.equals(e.getStatus(), "SENT")) {
+          msgSent = true;
+          break;
+        }
 
-    } catch (FOPException | ZPPException | JAXBException | SEDException_Exception ex) {
-      LOG.error("Error occured while executing sample", ex);
+      }
+      if (++iCnt > 5) {
+        LOG.error("Message is not sent in 5 seconds! - check url connection");
+        return;
+      }
+    }
+
+    //-----------------------------------------------------------------------
+    // RECEIVED MAIL
+    //-----------------------------------------------------------------------
+    // example get in mail list
+    // because "in process" in demo laurentius sets inmail status to DELIVERED - search is done by this status
+    // else default is RECEIVED
+    Thread.sleep(2000);
+    List<InMail> lstIM = wc.getInMailList(RECEIVER_BOX, "PLOCKED");
+    // search for corresponding in mail
+    InMail im = null;
+    for (InMail m : lstIM) {
+      System.out.println(m.getSenderMessageId() + " - " + om.
+              getSenderMessageId());
+      if (Objects.equals(m.getSenderMessageId(), om.getSenderMessageId())) {
+        im = m;
+        break;
+      }
+    }
+
+    ZPPUtils zpp = new ZPPUtils();
+    OutMail omDA = zpp.createZppAdviceOfDelivery(im, S_KEYSTORE,
+            S_KEYSTORE_PASSWD, singatureKey, S_KEY_PASSWD);
+
+    wc.serialize(omDA);
+    wc.submitMail(omDA);
+
+    Thread.sleep(1000);
+
+    InMail imWithDecPayload = wc.getInMail(im.getId(), RECEIVER_BOX);
+
+    for (InPart ip : imWithDecPayload.getInPayload().getInParts()) {
+      System.out.println(ip.getDescription());
+
     }
 
   }
