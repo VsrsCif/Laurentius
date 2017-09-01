@@ -18,22 +18,25 @@ FOLDER_DEPLOY="test-deploy"
 rm -rf $LAU_RELEASE_FOLDER/$ZIP_FILENAME
 rm -rf $FOLDER_DEPLOY
 
-
+# create folders
 mkdir "$LAU_RELEASE_FOLDER/$ZIP_FILENAME"
-mkdir "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/modules"
 mkdir "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/deployments"
 mkdir "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/wildfly-10.1"
+mkdir "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/jboss-eap-7.0"
+mkdir -p "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/modules/si/laurentius/main"
 mkdir $FOLDER_DEPLOY
-# si.laurentius module libralies
-cp "$LAU_PROJECT/Laurentius-libs/Laurentius-msh-xsd/target/Laurentius-msh-xsd-1.0.jar" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/modules/" 	
-cp "$LAU_PROJECT/Laurentius-libs/Laurentius-wsdl/target/Laurentius-wsdl-1.0.jar" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/modules/"
-cp "$LAU_PROJECT/Laurentius-libs/Laurentius-commons/target/Laurentius-commons-1.0.jar" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/modules/"
-cp "$LAU_PROJECT/Laurentius-libs/Laurentius-lce/target/Laurentius-lce-1.0.jar" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/modules/"
-cp "$LAU_PROJECT/Laurentius-libs/Laurentius-plugin-interfaces/target/Laurentius-plugin-interfaces-1.0.jar" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/modules/"
 
-cp "$LAU_PROJECT/scripts/wildfly-10.1/modules/si.laurentius.module.xml" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/modules/"
-cp "$LAU_PROJECT/scripts/wildfly-10.1/modules/org.apache.ws.securitymodule.xml" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/modules/"
-cp -r "$LAU_PROJECT/scripts/wildfly-10.1/modules/org"  "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/modules/"
+
+cp -r "$LAU_PROJECT/scripts/deployments/modules" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/"
+
+# si.laurentius module libralies
+cp "$LAU_PROJECT/Laurentius-libs/Laurentius-msh-xsd/target/Laurentius-msh-xsd-1.0.jar" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/modules/si/laurentius/main/" 	
+cp "$LAU_PROJECT/Laurentius-libs/Laurentius-wsdl/target/Laurentius-wsdl-1.0.jar" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/modules/si/laurentius/main/"
+cp "$LAU_PROJECT/Laurentius-libs/Laurentius-commons/target/Laurentius-commons-1.0.jar" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/modules/si/laurentius/main/"
+cp "$LAU_PROJECT/Laurentius-libs/Laurentius-lce/target/Laurentius-lce-1.0.jar" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/modules/si/laurentius/main/"
+cp "$LAU_PROJECT/Laurentius-libs/Laurentius-plugin-interfaces/target/Laurentius-plugin-interfaces-1.0.jar" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/modules/si/laurentius/main/"
+
+
 
 # application modules
 cp "$LAU_PROJECT/Laurentius-dao/target/Laurentius-dao.jar" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/deployments/"
@@ -46,19 +49,17 @@ cp "$LAU_PROJECT/Laurentius-plugins/Laurentius-basic-plugin/target/plugin-basic.
 cp "$LAU_PROJECT/Laurentius-plugins/Laurentius-test-case-plugin/target/plugin-testcase.war"  "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/deployments/"
 cp "$LAU_PROJECT/Laurentius-examples/example-web-plugin/target/example-web-plugin.war" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/deployments/"
 
+# wildfly configuration
+cp -r "$LAU_PROJECT/scripts/deployments/wildfly-10.1" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/"
+# jboss eap
+cp -r "$LAU_PROJECT/scripts/deployments/jboss-eap-7.0" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/"
 
-# configuration file
-cp -r "$LAU_PROJECT/scripts/wildfly-10.1/config"  "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/wildfly-10.1"
-# deploy script
-cp "$LAU_PROJECT/scripts/wildfly-10.1/deploy-laurentius.sh" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/wildfly-10.1"
-cp "$LAU_PROJECT/scripts/wildfly-10.1/laurentius-demo.sh" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/wildfly-10.1"
-cp "$LAU_PROJECT/scripts/wildfly-10.1/deploy-laurentius.bat" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/wildfly-10.1"
-cp "$LAU_PROJECT/scripts/wildfly-10.1/laurentius-demo.bat" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/wildfly-10.1"
 
 # init data:
-cp -r "$LAU_PROJECT/scripts/laurentius-demo" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/laurentius-home"
-
-zip -r "$LAU_RELEASE_FOLDER/$ZIP_FILENAME.zip" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME"
+cp -r "$LAU_PROJECT/scripts/deployments/laurentius-demo" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/laurentius-home"
+cd  "$LAU_RELEASE_FOLDER"
+zip -r "$ZIP_FILENAME.zip" "$ZIP_FILENAME"
+cd ..
 # move "boudle folder to test folder fo test deploy"
 mv $LAU_RELEASE_FOLDER/$ZIP_FILENAME $FOLDER_DEPLOY/$ZIP_TEST
 

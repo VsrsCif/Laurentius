@@ -86,18 +86,12 @@ fi
 
 
 
-# create module folder
-mkdir -p  "$WILDFLY_HOME/modules/si/laurentius/main/"
-# copy module libraries
-cp "$LAU_BUNDLE/modules/Laurentius-msh-xsd-1.0.jar" "$WILDFLY_HOME/modules/si/laurentius/main/"
-cp "$LAU_BUNDLE/modules/Laurentius-wsdl-1.0.jar" "$WILDFLY_HOME/modules/si/laurentius/main/"
-cp "$LAU_BUNDLE/modules/Laurentius-commons-1.0.jar" "$WILDFLY_HOME/modules/si/laurentius/main/"
-cp "$LAU_BUNDLE/modules/Laurentius-lce-1.0.jar" "$WILDFLY_HOME/modules/si/laurentius/main/"
-cp "$LAU_BUNDLE/modules/Laurentius-plugin-interfaces-1.0.jar" "$WILDFLY_HOME/modules/si/laurentius/main/"
-
+# copy modules
+cp -r "$LAU_BUNDLE/modules/org" "$WILDFLY_HOME/modules/"
+cp -r "$LAU_BUNDLE/modules/si" "$WILDFLY_HOME/modules/"
 # copy module descriptor
 cp "$LAU_BUNDLE/modules/si.laurentius.module.xml" "$WILDFLY_HOME/modules/si/laurentius/main/module.xml"
-cp -r "$LAU_BUNDLE/modules/org" "$WILDFLY_HOME/modules/"
+
 
 
 
@@ -117,7 +111,7 @@ cp "$LAU_BUNDLE/deployments/example-web-plugin.war"  "$WILDFLY_HOME/standalone/d
 if [ "$INIT" = "TRUE" ]; then
 
 	# set fix for module org.apache.ws.security
-	cp "$LAU_BUNDLE/modules/org.apache.ws.securitymodule.xml" "$WILDFLY_HOME/modules/system/layers/base/org/apache/ws/security/main/module.xml"
+	cp "$LAU_BUNDLE/modules/org.apache.ws.securitymodule_wildfly10.1.xml" "$WILDFLY_HOME/modules/system/layers/base/org/apache/ws/security/main/module.xml"
 
 	# copy start scripts
 	cp "$LAU_BUNDLE/wildfly-10.1/laurentius-demo.sh" "$WILDFLY_HOME/bin/"
@@ -134,13 +128,5 @@ if [ "$INIT" = "TRUE" ]; then
 	cp "$LAU_BUNDLE/wildfly-10.1/config/test-tls-keystore.jks" "$WILDFLY_HOME/standalone/configuration/"
 	mv "$WILDFLY_HOME/bin/standalone.conf" "$WILDFLY_HOME/bin/standalone.conf.bck"
 	cp "$LAU_BUNDLE/wildfly-10.1/config/standalone.conf" "$WILDFLY_HOME/bin/"
-	
-
-
-
-
-
-
-
 fi
 

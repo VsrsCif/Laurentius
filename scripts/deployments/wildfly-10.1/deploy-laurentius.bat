@@ -67,26 +67,18 @@ echo INIT = "%INIT%".
 
 
 
-rem  create module folder
-if not exist %WILDFLY_HOME%\modules\si\laurentius\main\ (
-	md  "%WILDFLY_HOME%\modules\si\laurentius\main\"
-)
-	  
-
-rem  copy module libraries
-copy "%LAU_BUNDLE%\modules\Laurentius-msh-xsd-1.0.jar" "%WILDFLY_HOME%\modules\si\laurentius\main\"
-copy "%LAU_BUNDLE%\modules\Laurentius-wsdl-1.0.jar" "%WILDFLY_HOME%\modules\si\laurentius\main\"
-copy "%LAU_BUNDLE%\modules\Laurentius-commons-1.0.jar" "%WILDFLY_HOME%\modules\si\laurentius\main\"
-copy "%LAU_BUNDLE%\modules\Laurentius-lce-1.0.jar" "%WILDFLY_HOME%\modules\si\laurentius\main\"
-copy "%LAU_BUNDLE%\modules\Laurentius-plugin-interfaces-1.0.jar" "%WILDFLY_HOME%\modules\si\laurentius\main\"
-
-
 rem  copy module descriptor
-copy "%LAU_BUNDLE%\modules\si.laurentius.module.xml" "%WILDFLY_HOME%\modules\si\laurentius\main\module.xml"
+
 if not exist "%WILDFLY_HOME%\modules\org\" (
 	md "%WILDFLY_HOME%\modules\org"
 )
+if not exist "%WILDFLY_HOME%\modules\si\" (
+	md "%WILDFLY_HOME%\modules\si"
+)
+
 xcopy "%LAU_BUNDLE%\modules\org" "%WILDFLY_HOME%\modules\org" /S /E
+xcopy "%LAU_BUNDLE%\modules\si" "%WILDFLY_HOME%\modules\si" /S /E
+copy "%LAU_BUNDLE%\modules\si.laurentius.module.xml" "%WILDFLY_HOME%\modules\si\laurentius\main\module.xml"
 
 rem  deploy commons ejbs
 copy "%LAU_BUNDLE%\deployments\Laurentius-dao.jar"  "%WILDFLY_HOME%\standalone\deployments\"
@@ -97,7 +89,7 @@ copy "%LAU_BUNDLE%\deployments\laurentius-ws.war"  "%WILDFLY_HOME%\standalone\de
 copy "%LAU_BUNDLE%\deployments\laurentius-web.war"  "%WILDFLY_HOME%\standalone\deployments\"
 copy "%LAU_BUNDLE%\deployments\plugin-zpp.war"  "%WILDFLY_HOME%\standalone\deployments\"
 copy "%LAU_BUNDLE%\deployments\plugin-testcase.war"  "%WILDFLY_HOME%\standalone\deployments\"
-copy "%LAU_BUNDLE%\deployments\plugin-basic.war  "%WILDFLY_HOME%\standalone\deployments\"
+copy "%LAU_BUNDLE%\deployments\plugin-basic.war"  "%WILDFLY_HOME%\standalone\deployments\"
 
 
 
@@ -106,7 +98,7 @@ copy "%LAU_BUNDLE%\deployments\plugin-basic.war  "%WILDFLY_HOME%\standalone\depl
 
 if "%INIT%" == "true" (
 	rem  set fix for module org.apache.ws.security
-	copy "%LAU_BUNDLE%\modules\org.apache.ws.securitymodule.xml" "%WILDFLY_HOME%\modules\system\layers\base\org\apache\ws\security\main\module.xml"
+	copy "%LAU_BUNDLE%\modules\org.apache.ws.securitymodule_wildfly10.1.xml" "%WILDFLY_HOME%\modules\system\layers\base\org\apache\ws\security\main\module.xml"
 	echo copy configuration to "%WILDFLY_HOME%\standalone\configuration\".
 	rem  copy configuration
 	copy "%LAU_BUNDLE%\wildfly-10.1\config\laurentius-roles.properties" "%WILDFLY_HOME%\standalone\configuration\"
@@ -131,7 +123,7 @@ goto :END
 :quit
 echo.
 echo Usage:
-echo deploy-led.bat --init -b [LAU_BUNDLE] -w [WILDFLY_HOME] -l [LAU_HOME]
+echo deploy-laurentius.bat --init -b [LAU_BUNDLE] -w [WILDFLY_HOME] -l [LAU_HOME]
 echo.
 echo   --init  initialize laurentius.home and wildfly properties. 
 echo   -w   WILDFLY_HOME -  path jboss home: ex.: c:\temp\wildfly-10.1.0.Final\.

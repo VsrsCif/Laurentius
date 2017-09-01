@@ -4,6 +4,11 @@ set "BOUNDLE_TEST=Laurentius-test"
 set "FOLDER_DEPLOY=test-deploy"
 set "BOUNDLE_NAME=Laurentius-test"
 
+set SECMGR=true
+
+
+set JAVA_HOME="C:\Program Files (x86)\Java\jdk1.8.0_20"
+rem set PATH="%PATH%;C:\Program Files (x86)\Java\jdk1.8.0_20\bin"
 
 rem set "PATH=%PATH%;C:\Program Files (x86)\Java\jdk1.7.0_67\bin"
 rem set "JAVA_HOME=C:\Program Files (x86)\Java\jdk1.7.0_67\"
@@ -12,7 +17,7 @@ echo Clear wildfly folder.
 RMDIR "%FOLDER_DEPLOY%\%WILDFLY_HOME%" /S /Q
 echo Unzip wildfly.
 rem "C:\Program Files (X86)\7-Zip\7z.exe" x  "%WILDFLY_HOME%.zip"  -o%FOLDER_DEPLOY% > nul
-"C:\Program Files\7-Zip\7z.exe" x  "..\..\settings\%WILDFLY_HOME%.zip"  -o%FOLDER_DEPLOY% > nul
+"C:\Program Files\7-Zip\7z.exe" x  "settings\%WILDFLY_HOME%.zip"  -o%FOLDER_DEPLOY% > nul
 
 
 
