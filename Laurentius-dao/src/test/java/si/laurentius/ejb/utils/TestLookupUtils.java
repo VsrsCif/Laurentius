@@ -6,6 +6,7 @@
 package si.laurentius.ejb.utils;
 
 import java.io.File;
+import java.math.BigInteger;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
@@ -260,6 +261,9 @@ public class TestLookupUtils {
     MSHOutPart op = new MSHOutPart();
     op.setFilename("Test.txt");
     op.setDescription("test attachment");
+    op.setIsSent(Boolean.TRUE);
+    op.setIsReceived(Boolean.FALSE);
+    op.setGeneratedFromPartId(BigInteger.ONE);;
     
     File f =  S_STORAGE_UTIL.storeOutFile(MimeValue.MIME_TXT.getMimeType(), FILEBLOB_1.getBytes());
     op.setFilepath(StorageUtils.getRelativePath(f));
@@ -299,10 +303,16 @@ public class TestLookupUtils {
     ip.setFilename("Test.txt");
     ip.setDescription("test attachment");
     
+    ip.setIsSent(Boolean.TRUE);
+    ip.setIsReceived(Boolean.FALSE);
+    ip.setGeneratedFromPartId(BigInteger.TEN);
+    
     File f =  S_STORAGE_UTIL.storeOutFile(MimeValue.MIME_TXT.getMimeType(), FILEBLOB_1.getBytes());
     ip.setFilepath(StorageUtils.getRelativePath(f));
     ip.setMimeType(MimeValue.MIME_TEXI.getMimeType());
     ip.setEbmsId("SM_ID-" + UUID.randomUUID().toString());
+    
+    
 
     IMPartProperty iprop1 = new IMPartProperty();
     iprop1.setName("Property 1");

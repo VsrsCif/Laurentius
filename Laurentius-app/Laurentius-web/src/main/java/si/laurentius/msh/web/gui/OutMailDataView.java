@@ -427,6 +427,9 @@ public class OutMailDataView extends AbstractMailView<MSHOutMail, MSHOutEvent>
         MSHOutPart p = new MSHOutPart();
         p.setEncoding("UTF-8");
         p.setDescription("Mail body");
+        p.setIsSent(Boolean.TRUE);
+        p.setIsReceived(Boolean.FALSE);
+        
         p.setMimeType(MimeValue.MIME_TXT.getMimeType());
 
         // mp.setValue();

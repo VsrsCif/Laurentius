@@ -361,6 +361,8 @@ public class TaskFileSubmitter implements TaskExecutionInterface {
 
       MSHOutPart mp = new MSHOutPart();
       mp.setDescription(f.getName());
+      mp.setIsSent(Boolean.TRUE);
+      mp.setIsReceived(Boolean.FALSE);
       try {
         mp.setFilepath(StorageUtils.getRelativePath(fNew));
       } catch (StorageException ex) {

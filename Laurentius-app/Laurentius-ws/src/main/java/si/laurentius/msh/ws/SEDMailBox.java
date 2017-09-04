@@ -1443,7 +1443,6 @@ public class SEDMailBox implements SEDMailBoxWS {
     OutMail mail = submitMailRequest.getData().getOutMail();
     // check for missing data
     List<String> lstWarn = SEDRequestUtils.validateMailForMissingData(mail);
-
     
     validatePrincipalBox(mail.getSenderEBox());
     
@@ -1484,6 +1483,9 @@ public class SEDMailBox implements SEDMailBoxWS {
     if (om == null) {
       // validate mail data
       PMode pmd = validateOutMailData(mail);
+      
+      
+      
 
       // serialize payload to cache FS and data to db
       serializeMail(mail, submitMailRequest.getControl().getUserId(),

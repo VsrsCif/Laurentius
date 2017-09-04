@@ -162,5 +162,24 @@ Copyright 2015, Supreme Court Republic of Slovenia
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
+                <xs:attribute name="IsSent" type="xs:boolean" >
+            <xs:annotation>
+                <xs:documentation>part was sent to receiver. For outgoing mail some payload part are not sent (plugin generated part's, sources for ecrypted part etc.. )</xs:documentation>
+            </xs:annotation>          
+        </xs:attribute>
+        <xs:attribute name="IsReceived" type="xs:boolean">
+            <xs:annotation>
+                <xs:documentation>part was received. For incomming payload parts, part can be generated from received part. For outgoing mail receiverd part is 
+                    AS4 Recipet, error etc.
+                </xs:documentation>
+            </xs:annotation>          
+        </xs:attribute>
+        <xs:attribute name="generatedFromPartId" type="xs:integer" >
+            <xs:annotation>
+                <xs:documentation>Part was generated from refereced part Id. If part was generated from more than one part (concenated pdf), reference must be null 
+                </xs:documentation>
+            </xs:annotation>          
+        </xs:attribute>
+        
 	</xs:complexType>
 </xs:schema>

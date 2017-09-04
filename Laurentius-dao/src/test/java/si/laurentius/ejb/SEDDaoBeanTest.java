@@ -42,6 +42,7 @@ import static si.laurentius.ejb.utils.TestUtils.setLogger;
 import si.laurentius.lce.DigestUtils;
 import si.laurentius.msh.inbox.event.MSHInEvent;
 import si.laurentius.msh.inbox.mail.MSHInMail;
+import si.laurentius.msh.inbox.payload.MSHInPart;
 import si.laurentius.msh.outbox.event.MSHOutEvent;
 import si.laurentius.msh.outbox.mail.MSHOutMail;
 import si.laurentius.msh.outbox.payload.MSHOutPart;
@@ -85,7 +86,7 @@ public class SEDDaoBeanTest extends TestUtils {
   public void test_A_01_SerializeOutMail_fillData() throws Exception {
     System.out.println("test_A_01_SerializeOutMail_fillData");
 
-    int iCount = getMessagesInQueue();
+    int iCount = getMessagesCountForOutQueue();
     MSHOutMail init = TestLookupUtils.createOutMail();
 
     init.setMessageId(null);
@@ -115,7 +116,7 @@ public class SEDDaoBeanTest extends TestUtils {
 
     assertEquals(fromDB.getSenderEBox(), fromDB.getSenderName());
     assertEquals(fromDB.getReceiverEBox(), fromDB.getReceiverName());
-    assertEquals(++iCount, getMessagesInQueue());
+    assertEquals(++iCount, getMessagesCountForOutQueue());
 
   }
 
@@ -123,7 +124,7 @@ public class SEDDaoBeanTest extends TestUtils {
   public void test_A_01_SerializeOutMail_events() throws Exception {
     System.out.println("test_A_01_SerializeOutMail_fillData");
 
-    int iCount = getMessagesInQueue();
+    int iCount = getMessagesCountForOutQueue();
     MSHOutMail init = TestLookupUtils.createOutMail();
 
     mTestInstance.serializeOutMail(init, "testUser", "testApplication",
@@ -135,7 +136,7 @@ public class SEDDaoBeanTest extends TestUtils {
             getMailById(MSHOutMail.class, init.getId());
     assertTrue(init != fromDB); // make sure to read from db
 
-    assertEquals(++iCount, getMessagesInQueue());
+    assertEquals(++iCount, getMessagesCountForOutQueue());
 
     // test event lists
     List<MSHOutEvent> leEvnt = mTestInstance.getMailEventList(MSHOutEvent.class,
@@ -156,7 +157,7 @@ public class SEDDaoBeanTest extends TestUtils {
   public void test_A_01_SerializeOutMail_payload() throws Exception {
     System.out.println("test_A_01_SerializeOutMail_Payload");
 
-    int iCount = getMessagesInQueue();
+    int iCount = getMessagesCountForOutQueue();
     MSHOutMail init = TestLookupUtils.createOutMail();
     for (MSHOutPart op : init.getMSHOutPayload().getMSHOutParts()) {
       op.setMimeType(null);
@@ -177,22 +178,39 @@ public class SEDDaoBeanTest extends TestUtils {
             getMailById(MSHOutMail.class, init.getId());
     assertTrue(init != fromDB); // make sure to read from db
 
-    assertEquals(++iCount, getMessagesInQueue());
+    assertEquals(++iCount, getMessagesCountForOutQueue());
 
     assertNotNull(fromDB.getMSHOutPayload());
 
     assertEquals(init.getMSHOutPayload().getMSHOutParts().size(), fromDB.
             getMSHOutPayload().getMSHOutParts().size());
 
-    for (MSHOutPart op : fromDB.getMSHOutPayload().getMSHOutParts()) {
-      File f = StorageUtils.getFile(op.getFilepath());
-      assertNotNull(op.getSha256Value());
-      assertNotNull(op.getSize());
-      assertNotNull(op.getMimeType());
+   for (int i =0,  l = fromDB.getMSHOutPayload().getMSHOutParts().size();i<l; i++) {
       
-      assertEquals(SEDMailPartSource.MAIL.getValue(), op.getSource());
-      assertEquals(DigestUtils.getHexSha256Digest(f), op.getSha256Value());
-      assertEquals(f.length(), op.getSize().longValue());
+      MSHOutPart part = fromDB.getMSHOutPayload().getMSHOutParts().get(i);
+      MSHOutPart initPart = init.getMSHOutPayload().getMSHOutParts().get(i);
+      
+      File f = StorageUtils.getFile(part.getFilepath());
+     
+      
+      assertEquals(initPart.getIsReceived(), part.getIsReceived());
+      assertEquals(initPart.getIsSent(), part.getIsSent());
+      assertEquals(initPart.getGeneratedFromPartId(), part.getGeneratedFromPartId());
+      assertEquals(initPart.getMimeType(), part.getMimeType());
+      assertEquals(initPart.getIsEncrypted(), part.getIsEncrypted());
+      assertEquals(initPart.getEncoding(), part.getEncoding());
+      assertEquals(initPart.getEbmsId(), part.getEbmsId());
+      assertEquals(initPart.getFilename(), part.getFilename());
+      assertEquals(initPart.getDescription(), part.getDescription());
+      
+
+      // test generated valies
+      assertNotNull(part.getSha256Value());
+      assertNotNull(part.getSize());
+      assertNotNull(part.getMimeType());
+      assertEquals(SEDMailPartSource.MAIL.getValue(), part.getSource());
+      assertEquals(DigestUtils.getHexSha256Digest(f), part.getSha256Value());
+      assertEquals(f.length(), part.getSize().longValue());
     }
 
   }
@@ -200,9 +218,8 @@ public class SEDDaoBeanTest extends TestUtils {
   
    @Test
   public void test_B_01_SerializeInMail() throws Exception {
-    System.out.println("test_B_01_SerializeInMail_fillData");
+    System.out.println("test_B_01_SerializeInMail");
 
-    int iCount = getMessagesInQueue();
      MSHInMail init = TestLookupUtils.createInMail();
 
     
@@ -233,7 +250,64 @@ public class SEDDaoBeanTest extends TestUtils {
   
 
   @Test
-  public void testAddInMailPayload() throws Exception {
+  public void test_B_01_SerializeInMail_Payload() throws Exception {
+     System.out.println("test_B_01_SerializeInMail_Payload");
+
+
+    MSHInMail init = TestLookupUtils.createInMail();
+    // test if generated mail has payload
+    assertNotNull(init.getMSHInPayload());
+    assertTrue(init.getMSHInPayload().getMSHInParts().size() > 0);
+    
+    for (MSHInPart part : init.getMSHInPayload().getMSHInParts()) {
+      part.setMimeType(null);
+      part.setSha256Value(null);
+      part.setSize(null);
+     
+    }
+    
+    
+
+    mTestInstance.serializeInMail(init, "testApplication");
+
+    assertNotNull(init.getId());
+    clearEntityManagerCahche();  // make sure to read from db
+    MSHInMail fromDB = mTestInstance.
+            getMailById(MSHInMail.class, init.getId());
+    assertTrue(init != fromDB); // make sure to read from db
+
+    
+    assertNotNull(fromDB.getMSHInPayload());
+
+    assertEquals(init.getMSHInPayload().getMSHInParts().size(), fromDB.
+            getMSHInPayload().getMSHInParts().size());
+
+   
+    for (int i =0,  l = fromDB.getMSHInPayload().getMSHInParts().size();i<l; i++) {
+      
+      MSHInPart part = fromDB.getMSHInPayload().getMSHInParts().get(i);
+      MSHInPart initPart = init.getMSHInPayload().getMSHInParts().get(i);
+      
+      File f = StorageUtils.getFile(part.getFilepath());
+      assertEquals(initPart.getIsReceived(), part.getIsReceived());
+      assertEquals(initPart.getIsSent(), part.getIsSent());
+      assertEquals(initPart.getGeneratedFromPartId(), part.getGeneratedFromPartId());
+      assertEquals(initPart.getMimeType(), part.getMimeType());
+      assertEquals(initPart.getIsEncrypted(), part.getIsEncrypted());
+      assertEquals(initPart.getEncoding(), part.getEncoding());
+      assertEquals(initPart.getEbmsId(), part.getEbmsId());
+      assertEquals(initPart.getFilename(), part.getFilename());
+      assertEquals(initPart.getDescription(), part.getDescription());
+      
+
+      // test generated valies
+      assertNotNull(part.getSha256Value());
+      assertNotNull(part.getSize());
+      assertNotNull(part.getMimeType());
+      assertEquals(SEDMailPartSource.MAIL.getValue(), part.getSource());
+      assertEquals(DigestUtils.getHexSha256Digest(f), part.getSha256Value());
+      assertEquals(f.length(), part.getSize().longValue());
+    }
   }
 
   @Test
@@ -340,7 +414,7 @@ public class SEDDaoBeanTest extends TestUtils {
 
   
   
-  public int getMessagesInQueue() throws NamingException, JMSException {
+  public int getMessagesCountForOutQueue() throws NamingException, JMSException {
     ConnectionFactory cf = (ConnectionFactory) InitialContext.doLookup(S_JMS_JNDI_CF);
 
     Connection connection = cf.createConnection();

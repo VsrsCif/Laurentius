@@ -347,8 +347,15 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
       }
     }
 
+    
     // encrypt payloads
     for (MSHOutPart op : lstMailParts) {
+      if (op.getIsSent()){
+        // non enc. part is not sent to receiver 
+        // update message
+        op.setIsSent(Boolean.FALSE);
+        lstUpdateMailParts.add(op);
+      }
       MSHOutPart encPart = null;
       if (mMEncParts.containsKey(op.getEbmsId())) {
         MSHOutPart mopEnc = mMEncParts.get(op.getEbmsId());

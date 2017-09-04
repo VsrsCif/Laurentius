@@ -69,6 +69,7 @@ import si.jrc.msh.utils.EBMSParser;
 import si.laurentius.commons.enums.MimeValue;
 import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.cxf.SoapUtils;
+import si.laurentius.commons.enums.SEDMailPartSource;
 import si.laurentius.commons.exception.HashException;
 import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.pmode.EBMSMessageContext;
@@ -479,11 +480,13 @@ public class EBMSInInterceptor extends AbstractEBMSInterceptor {
          mMail.setMSHInPayload(new MSHInPayload());
        }
        MSHInPart p = new MSHInPart();
+       p.setIsSent(Boolean.FALSE);
+       p.setIsReceived(Boolean.TRUE);
        p.setEbmsId(msgId);
        p.setMimeType(soapPartMime.getMimeType());
        p.setDescription("SOAP Part");
        p.setName("SOAPPart");
-       p.setSource("ebms");
+       p.setSource(SEDMailPartSource.EBMS.getValue());
        p.setFilename(f.getName());
        p.setFilepath(StorageUtils.getRelativePath(f));
        mMail.getMSHInPayload().getMSHInParts().add(p);
@@ -556,7 +559,7 @@ public class EBMSInInterceptor extends AbstractEBMSInterceptor {
   private File storeSoapPart(SOAPPart sp, MimeValue mv) throws StorageException {
 
     
-    File f = StorageUtils.getNewStorageFile("embs-header", mv.getSuffix());
+    File f = StorageUtils.getNewStorageFile(mv.getSuffix(), "embs-header");
 
     try {
       TransformerFactory.newInstance().newTransformer().transform(

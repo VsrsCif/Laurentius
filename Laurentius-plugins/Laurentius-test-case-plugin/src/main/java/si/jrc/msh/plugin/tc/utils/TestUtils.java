@@ -163,6 +163,8 @@ public class TestUtils {
                 f.getName()), f);
         MSHOutPart op = new MSHOutPart();
         op.setFilename(f.getName());
+        op.setIsSent(Boolean.TRUE);
+        op.setIsReceived(Boolean.FALSE);
 
         op.setDescription(i++ == 0 ? "Sklep" : "Priloga");
         op.setFilepath(StorageUtils.getRelativePath(fStorage));

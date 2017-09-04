@@ -164,7 +164,16 @@
                                     <p:column width="60" headerText="#{msg['Id']}">
                                         <h:outputText value="#{plpart.id}" />
                                     </p:column>
-                                    <p:column width="60" headerText="#{msg['Encrypted']}">
+                                    <p:column width="60" headerText="#{msg['RefId']}">
+                                        <h:outputText value="#{plpart.generatedFromPartId}" />
+                                    </p:column>
+                                    <p:column width="40" headerText="#{msg['Sent']}">
+                                        <h:outputText value="#{plpart.isSent}" />
+                                    </p:column>
+                                    <p:column width="40" headerText="#{msg['Rec']}">
+                                        <h:outputText value="#{plpart.isReceived}" />
+                                    </p:column>
+                                    <p:column width="40" headerText="#{msg['Enc']}">
                                         <h:outputText value="#{plpart.isEncrypted}" />
                                     </p:column>
                                     <p:column width="60" headerText="#{msg['Source']}">

@@ -245,6 +245,9 @@ public class EBMSParser {
 
       for (PartInfo pi : um.getPayloadInfo().getPartInfos()) {
         MSHInPart part = new MSHInPart();
+        part.setIsReceived(Boolean.TRUE);
+        part.setIsSent(Boolean.FALSE);
+        
         String href = pi.getHref();
         if (href != null) {
           if (href.startsWith("cid:")) {

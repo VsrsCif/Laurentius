@@ -109,6 +109,10 @@ public class ZPPUtils {
     MSHOutPart ptNew = new MSHOutPart();
 
     ptNew.setSource(ZPPConstants.S_ZPP_PLUGIN_TYPE);
+    ptNew.setIsSent(Boolean.TRUE);
+    ptNew.setIsReceived(Boolean.FALSE);
+    ptNew.setGeneratedFromPartId(ptSource.getId());
+    
     ptNew.setFilepath(StorageUtils.getRelativePath(fOut));
 
     ptNew.setSha256Value(DigestUtils.getHexSha256Digest(fOut));
@@ -213,6 +217,8 @@ public class ZPPUtils {
     XMLUtils.serialize(sk, fdek);
 
     MSHOutPart ptNew = new MSHOutPart();
+    ptNew.setIsSent(Boolean.FALSE);
+    ptNew.setIsReceived(Boolean.FALSE);
     ptNew.setSource(ZPPConstants.S_ZPP_PLUGIN_TYPE);
     ptNew.setEncoding(SEDValues.ENCODING_UTF8);
     ptNew.setMimeType(ZPPPartType.LocalEncryptionKey.getMimeType());
@@ -467,6 +473,8 @@ long l = LOG.logStart();
     MSHOutPart ptNew = new MSHOutPart();
     ptNew.setSource(ZPPConstants.S_ZPP_PLUGIN_TYPE);
     ptNew.setEncoding(SEDValues.ENCODING_BASE64);
+    ptNew.setIsSent(Boolean.TRUE);
+    ptNew.setIsReceived(Boolean.FALSE);
     ptNew.setMimeType(partType.getMimeType());
     ptNew.setName(partType.getPartName());
     ptNew.setType(partType.getPartType());
@@ -506,6 +514,8 @@ long l = LOG.logStart();
     MSHInPart ptNew = new MSHInPart();
     ptNew.setSource(ZPPConstants.S_ZPP_PLUGIN_TYPE);
     ptNew.setEncoding(SEDValues.ENCODING_BASE64);
+    ptNew.setIsSent(Boolean.FALSE);
+    ptNew.setIsReceived(Boolean.FALSE);
     ptNew.setMimeType(partType.getMimeType());
     ptNew.setName(partType.getPartName());
     ptNew.setType(partType.getPartType());

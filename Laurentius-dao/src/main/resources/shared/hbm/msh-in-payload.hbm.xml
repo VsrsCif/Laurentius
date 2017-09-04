@@ -10,7 +10,7 @@
             </generator>
         </id>
         <property column="MAIL_ID" name="MailId" type="java.math.BigInteger" scale="0" index="idx_inpart_mid" />
-        <property column="PART_EBMS_ID" name="EbmsId"  length="256" type="java.lang.String"  />
+        <property column="PART_EBMS_ID" name="EbmsId"  length="256" type="java.lang.String"  index="idx_inpart_ebmsid" />
         <property column="PART_NAME" name="name"  length="256" type="java.lang.String"  />
         <property column="PART_DESCRIPTION" name="Description"  length="512" type="java.lang.String"   />
         <property column="PART_TYPE" name="Type"  length="64" type="java.lang.String" />
@@ -22,6 +22,9 @@
         <property column="PART_SIZE" name="Size"  type="java.math.BigInteger" scale="0" />
         <property column="PART_IS_ENCRYPTED" name="IsEncrypted" type="java.lang.Boolean" />
         <property column="PART_SOURCE" name="Source"  length="32" type="java.lang.String" /> 
+        <property column="PART_IS_RECEIVED" name="IsReceived"   type="java.lang.Boolean" /> 
+        <property column="PART_IS_SENT" name="IsSent"   type="java.lang.Boolean" /> 
+        <property column="PART_GENERATED_FROM_PART" name="GeneratedFromPartId"   type="java.math.BigInteger" scale="0"/> 
         
         <bag name="imPartProperties"  access="field" cascade="all" lazy="false" order-by="Id asc" >
             <key not-null="true">

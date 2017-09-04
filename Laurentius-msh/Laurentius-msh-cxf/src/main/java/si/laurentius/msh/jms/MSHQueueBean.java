@@ -17,7 +17,6 @@ package si.laurentius.msh.jms;
 import java.io.File;
 import java.math.BigInteger;
 import java.util.Collections;
-import java.util.List;
 import javax.ejb.ActivationConfigProperty;
 import javax.ejb.EJB;
 import javax.ejb.EJBException;
@@ -28,7 +27,6 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.persistence.NoResultException;
-import org.w3c.dom.Element;
 import si.jrc.msh.client.MSHPluginOutEventHandler;
 import si.laurentius.msh.outbox.mail.MSHOutMail;
 import si.laurentius.msh.pmode.ReceptionAwareness;
@@ -40,7 +38,6 @@ import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.enums.SEDOutboxMailStatus;
 import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.SEDValues;
-import si.laurentius.commons.cxf.SoapUtils;
 import si.laurentius.commons.enums.SEDMailPartSource;
 import si.laurentius.commons.exception.PModeException;
 import si.laurentius.commons.exception.StorageException;
@@ -249,6 +246,9 @@ public class MSHQueueBean implements MessageListener {
              
         MSHOutPart mipt = new MSHOutPart();
 
+        mipt.setIsSent(Boolean.FALSE);
+        mipt.setIsReceived(Boolean.TRUE);
+        
         mipt.setMailId(mail.getId());
         mipt.setDescription("Soap response");
         mipt.setEbmsId(Utils.getUUIDWithLocalDomain()); // set response id?
