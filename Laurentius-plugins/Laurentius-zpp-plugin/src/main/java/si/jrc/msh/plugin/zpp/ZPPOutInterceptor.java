@@ -17,7 +17,6 @@ package si.jrc.msh.plugin.zpp;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.security.InvalidKeyException;
@@ -36,6 +35,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Resource;
@@ -45,14 +45,7 @@ import javax.ejb.Stateless;
 import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-import javax.transaction.HeuristicMixedException;
-import javax.transaction.HeuristicRollbackException;
-import javax.transaction.NotSupportedException;
-import javax.transaction.RollbackException;
-import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 import javax.xml.bind.JAXBException;
 import javax.xml.namespace.QName;
@@ -71,7 +64,6 @@ import si.jrc.msh.plugin.zpp.exception.ZPPException;
 import si.jrc.msh.plugin.zpp.utils.FOPUtils;
 import si.jrc.msh.plugin.zpp.utils.ZPPUtils;
 import si.laurentius.lce.enc.SEDCrypto;
-import si.laurentius.lce.enc.SEDKey;
 import si.laurentius.lce.sign.pdf.SignUtils;
 import si.laurentius.lce.sign.pdf.ValidateSignatureUtils;
 import si.laurentius.commons.enums.MimeValue;
@@ -175,7 +167,7 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
    * @param t
    */
   @Override
-  public void handleFault(SoapMessage t) {
+  public void handleFault(SoapMessage t, Properties contextProperties) {
     // ignore
   }
 
@@ -184,7 +176,7 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
    * @param msg
    */
   @Override
-  public boolean handleMessage(SoapMessage msg) {
+  public boolean handleMessage(SoapMessage msg, Properties contextProperties) {
     long l = LOG.logStart(msg);
 
     boolean isRequest = MessageUtils.isRequestor(msg);

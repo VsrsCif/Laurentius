@@ -14,6 +14,7 @@
  */
 package si.jrc.msh.plugin.tc;
 
+import java.util.Properties;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionManagement;
@@ -65,7 +66,7 @@ public class TestCaseInInterceptor implements SoapInterceptorInterface {
    * @param msg
    */
   @Override
-  public boolean handleMessage(SoapMessage msg) {
+  public boolean handleMessage(SoapMessage msg, Properties contextProperties) {
     long l = LOG.logStart();
 
     boolean isBackChannel = SoapUtils.isRequestMessage(msg);
@@ -114,7 +115,7 @@ public class TestCaseInInterceptor implements SoapInterceptorInterface {
    * @param t
    */
   @Override
-  public void handleFault(SoapMessage t) {
+  public void handleFault(SoapMessage t, Properties contextProperties) {
     // ignore
   }
 

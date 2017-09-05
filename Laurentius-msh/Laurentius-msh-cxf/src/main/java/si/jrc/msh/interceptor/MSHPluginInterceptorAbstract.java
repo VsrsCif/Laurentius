@@ -7,6 +7,7 @@ package si.jrc.msh.interceptor;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Properties;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import org.apache.cxf.binding.soap.SoapFault;
@@ -24,6 +25,8 @@ import si.laurentius.commons.rule.DecisionRuleAssertion;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.Utils;
 import si.laurentius.interceptor.SEDInterceptor;
+import si.laurentius.interceptor.SEDInterceptorInstance;
+import si.laurentius.interceptor.SEDInterceptorProperty;
 import si.laurentius.interceptor.SEDInterceptorRule;
 import si.laurentius.msh.inbox.mail.MSHInMail;
 import si.laurentius.msh.outbox.mail.MSHOutMail;
@@ -109,6 +112,13 @@ public abstract class MSHPluginInterceptorAbstract extends AbstractSoapIntercept
           LOG_PRIVATE.formatedWarning("Intercept %s message %s", intercept? "true" : "false",strMsg);
           if (intercept) {
             
+            // set ready context properties 
+            SEDInterceptorInstance inst = intc.getSEDInterceptorInstance();
+            Properties contextProperties = new Properties();
+            for (SEDInterceptorProperty sip: inst.getSEDInterceptorProperties()) {
+              contextProperties.setProperty(sip.getKey(),sip.getValue());
+            }
+            
             MailInterceptorDef mid = getPluginManager().
                     getMailInterceptoDef(intc.getSEDInterceptorInstance().
                             getPlugin(), intc.getSEDInterceptorInstance().
@@ -117,9 +127,9 @@ public abstract class MSHPluginInterceptorAbstract extends AbstractSoapIntercept
             LOG_PRIVATE.formatedlog("Execute plugin: %s", jndiName);
             if (!Utils.isEmptyString(jndiName)) {
               try {
-                SoapInterceptorInterface example = InitialContext.doLookup(
+                SoapInterceptorInterface interceptor = InitialContext.doLookup(
                         jndiName);
-                if (!example.handleMessage(msg)) {
+                if (!interceptor.handleMessage(msg, contextProperties)) {
                   LOG_PRIVATE.formatedWarning(
                           "Plugin: %s returned false - stop executing for: '%s'.",
                           jndiName, strMsg);

@@ -14,7 +14,6 @@
  */
 package si.jrc.msh.plugin.zpp;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -28,12 +27,10 @@ import java.security.SignatureException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Properties;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.Local;
@@ -49,7 +46,6 @@ import javax.transaction.UserTransaction;
 import javax.xml.bind.JAXBException;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
 import org.apache.cxf.binding.soap.SoapFault;
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.message.MessageUtils;
@@ -58,7 +54,6 @@ import org.apache.xml.security.keys.keyresolver.KeyResolverException;
 import si.laurentius.msh.inbox.mail.MSHInMail;
 import si.laurentius.msh.inbox.payload.MSHInPart;
 import si.laurentius.msh.outbox.mail.MSHOutMail;
-import org.oasis_open.docs.ebxml_msg.ebms.v3_0.ns.core._200704.SignalMessage;
 import si.laurentius.ebox.SEDBox;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
@@ -154,7 +149,7 @@ public class ZPPInInterceptor implements SoapInterceptorInterface {
    * @param msg
    */
   @Override
-  public boolean handleMessage(SoapMessage msg) {
+  public boolean handleMessage(SoapMessage msg, Properties contextProperties) {
     long l = LOG.logStart();
 
     boolean isRequest = MessageUtils.isRequestor(msg);
@@ -619,7 +614,7 @@ public class ZPPInInterceptor implements SoapInterceptorInterface {
    * @param t
    */
   @Override
-  public void handleFault(SoapMessage t) {
+  public void handleFault(SoapMessage t, Properties contextProperties) {
     // ignore
   }
 

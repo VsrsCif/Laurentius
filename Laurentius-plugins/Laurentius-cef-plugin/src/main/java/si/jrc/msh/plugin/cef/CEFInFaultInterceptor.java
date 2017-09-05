@@ -14,6 +14,7 @@
  */
 package si.jrc.msh.plugin.cef;
 
+import java.util.Properties;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.Local;
@@ -79,7 +80,7 @@ public class CEFInFaultInterceptor implements SoapInterceptorInterface {
    * @param msg
    */
   @Override
-  public boolean handleMessage(SoapMessage msg) {
+  public boolean handleMessage(SoapMessage msg, Properties contextProperties) {
     long l = LOG.logStart();
     
     // !!!!!!!!!!!!!!!!!!!!!!!
@@ -169,7 +170,7 @@ public class CEFInFaultInterceptor implements SoapInterceptorInterface {
    * @param t
    */
   @Override
-  public void handleFault(SoapMessage t) {
+  public void handleFault(SoapMessage t, Properties contextProperties) {
     // ignore
   }
 

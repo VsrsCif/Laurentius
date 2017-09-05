@@ -14,6 +14,7 @@
  */
 package si.laurentius.plugin.interfaces;
 
+import java.util.Properties;
 import javax.ejb.Local;
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.interceptor.Fault;
@@ -28,13 +29,15 @@ public interface SoapInterceptorInterface extends PluginComponentInterface {
   /**
    *
    * @param t
+   * @param contextProperties
    */
-  public boolean handleMessage(SoapMessage t) throws Fault;
+  public boolean handleMessage(SoapMessage t, Properties contextProperties) throws Fault;
 
   /**
    *
    * @param t
+   * @param contextProperties
    */
-  public void handleFault(SoapMessage t);
+  public void handleFault(SoapMessage t, Properties contextProperties);
   
   }
