@@ -11,6 +11,7 @@ import javax.ejb.Local;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import si.laurentius.commons.utils.SEDLogger;
+import si.laurentius.plugin.def.DefaultInitData;
 import si.laurentius.plugin.def.MenuItem;
 import si.laurentius.plugin.interfaces.AbstractPluginDescription;
 import si.laurentius.plugin.interfaces.PluginDescriptionInterface;
@@ -28,6 +29,11 @@ public class ZPPPluginDescription extends AbstractPluginDescription {
     private static final SEDLogger LOG = new SEDLogger(
             ZPPPluginDescription.class);
 
+    
+    @Override
+  public DefaultInitData getDefaultInitData() {
+    return null;
+  }
   @Override
   public MenuItem getMenu() {
     return null;

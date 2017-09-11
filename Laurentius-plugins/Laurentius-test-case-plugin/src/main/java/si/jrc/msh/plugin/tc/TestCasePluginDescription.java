@@ -23,6 +23,7 @@ import javax.ejb.Startup;
 import si.jrc.msh.plugin.tc.web.AppConstant;
 import si.laurentius.commons.SEDGUIConstants;
 import si.laurentius.commons.utils.SEDLogger;
+import si.laurentius.plugin.def.DefaultInitData;
 import si.laurentius.plugin.def.MenuItem;
 import si.laurentius.plugin.interfaces.AbstractPluginDescription;
 import si.laurentius.plugin.interfaces.PluginDescriptionInterface;
@@ -59,6 +60,10 @@ public class TestCasePluginDescription extends AbstractPluginDescription {
     }
   }
 
+  @Override
+  public DefaultInitData getDefaultInitData() {
+    return null;
+  }
   /**
    *
    * @return

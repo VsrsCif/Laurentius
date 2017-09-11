@@ -49,6 +49,8 @@ public abstract class AbstractPluginDescription implements
       mPlgDef.setWebContext(getWebUrlContext());
       mPlgDef.setMainMenu(getMenu());
       mPlgDef.setProcessMenu(getProcessMenu());
+      mPlgDef.setDefaultInitData(getDefaultInitData());
+      
       if (getWebPageRoles() != null && !getWebPageRoles().isEmpty()) {
         mPlgDef.getWebRoles().addAll(getWebPageRoles());
       }
@@ -60,23 +62,7 @@ public abstract class AbstractPluginDescription implements
 
     return mPlgDef;
   }
-/*
-  @Override
-  public MenuItem getMenu() {
 
-    MenuItem mi = new MenuItem();
-    mi.setName(getName());
-
-    return mi;
-  }
-
-  public MenuItem getProcessMenu() {
-
-    MenuItem mi = new MenuItem();
-    mi.setName(getName());
-
-    return mi;
-  }*/
 
   @EJB(mappedName = SEDJNDI.JNDI_PLUGIN)
   private SEDPluginManagerInterface mPluginManager;

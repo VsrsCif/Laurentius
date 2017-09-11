@@ -36,7 +36,7 @@ public interface SEDSchedulerInterface {
   
   boolean activateCronJob(SEDCronJob cj);
   boolean stopCronJob(SEDCronJob cj);
-  String executeContJob(SEDCronJob mj);
+  String executeCronJob(SEDCronJob mj);
 
   /**
    *

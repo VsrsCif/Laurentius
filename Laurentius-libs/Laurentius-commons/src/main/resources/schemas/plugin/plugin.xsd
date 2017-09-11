@@ -25,12 +25,21 @@ Copyright 2016, Supreme Court Republic of Slovenia
  See the Licence for the specific language governing permissions and  
  limitations under the Licence.
 -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://laurentius.si/plugin/def" xmlns:ns2="http://laurentius.si/plugin/crontask" xmlns:ns3="http://laurentius.si/plugin/processor" xmlns:ns4="http://laurentius.si/plugin/interceptor" xmlns:ns5="http://laurentius.si/plugin/eventlistener" targetNamespace="http://laurentius.si/plugin/def" elementFormDefault="qualified" attributeFormDefault="unqualified">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://laurentius.si/plugin/def" 
+           xmlns:ns2="http://laurentius.si/plugin/crontask" xmlns:ns3="http://laurentius.si/plugin/processor" xmlns:ns4="http://laurentius.si/plugin/interceptor" xmlns:ns5="http://laurentius.si/plugin/eventlistener" xmlns:ns6="http://msh.laurentius.si/pmode" 
+           xmlns:ns7="http://laurentius.si/interceptor" 
+           xmlns:ns8="http://laurentius.si/cron" 
+           
+           targetNamespace="http://laurentius.si/plugin/def" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xs:import namespace="http://laurentius.si/plugin/crontask" schemaLocation="./cron-task.xsd"/>
 	<xs:import namespace="http://laurentius.si/plugin/processor" schemaLocation="./inmail-processor.xsd"/>
 	<xs:import namespace="http://laurentius.si/plugin/interceptor" schemaLocation="./mail-interceptor.xsd"/>
 	<xs:import namespace="http://laurentius.si/plugin/eventlistener" schemaLocation="./outmail-event-listener.xsd"/>
+	<xs:import namespace="http://msh.laurentius.si/pmode" schemaLocation="../msh-settings.xsd"/>
+	<xs:import namespace="http://laurentius.si/interceptor" schemaLocation="../sed-interceptor.xsd"/>
+        <xs:import namespace="http://laurentius.si/cron" schemaLocation="../sed-cron.xsd"/>
 	<xs:element name="Plugin" type="ns1:Plugin"/>
+	<xs:element name="DefaultInitData" type="ns1:DefaultInitDataType"/>
 	<xs:complexType name="Plugin">
 		<xs:annotation>
 			<xs:documentation xml:lang="sl">Plugin data</xs:documentation>
@@ -41,8 +50,9 @@ Copyright 2016, Supreme Court Republic of Slovenia
 			<xs:element ref="ns4:MailInterceptorDef" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element ref="ns5:OutMailEventListenerDef" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="WebRole" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="MainMenu"  type="ns1:MenuItem" minOccurs="0"/>
-                        <xs:element name="ProcessMenu"  type="ns1:MenuItem"  minOccurs="0"/>                        
+			<xs:element name="MainMenu" type="ns1:MenuItem" minOccurs="0"/>
+			<xs:element name="ProcessMenu" type="ns1:MenuItem" minOccurs="0"/>
+			<xs:element ref="ns1:DefaultInitData" minOccurs="0"/>
 		</xs:sequence>
 		<xs:attribute name="webContext" type="xs:string" use="required">
 			<xs:annotation>
@@ -57,12 +67,33 @@ Copyright 2016, Supreme Court Republic of Slovenia
 		<xs:attribute name="jndi" type="xs:string" use="required"/>
 	</xs:complexType>
 	<xs:complexType name="MenuItem">
-			<xs:sequence>
-				<xs:element name="MenuItem" type="ns1:MenuItem" minOccurs="0" maxOccurs="unbounded"/>
-			</xs:sequence>
-			<xs:attribute name="name" use="required" type="xs:string"/>
-			<xs:attribute name="pageId" use="required" type="xs:string"/>
-                        <xs:attribute name="role" use="required" type="xs:string"/>
-		</xs:complexType>
-
+		<xs:sequence>
+			<xs:element name="MenuItem" type="ns1:MenuItem" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string" use="required"/>
+		<xs:attribute name="pageId" type="xs:string" use="required"/>
+		<xs:attribute name="role" type="xs:string" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="DefaultInitDataType">
+		<xs:sequence>
+			<xs:element name="PModeData" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element ref="ns6:Service" minOccurs="0" maxOccurs="unbounded"/>
+						<xs:element ref="ns6:Security" minOccurs="0" maxOccurs="unbounded"/>
+						<xs:element ref="ns6:ReceptionAwareness" minOccurs="0" maxOccurs="unbounded"/>
+						<xs:element ref="ns6:PMode" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="PluginData" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element ref="ns7:SEDInterceptor" minOccurs="0" maxOccurs="unbounded"/>
+                                                <xs:element ref="ns8:SEDCronJob" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
 </xs:schema>

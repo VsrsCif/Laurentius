@@ -15,6 +15,7 @@
 package si.laurentius.ejb;
 
 import java.io.File;
+import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -219,10 +220,17 @@ public class SEDDaoBean implements SEDDaoInterface {
       mutUTransaction.begin();
       for (MSHOutPart ip : lstAddParts) {
         ip.setMailId(mail.getId());
+        File f = StorageUtils.getFile(ip.getFilepath());
+        ip.setSize(BigInteger.valueOf(f.length()));
+        ip.setSha256Value(DigestUtils.getHexSha256Digest(f));
         memEManager.persist(ip);
       }
       for (MSHOutPart ip : lstUpdateParts) {
         ip.setMailId(mail.getId());
+        File f = StorageUtils.getFile(ip.getFilepath());
+        ip.setSize(BigInteger.valueOf(f.length()));
+        ip.setSha256Value(DigestUtils.getHexSha256Digest(f));
+                ;
         memEManager.merge(ip);
       }
       
@@ -295,6 +303,16 @@ public class SEDDaoBean implements SEDDaoInterface {
    */
   @Override
   public boolean addExecutionTask(SEDTaskExecution ad) {
+     if (!Utils.isEmptyString(ad.getResult()) && ad.getResult().length() > 1024){
+      String res = ad.getResult();
+      StringWriter sw = new StringWriter();
+      sw.append("Too long string: '");
+      sw.append(res);
+      sw.append("'.  Message substr to 1024");
+      LOG.logWarn(sw.toString(), null);
+      ad.setResult(res.substring(0, 1023));
+    
+    }
     return add(ad);
   }
 
@@ -1429,6 +1447,16 @@ public class SEDDaoBean implements SEDDaoInterface {
    */
   @Override
   public boolean updateExecutionTask(SEDTaskExecution ad) {
+    if (!Utils.isEmptyString(ad.getResult()) && ad.getResult().length() > 1024){
+      String res = ad.getResult();
+      StringWriter sw = new StringWriter();
+      sw.append("Too long string: '");
+      sw.append(res);
+      sw.append("'.  Message substr to 1024");
+      LOG.logWarn(sw.toString(), null);
+      ad.setResult(res.substring(0, 1023));
+    
+    }
     return update(ad);
   }
 

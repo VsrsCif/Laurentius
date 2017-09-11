@@ -14,6 +14,7 @@
  */
 package si.laurentius.ejb;
 
+import java.io.StringWriter;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
@@ -142,152 +143,165 @@ public class MSHScheduler implements SEDSchedulerInterface {
     } else if (!mj.getActive()) {
       LOG.formatedDebug("Cron job %s  not active!", name);
     } else {
-      executeContJob(mj);
+      executeCronJob(mj);
     }
     LOG.logEnd(l, String.format("Timeout for Cron job %s !'", name));
   }
 
   @Override
-  public String executeContJob(SEDCronJob mj) {
-    long l = LOG.logStart();
+  public String executeCronJob(SEDCronJob mj) {
+    long l = LOG.logStart(mj.getName());
+    StringWriter sw = new StringWriter();
+    for (SEDTask tsk : mj.getSEDTasks()) {
+      if (tsk.getActive()) {
+        sw.append(executeTask(mj, tsk));
+      }
+
+    }
+    LOG.logEnd(l, mj.getName());
+    return sw.toString();
+  }
+
+  private String executeTask(SEDCronJob mj, SEDTask tsk) {
+    long l = LOG.logStart(mj.getName(), tsk.getName());
+    LOG.formatedWarning("Execute cron %s, task %s", mj.getName(), tsk.getName());
     String result = "";
 
-    for (SEDTask tsk : mj.getSEDTasks()) {
-      SEDTaskExecution te = new SEDTaskExecution();
-      te.setCronId(mj.getId());
-      te.setName(mj.getName() + "-"+ tsk.getName());
-      te.setType(tsk.getType());
-      te.setPlugin(tsk.getPlugin());
-      te.setPluginVersion(tsk.getPluginVersion());
-      te.setStatus(SEDTaskStatus.INIT.getValue());
-      te.setStartTimestamp(Calendar.getInstance().getTime());
+    SEDTaskExecution te = new SEDTaskExecution();
+    te.setCronId(mj.getId());
+    te.setName(mj.getName() + "-" + tsk.getName());
+    te.setType(tsk.getType());
+    te.setPlugin(tsk.getPlugin());
+    te.setPluginVersion(tsk.getPluginVersion());
+    te.setStatus(SEDTaskStatus.INIT.getValue());
+    te.setStartTimestamp(Calendar.getInstance().getTime());
 
+    try {
+      mdbDao.addExecutionTask(te);
+    } catch (StorageException ex) {
+      result = String.format(
+              "Error occurred while executing task type %s!. Error: %s", te.
+                      getType(), ex.getMessage());
+      LOG.logEnd(l, result, ex);
+      return result;
+    }
+
+    Plugin plg = mpmPluginManager.getPluginByType(tsk.getPlugin());
+
+    if (plg == null) {
+      result = String.format(
+              "Not plugin %s!", tsk.getPlugin(), tsk.getType());
+      te.setStatus(SEDTaskStatus.ERROR.getValue());
+      te.setResult(result);
+      te.setEndTimestamp(Calendar.getInstance().getTime());
       try {
-        mdbDao.addExecutionTask(te);
+        mdbDao.updateExecutionTask(te);
       } catch (StorageException ex) {
-        result = String.format(
-                "Error occurred while executing task type %s!. Error: %s", te.
-                        getType(), ex.getMessage());
-        LOG.logEnd(l, result, ex);
-        return result;
+        LOG.logEnd(l, "Error updating task: '" + te.getType() + "' ", ex);
       }
+      return result;
+    } else if (!Objects.equals(plg.getVersion(), tsk.getPluginVersion())) {
+      LOG.
+              formatedWarning(
+                      "Plugin version mismatch for cron task execution %s",
+                      mj.getName());
+      te.setPluginVersion(plg.getVersion());
+    }
 
-      Plugin plg = mpmPluginManager.getPluginByType(tsk.getPlugin());
+    CronTaskDef ct = mpmPluginManager.
+            getCronTaskDef(tsk.getPlugin(), tsk.getType());
 
-      if (plg == null) {
-        result = String.format(
-                "Not plugin %s!", tsk.getPlugin(), tsk.getType());
-        te.setStatus(SEDTaskStatus.ERROR.getValue());
-        te.setResult(result);
-        te.setEndTimestamp(Calendar.getInstance().getTime());
-        try {
-          mdbDao.updateExecutionTask(te);
-        } catch (StorageException ex) {
-          LOG.logEnd(l, "Error updating task: '" + te.getType() + "' ", ex);
-        }
-        return result;
-      } else if (!Objects.equals(plg.getVersion(), tsk.getPluginVersion())) {
-        LOG.
-                formatedWarning(
-                        "Plugin version mismatch for cron task execution %s",
-                        mj.getName());
-        te.setPluginVersion(plg.getVersion());
-      }
-
-      CronTaskDef ct = mpmPluginManager.
-              getCronTaskDef(tsk.getPlugin(), tsk.getType());
-
-      if (ct == null) {
-        result = String.format(
-                "Not task processor for plugin %s and  task %s!", tsk.
-                        getPlugin(),
-                tsk.getType());
-        te.setStatus(SEDTaskStatus.ERROR.getValue());
-        te.setResult(result);
-        te.setEndTimestamp(Calendar.getInstance().getTime());
-        try {
-          mdbDao.updateExecutionTask(te);
-        } catch (StorageException ex) {
-          LOG.logEnd(l, "Error updating task: '" + te.getType() + "' ", ex);
-        }
-        return result;
-      }
-
-      // plugin  and task type
-      TaskExecutionInterface tproc = null;
+    if (ct == null) {
+      result = String.format(
+              "Not task processor for plugin %s and  task %s!", tsk.
+                      getPlugin(),
+              tsk.getType());
+      te.setStatus(SEDTaskStatus.ERROR.getValue());
+      te.setResult(result);
+      te.setEndTimestamp(Calendar.getInstance().getTime());
       try {
-        tproc = InitialContext.doLookup(ct.getJndi());
-      } catch (NamingException ex) {
-        result = String.format("Error getting taskexecutor: %s. ERROR: %s",
-                ct.getJndi(),
-                ex.getMessage());
-        te.setStatus(SEDTaskStatus.ERROR.getValue());
-        te.setResult(result);
-        te.setEndTimestamp(Calendar.getInstance().getTime());
-        try {
-          mdbDao.updateExecutionTask(te);
-        } catch (StorageException ex2) {
-          LOG.logEnd(l, "Error updating task: '" + te.getType() + "' ", ex2);
-        }
-        return result;
+        mdbDao.updateExecutionTask(te);
+      } catch (StorageException ex) {
+        LOG.logEnd(l, "Error updating task: '" + te.getType() + "' ", ex);
       }
-      Properties p = new Properties();
-      p.setProperty(SEDValues.S_CRON_ID_PROPERTY, mj.getId().toString());
-      p.setProperty(SEDValues.S_CRON_NAME_PROPERTY, mj.getName());
-      for (SEDTaskProperty tp : tsk.getSEDTaskProperties()) {
-        if (tp.getValue() != null) {
-          p.setProperty(tp.getKey(), tp.getValue());
-        }
-      }
+      return result;
+    }
 
-      te.setStatus(SEDTaskStatus.PROGRESS.getValue());
+    // plugin  and task type
+    TaskExecutionInterface tproc = null;
+    try {
+      tproc = InitialContext.doLookup(ct.getJndi());
+    } catch (NamingException ex) {
+      result = String.format("Error getting taskexecutor: %s. ERROR: %s",
+              ct.getJndi(),
+              ex.getMessage());
+      te.setStatus(SEDTaskStatus.ERROR.getValue());
+      te.setResult(result);
+      te.setEndTimestamp(Calendar.getInstance().getTime());
       try {
         mdbDao.updateExecutionTask(te);
       } catch (StorageException ex2) {
-        result = "Error updating task: '" + te.getType() + "' ";
+        LOG.logEnd(l, "Error updating task: '" + te.getType() + "' ", ex2);
+      }
+      return result;
+    }
+    Properties p = new Properties();
+    p.setProperty(SEDValues.S_CRON_ID_PROPERTY, mj.getId().toString());
+    p.setProperty(SEDValues.S_CRON_NAME_PROPERTY, mj.getName());
+    for (SEDTaskProperty tp : tsk.getSEDTaskProperties()) {
+      if (tp.getValue() != null) {
+        p.setProperty(tp.getKey(), tp.getValue());
+      }
+    }
+
+    te.setStatus(SEDTaskStatus.PROGRESS.getValue());
+    try {
+      mdbDao.updateExecutionTask(te);
+    } catch (StorageException ex2) {
+      result = "Error updating task: '" + te.getType() + "' ";
+      LOG.logEnd(l, result, ex2);
+      return result;
+    }
+
+    try {
+      result = tproc.executeTask(p);
+      LOG.formatedDebug(result);
+
+      te.setStatus(SEDTaskStatus.SUCCESS.getValue());
+      te.setResult(result);
+      te.setEndTimestamp(Calendar.getInstance().getTime());
+
+      try {
+        mdbDao.updateExecutionTask(te);
+      } catch (StorageException ex2) {
+        result = String.format(
+                "Error occurred while updating task  type %s!. Error: %s. Task executed with result:",
+                te.
+                        getType(), ex2.getMessage(), result);
         LOG.logEnd(l, result, ex2);
         return result;
       }
+    } catch (TaskException ex) {
 
+      te.setStatus(SEDTaskStatus.ERROR.getValue());
+      te.setResult(String.
+              format("TASK ERROR: %s. Err. desc: %s", ct.getJndi(),
+                      ex.getMessage()));
+      te.setEndTimestamp(Calendar.getInstance().getTime());
+      LOG.logEnd(l, "Error updating task: '" + te.getType() + "' ", ex);
       try {
-        result = tproc.executeTask(p);
-        LOG.formatedDebug(result);
-
-        te.setStatus(SEDTaskStatus.SUCCESS.getValue());
-        te.setResult(result);
-        te.setEndTimestamp(Calendar.getInstance().getTime());
-
-        try {
-          mdbDao.updateExecutionTask(te);
-        } catch (StorageException ex2) {
-          result = String.format(
-                  "Error occurred while updating task  type %s!. Error: %s. Task executed with result:",
-                  te.
-                          getType(), ex2.getMessage(), result);
-          LOG.logEnd(l, result, ex2);
-          return result;
-        }
-      } catch (TaskException ex) {
-
-        te.setStatus(SEDTaskStatus.ERROR.getValue());
-        te.setResult(String.
-                format("TASK ERROR: %s. Err. desc: %s", ct.getJndi(),
-                        ex.getMessage()));
-        te.setEndTimestamp(Calendar.getInstance().getTime());
-        LOG.logEnd(l, "Error updating task: '" + te.getType() + "' ", ex);
-        try {
-          mdbDao.updateExecutionTask(te);
-        } catch (StorageException ex2) {
-          result = String.format(
-                  "Error occurred while updating task  type %s!. Error: %s. Task executed with result:",
-                  te.
-                          getType(), ex2.getMessage(), result);
-          LOG.logEnd(l, result, ex2);
-          return result;
-        }
+        mdbDao.updateExecutionTask(te);
+      } catch (StorageException ex2) {
+        result = String.format(
+                "Error occurred while updating task  type %s!. Error: %s. Task executed with result:",
+                te.
+                        getType(), ex2.getMessage(), result);
+        LOG.logEnd(l, result, ex2);
+        return result;
       }
     }
-    LOG.logEnd(l);
+
+    LOG.logEnd(l, mj.getName(), tsk.getName());
     return result;
   }
 

@@ -36,6 +36,18 @@
                                 update=":forms:SettingsPlugin:pluginView:PluginDataView"
                                 />
                         
+                         <f:facet name="header">
+                        
+                          
+                           <p:commandButton value="#{msg['Install']}" styleClass="toolbar-Button"         
+                                         icon="ui-icon-svg-add ui-icon-size-22"                                                    
+                                         oncomplete="PF('pluginDialog').show()"
+                                         action="#{adminSEDPluginView.initializeSelectedPluginDataItems()}" 
+                                         update=":dlgplugin:pluginDialog:pluginDialogForm"
+                                         />
+                          
+                          </f:facet>
+                        
                         <p:column headerText="#{msg['Name']}" width="160">
                             <h:outputText value="#{sp.name}"></h:outputText>                
                         </p:column>

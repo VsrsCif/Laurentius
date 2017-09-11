@@ -13,7 +13,7 @@ MEPS_UNZIP="$FOLDER_DEPLOY/meps"
 
 cp ../../plugins/Laurentius-meps-plugin/target/plugin-meps.war $FOLDER_DEPLOY/$WILDFLY_HOME/standalone/deployments/
 
-cp ../../plugins/Laurentius-meps-plugin/src/main/resources/init/pmode-conf.xml $FOLDER_DEPLOY/$WILDFLY_HOME/standalone/data/laurentius-home/conf/
+#cp ../../plugins/Laurentius-meps-plugin/src/main/resources/init/pmode-conf.xml $FOLDER_DEPLOY/$WILDFLY_HOME/standalone/data/laurentius-home/conf/
 cp -r ../../plugins/Laurentius-meps-plugin/src/main/resources/init/meps $FOLDER_DEPLOY/$WILDFLY_HOME/standalone/data/laurentius-home/plugins/
 
 

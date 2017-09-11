@@ -543,7 +543,7 @@ public class XMLUtils {
       res = validateBySchema(xml, schXsd, xsdResourceFolder);
     } catch (JAXBException ex) {
 
-      res += "SchemaValidationError 2:" + ex.getMessage() + "\n";
+      res += "SchemaValidationError: " + ex.getMessage() + "\n";
     }
     return res;
   }

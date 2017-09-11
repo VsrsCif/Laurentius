@@ -27,7 +27,6 @@ import si.laurentius.cron.SEDTask;
 
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.interfaces.SEDLookupsInterface;
-import si.laurentius.commons.interfaces.SEDPluginManagerInterface;
 import si.laurentius.commons.interfaces.SEDSchedulerInterface;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.Utils;
@@ -169,7 +168,7 @@ public class AdminSEDCronJobView extends AbstractAdminJSFView<SEDCronJob> {
  
     SEDCronJob cj = getSelected();
     if (cj != null) {
-     return mshScheduler.executeContJob(cj);
+     return mshScheduler.executeCronJob(cj);
     }
     return null;
   }

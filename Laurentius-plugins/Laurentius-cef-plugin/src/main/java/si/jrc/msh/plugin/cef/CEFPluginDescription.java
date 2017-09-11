@@ -11,6 +11,7 @@ import javax.ejb.Local;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import si.laurentius.commons.utils.SEDLogger;
+import si.laurentius.plugin.def.DefaultInitData;
 import si.laurentius.plugin.def.MenuItem;
 import si.laurentius.plugin.interfaces.AbstractPluginDescription;
 import si.laurentius.plugin.interfaces.PluginDescriptionInterface;
@@ -27,6 +28,11 @@ public class CEFPluginDescription extends  AbstractPluginDescription {
 
   private static final SEDLogger LOG = new SEDLogger(CEFPluginDescription.class);
   
+  
+  @Override
+  public DefaultInitData getDefaultInitData() {
+    return null;
+  }
   @PostConstruct
   private void postConstruct() {    
     try {

@@ -224,7 +224,7 @@ public class ZPPTask implements TaskExecutionInterface {
     // create delivery advice
 
     MSHOutMail mout = new MSHOutMail();
-    mout.setMessageId(Utils.getInstance().getGuidString());
+    mout.setMessageId(Utils.getUUIDWithLocalDomain());
     mout.setService(ZPPConstants.S_ZPP_SERVICE);
     mout.setAction(ZPPConstants.S_ZPP_ACTION_ADVICE_OF_DELIVERY);
     mout.setConversationId(inMail.getConversationId());
@@ -252,7 +252,7 @@ public class ZPPTask implements TaskExecutionInterface {
       mout.setMSHOutPayload(new MSHOutPayload());
       mout.getMSHOutPayload().getMSHOutParts().add(mp);
       
-      mDB.serializeOutMail(mout, "", "ZPPDeliveryPlugin", "");
+      mDB.serializeOutMail(mout, "", ZPPConstants.S_ZPP_PLUGIN_TYPE, "");
       mDB.setStatusToInMail(inMail, SEDInboxMailStatus.PREADY,
               "AdviceOfDelivery created and submitted to out queue");
     } catch (SEDSecurityException | StorageException ex) {

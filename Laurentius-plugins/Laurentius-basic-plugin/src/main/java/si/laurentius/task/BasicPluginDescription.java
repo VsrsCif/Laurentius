@@ -16,6 +16,7 @@ import si.laurentius.commons.SEDGUIConstants;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.plg.db.IMPDBInterface;
 import si.laurentius.plg.web.AppConstant;
+import si.laurentius.plugin.def.DefaultInitData;
 import si.laurentius.plugin.def.MenuItem;
 import si.laurentius.plugin.interfaces.AbstractPluginDescription;
 import si.laurentius.plugin.interfaces.PluginDescriptionInterface;
@@ -41,6 +42,10 @@ public class BasicPluginDescription extends AbstractPluginDescription {
 
  
 
+  @Override
+  public DefaultInitData getDefaultInitData() {
+    return null;
+  }
   /**
    *
    * @return

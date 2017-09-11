@@ -20,7 +20,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.JAXBException;
-import org.oasis_open.docs.ebxml_bp.ebbp_signals_2.PartyInfoType;
 import si.jrc.msh.plugin.zpp.ZPPConstants;
 import si.jrc.msh.plugin.zpp.enums.FopTransformation;
 import si.jrc.msh.plugin.zpp.enums.ZPPPartPropertyType;
