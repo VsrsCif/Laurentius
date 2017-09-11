@@ -14,8 +14,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.BeforeClass;
@@ -42,7 +40,6 @@ import si.laurentius.user.SEDUser;
  */
 public class SEDLookupsTest extends TestUtils {
 
-  static EntityManagerFactory memfMSHFactory = null;
   static SEDLookups mTestInstance = new SEDLookups();
 
   @BeforeClass
@@ -52,10 +49,8 @@ public class SEDLookupsTest extends TestUtils {
     // set logger
     setLogger(SEDLookupsTest.class.getSimpleName());
 
-    // create persistence unit
-    memfMSHFactory = Persistence.createEntityManagerFactory(
-            PERSISTENCE_UNIT_NAME);
-    mTestInstance.memEManager = memfMSHFactory.createEntityManager();
+    
+    mTestInstance.memEManager = TestUtils.createEntityManager();
     mTestInstance.mutUTransaction
             = new MockUserTransaction(mTestInstance.memEManager.getTransaction());
     System.setProperty(SEDSystemProperties.SYS_PROP_LAU_DOMAIN, LAU_TEST_DOMAIN);

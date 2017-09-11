@@ -35,7 +35,7 @@ import si.laurentius.lce.KeystoreUtils;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class SEDCertStoreBeanTest extends TestUtils {
 
-  static EntityManagerFactory memfMSHFactory = null;
+  
   static final SEDCertStoreBean mTestInstance = new SEDCertStoreBean();
   KeystoreUtils mku = new KeystoreUtils();
   static final String[] CERT_SAMPLES = new String[]{"test-digicert.crt",
@@ -51,10 +51,8 @@ public class SEDCertStoreBeanTest extends TestUtils {
     // set logger
     setLogger(SEDCertStoreBeanTest.class.getSimpleName());
 
-    // create persistence unit
-    memfMSHFactory = Persistence.createEntityManagerFactory(
-            PERSISTENCE_UNIT_NAME);
-    mTestInstance.memEManager = memfMSHFactory.createEntityManager();
+    
+    mTestInstance.memEManager = TestUtils.createEntityManager();
     mTestInstance.mutUTransaction
             = new MockUserTransaction(mTestInstance.memEManager.getTransaction());
 

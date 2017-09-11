@@ -53,7 +53,6 @@ import si.laurentius.msh.outbox.payload.MSHOutPart;
  */
 public class SEDDaoBeanTest extends TestUtils {
 
-  static EntityManagerFactory memfMSHFactory = null;
   static SEDDaoBean mTestInstance = new SEDDaoBean();
 
   @BeforeClass
@@ -67,12 +66,12 @@ public class SEDDaoBeanTest extends TestUtils {
     System.setProperty(Context.INITIAL_CONTEXT_FACTORY,
             InitialContextFactoryForTest.class.getName());
 
-    // create persistence unit
-    memfMSHFactory = Persistence.createEntityManagerFactory(
-            PERSISTENCE_UNIT_NAME);
-    mTestInstance.memEManager = memfMSHFactory.createEntityManager();
+    
+    mTestInstance.memEManager = TestUtils.createEntityManager();
     mTestInstance.mutUTransaction
             = new MockUserTransaction(mTestInstance.memEManager.getTransaction());
+    
+    
     System.setProperty(SEDSystemProperties.SYS_PROP_LAU_DOMAIN, LAU_TEST_DOMAIN);
 
     setUpStorage("target/storage/SEDDaoBeanTest");

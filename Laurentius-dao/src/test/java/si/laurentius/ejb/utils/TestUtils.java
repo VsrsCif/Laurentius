@@ -18,6 +18,9 @@ import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.Session;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import org.apache.activemq.junit.EmbeddedActiveMQBroker;
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.FileAppender;
@@ -45,9 +48,11 @@ public class TestUtils {
    */
   protected static final String LAU_HOME = "target/TEST-LAU_HOME";
   public static final String LAU_TEST_DOMAIN = "test.com";
-  
-  public static final String S_JMS_JNDI_CF ="java:/jboss/ConnectionFactory";
-  public static final String S_JMS_QUEUE ="queue/MSHQueue";
+
+  public static final String S_JMS_JNDI_CF = "java:/jboss/ConnectionFactory";
+  public static final String S_JMS_QUEUE = "queue/MSHQueue";
+
+  static EntityManagerFactory memfMSHFactory = null;
 
   static {
     if (!Paths.get(LAU_HOME).toFile().exists()) {
@@ -61,6 +66,14 @@ public class TestUtils {
       System.setProperty(SEDSystemProperties.SYS_PROP_LAU_DOMAIN,
               LAU_TEST_DOMAIN);
     }
+  }
+
+  public static EntityManager createEntityManager() {
+    if (memfMSHFactory == null) {
+      memfMSHFactory = Persistence.createEntityManagerFactory(
+              PERSISTENCE_UNIT_NAME);
+    }
+    return memfMSHFactory.createEntityManager();
   }
 
   /**
@@ -116,22 +129,23 @@ public class TestUtils {
     }
   }
 
-  public static void setupJMS(String jndiFac, String prefix, List<String> lstJndiQueue) {
+  public static void setupJMS(String jndiFac, String prefix,
+          List<String> lstJndiQueue) {
     EmbeddedActiveMQBroker broker = new EmbeddedActiveMQBroker();
     broker.start();
-    
+
     // Add ConnectionFactory to JNDI
     ConnectionFactory connectionFactory = broker.createConnectionFactory();
-    InitialContextFactoryForTest.bind(jndiFac,connectionFactory);
+    InitialContextFactoryForTest.bind(jndiFac, connectionFactory);
     // create destionation 
     try {
       Connection connection = connectionFactory.createConnection();
-      connection.start();   
-      for (String jndiQueue: lstJndiQueue) {
-      Destination dest = connection.createSession(false,
-              Session.AUTO_ACKNOWLEDGE).createQueue(jndiQueue);
-      InitialContextFactoryForTest.bind(prefix+ jndiQueue,
-              dest);
+      connection.start();
+      for (String jndiQueue : lstJndiQueue) {
+        Destination dest = connection.createSession(false,
+                Session.AUTO_ACKNOWLEDGE).createQueue(jndiQueue);
+        InitialContextFactoryForTest.bind(prefix + jndiQueue,
+                dest);
       }
     } catch (JMSException ex) {
       java.util.logging.Logger.getLogger(SEDDaoBeanTest.class.getName()).log(
