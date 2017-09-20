@@ -1,6 +1,9 @@
 ![Build Status](https://api.travis-ci.org/VsrsCif/Laurentius.svg?branch=master)
 [Travis build](https://travis-ci.org/VsrsCif/Laurentius)
 
+[![Coverage Status](https://coveralls.io/repos/github/VsrsCif/Laurentius/badge.svg?branch=master)](https://coveralls.io/github/VsrsCif/Laurentius?branch=master)
+
+
 
 Aplikacija Laurentius je demo aplikacije za varno elektronsko izmenjavo sporočil po standardu ebMS 3.0 (AS4 profil). 
 Aplikacija služi kot primer implementacije protokola SVEV 2.0  za elektronsko vročanje sodnih pošiljk, 
