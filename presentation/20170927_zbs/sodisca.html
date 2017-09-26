@@ -84,12 +84,12 @@
 
 
             var textLines = [
-                {left: 590, top: 280, fontSize: 35, name: "SPLOŠNA SOD."},
-                {left: 590, top: 310, fontSize: 30, name: "1 vrhovno sodišče;"},
-                {left: 590, top: 350, fontSize: 30, name: "4 višja sodišča"},
-                {left: 590, top: 380, fontSize: 30, name: "11 okrožnih sodišč"},
-                {left: 590, top: 410, fontSize: 30, name: "44 okrajnih sodišč"},
-                {left: 520, top: 450, fontSize: 35, name: "SPECIALIZIRANA SOD."},
+                {left: 590, top: 280, fontSize: 35, name: "SPLOŠNA SODIŠČA"},
+                {left: 590, top: 310, fontSize: 30, name: "1 vrhovno sodišče"},
+                {left: 590, top: 340, fontSize: 30, name: "4 višja sodišča"},
+                {left: 590, top: 370, fontSize: 30, name: "11 okrožnih sodišč"},
+                {left: 590, top: 400, fontSize: 30, name: "44 okrajnih sodišč"},
+                {left: 520, top: 450, fontSize: 35, name: "SPECIALIZIRANA SODIŠČA"},
                 {left: 520, top: 480, fontSize: 30, name: "4 sodišča za odločanje o delovnih sporih, eno od njih tudi za odločanje o sporih iz socialnega zavarovanja."},
                 {left: 520, top: 570, fontSize: 30, name: "1 Upravno sodišče"},
             ];
@@ -108,7 +108,8 @@
                 var courtMap = document.getElementById("tribunals-map");
                 console.log("got court map:" + courtMap);
                 courtMap.innerHTML = "";
-                startShowCourtAnimation(courtMap);
+                startShowTextAnimation(courtMap);
+                
 
 
             }
@@ -123,21 +124,13 @@
                 function showNext() {
                     if (index >= courtList.length) {
                         clearInterval(id);
-                        startShowTextAnimation(courtMap);
+                        
                     } else {
                         var p = document.createElement("p");
                         p.className = "courtTown";
                         p.style = "font-size:18px; left:" + (courtList[index].left - offsetX) + "px; top:" + (courtList[index].top - offsetY) + "px";
                         p.innerHTML = courtList[index].name;
-                        /* p.animate([
-                         // keyframes
-                         {  opacity: '0.1'},
-                         { opacity: '1.0'},
-                         ], {
-                         // timing options
-                         duration: 1000,
-                         iterations: 1
-                         });*/
+                        
                         courtMap.appendChild(p);
                         index++;
                     }
@@ -153,6 +146,7 @@
                 function showNext() {
                     if (index >= textLines.length) {
                         clearInterval(id);
+                        startShowCourtAnimation(courtMap);
                     } else {
                         var p = document.createElement("div");
                         p.style = "font-size:20px; position:absolute; left:" + (textLines[index].left - offsetX) + "px; top:" + (textLines[index].top - offsetY) + "px";

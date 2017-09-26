@@ -153,10 +153,10 @@
             var animationIndex = 0;
 
             var text = [
-                {name: "Dodatki:", desc: "Namen dodatkov je avtomatizacija dodatne obdelave sprejetih in poslanih pošiljk."},
-                {name: "Prestrezniki:", desc: "Namen prestreznikov je preoblikovanje sporočil pri pošiljanju in implementacija dodatnih kontrol pred dokončnim prejemom sporočil"},
-                {name: "Procesi dohodne pošte:", desc: "Avtomatizacija izvoza in procesiranja dohodne pošte (xslt, izvoz, zagon zunanjih procesov, ...)."},
-                {name: "Koledar opravil:", desc: "Nastavljanje koledarjev za izvajanje časovnih opravila (Poročila, pošiljanje preko datotečnega sistema, ...)."}
+                {name: "Dodatki:", desc: "namen dodatkov je avtomatizacija obdelave sprejetih in poslanih pošiljk."},
+                {name: "Prestrezniki:", desc: "namen prestreznikov je preoblikovanje sporočil pri pošiljanju in implementacija dodatnih kontrol pred dokončnim prejemom sporočil."},
+                {name: "Procesi dohodne pošte:", desc: "namen 'processorjev' je avtomatizacija izvoza in procesiranja dohodne pošte (xslt, izvoz, zagon zunanjih procesov, ...)."},
+                {name: "Koledar opravil:", desc: "nastavljanje koledarjev za izvajanje časovnih opravila (Poročila, pošiljanje preko datotečnega sistema, ...)."}
             ];
 
 
@@ -180,8 +180,8 @@
                 document.getElementById("name").innerHTML = text[animationIndex].name;
                 document.getElementById("desc").innerHTML = text[animationIndex].desc;
                 
-                document.getElementById("letter").style.animation = "sendLetter 5s 3"
-                document.getElementById("as4Reciept").style.animation = "sendAS4Reciept 5s 3"
+                document.getElementById("letter").style.animation = "sendLetter 5s"
+                document.getElementById("as4Reciept").style.animation = "sendAS4Reciept 5s"
                 
                 if (animationIndex === 0) {
                     

@@ -46,15 +46,15 @@
 
             var text01 = [
                 {color: 'black', fontSize: 24, name: "Integracije:"},
-                {color: 'black', fontSize: 20, name: "Izdelava integracij 5.000 - 50.000 eur"},
-                {color: 'black', fontSize: 20, name: "Različne tehnologije (ftp,pgp, https, wsdl, rest, smtp, jms)"},
-                {color: 'black', fontSize: 20, name: "Različne standardi: SVEV 1.0, e-CEV, FURS, GURS, EDI,.. "},
-                {color: 'black', fontSize: 20, name: "Vzdrževanje"},
-                {color: 'black', fontSize: 20, name: "Nadgrajevanje "},
+                {color: 'black', fontSize: 20, name: "izdelava integracije: 5.000 - 50.000 eur"},
+                {color: 'black', fontSize: 20, name: "različne tehnologije: ftp,pgp, https, wsdl, rest, smtp, jms"},
+                {color: 'black', fontSize: 20, name: "različni standardi (standardi po meri)"},
+                {color: 'black', fontSize: 20, name: "vzdrževanje"},
+                {color: 'black', fontSize: 20, name: "nadgrajevanje (vsebina)"},
             ];
 
             var text02 = [
-                {color: 'black', fontSize: 24, name: "Skupne prvine transporta:"},
+                {color: 'black', fontSize: 24, name: "Skupne prvine transporta sporočil:"},
                 {color: 'black', fontSize: 20, name: "zagotavljanje pristnosti sporočil"},
                 {color: 'black', fontSize: 20, name: "identifikacija pošiljatelja"},
                 {color: 'black', fontSize: 20, name: "varnost prenosa sporočil"},
@@ -129,6 +129,9 @@
 
                 var courtUnits = document.getElementById("integration");
                 var textPlace = document.getElementById("integrationCosts");
+                var textPlace2 = document.getElementById("elements");
+                textPlace2.innerHTML ="";
+                textPlace.innerHTML ="";
 
                 var index = 0;
                 var id = setInterval(showNext, 500);
@@ -193,7 +196,7 @@
                 textPlace.innerHTML = "";
                 var label = document.createElement("label");
 
-                label.style = "font-size: " + textList[0].fontSize
+                label.style = "font-weight: bold;font-size: " + textList[0].fontSize
                         + "; color: " + textList[0].color;
                 label.innerHTML =textList[index].name;
                 textPlace.appendChild(label);
