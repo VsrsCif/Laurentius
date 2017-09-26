@@ -1,0 +1,262 @@
+<html lang="sl">
+
+    <head>
+        <meta charset="utf-8" />
+        <style >
+
+            body{
+                margin: 0;
+                padding: 0;
+                height: 600px;
+                width: 800px;
+                overflow: hidden;
+            }
+
+            .court {
+                background: transparent url("images/cif-logo.svg") no-repeat scroll left top;
+                background-size: 100% 100%;
+                position: absolute;
+                margin: 0;
+                padding: 0;
+                height: 150px;
+                width: 100px;
+                top: 120px;
+                left: 170px;
+                z-index: 100;
+
+            }
+
+
+
+
+
+
+            /* The animation code */
+            @keyframes showAllUnitsAnimation {
+                0% {transform: translate(0px, 0px) rotate(-90deg)  scale(6.7, 1.4)}                
+                50% {transform: translate(0px, 0px)  scale(6.7, 1.0)}
+                100% {transform: translate(0px, 0px)  scale(1.0, 1.0)}
+            }
+
+
+
+        </style>
+
+        <script type="text/javascript">
+
+            var text01 = [
+                {color: 'black', fontSize: 24, name: "Integracije:"},
+                {color: 'black', fontSize: 20, name: "Izdelava integracij 5.000 - 50.000 eur"},
+                {color: 'black', fontSize: 20, name: "Različne tehnologije (ftp,pgp, https, wsdl, rest, smtp, jms)"},
+                {color: 'black', fontSize: 20, name: "Različne standardi: SVEV 1.0, e-CEV, FURS, GURS, EDI,.. "},
+                {color: 'black', fontSize: 20, name: "Vzdrževanje"},
+                {color: 'black', fontSize: 20, name: "Nadgrajevanje "},
+            ];
+
+            var text02 = [
+                {color: 'black', fontSize: 24, name: "Skupne prvine transporta:"},
+                {color: 'black', fontSize: 20, name: "zagotavljanje pristnosti sporočil"},
+                {color: 'black', fontSize: 20, name: "identifikacija pošiljatelja"},
+                {color: 'black', fontSize: 20, name: "varnost prenosa sporočil"},
+                {color: 'black', fontSize: 20, name: "zanesljivost prenosa sporočil"},
+                {color: 'black', fontSize: 20, name: "dokazljivost prenosa"},
+                {color: 'black', fontSize: 20, name: "vročanje različnih oblik datotek"},
+                {color: 'black', fontSize: 18, name: "parametrizirano nastavljanje različnih koreografij izmenjave sporočil"},                
+                {color: 'black', fontSize: 18, name: "enostavno dodajanje in spreminjanje novih uporabnikov in izvajalcev storitev"},
+                {color: 'black', fontSize: 20, name: "uporaba odprtih standardov in tehnologij"},
+                {color: 'black', fontSize: 20, name: "avtomatizacija sprejema/pošiljanja"},
+            ];
+
+            var partners = [
+                {color: '#4343ff', name: "Odvetniki", icon: "company.svg"},
+                {color: '#5b5bff', name: "Notarji", icon: "circle-building.svg"},
+                {color: '#6b6bff', name: "Pravobranilci", icon: "circle-building.svg"},
+                {color: '#7b7bff', name: "GURS", icon: "circle-building.svg"},
+                {color: '#eeffaa', name: "Upravne enote", icon: "office-building_V2.svg"},
+                {color: '#8b8bff', name: "Izvršitelji", icon: "circle-building.svg"},
+                {color: '#8b8bff', name: "Zapori", icon: "factory_v2.svg"},
+                {color: '#9b9bff', name: "Banke", icon: "office-building_V2.svg"},
+                {color: '#ababff', name: "Zavarovalnice", icon: "company.svg"},
+                {color: '#ababff', name: "Telekomun. podj.", icon: "company.svg"},
+                {color: '#ababff', name: "Energetska podj.", icon: "company.svg"},
+                {color: '#bbbbff', name: "Izvajalec 1", icon: "office-building_V2.svg"},
+                {color: '#bbbbff', name: "Izvajalec 2", icon: "factory_v2.svg"},
+                {color: '#bbbbff', name: "...        .", icon: "company.svg"},
+            ];
+
+
+
+
+
+            window.addEventListener('message', function (event) {
+
+                if (event.data) {
+                    if (event.data === "restartAnimation") {
+                        restartAnimation();
+                    } else if (event.data === "nextAnimation") {
+                        nextAnimation();
+                    }
+
+
+
+                }
+            });
+
+            var animationIndex = 0;
+
+            function nextAnimation() {
+
+                if (animationIndex === 1) {
+                    startTextAnimation(text02, document.getElementById("elements"));
+
+                }
+
+            }
+
+            function resetAnimation() {
+                var courtUnits = document.getElementById("integration");
+
+                courtUnits.style.animation = '';
+                courtUnits.innerHTML = "";
+
+
+
+
+            }
+            function startAnimation() {
+
+                var delta = 2 * Math.PI / partners.length;
+
+                var courtUnits = document.getElementById("integration");
+                var textPlace = document.getElementById("integrationCosts");
+
+                var index = 0;
+                var id = setInterval(showNext, 500);
+                var offsetX = 170;
+                var offsetY = 170;
+                var radius = 160;
+
+                var div = document.createElement("div");
+                div.className = "court";
+                courtUnits.appendChild(div, textPlace);
+
+                startTextAnimation(text01, textPlace);
+
+
+                function showNext() {
+                    if (index >= partners.length) {
+                        clearInterval(id);
+                    } else {
+                        var r = radius + (index % 2 == 0 ? 10 : -10)
+                        var line = document.createElement("div");
+
+
+                        line.style = "border:1px solid; position:absolute;background:black: height: 1px; width:" +
+                                (r / 2) + "px; top:" + offsetY + "px;left: " + (offsetX) + "px; transform: rotate(" + (delta * index * 57.3) + "deg) translate(" + (20 + r / 2) + "px, 0px)";
+
+
+                        courtUnits.appendChild(line);
+
+
+                        var div = document.createElement("div");
+
+
+                        div.style = "font-size:20px; position:absolute; left:" + (r * Math.cos(delta * index) + offsetX) + "px; top:" + (r * Math.sin(delta * index) + offsetY)
+                                + "px; background: transparent url('images/" + partners[index].icon + "')  no-repeat scroll left top;background-size: 100% 100%;"
+                                + " min-width: 50px; height: 80px;";
+                        div.innerHTML = partners[index].name;
+
+                        div.animate([
+                            // keyframes
+                            {transform: 'scale(0.001)'},
+                            {transform: 'scale(1.5)'},
+                            {transform: 'scale(1.0)'},
+                        ], {
+                            // timing options
+                            duration: 1500,
+                            iterations: 1
+                        });
+
+                        courtUnits.appendChild(div);
+                        index++;
+                    }
+                }
+            }
+
+
+            function startTextAnimation(textList, textPlace) {
+                console.log("startTextAnimation: ");
+
+
+                // clear text
+                var index = 0;
+                textPlace.innerHTML = "";
+                var label = document.createElement("label");
+
+                label.style = "font-size: " + textList[0].fontSize
+                        + "; color: " + textList[0].color;
+                label.innerHTML =textList[index].name;
+                textPlace.appendChild(label);
+                index = 1;
+                var id = setInterval(showNext, 500);
+
+
+                function showNext() {
+                    if (index >= textList.length) {
+                        clearInterval(id);
+
+                    } else {
+                        var li = document.createElement("li");
+                        li.style = "font-size: " + textList[index].fontSize
+                                + "; color: " + textList[index].color;
+                        li.innerHTML = textList[index].name;
+
+                        li.animate([
+                            // keyframes
+                            {opacity: '0.0'},
+                            {opacity: '1.0'},
+                        ], {
+                            // timing options
+                            duration: 1000,
+                            iterations: 1
+                        });
+                        console.log("append test: " + textList[index].name);
+                        textPlace.appendChild(li);
+                        index++;
+                    }
+                }
+            }
+
+
+            function restartAnimation() {
+                console.log("restartAnimation");
+                resetAnimation();
+                setTimeout(function () {
+                    startAnimation()
+                }, 10);
+                animationIndex = 1;
+            }
+
+
+
+
+        </script>
+
+    </head>
+    <body >
+        <div id="integration" style="width:100%; height: 100%">
+            <div id="court" >
+            </div>
+
+
+        </div>
+        <ul id="integrationCosts" style="position:absolute; top: 5px;left: 420px;width:300px">
+
+        </ul>
+        <ul id="elements" style=" position:absolute; top: 250px;left: 400px;width:300px">
+
+        </ul>
+
+    </body>
+</html>
+

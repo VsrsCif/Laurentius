@@ -1,0 +1,205 @@
+
+<html lang="sl">
+    <meta charset="utf-8" />
+    <head>
+
+        <style>
+
+            #tribunals-map {
+                background: transparent url("images/court-oz.png") no-repeat scroll left top;
+                height: 531px;
+                position: absolute;
+                width: 760px;
+
+            }
+
+             p.courtTown {    
+                background-color: white;
+               box-shadow: 10px 10px 5px #888888;
+                position:absolute;
+                animation-name: showText;
+                animation-duration: 2s;
+                
+
+            }
+
+            /* Standard syntax */
+            @keyframes showText {
+                0%   { transform: scale(0,0);opacity:0}
+                100% {transform: scale(1.0,1.0);opacity:1.0}
+            }
+
+        </style>
+
+
+       
+        <script type="text/javascript">
+            var courtList = [
+                {left: 224, top: 239, name: "Kranj"},
+                {left: 147, top: 167, name: "Jesenice"},
+                {left: 180, top: 200, name: "Radovljica"},
+                {left: 185, top: 266, name: "Škofja Loka"},
+                {left: 458, top: 327, name: "Krško"},
+                {left: 483, top: 350, name: "Brežice"},
+                {left: 413, top: 308, name: "Sevnica"},
+                {left: 249, top: 308, name: "Ljubljana"},
+                {left: 281, top: 282, name: "Domžale"},
+                {left: 273, top: 344, name: "Grosuplje"},
+                {left: 287, top: 255, name: "Kamnik"},
+                {left: 330, top: 428, name: "Kočevje"},
+                {left: 252, top: 380, name: "Cerknica"},
+                {left: 366, top: 260, name: "Trbovlje"},
+                {left: 221, top: 327, name: "Vrhnika"},
+                {left: 324, top: 306, name: "Litija"},
+                {left: 369, top: 375, name: "Novo mesto"},
+                {left: 383, top: 449, name: "Črnomelj"},
+                {left: 380, top: 335, name: "Trebnje"},
+                {left: 477, top: 131, name: "Maribor"},
+                {left: 543, top: 134, name: "Lenart"},
+                {left: 459, top: 171, name: "Slovenska Bistrica"},
+                {left: 626, top: 83, name: "Murska Sobota"},
+                {left: 515, top: 101, name: "Gornja Radgona"},
+                {left: 633, top: 114, name: "Lendava"},
+                {left: 599, top: 143, name: "Ljutomer"},
+                {left: 581, top: 200, name: "Ptuj"},
+                {left: 593, top: 162, name: "Ormož"},
+                {left: 360, top: 138, name: "Slovenj Gradec"},
+                {left: 120, top: 452, name: "Koper"},
+                {left: 165, top: 440, name: "Ilirska Bistrica"},
+                {left: 84, top: 467, name: "Piran"},
+                {left: 191, top: 389, name: "Postojna"},
+                {left: 131, top: 405, name: "Sežana"},
+                {left: 107, top: 318, name: "Nova Gorica"},
+                {left: 134, top: 351, name: "Ajdovščina"},
+                {left: 141, top: 287, name: "Idrija"},
+                {left: 104, top: 255, name: "Tolmin"},
+                {left: 429, top: 237, name: "Celje"},
+                {left: 470, top: 198, name: "Slovenske Konjice"},
+                {left: 531, top: 222, name: "Šmarje pri Jelšah"},
+                {left: 390, top: 180, name: "Velenje"},
+                {left: 404, top: 218, name: "Žalec"},
+                {left: 470, top: 248, name: "Šentjur"},
+            ];
+
+
+
+            var textLines = [
+                {left: 590, top: 280, fontSize: 35, name: "SPLOŠNA SOD."},
+                {left: 590, top: 310, fontSize: 30, name: "1 vrhovno sodišče;"},
+                {left: 590, top: 350, fontSize: 30, name: "4 višja sodišča"},
+                {left: 590, top: 380, fontSize: 30, name: "11 okrožnih sodišč"},
+                {left: 590, top: 410, fontSize: 30, name: "44 okrajnih sodišč"},
+                {left: 520, top: 450, fontSize: 35, name: "SPECIALIZIRANA SOD."},
+                {left: 520, top: 480, fontSize: 30, name: "4 sodišča za odločanje o delovnih sporih, eno od njih tudi za odločanje o sporih iz socialnega zavarovanja."},
+                {left: 520, top: 570, fontSize: 30, name: "1 Upravno sodišče"},
+            ];
+
+           window.addEventListener('message', function (event) {
+
+                if (event.data) {
+                    if (event.data === "restartAnimation") {
+                        restartAnimation();
+                    }
+
+                }
+            });
+            function restartAnimation() {
+                console.log("restartAnimation");
+                var courtMap = document.getElementById("tribunals-map");
+                console.log("got court map:" + courtMap);
+                courtMap.innerHTML = "";
+                startShowCourtAnimation(courtMap);
+
+
+            }
+
+            function startShowCourtAnimation(courtMap) {
+
+                var index = 0;
+                var id = setInterval(showNext, 50);
+                var offsetX = 40;
+                var offsetY = 40;
+
+                function showNext() {
+                    if (index >= courtList.length) {
+                        clearInterval(id);
+                        startShowTextAnimation(courtMap);
+                    } else {
+                        var p = document.createElement("p");
+                        p.className = "courtTown";
+                        p.style = "font-size:18px; left:" + (courtList[index].left - offsetX) + "px; top:" + (courtList[index].top - offsetY) + "px";
+                        p.innerHTML = courtList[index].name;
+                        /* p.animate([
+                         // keyframes
+                         {  opacity: '0.1'},
+                         { opacity: '1.0'},
+                         ], {
+                         // timing options
+                         duration: 1000,
+                         iterations: 1
+                         });*/
+                        courtMap.appendChild(p);
+                        index++;
+                    }
+                }
+            }
+
+            function startShowTextAnimation(courtMap) {
+                var index = 0;
+                var id = setInterval(showNext, 50);
+                var offsetX = 40;
+                var offsetY = 40;
+
+                function showNext() {
+                    if (index >= textLines.length) {
+                        clearInterval(id);
+                    } else {
+                        var p = document.createElement("div");
+                        p.style = "font-size:20px; position:absolute; left:" + (textLines[index].left - offsetX) + "px; top:" + (textLines[index].top - offsetY) + "px";
+                        p.innerHTML = textLines[index].name;
+
+                        p.animate([
+                            // keyframes
+                            {transform: 'translateY(-300px)', opacity: '0.1'},
+                            {transform: 'translateY(0px)', opacity: '1.0'},
+                        ], {
+                            // timing options
+                            duration: 1000,
+                            iterations: 1
+                        });
+                        courtMap.appendChild(p);
+                        index++;
+                    }
+                }
+
+
+            }
+
+
+        </script>
+
+    </head>
+    <body onload="restartAnimation();">
+        <div id="tribunals-map" ></div>
+        <!--div class ="relative-section" style="top: 280", name="left:"580px;width: 300">
+            SPLOŠNA SODIŠČA
+            <ul>
+                <li>44 okrajnih sodišč;</li>
+                <li>11 okrožnih sodišč;</li>
+                <li>4 višja sodišča;</li>
+                <li>1 vrhovno sodišče;</li>
+            </ul>
+            SPECIALIZIRANA SODIŠČA
+            <ul >
+                <li>4 sodišča za odločanje o delovnih sporih, 
+                    eno od njih tudi za odločanje o sporih iz socialnega zavarovanja.</li>
+                <li>1 Upravno sodišče - (pristojnost višjege sodišča) </li>                         
+            </ul>
+        </div>             
+        <div class ="relative-section" style="top: 620", name="left:"50px;width: 800px;line-height: 95%">
+            Na slovenskih sodiščih je bilo na dan 31. 12. 2015 zaposlenih 913 sodnikov in 3.179 sodnega osebja.
+        </div-->
+
+    </body>
+</html>
+

@@ -1,0 +1,148 @@
+<html lang="sl">
+
+    <head>
+
+        <style>
+            body {
+                margin: 0px;
+                background-color: #AAAAAA;
+                overflow: hidden;
+            }
+
+        </style>
+
+
+        <script type="text/javascript" src="js/three.min.js"></script> 
+        <script type="text/javascript" src="js/OrbitControls.js"></script> 
+        <script type="text/javascript">
+
+
+            var camera, scene, renderer;
+            var mesh;
+
+
+            function init() {
+                var container = document.getElementById('container');
+
+                camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 5000);
+             //   camera.position.z = 400;
+                camera.position.y = 1000;
+                var light = new THREE.PointLight( 0xffffff, 0.8 );
+                camera.add( light );
+
+
+                //---------------------------------------------------------
+                // create scene
+                scene = new THREE.Scene();
+                scene.background = new THREE.Color(0xffffff);
+                var light = new THREE.AmbientLight(0x909090); // soft white light
+                scene.add(light);
+                var geometry = new THREE.PlaneBufferGeometry(20000, 20000);
+                var material = new THREE.MeshPhongMaterial({shininess: 0.3, color: 0x86592D});
+                var ground = new THREE.Mesh(geometry, material);
+                ground.position.set(0, 0, 0);
+                ground.rotation.x = -Math.PI / 2;
+                scene.add(ground);
+                // create wals
+                
+                var length = 700;
+                var width = 400;
+                var door = 300;
+                var wall = 20;
+
+                var court = new THREE.Shape();
+                court.moveTo(0, 0);
+                court.lineTo(0, length);
+                court.lineTo(width, length);
+                court.lineTo(width, 0);
+                court.lineTo(door, 0);
+                court.lineTo(door, wall);
+                court.lineTo(width-wall, wall);
+                
+                court.lineTo(width-wall, length-wall);
+                
+                court.lineTo(wall, length-wall);
+                
+                court.lineTo(wall, 0);
+                //court.lineTo(0, 0);
+
+
+               /* var room1 = new THREE.Path();
+                room1.moveTo(10, 10);
+                room1.lineTo(10, 180);
+                room1.lineTo(200, 180);
+                room1.lineTo(200, 10);
+                room1.lineTo(10, 10);
+
+                court.holes.push(room1);*/
+
+      
+
+                var extrudeSettings = {amount: 250, bevelEnabled: true, bevelSegments: 2, steps: 2, bevelSize: 1, bevelThickness: 1};
+                var geometry = new THREE.ExtrudeGeometry(court, extrudeSettings);
+                var meshCourt = new THREE.Mesh(geometry, new THREE.MeshPhongMaterial({color: 0xff0000}));
+                
+                meshCourt.position.x = 100;
+                meshCourt.rotation.x = -Math.PI /2.;
+
+
+                scene.add(meshCourt)
+
+                // person
+                var size = 100;
+                
+                var texture = new THREE.TextureLoader().load('textures/smiley.png');
+                var geometry = new THREE.SphereBufferGeometry(size/3., 32, 32);
+                //var geometry = new THREE.SpBoxBufferGeometry(200, 200, 200);
+                var material = new THREE.MeshBasicMaterial({map: texture});
+                //var material = new THREE.MeshBasicMaterial({color: 0x999999});
+                mesh = new THREE.Mesh(geometry, material);
+                mesh.position.y = size;
+                scene.add(mesh);
+                renderer = new THREE.WebGLRenderer();
+                renderer.setPixelRatio(window.devicePixelRatio);
+                renderer.setSize(window.innerWidth, window.innerHeight);
+                container.appendChild(renderer.domElement);
+
+                var geometry = new THREE.ConeBufferGeometry(size/2., size, 32);
+
+                var material = new THREE.MeshBasicMaterial({color: 0x0000FF});
+                var cone = new THREE.Mesh(geometry, material);
+                //cone.rotation.x=Math.PI /2.;
+                cone.position.y = -size/2.;
+                mesh.add(cone);
+
+
+                // create control    
+                var controls = new THREE.OrbitControls(camera);
+                // create window
+                window.addEventListener('resize', onWindowResize, false);
+            }
+            function onWindowResize() {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            }
+
+            function animate() {
+                requestAnimationFrame(animate);
+                //  mesh.rotation.x += 0.005;
+                //  mesh.rotation.y += 0.01;
+                renderer.render(scene, camera);
+            }
+            function startAnimation() {
+                init();
+
+                animate();
+            }
+
+        </script>
+
+    </head>
+    <body onload="startAnimation();">
+        <div  id="container" style="widht:100%;height:100%"></div>
+
+
+    </body>
+</html>
+

@@ -1,0 +1,239 @@
+<html lang="sl">
+
+    <head>
+        <meta charset="utf-8" />
+        <style >
+
+            body{
+                margin: 0;
+                padding: 0;
+                height: 600px;
+                width: 800px;
+                overflow: hidden;
+            }
+
+            #courtUnits {
+                background: transparent url("images/court-process/court-units.svg") no-repeat scroll left top;
+                background-size: 100% 100%;
+                position: absolute;
+                margin: 0;
+                padding: 0;
+                height: 600px;
+                width: 800px;
+
+                overflow: hidden;
+                -webkit-transform : translate(0px, 0px) rotate(-90deg)  scale(6.7, 1.3) ;  /* Chrome, Opera 15+, Safari 3.1+ */
+                -ms-transform     : translate(0px,  0px) rotate(-90deg)  scale(6.7, 1.3); /* IE 9 */
+                transform         : translate(0px, 0px) rotate(-90deg)  scale(6.7, 1.3); /* Firefox 16+, IE 10+, Opera */
+            }
+
+            div.CMS {
+
+                position: absolute;
+                margin: 0;
+                writing-mode: vertical-lr;
+                width: 88px;
+                height: 600px;
+                font-size: 75px;
+                text-align: left;
+                border:  black solid 5px;
+                vertical-align: middle;    
+
+            }
+
+            div.horizontalIS {
+
+                position: absolute;
+                margin: 0;
+
+                width: 800px;
+                height: 30px;
+                font-size: 28px;
+                text-align: center;
+                border:  black solid 2px;
+                vertical-align: middle;    
+
+            }
+
+
+
+
+            /* The animation code */
+            @keyframes showAllUnitsAnimation {
+                0% {transform: translate(0px, 0px) rotate(-90deg)  scale(6.7, 1.4)}                
+               
+                100% {transform: translate(0px, 0px)  scale(1.0, 1.0)}
+            }
+
+
+
+        </style>
+
+        <script type="text/javascript">
+
+            var infSystems = [
+                {left: 0, top: 0, color:   '#4343ff', name: "SRG vpisnik"},
+                {left: 89, top: 0, color:  '#5b5bff', name: "PRs vpisnik"},
+                {left: 178, top: 0, color: '#6b6bff', name: "PUND vpisnik"},        
+                {left: 267 , top: 0, color: '#7b7bff', name: "eZK vpisnik"},
+                {left: 356, top: 0, color: '#eeffaa', name: "I vpisnik"},                
+                {left: 444, top: 0, color: '#8b8bff', name: "K vpisnik"},
+                {left: 533, top: 0, color: '#9b9bff', name: "eINS vpisnik"},
+                {left: 622, top: 0, color: '#ababff', name: "SU vpisnik"},
+                {left: 711, top: 0, color: '#bbbbff', name: "eOveritve"},
+            ];
+
+            var infHorizontalSystems = [
+                {left: 0, top: 0, color: '#a3c3d3', name: "Avtentikacija"},
+                {left: 0, top: 0, color: '#93c3d3', name: "Avtorizacija"},
+                {left: 0, top: 0, color: '#83c3d3', name: "Tiskalniški servisi"},
+                {left: 0, top: 0, color: '#73c3d3', name: "Izdelava poročil"},        
+                {left: 0, top: 0, color: '#ffffaa', name: "EVIP  poštni sistem"},
+                {left: 0, top: 0, color: '#73c3d3', name: "DIES Zunanje evidence"},
+                
+                {left: 0, top: 0, color: '#63c3d3', name: "eObveznosti"},
+                {left: 0, top: 0, color: '#53c3d3', name: "eKoledar"},
+                {left: 0, top: 0, color: '#43c3d3', name: "..."},
+            ];
+
+
+
+            window.addEventListener('message', function (event) {
+
+                if (event.data) {
+                    if (event.data === "restartAnimation") {
+                        restartAnimation();
+                    } else if (event.data === "nextAnimation") {
+                        nextAnimation();
+                    }
+                    
+                    
+
+                }
+            });
+            
+            var animationIndex = 0;
+            
+            function nextAnimation(){
+                if (animationIndex===1){
+                    animationIndex = 2;
+                    startISAnimation();
+                }
+                else if (animationIndex===2){
+                    animationIndex = 3;
+                    startHORISAnimation();
+                }
+            }
+
+            function resetAnimation() {
+                var courtUnits = document.getElementById("courtUnits");
+
+                courtUnits.style.animation = '';
+                courtUnits.innerHTML = "";
+               
+
+
+
+            }
+            function startAnimation() {
+                var courtUnits = document.getElementById("courtUnits");
+                courtUnits.style.animation = 'showAllUnitsAnimation 5s forwards';
+
+            }
+
+            function startISAnimation() {
+                
+                
+                
+                var courtUnits = document.getElementById("courtUnits");
+                var index = 0;
+                var id = setInterval(showNext, 500);
+                var offsetX = 0;
+                var offsetY = 0;
+
+                function showNext() {
+                    if (index >= infSystems.length) {
+                        clearInterval(id);
+                        
+                    } else {
+                        var p = document.createElement("div");
+                        p.className = "CMS";
+                        p.style = "left:" + (infSystems[index].left - offsetX) + "px; top:" + (infSystems[index].top - offsetY)
+                                + "px; background-color: " + infSystems[index].color;
+                        p.innerHTML = infSystems[index].name;
+
+                        p.animate([
+                            // keyframes
+                            {transform: 'translateY(-300px)', opacity: '0.1'},
+                            {transform: 'translateY(0px)', opacity: '1.0'},
+                        ], {
+                            // timing options
+                            duration: 1000,
+                            iterations: 1
+                        });
+
+                        courtUnits.appendChild(p);
+                        index++;
+                    }
+                }
+            }
+
+            function startHORISAnimation() {
+                var courtUnits = document.getElementById("courtUnits");
+                var index = infHorizontalSystems.length-1;
+                var id = setInterval(showNext, 500);
+                var iHeight = 35;
+
+
+                function showNext() {
+                    if (index < 0) {
+                        clearInterval(id);
+
+                    } else {
+                        var p = document.createElement("div");
+                        var item = infHorizontalSystems[infHorizontalSystems.length-1 - index];
+                        p.className = "horizontalIS";
+                        p.style = "left:0px; top:" + (600 - iHeight - iHeight * index)
+                                + "px; background-color: " + item.color;
+                        p.innerHTML =item.name;
+
+                        p.animate([
+                            // keyframes
+                            {transform: 'translateX(-300px)', opacity: '0.1'},
+                            {transform: 'translateX(0px)', opacity: '1.0'},
+                        ], {
+                            // timing options
+                            duration: 1000,
+                            iterations: 1
+                        });
+
+                        courtUnits.appendChild(p);
+                        index--;
+                    }
+                }
+            }
+
+            function restartAnimation() {
+                console.log("restartAnimation");
+                resetAnimation();
+                setTimeout(function () {
+                    startAnimation()
+                }, 10);
+                animationIndex = 1;
+            }
+
+
+
+
+        </script>
+
+    </head>
+    <body onLoad="restartAnimation()">
+        <div id="courtUnits">
+
+        </div>
+
+
+    </body>
+</html>
+

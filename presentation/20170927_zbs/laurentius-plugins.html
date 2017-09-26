@@ -1,0 +1,273 @@
+<html lang="sl">
+
+    <head>
+        <meta charset="utf-8" />
+        <style >
+
+            body{
+                margin: 0;
+                padding: 0;
+                height: 600px;
+                width: 800px;
+
+            }
+            #ebmsmodel{
+                background: transparent url("images/ebms-model.svg") no-repeat scroll left top;
+                background-size: 100% 100%;
+                position: absolute;
+                bottom: 100px;
+                margin: 0;
+                padding: 0;
+                height: 300px;
+                width: 800px;
+                overflow: hidden;
+            }
+            
+            #letter{
+                background: transparent url("images/court-process/envelope.svg") no-repeat scroll left top;
+                background-size: 100% 100%;
+                position: absolute;
+                margin: 0;
+                padding: 0;
+                height: 45px;
+                width: 60px;
+                top: 100px;
+                left: 80px;
+                overflow: hidden;
+                transform: scale(0.001);
+            }
+            
+             div.shaderRed{
+                background: transparent url("images/shader-red.svg") no-repeat scroll left top;
+                background-size: 100% 100%;
+                position: absolute;
+                margin: 0;
+                padding: 0;
+                height: 180px;
+                width: 90px;
+                top: 100px;
+                left: 80px;
+                overflow: hidden;
+                
+            }
+             div.shaderBlue{
+                background: transparent url("images/shader-blue.svg") no-repeat scroll left top;
+                background-size: 100% 100%;
+                position: absolute;
+                margin: 0;
+                padding: 0;
+                height: 180px;
+                width: 90px;
+                top: 100px;
+                left: 80px;
+                overflow: hidden;
+                
+            }
+            
+            div.shaderGreen{
+                background: transparent url("images/shader-green.svg") no-repeat scroll left top;
+                background-size: 100% 100%;
+                position: absolute;
+                margin: 0;
+                padding: 0;
+                height: 180px;
+                width: 90px;
+                top: 100px;
+                left: 80px;
+                overflow: hidden;
+                
+            }
+            
+            #shader1{
+                top: 58px;
+                left: 212px;
+            }
+            
+            #shader2{
+                top: 58px;
+                left: 478px;
+            }
+            
+            #shader3{
+                top: 58px;
+                left: 580px;
+            }
+            
+            #shader4{
+                top: 58px;
+                left: 212px;
+            }
+            
+            #shader5{
+                top: 58px;
+                left: 478px;
+            }
+            
+            
+            
+             #as4Reciept{
+                background: transparent url("images/as4Reciept.svg") no-repeat scroll left top;
+                background-size: 100% 100%;
+                position: absolute;
+                margin: 0;
+                padding: 0;
+                height: 70px;
+                width: 200px;
+                top: 180px;
+                left: 280px;
+                overflow: hidden;
+                transform: scale(0.001);
+            }
+            
+            
+            /* The animation code */
+            @keyframes sendLetter {
+                0% {transform: scale(0.001)}
+                25% {transform: scale(1.0)}            
+                45% {transform: scale(1.0) translate(150px,0px) }
+                48% {transform: scale(1.0) translate(150px,0px) rotate(180deg) }
+                50% {transform: scale(1.0) translate(150px,0px) rotate(-360deg) }
+                70% {transform: scale(1.0) translate(420px,0px) }
+                72% {transform: scale(1.0) translate(420px,0px) rotate(90deg)}
+                74% {transform: scale(1.0) translate(420px,0px) rotate(180deg)}
+                76% {transform: scale(1.0) translate(420px,0px) rotate(270deg)}
+                78% {transform: scale(1.0) translate(420px,0px)  rotate(360deg) }           
+                90% {transform: scale(1.0) translate(620px,0px)}
+                100% {transform: translate(620px,0px) scale(0.001) }
+            }
+            
+             @keyframes sendAS4Reciept{
+                0% {transform: scale(0.001)}
+                70% {transform: scale(0.001)}
+                71% {transform: scale(1.)}
+                85% {transform: scale(1)}
+                86% {transform: scale(0.001)}           
+                100% {transform: scale(0.001)}
+            }
+            
+
+        </style>
+
+        <script type="text/javascript">
+
+            var animationIndex = 0;
+
+            var text = [
+                {name: "Dodatki:", desc: "Namen dodatkov je avtomatizacija dodatne obdelave sprejetih in poslanih pošiljk."},
+                {name: "Prestrezniki:", desc: "Namen prestreznikov je preoblikovanje sporočil pri pošiljanju in implementacija dodatnih kontrol pred dokončnim prejemom sporočil"},
+                {name: "Procesi dohodne pošte:", desc: "Avtomatizacija izvoza in procesiranja dohodne pošte (xslt, izvoz, zagon zunanjih procesov, ...)."},
+                {name: "Koledar opravil:", desc: "Nastavljanje koledarjev za izvajanje časovnih opravila (Poročila, pošiljanje preko datotečnega sistema, ...)."}
+            ];
+
+
+            window.addEventListener('message', function (event) {
+
+                if (event.data) {
+                    if (event.data === "restartAnimation") {
+                        restartAnimation();
+                    }
+                    if (event.data === "nextAnimation") {
+                        nextAnimation();
+                    }
+
+                }
+            });
+
+
+            function nextAnimation() {
+                console.log("next animation")
+                animationIndex = animationIndex < 0 || animationIndex >= text.length ? 0 : animationIndex;
+                document.getElementById("name").innerHTML = text[animationIndex].name;
+                document.getElementById("desc").innerHTML = text[animationIndex].desc;
+                
+                document.getElementById("letter").style.animation = "sendLetter 5s 3"
+                document.getElementById("as4Reciept").style.animation = "sendAS4Reciept 5s 3"
+                
+                if (animationIndex === 0) {
+                    
+                    document.getElementById("shader1").style.visibility ="hidden";
+                    document.getElementById("shader2").style.visibility ="hidden";
+                    document.getElementById("shader3").style.visibility ="hidden";
+                    document.getElementById("shader4").style.visibility ="hidden";
+                    document.getElementById("shader5").style.visibility ="hidden";
+                }
+                else if (animationIndex === 1) {
+                    
+                    document.getElementById("shader1").style.visibility ="visible";
+                    document.getElementById("shader2").style.visibility ="visible";
+                    document.getElementById("shader3").style.visibility ="hidden";
+                    document.getElementById("shader4").style.visibility ="hidden";
+                    document.getElementById("shader5").style.visibility ="hidden";
+                }                
+                else if (animationIndex === 2) {                    
+                    document.getElementById("shader1").style.visibility ="hidden";
+                    document.getElementById("shader2").style.visibility ="hidden";
+                    document.getElementById("shader3").style.visibility ="visible"
+                    document.getElementById("shader4").style.visibility ="hidden";
+                    document.getElementById("shader5").style.visibility ="hidden";;
+                }
+                
+                 else if (animationIndex === 3) {                    
+                    document.getElementById("shader1").style.visibility ="hidden";
+                    document.getElementById("shader2").style.visibility ="hidden";
+                    document.getElementById("shader3").style.visibility ="hidden"
+                    document.getElementById("shader4").style.visibility ="visible";
+                    document.getElementById("shader5").style.visibility ="visible";;
+                }
+
+                animationIndex = animationIndex + 1;
+
+            }
+
+            function resetAnimation() {
+                document.getElementById("letter").style.animation = ""
+                document.getElementById("as4Reciept").style.animation = ""
+
+
+            }
+            function startAnimation() {
+                animationIndex = 0;
+                nextAnimation();
+
+
+
+
+
+            }
+            function restartAnimation() {
+                console.log("restartAnimation");
+                resetAnimation();
+                setTimeout(function () {
+                    startAnimation()
+                }, 2);
+            }
+
+
+        </script>
+
+    </head>
+    <body >
+        <br />
+        <b id="name" style="font-size:36px"></b> <p style="display: inline;font-size:28px" id="desc"> </p ><br />
+        <br />
+    
+        <div id="ebmsmodel">
+            <div id="letter"> </div>
+            <div id="as4Reciept"> </div>
+            <div id="shader1" class="shaderRed"> </div>
+            <div id="shader2" class="shaderRed"> </div>
+            <div id="shader3" class="shaderBlue"> </div>
+            
+            <div id="shader4" class="shaderGreen"> </div>
+            <div id="shader5" class="shaderGreen"> </div>
+        </div>
+    
+
+
+
+
+
+
+</body>
+</html>
+

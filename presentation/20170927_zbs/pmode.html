@@ -1,0 +1,101 @@
+<html lang="sl">
+
+    <head>
+        <meta charset="utf-8" />
+        <style >
+
+            body{
+                margin: 0;
+                padding: 0;
+                height: 600px;
+                width: 800px;
+
+            }
+
+        </style>
+
+        <script type="text/javascript">
+
+            var animationIndex = 0;
+
+            var text = [
+                {name: "Poslovni kontekst:", desc: "Določa namen, storitev, akcijo in obliko vsebine", image: "laurentius-service.png"},
+                {name: "Poslovni kontekst:", desc: "Storitev skupaj z enolična oznako določa poslovno transakcijo. Lahko vsebuje več Akcij (izmenjave sporočil)", image: "laurentius-service.png"},
+                {name: "Profil varnosti:", desc: "Parametri določajo nivo varnosti, metode podpisa, šifriranja in elemente za podpis/šifriranje", image: "laurentius-security.png"},
+                {name: "Profil zanesljivosti:", desc: "parametri določajo uporabo mehanizmov za zagotavljanje zanesljivosti prenosa;", image: "laurentius-RA.png"},
+                {name: "eIdentitete:", desc: "Parametri določajo partnerjeve značilnosti digitalma potrdila,  URL naslovi, Domena,.. , ", image: "laurentius-partner.png"},
+
+                {name: "PMode:", desc: "Združeni profili v konkretno storitev", image: "laurentius-PMode.png"},
+                {name: "PMode:", desc: "Prenos posameznega sporočila/akcije", image: "laurentius-PModeMEP.png"},
+            ];
+
+            window.addEventListener('message', function (event) {
+
+                if (event.data) {
+                    if (event.data === "restartAnimation") {
+                        restartAnimation();
+                    }
+                    if (event.data === "nextAnimation") {
+                        nextAnimation();
+                    }
+
+                }
+            });
+
+
+            function nextAnimation() {
+                console.log("next animation")
+                animationIndex = animationIndex < 0 || animationIndex >= text.length ? 0 : animationIndex;
+                document.getElementById("name").innerHTML = text[animationIndex].name;
+                document.getElementById("desc").innerHTML = text[animationIndex].desc;
+                document.getElementById("image").src = "images/" + text[animationIndex].image;
+                animationIndex = animationIndex + 1;
+
+            }
+
+            function resetAnimation() {
+
+
+
+            }
+            function startAnimation() {
+                animationIndex = 0;
+                nextAnimation();
+
+
+
+
+
+            }
+            function restartAnimation() {
+                console.log("restartAnimation");
+                resetAnimation();
+                setTimeout(function () {
+                    startAnimation()
+                }, 2);
+
+
+
+            }
+
+
+        </script>
+
+    </head>
+    <body >
+
+
+        <b id="name" style="font-size:28px"></b> <p style="display: inline;font-size:24px" id="desc"> </p ><br />
+        <br />
+    <center>
+        <image id="image" width="750" height="450" src="" />
+        </center>
+
+
+
+
+
+
+    </body>
+</html>
+

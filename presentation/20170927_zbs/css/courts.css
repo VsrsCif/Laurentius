@@ -1,0 +1,24 @@
+
+
+#tribunals-map {
+    background: transparent url("../images/court-oz.png") no-repeat scroll left top;
+    left: -20px;
+    top: 50px;
+    height: 531px;
+    position: absolute;
+    width: 760px;
+
+}
+
+#tribunals-map p {    
+    font-size: 15px;
+    line-height: 10px;
+    list-style-type: none;
+    position: absolute;
+    text-align: left;
+    text-shadow: none;
+    bottom: 0px;
+    margin: 0px;    
+    color: #1b2745
+    
+}

@@ -1,0 +1,663 @@
+<html lang="sl">
+
+    <head>
+        <meta charset="utf-8" />
+        <style >
+
+            body{
+                margin: 0;
+                padding: 0;
+                height: 600px;
+                width: 800px;
+
+            }
+
+            #courtRoom {
+                background: transparent url("images/court-process/court-top.svg") no-repeat scroll left top;
+                background-size: 100% 100%;
+                position: absolute;
+                margin: 0;
+                padding: 0;
+                height: 600px;
+                width: 800px;
+                overflow: hidden;
+
+
+            }
+            #judge {
+                background: transparent url("images/court-process/judge-top.svg") no-repeat scroll left top;
+                background-size: 100% 100%;
+                height: 90px;
+                width: 140px;
+                position: absolute;
+                top: 40px;
+                left: 120px;
+            }
+            #hammer {
+                background: transparent url("images/court-process/hammer.svg") no-repeat scroll left top;
+                background-size: 100% 100%;
+                height: 60px;
+                width: 30px;
+                position: absolute;
+                top: 120px;
+                left: 120px;
+            }
+
+            #customer01{
+                background: transparent url("images/court-process/customer_01-top.svg") no-repeat scroll left top;
+                background-size: 100% 100%;
+                height: 90px;
+                width: 140px;
+                transform: rotate(-90deg);
+                position: absolute;
+                top: 180px;
+                left: -80px;                
+            }
+
+            #customer02{
+                background: transparent url("images/court-process/customer_02-top.svg") no-repeat scroll left top;
+                background-size: 100% 100%;
+                height: 90px;
+                width: 140px;
+                transform: rotate(-90deg);
+                position: absolute;
+                top: 340px;
+                left: -80px;                
+            }
+
+            #customer03{
+                background: transparent url("images/court-process/customer_03-top.svg") no-repeat scroll left top;
+                background-size: 100% 100%;
+                height: 90px;
+                width: 140px;
+                transform: rotate(-90deg);
+                position: absolute;
+                top: 180px;
+                left: -150px;                
+            }
+
+            #customer04{
+                background: transparent url("images/court-process/customer_04-top.svg") no-repeat scroll left top;
+                background-size: 100% 100%;
+                height: 90px;
+                width: 140px;
+                transform: rotate(-90deg);
+                position: absolute;
+                top: 340px;
+                left: -150px;                
+            }
+
+
+            #clerk01{
+                background: transparent url("images/court-process/clerk_01-top.svg") no-repeat scroll left top;
+                background-size: 100% 100%;
+                height: 90px;
+                width: 140px;
+                transform: rotate(90deg);
+                position: absolute;
+                top: 340px;
+                left: 460px;                
+            }
+
+            #book{
+                background: transparent url("images/court-process/book.svg") no-repeat scroll left top;
+                background-size: 100% 100%;
+                height: 60px;
+                width: 100px;
+                transform: rotate(-90deg);
+                position: absolute;
+                top: 340px;
+                left: 420px;   
+                animation-iteration-count: 2;
+            }
+
+
+            #clerk02{
+                background: transparent url("images/court-process/clerk_02-top.svg") no-repeat scroll left top;
+                background-size: 100% 100%;
+                height: 90px;
+                width: 140px;
+                transform: rotate(-90deg);
+                position: absolute;
+                top: 400px;
+                left: 590px;                
+            }
+
+            #postofficer{
+                background: transparent url("images/court-process/postofficer-top.svg") no-repeat scroll left top;
+                background-size: 100% 100%;
+                height: 90px;
+                width: 140px;
+                transform: rotate(90deg);
+                position: absolute;
+                top: 120px;
+                left: 800px;                
+            }
+
+            #doc01{
+                background: transparent url("images/court-process/document.svg") no-repeat scroll left top;
+                background-size: 100% 100%;
+                height: 60px;
+                width: 45px;
+                transform: rotate(180deg);
+                position: absolute;
+                top: 120px;
+                left: 160px;                
+            }
+
+            .envelope{
+                background: transparent url("images/court-process/envelope.svg") no-repeat scroll left top;
+                background-size: 100% 100%;
+                height: 30px;
+                width: 45px;
+                transform: rotate(90deg);
+                position: absolute;
+
+            }
+
+            #text01 {
+                font-size: 28px;
+                position: absolute;
+                top: 300px;
+                left: 20px;
+            }
+
+            #computer-judge {
+                background: transparent url("images/court-process/computer.svg") no-repeat scroll left top;
+                background-size: 100% 100%;
+                height: 80px;
+                width: 145px;
+                position: absolute;
+                top: 120px;
+                left: 170px;
+                transform: rotate(135deg) scale(0.001);
+            }
+
+
+            #computer-clerk01 {
+                background: transparent url("images/court-process/computer.svg") no-repeat scroll left top;
+                background-size: 100% 100%;
+                height: 80px;
+                width: 145px;
+                position: absolute;
+                top: 340px;
+                left: 380px;
+                transform: rotate(-90deg) scale(0.001);
+            }
+            #computer-clerk02 {
+                background: transparent url("images/court-process/computer.svg") no-repeat scroll left top;
+                background-size: 100% 100%;
+                height: 80px;
+                width: 145px;
+                position: absolute;
+                top: 400px;
+                left: 660px;
+                transform: rotate(90deg) scale(0.001);
+            }
+
+
+            /* The animation code */
+            @keyframes customer01Animation {
+                0% {transform: translate(0px,0px)   rotate(-90deg)}
+                6% {transform: translate(140px,20px)  rotate(-180deg)}
+                8% {transform: translate(140px,0px)  rotate(-180deg)}
+                11% {transform: translate(140px,0px)  rotate(-180deg)}
+                12% {transform: translate(160px,40px) rotate(-270deg)}
+                16% {transform: translate(-150px,0px) rotate(-270deg)}
+                100% {transform: translate(-150px,0px) rotate(-270deg)}
+            }
+
+            /* The animation code */
+            @keyframes customer02Animation {
+                0% {transform: translate(0px,0px)   rotate(-90deg)}
+                6% {transform: translate(280px,-60px)  rotate(-180deg)}
+                8% {transform: translate(280px,-160px)  rotate(-200deg)}
+                11% {transform: translate(280px,-160px)  rotate(-200deg)}
+                12% {transform: translate(280px,4px) rotate(-270deg)}
+                16% {transform: translate(-150px,60px) rotate(-270deg)}
+
+                50% {transform: translate(-150px,0px)   rotate(-90deg)}
+                56% {transform: translate(100px,-20px)  rotate(-150deg)}
+                58% {transform: translate(100px,-140px)  rotate(-160deg)}
+                61% {transform: translate(100px,-150px)  rotate(-160deg)}
+                62% {transform: translate(100px,-140px) rotate(-270deg)}
+                66% {transform: translate(-150px,0px) rotate(-270deg)}
+
+
+                100% {transform: translate(-150px,60px) rotate(0deg) rotate(80deg)}
+            }
+
+            /* The animation code */
+            @keyframes customer03Animation {
+                0% {transform: translate(0px,0px)   rotate(-90deg)}
+
+                20% {  transform: translate(0px,0px)   rotate(-90deg)}
+                26% {transform: translate(220px,20px)  rotate(-180deg)}
+                28% {transform: translate(220px,0px)  rotate(-180deg)}
+                35% {transform: translate(220px,0px)  rotate(-180deg)}
+                38% {transform: translate(240px,40px) rotate(-270deg)}
+                40% {transform: translate(0px,6px) rotate(-270deg)}
+
+
+                100% {transform: translate(0px,60px) rotate(0deg) rotate(-270deg)}
+            }
+
+
+            @keyframes customer04Animation {
+                50% {transform: translate(0px,0px)   rotate(-90deg)}
+                56% {transform: translate(300px,-60px)  rotate(-180deg)}
+                58% {transform: translate(320px,-160px)  rotate(-200deg)}
+                61% {transform: translate(320px,-160px)  rotate(-200deg)}
+                62% {transform: translate(300px,4px) rotate(-270deg)}
+                66% {transform: translate(-150px,60px) rotate(-270deg)}
+                100% {transform: translate(-150px,60px) rotate(0deg) rotate(80deg)}
+            }
+
+
+
+            @keyframes hammerAnimation {
+                0% {transform: scale(1.0)}
+                34% {transform: scale(1.0)}
+                36% {transform: scale(2.0)}
+                40% {transform: scale(1.0)}
+
+                100% {transform: scale(1.0)}
+
+            }
+
+            @keyframes doc01Animation {
+                0% { transform: rotate(180deg) scale(0.01)}
+
+                38% { transform: rotate(180deg) scale(0.01)}
+                40% { transform: rotate(180deg) scale(0.1)}
+
+                42% { transform: rotate(180deg) scale(1.0)}
+
+                50% {transform: translate(70px,0px)  rotate(-90deg)}
+
+                53% {transform: translate(150px,60px) rotate(0deg) rotate(180deg)} /*cleark document */
+                56% {transform: translate(220px,0px) rotate(0deg) rotate(90deg)}
+
+                67% {transform: translate(350px,0px) rotate(0deg) rotate(90deg)}
+
+                73% {transform: translate(400px,50px) rotate(0deg) rotate(120deg)}
+
+                76% {transform: translate(370px,120px) rotate(0deg) rotate(180deg)}
+                80% {transform: translate(370px,240px) rotate(0deg) rotate(270deg)}
+
+                85% {transform: translate(300px,240px) rotate(0deg) rotate(270deg)}
+                87% {transform: translate(280px,360px) rotate(0deg) rotate(270deg)} /* on table to take clerk 2*/
+                97% {transform: translate(550px,300px) rotate(0deg) rotate(90deg) }
+                98% {transform: translate(550px,300px) rotate(0deg) rotate(90deg) }
+                99% { transform:translate(550px,300px)  scale(0.01)}
+                100% { transform: rotate(180deg) scale(0.01)}
+
+            }
+
+            @keyframes clerk01Animation {
+                0% {transform: translate(0px,0px) rotate(90deg)}
+                10% {transform: translate(0px,0px) rotate(90deg)}
+                16% {transform: translate(40px,0px) rotate(180deg)} /* rotate befor go*/
+
+                30% {transform: translate(0px,-200px) rotate(120deg)}
+                33% {transform: translate(-50px,-250px) rotate(90deg)}
+                50% {transform: translate(-220px,-250px) rotate(90deg)} 
+                53% {transform: translate(-200px,-250px) rotate(0deg)} /* take document */
+                56% {transform: translate(-180px,-250px) rotate(-90deg)}
+
+                67% {transform: translate(-50px,-250px) rotate(-90deg)}
+                73% {transform: translate(0px,-200px) rotate(-60deg)}
+
+                76% {transform: translate(40px,-150px) rotate(0deg)}
+                83% {transform: translate(40px,0px) rotate(90deg)}
+                85% {transform: translate(0px,0px) rotate(90deg)}
+                100% {transform: translate(0px,0px) rotate(90deg)}
+
+            }
+
+            @keyframes clerk02Animation {
+                0% {transform: translate(0px,0px) rotate(-90deg)}
+                20% {transform: translate(0px,0px) rotate(-90deg)}
+                22% {transform: translate(-140px,60px) rotate(90deg)}
+                24% {transform: translate(0px,0px) rotate(-90deg)}                
+                /*2. LETTER*/
+
+                45% {transform: translate(0px,0px) rotate(-90deg)}
+                47% {transform: translate(-140px,60px) rotate(90deg)}
+                49% {transform: translate(0px,0px) rotate(-90deg)}
+                /*3. LETTER*/
+                70% {transform: translate(0px,0px) rotate(-90deg)}
+                72% {transform: translate(-140px,60px) rotate(90deg)}
+                74% {transform: translate(0px,0px) rotate(-90deg)}                
+
+                100% {transform: translate(0px,0px) rotate(-90deg)}
+            }
+
+            @keyframes postofficerAnimation {
+                0% {transform: translate(0px,0px) rotate(90deg)}
+
+                70% {transform: translate(0px,0px) rotate(90deg)}
+
+                80% {transform: translate(-150px, 100px) rotate(0deg)}                
+                90% {transform: translate(-150px, 100px) rotate(0deg)}
+                93% {transform: translate(-150px, 50px) rotate(-120deg)}
+
+                100% {transform: translate(0px,0px) rotate(-90deg)}
+            }
+
+
+
+            @keyframes envelopeFinalAnimation {
+                0% {transform: rotate(-90deg) scale(1.0)}
+                80% {transform: rotate(-90deg) scale(1.0)}
+                84% {transform: translate(20px,-30px) scale(0.5)}
+                87% {transform: translate(30px,-50px) scale(0.001)}
+                100% {transform:  scale(0.001)  }
+            }
+
+            @keyframes envelopeAnimation {
+                0% {transform: scale(0.001)}
+                23% {transform: scale(0.001)}
+                24% {transform: scale(0.5)}
+                25% {transform: rotate(-90deg) scale(1.0)  }
+                26% {transform: translate(0px,-60px) rotate(-90deg) scale(0.5)  }
+                27% {transform: translate(0px,-60px) rotate(-90deg) scale(0.001)  }
+
+                47% {transform: translate(0px,-60px) rotate(-90deg) scale(0.001)  }
+                48% {transform: scale(0.001) }
+                49% {transform: scale(0.5) }
+                50% {transform: rotate(-90deg) scale(1.0)  }
+                51% {transform: translate(0px,-60px) rotate(-90deg) scale(0.5)  }
+                52% {transform: translate(0px,-60px) rotate(-90deg) scale(0.001)  }
+
+                72% {transform: translate(0px,-60px) rotate(-90deg) scale(0.001)  }
+                73% {transform: scale(0.001) }
+                74% {transform: scale(0.5) }
+                75% {transform: rotate(-90deg) scale(1.0)  }
+                76% {transform: translate(0px,-60px) rotate(-90deg) scale(0.5)  }
+                77% {transform: translate(0px,-60px) rotate(-90deg) scale(0.001)  }
+
+
+                100% {transform: translate(0px,-60px) rotate(-90deg) scale(0.001)  }
+
+            }
+
+            @keyframes text02Animation {
+                0% {transform: scale(0.001)}
+
+                76% {transform: scale(0.001)}
+                85% {transform: scale(1.0)}
+
+
+                100% {transform: scale(1.0)}
+
+            }
+
+
+
+            @keyframes clerk01Computer {
+                0% {transform: scale(0.001) rotate(-90deg)}
+
+                100% {transform: scale(1.0) rotate(-90deg)}            
+            }
+
+            @keyframes clerk02Computer {
+                0% {transform: scale(0.001) rotate(90deg)}
+
+                100% {transform: scale(1.0) rotate(90deg)}            
+            }
+
+            @keyframes judgeComputer {
+                0% {transform: scale(0.001) rotate(135deg)}
+                100% {transform: scale(0.8) rotate(135deg)}            
+            }
+        </style>
+
+        <script type="text/javascript">
+
+            var indexAnimation = 0;
+
+
+            var text01 = [
+                {color: 'black', fontSize: 38, name: "709.743 zadev/leto"},
+                {color: 'black', fontSize: 38, name: "900 sodnikov"},
+                {color: 'black', fontSize: 38, name: "3.204 sod. osebja"},
+                {color: 'black', fontSize: 32, name: "6-8 mio sodnih pošiljk"},
+            ];
+
+            window.addEventListener('message', function (event) {
+
+                if (event.data) {
+                    if (event.data === "restartAnimation") {
+                        restartAnimation();
+                    } else if (event.data === "nextAnimation") {
+                        nextAnimation();
+                    }
+
+                }
+            });
+
+            function nextAnimation() {
+                stopAnimation();
+                console.log("nextAnimation: index: " + indexAnimation);
+                if (indexAnimation === 1) {
+                    document.getElementById("computer-clerk01").style.animation = "clerk01Computer 3s forwards";
+                    document.getElementById("computer-clerk02").style.animation = "clerk02Computer 3s forwards 1.5s";
+                    document.getElementById("book").style.visibility = 'hidden';
+                    document.getElementById("text01").style.visibility="hidden";
+                    document.getElementById("text02").style.visibility="hidden";
+                    document.getElementById("text03").style.visibility="visible";
+                    indexAnimation = 2;
+                } else if (indexAnimation === 2) {
+                    document.getElementById("computer-judge").style.animation = "judgeComputer 3s forwards";
+                    document.getElementById("book").style.visibility = 'hidden';
+                    document.getElementById("text01").style.visibility="hidden";
+                    document.getElementById("text02").style.visibility="hidden";
+                    document.getElementById("text03").style.visibility="visible";
+                    document.getElementById("doc01").style.visibility = 'hidden';
+                }
+
+            }
+
+            function stopAnimation() {
+
+
+                var customer01 = document.getElementById("customer01");
+                var customer02 = document.getElementById("customer02");
+                var customer03 = document.getElementById("customer03");
+                var customer04 = document.getElementById("customer04");
+
+
+
+                var clerk01 = document.getElementById("clerk01");
+                var clerk02 = document.getElementById("clerk02");
+                var postofficer = document.getElementById("postofficer");
+                var hammer = document.getElementById("hammer");
+                var doc01 = document.getElementById("doc01");
+
+
+                var text02 = document.getElementById("text02");
+
+
+
+                customer01.style.animation = '';
+                customer02.style.animation = '';
+                customer03.style.animation = '';
+                customer04.style.animation = '';
+                clerk01.style.animation = '';
+                clerk02.style.animation = '';
+                postofficer.style.animation = '';
+                hammer.style.animation = '';
+                doc01.style.animation = '';
+                text02.style.animation = '';
+
+
+                var envps = document.getElementsByClassName("envelope");
+                for (var i = 0; i < envps.length; i++) {
+                    envps[i].style.animation = '';
+
+                }
+
+
+
+            }
+            function startAnimation() {
+                document.getElementById("book").style.visibility = "";
+                document.getElementById("doc01").visibility = 'visible';
+
+                document.getElementById("computer-clerk01").style.animation = "";
+                document.getElementById("computer-clerk02").style.animation = "";
+                document.getElementById("computer-judge").style.animation = "";
+
+
+                var customer01 = document.getElementById("customer01");
+                var customer02 = document.getElementById("customer02");
+                var customer03 = document.getElementById("customer03");
+                var customer04 = document.getElementById("customer04");
+                var clerk01 = document.getElementById("clerk01");
+                var clerk02 = document.getElementById("clerk02");
+                var postofficer = document.getElementById("postofficer");
+                var hammer = document.getElementById("hammer");
+                var doc01 = document.getElementById("doc01");
+                var text02 = document.getElementById("text02");
+                document.getElementById("text03").style.visibility="hidden";
+
+
+                customer01.style.animation = 'customer01Animation 24s forwards';
+                customer02.style.animation = 'customer02Animation 24s forwards';
+                customer03.style.animation = 'customer03Animation 24s forwards';
+                customer04.style.animation = 'customer04Animation 24s forwards';
+                clerk01.style.animation = 'clerk01Animation 6s  forwards 0s 3';
+                clerk02.style.animation = 'clerk02Animation 24s forwards';
+                postofficer.style.animation = 'postofficerAnimation 24s forwards';
+                hammer.style.animation = 'hammerAnimation 6s forwards  0s 3';
+                doc01.style.animation = 'doc01Animation 6s forwards 0s 3';
+
+                text02.style.visibility="visible";
+                text02.style.animation = 'text02Animation 24s forwards';
+
+                var envps = document.getElementsByClassName("envelope");
+                for (var i = 0; i < envps.length; i++) {
+                    var envp = envps[i];
+                    if (envp.id) {
+                        envp.style.animation = "envelopeAnimation 24s forwards " + (i * 0.1) + "s  ";
+                    } else {
+                        envp.style.animation = "envelopeFinalAnimation 24s forwards " + (i * 0.1) + "s  ";
+
+                    }
+                }
+                startTextAnimation();
+                indexAnimation = 1;
+
+            }
+            function restartAnimation() {
+                console.log("restartAnimation");
+                stopAnimation();
+                setTimeout(function () {
+                    startAnimation()
+                }, 50);
+
+
+
+            }
+
+
+            function startTextAnimation() {
+                console.log("startTextAnimation: ");
+                animationIndex = 1;
+                text02.style.visibility="visible";
+
+                var textPlace = document.getElementById("text01");
+                // clear text
+                textPlace.innerHTML = "";
+                var index = 0;
+                var id = setInterval(showNext, 1000);
+
+
+                function showNext() {
+                    if (index >= text01.length) {
+                        clearInterval(id);
+
+                    } else {
+                        var li = document.createElement("li");
+                        li.style = "font-size: " + text01[index].fontSize
+                                + "; color: " + text01[index].color;
+                        li.innerHTML = text01[index].name;
+
+                        li.animate([
+                            // keyframes
+                            {opacity: '0.0'},
+                            {opacity: '1.0'},
+                        ], {
+                            // timing options
+                            duration: 2000,
+                            iterations: 1
+                        });
+                        console.log("append test: " + text01[index].name);
+                        textPlace.appendChild(li);
+                        index++;
+                    }
+                }
+            }
+
+
+
+
+        </script>
+
+    </head>
+    <body >
+        <div id="courtRoom">
+            <div id="book"></div>
+            <div id="doc01"></div>
+
+            <div id="hammer"></div>
+            <div id="judge"></div>
+            <div id="computer-judge" ></div>
+
+            <div id="customer01"></div>
+            <div id="customer02"></div>
+            <div id="customer03"></div>
+            <div id="customer04"></div>
+
+            <div id="clerk01"></div>
+            <div id="computer-clerk01"></div>
+            <div id="clerk02"></div>
+            <div id="computer-clerk02"></div>
+            <div id="postofficer"></div>
+
+            <div id="envelope01" style="top: 385px;left: 701px; transform:  scale(0.001)" class='envelope'></div>
+            <div id="envelope02" style="top: 383px;left: 710px; transform:  scale(0.001);" class='envelope'></div>
+            <div id="envelope03" style="top: 376px;left: 702px; transform:  scale(0.001);" class='envelope'></div>
+            <div id="envelope04" style="top: 378px;left: 689px; transform:  scale(0.001);" class='envelope'></div>
+            <div id="envelope05" style="top: 386px;left: 700px; transform:  scale(0.001);" class='envelope'></div>
+
+
+
+            <div style="top: 316px;left: 700px;" class='envelope'></div>
+            <div style="top: 311px;left: 702px;" class='envelope'></div>
+            <div style="top: 313px;left: 710px;" class='envelope'></div>
+            <div style="top: 319px;left: 699px;" class='envelope'></div>
+
+            <!-- text position-->
+            <ul id = "text01"   >
+            </ul>
+
+
+            <ul id = "text02" style="position: absolute; top: 50px; left: 300px; font-size: 28px"  >
+                <li>Vpisnik (vpisna knjiga): podatki o zadevah (več kot 200 vrst)</li>
+                <li>Spis: zbirka vseh listin v zadevi.</li>
+            </ul>
+            
+            <ul id = "text03" style="visibility: hidden; position: absolute; top: 50px; left: 300px; font-size: 28px"  >
+                <li><b>eVpisnik + podporna orodja</b> - elektronsko vodenje zadev</li>
+                <li><b>eSpis</b> - listine v elektronski obliki</li>
+            </ul>
+
+
+        </div>
+
+
+    </body>
+</html>
+

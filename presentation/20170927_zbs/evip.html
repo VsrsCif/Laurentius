@@ -1,0 +1,129 @@
+<html lang="sl">
+
+    <head>
+        <meta charset="utf-8" />
+        <style >
+
+            body{
+                margin: 0;
+                padding: 0;
+                height: 600px;
+                width: 800px;
+
+            }
+
+            #inmail{
+                background: transparent url("images/moduli-dohodne-poste.png") no-repeat scroll left top;
+                background-size: 100% 100%;
+                position: absolute;
+                margin: 0;
+                padding: 0;
+                height: 600px;
+                width: 800px;
+                overflow: hidden;
+
+
+            }
+            
+             #outmail{
+                background: transparent url("images/moduli-izhodne-poste.png") no-repeat scroll left top;
+                background-size: 100% 100%;
+                position: absolute;
+                margin: 0;
+                padding: 0;
+                height: 600px;
+                width: 800px;
+                overflow: hidden;
+
+
+            }
+            
+            /* The animation code */
+            @keyframes rotateShowImage {
+                0% {opacity: 0}                
+                50% {opacity: 1.; transform: rotateY(-90deg)}
+                100% {opacity: 1.; transform: rotateY(0deg)}
+            }
+            
+            @keyframes rotateHideImage {
+                0% {opacity: 1.}                
+                49% {opacity: 0.; transform: rotateY(90deg)}
+                50% {opacity: 0.; transform: rotateY(90deg) }
+                100% {opacity: 0.; transform: rotateY(90deg)}
+            }
+        
+
+
+
+
+        </style>
+
+        <script type="text/javascript">
+
+            window.addEventListener('message', function (event) {
+
+                if (event.data) {
+                    if (event.data === "restartAnimation") {
+                        restartAnimation();
+                    }
+                    if (event.data === "nextAnimation") {
+                        nextAnimation();
+                    }
+
+                }
+            });
+            
+            
+            function nextAnimation() {
+                console.log("next animation")
+                document.getElementById("inmail").style.animation = "rotateHideImage 3s forwards";
+                document.getElementById("outmail").style.animation = "rotateShowImage 3s forwards";
+            }
+
+            function resetAnimation() {
+
+
+                document.getElementById("inmail").style.animation = "";
+                document.getElementById("outmail").style.animation = "";
+                
+                
+            }
+            function startAnimation() {
+                
+                
+                
+               // document.getElementById("inmail").style.animation = "clerk01Documents 12s forwards";
+              
+
+
+
+
+            }
+            function restartAnimation() {
+                console.log("restartAnimation");
+                resetAnimation();
+                setTimeout(function () {
+                    startAnimation()
+                }, 2);
+
+
+
+            }
+
+
+
+
+        </script>
+
+    </head>
+    <body >
+        <div id="outmail">
+        </div>
+        <div id="inmail">
+        </div>
+        
+
+
+    </body>
+</html>
+
