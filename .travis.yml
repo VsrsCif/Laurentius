@@ -33,5 +33,4 @@ jobs:
       - docker images
       - docker tag laurentius $DOCKER_USERNAME/laurentius
       - docker push $DOCKER_USERNAME/laurentius
-    - stage: test
-      script: docker run --rm $DOCKER_USERNAME/laurentius
+
