@@ -21,11 +21,11 @@
             }
             
             .dropText {    
-                background-color: white;
-                box-shadow: 10px 10px 5px #888888;
+                background-color: transparent;
                 position:absolute;
+                font-size:18px;
                 animation-name: showDropText;
-                animation-duration: 4s;
+                animation-duration: 2s;
             }
 
             /* Standard syntax */
@@ -157,9 +157,12 @@
                         startShowCourtAnimation(courtMap);
                     } else {
                         var p = document.createElement("div");
-                        p.style = "font-size:20px; position:absolute; left:" + (textLines[index].left - offsetX) + "px; top:" + (textLines[index].top - offsetY) + "px";
+                        
                         p.innerHTML = textLines[index].name;
-                        p.class  ="dropText";
+                        p.className  ="dropText";
+                        p.style ="position:absolute;left:" +(textLines[index].left - offsetX) + "px;top:"+(textLines[index].top - offsetY) + "px";
+                        //p.style.left =  (textLines[index].left - offsetX) + "px";
+                        //p.style.top =  (textLines[index].top - offsetY) + "px";
 /*
                         p.animate([
                             // keyframes
