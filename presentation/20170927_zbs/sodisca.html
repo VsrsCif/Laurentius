@@ -16,6 +16,7 @@
                 background-color: white;
                 box-shadow: 10px 10px 5px #888888;
                 position:absolute;
+                font-size:15px;
                 animation-name: showText;
                 animation-duration: 2s;
             }
@@ -25,7 +26,7 @@
                 position:absolute;
                 font-size:18px;
                 animation-name: showDropText;
-                animation-duration: 2s;
+                animation-duration: 4s;
             }
 
             /* Standard syntax */
@@ -137,7 +138,8 @@
                         var p = document.createElement("p");
                         p.className = "courtTown";
                         courtMap.appendChild(p); // fist add then set style
-                        p.style = "font-size:18px; left:" + (courtList[index].left - offsetX) + "px; top:" + (courtList[index].top - offsetY) + "px";
+                        p.style.left = (courtList[index].left - offsetX) + "px"
+                        p.style.top = (courtList[index].top - offsetY) + "px";
                         p.innerHTML = courtList[index].name;
 
                         
