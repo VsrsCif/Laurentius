@@ -160,6 +160,7 @@
                         
                         p.innerHTML = textLines[index].name;
                         p.className  ="dropText";
+                        courtMap.appendChild(p);
                         //p.style ="position:absolute;left:" +(textLines[index].left - offsetX) + "px;top:"+(textLines[index].top - offsetY) + "px";
                        // p.cssText ="position:absolute;left:" +(textLines[index].left - offsetX) + "px;top:"+(textLines[index].top - offsetY) + "px";
                         p.style.position = "absolute";
@@ -175,7 +176,7 @@
                             duration: 1000,
                             iterations: 1
                         });*/
-                        courtMap.appendChild(p);
+                        
                         index++;
                     }
                 }
