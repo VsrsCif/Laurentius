@@ -166,7 +166,7 @@
 
 
             function nextAnimation() {
-                console.log("next animation")
+                
                 if (animationIndex === 1) {
                     animationIndex = 2;
 
@@ -217,7 +217,7 @@
 
             }
             function restartAnimation() {
-                console.log("restartAnimation");
+                
                 resetAnimation();
                 setTimeout(function () {
                     startAnimation()
@@ -228,7 +228,7 @@
             }
 
             function startTextAnimation(textList, textPlace) {
-                console.log("startTextAnimation: ");
+                
 
 
                 // clear text
@@ -256,7 +256,7 @@
                             duration: 1000,
                             iterations: 1
                         });
-                        console.log("append test: " + textList[index].name);
+                        
                         textPlace.appendChild(li);
                         index++;
                     }

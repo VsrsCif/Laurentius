@@ -439,7 +439,6 @@
 
             function nextAnimation() {
                 stopAnimation();
-                console.log("nextAnimation: index: " + indexAnimation);
                 if (indexAnimation === 1) {
                     document.getElementById("computer-clerk01").style.animation = "clerk01Computer 3s forwards";
                     document.getElementById("computer-clerk02").style.animation = "clerk02Computer 3s forwards 1.5s";
@@ -551,7 +550,6 @@
 
             }
             function restartAnimation() {
-                console.log("restartAnimation");
                 stopAnimation();
                 setTimeout(function () {
                     startAnimation()
@@ -563,7 +561,6 @@
 
 
             function startTextAnimation() {
-                console.log("startTextAnimation: ");
                 animationIndex = 1;
                 text02.style.visibility="visible";
 
@@ -593,7 +590,6 @@
                             duration: 2000,
                             iterations: 1
                         });
-                        console.log("append test: " + text01[index].name);
                         textPlace.appendChild(li);
                         index++;
                     }
