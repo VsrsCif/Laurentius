@@ -136,10 +136,11 @@
                     } else {
                         var p = document.createElement("p");
                         p.className = "courtTown";
+                        courtMap.appendChild(p); // fist add then set style
                         p.style = "font-size:18px; left:" + (courtList[index].left - offsetX) + "px; top:" + (courtList[index].top - offsetY) + "px";
                         p.innerHTML = courtList[index].name;
 
-                        courtMap.appendChild(p);
+                        
                         index++;
                     }
                 }
@@ -160,7 +161,7 @@
                         
                         p.innerHTML = textLines[index].name;
                         p.className  ="dropText";
-                        courtMap.appendChild(p);
+                        courtMap.appendChild(p); //  first add then set stype IE and edge problem
                         //p.style ="position:absolute;left:" +(textLines[index].left - offsetX) + "px;top:"+(textLines[index].top - offsetY) + "px";
                        // p.cssText ="position:absolute;left:" +(textLines[index].left - offsetX) + "px;top:"+(textLines[index].top - offsetY) + "px";
                         p.style.position = "absolute";
