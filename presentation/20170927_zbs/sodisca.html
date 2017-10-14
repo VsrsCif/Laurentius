@@ -1,4 +1,3 @@
-
 <html lang="sl">
     <meta charset="utf-8" />
     <head>
@@ -13,14 +12,20 @@
 
             }
 
-             p.courtTown {    
+            p.courtTown {    
                 background-color: white;
-               box-shadow: 10px 10px 5px #888888;
+                box-shadow: 10px 10px 5px #888888;
                 position:absolute;
                 animation-name: showText;
                 animation-duration: 2s;
-                
-
+            }
+            
+            p.dropText {    
+                background-color: white;
+                box-shadow: 10px 10px 5px #888888;
+                position:absolute;
+                animation-name: showDropText;
+                animation-duration: 1s;
             }
 
             /* Standard syntax */
@@ -29,10 +34,15 @@
                 100% {transform: scale(1.0,1.0);opacity:1.0}
             }
 
+            @keyframes showDropText {
+                0%   { transform: translateY(-300px);opacity:0}
+                100% {transform: translateY(-0px);opacity:1.0}
+            }
+
         </style>
 
 
-       
+
         <script type="text/javascript">
             var courtList = [
                 {left: 224, top: 239, name: "Kranj"},
@@ -94,7 +104,7 @@
                 {left: 520, top: 570, fontSize: 30, name: "1 Upravno sodišče"},
             ];
 
-           window.addEventListener('message', function (event) {
+            window.addEventListener('message', function (event) {
 
                 if (event.data) {
                     if (event.data === "restartAnimation") {
@@ -107,7 +117,7 @@
                 var courtMap = document.getElementById("tribunals-map");
                 courtMap.innerHTML = "";
                 startShowTextAnimation(courtMap);
-                
+
 
 
             }
@@ -122,13 +132,13 @@
                 function showNext() {
                     if (index >= courtList.length) {
                         clearInterval(id);
-                        
+
                     } else {
                         var p = document.createElement("p");
                         p.className = "courtTown";
                         p.style = "font-size:18px; left:" + (courtList[index].left - offsetX) + "px; top:" + (courtList[index].top - offsetY) + "px";
                         p.innerHTML = courtList[index].name;
-                        
+
                         courtMap.appendChild(p);
                         index++;
                     }
@@ -149,7 +159,8 @@
                         var p = document.createElement("div");
                         p.style = "font-size:20px; position:absolute; left:" + (textLines[index].left - offsetX) + "px; top:" + (textLines[index].top - offsetY) + "px";
                         p.innerHTML = textLines[index].name;
-
+                        p.class  ="dropText";
+/*
                         p.animate([
                             // keyframes
                             {transform: 'translateY(-300px)', opacity: '0.1'},
@@ -158,7 +169,7 @@
                             // timing options
                             duration: 1000,
                             iterations: 1
-                        });
+                        });*/
                         courtMap.appendChild(p);
                         index++;
                     }
