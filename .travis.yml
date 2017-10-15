@@ -31,14 +31,14 @@ branches:
   - master
 
 #
-#jobs:
-#  include:
-#    - stage: build docker image
-#      script:
-#      - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
-#      - docker build -t laurentius .
-#      - docker tag laurentius $DOCKER_USERNAME/laurentius
-#      - docker push $DOCKER_USERNAME/laurentius
+jobs:
+  include:
+    - stage: build docker image
+      script:
+      - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+      - docker build -t laurentius .
+      - docker tag laurentius $DOCKER_USERNAME/laurentius
+      - docker push $DOCKER_USERNAME/laurentius
 
 
 #    - stage: test
