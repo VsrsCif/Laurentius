@@ -9,6 +9,13 @@ language: java
 jdk:
   - oraclejdk8
   
+  
+addons:
+  sonarcloud:
+    organization: "vsrs-laurentius"
+    token:
+      secure: "EY9V1SqI1d91L26hamjpapb5PtNrw1bVUXtP6hXCR4SYs70TI1zFMtdPTCj/ZU7RY6d+rbYzz1d5EpXvK8incfvE8gidT9gbOEJJvF49ll1oNE2eX1tX5NcvaTs8DPeu6TKW9aUIHTj0SRCuMbPW24WLd4pKRHiE+f12XTb8hMcd01ynhA5HVxyzOIpDkQxjHGHylDf14gsQgTr2IrLKQVxCKPGsyRKdJNOELds6g91G1AkmHZ1wPxWUoz6b8+kZefhnwJwfrSiPknqadsl1/Uh/lUS1LIYF2MQc4hdAeYqI2kbOwVteeDuV432cCrRll+0QUsksf/hK6c9YbU4E+CNm4lXxmVvckX5T4XeUyUOiTIti6Oc5fxiG4J7TpETOQ3y9cN2sIDI0sIYJ6gggMbM90hlwjSi2PBa+dobSh+VDwB7RUPhTPHMP3XaGP5vEvRj0X0lyieE9Et7uBDKywwV5lcAV8aBPKYsrmxKhgL/LpuLThW5adMr9QobuDZE9fXdBgUEKm65Tron6NECcZb5JZQGZ/F5kxDdJoi4DQzMC/a8tBnYNR5C0WriZxzgvktpq+VxXwEA9uF3FkhaOwiv1UZ76AaWgTkeRNyXA3adSVrO6i1lDuxTvQEavSz+co21wy6yDLerCNzqK34kyUqUaLsvBOOyigWl8My4STXc="
+  
 script:  
   #run all tests 
   #- mvn -P CI-BuildWithReports 
@@ -17,7 +24,7 @@ script:
   #sonar:sonar -Dsonar.host.url=https://sonarqube.com -Dsonar.login=$SONAR_TOKEN
 
 after_success:
-  - mvn clean test jacoco:report coveralls:report
+   - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar
 
 branches:
   only:
@@ -30,7 +37,7 @@ jobs:
       script:
       - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
       - docker build -t laurentius .
-      - docker images
       - docker tag laurentius $DOCKER_USERNAME/laurentius
       - docker push $DOCKER_USERNAME/laurentius
-
+#    - stage: test
+#      script: docker run --rm $DOCKER_USERNAME/laurentius
