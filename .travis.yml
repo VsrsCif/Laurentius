@@ -19,8 +19,8 @@ addons:
 script:  
   #run all tests 
   #- mvn -P CI-BuildWithReports 
-  - mvn clean install  
-  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent package sonar:sonar
+  # - mvn clean install  
+  - mvn clean istall org.jacoco:jacoco-maven-plugin:prepare-agent package sonar:sonar
   #- mvn clean install jacoco:report coveralls:report
   #sonar:sonar -Dsonar.host.url=https://sonarqube.com -Dsonar.login=$SONAR_TOKEN
 
