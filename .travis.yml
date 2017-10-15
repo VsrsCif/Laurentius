@@ -13,13 +13,15 @@ jdk:
 addons:
   sonarcloud:
     organization: "vsrs-laurentius"
-    token:
-      secure: "EY9V1SqI1d91L26hamjpapb5PtNrw1bVUXtP6hXCR4SYs70TI1zFMtdPTCj/ZU7RY6d+rbYzz1d5EpXvK8incfvE8gidT9gbOEJJvF49ll1oNE2eX1tX5NcvaTs8DPeu6TKW9aUIHTj0SRCuMbPW24WLd4pKRHiE+f12XTb8hMcd01ynhA5HVxyzOIpDkQxjHGHylDf14gsQgTr2IrLKQVxCKPGsyRKdJNOELds6g91G1AkmHZ1wPxWUoz6b8+kZefhnwJwfrSiPknqadsl1/Uh/lUS1LIYF2MQc4hdAeYqI2kbOwVteeDuV432cCrRll+0QUsksf/hK6c9YbU4E+CNm4lXxmVvckX5T4XeUyUOiTIti6Oc5fxiG4J7TpETOQ3y9cN2sIDI0sIYJ6gggMbM90hlwjSi2PBa+dobSh+VDwB7RUPhTPHMP3XaGP5vEvRj0X0lyieE9Et7uBDKywwV5lcAV8aBPKYsrmxKhgL/LpuLThW5adMr9QobuDZE9fXdBgUEKm65Tron6NECcZb5JZQGZ/F5kxDdJoi4DQzMC/a8tBnYNR5C0WriZxzgvktpq+VxXwEA9uF3FkhaOwiv1UZ76AaWgTkeRNyXA3adSVrO6i1lDuxTvQEavSz+co21wy6yDLerCNzqK34kyUqUaLsvBOOyigWl8My4STXc="
-  
+    token:   
+      secure: "gijeQND97bL7qx8JQtq7bvAIm58aKDDBvgcnQZmHSOi7HY9hnrnfy4V135lhOaF1oFtdAC7cx6uvUkUoZ2ZTFka1CSgbNlTAOYefA1+ijvYpTpVjvW1zeP8wXnm2tdkvhD1dAIKkyBSZYbv53O8sFQj80l2Oj4Wa5x2rlDjRnd01z0MW7Imzfighi7zlRhtYEzjix6vAi7ndAW5NTzEiV+CRjOkAliwp6GWty8BH3p5K2lgc/QgQC3EgdLbN5BN0eCzqurgP7PIFZYroZrIPnJXlT3qZaJjyRubdA8p4uwueMXGcnx0ylv3ZriNKE4xdrv6f9G1fLUNJaQpFrmzO5hNvFoyEFLmnp3NQWQiJptk+5B5XF6zbypObdMSOXAnBondJcR1E+Hj+6lvYSn/nciUqwKD09ND0DLeP/lbQptQP6HCcUPMYgrrHdoVt/0PSJzs4ZMMZpBFczNv74DVwSJvZC+P0vNeSJ+YS1kjhN9vb0rrcgQUYEl13C8W4Uo1rDQistinTVVFuH/r1MfaCj4TsxQ3E1/r3wUrb5LVFAqRyG7sxhKKG82g6Zqv6UT13MglhT3UgnCqND/+BndWqv0ewViXLDCgL5a0EM7d9Y2Fo2SZIiW8KblGga3o/ULRZfUgj6X6I2z6O1XlTPXDR+S1lEeGpwulY5DdX0+YO1zo="
+ 
+
 script:  
+    - mvn clean install org.jacoco:jacoco-maven-plugin:prepare-agent package sonar:sonar
   #run all tests 
   #- mvn -P CI-BuildWithReports 
-  - mvn clean install org.jacoco:jacoco-maven-plugin:prepare-agent package sonar:sonar
+  
   #- mvn clean install jacoco:report coveralls:report
   #sonar:sonar -Dsonar.host.url=https://sonarqube.com -Dsonar.login=$SONAR_TOKEN
 
