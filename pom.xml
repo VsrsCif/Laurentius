@@ -68,25 +68,39 @@
         <maven.surefire.plugin.version>2.16</maven.surefire.plugin.version>
         <sonar.maven.version>3.2</sonar.maven.version>
         <!-- DEPENDENCIES -->
-        <cxf-rt.version>3.1.4</cxf-rt.version>        
-        <net.sf.saxon.version>9.7.0-14</net.sf.saxon.version>
-        <javax.javaee-api.version>7.0</javax.javaee-api.version>
+             
+        <net.sf.saxon.version>9.8.0-5</net.sf.saxon.version>
+        <javax.javaee-api.version>8.0</javax.javaee-api.version>
         <log4j.version>1.2.17</log4j.version>
-        <org.apache.derby.version>10.10.2.0</org.apache.derby.version>
-        <org.hibernate.version>4.2.6.Final</org.hibernate.version>
-        <org.apache.activemq.version>5.7.0</org.apache.activemq.version>        
-        <org.apache.xmlgraphics.fop.version>2.1</org.apache.xmlgraphics.fop.version>
-        <org.apache.pdfbox.version>2.0.3</org.apache.pdfbox.version>
-        <org.apache.santuario.xmlsec.version>2.0.6</org.apache.santuario.xmlsec.version>
-        <org.bouncycastle.version>1.58</org.bouncycastle.version>
-        <maven.war.plugin.version>2.6</maven.war.plugin.version>     
         
-        <!-- GUI -->
+        
+               
+        <org.apache.xmlgraphics.fop.version>2.2</org.apache.xmlgraphics.fop.version>
+        <org.apache.pdfbox.version>2.0.7</org.apache.pdfbox.version>
+        
+        
+        <maven.war.plugin.version>2.6</maven.war.plugin.version>     
+        <!-- wildfly 10.1 depedecies / latest  21.10.2017
+            - org.bouncycastle: 1.52/ latest 1.58     
+            - org.apache.santuario.xmlsec: 2.0.6 / latest 2.1.0
+            - org.apache.cxf.*: 3.1.6 / latest 3.2.0
+            - org.apache.activemq: 1.1.0  / latest 2.3.0
+        -->
+        <org.apache.santuario.xmlsec.version>2.0.6</org.apache.santuario.xmlsec.version>        
+        <org.bouncycastle.version>1.58</org.bouncycastle.version>
+        <cxf-rt.version>3.1.6</cxf-rt.version>
+        <org.apache.activemq.version>1.1.0</org.apache.activemq.version>
+         
+        
+        <!-- GUI latest primeface 6.1 -> dialog problem  -->
         <org.primefaces.version>6.0</org.primefaces.version>
         <org.primefaces.extensions.version>6.0.0</org.primefaces.extensions.version>        
-        <!-- unit testing-->
-        <org.apache.derby.version>10.10.2.0</org.apache.derby.version>
-        <junit.version>4.12</junit.version>        
+        <!-- unit testing-->      
+        <org.apache.derby.version>10.14.1.0</org.apache.derby.version>
+        <org.hibernate.version>5.2.12.Final</org.hibernate.version>
+        <junit.version>4.12</junit.version>
+        <org.apache.activemq.junit.version>5.15.2</org.apache.activemq.junit.version>      
+        <org.apache.activemq.core.version>5.7.0</org.apache.activemq.core.version> 
         
     </properties>
 
@@ -185,6 +199,33 @@
                 <artifactId>fop</artifactId>
                 <version>${org.apache.xmlgraphics.fop.version}</version>            
             </dependency>
+            
+            <dependency>
+                <groupId>org.apache.activemq</groupId>
+                <artifactId>activemq-core</artifactId>
+                <version>${org.apache.activemq.core.version}</version> 
+            </dependency>
+        
+            <dependency>
+                <groupId>org.apache.activemq.tooling</groupId>
+                <artifactId>activemq-junit</artifactId>
+                <version>${org.apache.activemq.junit.version}</version> 
+                
+            </dependency> 
+ 
+            <dependency>
+                <groupId>org.apache.activemq</groupId>
+                <artifactId>activemq-broker</artifactId>
+                <version>${org.apache.activemq.junit.version}</version> 
+            
+            </dependency>
+            
+            <dependency>
+                <groupId>org.apache.activemq</groupId>
+                <artifactId>artemis-jms-client</artifactId>
+                <version>${org.apache.activemq.version}</version>
+            </dependency>
+            
             <!-- database -->
             <dependency>
                 <groupId>org.apache.derby</groupId>
@@ -202,12 +243,7 @@
                 <artifactId>hibernate-entitymanager</artifactId>
                 <version>${org.hibernate.version}</version>            
             </dependency>
-            <!-- JMS for testing  -->
-            <dependency>
-                <groupId>org.apache.activemq</groupId>
-                <artifactId>activemq-core</artifactId>
-                <version>${org.apache.activemq.version}</version>            
-            </dependency>
+           
             
         </dependencies>
     </dependencyManagement>
