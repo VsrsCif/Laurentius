@@ -54,15 +54,15 @@ public class ZPPUtils {
 
     OutMail mout = new OutMail();
     mout.setSenderMessageId(UUID.randomUUID().toString()); // client  message id );
-    mout.setService(ZPPConstants.S_ZPP_SERVICE);
-    mout.setAction(ZPPConstants.S_ZPP_ACTION_ADVICE_OF_DELIVERY);
+    mout.setService(ZPPDeliveryConstants.S_ZPP_SERVICE);
+    mout.setAction(ZPPDeliveryConstants.S_ZPP_ACTION_ADVICE_OF_DELIVERY);
     mout.setConversationId(mInMail.getConversationId());
     mout.setSenderEBox(mInMail.getReceiverEBox());
     mout.setSenderName(mInMail.getReceiverName());
     mout.setRefToMessageId(mInMail.getMessageId());
     mout.setReceiverEBox(mInMail.getSenderEBox());
     mout.setReceiverName(mInMail.getSenderName());
-    mout.setSubject(ZPPConstants.S_ZPP_ACTION_ADVICE_OF_DELIVERY);
+    mout.setSubject(ZPPDeliveryConstants.S_ZPP_ACTION_ADVICE_OF_DELIVERY);
 
 
     File fDNViz = null;
@@ -110,7 +110,7 @@ public class ZPPUtils {
 
       mout.setOutPayload(new OutPayload());
       OutPart mp = new OutPart();
-      mp.setDescription(ZPPConstants.S_ZPP_ACTION_ADVICE_OF_DELIVERY);
+      mp.setDescription(ZPPDeliveryConstants.S_ZPP_ACTION_ADVICE_OF_DELIVERY);
       mp.setMimeType(MimeConstants.MIME_PDF);
       mout.getOutPayload().getOutParts().add(mp);
       
@@ -147,8 +147,8 @@ public class ZPPUtils {
   public FOPUtils getFOP() {
     if (mfpFop == null) {
 
-      mfpFop = new FOPUtils(new File(S_SETTINGS_FOLDER+ ZPPConstants.FOP_CONFIG_FILENAME),
-              S_SETTINGS_FOLDER + ZPPConstants.XSLT_FOLDER);
+      mfpFop = new FOPUtils(new File(S_SETTINGS_FOLDER+ ZPPDeliveryConstants.FOP_CONFIG_FILENAME),
+              S_SETTINGS_FOLDER + ZPPDeliveryConstants.XSLT_FOLDER);
     }
     return mfpFop;
   }

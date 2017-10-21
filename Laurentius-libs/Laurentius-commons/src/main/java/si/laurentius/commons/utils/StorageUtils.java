@@ -33,6 +33,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Stream;
 import si.laurentius.commons.enums.MimeValue;
 import static si.laurentius.commons.enums.MimeValue.getSuffixBYMimeType;
 import si.laurentius.commons.SEDSystemProperties;
@@ -83,8 +84,8 @@ public class StorageUtils {
       CURRENT_PATH = pcDir.resolve(format("%03d", i)).toAbsolutePath();
       if (CURRENT_PATH.toFile().exists()) {
       
-      try {
-        CURRENT_FILE_COUNT_IN_FOLDER.set((int)Files.list(CURRENT_PATH).count());
+      try (Stream strPaths = Files.list(CURRENT_PATH)){
+        CURRENT_FILE_COUNT_IN_FOLDER.set((int)strPaths.count());
       } catch (IOException ex) {
         throw new StorageException(
           format("Error occurred while counting files if storage folder: '%s'",

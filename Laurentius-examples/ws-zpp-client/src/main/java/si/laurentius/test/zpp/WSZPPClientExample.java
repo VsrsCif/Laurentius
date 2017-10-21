@@ -27,7 +27,6 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.logging.Level;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -90,13 +89,13 @@ public class WSZPPClientExample {
   public static final String RECEIVER_BOX = "b.department@" + DOMAIN;
 
   public static final Logger LOG = Logger.getLogger(WSZPPClientExample.class);
+  
+  public static final String LOG_SECTION_SEPARATOR = "*****************************";
 
-  public File[] testFiles;
+  private File[] testFiles;
   SEDMailBoxWS mTestInstance = null;
 
-  public WSZPPClientExample() {
 
-  }
 
   public SEDMailBoxWS getService() {
     if (mTestInstance == null) {
@@ -155,8 +154,8 @@ public class WSZPPClientExample {
     // example submit mail
     BigInteger bi = wc.submitMail(createOutMail(RECEIVER_BOX, "Mr. Receiver",
             SENDER_BOX, "Mr. Sender",
-            ZPPConstants.S_ZPP_SERVICE,
-            ZPPConstants.S_ZPP_ACTION_DELIVERY_NOTIFICATION,
+            ZPPDeliveryConstants.S_ZPP_SERVICE,
+            ZPPDeliveryConstants.S_ZPP_ACTION_DELIVERY_NOTIFICATION,
             "Test message",
             "VL 1/2016"));
 
@@ -169,6 +168,11 @@ public class WSZPPClientExample {
         om = m;
         break;
       }
+    }
+   
+    if (om== null){
+      LOG.error("Message sent but no out message found for senderbox " + SENDER_BOX);
+        return;
     }
 
     boolean msgSent = false;
@@ -201,7 +205,7 @@ public class WSZPPClientExample {
     // search for corresponding in mail
     InMail im = null;
     for (InMail m : lstIM) {
-      System.out.println(m.getSenderMessageId() + " - " + om.
+      LOG.info(m.getSenderMessageId() + " - " + om.
               getSenderMessageId());
       if (Objects.equals(m.getSenderMessageId(), om.getSenderMessageId())) {
         im = m;
@@ -221,7 +225,7 @@ public class WSZPPClientExample {
     InMail imWithDecPayload = wc.getInMail(im.getId(), RECEIVER_BOX);
 
     for (InPart ip : imWithDecPayload.getInPayload().getInParts()) {
-      System.out.println(ip.getDescription());
+      LOG.info(ip.getDescription());
 
     }
 
@@ -250,9 +254,9 @@ public class WSZPPClientExample {
     // submit request
     LOG.info("submit message");
     SubmitMailResponse mr = getService().submitMail(smr);
-    LOG.info("*****************************");
+    LOG.info(LOG_SECTION_SEPARATOR);
     LOG.info("got 'sumitMail' response:\n" + serialize(mr));
-    LOG.info("*****************************");
+    LOG.info(LOG_SECTION_SEPARATOR);
 
     return mr.getRData() != null ? mr.getRData().getMailId() : null;
   }
@@ -267,9 +271,9 @@ public class WSZPPClientExample {
     omlr.getData().setSenderEBox(senderBox);
 
     OutMailListResponse mlr = getService().getOutMailList(omlr);
-    LOG.info("*****************************");
+    LOG.info(LOG_SECTION_SEPARATOR);
     LOG.info("Got 'getOutMailList' response:\n" + serialize(mlr));
-    LOG.info("*****************************");
+    LOG.info(LOG_SECTION_SEPARATOR);
     return mlr.getRData().getOutMails();
 
   }
@@ -283,13 +287,13 @@ public class WSZPPClientExample {
     omelr.setData(new OutMailEventListRequest.Data());
     omelr.getData().setSenderEBox(senderBox);
     omelr.getData().setMailId(bi);
-    LOG.info("*****************************");
+    LOG.info(LOG_SECTION_SEPARATOR);
     LOG.info("'getOutMailEventList' request:\n" + serialize(omelr));
-    LOG.info("*****************************");
+    LOG.info(LOG_SECTION_SEPARATOR);
     OutMailEventListResponse mler = getService().getOutMailEventList(omelr);
-    LOG.info("*****************************");
+    LOG.info(LOG_SECTION_SEPARATOR);
     LOG.info("Got 'getOutMailEventList' response:\n" + serialize(mler));
-    LOG.info("*****************************");
+    LOG.info(LOG_SECTION_SEPARATOR);
     return mler.getRData().getOutEvents();
 
   }
@@ -307,18 +311,18 @@ public class WSZPPClientExample {
 
     ModifyOutMailResponse res;
     try {
-      LOG.info("*****************************");
+      LOG.info(LOG_SECTION_SEPARATOR);
       LOG.info("'getInMailList' request:\n" + serialize(req));
-      LOG.info("*****************************");
+      LOG.info(LOG_SECTION_SEPARATOR);
       res = getService().modifyOutMail(req);
-      LOG.info("*****************************");
+      LOG.info(LOG_SECTION_SEPARATOR);
       LOG.info("Got 'modifyOutMail' response:\n" + serialize(res));
-      LOG.info("*****************************");
+      LOG.info(LOG_SECTION_SEPARATOR);
     } catch (SEDException_Exception ex) {
-      LOG.info("*****************************");
+      LOG.info(LOG_SECTION_SEPARATOR);
       LOG.info("Got 'modifyOutMail' SEDException_Exception:\n" + serialize(ex.
               getFaultInfo()));
-      LOG.info("*****************************");
+      LOG.info(LOG_SECTION_SEPARATOR);
     }
   }
 
@@ -332,14 +336,14 @@ public class WSZPPClientExample {
     req.getData().setReceiverEBox(receiverBox);
     req.getData().setStatus(status);
 
-    LOG.info("*****************************");
+    LOG.info(LOG_SECTION_SEPARATOR);
     LOG.info("'getInMailList' request:\n" + serialize(req));
-    LOG.info("*****************************");
+    LOG.info(LOG_SECTION_SEPARATOR);
 
     InMailListResponse mlr = getService().getInMailList(req);
-    LOG.info("*****************************");
+    LOG.info(LOG_SECTION_SEPARATOR);
     LOG.info("Got 'getInMailList' response:\n" + serialize(mlr));
-    LOG.info("*****************************");
+    LOG.info(LOG_SECTION_SEPARATOR);
     // return first mail id
     return mlr.getRData().getInMails();
 
@@ -356,9 +360,9 @@ public class WSZPPClientExample {
     omelr.getData().setMailId(bi);
 
     InMailEventListResponse mler = getService().getInMailEventList(omelr);
-    LOG.info("*****************************");
+    LOG.info(LOG_SECTION_SEPARATOR);
     LOG.info("Got 'getInMailEventList' response:\n" + serialize(mler));
-    LOG.info("*****************************");
+    LOG.info(LOG_SECTION_SEPARATOR);
 
   }
 
@@ -373,9 +377,9 @@ public class WSZPPClientExample {
     reg.getData().setMailId(bi);
 
     GetInMailResponse mler = getService().getInMail(reg);
-    LOG.info("*****************************");
+    LOG.info(LOG_SECTION_SEPARATOR);
     LOG.info("Got 'getInMail' response:\n" + serialize(mler));
-    LOG.info("*****************************");
+    LOG.info(LOG_SECTION_SEPARATOR);
     return mler.getRData().getInMail();
 
   }
@@ -394,9 +398,9 @@ public class WSZPPClientExample {
     ModifyInMailResponse res;
     try {
       res = getService().modifyInMail(req);
-      LOG.info("*****************************");
+      LOG.info(LOG_SECTION_SEPARATOR);
       LOG.info("Got response:\n" + serialize(res));
-      LOG.info("*****************************");
+      LOG.info(LOG_SECTION_SEPARATOR);
     } catch (SEDException_Exception ex) {
       LOG.info("Got SEDException_Exception: " + serialize(ex.getFaultInfo()));
     }

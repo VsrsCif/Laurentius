@@ -437,32 +437,35 @@ public class TaskArchive implements TaskExecutionInterface {
 
     File fArhMail = new File(archFolder, "archive-mail.txt");
     File ferrLogMail = new File(archFolder, "archive-error.txt");
+    sw.append((lst - LOG.getTime()) + " ms\n");
 
     try (FileWriter fwArhMail = new FileWriter(fArhMail); FileWriter fwErrLogMail = new FileWriter(
             ferrLogMail)) {
 
-      sw.append(" end: " + (lst - LOG.getTime()) + " ms\n");
+      
 
-      sw.append("- Arhive settings and lookups");
+      sw.append("- Arhive settings and lookups:");
       lst = LOG.getTime();
       mLookups.exportLookups(archFolder, bArchivePassword);
-      sw.append(" end: " + (lst - LOG.getTime()) + " ms\n");
+      sw.append( (lst - LOG.getTime()) + " ms\n");
 
-      sw.append("---------------------\nArhive out mail\n");
+      sw.append("- Arhive out mail:");
       lst = LOG.getTime();
       String rs = archiveOutMails(dtArhiveTo, archFolder, iChunkSize, fwArhMail,
               fwErrLogMail);
+      
+      sw.append( (lst - LOG.getTime()) + " ms\n");
+      sw.append("Message");
       sw.append(rs);
-      sw.append(
-              " end: " + (lst - LOG.getTime()) + " ms\n---------------------\n\n");
 
-      sw.append("---------------------\nArhive in mail");
+      sw.append("\nArhive in mail: ");
       lst = LOG.getTime();
       rs = archiveInMails(dtArhiveTo, archFolder, iChunkSize, fwArhMail,
               fwErrLogMail);
+      sw.append( (lst - LOG.getTime()) + " ms\n");
+      sw.append("Message");
       sw.append(rs);
-      sw.append(
-              " end: " + (lst - LOG.getTime()) + " ms\n---------------------\n\n");
+
       fwArhMail.flush();
       fwErrLogMail.flush();
     } catch (IOException ex) {

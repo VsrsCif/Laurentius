@@ -27,6 +27,9 @@ public class TaskException extends Exception {
 
     InitException(1, "Init exception"),
     ProcessException(2, "Execution error"), ;
+    
+    
+    public static final String ERR_MESSAGES_CREATE_FOLDER = "Could not remove folder: %s !";
 
     int iCode;
     String strDesc;

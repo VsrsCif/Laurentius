@@ -19,17 +19,17 @@ package si.laurentius.test;
 import java.io.File;
 import java.io.StringWriter;
 import java.math.BigInteger;
-import java.net.Authenticator;
-import java.net.MalformedURLException;
-import java.net.PasswordAuthentication;
-import java.net.URL;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.ws.Binding;
+import javax.xml.ws.BindingProvider;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 import si.laurentius.GetInMailRequest;
@@ -72,7 +72,7 @@ public class WSClientExample {
   public static final String APPL_ID = "appl_1";
   public static final String APPL_PASSWORD = "appl1234";
 
-  public static String MAILBOX_ADDRESS
+  public static final String MAILBOX_ADDRESS
           = "http://localhost:8080/laurentius-ws/mailbox?wsdl";
 
   public static final String DOMAIN = "mb-laurentius.si"; // CHANGE BOX DOMAIN!!!
@@ -80,32 +80,46 @@ public class WSClientExample {
   public static final String RECEIVER_BOX = "b.department@" + DOMAIN;
   public static final String SERVICE = "DeliveryWithReceipt";
   public static final String ACTION = "Delivery";
+  public static final String LOG_SECTION_SEPARATOR = "*****************************";
 
   public static final Logger LOG = Logger.getLogger(WSClientExample.class);
 
-  public File[] testFiles;
+  File[] testFiles;
   SEDMailBoxWS mTestInstance = null;
-
-  public WSClientExample() {
-
-  }
 
   public SEDMailBoxWS getService() {
     if (mTestInstance == null) {
-      //  System.setProperty("http.maxRedirects", "2"); // at least two redirection login and webservice url.(def: 20)
 
       try {
+        /*
+        //-----------------------------------------
+        // Authenticator method 1 for "fat client"
+        // use HTTPHandlerBasicAuthenticator for "weblogic"
         Authenticator.setDefault(new Authenticator() {
           @Override
           protected PasswordAuthentication getPasswordAuthentication() {
             return new PasswordAuthentication(APPL_ID, APPL_PASSWORD.
                     toCharArray());
           }
-        });
-        Mailbox msb = new Mailbox(new URL(MAILBOX_ADDRESS));
+        });*/
+
+        Mailbox msb = new Mailbox(Mailbox.class.
+                getResource("/wsdl/mailbox.wsdl")); // wsdl is in laurentius-wsdl.jar
         mTestInstance = msb.getSEDMailBoxWSPort();
-      } catch (MalformedURLException ex) {
-        LOG.error("Bad url", ex);
+        Map<String, Object> req_ctx = ((BindingProvider) mTestInstance).
+                getRequestContext();
+        req_ctx.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, MAILBOX_ADDRESS);
+
+        //-----------------------------------------
+        // Authenticator method 2 for "multithreaded env. as server"
+        Binding binding = ((BindingProvider) mTestInstance).getBinding();
+        List hchain = binding.getHandlerChain();
+        if (hchain == null) {
+          hchain = new ArrayList();
+        }
+        hchain.add(new HTTPHandlerBasicAuthenticator(APPL_ID, APPL_PASSWORD));
+        binding.setHandlerChain(hchain);
+
       } catch (Exception pe) {
         LOG.error("Bad password or application account: " + pe.getMessage());
       }
@@ -138,6 +152,12 @@ public class WSClientExample {
           om = m;
           break;
         }
+      }
+
+      if (om == null) {
+        LOG.error(
+                "Message sent but no out message found for senderbox " + SENDER_BOX);
+        return;
       }
 
       boolean msgSent = false;
@@ -174,21 +194,20 @@ public class WSClientExample {
       // search for corresponding in mail
       InMail im = null;
       for (InMail m : lstIM) {
-        System.out.println(m.getSenderMessageId() + " - " + om.getSenderMessageId());
+        System.out.println(m.getSenderMessageId() + " - " + om.
+                getSenderMessageId());
         if (Objects.equals(m.getSenderMessageId(), om.getSenderMessageId())) {
           im = m;
           break;
         }
       }
-      
-    
 
       // example get in mail
       wc.getInMail(im.getId(), RECEIVER_BOX);
       // example get in mail events
       wc.getInMailEventList(im.getId(), RECEIVER_BOX);
-      
-     Thread.sleep(1000);
+
+      Thread.sleep(1000);
       // example modify status for out mail
       wc.modifyInMail(im.getId(), RECEIVER_BOX);
 
@@ -221,9 +240,9 @@ public class WSClientExample {
     // submit request
     LOG.info("submit message");
     SubmitMailResponse mr = getService().submitMail(smr);
-    LOG.info("*****************************");
+    LOG.info(LOG_SECTION_SEPARATOR);
     LOG.info("got 'sumitMail' response:\n" + serialize(mr));
-    LOG.info("*****************************");
+    LOG.info(LOG_SECTION_SEPARATOR);
 
     return mr.getRData() != null ? mr.getRData().getMailId() : null;
   }
@@ -238,9 +257,9 @@ public class WSClientExample {
     omlr.getData().setSenderEBox(senderBox);
 
     OutMailListResponse mlr = getService().getOutMailList(omlr);
-    LOG.info("*****************************");
+    LOG.info(LOG_SECTION_SEPARATOR);
     LOG.info("Got 'getOutMailList' response:\n" + serialize(mlr));
-    LOG.info("*****************************");
+    LOG.info(LOG_SECTION_SEPARATOR);
     return mlr.getRData().getOutMails();
 
   }
@@ -254,13 +273,13 @@ public class WSClientExample {
     omelr.setData(new OutMailEventListRequest.Data());
     omelr.getData().setSenderEBox(senderBox);
     omelr.getData().setMailId(bi);
-    LOG.info("*****************************");
+    LOG.info(LOG_SECTION_SEPARATOR);
     LOG.info("'getOutMailEventList' request:\n" + serialize(omelr));
-    LOG.info("*****************************");
+    LOG.info(LOG_SECTION_SEPARATOR);
     OutMailEventListResponse mler = getService().getOutMailEventList(omelr);
-    LOG.info("*****************************");
+    LOG.info(LOG_SECTION_SEPARATOR);
     LOG.info("Got 'getOutMailEventList' response:\n" + serialize(mler));
-    LOG.info("*****************************");
+    LOG.info(LOG_SECTION_SEPARATOR);
     return mler.getRData().getOutEvents();
 
   }
@@ -278,22 +297,22 @@ public class WSClientExample {
 
     ModifyOutMailResponse res;
     try {
-      LOG.info("*****************************");
+      LOG.info(LOG_SECTION_SEPARATOR);
       LOG.info("'getInMailList' request:\n" + serialize(req));
-      LOG.info("*****************************");
+      LOG.info(LOG_SECTION_SEPARATOR);
       res = getService().modifyOutMail(req);
-      LOG.info("*****************************");
+      LOG.info(LOG_SECTION_SEPARATOR);
       LOG.info("Got 'modifyOutMail' response:\n" + serialize(res));
-      LOG.info("*****************************");
+      LOG.info(LOG_SECTION_SEPARATOR);
     } catch (SEDException_Exception ex) {
-      LOG.info("*****************************");
+      LOG.info(LOG_SECTION_SEPARATOR);
       LOG.info("Got 'modifyOutMail' SEDException_Exception:\n" + serialize(ex.
               getFaultInfo()));
-      LOG.info("*****************************");
+      LOG.info(LOG_SECTION_SEPARATOR);
     }
   }
 
-  public List<InMail> getInMailList(String receiverBox,String status)
+  public List<InMail> getInMailList(String receiverBox, String status)
           throws SEDException_Exception, JAXBException {
     InMailListRequest req = new InMailListRequest();
     Control c = createControl();
@@ -303,14 +322,14 @@ public class WSClientExample {
     req.getData().setReceiverEBox(receiverBox);
     req.getData().setStatus(status);
 
-    LOG.info("*****************************");
+    LOG.info(LOG_SECTION_SEPARATOR);
     LOG.info("'getInMailList' request:\n" + serialize(req));
-    LOG.info("*****************************");
+    LOG.info(LOG_SECTION_SEPARATOR);
 
     InMailListResponse mlr = getService().getInMailList(req);
-    LOG.info("*****************************");
+    LOG.info(LOG_SECTION_SEPARATOR);
     LOG.info("Got 'getInMailList' response:\n" + serialize(mlr));
-    LOG.info("*****************************");
+    LOG.info(LOG_SECTION_SEPARATOR);
     // return first mail id
     return mlr.getRData().getInMails();
 
@@ -327,9 +346,9 @@ public class WSClientExample {
     omelr.getData().setMailId(bi);
 
     InMailEventListResponse mler = getService().getInMailEventList(omelr);
-    LOG.info("*****************************");
+    LOG.info(LOG_SECTION_SEPARATOR);
     LOG.info("Got 'getInMailEventList' response:\n" + serialize(mler));
-    LOG.info("*****************************");
+    LOG.info(LOG_SECTION_SEPARATOR);
 
   }
 
@@ -344,9 +363,9 @@ public class WSClientExample {
     reg.getData().setMailId(bi);
 
     GetInMailResponse mler = getService().getInMail(reg);
-    LOG.info("*****************************");
+    LOG.info(LOG_SECTION_SEPARATOR);
     LOG.info("Got 'getInMail' response:\n" + serialize(mler));
-    LOG.info("*****************************");
+    LOG.info(LOG_SECTION_SEPARATOR);
 
   }
 
@@ -364,9 +383,9 @@ public class WSClientExample {
     ModifyInMailResponse res;
     try {
       res = getService().modifyInMail(req);
-      LOG.info("*****************************");
+      LOG.info(LOG_SECTION_SEPARATOR);
       LOG.info("Got response:\n" + serialize(res));
-      LOG.info("*****************************");
+      LOG.info(LOG_SECTION_SEPARATOR);
     } catch (SEDException_Exception ex) {
       LOG.info("Got SEDException_Exception: " + serialize(ex.getFaultInfo()));
     }

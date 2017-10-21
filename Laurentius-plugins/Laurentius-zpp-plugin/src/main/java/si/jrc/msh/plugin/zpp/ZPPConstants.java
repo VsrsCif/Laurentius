@@ -10,36 +10,40 @@ package si.jrc.msh.plugin.zpp;
  */
 public class ZPPConstants {
 
+  private ZPPConstants() {
+  }
+
+  
   /**
      *
      */
   public static final String ELM_SIGNAL_ENCRYPTED_KEY = "EncryptedKey";
 
-  // public static String LOCK_STATUS="ZPPLock";
+  
   /**
      *
      */
-  public static String FOP_CONFIG_FILENAME = "fop.xconf";
+  public static final String FOP_CONFIG_FILENAME = "fop.xconf";
 
   /**
      *
      */
-  public static String MSG_DELIVERY_NOTIFICATION_DESC = "Obvestilo o prispeli pošiljki";
+  public static final String MSG_DELIVERY_NOTIFICATION_DESC = "Obvestilo o prispeli pošiljki";
 
   /**
      *
      */
-  public static String MSG_DELIVERY_NOTIFICATION_FILENAME = "ZPPObvestilo";
+  public static final String MSG_DELIVERY_NOTIFICATION_FILENAME = "ZPPObvestilo";
 
   /**
      *
      */
-  public static String MSG_DOC_PREFIX_DESC = "Sifriran dok.:";
+  public static final String MSG_DOC_PREFIX_DESC = "Sifriran dok.:";
 
   /**
      *
      */
-  public static String SVEV_FOLDER = "SVEV";
+  public static final  String SVEV_FOLDER = "SVEV";
 
   /**
      *
@@ -89,5 +93,5 @@ public class ZPPConstants {
   /**
      *
      */
-  public static String XSLT_FOLDER = "xslt";
+  public static final String XSLT_FOLDER = "xslt";
 }

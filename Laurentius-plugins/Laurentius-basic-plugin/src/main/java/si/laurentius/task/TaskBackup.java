@@ -71,7 +71,9 @@ public class TaskBackup implements TaskExecutionInterface {
    *
    */
   public static final String KEY_EXPORT_FOLDER = "backup.folder";
+
   private static final SEDLogger LOG = new SEDLogger(TaskBackup.class);
+
 
   /**
    *
@@ -94,8 +96,7 @@ public class TaskBackup implements TaskExecutionInterface {
       @Override
       public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
         if (exc == null) {
-          Files.delete(dir);
-          return FileVisitResult.CONTINUE;
+          return deleteFile(dir);
         } else {
           // directory iteration failed; propagate exception
           throw exc;
@@ -104,8 +105,7 @@ public class TaskBackup implements TaskExecutionInterface {
 
       @Override
       public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-        Files.delete(file);
-        return FileVisitResult.CONTINUE;
+        return deleteFile(file);
       }
 
       @Override
@@ -113,7 +113,11 @@ public class TaskBackup implements TaskExecutionInterface {
         // try to delete the file anyway, even if its attributes
         // could not be read, since delete-only access is
         // theoretically possible
-        Files.delete(file);
+        return deleteFile(file);
+      }
+
+      public FileVisitResult deleteFile(Path path) throws IOException {
+        Files.delete(path);
         return FileVisitResult.CONTINUE;
       }
     });
@@ -168,9 +172,9 @@ public class TaskBackup implements TaskExecutionInterface {
             for (MSHInPart p : m.getMSHInPayload().getMSHInParts()) {
               if (p.getFilepath() != null) {
                 try {
-                    File fp = StorageUtils.getFile(p.getFilepath());
+                  File fp = StorageUtils.getFile(p.getFilepath());
                   if (fp.exists()) {
-                  mSU.copyFileToFolder(p.getFilepath(), flStorage);
+                    mSU.copyFileToFolder(p.getFilepath(), flStorage);
                   } else {
                     fwLogErr.append("\nPayload: ");
                     fwLogErr.append(p.getFilepath());
@@ -253,12 +257,12 @@ public class TaskBackup implements TaskExecutionInterface {
                   getMSHOutParts().isEmpty()) {
             for (MSHOutPart p : m.getMSHOutPayload().getMSHOutParts()) {
               if (p.getFilepath() != null) {
-                
+
                 try {
-                   File fp = StorageUtils.getFile(p.getFilepath());
+                  File fp = StorageUtils.getFile(p.getFilepath());
                   if (fp.exists()) {
 
-                  mSU.copyFileToFolder(p.getFilepath(), flStorage);
+                    mSU.copyFileToFolder(p.getFilepath(), flStorage);
                   } else {
                     fwLogErr.append("\nPayload: ");
                     fwLogErr.append(p.getFilepath());
@@ -365,34 +369,36 @@ public class TaskBackup implements TaskExecutionInterface {
         LOG.logWarn(l, msg, nfe);
       }
     }
-
     sw.append("- Init folders:");
     long lst = LOG.getTime();
     File bckFolder = initFolders(sfolder, backupFolder, bDelOldFolder);
-    sw.append(" end: " + (lst - LOG.getTime()) + " ms\n");
-    
-     File ferrLogMail = new File(bckFolder, "backup-error.txt");
-    try (FileWriter fwErrLogMail = new FileWriter( ferrLogMail)){
+    sw.append( (lst - LOG.getTime()) + " ms\n");
 
-    sw.append("- Backup settings and lookups");
-    lst = LOG.getTime();
-    mLookups.exportLookups(bckFolder, bBackupPassword);
-    sw.append(" end: " + (lst - LOG.getTime()) + " ms\n");
+    File ferrLogMail = new File(bckFolder, "backup-error.txt");
+    try (FileWriter fwErrLogMail = new FileWriter(ferrLogMail)) {
 
-   
-    sw.append("---------------------\nBackup out mail\n");
-    lst = LOG.getTime();
-    String rs = backupOutMails(null, bckFolder, iChunkSize,fwErrLogMail);
-    sw.append(rs);
-    sw.append(
-            " end: " + (lst - LOG.getTime()) + " ms\n---------------------\n\n");
+      sw.append("- Backup settings and lookups:");
+      lst = LOG.getTime();
+      mLookups.exportLookups(bckFolder, bBackupPassword);
+      sw.append((lst - LOG.getTime()) + " ms\n");
 
-    sw.append("---------------------\nBackup in mail");
-    lst = LOG.getTime();
-    rs = backupInMails(null, bckFolder, iChunkSize, fwErrLogMail);
-    sw.append(rs);
-    sw.append(
-            " end: " + (lst - LOG.getTime()) + " ms\n---------------------\n\n");
+      sw.append("- Backup out mail:");
+      lst = LOG.getTime();
+      String rs = backupOutMails(null, bckFolder, iChunkSize, fwErrLogMail);
+      sw.append((lst - LOG.getTime()) + " ms\n");
+      sw.append("Message: ");
+      sw.append(rs);
+      sw.append("\n");
+      
+
+      sw.append("- Backup in mail: ");
+      lst = LOG.getTime();
+      rs = backupInMails(null, bckFolder, iChunkSize, fwErrLogMail);
+      sw.append((lst - LOG.getTime()) + " ms\n");
+      sw.append("Message: ");
+      sw.append(rs);
+      sw.append("\n");
+      
     } catch (IOException ex) {
       throw new TaskException(TaskException.TaskExceptionCode.InitException,
               "Error opening archive list file:  '" + ferrLogMail.
@@ -404,24 +410,7 @@ public class TaskBackup implements TaskExecutionInterface {
     return sw.toString();
   }
 
-  /*
-  * @Override public String getType() { return "backup"; }
-  *
-  * @Override public String getName() { return "Backup data"; }
-  *
-  * @Override public String getDesc() { return "Backup data to 'xml' and files to backup-storage";
-  * }
-  *
-  * @Override public Properties getProperties() { Properties p = new Properties();
-  * p.setProperty(KEY_EXPORT_FOLDER, "Backup folder"); p.setProperty(KEY_CHUNK_SIZE,
-  * "Max mail count in chunk");
-  *
-  * p.setProperty(KEY_DELETE_OLD, "Clear backup folder (true/false)"); return p; }
-   */
-  /**
-   *
-   * @return
-   */
+ 
   @Override
   public CronTaskDef getDefinition() {
     CronTaskDef tt = new CronTaskDef();
@@ -456,29 +445,31 @@ public class TaskBackup implements TaskExecutionInterface {
         removeRecursive(f.toPath());
       } catch (IOException ex) {
         throw new TaskException(TaskException.TaskExceptionCode.InitException,
-                "Could not remove folder: '" + f.getAbsolutePath() + "'!", ex);
+                String.format(TaskException.TaskExceptionCode.ERR_MESSAGES_CREATE_FOLDER, f.getAbsolutePath(), ex));
+                
       }
     }
 
     if (!f.exists() && !f.mkdirs()) {
       throw new TaskException(TaskException.TaskExceptionCode.InitException,
-              "Could not create folder: '" + f.getAbsolutePath() + "'!");
+               String.format(TaskException.TaskExceptionCode.ERR_MESSAGES_CREATE_FOLDER, f.getAbsolutePath()));
+              
     }
     File bck = new File(f, bckFolder);
     if (bck.exists()) {
       throw new TaskException(TaskException.TaskExceptionCode.InitException,
-              "Backup folder: '"
-              + bck.getAbsolutePath() + "' already exists. " + "Backup would overwrite folder content!");
+              "Backup folder: '" + bck.getAbsolutePath() 
+                      + "' already exists! Backup would overwrite folder content!");
     } else if (!bck.mkdirs()) {
       throw new TaskException(TaskException.TaskExceptionCode.InitException,
-              "Could not create folder: '" + bck.getAbsolutePath() + "'!");
+             String.format(TaskException.TaskExceptionCode.ERR_MESSAGES_CREATE_FOLDER, bck.getAbsolutePath()));
 
     }
 
     File bckStrg = new File(bck, STORAGE_FOLDER);
     if (!bckStrg.mkdirs()) {
       throw new TaskException(TaskException.TaskExceptionCode.InitException,
-              "Could not create folder: '" + bckStrg.getAbsolutePath() + "'!");
+               String.format(TaskException.TaskExceptionCode.ERR_MESSAGES_CREATE_FOLDER, bckStrg.getAbsolutePath()));
 
     }
     return bck;
