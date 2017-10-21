@@ -84,7 +84,7 @@ public class StorageUtils {
       CURRENT_PATH = pcDir.resolve(format("%03d", i)).toAbsolutePath();
       if (CURRENT_PATH.toFile().exists()) {
       
-      try (Stream strPaths = Files.list(CURRENT_PATH)){
+      try (Stream strPaths = Files.list(CURRENT_PATH)){ 
         CURRENT_FILE_COUNT_IN_FOLDER.set((int)strPaths.count());
       } catch (IOException ex) {
         throw new StorageException(
