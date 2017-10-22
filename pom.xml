@@ -68,8 +68,12 @@
         <maven.surefire.plugin.version>2.16</maven.surefire.plugin.version>
         <sonar.maven.version>3.2</sonar.maven.version>
         <!-- DEPENDENCIES -->
-             
-        <net.sf.saxon.version>9.8.0-5</net.sf.saxon.version>
+        <!-- 
+        Saxon9-HE no longer offers XPath 1.0 compatibility mode, so it won't run a stylesheet labelled with version="1.0".
+             The last open source Saxon release to offer this feature is Saxon 9.7, which of course is still available
+             Latest: 9.7.0-14 9.8.0-5
+        -->     
+        <net.sf.saxon.version>9.7.0-14</net.sf.saxon.version>
         <javax.javaee-api.version>8.0</javax.javaee-api.version>
         <log4j.version>1.2.17</log4j.version>
         
@@ -95,9 +99,10 @@
         <!-- GUI latest primeface 6.1 -> dialog problem  -->
         <org.primefaces.version>6.0</org.primefaces.version>
         <org.primefaces.extensions.version>6.0.0</org.primefaces.extensions.version>        
-        <!-- unit testing-->      
+        <!-- unit testing
+        -->      
         <org.apache.derby.version>10.14.1.0</org.apache.derby.version>
-        <org.hibernate.version>5.2.12.Final</org.hibernate.version>
+        <org.hibernate.version>4.2.6.Final</org.hibernate.version>
         <junit.version>4.12</junit.version>
         <org.apache.activemq.junit.version>5.15.2</org.apache.activemq.junit.version>      
         <org.apache.activemq.core.version>5.7.0</org.apache.activemq.core.version> 
