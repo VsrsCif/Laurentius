@@ -81,7 +81,7 @@ public class WSZPPClientExample {
   public static final String APPL_ID = "appl_1";
   public static final String APPL_PASSWORD = "appl1234";
 
-  public static String MAILBOX_ADDRESS
+  public static final String MAILBOX_ADDRESS
           = "http://localhost:8080/laurentius-ws/mailbox?wsdl";
 
   public static final String DOMAIN = "mb-laurentius.si"; // CHANGE BOX DOMAIN!!!
@@ -92,7 +92,6 @@ public class WSZPPClientExample {
   
   public static final String LOG_SECTION_SEPARATOR = "*****************************";
 
-  private File[] testFiles;
   SEDMailBoxWS mTestInstance = null;
 
 
@@ -213,6 +212,11 @@ public class WSZPPClientExample {
       }
     }
 
+    if (im ==null) {
+       LOG.error("Message submitted but no mail in status PLOCKED found for "+ RECEIVER_BOX);
+        return;
+    }
+    
     ZPPUtils zpp = new ZPPUtils();
     OutMail omDA = zpp.createZppAdviceOfDelivery(im, S_KEYSTORE,
             S_KEYSTORE_PASSWD, singatureKey, S_KEY_PASSWD);

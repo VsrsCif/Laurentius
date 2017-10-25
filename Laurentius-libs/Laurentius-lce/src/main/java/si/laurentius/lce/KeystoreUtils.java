@@ -81,7 +81,7 @@ public class KeystoreUtils {
     Date currDate = Calendar.getInstance().getTime();
     return crt.getValidTo() != null
             && crt.getValidFrom() != null
-            & currDate.after(crt.getValidFrom())
+            && currDate.after(crt.getValidFrom())
             && currDate.before(crt.getValidTo());
   }
 

@@ -20,6 +20,11 @@ package si.laurentius.ejb;
  */
 public class SEDNamedQueries {
 
+  private SEDNamedQueries() {
+  }
+  
+  
+
   public static final String GET_CERTSTORE_BY_NAME = "si.laurentius.cert.SEDCertStore.getByName";
 
   public static final String UPDATE_INMAIL = "si.laurentius.msh.inbox.mail.MSHInMail.updateStatus";
@@ -27,5 +32,13 @@ public class SEDNamedQueries {
   public static final String UPDATE_OUTMAIL_DELIVERED_DATE = "si.laurentius.msh.outbox.mail.MSHOutMail.updateDeliveredDate";
   public static final String UPDATE_OUTMAIL_RECEIVED_DATE = "si.laurentius.msh.outbox.mail.MSHOutMail.updateReceivedDate";
   public static final String UPDATE_OUTMAIL_SENT_DATE = "si.laurentius.msh.outbox.mail.MSHOutMail.updateSentDate";
+  
+  public static final String QUERY_PARAM_ID="id";
+  public static final String QUERY_PARAM_STATUS="status";
+  public static final String QUERY_PARAM_STATUS_DATE="statusDate";
+  public static final String QUERY_PARAM_TYPE="type";
+  public static final String QUERY_PARAM_CRON_ID="cronId";
+  
+  
 
 }

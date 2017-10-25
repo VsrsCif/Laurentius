@@ -178,38 +178,54 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
     SEDCertPassword cp = new SEDCertPassword();
     cp.setAlias(alias);
     cp.setPassword(pswd);
-    boolean suc = false;
+
+    TypedQuery<SEDCertPassword> tg
+            = memEManager.createNamedQuery(
+                    SEDCertPassword.class.getName() + ".getByAlias",
+                    SEDCertPassword.class);
+    tg.setParameter("alias", alias);
+    SEDCertPassword dbCP = null;
     try {
-      TypedQuery<SEDCertPassword> tg
-              = memEManager.createNamedQuery(
-                      SEDCertPassword.class.getName() + ".getByAlias",
-                      SEDCertPassword.class);
-      tg.setParameter("alias", alias);
-      try {
-        SEDCertPassword dbCP = tg.getSingleResult();
-        if (!Objects.equals(pswd, dbCP.getPassword())) {
-          dbCP.setPassword(pswd);
-          mutUTransaction.begin();
-          memEManager.merge(cp);
-          mutUTransaction.commit();
+      dbCP = tg.getSingleResult();
+    } catch (NoResultException ignore) {
+      LOG.log("No key found for %s, key data will be added to db!", alias);
+    }
 
-        }
+    if (dbCP == null) {
+      setPasswordToDB(cp, false);
+    } else if (!Objects.equals(pswd, dbCP.getPassword())) {
+      dbCP.setPassword(pswd);
+      setPasswordToDB(dbCP, true);
 
-      } catch (NoResultException nre) {
-        mutUTransaction.begin();
+    }
+
+    LOG.logEnd(l, alias);
+
+  }
+
+  private void setPasswordToDB(SEDCertPassword cp, boolean update) throws SEDSecurityException {
+    long l = LOG.logStart(cp.getAlias());
+
+    try {
+      mutUTransaction.begin();
+      if (update) {
+        memEManager.merge(cp);
+      } else {
         memEManager.persist(cp);
-        mutUTransaction.commit();
-
       }
+      mutUTransaction.commit();
       refreshPasswords();
-
-      suc = true;
-    } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException
-            | HeuristicRollbackException | SecurityException | IllegalStateException ex) {
+    } catch (NotSupportedException | SystemException | RollbackException
+            | HeuristicMixedException
+            | HeuristicRollbackException
+            | SecurityException
+            | IllegalStateException ex) {
       String msg = String.format(
-              "Error occured while saving passwd for alias %s. Err %s", alias,
+              "Error occured while saving passwd for alias %s. Err %s", cp.
+                      getAlias(),
               ex.getMessage());
       LOG.logError(l, msg, ex);
+
       try {
 
         mutUTransaction.rollback();
@@ -222,8 +238,6 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
               ex,
               msg);
     }
-    LOG.logEnd(l, alias);
-
   }
 
   /**
@@ -299,8 +313,6 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
         // update cached values or update cache!
         mscCacheList.clearCachedList(SEDCertPassword.class);
         mscCacheList.clearCachedList(KEYSTORE_NAME);
-        //pswd.setAlias(newAlias);
-        //cert.setAlias(newAlias);
 
       } catch (SEDSecurityException | NotSupportedException | SystemException | RollbackException | HeuristicMixedException
               | HeuristicRollbackException | SecurityException | IllegalStateException ex) {
@@ -429,11 +441,13 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
           }
         }
       }
-      if (crlExists == null || Utils.isEmptyString(crlExists.getFilePath())) {
-        if (updateCrlCache(crl)) {
-          mlstCertCRL.put(crl.getIssuerDigestValue(), crl);
-          crlExists = crl;
-        }
+      if ((crlExists == null
+              || Utils.isEmptyString(crlExists.getFilePath()))
+              && updateCrlCache(crl)) {
+
+        mlstCertCRL.put(crl.getIssuerDigestValue(), crl);
+        crlExists = crl;
+
       }
     } catch (CertificateParsingException | IOException ex) {
       LOG.logError("Error updating CRL cache", ex);
@@ -478,7 +492,7 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
   public List<String> getKeystoreAliases(boolean onlyKeys) {
 
     long l = LOG.logStart();
-    List<String> lst = Collections.emptyList();;
+    List<String> lst = Collections.emptyList();
     try {
       List<SEDCertificate> lc = getCertificates();
       lst = new ArrayList<>();
@@ -548,7 +562,6 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
    */
   @Override
   public List<SEDCertCRL> getSEDCertCRLs() {
-    long l = LOG.logStart();
     return new ArrayList(mlstCertCRL.values());
   }
 
@@ -664,12 +677,12 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
     Boolean bRes = null;
     SEDCertCRL crlData = getCrlForCert(x509Cert, false);
     X509CRL crl = null;
-    if (crlData == null) {       
-      LOG.formatedWarning("Certificate %s does not have CLR extension!", x509Cert.getSubjectX500Principal().getName());
+    if (crlData == null) {
+      LOG.formatedWarning("Certificate %s does not have CLR extension!",
+              x509Cert.getSubjectX500Principal().getName());
       return false;
     }
     crl = CRLVerifier.getCRLFromFile(crlData.getFilePath());
-    
 
     if (crl != null) {
       bRes = crl.isRevoked(x509Cert);
@@ -944,15 +957,13 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
     boolean bSuc = false;
 
     if (mdNetUtils != null && !mdNetUtils.isConnectedToNetwork()) {
-      String msg = String.format(
-              "Could not retrieve CRL list. Network is not connected");
+      String msg = "Could not retrieve CRL list. Network is not connected";
       LOG.logError(msg, null);
       return false;
     }
 
     if (mdNetUtils != null && !mdNetUtils.isConnectedToInternet()) {
-      String msg = String.format(
-              "Could not retrieve CRL list. Internet is not reachable!");
+      String msg = "Could not retrieve CRL list. Internet is not reachable!";
       LOG.logError(msg, null);
       return false;
     }
@@ -976,7 +987,7 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
                 get(0) : null);*/
       } catch (IOException | CertificateException | CRLException | NamingException ex) {
         String msg = String.format(
-                "Error retrieving CRL Cache for %s url: error %s",
+                "Error retrieving CRL Cache for %s url %s: error %s",
                 crl.getIssuerDN(), u.getValue(), ex.getMessage());
         LOG.logError(msg, ex);
       }

@@ -55,6 +55,7 @@ import javax.transaction.NotSupportedException;
 import javax.transaction.RollbackException;
 import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
+import javax.xml.bind.JAXBException;
 import si.laurentius.msh.inbox.event.MSHInEvent;
 import si.laurentius.msh.inbox.mail.MSHInMail;
 import si.laurentius.msh.outbox.event.MSHOutEvent;
@@ -76,6 +77,7 @@ import si.laurentius.commons.interfaces.SEDDaoInterface;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StorageUtils;
 import si.laurentius.commons.utils.Utils;
+import si.laurentius.commons.utils.xml.XMLUtils;
 import si.laurentius.lce.DigestUtils;
 import si.laurentius.msh.inbox.payload.MSHInPart;
 import si.laurentius.msh.outbox.payload.MSHOutPart;
@@ -89,6 +91,15 @@ import si.laurentius.msh.outbox.payload.MSHOutPart;
 @TransactionManagement(TransactionManagementType.BEAN)
 public class SEDDaoBean implements SEDDaoInterface {
 
+  private static final String MSG_ERR_ROLLBACK = "Rollback failed";
+  private static final String MSG_ERR_STATUS = "Status %s not setted to class: %s, id  %d. Effected %d rows!  Mail not exists or id duplicates?";  
+  private static final String MSG_ERR_PESIST_PARTS = "Error occured while persisting parts (%s) for class %s, id %d. Error %s";
+  private static final String MSG_ERR_COMMIT_PARTS = "Error occured while commit parts (%s) for class %s, id %d. Error %s";
+  private static final String MSG_ERR_REMOVE = "Error occured while removing class %s, id %d. Error %s";
+  private static final String MSG_ERR_JMS_SUBMIT = "Error occured while submitting class %s, id %d to JMS %s. Error %s";
+  
+  
+  
   /**
    *
    */
@@ -120,24 +131,31 @@ public class SEDDaoBean implements SEDDaoInterface {
    * @param o
    * @return
    */
-  private <T> boolean add(T o) {
+  protected <T> void add(T o) throws StorageException {
     long l = LOG.logStart();
-    boolean suc = false;
     try {
       mutUTransaction.begin();
       memEManager.persist(o);
       mutUTransaction.commit();
-      suc = true;
     } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException
             | HeuristicRollbackException | SecurityException | IllegalStateException ex) {
+
+      // get cause of an error, because usually contains a good description
+      // of sql error.
+      String erMsg = "Error occured while adding object: "
+              + o.getClass().getName() + ". Root error: " + getExceptioRootCase(
+              ex);
+      // do not log error it is thrown on .. 
+      LOG.logError(l, erMsg, null);
       try {
-        LOG.logError(l, ex.getMessage(), ex);
+
         mutUTransaction.rollback();
       } catch (IllegalStateException | SecurityException | SystemException ex1) {
-        LOG.logWarn(l, "Rollback failed", ex1);
+        LOG.logWarn(l, MSG_ERR_ROLLBACK, ex1);
       }
+      throw new StorageException(erMsg, ex);
+
     }
-    return suc;
   }
 
   @Override
@@ -153,48 +171,65 @@ public class SEDDaoBean implements SEDDaoInterface {
         ip.setMailId(mail.getId());
         memEManager.persist(ip);
       }
-      mail.setStatus(status.getValue());
-      mail.setStatusDate(Calendar.getInstance().getTime());
-
-      Query updq = memEManager.createNamedQuery(SEDNamedQueries.UPDATE_INMAIL);
-      updq.setParameter("id", mail.getId());
-      updq.setParameter("statusDate", mail.getStatusDate());
-      updq.setParameter("status", mail.getStatus());
-
-      int iVal = updq.executeUpdate();
-      if (iVal != 1) {
-        try {
-          mutUTransaction.rollback();
-        } catch (IllegalStateException | SecurityException | SystemException ex1) {
-          LOG.logWarn(l, ex1.getMessage(), ex1);
-        }
-        String msg
-                = "Status not setted to MSHInMail:" + mail.getId() + " result: '" + iVal
-                + "'. Mail not exists or id duplicates?";
-        LOG.logError(l, msg, null);
-        throw new StorageException(msg, null);
+    } catch (NotSupportedException | SystemException ex) {
+      String msg = String.format(MSG_ERR_PESIST_PARTS, "Add:" + lstParts.size(), mail.getClass().getName(), mail.getId(), ex.getMessage());
+      LOG.logError(l, msg, null);
+      try {
+        mutUTransaction.rollback();
+      } catch (IllegalStateException | SecurityException | SystemException ex1) {
+        LOG.logWarn(l, ex1.getMessage(), ex1);
       }
+      throw new StorageException(msg, ex);
 
-      // persist mail event
-      MSHInEvent me = new MSHInEvent();
-      me.setMailId(mail.getId());
-      me.setDescription(statusdesc);
-      me.setStatus(mail.getStatus());
-      me.setDate(mail.getStatusDate());
-      me.setUserId(userId);
-      me.setApplicationId(applicationId);
+    }
+
+    mail.setStatus(status.getValue());
+    mail.setStatusDate(Calendar.getInstance().getTime());
+
+    Query updq = memEManager.createNamedQuery(SEDNamedQueries.UPDATE_INMAIL);
+    updq.setParameter(SEDNamedQueries.QUERY_PARAM_ID, mail.getId());
+    updq.setParameter(SEDNamedQueries.QUERY_PARAM_STATUS_DATE, mail.
+            getStatusDate());
+    updq.setParameter(SEDNamedQueries.QUERY_PARAM_STATUS, mail.getStatus());
+
+    int iVal = updq.executeUpdate();
+    if (iVal != 1) {
+      try {
+        mutUTransaction.rollback();
+      } catch (IllegalStateException | SecurityException | SystemException ex1) {
+        LOG.logWarn(l, MSG_ERR_ROLLBACK, ex1);
+      }
+      String msg = String.format(MSG_ERR_STATUS, mail.getStatus(), mail.
+              getClass().getName(), mail.getId(), iVal);
+      LOG.logError(l, msg, null);
+      throw new StorageException(msg, null);
+    }
+
+    // persist mail event
+    MSHInEvent me = new MSHInEvent();
+    me.setMailId(mail.getId());
+    me.setDescription(statusdesc);
+    me.setStatus(mail.getStatus());
+    me.setDate(mail.getStatusDate());
+    me.setUserId(userId);
+    me.setApplicationId(applicationId);
+    try {
       memEManager.persist(me);
 
       mutUTransaction.commit();
       suc = true;
-    } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException
+    } catch (SystemException | RollbackException | HeuristicMixedException
             | HeuristicRollbackException | SecurityException | IllegalStateException ex) {
+      String msg = String.format(MSG_ERR_COMMIT_PARTS, "Add:" + lstParts.size(), mail.getClass().getName(), mail.getId(), ex.getMessage());
+      LOG.logError(l, msg, null);
       try {
         LOG.logError(l, ex.getMessage(), ex);
         mutUTransaction.rollback();
       } catch (IllegalStateException | SecurityException | SystemException ex1) {
-        LOG.logWarn(l, "Rollback failed", ex1);
+        LOG.logWarn(l, MSG_ERR_ROLLBACK, ex1);
       }
+      throw new StorageException(msg, ex);
+
     }
 
     return suc;
@@ -205,17 +240,22 @@ public class SEDDaoBean implements SEDDaoInterface {
           SEDOutboxMailStatus status, String statusdesc, String userId,
           String applicationId) throws StorageException {
 
-   return updateOutMailPayload(mail, lstParts, Collections.emptyList(), Collections.emptyList(), status,
-           statusdesc, userId, applicationId);
+    return updateOutMailPayload(mail, lstParts, Collections.emptyList(),
+            Collections.emptyList(), status,
+            statusdesc, userId, applicationId);
   }
-  
-  
+
   @Override
-   public boolean updateOutMailPayload(MSHOutMail mail, List<MSHOutPart> lstAddParts, List<MSHOutPart> lstUpdateParts, List<MSHOutPart> lstDeleteParts,  
-          SEDOutboxMailStatus status, String statusdesc, String userId, String applicationId) throws StorageException{
-     // persits parts
+  public boolean updateOutMailPayload(MSHOutMail mail,
+          List<MSHOutPart> lstAddParts, List<MSHOutPart> lstUpdateParts,
+          List<MSHOutPart> lstDeleteParts,
+          SEDOutboxMailStatus status, String statusdesc, String userId,
+          String applicationId) throws StorageException {
+    // persits parts
     long l = LOG.logStart();
     boolean suc = false;
+    String strMsg = String.format("a: %d, u: %d, d %d", lstAddParts.size(),
+            lstUpdateParts.size(), lstDeleteParts.size());
     try {
       mutUTransaction.begin();
       for (MSHOutPart ip : lstAddParts) {
@@ -225,76 +265,85 @@ public class SEDDaoBean implements SEDDaoInterface {
         ip.setSha256Value(DigestUtils.getHexSha256Digest(f));
         memEManager.persist(ip);
       }
+
       for (MSHOutPart ip : lstUpdateParts) {
         ip.setMailId(mail.getId());
         File f = StorageUtils.getFile(ip.getFilepath());
         ip.setSize(BigInteger.valueOf(f.length()));
         ip.setSha256Value(DigestUtils.getHexSha256Digest(f));
-                ;
+
         memEManager.merge(ip);
       }
-      
+
       for (MSHOutPart ip : lstDeleteParts) {
         ip.setMailId(mail.getId());
         memEManager.remove(l);
       }
-      
-      String  strMsg = String.format("a: %d, u: %d, d %d", lstAddParts.size(),lstUpdateParts.size(),lstDeleteParts.size());
-      LOG.logWarn(strMsg,null);
 
-// cause locking
-     mail.setStatusDate(Calendar.getInstance().getTime());
-     mail.setStatus(status.getValue());
-//      memEManager.merge(mail);
-
-      Query updq = memEManager.createNamedQuery(SEDNamedQueries.UPDATE_OUTMAIL);
-      updq.setParameter("id", mail.getId());
-      updq.setParameter("statusDate", mail.getStatusDate());
-      updq.setParameter("status", mail.getStatus());
-
-      int iVal = updq.executeUpdate();
-      if (iVal != 1) {
-        try {
-          mutUTransaction.rollback();
-        } catch (IllegalStateException | SecurityException | SystemException ex1) {
-          LOG.logWarn(l, ex1.getMessage(), ex1);
-        }
-        String msg
-                = "Status not setted to MSHOutMail:" + mail.getId() + " result: '" + iVal
-                + "'. Mail not exists or id duplicates?";
-        LOG.logError(l, msg, null);
-        throw new StorageException(msg, null);
-      }
-
-      // persist mail event
-      MSHOutEvent me = new MSHOutEvent();
-      me.setMailId(mail.getId());
-      me.setSenderMessageId(mail.getSenderMessageId());
-      me.setDescription(statusdesc + " " +strMsg);
-      me.setStatus(mail.getStatus());
-      me.setDate(mail.getStatusDate());
-      me.setUserId(userId);
-      me.setApplicationId(applicationId);
-      memEManager.persist(me);
-
-      mutUTransaction.commit();
-  
-      
-      
-      suc = true;
-    } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException
-            | HeuristicRollbackException | SecurityException | IllegalStateException ex) {
+    } catch (NotSupportedException | SystemException ex) {
+      String msg = String.format(MSG_ERR_PESIST_PARTS, strMsg, mail.getClass().getName(), mail.getId(), ex.getMessage());     
+      LOG.logError(l, msg, null);
       try {
-        LOG.logError(l, ex.getMessage(), ex);
         mutUTransaction.rollback();
       } catch (IllegalStateException | SecurityException | SystemException ex1) {
-        LOG.logWarn(l, "Rollback failed", ex1);
+        LOG.logWarn(l, ex1.getMessage(), ex1);
       }
+      throw new StorageException(msg, ex);
+
+    }
+
+    // if merge cause locking 
+    mail.setStatusDate(Calendar.getInstance().getTime());
+    mail.setStatus(status.getValue());
+
+    Query updq = memEManager.createNamedQuery(SEDNamedQueries.UPDATE_OUTMAIL);
+    updq.setParameter(SEDNamedQueries.QUERY_PARAM_ID, mail.getId());
+    updq.setParameter(SEDNamedQueries.QUERY_PARAM_STATUS_DATE, mail.
+            getStatusDate());
+    updq.setParameter(SEDNamedQueries.QUERY_PARAM_STATUS, mail.getStatus());
+
+    int iVal = updq.executeUpdate();
+    if (iVal != 1) {
+      try {
+        mutUTransaction.rollback();
+      } catch (IllegalStateException | SecurityException | SystemException ex1) {
+        LOG.logWarn(l, ex1.getMessage(), ex1);
+      }
+      String msg = String.format(MSG_ERR_STATUS, mail.getStatus(), mail.
+              getClass().getName(), mail.getId(), iVal);
+      LOG.logError(l, msg, null);
+      throw new StorageException(msg, null);
+    }
+
+    // persist mail event
+    MSHOutEvent me = new MSHOutEvent();
+    me.setMailId(mail.getId());
+    me.setSenderMessageId(mail.getSenderMessageId());
+    me.setDescription(statusdesc + " " + strMsg);
+    me.setStatus(mail.getStatus());
+    me.setDate(mail.getStatusDate());
+    me.setUserId(userId);
+    me.setApplicationId(applicationId);
+    try {
+      memEManager.persist(me);
+      mutUTransaction.commit();
+
+      suc = true;
+    } catch (SystemException | RollbackException | HeuristicMixedException
+            | HeuristicRollbackException | SecurityException | IllegalStateException ex) {
+      String msg = String.format(MSG_ERR_COMMIT_PARTS, strMsg, mail.getClass().getName(), mail.getId(), ex.getMessage());
+      LOG.logError(l, msg,null);
+      try {       
+        mutUTransaction.rollback();
+      } catch (IllegalStateException | SecurityException | SystemException ex1) {
+        LOG.logWarn(l, MSG_ERR_ROLLBACK, ex1);
+      }
+      throw new StorageException(msg, ex);
     }
 
     return suc;
-  
-   }
+
+  }
 
   /**
    *
@@ -302,18 +351,39 @@ public class SEDDaoBean implements SEDDaoInterface {
    * @return
    */
   @Override
-  public boolean addExecutionTask(SEDTaskExecution ad) {
-     if (!Utils.isEmptyString(ad.getResult()) && ad.getResult().length() > 1024){
-      String res = ad.getResult();
+  public boolean addExecutionTask(SEDTaskExecution task) {
+    if (!Utils.isEmptyString(task.getResult()) && task.getResult().length() > 1024) {
+      String res = task.getResult();
       StringWriter sw = new StringWriter();
       sw.append("Too long string: '");
       sw.append(res);
       sw.append("'.  Message substr to 1024");
       LOG.logWarn(sw.toString(), null);
-      ad.setResult(res.substring(0, 1023));
-    
+      task.setResult(res.substring(0, 1023));
+
     }
-    return add(ad);
+    boolean suc = false;
+    try {
+      add(task);
+      suc = true;
+    } catch (StorageException se) {
+      StringWriter sw = new StringWriter();
+      sw.append("Error occured while adding task. Error");
+      sw.append(se.getMessage());
+      sw.append(". Task: ");
+
+      try {
+        sw.append(XMLUtils.serializeToString(task));
+      } catch (JAXBException ex) {
+        sw.append("Task: " + task.getName());
+        LOG.formatedWarning(
+                "Jaxb exception: %s for SEDTaskExecution for cron id: %d", ex.
+                        getMessage(), task.getCronId());
+      }
+      LOG.logError(sw.toString(), se);
+    }
+
+    return suc;
   }
 
   /**
@@ -331,7 +401,8 @@ public class SEDDaoBean implements SEDDaoInterface {
           boolean forCount, String sortField, String sortOrder) {
     long l = LOG.logStart();
     CriteriaBuilder cb = memEManager.getCriteriaBuilder();
-    CriteriaQuery cq = forCount ? cb.createQuery(Long.class) : cb.createQuery(
+    CriteriaQuery cq = forCount ? cb.createQuery(Long.class
+    ) : cb.createQuery(
             type);
     Root<T> om = cq.from(type);
     if (forCount) {
@@ -497,7 +568,8 @@ public class SEDDaoBean implements SEDDaoInterface {
     Query q
             = memEManager.createNamedQuery(
                     "si.laurentius.msh.inbox.mail.MSHInMail.getByConvIdAndAction",
-                    MSHInMail.class);
+                    MSHInMail.class
+            );
     q.setParameter("convId", convId);
     q.setParameter("action", action);
     List<MSHInMail> lst = q.getResultList();
@@ -530,11 +602,12 @@ public class SEDDaoBean implements SEDDaoInterface {
     TypedQuery<SEDTaskExecution> tq
             = memEManager.createNamedQuery(
                     "si.laurentius.cron.SEDTaskExecution.getByStatusAndTypeAndCronJobId",
-                    SEDTaskExecution.class);
+                    SEDTaskExecution.class
+            );
 
-    tq.setParameter("status", SEDTaskStatus.SUCCESS.getValue());
-    tq.setParameter("type", type);
-    tq.setParameter("cronId", cronId);
+    tq.setParameter(SEDNamedQueries.QUERY_PARAM_STATUS, SEDTaskStatus.SUCCESS.getValue());
+    tq.setParameter(SEDNamedQueries.QUERY_PARAM_TYPE, type);
+    tq.setParameter(SEDNamedQueries.QUERY_PARAM_CRON_ID, cronId);
 
     tq.setMaxResults(1);
     try {
@@ -638,31 +711,7 @@ public class SEDDaoBean implements SEDDaoInterface {
     return mailEvents;
   }
 
-  /**
-   *
-   * @param <T>
-   * @param o
-   * @return
-   */
-  private <T> boolean remove(T o) {
-    long l = LOG.logStart();
-    boolean suc = false;
-    try {
-      mutUTransaction.begin();
-      memEManager.remove(memEManager.contains(o) ? o : memEManager.merge(o));
-      mutUTransaction.commit();
-      suc = true;
-    } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException
-            | HeuristicRollbackException | SecurityException | IllegalStateException ex) {
-      try {
-        LOG.logError(l, ex.getMessage(), ex);
-        mutUTransaction.rollback();
-      } catch (IllegalStateException | SecurityException | SystemException ex1) {
-        LOG.logWarn(l, "Rollback failed", ex1);
-      }
-    }
-    return suc;
-  }
+ 
 
   /**
    *
@@ -672,7 +721,9 @@ public class SEDDaoBean implements SEDDaoInterface {
   @Override
   public void removeInMail(BigInteger bi)
           throws StorageException {
-    removeMail(MSHInMail.class, MSHInEvent.class, bi);
+    removeMail(MSHInMail.class,
+            MSHInEvent.class,
+            bi);
   }
 
   /**
@@ -706,12 +757,10 @@ public class SEDDaoBean implements SEDDaoInterface {
         try {
           mutUTransaction.rollback();
         } catch (IllegalStateException | SecurityException | SystemException ex1) {
-          LOG.logWarn(l, "", ex);
-        }
-        String msg
-                = "Error occurred where removing mail type: '" + type + "', id: '" + bi + "'! Err:"
-                + ex.getMessage();
-        LOG.logError(l, msg, ex);
+          LOG.logWarn(l, MSG_ERR_ROLLBACK, ex);
+        }        
+        String msg = String.format(MSG_ERR_REMOVE, type.getName(), bi, ex.getMessage());        
+        LOG.logError(l, msg, null);
         throw new StorageException(msg, ex);
       }
     }
@@ -727,7 +776,9 @@ public class SEDDaoBean implements SEDDaoInterface {
   @Override
   public void removeOutMail(BigInteger bi)
           throws StorageException {
-    removeMail(MSHOutMail.class, MSHOutEvent.class, bi);
+    removeMail(MSHOutMail.class,
+            MSHOutEvent.class,
+            bi);
   }
 
   @Override
@@ -748,22 +799,30 @@ public class SEDDaoBean implements SEDDaoInterface {
     String msgFactoryJndiName = getJNDIPrefix() + SEDValues.EBMS_JMS_CONNECTION_FACTORY_JNDI;
     String msgQueueJndiName = getJNDI_JMSPrefix() + SEDValues.JNDI_QUEUE_EBMS;
     Connection connection = null;
-    Session session = null;
+    
     String msgDesc = String.format(
             "Add mail to submit queue. Retry %d, delay %d ms", retry, delay);
-    Message message = null;
-    MessageProducer sender = null;
+
     try {
       // create JMS session
 
-      ConnectionFactory cf = (ConnectionFactory) InitialContext.doLookup(
+      ConnectionFactory cf =  InitialContext.doLookup(
               msgFactoryJndiName);
       if (mqMSHQueue == null) {
-        mqMSHQueue = (Queue) InitialContext.doLookup(msgQueueJndiName);
+        mqMSHQueue =  InitialContext.doLookup(msgQueueJndiName);
       }
       connection = cf.createConnection();
-      session = connection.createSession(true, Session.SESSION_TRANSACTED);
-      sender = session.createProducer(mqMSHQueue);
+    }catch (NamingException | JMSException ex) {
+      String msg = String.format(MSG_ERR_JMS_SUBMIT,mail.getClass().getName(), mail.getId(),msgQueueJndiName, ex.getMessage()  );      
+      LOG.logError(l, msg, ex);
+      throw new StorageException(msg, ex);
+    }
+
+    Message message = null;
+    try (Session session = connection.createSession(true, Session.SESSION_TRANSACTED);
+         MessageProducer sender = session.createProducer(mqMSHQueue);){
+      
+      
       message = session.createMessage();
       message.setLongProperty(SEDValues.EBMS_QUEUE_PARAM_MAIL_ID, mail.getId().
               longValue());
@@ -774,16 +833,7 @@ public class SEDDaoBean implements SEDDaoInterface {
       message.setLongProperty(SEDValues.EBMS_QUEUE_DELAY_AMQ, delay);
       message.setLongProperty(SEDValues.EBMS_QUEUE_DELAY_Artemis,
               delay + System.currentTimeMillis());
-    } catch (NamingException | JMSException ex) {
-      String msg
-              = "Error sending mail : '" + mail.getId() + "'! Err:" + ex.
-              getMessage();
-      LOG.logError(l, msg, ex);
-      throw new StorageException(msg, ex);
-    }
-
-    try {
-
+   
       Query updq = memEManager.createNamedQuery(SEDNamedQueries.UPDATE_OUTMAIL);
       updq.setParameter("id", mail.getId());
       updq.setParameter("statusDate", mail.getStatusDate());
@@ -819,6 +869,7 @@ public class SEDDaoBean implements SEDDaoInterface {
       //sender.send(message);
       mutUTransaction.commit();
       // transaction is not working TODO!!!
+      
       sender.send(message);
       session.commit();
 
@@ -839,14 +890,7 @@ public class SEDDaoBean implements SEDDaoInterface {
         }
       }
 
-      try {
-        if (session != null) {
-          session.rollback();
-        }
-      } catch (JMSException ex1) {
-        LOG.logWarn(l, "Error rollback JSM session", ex1);
-      }
-
+     
       String msg
               = "Error sending mail : '" + mail.getId() + "'! Err:" + ex.
               getMessage();
@@ -854,11 +898,8 @@ public class SEDDaoBean implements SEDDaoInterface {
       throw new StorageException(msg, ex);
 
     } finally {
-
-      try {
-        if (connection != null) {
-          connection.close();
-        }
+      try {        
+          connection.close();        
       } catch (JMSException jmse) {
         LOG.logWarn(l, "Error closing connection JSM session", jmse);
 
@@ -880,8 +921,7 @@ public class SEDDaoBean implements SEDDaoInterface {
     try {
 
       if (Utils.isEmptyString(mail.getMessageId())) {
-        String msg = String.format(
-                "Missing mail ebms Id");
+        String msg ="Missing mail ebms Id";
         throw new StorageException(msg);
       }
       if (Utils.isEmptyString(mail.getSenderEBox())) {
@@ -938,7 +978,8 @@ public class SEDDaoBean implements SEDDaoInterface {
                     "Mail has wrong payload part size (sender: %s, service %s, senderMessageId: %s, filepart %s) "
                     + "size: %d, expected size %d!",
                     mail.getSenderEBox(), mail.getService(), mail.
-                    getSenderMessageId(), mp.getEbmsId(),  mp.getSize() == null ? 0 : mp.
+                    getSenderMessageId(), mp.getEbmsId(),
+                    mp.getSize() == null ? 0 : mp.
                     getSize().longValue(), f.length());
           }
 
@@ -968,29 +1009,27 @@ public class SEDDaoBean implements SEDDaoInterface {
                 mail.getSenderEBox(), mail.getService(), mail.
                 getSenderMessageId());
       }
-      
+
       Date dt = Calendar.getInstance().getTime();
-      
-      if (Utils.isEmptyString(mail.getStatus())){
-         mail.setStatus(SEDInboxMailStatus.RECEIVED.getValue());
-         mail.setReceivedDate(dt);
-         mail.setStatusDate(dt);
-      }
-      
-      if (mail.getStatusDate()==null){
+
+      if (Utils.isEmptyString(mail.getStatus())) {
+        mail.setStatus(SEDInboxMailStatus.RECEIVED.getValue());
+        mail.setReceivedDate(dt);
         mail.setStatusDate(dt);
       }
-      
-      if (mail.getReceivedDate()==null){
+
+      if (mail.getStatusDate() == null) {
+        mail.setStatusDate(dt);
+      }
+
+      if (mail.getReceivedDate() == null) {
         mail.setReceivedDate(dt);
       }
-      
-      
 
       mutUTransaction.begin();
       // persist mail
       memEManager.persist(mail);
-      
+
       if (mail.getMSHInPayload() != null) {
         for (MSHInPart mp : mail.getMSHInPayload().getMSHInParts()) {
           mp.setMailId(mail.getId());
@@ -1432,7 +1471,7 @@ public class SEDDaoBean implements SEDDaoInterface {
         LOG.logError(l, ex.getMessage(), ex);
         mutUTransaction.rollback();
       } catch (IllegalStateException | SecurityException | SystemException ex1) {
-        LOG.logWarn(l, "Rollback failed", ex1);
+        LOG.logWarn(l, MSG_ERR_ROLLBACK, ex1);
       }
     }
     return suc;
@@ -1447,7 +1486,7 @@ public class SEDDaoBean implements SEDDaoInterface {
    */
   @Override
   public boolean updateExecutionTask(SEDTaskExecution ad) {
-    if (!Utils.isEmptyString(ad.getResult()) && ad.getResult().length() > 1024){
+    if (!Utils.isEmptyString(ad.getResult()) && ad.getResult().length() > 1024) {
       String res = ad.getResult();
       StringWriter sw = new StringWriter();
       sw.append("Too long string: '");
@@ -1455,7 +1494,7 @@ public class SEDDaoBean implements SEDDaoInterface {
       sw.append("'.  Message substr to 1024");
       LOG.logWarn(sw.toString(), null);
       ad.setResult(res.substring(0, 1023));
-    
+
     }
     return update(ad);
   }
@@ -1541,6 +1580,24 @@ public class SEDDaoBean implements SEDDaoInterface {
       }
     }
     LOG.logEnd(l);
+  }
+
+  /**
+   * Method returs root cause message.
+   *
+   * @param ex
+   * @return message of last caused message;
+   */
+  protected String getExceptioRootCase(Throwable ex) {
+    if (ex == null) {
+      return null;
+    }
+    if (ex.getCause() != null) {
+      return getExceptioRootCase(ex.getCause());
+    }
+
+    return ex.getClass().getName() + ":" + ex.getMessage();
+
   }
 
 }

@@ -16,6 +16,7 @@
  */
 package si.laurentius.test;
 
+
 import java.io.File;
 import java.io.StringWriter;
 import java.math.BigInteger;
@@ -63,6 +64,8 @@ import si.laurentius.outbox.payload.OutPayload;
 import si.laurentius.outbox.property.OutProperties;
 import si.laurentius.outbox.property.OutProperty;
 
+
+
 /**
  *
  * @author Jože Rihtaršič
@@ -106,6 +109,9 @@ public class WSClientExample {
         Mailbox msb = new Mailbox(Mailbox.class.
                 getResource("/wsdl/mailbox.wsdl")); // wsdl is in laurentius-wsdl.jar
         mTestInstance = msb.getSEDMailBoxWSPort();
+        
+
+        
         Map<String, Object> req_ctx = ((BindingProvider) mTestInstance).
                 getRequestContext();
         req_ctx.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, MAILBOX_ADDRESS);
@@ -194,13 +200,17 @@ public class WSClientExample {
       // search for corresponding in mail
       InMail im = null;
       for (InMail m : lstIM) {
-        System.out.println(m.getSenderMessageId() + " - " + om.
+        LOG.info(m.getSenderMessageId() + " - " + om.
                 getSenderMessageId());
         if (Objects.equals(m.getSenderMessageId(), om.getSenderMessageId())) {
           im = m;
           break;
         }
       }
+       if (im == null) {
+          LOG.error("Message is not sent but no mail found in statu RECEIVED for " + RECEIVER_BOX);
+          return;
+        }
 
       // example get in mail
       wc.getInMail(im.getId(), RECEIVER_BOX);
@@ -239,6 +249,7 @@ public class WSClientExample {
 
     // submit request
     LOG.info("submit message");
+    
     SubmitMailResponse mr = getService().submitMail(smr);
     LOG.info(LOG_SECTION_SEPARATOR);
     LOG.info("got 'sumitMail' response:\n" + serialize(mr));

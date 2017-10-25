@@ -8,9 +8,12 @@ package si.laurentius.ejb;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.JMSException;
@@ -20,19 +23,20 @@ import javax.jms.Session;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import org.junit.Assert;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNull;
 import org.junit.Test;
 import org.junit.BeforeClass;
 import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.enums.SEDInboxMailStatus;
 import si.laurentius.commons.enums.SEDMailPartSource;
 import si.laurentius.commons.enums.SEDOutboxMailStatus;
+import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.utils.StorageUtils;
+import si.laurentius.cron.SEDTaskExecution;
 import si.laurentius.ejb.db.MockUserTransaction;
 import si.laurentius.ejb.utils.InitialContextFactoryForTest;
 import si.laurentius.ejb.utils.TestLookupUtils;
@@ -309,6 +313,63 @@ public class SEDDaoBeanTest extends TestUtils {
     }
   }
 
+  
+  @Test
+  public void testGetExceptioRootCase() throws Exception {
+    String message1 = "Cause Message 1";
+    String message2 = "Cause Message 2";
+    String message3 = "Cause Message 3";
+    Exception e1 = new Exception(message1);
+    Exception e2 = new Exception(message2, e1);
+    Exception e3 = new Exception(message3, e2);
+    
+   assertEquals(message3, e3.getMessage());
+   // response format expect error classname
+   assertEquals(e1.getClass().getName() + ":"  + message1, mTestInstance.getExceptioRootCase(e3));
+    
+  }
+  
+  protected void testAdd() {
+    SEDTaskExecution  te = new SEDTaskExecution();
+    te.setCronId(BigInteger.ONE);
+    te.setName("TO LONG NAME (max len 64) 123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890");
+    te.setEndTimestamp(Calendar.getInstance().getTime());
+    te.setStartTimestamp(Calendar.getInstance().getTime());
+    te.setPlugin("Plugin");
+    te.setPluginVersion("1.0");
+    te.setResult("Result");
+    te.setStatus("SUCCESS");
+    te.setType("type");
+    
+    
+    Exception e = null;
+    try {
+      mTestInstance.add(te);
+      
+    } catch (StorageException ex) {
+      e= ex;
+    }
+    assertNotNull("Error is expected but non was thrown!", e);
+    
+    te.setName("Test task");
+    e = null;
+    try {
+      mTestInstance.add(te);      
+    } catch (StorageException ex) {
+      e= ex;
+    }
+    Assert.assertNull("Error occured while adding valid task!", e);
+    
+    
+    
+    
+    
+    
+    
+  
+  }
+  
+          
   @Test
   public void testAddOutMailPayload() throws Exception {
   }

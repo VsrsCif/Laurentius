@@ -54,11 +54,14 @@
             <artifactId>Laurentius-wsdl</artifactId>
             <version>${project.version}</version>		
         </dependency>
+        <dependency>
+            <groupId>javax.annotation</groupId>
+            <artifactId>javax.annotation-api</artifactId>                
+        </dependency>
 
         <dependency>
             <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>${log4j.version}</version>                
+            <artifactId>log4j</artifactId>            
         </dependency>
       
     </dependencies>

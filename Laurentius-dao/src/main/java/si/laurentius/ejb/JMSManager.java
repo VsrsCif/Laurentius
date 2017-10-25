@@ -53,6 +53,8 @@ public class JMSManager implements JMSManagerInterface {
 
   private static final SEDLogger LOG = new SEDLogger(JMSManager.class);
 
+  private static final String MSG_ERR_CLOSEJMS = "Error occured while closing JMS session: %s.";
+
   /**
    *
    * @param con
@@ -63,7 +65,7 @@ public class JMSManager implements JMSManagerInterface {
         con.close();
       }
     } catch (JMSException jmse) {
-      LOG.formatedWarning("Error closing JMS session: %s", jmse.getMessage());
+      LOG.formatedWarning(MSG_ERR_CLOSEJMS, jmse.getMessage());
 
     }
   }
@@ -80,37 +82,32 @@ public class JMSManager implements JMSManagerInterface {
   public boolean exportInMail(long inId)
           throws NamingException, JMSException {
 
-    boolean suc = false;
-    InitialContext ic = null;
-    Connection connection = null;
     String msgFactoryJndiName = getJNDIPrefix() + SEDValues.EBMS_JMS_CONNECTION_FACTORY_JNDI;
     String msgQueueJndiName = getJNDI_JMSPrefix() + SEDValues.JNDI_QUEUE_IN_MAIL_PROCESS;
-    try {
-      ic = new InitialContext();
-      ConnectionFactory cf = (ConnectionFactory) ic.lookup(msgFactoryJndiName);
-      Queue queue = (Queue) ic.lookup(msgQueueJndiName);
-      connection = cf.createConnection();
-      Session session = connection.
-              createSession(false, Session.AUTO_ACKNOWLEDGE);
-      MessageProducer sender = session.createProducer(queue);
+
+    InitialContext ic = new InitialContext();
+    ConnectionFactory cf = (ConnectionFactory) ic.lookup(msgFactoryJndiName);
+
+    Queue queue = (Queue) ic.lookup(msgQueueJndiName);
+    try (Connection connection = cf.createConnection();
+            Session session = connection.
+                    createSession(false, Session.AUTO_ACKNOWLEDGE);
+            MessageProducer sender = session.createProducer(queue)) {
       Message message = session.createMessage();
 
       message.setLongProperty(SEDValues.EBMS_QUEUE_PARAM_MAIL_ID, inId);
       sender.send(message);
-      suc = true;
-    } finally {
-      if (ic != null) {
-        try {
-          ic.close();
-        } catch (Exception ignore) {
-          LOG.formatedWarning("Error closing JMS session: %s", ignore.
-                  getMessage());
-        }
-      }
-      closeConnection(connection);
+
     }
 
-    return suc;
+    try {
+      ic.close();
+    } catch (NamingException ignore) {
+      LOG.formatedWarning(MSG_ERR_CLOSEJMS, ignore.
+              getMessage());
+    }
+
+    return true;
   }
 
   private String getJNDIPrefix() {
@@ -118,10 +115,6 @@ public class JMSManager implements JMSManagerInterface {
     return System.getProperty(SYS_PROP_JNDI_PREFIX, "java:/jboss/");
   }
 
-  /*
-   * private String getJNDIPrefix() { return "__/"; // return
-   * System.getProperty(SEDSystemProperties.SYS_PROP_JNDI_PREFIX, "java:/"); }
-   */
   private String getJNDI_JMSPrefix() {
     return System.getProperty(SYS_PROP_JNDI_JMS_PREFIX, "java:/jms/");
   }
@@ -140,25 +133,22 @@ public class JMSManager implements JMSManagerInterface {
   public boolean sendMessage(long biPosiljkaId, int retry, long delay,
           boolean transacted) throws NamingException, JMSException {
 
-    boolean suc = false;
-    InitialContext ic = null;
-    Connection connection = null;
     String msgFactoryJndiName = getJNDIPrefix() + SEDValues.EBMS_JMS_CONNECTION_FACTORY_JNDI;
     String msgQueueJndiName = getJNDI_JMSPrefix() + SEDValues.JNDI_QUEUE_EBMS;
-    try {
-      ic = new InitialContext();
-      ConnectionFactory cf = (ConnectionFactory) ic.lookup(msgFactoryJndiName);
-      Queue queue = (Queue) ic.lookup(msgQueueJndiName);
-      connection = cf.createConnection();
-      Session session = connection.createSession(transacted,
-              Session.AUTO_ACKNOWLEDGE);
-      MessageProducer sender = session.createProducer(queue);
-      Message message = session.createMessage();
 
+    InitialContext ic = new InitialContext();
+    ConnectionFactory cf = (ConnectionFactory) ic.lookup(msgFactoryJndiName);
+    Queue queue = (Queue) ic.lookup(msgQueueJndiName);
+   
+
+    try (Connection connection = cf.createConnection(); Session session = connection.createSession(transacted,
+            Session.AUTO_ACKNOWLEDGE);
+            MessageProducer sender = session.createProducer(queue);) {
+      Message message = session.createMessage();
       message.setLongProperty(SEDValues.EBMS_QUEUE_PARAM_MAIL_ID, biPosiljkaId);
       message.setStringProperty(
               SEDValues.EBMS_QUEUE_DUPLICATE_DETECTION_ID_Artemis,
-              "" + biPosiljkaId);
+              "" +Long.toString(biPosiljkaId));
 
       message.setIntProperty(SEDValues.EBMS_QUEUE_PARAM_RETRY, retry);
       message.setLongProperty(SEDValues.EBMS_QUEUE_PARAM_DELAY, delay);
@@ -170,20 +160,17 @@ public class JMSManager implements JMSManagerInterface {
       LOG.formatedDebug("Submit mail to queue: %d, retry %d, delay %d ",
               biPosiljkaId, retry, delay);
       sender.send(message);
-      suc = true;
-    } finally {
-      if (ic != null) {
-        try {
-          ic.close();
-        } catch (Exception ignore) {
-          LOG.formatedWarning("Error closing JMS session: %s", ignore.
-                  getMessage());
-        }
-      }
-      closeConnection(connection);
+
     }
 
-    return suc;
+    try {
+      ic.close();
+    } catch (NamingException ignore) {
+      LOG.formatedWarning(MSG_ERR_CLOSEJMS, ignore.
+              getMessage());
+    }
+
+    return true;
   }
 
   /**
@@ -214,7 +201,7 @@ public class JMSManager implements JMSManagerInterface {
         try {
           ic.close();
         } catch (Exception ignore) {
-          LOG.formatedWarning("Error closing JMS session: %s", ignore.
+          LOG.formatedWarning(MSG_ERR_CLOSEJMS, ignore.
                   getMessage());
         }
       }
@@ -227,7 +214,7 @@ public class JMSManager implements JMSManagerInterface {
   // To do this we send a management message to get the message count.
   // In real life you wouldn't create a new session every time you send a management message
   private QueueData getQueueData(final Connection connection,
-          final String jndiQue) throws Exception {
+          final String jndiQue) throws JMSException {
     long l = LOG.logStart(jndiQue);
     QueueData qd = new QueueData();
 
@@ -249,31 +236,19 @@ public class JMSManager implements JMSManagerInterface {
     qd.setConsumerCount(getQueueAttribute(
             JMSArtemisAttribute.ConsumerCount,
             requestor, queName, m));
-    qd.setDeadLetterAddress( getQueueAttribute(
+    qd.setDeadLetterAddress(getQueueAttribute(
             JMSArtemisAttribute.DeadLetterAddress,
             requestor, queName, m));
-   /* qd.setDeliveringCount(getQueueAttribute(
-            JMSArtemisAttribute.DeliveringCount,
-            requestor, queName, m));*/
-    qd.setExpiryAddress( getQueueAttribute(
+    qd.setExpiryAddress(getQueueAttribute(
             JMSArtemisAttribute.ExpiryAddress,
             requestor, queName, m));
-    /*qd.setFirstMessageAge( getQueueAttribute(
-            JMSArtemisAttribute.FirstMessageAge,
-            requestor, queName, m));*/
-    qd.setMessageCount( getQueueAttribute(
+    qd.setMessageCount(getQueueAttribute(
             JMSArtemisAttribute.MessageCount, requestor, queName, m));
-  /*  qd.setMessagesAcknowledged( getQueueAttribute(
-            JMSArtemisAttribute.MessagesAcknowledged,
-            requestor, queName, m));*/
-    qd.setMessagesAdded( getQueueAttribute(
+    qd.setMessagesAdded(getQueueAttribute(
             JMSArtemisAttribute.MessagesAdded,
             requestor, queName, m));
- /*   qd.setName( getQueueAttribute(JMSArtemisAttribute.Name,
-            requestor, queName, m));
-    qd.setPaused( getQueueAttribute(JMSArtemisAttribute.Paused,
-            requestor, queName, m));*/
-    qd.setScheduledCount( getQueueAttribute(
+
+    qd.setScheduledCount(getQueueAttribute(
             JMSArtemisAttribute.ScheduledCount,
             requestor, queName, m));
     LOG.logEnd(l, jndiQue);
@@ -288,13 +263,15 @@ public class JMSManager implements JMSManagerInterface {
       Message response = requestor.request(m);
       res = JMSManagementHelper.getResult(response);
       if (res != null && !Objects.equals(res.getClass(), jmsAtt.getValueClass())) {
-        
+
         LOG.logError(
                 String.format(
                         "Error occured while retrieving parameter %s for queue %s. "
-                                + "Result %s class:%s, expected: %s",
-                        jmsAtt.getName(), queName, res, res!=null?res.getClass().getName():"Null", jmsAtt.getValueClass()), null);
-        
+                        + "Result %s class:%s, expected: %s",
+                        jmsAtt.getName(), queName, res, res.
+                        getClass().getName(), jmsAtt.getValueClass()),
+                null);
+
       }
     } catch (Exception ex) {
       LOG.logError(
@@ -302,27 +279,24 @@ public class JMSManager implements JMSManagerInterface {
                       "Error retrieving parameter %s for queue %s. Error: %s.",
                       jmsAtt.getName(), queName, ex.getMessage()), ex);
     }
-    return res!=null?res.toString():"Null";
+    return res != null ? res.toString() : "Null";
   }
-  
-  public <T> T getNullFormClass(Class c){
-    assert c!=null;
-    if (c.equals(String.class)){
-      return (T)"";
+
+  public <T> T getNullFormClass(Class c) {
+    assert c != null;
+    if (c.equals(String.class)) {
+      return (T) "";
+    } else if (c.equals(int.class)) {
+      return (T) Integer.valueOf(0);
+    } else if (c.equals(long.class)
+            || c.equals(Long.class)) {
+      return (T) Long.valueOf(0);
+    } else if (c.equals(boolean.class)) {
+      return (T) Boolean.FALSE;
     }
-    else if (c.equals(int.class)){
-      return (T)Integer.valueOf(0);
-    }else if (c.equals(long.class) || 
-            c.equals(Long.class)){
-      return (T)Long.valueOf(0);
-    }else if (c.equals(boolean.class)){
-      return (T)Boolean.FALSE;
-    } 
     return null;
-  
+
   }
-  
-   
 
   @Override
   public boolean pauseQueue(String jndi) throws JMSException, NamingException {
@@ -337,58 +311,51 @@ public class JMSManager implements JMSManagerInterface {
 
   private boolean invokeJMSQeueOperation(
           final String jndiQue, final String operation) throws JMSException, NamingException {
-    InitialContext ic = null;
-    Connection connection = null;
-    String msgFactoryJndiName = getJNDIPrefix() + SEDValues.EBMS_JMS_CONNECTION_FACTORY_JNDI;
+
     boolean suc = false;
-    try {
-      ic = new InitialContext();
-      ConnectionFactory cf = (ConnectionFactory) ic.lookup(msgFactoryJndiName);
-      connection = cf.createConnection();
-      try {
-        QueueSession session = ((QueueConnection) connection).
-                createQueueSession(
-                        false, Session.AUTO_ACKNOWLEDGE);
+    String msgFactoryJndiName = getJNDIPrefix() + SEDValues.EBMS_JMS_CONNECTION_FACTORY_JNDI;
 
-        Queue managementQueue = ActiveMQJMSClient.createQueue(
-                "activemq.management");
+    InitialContext ic = new InitialContext();
+    ConnectionFactory cf = (ConnectionFactory) ic.lookup(msgFactoryJndiName);
+   
+    try ( Connection connection = cf.createConnection();QueueSession session = ((QueueConnection) connection).
+            createQueueSession(
+                    false, Session.AUTO_ACKNOWLEDGE)) {
 
-        QueueRequestor requestor = new QueueRequestor(session, managementQueue);
+      Queue managementQueue = ActiveMQJMSClient.createQueue(
+              "activemq.management");
 
-        connection.start();
+      QueueRequestor requestor = new QueueRequestor(session, managementQueue);
 
-        Message m = session.createMessage();
-        JMSManagementHelper.putOperationInvocation(m,
-                ResourceNames.JMS_QUEUE + jndiQue.
-                        substring(jndiQue.indexOf('/') + 1), operation);
-        Message response = requestor.request(m);
-        suc = JMSManagementHelper.hasOperationSucceeded(response);
-        if (!suc) {
-          Object oRes;
-          try {
-            oRes = JMSManagementHelper.getResult(response);
-            LOG.formatedWarning("Operation %s not succeeded. Message %s",
-                    operation, oRes);
-          } catch (Exception ex) {
-            LOG.logError(
-                    "Error retrieving JMS Control message for operation: " + operation,
-                    ex);
-          }
-        }
-      } catch (Exception ex) {
-        LOG.logError(jndiQue, ex);
-      }
+      connection.start();
 
-    } finally {
-      if (ic != null) {
+      Message m = session.createMessage();
+      JMSManagementHelper.putOperationInvocation(m,
+              ResourceNames.JMS_QUEUE + jndiQue.
+                      substring(jndiQue.indexOf('/') + 1), operation);
+      Message response = requestor.request(m);
+      suc = JMSManagementHelper.hasOperationSucceeded(response);
+      if (!suc) {
+        Object oRes;
         try {
-          ic.close();
-        } catch (NamingException ignore) {
-          LOG.formatedWarning("Error closing JMS session: %s", ignore.
-                  getMessage());
+          oRes = JMSManagementHelper.getResult(response);
+          LOG.formatedWarning("Operation %s not succeeded. Message %s",
+                  operation, oRes);
+        } catch (Exception ex) {
+          LOG.logError(
+                  "Error retrieving JMS Control message for operation: " + operation,
+                  ex);
         }
       }
-      closeConnection(connection);
+    } catch (Exception ex) {
+      LOG.logError(jndiQue, ex);
+    }
+
+    try {
+      ic.close();
+    } catch (NamingException ignore) {
+      LOG.formatedWarning(MSG_ERR_CLOSEJMS, ignore.
+              getMessage());
     }
 
     return suc;

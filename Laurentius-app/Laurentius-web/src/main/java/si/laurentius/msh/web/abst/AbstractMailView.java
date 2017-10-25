@@ -37,6 +37,7 @@ import org.primefaces.model.DualListModel;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.StreamedContent;
 import si.laurentius.commons.utils.ReflectUtils;
+import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StringFormater;
 import si.laurentius.msh.mail.MSHMailType;
 import si.laurentius.msh.web.gui.OutMailDataView;
@@ -49,16 +50,16 @@ import si.laurentius.msh.web.gui.OutMailDataView;
  */
 public abstract class AbstractMailView<T, S> {
 
+    private static final SEDLogger LOG = new SEDLogger(AbstractMailView.class);
   /**
    *
    */
-  protected static final SimpleDateFormat SDF_DDMMYYY_HH_MM_SS = new SimpleDateFormat(
-          "dd.MM.YYYY HH:mm:ss");
+  private SimpleDateFormat msdfDateFormat = new SimpleDateFormat(
+          "dd.MM.yyyy HH:mm:ss");
 
   /**
    *
    */
-  //protected T mMail;
   private List<T> selected;
 
   /**
@@ -86,10 +87,17 @@ public abstract class AbstractMailView<T, S> {
   public StreamedContent exportTableData() {
 
     List<String> mehtods = getCurrentPickupDualExportData().getTarget();
+     File f;
     try {
-      File f = File.createTempFile("export", ".txt");
+      f = File.createTempFile("export", ".txt");
+    } catch (IOException ex) {
+      LOG.logError( "Error occrured while creating temp export file!", ex);
+      return null; 
+    }
+    try (  FileWriter fw = new FileWriter(f)) {
+     
       List<T> lst = mMailModel.getData(0, 1000);
-      FileWriter fw = new FileWriter(f);
+
       fw.write("St., ");
       fw.write(String.join(",", mehtods));
       fw.write("\n");
@@ -100,16 +108,14 @@ public abstract class AbstractMailView<T, S> {
 
       }
       fw.flush();
-      fw.close();
+
 
       return new DefaultStreamedContent(new FileInputStream(f), "text/plain",
               "export-data.txt",
               "utf-8");
     } catch (IOException ex) {
-      Logger.getLogger(OutMailDataView.class.getName()).log(Level.SEVERE, null,
-              ex);
-    } finally {
-
+       LOG.logError( "Error occrured while exporting data file!", ex);
+     
     }
     return null;
   }
@@ -120,7 +126,7 @@ public abstract class AbstractMailView<T, S> {
    * @return
    */
   public String formatDate(Date date) {
-    return SDF_DDMMYYY_HH_MM_SS.format(date);
+    return msdfDateFormat.format(date);
   }
 
   /**
@@ -156,19 +162,7 @@ public abstract class AbstractMailView<T, S> {
       List<String> sbIDs = new ArrayList<>();
       List<String> sbTrg = new ArrayList<>();
       sbIDs.addAll(ReflectUtils.getBeanProperties(MSHMailType.class));
-      /*List<String> sbTrg = ReflectUtils.getBeanProperties(mMailModel.getType());
-    if (sbTrg.contains("MSHOutProperties")) {
-      sbTrg.remove("MSHOutProperties");
-    }
-    if (sbTrg.contains("MSHInProperties")) {
-      sbTrg.remove("MSHInProperties");
-    }
-    if (sbTrg.contains("MSHOutPayload")) {
-      sbTrg.remove("MSHOutPayload");
-    }
-    if (sbTrg.contains("MSHInPayload")) {
-      sbTrg.remove("MSHInPayload");
-    }*/
+     
       msbCBExportDualList = new DualListModel<>(sbIDs, sbTrg);
     }
     return msbCBExportDualList;
@@ -275,7 +269,6 @@ public abstract class AbstractMailView<T, S> {
    * @param mail
    */
   public void setCurrentMail(T mail) {
-//    this.mMail = mail;
     updateEventList();
   }
 
@@ -295,12 +288,11 @@ public abstract class AbstractMailView<T, S> {
     mTabActiveIndex = itindex;
   }
 
-  ;
 
   /**
      *
      */
-  abstract public void updateEventList();
+  public abstract void updateEventList();
 
   /**
    *

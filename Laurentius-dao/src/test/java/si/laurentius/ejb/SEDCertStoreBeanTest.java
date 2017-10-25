@@ -35,7 +35,6 @@ import si.laurentius.lce.KeystoreUtils;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class SEDCertStoreBeanTest extends TestUtils {
 
-  
   static final SEDCertStoreBean mTestInstance = new SEDCertStoreBean();
   KeystoreUtils mku = new KeystoreUtils();
   static final String[] CERT_SAMPLES = new String[]{"test-digicert.crt",
@@ -51,7 +50,6 @@ public class SEDCertStoreBeanTest extends TestUtils {
     // set logger
     setLogger(SEDCertStoreBeanTest.class.getSimpleName());
 
-    
     mTestInstance.memEManager = TestUtils.createEntityManager();
     mTestInstance.mutUTransaction
             = new MockUserTransaction(mTestInstance.memEManager.getTransaction());
@@ -87,7 +85,7 @@ public class SEDCertStoreBeanTest extends TestUtils {
     assertTrue("File csRootCA exists", cs.exists());
 
   }
-  
+
   @Test
   public void test_B_CertStoresInvalidPasswd() throws Exception {
     System.out.println("test_A_CertStoresInvalidPasswd");
@@ -104,8 +102,8 @@ public class SEDCertStoreBeanTest extends TestUtils {
     // test rootCA store
     mTestInstance.mscCacheList.clearCachedList(SEDCertPassword.class);;
 
-     ks = mTestInstance.getCertStore();
-     assertNotNull("Keystore must not be null", ks);
+    ks = mTestInstance.getCertStore();
+    assertNotNull("Keystore must not be null", ks);
   }
 
   @Test
@@ -119,12 +117,12 @@ public class SEDCertStoreBeanTest extends TestUtils {
     assertNotNull("Test X509Certificate must not be null", xc);
 
     // get certstore  
-
     assertNotNull("Keystore must not be null", mTestInstance.getCertStore());
     int iSize = mTestInstance.getCertStore().size();
     mTestInstance.addCertToCertStore(xc, alias);
     // cert added to keystore
-    assertEquals("Cert is added to keystore", iSize + 1, mTestInstance.getCertStore().size());
+    assertEquals("Cert is added to keystore", iSize + 1, mTestInstance.
+            getCertStore().size());
     assertEquals("Certificate list is updated", iSize + 1, mTestInstance.
             getCertificates().size());
 
@@ -151,7 +149,8 @@ public class SEDCertStoreBeanTest extends TestUtils {
     int iSize = ks.size();
     mTestInstance.addCertToRootCA(xc, alias);
     // cert added to keystore
-    assertEquals("Cert is added to keystore", iSize + 1, mTestInstance.getCertStore().size());
+    assertEquals("Cert is added to keystore", iSize + 1, mTestInstance.
+            getCertStore().size());
 
     List<X509Certificate> rootCACerts = mTestInstance.getRootCA509Certs();
     assertEquals("Certificate list is updated", iSize + 1, rootCACerts.size());
@@ -191,7 +190,8 @@ public class SEDCertStoreBeanTest extends TestUtils {
 
     mTestInstance.addKeyToToCertStore(alias, key, crt, keyPasswd);
     // cert added to keystore
-    assertEquals("Cert is added to keystore", iSize + 1, mTestInstance.getCertStore().size());
+    assertEquals("Cert is added to keystore", iSize + 1, mTestInstance.
+            getCertStore().size());
 
     List<SEDCertificate> crts = mTestInstance.getCertificates();
     assertEquals("Certificate list is updated", iSize + 1, crts.size());
@@ -223,17 +223,108 @@ public class SEDCertStoreBeanTest extends TestUtils {
 
     mTestInstance.addKeyToToCertStore(alias, key, crt, keyPasswd);
     // cert added to keystore
-    assertEquals("Cert is added to keystore", iSize + 1, mTestInstance.getCertStore().size());
+    assertEquals("Cert is added to keystore", iSize + 1, mTestInstance.
+            getCertStore().size());
 
     SEDCertificate scNew = mTestInstance.getSEDCertificatForAlias(alias);
     assertNotNull(scNew);
 
     // remove certificte 
     mTestInstance.removeCertificateFromStore(scNew);
-    assertEquals("Cert is removed from keystore", iSize, mTestInstance.getCertStore().size());
+    assertEquals("Cert is removed from keystore", iSize, mTestInstance.
+            getCertStore().size());
 
     scNew = mTestInstance.getSEDCertificatForAlias(alias);
     assertNull(scNew);
+
+  }
+
+  @Test
+  public void test_F_addPassword() throws Exception {
+    System.out.println("test_D_addKeyToToCertStore");
+    String srcAlias = Utils.getUUID("Key_");
+    String keyPasswd1 = Utils.getUUID("Pass_");
+    String keyPasswd2 = Utils.getUUID("Pass_");
+
+    SEDCertPassword pwd = mTestInstance.getKeyPassword(srcAlias);
+    assertNull(pwd);
+
+    mTestInstance.addPassword(srcAlias, keyPasswd1);
+
+    SEDCertPassword pwd2 = mTestInstance.getKeyPassword(srcAlias);
+    assertNotNull(pwd2);
+    assertEquals(keyPasswd1, pwd2.getPassword());
+
+    mTestInstance.addPassword(srcAlias, keyPasswd2);
+
+    SEDCertPassword pwd3 = mTestInstance.getKeyPassword(srcAlias);
+    assertNotNull(pwd3);
+    assertEquals(keyPasswd2, pwd3.getPassword());
+
+  }
+  
+  @Test
+  public void test_G_changeAliasForSEDCertificate() throws Exception {
+    System.out.println("test_G_changeAliasForSEDCertificate");
+
+    String alias = Utils.getUUID("als1");
+    String alias2 = Utils.getUUID("als2");
+    X509Certificate xc = mku.getCertFromInputStream(
+            SEDCertStoreBeanTest.class.getResourceAsStream(
+                    "/certs/sample/sigov-ca.crt"));
+    assertNotNull("Test X509Certificate must not be null", xc);
+
+    // get certstore  
+    KeyStore ks = mTestInstance.getCertStore();
+    assertNotNull("Keystore must not be null", ks);
+    int iSize = ks.size();
+    mTestInstance.addCertToCertStore(xc, alias);
+    // cert added to keystore
+    assertEquals("Cert is added to keystore", iSize + 1, mTestInstance.
+            getCertStore().size());
+    
+    
+    SEDCertificate sc =  mTestInstance.getSEDCertificatForAlias(alias);
+    
+    assertNotNull(sc);
+
+    mTestInstance. changeAliasForCertificate(sc, alias2);
+    SEDCertificate sc2 =  mTestInstance.getSEDCertificatForAlias(alias2);
+    assertNotNull(sc2);
+    assertEquals(sc.getHexSHA1Digest(), sc2.getHexSHA1Digest());
+    assertNull(mTestInstance.getX509CertForAlias(alias));
+
+  }
+
+  @Test
+  public void test_G_changeAliasForCertificate() throws Exception {
+    System.out.println("test_G_changeAliasForCertificate");
+
+    String alias = Utils.getUUID("als1");
+    String alias2 = Utils.getUUID("als2");
+    X509Certificate xc = mku.getCertFromInputStream(
+            SEDCertStoreBeanTest.class.getResourceAsStream(
+                    "/certs/sample/sigov-ca.crt"));
+    assertNotNull("Test X509Certificate must not be null", xc);
+
+    // get certstore  
+    KeyStore ks = mTestInstance.getCertStore();
+    assertNotNull("Keystore must not be null", ks);
+    int iSize = ks.size();
+    mTestInstance.addCertToCertStore(xc, alias);
+    // cert added to keystore
+    assertEquals("Cert is added to keystore", iSize + 1, mTestInstance.
+            getCertStore().size());
+
+    X509Certificate xcGet = mTestInstance.getX509CertForAlias(alias);
+    assertNotNull(xcGet);
+    assertEquals(xc, xcGet);
+
+    mTestInstance.changeAlias(alias, alias2);
+    X509Certificate xcGet2 = mTestInstance.getX509CertForAlias(alias2);
+    assertNotNull(xcGet2);
+    assertEquals(xc, xcGet2);
+    assertNull(mTestInstance.getX509CertForAlias(alias));
 
   }
 
