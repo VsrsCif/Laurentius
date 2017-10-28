@@ -79,6 +79,9 @@ public class StorageUtils {
     // current date
     
     Path pcDir = dateStorageFolder(cld);
+    assert pcDir!= null: "Date storage folder must not be null!";
+    
+    
     // check if current path is 'todays' path 
     if (sCurrentPath != null && !sCurrentPath.startsWith(pcDir)) {
       sCurrentPath = null;

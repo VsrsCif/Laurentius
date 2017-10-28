@@ -403,10 +403,10 @@ public class ZPPInInterceptor implements SoapInterceptorInterface {
       if (Objects.equals(mip.getType(), ZPPConstants.ELM_SIGNAL_ENCRYPTED_KEY)) {
         encKeyFile = StorageUtils.getFile(mip.getFilepath());
         ek = mSedCrypto.file2SimetricEncryptedKey(encKeyFile);
-
         break;
       }
     }
+    assert ek!=null: "Missing EncryptedKey in ZPPFictionNotification!";
 
     Key k = null;
 

@@ -58,14 +58,14 @@ public class EBMSOutFaultInterceptor extends AbstractEBMSInterceptor {
   /**
    * Logger for EBMSOutFaultInterceptor class
    */
-  protected final static SEDLogger LOG = new SEDLogger(
+  protected static final SEDLogger LOG = new SEDLogger(
           EBMSOutFaultInterceptor.class);
   /**
    * ebms message tools for converting between ebms and Laurentius message
    * entity
    */
   protected final EBMSBuilder mEBMSUtil = new EBMSBuilder();
-  
+
   private boolean handleMessageCalled;
 
   /**
@@ -76,70 +76,74 @@ public class EBMSOutFaultInterceptor extends AbstractEBMSInterceptor {
     super(Phase.PRE_PROTOCOL);
     getAfter().add(EBMSOutInterceptor.class.getName());
   }
-  
+
   @Override
   public void handleMessage(SoapMessage message)
           throws Fault {
-    
+
     SoapVersion sv = message.getVersion();
     handleMessageCalled = true;
-    
+
     Exception ex = message.getContent(Exception.class);
-    if (ex == null) {
-      throw new RuntimeException("Exception is expected");
-    }
-    if (!(ex instanceof Fault)) {
-      throw new RuntimeException("Fault is expected");
-    }
+    assert ex != null : "Exception is expected as message content";
+    assert ex instanceof Fault : "Fault type if exception is expected as message content";
+
     SOAPMessage sm = createSoapFault(ex, sv);
+    assert sm != null : "SOAPMessage must not be null";
+
     message.setContent(SOAPMessage.class, sm);
     message.removeContent(Exception.class);
-    
+
+    // handle security for out fault message
     EBMSMessageContext ectx = SoapUtils.getEBMSMessageOutContext(message);
-    if (ectx != null) {
-      try {
-        WSS4JOutInterceptor sc
-                = configureOutSecurityInterceptors(ectx.getSecurity(), ectx.
-                        getSenderPartyIdentitySet().getLocalPartySecurity(),
-                        ectx.getReceiverPartyIdentitySet().
-                                getExchangePartySecurity(), "",
-                        SoapFault.FAULT_CODE_CLIENT);
-        LOG.formatedlog(
-                "Security for soapfault setted! Security: '%s', Sender '%s', receiver: '%s'.",
-                ectx.getSecurity().getId(), ectx.getSenderPartyIdentitySet().
-                getId(),
-                ectx.getReceiverPartyIdentitySet().getId());
-        sc.handleMessage(message);
-      } catch (EBMSError err) {
-        String msg ="Error occured while creating WSS4JOutInterceptor for out Fault! No security will be created for outFault!: Error: " + err.getMessage()  ;
-        LOG.logError(msg, ex);
-        
-      }
+    if (ectx != null && ectx.getSecurity() != null) {
+      handleSecurityForOutFaultMessage(message, ectx);
     }
 
-    // deal with the actual exception : fault.getCause()
+    // write fault message to stream. 
     HttpServletResponse response = (HttpServletResponse) message.getExchange()
             .getInMessage().get(AbstractHTTPDestination.HTTP_RESPONSE);
     response.setStatus(500);
     response.setContentType("application/soap+xml");
-    
+
     try {
       sm.writeTo(response.getOutputStream());
-      
       response.getOutputStream().flush();
       message.getInterceptorChain().abort();
-    } catch (IOException ioex) {
-      throw new RuntimeException("Error writing the response");
-    } catch (SOAPException ex1) {
+    } catch (IOException | SOAPException ioex) {
+      String msg = "Error occured while writting fault message to out stream";
+      LOG.logError(msg, ioex);
       throw new RuntimeException("Error writing the response");
     }
-    
+
   }
-  
+
+  private void handleSecurityForOutFaultMessage(SoapMessage message,
+          EBMSMessageContext ectx) {
+    try {
+      WSS4JOutInterceptor sc
+              = configureOutSecurityInterceptors(ectx.getSecurity(), ectx.
+                      getSenderPartyIdentitySet().getLocalPartySecurity(),
+                      ectx.getReceiverPartyIdentitySet().
+                              getExchangePartySecurity(), "",
+                      SoapFault.FAULT_CODE_CLIENT);
+      LOG.formatedlog(
+              "Security for soapfault setted! Security: '%s', Sender '%s', receiver: '%s'.",
+              ectx.getSecurity().getId(), ectx.getSenderPartyIdentitySet().
+              getId(),
+              ectx.getReceiverPartyIdentitySet().getId());
+      sc.handleMessage(message);
+    } catch (EBMSError err) {
+      String msg = "Error occured while creating WSS4JOutInterceptor for out Fault! No security will be created for outFault!: Error: " + err.
+              getMessage();
+      LOG.logError(msg, err);
+    }
+  }
+
   protected boolean handleMessageCalled() {
     return handleMessageCalled;
   }
-  
+
   private SOAPMessage createSoapFault(Exception exc, SoapVersion sv) {
     long l = LOG.logStart();
     SOAPMessage request = null;
@@ -147,44 +151,44 @@ public class EBMSOutFaultInterceptor extends AbstractEBMSInterceptor {
       MessageFactory mf = MessageFactory.newInstance(
               SOAPConstants.SOAP_1_2_PROTOCOL);
       request = mf.createMessage();
-      
+
       SOAPBody body = request.getSOAPBody();
       SOAPFault soapFault = body.addFault();
-      
+
       Messaging msgHeader = null;
       if (exc instanceof EBMSError) {
-        
+
         EBMSError sf = (EBMSError) exc;
-        
+
         soapFault.setFaultString(((EBMSError) exc).getSubMessage());
         soapFault.setFaultCode(SOAPConstants.SOAP_SENDER_FAULT);
-        
+
         msgHeader = EBMSBuilder.createMessaging(sv);
-        
+
         SignalMessage sm
                 = EBMSBuilder.createErrorSignal(sf, Calendar.getInstance()
                         .getTime());
-        
+
         msgHeader.getSignalMessages().add(sm);
-        
+
       } else if (exc instanceof Fault) {
-        
+
         Fault sf = (Fault) exc;
-        
+
         soapFault.setFaultString(sf.getMessage());
         soapFault.setFaultCode(SOAPConstants.SOAP_RECEIVER_FAULT);
-        
+
         msgHeader = EBMSBuilder.createMessaging(sv);
         SignalMessage sgnl = EBMSBuilder.createErrorSignal(sf, null, sf.
                 getMessage(),
                 SEDSystemProperties.getLocalDomain(), Calendar.getInstance()
                 .getTime());
         msgHeader.getSignalMessages().add(sgnl);
-        
+
         if (sf.hasDetails()) {
           try {
             soapFault.addDetail();
-            
+
             Node nd = request.getSOAPPart().importNode(sf.getDetail(), true);
             nd = nd.getFirstChild();
             while (nd != null) {
@@ -200,7 +204,7 @@ public class EBMSOutFaultInterceptor extends AbstractEBMSInterceptor {
         soapFault.setFaultString(exc.getMessage());
         soapFault.setFaultCode(SOAPConstants.SOAP_RECEIVER_FAULT);
       }
-      
+
       try {
         if (msgHeader != null) {
           SOAPHeader sh = request.getSOAPHeader();
@@ -210,15 +214,14 @@ public class EBMSOutFaultInterceptor extends AbstractEBMSInterceptor {
           request.saveChanges();
         }
       } catch (JAXBException | SOAPException ex) {
-        String errMsg = "Error adding ebms header to soap: " + ex.getMessage();
+        String errMsg = "Error occured while adding ebms header to soap: " + ex.getMessage();
         LOG.logError(l, errMsg, ex);
-        
+
       }
     } catch (SOAPException e) {
-      // do nothing
-      e.printStackTrace();
+      LOG.logError("Error occured while creating soap fault message: " +e.getMessage(), e);
     }
     return request;
   }
-  
+
 }

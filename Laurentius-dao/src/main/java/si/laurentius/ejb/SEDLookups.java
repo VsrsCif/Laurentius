@@ -563,7 +563,7 @@ public class SEDLookups implements SEDLookupsInterface {
     
     boolean bsuc;
     SEDCronJob st = getById(SEDCronJob.class, sb.getId());
-    if (!Objects.deepEquals(st, sb) && st.getSEDTasks().size() > 0) {
+    if ( st !=null && !Objects.deepEquals(st, sb) && st.getSEDTasks().size() > 0) {
       // delete connected property list and insert new rows
       sb.getSEDTasks().forEach(tp -> {
         tp.setId(null);
@@ -582,7 +582,7 @@ public class SEDLookups implements SEDLookupsInterface {
   @Override
   public boolean updateSEDInterceptor(SEDInterceptor sb) {
     SEDInterceptor st = getById(SEDInterceptor.class, sb.getId());
-    if (!Objects.deepEquals(st, sb) && st.getSEDInterceptorInstance() != null) {
+    if (st !=null && !Objects.deepEquals(st, sb) && st.getSEDInterceptorInstance() != null) {
       // delete connected property list and insert new rows
       sb.getSEDInterceptorInstance().getSEDInterceptorProperties().forEach(
               tp -> {
@@ -600,7 +600,7 @@ public class SEDLookups implements SEDLookupsInterface {
   public boolean updateSEDProcessorInstance(SEDProcessorInstance sb) {
     boolean bsuc = false;
     SEDProcessorInstance st = getById(SEDProcessorInstance.class, sb.getId());
-    if (!Objects.deepEquals(st, sb) && st.getSEDProcessorProperties().size() > 0) {
+    if (st !=null &&  !Objects.deepEquals(st, sb) && st.getSEDProcessorProperties().size() > 0) {
       // delete connected property list and insert new rows
       sb.getSEDProcessorProperties().forEach(tp -> {
         tp.setId(null);
@@ -619,7 +619,7 @@ public class SEDLookups implements SEDLookupsInterface {
   public boolean updateSEDProcessor(SEDProcessor sb) {
     boolean bsuc;
     SEDProcessor st = getById(SEDProcessor.class, sb.getId());
-    if (!Objects.deepEquals(st, sb) && st.getSEDProcessorInstances().size() > 0) {
+    if (st !=null &&  !Objects.deepEquals(st, sb) && st.getSEDProcessorInstances().size() > 0) {
       // delete connected property list and insert new rows
       sb.getSEDProcessorInstances().forEach(tp -> {
         tp.setId(null);

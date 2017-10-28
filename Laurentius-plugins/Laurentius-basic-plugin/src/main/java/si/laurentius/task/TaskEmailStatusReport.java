@@ -220,8 +220,13 @@ public class TaskEmailStatusReport extends TaskEmailReport {
                 getReportForStatusChangeInterval(sedboxes, startDate, endDate,
                         inStatuses, outStatuses, services);
         break;
+      default: 
+        assert false: String.format("Unknown status report interval %s", rti.name());
     }
-
+    
+    assert sr!=null: "Null SEDReportBoxStatusfrom database!";
+    
+    
     if (bSkipNoMail
             && (sr.getInMail() == null || sr.getInMail().getStatuses().isEmpty())
             && (sr.getOutMail() == null || sr.getOutMail().getStatuses().
