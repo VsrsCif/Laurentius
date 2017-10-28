@@ -8,7 +8,9 @@
       xmlns:composite="http://java.sun.com/jsf/composite"
       xmlns:sui="http://java.sun.com/jsf/composite/laurentius-ui"
       xmlns:pnl="http://java.sun.com/jsf/composite/laurentius-ui/panel">
-
+    <h:head>
+        <title>Laurentius</title>       
+    </h:head>
     <composite:interface>
     </composite:interface>
 
@@ -36,7 +38,7 @@
                     <!--p:ajax event="rowDblselect" listener="#{pModeView.startEditSelected()}" 
                             update=":dlgPMode:pModeDialog:pModeDialogForm"
                             oncomplete="PF('pModeDialog').show()"/-->
-                    
+
                     <p:ajax event="rowDblselect" listener="#{pModeView.startEditSelected()}" 
                             update=":dlgPModeInstance:pModeServiceInstanceDialog:pModeServiceInstanceDialogForm"
                             oncomplete="PF('pModeServiceInstanceDialog').show()"/>

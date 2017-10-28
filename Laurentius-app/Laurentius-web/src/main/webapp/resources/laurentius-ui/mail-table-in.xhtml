@@ -8,6 +8,9 @@
       xmlns:composite="http://java.sun.com/jsf/composite"
       xmlns:pnl="http://java.sun.com/jsf/composite/laurentius-ui/panel"
       >
+    <h:head>
+        <title>Laurentius</title>       
+    </h:head>
 
     <composite:interface>
 
@@ -169,7 +172,7 @@
                                     <p:column width="60" headerText="#{msg['Id']}">
                                         <h:outputText value="#{plpart.id}" />
                                     </p:column>
-                                     <p:column width="60" headerText="#{msg['RefId']}">
+                                    <p:column width="60" headerText="#{msg['RefId']}">
                                         <h:outputText value="#{plpart.generatedFromPartId}" />
                                     </p:column>
                                     <p:column width="40" headerText="#{msg['Sent']}">
@@ -207,19 +210,19 @@
                                     </p:column>
 
                                     <p:rowExpansion>
-                                            <p:dataTable var="plpartprop" 
-                                                         value="#{plpart.IMPartProperties}"
-                                                         scrollable="true"
-                                                         scrollHeight="135"
-                                                         >
-                                                <p:column width="200" headerText="#{msg['Name']}">
-                                                    <h:outputText value="#{plpartprop.name}" />
-                                                </p:column>
+                                        <p:dataTable var="plpartprop" 
+                                                     value="#{plpart.IMPartProperties}"
+                                                     scrollable="true"
+                                                     scrollHeight="135"
+                                                     >
+                                            <p:column width="200" headerText="#{msg['Name']}">
+                                                <h:outputText value="#{plpartprop.name}" />
+                                            </p:column>
 
-                                                <p:column  headerText="#{msg['Value']}">
-                                                    <h:outputText value="#{plpartprop.value}" />
-                                                </p:column>
-                                            </p:dataTable>
+                                            <p:column  headerText="#{msg['Value']}">
+                                                <h:outputText value="#{plpartprop.value}" />
+                                            </p:column>
+                                        </p:dataTable>
                                     </p:rowExpansion>
 
                                 </p:dataTable>
