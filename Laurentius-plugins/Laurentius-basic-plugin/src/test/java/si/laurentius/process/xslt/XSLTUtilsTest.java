@@ -20,7 +20,7 @@ import si.laurentius.commons.utils.xml.XMLUtils;
 public class XSLTUtilsTest {
 
   public static final String S_XML_TEST_FILE_V01 = "/xml-sample/court-eizvrsba.xml";
-  public static final String S_XSLT_FILE_V01 = "/xslt/c2b_eizvrsba-demo_v01.xsl";
+
   public static final String S_XSLT_FILE_ZBS_V01 = "/xslt/Sodisce2ZbsIzvrsbeXml_v1.00.xslt";
   
   
@@ -37,11 +37,7 @@ public class XSLTUtilsTest {
 
   @BeforeClass
   public static void setUpClass() {
-    System.out.println("********************************");
-    System.out.println("GOT: " + System.getProperty(
-            "javax.xml.transform.TransformerFactory"));
-    // System.setProperty("javax.xml.transform.TransformerFactory",
-    //                        "net.sf.saxon.TransformerFactoryImpl");
+    
   }
 
   @Before
@@ -51,22 +47,7 @@ public class XSLTUtilsTest {
   /**
    * Test of transform method, of class XSLTUtils.
    */
-  @Test
-  public void testTransform()
-          throws Exception {
-    System.out.println("transform");
 
-    Document source = XMLUtils.deserializeToDom(XSLTUtilsTest.class.
-            getResourceAsStream(S_XML_TEST_FILE_V01));
-    File fxstl = new File("src/test/resources/" + S_XSLT_FILE_V01);
-
-    InputStream xsltSource = XSLTUtilsTest.class.getResourceAsStream(
-            S_XSLT_FILE_V01);
-    File fileResult = File.createTempFile("xslt", ".xml", new File(
-            S_TARGET_FOLDER));
-    XSLTUtils.transform(source, xsltSource, fileResult);
-
-  }
 
   @Test
   public void testZBSTransform()
