@@ -16,8 +16,8 @@ package si.laurentius.msh.web.admin;
 
 import java.util.List;
 import javax.ejb.EJB;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.inject.Named;
+import javax.enterprise.context.SessionScoped;
 
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.interfaces.PModeInterface;
@@ -34,7 +34,7 @@ import si.laurentius.process.SEDProcessorRule;
  * @author Jože Rihtaršič
  */
 @SessionScoped
-@ManagedBean(name = "adminSEDInMailProcessView")
+@Named("adminSEDInMailProcessView")
 public class AdminSEDInMailProcessView extends AbstractAdminJSFView<SEDProcessor> {
 
   private static final SEDLogger LOG = new SEDLogger(

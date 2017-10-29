@@ -14,20 +14,14 @@
  */
 package si.laurentius.msh.web.admin;
 
-import java.security.cert.X509Certificate;
 import java.util.List;
 import javax.ejb.EJB;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
-import org.primefaces.context.RequestContext;
+import javax.inject.Named;
+import javax.enterprise.context.SessionScoped;
 import si.laurentius.cert.crl.SEDCertCRL;
-import si.laurentius.cert.SEDCertificate;
 import si.laurentius.commons.SEDJNDI;
-import si.laurentius.commons.interfaces.SEDLookupsInterface;
 import si.laurentius.commons.utils.SEDLogger;
-import si.laurentius.lce.KeystoreUtils;
 import si.laurentius.commons.interfaces.SEDCertStoreInterface;
-import si.laurentius.cron.SEDCronJob;
 import si.laurentius.msh.web.abst.AbstractAdminJSFView;
 
 /**
@@ -35,7 +29,7 @@ import si.laurentius.msh.web.abst.AbstractAdminJSFView;
  * @author Jože Rihtaršič
  */
 @SessionScoped
-@ManagedBean(name = "adminSEDCRLView")
+@Named("adminSEDCRLView")
 public class AdminSEDCRLView extends AbstractAdminJSFView<SEDCertCRL> {
 
   private static final SEDLogger LOG = new SEDLogger(AdminSEDCRLView.class);

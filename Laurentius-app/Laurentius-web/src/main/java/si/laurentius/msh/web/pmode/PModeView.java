@@ -19,8 +19,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import javax.ejb.EJB;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.inject.Named;
+import javax.enterprise.context.SessionScoped;
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.exception.PModeException;
 import si.laurentius.commons.interfaces.PModeInterface;
@@ -37,7 +37,7 @@ import si.laurentius.msh.pmode.Service;
  * @author Jože Rihtaršič
  */
 @SessionScoped
-@ManagedBean(name = "pModeView")
+@Named("pModeView")
 public class PModeView extends AbstractPModeJSFView<PMode> {
 
   /**

@@ -12,8 +12,8 @@ import java.util.jar.Manifest;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.faces.application.ViewHandler;
-import javax.faces.bean.ApplicationScoped;
-import javax.faces.bean.ManagedBean;
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Named;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 import javax.xml.ws.WebServiceContext;
@@ -29,7 +29,7 @@ import si.laurentius.property.SEDProperty;
  * @author Jože Rihtaršič
  */
 @ApplicationScoped
-@ManagedBean(name = "ApplicationData")
+@Named("ApplicationData")
 public class ApplicationData extends AbstractJSFView {
 
   @Resource

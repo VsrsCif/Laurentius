@@ -27,9 +27,9 @@ import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.SessionScoped;
+import javax.inject.Named;
+import javax.enterprise.context.SessionScoped;
+import javax.inject.Inject;
 import javax.jms.JMSException;
 import javax.naming.NamingException;
 import org.primefaces.context.RequestContext;
@@ -57,7 +57,7 @@ import si.laurentius.msh.web.abst.AbstractMailView;
  * @author Jože Rihtaršič
  */
 @SessionScoped
-@ManagedBean(name = "InMailDataView")
+@Named("InMailDataView")
 public class InMailDataView extends AbstractMailView<MSHInMail, MSHInEvent> implements Serializable {
 
   private static final SEDLogger LOG = new SEDLogger(InMailDataView.class);
@@ -69,7 +69,7 @@ public class InMailDataView extends AbstractMailView<MSHInMail, MSHInEvent> impl
   @EJB(mappedName = SEDJNDI.JNDI_JMSMANAGER)
   JMSManagerInterface mJMS;
 
-  @ManagedProperty(value = "#{userSessionData}")
+  @Inject
   private UserSessionData userSessionData;
 
   @EJB(mappedName = SEDJNDI.JNDI_PMODE)

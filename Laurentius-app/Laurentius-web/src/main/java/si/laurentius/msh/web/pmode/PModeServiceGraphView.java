@@ -5,14 +5,13 @@
  */
 package si.laurentius.msh.web.pmode;
 
-import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.inject.Named;
+import javax.enterprise.context.SessionScoped;
 import org.primefaces.model.diagram.Connection;
 import org.primefaces.model.diagram.DefaultDiagramModel;
 import org.primefaces.model.diagram.DiagramModel;
@@ -31,7 +30,7 @@ import si.laurentius.msh.pmode.PayloadProfile;
 import si.laurentius.msh.pmode.Service;
 import si.laurentius.msh.web.abst.AbstractAdminJSFView;
 
-@ManagedBean(name = "pModeServiceGraphView")
+@Named("pModeServiceGraphView")
 @SessionScoped
 public class PModeServiceGraphView extends AbstractAdminJSFView<Action> {
 

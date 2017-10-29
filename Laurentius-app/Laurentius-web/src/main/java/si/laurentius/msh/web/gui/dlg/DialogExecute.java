@@ -1,9 +1,10 @@
 package si.laurentius.msh.web.gui.dlg;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.inject.Named;
+import javax.enterprise.context.SessionScoped;
 import org.primefaces.context.RequestContext;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.cron.SEDTask;
@@ -15,8 +16,8 @@ import si.laurentius.msh.web.admin.AdminSEDCronJobView;
  * @author Jože Rihtaršič
  */
 @SessionScoped
-@ManagedBean(name = "executeDialog")
-public class DialogExecute {
+@Named("executeDialog")
+public class DialogExecute  implements Serializable{
 
   private static final SEDLogger LOG = new SEDLogger(DialogExecute.class);
 

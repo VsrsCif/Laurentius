@@ -14,16 +14,17 @@
  */
 package si.laurentius.msh.web.gui;
 
-import javax.faces.bean.ApplicationScoped;
-import javax.faces.bean.ManagedBean;
+import java.io.Serializable;
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Named;
 
 /**
  *
  * @author Jože Rihtaršič
  */
 @ApplicationScoped
-@ManagedBean(name = "AppConstant")
-public class AppConstant {
+@Named("AppConstant")
+public class AppConstant  implements Serializable{
 
   /**
      *

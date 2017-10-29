@@ -18,8 +18,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.ejb.EJB;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.inject.Named;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.event.ActionEvent;
 import org.primefaces.model.CheckboxTreeNode;
 import org.primefaces.model.TreeNode;
@@ -54,7 +54,7 @@ import si.laurentius.plugin.processor.InMailProcessorDef;
  * @author Jože Rihtaršič
  */
 @SessionScoped
-@ManagedBean(name = "adminSEDPluginView")
+@Named("adminSEDPluginView")
 public class AdminSEDPluginView extends AbstractAdminJSFView<Plugin> {
 
   private static final SEDLogger LOG = new SEDLogger(AdminSEDPluginView.class);

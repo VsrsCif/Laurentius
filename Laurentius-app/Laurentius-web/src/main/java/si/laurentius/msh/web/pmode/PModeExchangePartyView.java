@@ -18,27 +18,25 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import javax.ejb.EJB;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.SessionScoped;
+import javax.inject.Named;
+import javax.inject.Inject;
+import javax.enterprise.context.SessionScoped;
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.exception.PModeException;
 import si.laurentius.commons.interfaces.PModeInterface;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.Utils;
 import si.laurentius.msh.pmode.PMode;
-import si.laurentius.msh.pmode.PModePartyInfo;
 import si.laurentius.msh.pmode.PartyIdentitySet;
 import si.laurentius.msh.pmode.PartyIdentitySetType;
 import si.laurentius.msh.pmode.Service;
-import static si.laurentius.msh.web.pmode.PModeView.LOG;
 
 /**
  *
  * @author Jože Rihtaršič
  */
 @SessionScoped
-@ManagedBean(name = "pModeExchangePartyView")
+@Named("pModeExchangePartyView")
 public class PModeExchangePartyView extends AbstractPModeJSFView<PMode.ExchangeParties.PartyInfo> {
 
   /**
@@ -49,7 +47,7 @@ public class PModeExchangePartyView extends AbstractPModeJSFView<PMode.ExchangeP
   @EJB(mappedName = SEDJNDI.JNDI_PMODE)
   PModeInterface mPModeInteface;
 
-  @ManagedProperty(value = "#{pModeView}")
+  @Inject
   PModeView pModeView;
 
   

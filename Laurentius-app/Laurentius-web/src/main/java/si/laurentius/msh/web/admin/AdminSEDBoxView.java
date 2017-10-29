@@ -22,8 +22,8 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.ejb.EJB;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.inject.Named;
+import javax.enterprise.context.SessionScoped;
 import si.laurentius.application.SEDApplication;
 import si.laurentius.ebox.SEDBox;
 import si.laurentius.commons.SEDJNDI;
@@ -39,7 +39,7 @@ import si.laurentius.user.SEDUser;
  * @author Jože Rihtaršič
  */
 @SessionScoped
-@ManagedBean(name = "adminSEDBoxView")
+@Named("adminSEDBoxView")
 public class AdminSEDBoxView extends AbstractAdminJSFView<SEDBox> {
 
   private static final SEDLogger LOG = new SEDLogger(AdminSEDBoxView.class);

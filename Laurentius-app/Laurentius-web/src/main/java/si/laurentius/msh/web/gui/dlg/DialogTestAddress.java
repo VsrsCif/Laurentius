@@ -1,8 +1,8 @@
 package si.laurentius.msh.web.gui.dlg;
 
 import javax.ejb.EJB;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.inject.Named;
+import javax.enterprise.context.SessionScoped;
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.exception.PModeException;
 
@@ -17,7 +17,7 @@ import si.laurentius.msh.web.abst.AbstractJSFView;
  * @author Jože Rihtaršič
  */
 @SessionScoped
-@ManagedBean(name = "testAddressDialog")
+@Named("testAddressDialog")
 public class DialogTestAddress extends AbstractJSFView {
 
   @EJB(mappedName = SEDJNDI.JNDI_PMODE)

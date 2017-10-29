@@ -8,9 +8,9 @@ package si.laurentius.msh.web.gui.menu;
 import java.io.Serializable;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.SessionScoped;
+import javax.inject.Named;
+import javax.inject.Inject;
+import javax.enterprise.context.SessionScoped;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 import si.laurentius.commons.SEDJNDI;
@@ -21,13 +21,13 @@ import si.laurentius.msh.web.gui.AppConstant;
 import si.laurentius.msh.web.gui.MainWindow;
 import si.laurentius.plugin.def.Plugin;
 
-@ManagedBean(name = "settingsMenuView")
+@Named("settingsMenuView")
 @SessionScoped
 public class SettingsMenuView implements Serializable {
 
   private static final SEDLogger LOG = new SEDLogger(SettingsMenuView.class);
 
-  @ManagedProperty(value = "#{mainWindow}")
+  @Inject
   private MainWindow mainWindow;
 
   @EJB(mappedName = SEDJNDI.JNDI_PLUGIN)

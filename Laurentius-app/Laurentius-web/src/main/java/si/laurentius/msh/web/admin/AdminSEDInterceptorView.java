@@ -21,8 +21,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import javax.ejb.EJB;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.inject.Named;
+import javax.enterprise.context.SessionScoped;
 import si.laurentius.commons.enums.SEDInterceptorEvent;
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.interfaces.PModeInterface;
@@ -45,7 +45,7 @@ import si.laurentius.plugin.interceptor.MailInterceptorDef;
  * @author Jože Rihtaršič
  */
 @SessionScoped
-@ManagedBean(name = "adminSEDInterceptorView")
+@Named("adminSEDInterceptorView")
 public class AdminSEDInterceptorView extends AbstractAdminJSFView<SEDInterceptor> {
 
   private static final SEDLogger LOG = new SEDLogger(

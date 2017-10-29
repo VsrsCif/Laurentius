@@ -16,8 +16,8 @@ package si.laurentius.msh.web.admin;
 
 import java.util.Map;
 import javax.ejb.EJB;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.enterprise.context.SessionScoped;
+import javax.inject.Named;
 import javax.jms.JMSException;
 import javax.naming.NamingException;
 import si.laurentius.commons.SEDJNDI;
@@ -31,7 +31,7 @@ import si.laurentius.msh.web.abst.AbstractJSFView;
  * @author Jože Rihtaršič
  */
 @SessionScoped
-@ManagedBean(name = "monitorJMSView")
+@Named
 public class MonitorJMSView extends AbstractJSFView {
 
   @EJB(mappedName = SEDJNDI.JNDI_JMSMANAGER)

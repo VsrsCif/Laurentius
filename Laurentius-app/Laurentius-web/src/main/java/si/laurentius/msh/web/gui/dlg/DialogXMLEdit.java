@@ -1,10 +1,9 @@
 package si.laurentius.msh.web.gui.dlg;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.io.Serializable;
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.inject.Named;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.xml.bind.JAXBException;
 import org.primefaces.context.RequestContext;
@@ -18,8 +17,8 @@ import static si.laurentius.msh.web.abst.AbstractAdminJSFView.CB_PARA_SAVED;
  * @author Jože Rihtaršič
  */
 @SessionScoped
-@ManagedBean(name = "dialogXMLEdit")
-public class DialogXMLEdit {
+@Named("dialogXMLEdit")
+public class DialogXMLEdit  implements Serializable{
 
   private static final SEDLogger LOG = new SEDLogger(DialogXMLEdit.class);
 

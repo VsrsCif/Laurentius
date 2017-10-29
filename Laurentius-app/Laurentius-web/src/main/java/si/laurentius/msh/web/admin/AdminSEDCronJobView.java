@@ -19,8 +19,8 @@ import java.util.Collection;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Timer;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.inject.Named;
+import javax.enterprise.context.SessionScoped;
 import org.primefaces.context.RequestContext;
 import si.laurentius.cron.SEDCronJob;
 import si.laurentius.cron.SEDTask;
@@ -38,7 +38,7 @@ import si.laurentius.msh.web.gui.dlg.DialogExecute;
  * @author Jože Rihtaršič
  */
 @SessionScoped
-@ManagedBean(name = "adminSEDCronJobView")
+@Named("adminSEDCronJobView")
 public class AdminSEDCronJobView extends AbstractAdminJSFView<SEDCronJob> {
 
   private static final SEDLogger LOG = new SEDLogger(AdminSEDCronJobView.class);

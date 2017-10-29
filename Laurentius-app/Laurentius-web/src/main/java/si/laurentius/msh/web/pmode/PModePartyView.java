@@ -15,18 +15,14 @@
 package si.laurentius.msh.web.pmode;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.inject.Named;
+import javax.enterprise.context.SessionScoped;
 import org.primefaces.event.CellEditEvent;
 import si.laurentius.commons.SEDJNDI;
-import si.laurentius.commons.exception.PModeException;
 import si.laurentius.commons.interfaces.PModeInterface;
 import si.laurentius.commons.interfaces.SEDLookupsInterface;
 import si.laurentius.commons.utils.SEDLogger;
@@ -41,7 +37,7 @@ import si.laurentius.commons.interfaces.SEDCertStoreInterface;
  * @author Jože Rihtaršič
  */
 @SessionScoped
-@ManagedBean(name = "pModePartyView")
+@Named("pModePartyView")
 public class PModePartyView extends AbstractPModeJSFView<PartyIdentitySet> {
 
   /**

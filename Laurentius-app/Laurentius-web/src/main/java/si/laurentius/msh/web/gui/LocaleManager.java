@@ -4,19 +4,20 @@
  */
 package si.laurentius.msh.web.gui;
 
+import java.io.Serializable;
 import java.util.Locale;
 import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.inject.Named;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
 
 /**
  *
  * @author Jože Rihtaršič
  */
-@ManagedBean
+@Named
 @SessionScoped
-public class LocaleManager {
+public class LocaleManager implements Serializable{
 
   private Locale locale;
 

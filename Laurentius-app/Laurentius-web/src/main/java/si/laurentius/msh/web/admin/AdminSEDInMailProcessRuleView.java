@@ -15,9 +15,9 @@
 package si.laurentius.msh.web.admin;
 
 import java.util.List;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.SessionScoped;
+import javax.inject.Named;
+import javax.inject.Inject;
+import javax.enterprise.context.SessionScoped;
 
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.msh.web.abst.AbstractAdminJSFView;
@@ -29,13 +29,13 @@ import si.laurentius.process.SEDProcessorRule;
  * @author Jože Rihtaršič
  */
 @SessionScoped
-@ManagedBean(name = "adminSEDInMailProcessRuleView")
+@Named("adminSEDInMailProcessRuleView")
 public class AdminSEDInMailProcessRuleView extends AbstractAdminJSFView<SEDProcessorRule> {
 
   private static final SEDLogger LOG = new SEDLogger(
           AdminSEDInMailProcessRuleView.class);
 
-  @ManagedProperty(value = "#{adminSEDInMailProcessView}")
+  @Inject
   private AdminSEDInMailProcessView admProcessorView;
 
   public AdminSEDInMailProcessView getAdmProcessorView() {

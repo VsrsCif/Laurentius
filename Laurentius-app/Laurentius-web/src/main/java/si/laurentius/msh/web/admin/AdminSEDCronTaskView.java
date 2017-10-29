@@ -20,9 +20,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import javax.ejb.EJB;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.SessionScoped;
+import javax.inject.Named;
+import javax.inject.Inject;
+import javax.enterprise.context.SessionScoped;
 
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.interfaces.SEDPluginManagerInterface;
@@ -42,7 +42,7 @@ import si.laurentius.plugin.def.Plugin;
  * @author Jože Rihtaršič
  */
 @SessionScoped
-@ManagedBean(name = "adminSEDCronTaskView")
+@Named("adminSEDCronTaskView")
 public class AdminSEDCronTaskView extends AbstractAdminJSFView<SEDTask> {
 
   private static final SEDLogger LOG = new SEDLogger(
@@ -51,7 +51,7 @@ public class AdminSEDCronTaskView extends AbstractAdminJSFView<SEDTask> {
   @EJB(mappedName = SEDJNDI.JNDI_PLUGIN)
   private SEDPluginManagerInterface mPlgManager;
 
-  @ManagedProperty(value = "#{adminSEDCronJobView}")
+  @Inject
   private AdminSEDCronJobView admCronJobView;
 
   public AdminSEDCronJobView getAdmCronJobView() {

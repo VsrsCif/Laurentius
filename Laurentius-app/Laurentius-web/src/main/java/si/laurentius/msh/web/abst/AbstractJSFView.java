@@ -4,6 +4,7 @@
  */
 package si.laurentius.msh.web.abst;
 
+import java.io.Serializable;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
@@ -14,7 +15,7 @@ import org.primefaces.context.RequestContext;
  *
  * @author Jože Rihtaršič
  */
-public class AbstractJSFView {
+public class AbstractJSFView implements Serializable {
 
   public static final String CB_PARA_SAVED = "saved";
   public static final String CB_PARA_REMOVED = "removed";

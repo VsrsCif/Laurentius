@@ -2,8 +2,8 @@ package si.laurentius.msh.web.gui.dlg;
 
 import java.util.List;
 import java.util.Objects;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.inject.Named;
+import javax.enterprise.context.SessionScoped;
 import org.primefaces.context.RequestContext;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.xml.XMLUtils;
@@ -15,7 +15,7 @@ import si.laurentius.msh.web.abst.AbstractJSFView;
  * @author Jože Rihtaršič
  */
 @SessionScoped
-@ManagedBean(name = "dialogXPath")
+@Named("dialogXPath")
 public class DialogXPath extends AbstractJSFView {
 
   private static final SEDLogger LOG = new SEDLogger(DialogXPath.class);

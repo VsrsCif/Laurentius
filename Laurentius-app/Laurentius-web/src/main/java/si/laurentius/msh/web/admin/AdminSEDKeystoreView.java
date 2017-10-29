@@ -21,8 +21,8 @@ import java.util.Objects;
 
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.inject.Named;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
 import org.primefaces.context.RequestContext;
 import si.laurentius.cert.SEDCertificate;
@@ -40,7 +40,7 @@ import si.laurentius.msh.web.abst.AbstractAdminJSFView;
  * @author Jože Rihtaršič
  */
 @SessionScoped
-@ManagedBean(name = "adminSEDKeystoreView")
+@Named("adminSEDKeystoreView")
 public class AdminSEDKeystoreView extends AbstractAdminJSFView<SEDCertificate> {
 
   private static final SEDLogger LOG = new SEDLogger(AdminSEDKeystoreView.class);

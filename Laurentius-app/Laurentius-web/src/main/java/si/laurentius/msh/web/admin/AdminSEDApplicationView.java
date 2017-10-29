@@ -18,8 +18,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import javax.ejb.EJB;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.inject.Named;
+import javax.enterprise.context.SessionScoped;
 import org.primefaces.model.DualListModel;
 import si.laurentius.ebox.SEDBox;
 import si.laurentius.application.SEDApplication;
@@ -34,7 +34,7 @@ import si.laurentius.msh.web.abst.AbstractAdminJSFView;
  * @author Jože Rihtaršič
  */
 @SessionScoped
-@ManagedBean(name = "adminSEDApplicationView")
+@Named("adminSEDApplicationView")
 public class AdminSEDApplicationView extends AbstractAdminJSFView<SEDApplication> {
 
   private static final SEDLogger LOG = new SEDLogger(AdminSEDApplicationView.class);

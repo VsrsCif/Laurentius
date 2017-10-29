@@ -1,7 +1,8 @@
 package si.laurentius.msh.web.gui.dlg;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import java.io.Serializable;
+import javax.inject.Named;
+import javax.enterprise.context.SessionScoped;
 import org.primefaces.context.RequestContext;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.msh.web.abst.AbstractAdminJSFView;
@@ -12,8 +13,8 @@ import static si.laurentius.msh.web.abst.AbstractAdminJSFView.CB_PARA_REMOVED;
  * @author Jože Rihtaršič
  */
 @SessionScoped
-@ManagedBean(name = "dialogDelete")
-public class DialogDelete {
+@Named("dialogDelete")
+public class DialogDelete  implements Serializable{
 
   private static final SEDLogger LOG = new SEDLogger(DialogDelete.class);
 

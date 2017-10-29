@@ -2,8 +2,8 @@ package si.laurentius.msh.web.admin;
 
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.inject.Named;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
 import org.primefaces.context.RequestContext;
 import si.laurentius.commons.SEDJNDI;
@@ -19,7 +19,7 @@ import si.laurentius.msh.web.abst.AbstractJSFView;
  * @author Jože Rihtaršič
  */
 @SessionScoped
-@ManagedBean(name = "adminCustomSettings")
+@Named("adminCustomSettings")
 public class AdminCustomSettings extends AbstractJSFView{
 
   private static final SEDLogger LOG = new SEDLogger(AdminCustomSettings.class);

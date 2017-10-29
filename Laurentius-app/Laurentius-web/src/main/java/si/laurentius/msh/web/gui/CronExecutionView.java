@@ -17,9 +17,9 @@ package si.laurentius.msh.web.gui;
 import java.io.Serializable;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.SessionScoped;
+import javax.inject.Named;
+import javax.inject.Inject;
+import javax.enterprise.context.SessionScoped;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.UnselectEvent;
 import si.laurentius.cron.SEDTaskExecution;
@@ -32,7 +32,7 @@ import si.laurentius.commons.interfaces.SEDDaoInterface;
  * @author Jože Rihtaršič
  */
 @SessionScoped
-@ManagedBean(name = "CronExecutionView")
+@Named("CronExecutionView")
 public class CronExecutionView implements Serializable {
 
   private static final long serialVersionUID = 1L;
@@ -40,7 +40,7 @@ public class CronExecutionView implements Serializable {
   @EJB(mappedName = SEDJNDI.JNDI_SEDDAO)
   SEDDaoInterface mDB;
 
-  @ManagedProperty(value = "#{userSessionData}")
+  @Inject
   private UserSessionData userSessionData;
 
   /**

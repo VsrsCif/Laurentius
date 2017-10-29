@@ -3,6 +3,7 @@ package si.laurentius.msh.web.gui.dlg;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.security.Key;
@@ -24,8 +25,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.inject.Named;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.naming.InvalidNameException;
 import javax.naming.ldap.LdapName;
@@ -48,8 +49,8 @@ import si.laurentius.lce.KeystoreUtils;
  * @author Jože Rihtaršič
  */
 @SessionScoped
-@ManagedBean(name = "dialogImportCert")
-public class DialogImportCert {
+@Named("dialogImportCert")
+public class DialogImportCert  implements Serializable{
 
   private static final SEDLogger LOG = new SEDLogger(DialogImportCert.class);
 

@@ -18,8 +18,8 @@ import java.util.Collections;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.inject.Named;
+import javax.enterprise.context.SessionScoped;
 import org.primefaces.context.RequestContext;
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.interfaces.PModeInterface;
@@ -39,7 +39,7 @@ import si.laurentius.msh.web.gui.dlg.DialogXPath;
  * @author Jože Rihtaršič
  */
 @SessionScoped
-@ManagedBean(name = "pModeSecurityView")
+@Named("pModeSecurityView")
 public class PModeSecurityView extends AbstractPModeJSFView<Security> {
 
   public static final X509.Signature NULL_SIGNATURE = new X509.Signature();

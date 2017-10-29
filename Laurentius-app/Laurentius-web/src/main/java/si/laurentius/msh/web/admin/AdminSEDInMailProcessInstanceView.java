@@ -20,9 +20,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import javax.ejb.EJB;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.SessionScoped;
+import javax.inject.Named;
+import javax.inject.Inject;
+import javax.enterprise.context.SessionScoped;
 
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.interfaces.SEDPluginManagerInterface;
@@ -42,7 +42,7 @@ import si.laurentius.process.SEDProcessor;
  * @author Jože Rihtaršič
  */
 @SessionScoped
-@ManagedBean(name = "adminSEDInMailProcessInstanceView")
+@Named("adminSEDInMailProcessInstanceView")
 public class AdminSEDInMailProcessInstanceView extends AbstractAdminJSFView<SEDProcessorInstance> {
 
   private static final SEDLogger LOG = new SEDLogger(
@@ -51,7 +51,7 @@ public class AdminSEDInMailProcessInstanceView extends AbstractAdminJSFView<SEDP
   @EJB(mappedName = SEDJNDI.JNDI_PLUGIN)
   private SEDPluginManagerInterface mPlgManager;
 
-  @ManagedProperty(value = "#{adminSEDInMailProcessView}")
+  @Inject
   private AdminSEDInMailProcessView admProcView;
 
   PluginPropertyModel mtpmPropertyModel = new PluginPropertyModel();

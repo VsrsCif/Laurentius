@@ -17,9 +17,9 @@ package si.laurentius.msh.web.pmode;
 import java.math.BigInteger;
 import java.util.List;
 import javax.ejb.EJB;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.SessionScoped;
+import javax.inject.Named;
+import javax.inject.Inject;
+import javax.enterprise.context.SessionScoped;
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.enums.MimeValue;
@@ -35,7 +35,7 @@ import si.laurentius.msh.pmode.Service;
  * @author Jože Rihtaršič
  */
 @SessionScoped
-@ManagedBean(name = "pModeServiceView")
+@Named("pModeServiceView")
 public class PModeServiceView extends AbstractPModeJSFView<Service> {
 
   /**
@@ -46,7 +46,7 @@ public class PModeServiceView extends AbstractPModeJSFView<Service> {
   @EJB(mappedName = SEDJNDI.JNDI_PMODE)
   PModeInterface mPModeInteface;
 
-  @ManagedProperty(value = "#{pModeServiceGraphView}")
+  @Inject
   PModeServiceGraphView serviceGraphView;
 
   public PModeServiceGraphView getServiceGraphView() {

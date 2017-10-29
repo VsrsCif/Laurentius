@@ -17,9 +17,9 @@ package si.laurentius.msh.web.admin;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.SessionScoped;
+import javax.inject.Named;
+import javax.inject.Inject;
+import javax.enterprise.context.SessionScoped;
 import si.laurentius.commons.enums.SEDRulePredicate;
 import si.laurentius.commons.utils.ReflectUtils;
 
@@ -35,13 +35,13 @@ import si.laurentius.msh.web.abst.AbstractAdminJSFView;
  * @author Jože Rihtaršič
  */
 @SessionScoped
-@ManagedBean(name = "adminSEDInterceptorRuleView")
+@Named("adminSEDInterceptorRuleView")
 public class AdminSEDInterceptorRuleView extends AbstractAdminJSFView<SEDInterceptorRule> {
 
   private static final SEDLogger LOG = new SEDLogger(
           AdminSEDInterceptorRuleView.class);
 
-  @ManagedProperty(value = "#{adminSEDInterceptorView}")
+  @Inject
   private AdminSEDInterceptorView admRuleView;
 
   public AdminSEDInterceptorView getAdmRuleView() {

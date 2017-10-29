@@ -6,8 +6,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import javax.ejb.EJB;
-import javax.faces.bean.ApplicationScoped;
-import javax.faces.bean.ManagedBean;
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Named;
 import si.laurentius.commons.enums.SEDInboxMailStatus;
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.enums.MimeValue;
@@ -37,7 +37,7 @@ import si.laurentius.plugin.interfaces.PropertyListType;
  * @author Jože Rihtaršič
  */
 @ApplicationScoped
-@ManagedBean(name = "LookupsData")
+@Named("LookupsData")
 public class LookupsData extends AbstractJSFView {
 
   @EJB(mappedName = SEDJNDI.JNDI_SEDLOOKUPS)

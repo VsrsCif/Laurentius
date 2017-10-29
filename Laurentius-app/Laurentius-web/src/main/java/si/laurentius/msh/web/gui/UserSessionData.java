@@ -19,9 +19,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.SessionScoped;
+import javax.inject.Named;
+import javax.inject.Inject;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import org.primefaces.event.SelectEvent;
@@ -39,11 +39,11 @@ import si.laurentius.plugin.def.Plugin;
  * @author Jože Rihtaršič
  */
 @SessionScoped
-@ManagedBean(name = "userSessionData")
+@Named("userSessionData")
 public class UserSessionData extends AbstractJSFView {
 
   private static final SEDLogger LOG = new SEDLogger(UserSessionData.class);
-  @ManagedProperty(value = "#{loginManager}")
+  @Inject
   private LoginManager loginManager;
   private String mstrCurrentSEDBox;
 

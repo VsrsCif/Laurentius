@@ -1,9 +1,10 @@
 package si.laurentius.msh.web.gui;
 
 import java.io.IOException;
+import java.io.Serializable;
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.inject.Named;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import org.primefaces.event.TabChangeEvent;
@@ -14,8 +15,8 @@ import si.laurentius.commons.utils.SEDLogger;
  * @author Jože Rihtaršič
  */
 @SessionScoped
-@ManagedBean(name = "mainWindow")
-public class MainWindow {
+@Named("mainWindow")
+public class MainWindow  implements Serializable{
   
   private static final SEDLogger LOG = new SEDLogger(MainWindow.class);
 

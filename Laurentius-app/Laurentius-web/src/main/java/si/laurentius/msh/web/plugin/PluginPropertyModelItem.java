@@ -8,9 +8,7 @@ package si.laurentius.msh.web.plugin;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import javafx.print.Collation;
 import si.laurentius.commons.utils.Utils;
 import si.laurentius.plugin.component.PluginPropertyDef;
 

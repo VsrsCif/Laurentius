@@ -33,9 +33,9 @@ import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.SessionScoped;
+import javax.inject.Named;
+import javax.inject.Inject;
+import javax.enterprise.context.SessionScoped;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultStreamedContent;
@@ -66,7 +66,7 @@ import si.laurentius.msh.web.abst.AbstractMailView;
  * @author Jože Rihtaršič
  */
 @SessionScoped
-@ManagedBean(name = "OutMailDataView")
+@Named("OutMailDataView")
 public class OutMailDataView extends AbstractMailView<MSHOutMail, MSHOutEvent>
         implements
         Serializable {
@@ -88,7 +88,7 @@ public class OutMailDataView extends AbstractMailView<MSHOutMail, MSHOutEvent>
   MSHOutMail newOutMail;
   MSHOutPart selectedNewOutMailAttachment;
 
-  @ManagedProperty(value = "#{userSessionData}")
+  @Inject
   private UserSessionData userSessionData;
 
   /**

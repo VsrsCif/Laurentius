@@ -18,9 +18,9 @@ import java.math.BigInteger;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.SessionScoped;
+import javax.inject.Named;
+import javax.inject.Inject;
+import javax.enterprise.context.SessionScoped;
 import si.laurentius.commons.enums.MimeValue;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.msh.pmode.Action;
@@ -31,7 +31,7 @@ import si.laurentius.msh.pmode.PayloadProfile;
  * @author Jože Rihtaršič
  */
 @SessionScoped
-@ManagedBean(name = "pModeActionPayloadView")
+@Named("pModeActionPayloadView")
 public class PModeActionPayloadView extends AbstractPModeJSFView<PayloadProfile> {
 
   /**
@@ -39,7 +39,7 @@ public class PModeActionPayloadView extends AbstractPModeJSFView<PayloadProfile>
    */
   public static final SEDLogger LOG = new SEDLogger(PModeActionPayloadView.class);
 
-  @ManagedProperty(value = "#{pModeServiceGraphView}")
+  @Inject
   PModeServiceGraphView serviceGraphView;
 
   public PModeServiceGraphView getServiceGraphView() {

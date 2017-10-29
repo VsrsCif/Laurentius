@@ -18,8 +18,8 @@ import java.util.List;
 import java.util.Objects;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.inject.Named;
+import javax.enterprise.context.SessionScoped;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.Duration;
@@ -33,7 +33,7 @@ import si.laurentius.msh.pmode.ReceptionAwareness;
  * @author Jože Rihtaršič
  */
 @SessionScoped
-@ManagedBean(name = "pModeReceptionAwarenessView")
+@Named("pModeReceptionAwarenessView")
 public class PModeReceptionAwarenessView extends AbstractPModeJSFView<ReceptionAwareness> {
 
   /**
