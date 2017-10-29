@@ -26,12 +26,18 @@ import org.apache.log4j.Logger;
  * @author Joze Rihtarsic <joze.rihtarsic@sodisce.si>
  */
 public class SEDLogger {
+
   /**
-   * Method returs first cause message in throwable stack. If Throwable is null, null is returned.
+   * Method returs first cause message in throwable stack. If Throwable is null,
+   * null is returned.
    *
    * @param tw throwable
    * @return
    */
+
+  private static final String MSG = ": msg.: '";
+  private static final String MSG_FC = ", first cause: '";
+
   public static String getFirstCauseMessage(Throwable tw) {
     if (tw == null || tw.getCause() == null) {
       return null;
@@ -41,7 +47,7 @@ public class SEDLogger {
       twCause = twCause.getCause();
     }
     return twCause.getMessage();
-    
+
   }
 
   int miMethodStack = 3;
@@ -52,7 +58,8 @@ public class SEDLogger {
    * @param clzz
    */
   public SEDLogger(Class clzz) {
-    mlgLogger = Logger.getLogger(clzz != null ? clzz.getName() : this.getClass().getName());
+    mlgLogger = Logger.getLogger(
+            clzz != null ? clzz.getName() : this.getClass().getName());
   }
 
   /**
@@ -61,7 +68,8 @@ public class SEDLogger {
    * @param iLogStackMethodLevel
    */
   public SEDLogger(Class clzz, int iLogStackMethodLevel) {
-    mlgLogger = Logger.getLogger(clzz != null ? clzz.getName() : this.getClass().getName());
+    mlgLogger = Logger.getLogger(
+            clzz != null ? clzz.getName() : this.getClass().getName());
     miMethodStack = iLogStackMethodLevel;
   }
 
@@ -70,9 +78,9 @@ public class SEDLogger {
    * @return
    */
   protected String getCurrentMethodName() {
-    return currentThread().getStackTrace().length > miMethodStack ?
-        currentThread().getStackTrace()[miMethodStack]
-        .getMethodName() : "NULL METHOD";
+    return currentThread().getStackTrace().length > miMethodStack
+            ? currentThread().getStackTrace()[miMethodStack]
+                    .getMethodName() : "NULL METHOD";
   }
 
   /**
@@ -99,11 +107,13 @@ public class SEDLogger {
           sw.append(",");
         }
         sw.append("'" + o + "' ");
+        i++;
       }
       strParams = sw.toString();
     }
 
-    mlgLogger.info(getCurrentMethodName() + ":" + (strParams != null ? strParams : ""));
+    mlgLogger.info(
+            getCurrentMethodName() + ":" + (strParams != null ? strParams : ""));
     return mlTime;
   }
 
@@ -119,7 +129,7 @@ public class SEDLogger {
     mlgLogger.info(getCurrentMethodName() + ":" + String.format(format, param));
     return mlTime;
   }
-  
+
   public long formatedDebug(final String format, final Object... param) {
     long mlTime = getTime();
     mlgLogger.debug(getCurrentMethodName() + ":" + String.format(format, param));
@@ -131,14 +141,13 @@ public class SEDLogger {
     mlgLogger.warn(getCurrentMethodName() + ":" + String.format(format, param));
     return mlTime;
   }
-  
+
   public long formatedError(final String format, final Object... param) {
     long mlTime = getTime();
     mlgLogger.error(getCurrentMethodName() + ":" + String.format(format, param));
     return mlTime;
   }
 
-  
   /**
    *
    * @param lTime
@@ -155,10 +164,19 @@ public class SEDLogger {
       strParams = sw.toString();
     }
     long logTime = (getTime() - lTime);
+
+    mlgLogger.log(logTime < 30000 ? Level.DEBUG : Level.WARN,
+            getCurrentMethodName() + ": - END ( " + logTime + " ms) "
+            + strParams);
+
+  }
+  
+  public void logEnd(long lTime, String objectType, String objectId,  String message) {
+    long logTime = (getTime() - lTime);
     
-      mlgLogger.log(logTime < 30000? Level.DEBUG:Level.WARN,  
-          getCurrentMethodName() + ": - END ( " + (getTime() - lTime) + " ms) " +
-           strParams);
+    String val = formatLine(getCurrentMethodName(), "END", objectType, objectId, logTime, message, null);
+    mlgLogger.log(logTime < 30000 ? Level.DEBUG : Level.WARN,
+           val);
 
   }
 
@@ -170,15 +188,43 @@ public class SEDLogger {
    */
   public void logError(long lTime, String strMessage, Throwable ex) {
 
-    mlgLogger.error(getCurrentMethodName() + ": - ERROR MSG: '" + strMessage + "'" + (ex == null ?
-        "." : ", first cause '" + getFirstCauseMessage(ex) + "')") + "( "
-        + (getTime() - lTime) + " ms )", ex);
+    mlgLogger.error(
+            getCurrentMethodName() + MSG + strMessage + "'" + (ex == null
+                    ? "." : MSG_FC + getFirstCauseMessage(ex) + "')") + "( "
+            + (getTime() - lTime) + " ms )", ex);
   }
-  
+
   public void logError(String strMessage, Throwable ex) {
 
-    mlgLogger.error(getCurrentMethodName() + ": - ERROR MSG: '" + strMessage + "'" + (ex == null ?
-        "." : ", first cause '" + getFirstCauseMessage(ex) + "')") , ex);
+    mlgLogger.error(
+            getCurrentMethodName() + MSG + strMessage + "'" + (ex == null
+                    ? "." : MSG_FC + getFirstCauseMessage(ex) + "')"), ex);
+  }
+
+  private String formatLine(String method, String logEvent, String objecType,
+          String objectId, long lDurTime, String strMessage, Throwable ex) {
+
+    StringBuilder sw = new StringBuilder();
+    sw.append(method);
+    sw.append(": ");
+    sw.append(logEvent).append(" (").append(lDurTime).append(" ms ) ");
+
+    sw.append(objecType).append(' ');
+    sw.append(objectId).append(' ');
+    sw.append(": ");
+
+    // add message
+    if (strMessage != null) {
+      sw.append(" msg: '").append(strMessage).append("' ");
+    }
+    // add error message
+    if (ex != null) {
+      sw.append(" Err: '").append(ex).append("', FC: '").append(
+              getFirstCauseMessage(ex)).append("'.");
+    }
+
+    return sw.toString();
+
   }
 
   /**
@@ -187,9 +233,10 @@ public class SEDLogger {
    * @param ex
    */
   public void logError(long lTime, Throwable ex) {
-    mlgLogger.error(getCurrentMethodName() + ": - ERROR MSG: '" +
-         (ex != null ? ex.getMessage() : "") + "' first cause '" + getFirstCauseMessage(ex) + "' ( " +
-        (getTime() - lTime) + " ms )", ex);
+    mlgLogger.error(getCurrentMethodName() + MSG
+            + (ex != null ? ex.getMessage() : "") + MSG_FC + getFirstCauseMessage(
+            ex) + "' ( "
+            + (getTime() - lTime) + " ms )", ex);
   }
 
   /**
@@ -212,8 +259,8 @@ public class SEDLogger {
       strParams = sw.toString();
     }
 
-    mlgLogger.trace(getCurrentMethodName() + ": - BEGIN' " +
-         (strParams != null ? " params: " + strParams : ""));
+    mlgLogger.trace(getCurrentMethodName() + ": - BEGIN' "
+            + (strParams != null ? " params: " + strParams : ""));
     return mlTime;
   }
 
@@ -224,9 +271,9 @@ public class SEDLogger {
    * @param ex
    */
   public void logWarn(long lTime, String strMessage, Exception ex) {
-    mlgLogger.warn(getCurrentMethodName() + ": - WARN MSG: '" + strMessage + "', first cause '" +
-        getFirstCauseMessage(ex) + "' ( " +
-         (getTime() - lTime) + " ms )", ex);
+    mlgLogger.warn(getCurrentMethodName() + MSG + strMessage + MSG_FC
+            + getFirstCauseMessage(ex) + "' ( "
+            + (getTime() - lTime) + " ms )", ex);
   }
 
   /**
@@ -236,10 +283,9 @@ public class SEDLogger {
    * @param ex
    */
   public void logWarn(String strMessage, Exception ex) {
-    mlgLogger.warn(getCurrentMethodName() + ": - WARN MSG: '" + strMessage + "', first cause '" +
-        getFirstCauseMessage(ex) + "'.", ex);
+    mlgLogger.warn(getCurrentMethodName() + MSG + strMessage + MSG_FC
+            + getFirstCauseMessage(ex) + "'.", ex);
   }
-
 
   public Logger getLogger() {
     return mlgLogger;
