@@ -1,8 +1,0 @@
-<jboss-deployment-structure>
-    <deployment>
-        <dependencies>
-            <module name="si.laurentius" /> 
-             <module name="org.primefaces" meta-inf="export" />  
-        </dependencies>
-    </deployment>
-</jboss-deployment-structure>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="urn:jboss:module:1.5" name="si.laurentius">
+    <resources>	
+        <resource-root path="Laurentius-msh-xsd-VERSION.jar"/>
+        <resource-root path="Laurentius-wsdl-VERSION.jar"/>
+        <resource-root path="Laurentius-commons-VERSION.jar"/>
+        <resource-root path="Laurentius-lce-VERSION.jar"/>
+        <resource-root path="Laurentius-plugin-interfaces-VERSION.jar"/>
+    </resources>
+    <dependencies>
+        <module name="javax.annotation.api"/>
+        <module name="javax.api"/>	
+        <module name="javax.ejb.api"/>
+        <module name="javax.jws.api" />
+        <module name="javax.mail.api"/>
+        <module name="javax.jms.api"/>
+        <module name="javax.xml.soap.api"/>
+        <module name="javax.xml.ws.api"/>
+        <module name="org.apache.cxf"/>
+        <module name="org.apache.cxf.impl"/> 
+		<module name="org.apache.pdfbox"/>
+        <module name="org.apache.commons.io"/> 
+        <module name="org.apache.log4j"/>
+        <module name="org.apache.santuario.xmlsec"/>
+        <module name="org.apache.ws.security"/>
+        <module name="org.hibernate"/>
+        <module name="org.javassist"/>
+        <module name="org.bouncycastle"/>
+    </dependencies>
+</module>
+

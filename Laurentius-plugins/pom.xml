@@ -44,8 +44,6 @@
     <modules>
 	<module>Laurentius-basic-plugin</module>
         <module>Laurentius-zpp-plugin</module>
-        <!-- TODO module>Laurentius-meps-plugin</module -->
-        <module>Laurentius-cef-plugin</module>
 	<module>Laurentius-test-case-plugin</module>
     </modules>
 </project>
