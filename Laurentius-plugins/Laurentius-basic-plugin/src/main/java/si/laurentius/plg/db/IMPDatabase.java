@@ -55,6 +55,8 @@ import si.laurentius.plugin.imp.XSLTRule;
 @Local(IMPDBInterface.class)
 @TransactionManagement(TransactionManagementType.BEAN)
 public class IMPDatabase implements IMPDBInterface {
+  
+  private static final String MSG_ERR_ROLLBACK = "Rollback failed";
 
   public static final String FILE_INIT_DATA = "plg-basic-init.xml";
   /**
@@ -98,7 +100,7 @@ public class IMPDatabase implements IMPDBInterface {
         LOG.logError(l, ex.getMessage(), ex);
         mutUTransaction.rollback();
       } catch (IllegalStateException | SecurityException | SystemException ex1) {
-        LOG.logWarn(l, "Rollback failed", ex1);
+        LOG.logWarn(l, MSG_ERR_ROLLBACK, ex1);
       }
     }
     return suc;
@@ -263,7 +265,7 @@ public class IMPDatabase implements IMPDBInterface {
         LOG.logError(l, ex.getMessage(), ex);
         mutUTransaction.rollback();
       } catch (IllegalStateException | SecurityException | SystemException ex1) {
-        LOG.logWarn(l, "Rollback failed", ex1);
+        LOG.logWarn(l, MSG_ERR_ROLLBACK, ex1);
       }
     }
     return suc;
@@ -300,7 +302,7 @@ public class IMPDatabase implements IMPDBInterface {
         LOG.logError(l, ex.getMessage(), ex);
         mutUTransaction.rollback();
       } catch (IllegalStateException | SecurityException | SystemException ex1) {
-        LOG.logWarn(l, "Rollback failed", ex1);
+        LOG.logWarn(l, MSG_ERR_ROLLBACK, ex1);
       }
     }
     return suc;
@@ -327,7 +329,7 @@ public class IMPDatabase implements IMPDBInterface {
         LOG.logError(l, ex.getMessage(), ex);
         mutUTransaction.rollback();
       } catch (IllegalStateException | SecurityException | SystemException ex1) {
-        LOG.logWarn(l, "Rollback failed", ex1);
+        LOG.logWarn(l, MSG_ERR_ROLLBACK, ex1);
       }
     }
     return suc;
