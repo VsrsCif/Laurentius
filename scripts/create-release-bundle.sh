@@ -106,6 +106,9 @@ cp -r "$LAU_PROJECT/scripts/install/laurentius-home" "$LAU_RELEASE_FOLDER/$ZIP_F
 # CREATE_BOUNDLE   
 cd $LAU_RELEASE_FOLDER
 zip -r "$ZIP_FILENAME.zip" $ZIP_FILENAME
+# CALCULATE CHECKSUM   
+sha256sum --tag "$ZIP_FILENAME.zip" >> "$ZIP_FILENAME.sha256"
+
 cd ..
 
 #--------------------------------------------------------------------------------------
