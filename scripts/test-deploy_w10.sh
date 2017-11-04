@@ -12,7 +12,7 @@ unzip -q "../../settings/$WILDFLY_HOME.zip" -d $FOLDER_DEPLOY
 
 cd "$FOLDER_DEPLOY/$BOUNDLE_NAME/wildfly-10.1"
 
-./deploy-laurentius.sh --init -w "../../$WILDFLY_HOME"
+./deploy-laurentius.sh --init -s "../../$WILDFLY_HOME"
 
 cd "../../$WILDFLY_HOME/bin"
 
