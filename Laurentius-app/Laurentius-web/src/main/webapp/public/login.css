@@ -5,7 +5,9 @@
 }
 
 .LoginTitle {
+    
     background:  url("first-page.svg")  no-repeat right top ;
+    margin: auto;
     background-position: 0 0;
     font-family: Arial;
     color:black;

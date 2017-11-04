@@ -104,7 +104,7 @@
         
         <!-- GUI latest primeface 6.1 -> dialog problem  -->
         <org.primefaces.version>6.1</org.primefaces.version>
-        <org.primefaces.extensions.version>6.0.0</org.primefaces.extensions.version>        
+        <org.primefaces.extensions.version>6.1.1</org.primefaces.extensions.version>        
         <!-- unit testing
         -->      
         <org.apache.derby.version>10.14.1.0</org.apache.derby.version>

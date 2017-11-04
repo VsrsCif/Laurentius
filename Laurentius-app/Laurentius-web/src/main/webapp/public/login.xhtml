@@ -17,58 +17,59 @@
         <h:body class="LoginPage">
 
 
-            <div class="LoginTitle"></div> 
-            <h:form id="loginForm">     
-                <p:panel id="loginPanel" header="#{msg['Login']}" style="width:600px">
-                    <p:fragment autoUpdate="true">
+            <div  class="LoginTitle"></div> 
+            
+                <h:form id="loginForm">     
+                    <p:panel id="loginPanel" header="#{msg['Login']}" style="width:600px;margin: auto;">
+                        <p:fragment autoUpdate="true">
 
-                        <p:panelGrid   styleClass="panelGridNoBorder">
-                            <p:row>
-                                <p:column><p:outputLabel for="username" value="#{msg['Username']}"/></p:column>
-                                <p:column><p:inputText id="username" value="#{loginManager.username}" 
-                                                       required="true" 
-                                                       requiredMessage="#{msg['EnterUsername']}" 
-                                                       /></p:column>
-                                <p:column><h:message for="username"/></p:column>
-                            </p:row>
-                            <p:row>
-                                <p:column><p:outputLabel for="password" value="#{msg['Password']}"/></p:column>
-                                <p:column><p:password id="password" value="#{loginManager.password}"
-                                                      required="true"
-                                                      requiredMessage="#{msg['EnterPassword']}" 
-                                                      /></p:column>
-                                <p:column><h:message for="password"/></p:column>
-                            </p:row>
-                            <p:row>
-                                <p:column colspan="3">
-                                    <div style="width: 100%; position: relative; right: 0px;">
-                                        <p:commandButton  id="loginButton" widgetVar="loginButton" value="#{msg['Login']}"
-                                                          actionListener="#{loginManager.login()}"
-                                                          class="image-Button" icon="ui-icon-size-22 ui-icon-svg-ok"
-                                                          onclick="PF('loginButton').disable()"
-                                                          />
-                                    </div>
-                                </p:column>
-                            </p:row>
+                            <p:panelGrid   styleClass="panelGridNoBorder">
+                                <p:row>
+                                    <p:column><p:outputLabel for="username" value="#{msg['Username']}"/></p:column>
+                                    <p:column><p:inputText id="username" value="#{loginManager.username}" 
+                                                           required="true" 
+                                                           requiredMessage="#{msg['EnterUsername']}" 
+                                                           /></p:column>
+                                    <p:column><h:message for="username"/></p:column>
+                                </p:row>
+                                <p:row>
+                                    <p:column><p:outputLabel for="password" value="#{msg['Password']}"/></p:column>
+                                    <p:column><p:password id="password" value="#{loginManager.password}"
+                                                          required="true"
+                                                          requiredMessage="#{msg['EnterPassword']}" 
+                                                          /></p:column>
+                                    <p:column><h:message for="password"/></p:column>
+                                </p:row>
+                                <p:row>
+                                    <p:column colspan="3">
+                                        <div style="width: 100%; position: relative; right: 0px;">
+                                            <p:commandButton  id="loginButton" widgetVar="loginButton" value="#{msg['Login']}"
+                                                              actionListener="#{loginManager.login()}"
+                                                              class="image-Button" icon="ui-icon-size-22 ui-icon-svg-ok"
+                                                              onclick="PF('loginButton').disable()"
+                                                              />
+                                        </div>
+                                    </p:column>
+                                </p:row>
 
-                            <p:row>
-                                <p:column colspan="3"><h:messages globalOnly="true"/></p:column>
-                            </p:row>
-                        </p:panelGrid>
-                        <p:blockUI block=":loginForm:loginPanel" 
-                                   trigger=":loginForm:loginButton"
-                                   >
-                            <h:graphicImage value="#{resource['images:/ajax-progress.gif']}"  /> 
-                            <h:outputText value="#{msg['Login']}" />
-                        </p:blockUI>
+                                <p:row>
+                                    <p:column colspan="3"><h:messages globalOnly="true"/></p:column>
+                                </p:row>
+                            </p:panelGrid>
+                            <p:blockUI block=":loginForm:loginPanel" 
+                                       trigger=":loginForm:loginButton"
+                                       >
+                                <h:graphicImage value="#{resource['images:/ajax-progress.gif']}"  /> 
+                                <h:outputText value="#{msg['Login']}" />
+                            </p:blockUI>
 
 
-                    </p:fragment>
-                    <div style="float:right;color: gray; margin-top: 30px;font-size:12px">
-                        <p:outputLabel value="Laurentius"/>  #{msg['Version']}: <p:outputLabel value="#{ApplicationData.buildVersion}" />                        
-                    </div>
-                </p:panel> 
-            </h:form>
+                        </p:fragment>
+                        <div style="float:right;color: gray; margin-top: 30px;font-size:12px">
+                            <p:outputLabel value="Laurentius"/>  #{msg['Version']}: <p:outputLabel value="#{ApplicationData.buildVersion}" />                        
+                        </div>
+                    </p:panel> 
+                </h:form>
 
 
 
