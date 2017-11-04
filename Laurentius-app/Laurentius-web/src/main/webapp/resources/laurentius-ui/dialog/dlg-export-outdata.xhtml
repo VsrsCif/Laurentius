@@ -24,7 +24,7 @@
                     <p:layoutUnit position="center"  >
                         <h:outputText value="#{msg['SelectExportData']}:" />
 
-                        <center>
+                        
                             <p:pickList id="ExportDataPickList" 
                                         value="#{OutMailDataView.currentPickupDualExportData}" 
                                         var="method"                                                 
@@ -41,7 +41,7 @@
                                     <h:outputText value="#{method}" />
                                 </p:column>
                             </p:pickList>
-                        </center>
+                        
                     </p:layoutUnit>
                     <p:layoutUnit position="south"  size="40" minSize="40" maxSize="40" >
                         <p:toolbar 
