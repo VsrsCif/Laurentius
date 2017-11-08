@@ -104,8 +104,8 @@ public interface PModeInterface {
    * @return
    * @throws PModeException
    */
-  public PartyIdentitySet getPartyIdentitySetById(String partyIdentiySetId)
-      throws PModeException;
+  public PartyIdentitySet getPartyIdentitySetById(String partyIdentiySetId);
+   
 
  
   /**

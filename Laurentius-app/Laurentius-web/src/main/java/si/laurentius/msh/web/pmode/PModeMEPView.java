@@ -87,9 +87,22 @@ public class PModeMEPView extends AbstractPModeJSFView<MEPType> {
     }
     if (mlt.getTransport().getForeChannel() == null) {
       mlt.getTransport().setForeChannel(new TransportChannelType());
+
     }
     if (mlt.getTransport().getBackChannel() == null) {
       mlt.getTransport().setBackChannel(new TransportChannelType());
+    }
+
+    if (mlt.getTransport().getForeChannel().getReceptionAwareness() == null) {
+      mlt.getTransport().getForeChannel().setReceptionAwareness(
+              new TransportChannelType.ReceptionAwareness());
+    }
+
+    if (mlt.getTransport().getBackChannel().getReceptionAwareness() == null) {
+      mlt.getTransport().getBackChannel().setReceptionAwareness(
+              new TransportChannelType.ReceptionAwareness());
+      
+      
     }
   }
 

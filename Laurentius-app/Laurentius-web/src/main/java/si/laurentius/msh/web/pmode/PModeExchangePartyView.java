@@ -43,16 +43,15 @@ public class PModeExchangePartyView extends AbstractPModeJSFView<PMode.ExchangeP
    *
    */
   public static final SEDLogger LOG = new SEDLogger(PModeExchangePartyView.class);
-  
+
   @EJB(mappedName = SEDJNDI.JNDI_PMODE)
   PModeInterface mPModeInteface;
 
   @Inject
   PModeView pModeView;
 
-  
   PartyIdentitySet editableParty;
-    
+
   public PModeView getpModeView() {
     return pModeView;
   }
@@ -60,11 +59,10 @@ public class PModeExchangePartyView extends AbstractPModeJSFView<PMode.ExchangeP
   public void setpModeView(PModeView pModeView) {
     this.pModeView = pModeView;
   }
-  
-  
+
   public String getEditablePartyId() {
     PMode.ExchangeParties.PartyInfo pme = getEditable();
-    return pme != null?pme.getPartyIdentitySetIdRef():null;    
+    return pme != null ? pme.getPartyIdentitySetIdRef() : null;
   }
 
   public void setEditablePartyId(String elp) {
@@ -76,8 +74,9 @@ public class PModeExchangePartyView extends AbstractPModeJSFView<PMode.ExchangeP
         if (Objects.equals(pis.getId(), elp)) {
           editableParty = pis;
           pi.setPartyIdentitySetIdRef(elp);
-          if (!pis.getTransportProtocols().isEmpty()){
-            pi.setPartyDefTransportIdRef(pis.getTransportProtocols().get(0).getId());
+          if (!pis.getTransportProtocols().isEmpty()) {
+            pi.setPartyDefTransportIdRef(pis.getTransportProtocols().get(0).
+                    getId());
           }
           break;
         }
@@ -86,9 +85,9 @@ public class PModeExchangePartyView extends AbstractPModeJSFView<PMode.ExchangeP
     }
 
   }
-  
+
   public boolean getEditablePartyHasInitiatorRole() {
-    
+
     Service srv = pModeView.getEditableService();
     boolean hasIR = false;
     if (srv != null && srv.getInitiator() != null) {
@@ -107,7 +106,7 @@ public class PModeExchangePartyView extends AbstractPModeJSFView<PMode.ExchangeP
   }
 
   public boolean getEditablePartyHasRole(String role) {
-    PMode.ExchangeParties.PartyInfo pi =  getEditable();
+    PMode.ExchangeParties.PartyInfo pi = getEditable();
 
     boolean hasIR = false;
     if (pi != null && !Utils.isEmptyString(role)) {
@@ -117,7 +116,6 @@ public class PModeExchangePartyView extends AbstractPModeJSFView<PMode.ExchangeP
     return hasIR;
   }
 
-            
   public void setEditablePartyHasInitiatorRole(boolean bVal) {
     Service srv = pModeView.getEditableService();
     if (srv != null && srv.getInitiator() != null) {
@@ -134,7 +132,7 @@ public class PModeExchangePartyView extends AbstractPModeJSFView<PMode.ExchangeP
 
   public void setEditablePartyRole(boolean bVal, String role) {
 
-   PMode.ExchangeParties.PartyInfo pi =  getEditable();
+    PMode.ExchangeParties.PartyInfo pi = getEditable();
     if (pi != null && !Utils.isEmptyString(role)) {
       if (bVal) {
         if (!pi.getRoles().contains(role)) {
@@ -150,25 +148,13 @@ public class PModeExchangePartyView extends AbstractPModeJSFView<PMode.ExchangeP
   }
 
   public List<PartyIdentitySetType.TransportProtocol> getEditablePartyTransports() {
-     PMode.ExchangeParties.PartyInfo pi =  getEditable();
-    
-    if (pi != null) {
-      
-      try {
-        PartyIdentitySetType pist = mPModeInteface.getPartyIdentitySetById(pi.getPartyIdentitySetIdRef());
+    PMode.ExchangeParties.PartyInfo pi = getEditable();
 
-        return pist.getTransportProtocols();
-      } catch (PModeException ex) {
-        LOG.formatedWarning(
-                "Error %s occured while retrieving party identity set %s ", ex.
-                        getMessage(), pi.getPartyIdentitySetIdRef());
-      }
-    }
-    return Collections.emptyList();
+    PartyIdentitySetType pist = pi != null ? mPModeInteface.
+            getPartyIdentitySetById(pi.getPartyIdentitySetIdRef()) : null;
+
+    return pist != null ? pist.getTransportProtocols() : Collections.emptyList();
   }
-
-
- 
 
   @Override
   public boolean validateData() {
@@ -177,14 +163,10 @@ public class PModeExchangePartyView extends AbstractPModeJSFView<PMode.ExchangeP
 
   @Override
   public void createEditable() {
-    
 
     PMode.ExchangeParties.PartyInfo np = new PMode.ExchangeParties.PartyInfo();
 
-   // np.setAgreementRef(new AgreementRef());
-   
-    
-    
+    // np.setAgreementRef(new AgreementRef());
     setNew(np);
 
   }
@@ -222,7 +204,8 @@ public class PModeExchangePartyView extends AbstractPModeJSFView<PMode.ExchangeP
                 new PMode.ExchangeParties());
       }
 
-      bsuc = pModeView.getEditable().getExchangeParties().getPartyInfos().add(ecj);
+      bsuc = pModeView.getEditable().getExchangeParties().getPartyInfos().add(
+              ecj);
     } else {
       addError("No editable payload!");
     }
@@ -235,10 +218,12 @@ public class PModeExchangePartyView extends AbstractPModeJSFView<PMode.ExchangeP
     PMode.ExchangeParties.PartyInfo ecj = getSelected();
     if (ecj != null && pModeView.getEditable() != null) {
       if (pModeView.getEditable().getExchangeParties() != null) {
-        for (int i = 0; i < pModeView.getEditable().getExchangeParties().getPartyInfos().size(); i++) {
+        for (int i = 0; i < pModeView.getEditable().getExchangeParties().
+                getPartyInfos().size(); i++) {
           PMode.ExchangeParties.PartyInfo pp = pModeView.getEditable().
                   getExchangeParties().getPartyInfos().get(i);
-          if (Objects.equals(pp.getPartyIdentitySetIdRef(), ecj.getPartyIdentitySetIdRef())) {
+          if (Objects.equals(pp.getPartyIdentitySetIdRef(), ecj.
+                  getPartyIdentitySetIdRef())) {
             pModeView.getEditable().getExchangeParties().
                     getPartyInfos().remove(i);
             bSuc = true;
@@ -256,14 +241,15 @@ public class PModeExchangePartyView extends AbstractPModeJSFView<PMode.ExchangeP
   @Override
   public boolean updateEditable() {
     boolean bSuc = false;
-     PMode.ExchangeParties.PartyInfo ecj = getEditable();
+    PMode.ExchangeParties.PartyInfo ecj = getEditable();
     if (ecj != null && pModeView.getEditable() != null) {
       if (pModeView.getEditable().getExchangeParties() != null) {
         for (int i = 0; i < pModeView.getEditable().getExchangeParties().
                 getPartyInfos().size(); i++) {
           PMode.ExchangeParties.PartyInfo pp = pModeView.getEditable().
                   getExchangeParties().getPartyInfos().get(i);
-          if (Objects.equals(pp.getPartyIdentitySetIdRef(), ecj.getPartyIdentitySetIdRef())) {
+          if (Objects.equals(pp.getPartyIdentitySetIdRef(), ecj.
+                  getPartyIdentitySetIdRef())) {
             pModeView.getEditable().getExchangeParties().
                     getPartyInfos().remove(i);
             pModeView.getEditable().getExchangeParties().

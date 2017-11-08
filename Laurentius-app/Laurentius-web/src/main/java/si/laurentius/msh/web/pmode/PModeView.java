@@ -53,7 +53,8 @@ public class PModeView extends AbstractPModeJSFView<PMode> {
 
   public String getEditableLocalPartyId() {
     PMode pme = getEditable();
-    return pme != null && pme.getLocalPartyInfo()!=null?pme.getLocalPartyInfo().getPartyIdentitySetIdRef():null;    
+    return pme != null && pme.getLocalPartyInfo() != null ? pme.
+            getLocalPartyInfo().getPartyIdentitySetIdRef() : null;
   }
 
   public void setEditableLocalPartyId(String elp) {
@@ -65,8 +66,9 @@ public class PModeView extends AbstractPModeJSFView<PMode> {
         if (pis.getIsLocalIdentity() && Objects.equals(pis.getId(), elp)) {
           editableLocalParty = pis;
           pme.getLocalPartyInfo().setPartyIdentitySetIdRef(elp);
-          if (!pis.getTransportProtocols().isEmpty()){
-            pme.getLocalPartyInfo().setPartyDefTransportIdRef(pis.getTransportProtocols().get(0).getId());
+          if (!pis.getTransportProtocols().isEmpty()) {
+            pme.getLocalPartyInfo().setPartyDefTransportIdRef(pis.
+                    getTransportProtocols().get(0).getId());
           }
           break;
         }
@@ -89,7 +91,6 @@ public class PModeView extends AbstractPModeJSFView<PMode> {
     this.editableService = null;
     if (pme != null && !Utils.isEmptyString(es)) {
       List<Service> lstSrv = mPModeInteface.getServices();
-      
 
       for (Service srv : lstSrv) {
         if (Objects.equals(srv.getId(), es)) {
@@ -117,25 +118,25 @@ public class PModeView extends AbstractPModeJSFView<PMode> {
     this.editableService = editableService;
   }
 
-  public  List<String>  getEditableServiceRoles(){
+  public List<String> getEditableServiceRoles() {
     Service es = getEditableService();
     List<String> lstRoles = null;
-    if (es!=null){
-      lstRoles= new ArrayList<>();
-      if (es.getInitiator()!=null){
+    if (es != null) {
+      lstRoles = new ArrayList<>();
+      if (es.getInitiator() != null) {
         lstRoles.add(es.getInitiator().getRole());
       }
-      if (es.getExecutor()!=null){
+      if (es.getExecutor() != null) {
         lstRoles.add(es.getExecutor().getRole());
       }
-    
+
     } else {
-    lstRoles = Collections.emptyList();
+      lstRoles = Collections.emptyList();
     }
     return lstRoles;
-  
+
   }
-          
+
   @Override
   public boolean validateData() {
 
@@ -253,7 +254,6 @@ public class PModeView extends AbstractPModeJSFView<PMode> {
     return hasIR;
   }
 
-            
   public void setEditableLocPartyHasInitiatorRole(boolean bVal) {
     Service srv = getEditableService();
     if (srv != null && srv.getInitiator() != null) {
@@ -291,19 +291,11 @@ public class PModeView extends AbstractPModeJSFView<PMode> {
             isEmptyString(
                     pm.getLocalPartyInfo().getPartyIdentitySetIdRef()) ? pm.
             getLocalPartyInfo().getPartyIdentitySetIdRef() : null;
-    if (pis != null) {
 
-      try {
-        PartyIdentitySetType pist = mPModeInteface.getPartyIdentitySetById(pis);
+    PartyIdentitySetType pist = pis != null ? mPModeInteface.
+            getPartyIdentitySetById(pis) : null;
 
-        return pist.getTransportProtocols();
-      } catch (PModeException ex) {
-        LOG.formatedWarning(
-                "Error %s occured while retrieving party identity set %s ", ex.
-                        getMessage(), pis);
-      }
-    }
-    return Collections.emptyList();
+    return pist != null?pist.getTransportProtocols(): Collections.emptyList();
   }
 
   /**

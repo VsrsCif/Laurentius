@@ -534,7 +534,7 @@
 	<xs:complexType name="Property">
 		<xs:attribute name="name" type="xs:string" use="required"/>
 		<xs:attribute name="type" type="xs:string"/>
-		<xs:attribute name="required" type="xs:boolean" default="false"/>
+		<xs:attribute name="required" type="xs:boolean" />
 	</xs:complexType>
 	<xs:complexType name="Protocol">
 		<xs:sequence>

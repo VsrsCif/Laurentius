@@ -131,8 +131,7 @@ public class PModeManagerBean implements PModeInterface {
   }
 
   @Override
-  public PartyIdentitySet getPartyIdentitySetById(String partyIdentiySetId)
-          throws PModeException {
+  public PartyIdentitySet getPartyIdentitySetById(String partyIdentiySetId){
     return getPModeManager().getPartyIdentitySetById(partyIdentiySetId);
   }
 

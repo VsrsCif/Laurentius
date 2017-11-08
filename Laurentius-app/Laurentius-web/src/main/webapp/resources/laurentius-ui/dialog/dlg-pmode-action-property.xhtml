@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      xmlns:dlg="http://java.sun.com/jsf/composite/laurentius-ui/dialog"
+      xmlns:pnl="http://java.sun.com/jsf/composite/laurentius-ui/panel"
+      >
+    <h:head>
+        <title>Laurentius</title>       
+    </h:head>
+    <composite:interface>
+    </composite:interface>
+
+    <composite:implementation >
+        <dlg:dlg-abstract   id="pModeActionPropertyDialog"
+                            formId="pModeActionPropertyDialogForm"
+                            dialogTitle="#{msg['pModeActionPropertyDialog']}" 
+                            editable="#{pModeActionPropertiesView.editable}"
+                            width="300"
+                            height="200"
+                            updateOnSave="dlgPModeServiceAction:pModeServiceActionDialog:pModeServiceActionDialogForm:TblProperties"
+                            onConfirmAction="#{pModeActionPropertiesView.addOrUpdateEditable()}" >
+
+            <p:layout>
+                <p:layoutUnit position="center">
+                    <p:panelGrid  columns="2" columnClasses="grid-label, value"  style="width:100%; height: 100% ">
+                        <f:facet name="header">
+                            <h:outputText value="#{msg['Name']}" />
+                            <h:inputText value="#{pModeActionPropertiesView.editable.name}" 
+                                         disabled="#{empty pModeActionPropertiesView.new}"  style="width:100%;" />
+                        </f:facet>
+
+
+                        <h:outputText value="#{msg['Required']}:" />
+                        <p:selectBooleanCheckbox  value="#{pModeActionPropertiesView.editable.required}" 
+                                                  style="width: 100%"
+                                                         />
+                            
+                        
+                        <h:outputText value="#{msg['Type']}:" />
+                        <h:inputText  value="#{pModeActionPropertiesView.editable.type}" style="width: 100%"  />
+
+                         
+                    </p:panelGrid>      
+                </p:layoutUnit>
+               
+            </p:layout>
+        </dlg:dlg-abstract>
+    </composite:implementation>
+
+</html>

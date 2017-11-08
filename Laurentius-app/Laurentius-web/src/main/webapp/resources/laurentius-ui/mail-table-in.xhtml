@@ -164,7 +164,7 @@
                                 <p:dataTable var="plpart" 
                                              value="#{InMailDataView.currentMail.MSHInPayload.MSHInParts}"
                                              scrollable="true"
-                                             scrollHeight="135">
+                                             scrollHeight="130">
 
                                     <p:column style="width:16px">
                                         <p:rowToggler />
@@ -239,7 +239,7 @@
 
                                 <p:dataTable var="mailEvents" value="#{InMailDataView.mailEvents}"
                                              scrollable="true"
-                                             scrollHeight="135" >
+                                             scrollHeight="130" >
                                     <p:column width="60" headerText="#{msg['Id']}">
                                         <h:outputText value="#{mailEvents.id}" />
                                     </p:column>
@@ -269,6 +269,30 @@
 
                             </p:outputPanel>
                         </p:tab>
+                        <p:tab >
+                            <f:facet name="title">
+                                <h:graphicImage value="#{resource['images:/data.svg']}" width="22" height="22" />
+                                <h:outputText value="#{msg['Properties']}" />                                 
+                            </f:facet>
+                            <p:outputPanel id="InMailProperties" style="text-align:center;">
+
+
+                                <p:dataTable var="mp" value="#{InMailDataView.currentMail.MSHInProperties.MSHInProperties}"
+                                             scrollable="true"
+                                             scrollHeight="130" >
+                                    <p:column width="150" headerText="#{msg['Key']}">
+                                        <h:outputText value="#{mp.name}" />
+                                    </p:column>
+                                    
+                                    <p:column  headerText="#{msg['Value']}">
+                                        <h:outputText value="#{mp.value}"  ></h:outputText>
+                                    </p:column>
+
+                                </p:dataTable>
+
+                            </p:outputPanel>
+                        </p:tab>
+                        
                     </p:tabView>
                 </p:layoutUnit>
             </p:layout>

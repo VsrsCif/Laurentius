@@ -63,9 +63,10 @@ public class OutMailDataModel extends AbstractMailDataModel<MSHOutMail> {
   public MSHOutMail getRowData(String inMailId) {
     BigInteger id = new BigInteger(inMailId);
 
-    for (MSHOutMail player : getCurrentData()) {
-      if (id.equals(player.getId())) {
-        return player;
+    for (MSHOutMail mail : getCurrentData()) {
+      if (id.equals(mail.getId())) {
+
+        return mail;
       }
     }
     return null;

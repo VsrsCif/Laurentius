@@ -14,16 +14,21 @@
  */
 package si.laurentius.msh.web.admin;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.event.ActionEvent;
+import org.primefaces.context.RequestContext;
 import org.primefaces.model.CheckboxTreeNode;
 import org.primefaces.model.TreeNode;
 import si.laurentius.commons.SEDJNDI;
+import si.laurentius.commons.exception.PModeException;
 import si.laurentius.commons.interfaces.PModeInterface;
 import si.laurentius.commons.interfaces.SEDLookupsInterface;
 import si.laurentius.commons.interfaces.SEDPluginManagerInterface;
@@ -31,9 +36,7 @@ import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.Utils;
 import si.laurentius.commons.utils.xml.XMLUtils;
 import si.laurentius.cron.SEDCronJob;
-import si.laurentius.cron.SEDTask;
 import si.laurentius.interceptor.SEDInterceptor;
-import si.laurentius.interceptor.SEDInterceptorRule;
 import si.laurentius.msh.pmode.PMode;
 import si.laurentius.msh.pmode.PModePartyInfo;
 import si.laurentius.msh.pmode.PartyIdentitySet;
@@ -129,6 +132,18 @@ public class AdminSEDPluginView extends AbstractAdminJSFView<Plugin> {
                             getId(), s, "Service"), pluginTypeItem);
                   });
         }
+        
+        if (did.getPModeData().getPartyIdentitySets() != null) {
+          TreeNode pluginTypeItem = new CheckboxTreeNode(new PluginTreeItem(
+                  "Parties", null, "Parties"), pmodeItems);
+          pluginTypeItem.setExpanded(true);
+
+          did.getPModeData().getPartyIdentitySets().
+                  forEach((s) -> {
+                    TreeNode item = new CheckboxTreeNode(new PluginTreeItem(s.
+                            getId(), s, "Party"), pluginTypeItem);
+                  });
+        }
 
         if (did.getPModeData().getSecurities() != null) {
           TreeNode pluginTypeItem = new CheckboxTreeNode(new PluginTreeItem(
@@ -209,15 +224,12 @@ public class AdminSEDPluginView extends AbstractAdminJSFView<Plugin> {
   public void installSelectedPluginItems() {
 
     if (selectedPluginItems == null) {
-      LOG.logWarn("No selected plugin items to install!", null);
+      String msg = "No selected plugin items to install";
+      LOG.logWarn(msg, null);
+      addError(msg);
       return;
     }
-    List<PartyIdentitySet> lstLPI = new ArrayList<>();
-    mPModeManager.getPartyIdentitySets().stream().
-            filter((pi) -> (pi.getIsLocalIdentity())).
-            forEachOrdered((pi) -> {
-              lstLPI.add(pi);
-            });
+
 
     for (TreeNode tn : selectedPluginItems) {
       PluginTreeItem item = (PluginTreeItem) tn.getData();
@@ -226,120 +238,133 @@ public class AdminSEDPluginView extends AbstractAdminJSFView<Plugin> {
       }
 
       if (item.getPluginItem() instanceof Service) {
-        Service s = (Service) item.getPluginItem();
-        if (mPModeManager.getServiceById(s.getId()) == null) {
-          mPModeManager.addService(s);
-        }
+        installService((Service) item.getPluginItem());
       }
       if (item.getPluginItem() instanceof Security) {
-        Security sec = (Security) item.getPluginItem();
-        if (mPModeManager.getSecurityById(sec.getId()) == null) {
-          mPModeManager.addSecurity(sec);
-        }
+        installSecurity((Security) item.getPluginItem());
       }
 
       if (item.getPluginItem() instanceof ReceptionAwareness) {
-        ReceptionAwareness rc = (ReceptionAwareness) item.getPluginItem();
+        installReceptionAwareness((ReceptionAwareness) item.getPluginItem());
+      }
 
-        if (mPModeManager.getReceptionAwarenessById(rc.getId()) == null) {
-          mPModeManager.addReceptionAwareness(rc);
-        }
+      // add parties
+      if (item.getPluginItem() instanceof PartyIdentitySet) {
+        installPartyIdentitySet((PartyIdentitySet) item.getPluginItem());
       }
 
       if (item.getPluginItem() instanceof PMode) {
-        PMode p = (PMode) item.getPluginItem();
-
-        if (mPModeManager.getPModeById(p.getId()) == null) {
-          Service sv = mPModeManager.getServiceById(p.getServiceIdRef());
-          if (sv == null) {
-            LOG.formatedWarning(
-                    "Could not add PMode %s, because service %s is not registred. Bad plugin init data?",
-                    p.getId(), p.getServiceIdRef());
-            continue;
-          }
-
-          PMode pClone = XMLUtils.deepCopyJAXB(p);
-
-          if (!lstLPI.isEmpty()) {
-            pClone.setLocalPartyInfo(new PModePartyInfo());
-            pClone.getLocalPartyInfo().setPartyIdentitySetIdRef(lstLPI.get(0).
-                    getId());
-            if (!lstLPI.get(0).getTransportProtocols().isEmpty()) {
-              pClone.getLocalPartyInfo().setPartyDefTransportIdRef(
-                      lstLPI.get(0).getTransportProtocols().get(0).getId());
-
-              if (sv.getExecutor() != null) {
-                pClone.getLocalPartyInfo().getRoles().add(sv.getExecutor().
-                        getRole());
-              }
-              if (sv.getInitiator() != null) {
-                pClone.getLocalPartyInfo().getRoles().add(sv.getInitiator().
-                        getRole());
-              }
-            }
-
-            PMode.ExchangeParties eps = new PMode.ExchangeParties();
-            for (PartyIdentitySet ps : lstLPI) {
-              PMode.ExchangeParties.PartyInfo pi = new PMode.ExchangeParties.PartyInfo();
-              pi.setPartyIdentitySetIdRef(ps.getId());
-              if (!ps.getTransportProtocols().isEmpty()) {
-                pi.setPartyDefTransportIdRef(
-                        ps.getTransportProtocols().get(0).
-                                getId());
-              }
-              if (sv.getExecutor() != null) {
-                pi.getRoles().add(sv.getExecutor().getRole());
-              }
-              if (sv.getInitiator() != null) {
-                pi.getRoles().add(sv.getInitiator().getRole());
-              }
-
-              eps.getPartyInfos().add(pi);
-
-            }
-            pClone.setExchangeParties(eps);
-          }
-          mPModeManager.addPMode(pClone);
-        }
-
+        installPMode((PMode) item.getPluginItem());
       }
 
       if (item.getPluginItem() instanceof SEDInterceptor) {
-        SEDInterceptor si = (SEDInterceptor) item.getPluginItem();
-
-        if (mdbLookups.getSEDInterceptorByName(si.getName()) == null) {
-          si.setId(null);
-          si.getSEDInterceptorRules().
-                  forEach((sr) -> {
-                    sr.setId(null);
-                  });
-
-          si.getSEDInterceptorInstance().getSEDInterceptorProperties().
-                  forEach((sr) -> {
-                    sr.setId(null);
-                  });
-
-          mdbLookups.addSEDInterceptor(si);
-        }
+        installSEDInterceptor((SEDInterceptor) item.getPluginItem());
       }
 
       if (item.getPluginItem() instanceof SEDCronJob) {
-        SEDCronJob cj = (SEDCronJob) item.getPluginItem();
-
-        cj.setId(null);
-        cj.getSEDTasks().forEach((tsk) -> {
-          tsk.setId(null);
-          tsk.getSEDTaskProperties().
-                  forEach((sr) -> {
-                    sr.setId(null);
-                  });
-
-        });
-        mdbLookups.addSEDCronJob(cj);
+        installSEDCronJob((SEDCronJob) item.getPluginItem());
 
       }
 
     }
+    // submit message to dialog  to close 
+    RequestContext.getCurrentInstance().addCallbackParam("saved", true);
+
+  }
+
+  private boolean installService(Service s) {
+    boolean bAdd = false;
+    if (mPModeManager.getServiceById(s.getId()) == null) {
+      mPModeManager.addService(s);
+      bAdd = true;
+    }
+    return bAdd;
+  }
+
+  private boolean installSecurity(Security sec) {
+    boolean bAdd = false;
+    if (mPModeManager.getSecurityById(sec.getId()) == null) {
+      mPModeManager.addSecurity(sec);
+      bAdd = true;
+    }
+    return bAdd;
+  }
+
+  private boolean installReceptionAwareness(ReceptionAwareness rc) {
+    boolean bAdd = false;
+    if (mPModeManager.getReceptionAwarenessById(rc.getId()) == null) {
+      mPModeManager.addReceptionAwareness(rc);
+      bAdd = true;
+    }
+    return bAdd;
+  }
+
+  private boolean installPartyIdentitySet(PartyIdentitySet ps) {
+    boolean bAdd = false;
+    if (mPModeManager.getPartyIdentitySetById(ps.getId()) == null) {
+      mPModeManager.addPartyIdentitySet(ps);
+      bAdd = true;
+    }
+    return bAdd;
+  }
+
+  private boolean installSEDInterceptor(SEDInterceptor si) {
+    boolean bAdd = false;
+
+    if (mdbLookups.getSEDInterceptorByName(si.getName()) == null) {
+      si.setId(null);
+      si.getSEDInterceptorRules().
+              forEach((sr) -> {
+                sr.setId(null);
+              });
+
+      si.getSEDInterceptorInstance().getSEDInterceptorProperties().
+              forEach((sr) -> {
+                sr.setId(null);
+              });
+
+      mdbLookups.addSEDInterceptor(si);
+      bAdd = true;
+    }
+    return bAdd;
+  }
+
+  private boolean installSEDCronJob(SEDCronJob cj) {
+    boolean bAdd = false;
+
+    if (mdbLookups.getSEDCronJobByName(cj.getName()) == null) {
+
+      cj.setId(null);
+      cj.getSEDTasks().forEach((tsk) -> {
+        tsk.setId(null);
+        tsk.getSEDTaskProperties().
+                forEach((sr) -> {
+                  sr.setId(null);
+                });
+
+      });
+      mdbLookups.addSEDCronJob(cj);
+      bAdd = true;
+    }
+    return bAdd;
+  }
+
+  private boolean installPMode(PMode p) {
+    boolean bAdd = false;
+
+    if (mPModeManager.getPModeById(p.getId()) == null) {
+      Service sv = mPModeManager.getServiceById(p.getServiceIdRef());
+      if (sv == null) {
+        LOG.formatedWarning(
+                "Could not add PMode %s, because service %s is not registred. Bad plugin init data?",
+                p.getId(), p.getServiceIdRef());
+        return bAdd;
+      }
+      mPModeManager.addPMode(p);
+      bAdd = true;
+    }
+
+    return bAdd;
   }
 
   /**
