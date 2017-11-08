@@ -188,6 +188,8 @@ public abstract class AbstractEBMSInterceptor extends AbstractSoapInterceptor {
     long l = LOG.logStart();
     WSS4JOutInterceptor sec = null;
     Map<String, Object> outProps = null;
+    
+    
 
     if (sc.getX509() == null) {
       LOG.logWarn(l,
@@ -227,7 +229,7 @@ public abstract class AbstractEBMSInterceptor extends AbstractSoapInterceptor {
             getReference() != null) {
       X509.Encryption enc = sc.getX509().getEncryption();
 
-      String encAlias = lps.getSignatureKeyAlias();
+      String encAlias = epx.getEncryptionCertAlias();
      
 
       Map<String, Object> penc;

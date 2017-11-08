@@ -30,9 +30,9 @@
         <property column="DATE_DELIVERED" name="DeliveredDate"  type="java.util.Date" index="idx_out_date_delivered" />
         
         <component name="MSHOutProperties" class="si.laurentius.msh.outbox.property.MSHOutProperties">
-            <bag name="mshOutProperties" inverse="true" access="field" cascade="all" lazy="false" order-by="Id asc" >
+            <bag name="mshOutProperties" access="field" cascade="all" lazy="false" order-by="Id asc" >
                 <key not-null="true">
-                    <column name="MAIL_ID"/>
+                    <column name="MAIL_ID" scale="0"/>
                 </key>
                 <one-to-many class="si.laurentius.msh.outbox.property.MSHOutProperty" />
             </bag>

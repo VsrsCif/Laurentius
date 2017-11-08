@@ -619,12 +619,12 @@
 				<xs:documentation> An underlying transport protocol qualifies as "two-way" if (a) it guarantees a transport channel for transferring the response of every message (request) initiated by an MSH, back to this MSH without need for explicit addressing information in SOAP headers, and regardless of connectivity restrictions such as inability to accept incoming new connections; and (b) it provides to the MSH initiator of the exchange, some means for correlating the response with the request, without relying on the SOAP header. For example, HTTP qualifies as two-way, but SMTP and FTP do not (although FTP has a notion of session, it does not inherently support the coupling of (b)). The channel offered in (a) is also called "back-channel" in this specification.</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
-		<xs:attribute name="gzipCompress" type="xs:boolean" default="false">
+		<xs:attribute name="gzipCompress" type="xs:boolean" >
 			<xs:annotation>
 				<xs:documentation>if true attachmets are gzip compressed“</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
-		<xs:attribute name="base64Encoded" type="xs:boolean" default="false">
+		<xs:attribute name="base64Encoded" type="xs:boolean" >
 			<xs:annotation>
 				<xs:documentation>if true attachmets are base64Encoded for transport . (For use of SMTP protocol)</xs:documentation>
 			</xs:annotation>

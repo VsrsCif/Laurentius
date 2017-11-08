@@ -62,6 +62,7 @@ public class GZIPUtil {
       trg.write(buffer, 0, i);
     }
     trg.finish();
+   
   }
 
   /**

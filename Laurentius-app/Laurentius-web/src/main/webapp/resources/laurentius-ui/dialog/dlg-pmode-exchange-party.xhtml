@@ -44,10 +44,10 @@
                         </p:selectOneMenu>
 
                         <h:outputText value="#{msg['PartyDefTransport']}:" />
-                        <p:selectOneMenu id="defLocalTransport" value="#{pModeExchangePartyView.editablePartyId}" 
+                        <p:selectOneMenu id="defLocalTransport" value="#{pModeExchangePartyView.editable.partyDefTransportIdRef}" 
                                          style="width: 100%"
                                          >
-                            <f:selectItems value="#{pModeView.editableLocalParty.transportProtocols}" var="lpt" 
+                            <f:selectItems value="#{pModeExchangePartyView.editablePartyTransports}" var="lpt" 
                                            itemLabel="#{lpt.id}" itemValue="#{lpt.id}"
 
                                            />

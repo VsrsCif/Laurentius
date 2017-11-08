@@ -112,7 +112,7 @@ public class EBMSOutInterceptor extends AbstractEBMSInterceptor {
 
     String msgId = outMail != null ? outMail.getMessageId() : null;
 
-    LOG.log("Prepare to submit message: " + msgId);
+    LOG.formatedlog("Prepare to submit message: %s" , msgId);
     // get pmode data
     PartyIdentitySet sPID = ectx.getSenderPartyIdentitySet();
     PartyIdentitySet rPID = ectx.getReceiverPartyIdentitySet();
@@ -130,9 +130,15 @@ public class EBMSOutInterceptor extends AbstractEBMSInterceptor {
 
         // add attachments
         try {
+          
           // set attachment for wss signature!
-          LOG.log("Set attachmetns for message: " + msgId);
-          setAttachments(msg, outMail, ectx.getTransportProtocol().getGzipCompress(), ectx.getTransportProtocol().getBase64Encoded());
+          LOG.formatedlog("Set attachmetns for message: %s, gzip compress: %s, base64Encode %s" 
+                  , msgId
+                  , Utils.toStringBooleanValue(ectx.getTransportProtocol().getGzipCompress())
+                  , Utils.toStringBooleanValue(ectx.getTransportProtocol().getBase64Encoded()) );
+          
+          setAttachments(msg, outMail, ectx.getTransportProtocol().getGzipCompress()!=null && ectx.getTransportProtocol().getGzipCompress()
+                  ,ectx.getTransportProtocol().getBase64Encoded()!=null && ectx.getTransportProtocol().getBase64Encoded());
         } catch (StorageException ex) {
           String msgError = "Error adding attachments to soap" + ex.getMessage();
           LOG.logError(l, msgError, ex);

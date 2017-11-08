@@ -4,14 +4,12 @@
  */
 package si.jrc.msh.client;
 
-import java.util.List;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
+import javax.ejb.EJB;
+import si.laurentius.commons.SEDJNDI;
+import si.laurentius.commons.interfaces.SEDLookupsInterface;
 import si.laurentius.msh.outbox.mail.MSHOutMail;
-import si.laurentius.msh.pmode.PluginType;
 import si.laurentius.commons.pmode.EBMSMessageContext;
 import si.laurentius.commons.utils.SEDLogger;
-import si.laurentius.commons.utils.Utils;
 import si.laurentius.plugin.interfaces.OutMailEventInterface;
 
 /**
@@ -19,6 +17,10 @@ import si.laurentius.plugin.interfaces.OutMailEventInterface;
  * @author Jože Rihtaršič
  */
 public class MSHPluginOutEventHandler {
+  
+  
+  @EJB(mappedName = SEDJNDI.JNDI_SEDLOOKUPS)
+  protected SEDLookupsInterface mSedLookups;
 
   /**
      *

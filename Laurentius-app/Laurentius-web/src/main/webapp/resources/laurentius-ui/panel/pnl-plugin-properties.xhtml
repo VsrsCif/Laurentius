@@ -30,8 +30,9 @@
             <f:facet name="header"> <h:outputText value="#{cc.attrs.header}" /></f:facet>
             <p:column headerText="#{msg['Key']}"  width="150">
                 <h:outputText id="TblPluginTypePropKey" value="#{sp.propertyDef.key}" />
-                <p:tooltip for="#{cc.clientId}:#{cc.attrs.tableId}:#{rowIndex}:TblPluginTypePropKey"
-                           value="#{sp.propertyDef.description}"/>
+                <!-- tooltip is broken in primefaces 6.1
+                p:tooltip for=" # {cc.clientId}: # {cc.attrs.tableId}: # {rowIndex}:TblPluginTypePropKey"
+                           value=" # { sp.propertyDef.description}"/ -->
             </p:column>
             <p:column headerText="#{msg['Mnd.']}" width="20">
                 <p:selectBooleanCheckbox value="#{sp.propertyDef.mandatory}" disabled="true" />

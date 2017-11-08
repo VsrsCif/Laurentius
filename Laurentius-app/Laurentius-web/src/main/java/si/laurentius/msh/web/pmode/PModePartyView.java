@@ -22,6 +22,7 @@ import javax.faces.application.FacesMessage;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import org.primefaces.event.CellEditEvent;
+import org.primefaces.event.RowEditEvent;
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.interfaces.PModeInterface;
 import si.laurentius.commons.interfaces.SEDLookupsInterface;
@@ -55,6 +56,8 @@ public class PModePartyView extends AbstractPModeJSFView<PartyIdentitySet> {
   SEDCertStoreInterface mCertBean;
 
   PartyIdentitySetType.PartyId selectedPartyId;
+  
+  PartyIdentitySetType.PartyId editablePartyId;
 
   /**
    *
@@ -249,29 +252,7 @@ public class PModePartyView extends AbstractPModeJSFView<PartyIdentitySet> {
     return null;
   }
 
-  public Protocol.TLS getCurrrentTransportTLS() {
-    PartyIdentitySetType.TransportProtocol tc = getCurrentTransportProtocol();
-    if (tc != null) {
-      if (tc.getTLS() == null) {
-        tc.setTLS(new Protocol.TLS());
-      }
-      return tc.getTLS();
-    }
-    return null;
-  }
 
-
-
-  public Protocol.Address getCurrrentAddress() {
-    PartyIdentitySetType.TransportProtocol tc = getCurrentTransportProtocol();
-    if (tc != null) {
-      if (tc.getAddress() == null) {
-        tc.setAddress(new Protocol.Address());
-      }
-      return tc.getAddress();
-    }
-    return null;
-  }
 
   public PartyIdentitySetType.LocalPartySecurity getCurrrentLocalPartySecurity() {
     if (getEditable() != null) {
@@ -305,10 +286,14 @@ public class PModePartyView extends AbstractPModeJSFView<PartyIdentitySet> {
   }
 
   public void removeSelectedPartyId() {
+     if (getEditable()!= null && getSelectedPartyId() != null) {
+       getEditable().getPartyIds().remove(getSelectedPartyId());
+    }
 
   }
 
   public void onCellEditTableComplete(CellEditEvent cee) {
+    
     LOG.formatedlog("Cell edit rindex %d, row key %s, new val %s ", cee.
             getRowIndex(),
             cee.getRowKey(), cee.getNewValue());
@@ -321,6 +306,7 @@ public class PModePartyView extends AbstractPModeJSFView<PartyIdentitySet> {
 
   public void setSelectedPartyId(PartyIdentitySetType.PartyId spi) {
     LOG.formatedlog("Select partyId: %d", getPartyIdIndex(spi));
+    
     this.selectedPartyId = spi;
   }
 
@@ -339,4 +325,39 @@ public class PModePartyView extends AbstractPModeJSFView<PartyIdentitySet> {
     }
     return null;
   }
+  
+  public String getIdentifersAsString(PartyIdentitySetType.PartyId pi){    
+    return pi!=null && pi.getIdentifiers()!= null?String.join(",", pi.getIdentifiers()):"";
+  }
+  
+  public String getCurrentIdentifersAsString(){    
+     return getSelectedPartyId()!=null? 
+             getIdentifersAsString(getSelectedPartyId()):null;
+    
+  }
+  
+  public void setCurrentIdentifersAsString(String val){    
+    PartyIdentitySetType.PartyId pi =  getSelectedPartyId();
+     if (pi!=null){
+        pi.getIdentifiers().clear();
+        String[] lst = val.split(",");
+        for (String i: lst){
+          String idt =  i.trim();
+          if (!idt.isEmpty()){
+            pi.getIdentifiers().add(idt);
+          }
+        }
+     }
+    
+  }
+   public void onRowEdit(RowEditEvent event) {
+     PartyIdentitySetType.PartyId pi = ((PartyIdentitySetType.PartyId) event.getObject());
+     
+    }
+     
+    public void onRowCancel(RowEditEvent event) {
+      PartyIdentitySetType.PartyId pi = ((PartyIdentitySetType.PartyId) event.getObject());
+    }
+  
+
 }

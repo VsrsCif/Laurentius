@@ -14,7 +14,6 @@ import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.Utils;
 import si.laurentius.plugin.component.ComponentBase;
 import si.laurentius.plugin.crontask.CronTaskDef;
-import si.laurentius.plugin.def.MenuItem;
 import si.laurentius.plugin.def.Plugin;
 import si.laurentius.plugin.eventlistener.OutMailEventListenerDef;
 import si.laurentius.plugin.interceptor.MailInterceptorDef;

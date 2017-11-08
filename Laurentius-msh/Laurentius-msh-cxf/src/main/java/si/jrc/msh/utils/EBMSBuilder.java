@@ -204,7 +204,7 @@ public class EBMSBuilder {
             pi.setValue(address);
             break;
           case PModeConstants.PARTY_ID_SOURCE_TYPE_NAME:
-            pi.setValue(Utils.isEmptyString(name)?address:name);
+            pi.setValue(Utils.isEmptyString(name) ? address : name);
             break;
           case PModeConstants.PARTY_ID_SOURCE_TYPE_IDENTIFIER:
             String identifier = address.substring(0, address.indexOf('@'));
@@ -301,7 +301,7 @@ public class EBMSBuilder {
         p.setValue(DatatypeConverter.printDateTime(cal));
         lstProperties.add(p);
       }
-      
+
       if (!Utils.isEmptyString(mo.getSenderMessageId())) {
         Property p = new Property();
         p.setName(EBMSConstants.EBMS_PROPERTY_SENDER_MSG_ID);
@@ -353,7 +353,8 @@ public class EBMSBuilder {
           fileProp.add(fp);
         }
 
-        if (ctx.getTransportProtocol().getGzipCompress()) {
+        if (ctx.getTransportProtocol().getGzipCompress() != null && ctx.
+                getTransportProtocol().getGzipCompress()) {
           Property fp = new Property();
           fp.setName(EBMSConstants.EBMS_PAYLOAD_COMPRESSION_TYPE);
           fp.setValue(MimeValue.MIME_GZIP.getMimeType());

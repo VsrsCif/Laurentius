@@ -4,12 +4,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml"   
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:p="http://primefaces.org/ui"
-      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:p="http://primefaces.org/ui"      
       xmlns:composite="http://java.sun.com/jsf/composite"
       xmlns:dlg="http://java.sun.com/jsf/composite/laurentius-ui/dialog"
+      xmlns:pnl="http://java.sun.com/jsf/composite/laurentius-ui/panel"
       >
-     <h:head>
+    <h:head>
         <title>Laurentius</title>       
     </h:head>
     <composite:interface>
@@ -36,188 +36,157 @@
                                 <h:outputText value="#{msg['Identity']}" />
                             </f:facet>
 
-                            <p:panelGrid  id="dataGrid"  style="width:100%; height: 80px">
-                                <p:row>
-                                    <p:column colspan="6" >
-                                        <hr />
-                                        <b>#{msg['Identity']}</b>
-                                    </p:column>
-                                </p:row>
-                                <p:row>
-                                    <p:column>
-                                        <h:outputText value="#{msg['Id']}:"   />
-                                    </p:column>
-                                    <p:column>
-                                        <p:inputText id="partyId" value="#{pModePartyView.editable.id}" 
-                                                     disabled="#{!pModePartyView.isEditableNew()}"  style="width: 160px" >
-                                        </p:inputText>
-                                    </p:column>
-                                    <p:column>                                    
-                                        <h:outputText value="#{msg['Domain']}:"  />
-                                    </p:column>
-                                    <p:column>                                            
-                                        <p:inputText id="domain" value="#{pModePartyView.editable.domain}"
-                                                     disabled="#{pModePartyView.editableLocalIdentity}" 
-                                                     style="width: 160px"  >
-                                        </p:inputText>
-                                    </p:column>
-                                    <p:column>                                    
-                                        <p:selectBooleanCheckbox itemLabel="#{msg['Active']}:" id="exIdentityActive"
-                                                                 value="#{pModePartyView.editableIdentityActive}" 
-                                                                 style="width: 100%"
-                                                                 disabled="#{pModePartyView.editableLocalIdentity}"
-                                                                 >
-                                        </p:selectBooleanCheckbox>
-                                    </p:column>
-                                    <p:column>                                    
-                                        <p:selectBooleanCheckbox itemLabel="#{msg['IsLocalIdentity']}:" id="locIdentity"
-                                                                 value="#{pModePartyView.editableLocalIdentity}" 
-                                                                 style="width: 100%"
-                                                                 >  
-                                            <p:ajax update=":dlgPModeParty:pModePartyDialog:pModePartyDialogForm:partyTab:domain                                                         
-                                                    :dlgPModeParty:pModePartyDialog:pModePartyDialogForm:partyTab:locSignAlias 
-                                                    :dlgPModeParty:pModePartyDialog:pModePartyDialogForm:partyTab:locDecAlias
-                                                    :dlgPModeParty:pModePartyDialog:pModePartyDialogForm:partyTab:exIdentityActive"/>
-                                        </p:selectBooleanCheckbox>
-                                    </p:column>
-
-                                </p:row>
-                                <p:row>
-                                    <p:column colspan="6" >
-                                        <hr />
-                                        <b>#{msg['LocalIdentityCertificates']}</b>
-                                    </p:column>
-                                </p:row>
-                                <p:row>
-
-                                    <p:column>                                    
-                                        <h:outputText value="#{msg['SignatureKeyAlias']}:"  />
-                                    </p:column>
-                                    <p:column>
-                                        <p:selectOneMenu id="locSignAlias" 
-                                                         value="#{pModePartyView.currrentLocalPartySecurity.signatureKeyAlias}"
-                                                         style="width: 160px"
-                                                         disabled="#{!pModePartyView.editableLocalIdentity}"
-                                                         >
-                                            <f:selectItem noSelectionOption="true" />
-                                            <f:selectItems value="#{adminSEDKeystoreView.list}" var="cs" 
-
-                                                           itemLabel="#{cs.alias}" itemValue="#{cs.alias}" 
-                                                           itemDisabled="#{!cs.keyEntry}" /> 
-
-                                            
-                                        </p:selectOneMenu>
-                                    </p:column>
-                                    <p:column>                                    
-                                        <h:outputText value="#{msg['DecriptionKeyAlias']}:"  />
-                                    </p:column>
-                                    <p:column>
-                                        <p:selectOneMenu id="locDecAlias" 
-                                                         value="#{pModePartyView.currrentLocalPartySecurity.decryptionKeyAlias}"
-                                                         style="width:160px"
-                                                         disabled="#{!pModePartyView.editableLocalIdentity}"
-                                                         
-                                                         >
-                                            <f:selectItem noSelectionOption="true" />
-                                            <f:selectItems value="#{adminSEDKeystoreView.list}" var="cs"  
-                                                           itemLabel="#{cs.alias}" itemValue="#{cs.alias}"
-                                                           itemDisabled="#{!cs.keyEntry}" />
-                                  
-                                        </p:selectOneMenu>
-
-
-                                    </p:column>
-                                </p:row>
-                                <p:row>
-                                    <p:column colspan="6" >
-                                        <hr />
-                                        <b>#{msg['ExchangeIdentityCertificates']}</b>
-                                    </p:column>
-                                </p:row>
-                                <p:row>
-
-                                    <p:column>                                    
-                                        <h:outputText value="#{msg['SignatureCertAlias']}:"  />
-                                    </p:column>
-                                    <p:column>
-                                        <p:selectOneMenu id="excSignAlias" 
-                                                         value="#{pModePartyView.currrentExchangePartySecurity.signatureCertAlias}"
-                                                         style="width: 160px" >
-                                            <f:selectItem noSelectionOption="true" />
-                                            <f:selectItems value="#{adminSEDKeystoreView.list}" 
-                                                           var="cs" itemLabel="#{cs.alias}" 
-
-                                                           itemValue="#{cs.alias}" /> 
-                                            
-                                        </p:selectOneMenu>
-                                    </p:column>
-                                    <p:column>                                    
-                                        <h:outputText value="#{msg['EncryptionCertAlias']}:"  />
-                                    </p:column>
-                                    <p:column>
-                                        <p:selectOneMenu id="excencAlias" 
-                                                         value="#{pModePartyView.currrentExchangePartySecurity.encryptionCertAlias}"
-                                                         style="width: 160px" >
-                                            <f:selectItem noSelectionOption="true" />
-                                            <f:selectItems value="#{adminSEDKeystoreView.list}" 
-                                                           var="cs" itemLabel="#{cs.alias}"
-
-                                                           itemValue="#{cs.alias}" /> 
-                                           
-                                        </p:selectOneMenu>
-                                    </p:column>
-                                </p:row>
-                            </p:panelGrid>
-
-                            <hr />
-                            <b>#{msg['Identity']}</b>
-                            <p:dataTable id="TblIdentity" 
-                                         selectionMode="single"
-                                         selection="#{pModePartyView.selectedPartyId}"
-                                         rowKey="#{sp}"
-                                         var="sp" 
-                                         value="#{pModePartyView.editable.partyIds}"
-                                         style="padding: 0px; margin: 0px;box-sizing: border-box; "
-                                         scrollable="true" 
-                                         scrollHeight="100%"                   
-                                         editable="true"
-                                         editMode="cell"
-                                         >
-                                <p:ajax event="cellEdit" listener="#{pModePartyView.onCellEditTableComplete}" />
+                            <p:panelGrid  columns="4" columnClasses="grid-label, value,grid-label, value"  style="width:100%;">
                                 <f:facet name="header">
-                                    <p:commandButton value="#{msg['Add']}" styleClass="toolbar-Button" 
-                                                     icon="ui-icon-svg-add ui-icon-size-22"  
-                                                     update=":dlgPModeParty:pModePartyDialog:pModePartyDialogForm:partyTab:TblIdentity" 
-                                                     actionListener="#{pModePartyView.createPartyId()}"
-                                                     />
+                                    <h:outputText value="#{msg['Identity']}" />
+                                </f:facet>
 
-                                    <p:commandButton value="#{msg['Delete']}" styleClass="toolbar-Button" 
-                                                     icon="ui-icon-svg-remove ui-icon-size-22"  
-                                                     actionListener="#{pModePartyView.removeSelectedPartyId()}"
-                                                     update=":dlgPModeParty:pModePartyDialog:pModePartyDialogForm:partyTab:TblIdentity" />
+                                <h:outputText value="#{msg['Id']}:"   />
+                                <p:inputText id="partyId" value="#{pModePartyView.editable.id}" 
+                                             disabled="#{!pModePartyView.isEditableNew()}"  style="width: 100%"  />
 
+
+                                <h:outputText value="#{msg['Active']}:"   />
+                                <p:selectBooleanCheckbox id="exIdentityActive"
+                                                         value="#{pModePartyView.editableIdentityActive}" 
+                                                         style="width: 100%"
+                                                         disabled="#{pModePartyView.editableLocalIdentity}"
+                                                         />
+
+
+
+
+                                <h:outputText value="#{msg['Domain']}:"  />
+                                <p:inputText id="domain" value="#{pModePartyView.editable.domain}"
+                                             disabled="#{pModePartyView.editableLocalIdentity}" 
+                                            style="width: 100%"   />
+
+
+                                <h:outputText value="#{msg['IsLocalIdentity']}:"   />
+                                <p:selectBooleanCheckbox id="locIdentity"
+                                                         value="#{pModePartyView.editableLocalIdentity}" 
+                                                         style="width: 100%"
+                                                         >  
+                                    <p:ajax update=":dlgPModeParty:pModePartyDialog:pModePartyDialogForm:partyTab:domain                                                         
+                                            :dlgPModeParty:pModePartyDialog:pModePartyDialogForm:partyTab:locSignAlias 
+                                            :dlgPModeParty:pModePartyDialog:pModePartyDialogForm:partyTab:locDecAlias
+                                            :dlgPModeParty:pModePartyDialog:pModePartyDialogForm:partyTab:exIdentityActive"/>
+                                </p:selectBooleanCheckbox>
+
+                            </p:panelGrid>
+                            <p:panelGrid  columns="4" columnClasses="grid-label, value,grid-label, value"  style="width:100%;">
+                                <f:facet name="header">
+                                    <h:outputText value="#{msg['LocalIdentityCertificates']}" />
+                                </f:facet>
+
+                                <h:outputText value="#{msg['SignatureKeyAlias']}:"  />
+                                <p:selectOneMenu id="locSignAlias" 
+                                                 value="#{pModePartyView.currrentLocalPartySecurity.signatureKeyAlias}"
+                                                 style="width: 160px"
+                                                 disabled="#{!pModePartyView.editableLocalIdentity}"
+                                                 >
+                                    <f:selectItem noSelectionOption="true" />
+                                    <f:selectItems value="#{adminSEDKeystoreView.list}" var="cs" 
+
+                                                   itemLabel="#{cs.alias}" itemValue="#{cs.alias}" 
+                                                   itemDisabled="#{!cs.keyEntry}" /> 
+
+
+                                </p:selectOneMenu>
+
+                                <h:outputText value="#{msg['DecriptionKeyAlias']}:"  />                                    
+                                <p:selectOneMenu id="locDecAlias" 
+                                                 value="#{pModePartyView.currrentLocalPartySecurity.decryptionKeyAlias}"
+                                                 style="width:160px"
+                                                 disabled="#{!pModePartyView.editableLocalIdentity}"
+
+                                                 >
+                                    <f:selectItem noSelectionOption="true" />
+                                    <f:selectItems value="#{adminSEDKeystoreView.list}" var="cs"  
+                                                   itemLabel="#{cs.alias}" itemValue="#{cs.alias}"
+                                                   itemDisabled="#{!cs.keyEntry}" />
+
+                                </p:selectOneMenu>
+
+                                
+                            </p:panelGrid>
+                            <p:panelGrid  columns="4" columnClasses="grid-label, value,grid-label, value"  style="width:100%;">
+                                <f:facet name="header">
+                                    <h:outputText value="#{msg['ExchangeIdentityCertificates']}" />
                                 </f:facet>
 
 
+                                <h:outputText value="#{msg['SignatureCertAlias']}:"  />                                    
+                                <p:selectOneMenu id="excSignAlias" 
+                                                 value="#{pModePartyView.currrentExchangePartySecurity.signatureCertAlias}"
+                                                 style="width: 160px" >
+                                    <f:selectItem noSelectionOption="true" />
+                                    <f:selectItems value="#{adminSEDKeystoreView.list}" 
+                                                   var="cs" itemLabel="#{cs.alias}" 
+
+                                                   itemValue="#{cs.alias}" /> 
+
+                                </p:selectOneMenu>
+
+                                <h:outputText value="#{msg['EncryptionCertAlias']}:"  />
+
+
+                                <p:selectOneMenu id="excencAlias" 
+                                                 value="#{pModePartyView.currrentExchangePartySecurity.encryptionCertAlias}"
+                                                 style="width: 160px" >
+                                    <f:selectItem noSelectionOption="true" />
+                                    <f:selectItems value="#{adminSEDKeystoreView.list}" 
+                                                   var="cs" itemLabel="#{cs.alias}"
+
+                                                   itemValue="#{cs.alias}" /> 
+
+                                </p:selectOneMenu>
+                            </p:panelGrid>
+
+                            <hr />
+                            
+                            <p:dataTable id="TblIdentity" 
+                                         selectionMode="single"
+                                         selection="#{pModePartyIdView.selected}"
+                                         rowKey="#{sp}"
+                                         var="sp" 
+                                         value="#{pModePartyIdView.list}"
+                                         style="padding: 0px; margin: 0px;box-sizing: border-box; "
+                                         scrollable="true" 
+                                         scrollHeight="100%"                   
+
+                                         >
+
+                                <f:facet name="header">
+                                    <b>#{msg['ebMSPartyId']}</b>
+                                    <pnl:pnl-table-control 
+                                        dialogVar="pModePartyIdDialog"
+                                        updateDialog=":dlgPModePartyId:pModePartyIdDialog:pModePartyIdDialogForm"
+                                        updateTable=":dlgPModeParty:pModePartyDialog:pModePartyDialogForm:partyTab:TblIdentity"
+                                        addActionListener="#{pModePartyIdView.createEditable()}"
+                                        editActionListener="#{pModePartyIdView.startEditSelected()}"
+                                        removeActionListener="#{pModePartyIdView.removeSelectedWithWarning(':dlgPModeParty:pModePartyDialog:pModePartyDialogForm:partyTab:TblIdentity')}"                            
+                                        />
+
+                                </f:facet>
+
+                                <p:ajax event="rowDblselect" 
+                                        listener="#{pModePartyIdView.startEditSelected()}" 
+                                        oncomplete="PF('pModePartyIdDialog').show()"    
+                                        update=":dlgPModePartyId:pModePartyIdDialog:pModePartyIdDialogForm"
+                                        />
+
                                 <p:column headerText="#{msg['Type']}" >
-                                    <p:cellEditor>
-                                        <f:facet name="output"><h:outputText value="#{sp.type}" /></f:facet>
-                                        <f:facet name="input"><p:inputText id="type" value="#{sp.type}" style="width:100%"/></f:facet>
-                                    </p:cellEditor>
+                                    <h:outputText value="#{sp.type}" />                                  
                                 </p:column>
 
 
-                                <p:column headerText="#{msg['Source']}" >
-                                    <p:cellEditor>
-                                        <f:facet name="output"><h:outputText value="#{sp.valueSource}" /></f:facet>
-                                        <f:facet name="input">
-                                            <p:selectOneMenu id="source" value="#{sp.valueSource}" style = "width:100%;box-sizing: border-box;">
-                                                <f:selectItem itemLabel="name" itemValue="name" />
-                                                <f:selectItem itemLabel="address" itemValue="address" />
-                                                <f:selectItem itemLabel="identifier" itemValue="identifier" />            
-                                            </p:selectOneMenu>
-                                        </f:facet>
-                                    </p:cellEditor>
+                                <p:column headerText="#{msg['Source']}"  width="50">
+                                    <h:outputText value="#{sp.valueSource}" />
+                                </p:column>
+
+                                <p:column headerText="#{msg['Identifiers']}"  >
+                                    <h:outputText value="#{pModePartyView.getIdentifersAsString(sp)}" />
                                 </p:column>
 
                             </p:dataTable>
@@ -226,99 +195,64 @@
 
 
                         </p:tab>
-                        <p:tab   id="TransportTab" title="#{msg['Transport']}">
-                            <f:facet name="title">
+                        <p:tab   id="partyTab" title="#{msg['Transport']}">
+                            <f:facet name="header">
                                 <h:outputText value="#{msg['Transport']}" />
                             </f:facet>
-                            <hr />
-                            <h:outputText value="#{msg['Id']}"  />
-                            <h:inputText value="#{pModePartyView.currentTransportProtocol.id}"  style="width:100%;"/>
-                            <hr />
-                            <b><h:outputText value="#{msg['Address']}" /></b>
-                            <p:panelGrid   style="width:100%;" >
+                            
+                              <p:dataTable id="TblPModeTransports" 
+                                         selectionMode="single"
+                                         selection="#{pModePartyTransportView.selected}"
+                                         rowKey="#{sp}"
+                                         var="sp" 
+                                         value="#{pModePartyTransportView.list}"
+                                         style="padding: 0px; margin: 0px;box-sizing: border-box;height: 100%;width: 100% "
+                                         scrollable="true" 
+                                         scrollHeight="100%"      
+                                        
+                                         
 
-                                <p:row>
-                                    <p:column>
-                                        <h:outputText value="#{msg['Address']}"  />
-                                    </p:column>
-                                    <p:column colspan="5">
-                                        <h:inputText value="#{pModePartyView.currrentAddress.value}"  style="width:100%;"/>
-                                    </p:column>
-                                </p:row>
-                                <p:row>
-                                    <p:column>
-                                        <h:outputText value="Chunked:" />
-                                    </p:column>
-                                    <p:column>
-                                        <p:selectBooleanCheckbox value="#{pModePartyView.currrentAddress.chunked}" />
-                                    </p:column>
-                                    <p:column>
-                                        <h:outputText value="Connection timeout:" />
-                                    </p:column>
-                                    <p:column>
-                                        <p:inputNumber value="#{pModePartyView.currrentAddress.connectionTimeout}" 
-                                                       minValue="0" 
-                                                       decimalPlaces="0" 
-                                                       thousandSeparator="" />
-                                    </p:column>
-                                    <p:column>
-                                        <h:outputText value="Receive timeout:" />
-                                    </p:column>
-                                    <p:column>
-                                        <p:inputNumber value="#{pModePartyView.currrentAddress.receiveTimeout}"                                                           
-                                                       minValue="0" 
-                                                       decimalPlaces="0" 
-                                                       thousandSeparator=""/>
-                                    </p:column>
-                                </p:row>
-                            </p:panelGrid>
-                            <hr />                                
+                                         >
 
-                            <b><h:outputText value="#{msg['TLS']}" /></b>
+                                <f:facet name="header">
 
-                            <p:panelGrid >
-                                <p:row>                                                                                        
-                                    <p:column>
-                                        <h:outputText value="#{msg['ServerTrustCert']}:" />
-                                    </p:column>
-                                    <p:column>
-                                        <p:selectOneMenu id="tlsServerCertAlias" 
-                                                         value="#{pModePartyView.currrentTransportTLS.serverTrustCertAlias}"
-                                                         style="width: 160px" >
-                                            <f:selectItem noSelectionOption="true" />
-                                            <f:selectItems value="#{adminSEDKeystoreView.list}" 
-                                                           var="cs" itemLabel="#{cs.alias}"                                                        
-                                                           itemValue="#{cs.alias}" 
-                                                           /> 
+                                    <pnl:pnl-table-control 
+                                        dialogVar="pModePartyTransportDialog"
+                                        updateDialog=":dlgPModePartyTransport:pModePartyTransportDialog:pModePartyTransportDialogForm"
+                                        updateTable=":dlgPModeParty:pModePartyDialog:pModePartyDialogForm:partyTab:TblPModeTransports"
+                                        addActionListener="#{pModePartyTransportView.createEditable()}"
+                                        editActionListener="#{pModePartyTransportView.startEditSelected()}"
+                                        removeActionListener="#{pModePartyTransportView.removeSelectedWithWarning(':dlgPModeParty:pModePartyDialog:pModePartyDialogForm:partyTab:TblPModeTransports')}"
+                                        />
 
-                                        </p:selectOneMenu>
-                                    </p:column>
-                                    <p:column>
-                                        <h:outputText value="#{msg['DisableCNCheck']}:" />
-                                    </p:column>
-                                    <p:column>
-                                        <p:selectBooleanCheckbox value="#{pModePartyView.currrentTransportTLS.disableCNAndHostnameCheck}" />
-                                    </p:column>
-                                </p:row>
-                                <p:row>
+                                </f:facet>
 
-                                    <p:column>
-                                        <h:outputText value="#{msg['ClientKeyAlias']}:"  />
-                                    </p:column>
-                                    <p:column>
-                                        <p:selectOneMenu id="tlskeyAlias" 
-                                                         value="#{pModePartyView.currrentTransportTLS.clientKeyAlias}"
-                                                         style="width: 160px" >
-                                            <f:selectItem noSelectionOption="true" />
-                                            <f:selectItems value="#{adminSEDKeystoreView.list}" 
-                                                           var="cs" itemLabel="#{cs.alias}"
-                                                           itemValue="#{cs.alias}"                                                           
-                                                           itemDisabled="#{!cs.keyEntry}"/> 
+                                <p:ajax event="rowDblselect" 
+                                        listener="#{pModePartyTransportView.startEditSelected()}" 
+                                        oncomplete="PF('pModePartyTransportDialog').show()"    
+                                        update=":dlgPModePartyTransport:pModePartyTransportDialog:pModePartyTransportDialogForm"
+                                        />
 
-                                        </p:selectOneMenu>
-                                    </p:column>
-                                </p:row>
-                            </p:panelGrid>
+                                <p:column headerText="#{msg['Id']}" width="100" >
+                                    <h:outputText value="#{sp.id}" />                                  
+                                </p:column>
+                                
+                                <p:column headerText="#{msg['GzipCompression']}" width="50" >
+                                    <h:outputText value="#{sp.gzipCompress}" /> 
+                                </p:column>
+                                <p:column headerText="#{msg['base64Encoded']}" width="50" >
+                                    <h:outputText value="#{sp.base64Encoded}" />                                  
+                                </p:column>
+
+
+                                <p:column headerText="#{msg['Address']}"  >
+                                    <h:outputText value="#{sp.address.value}" />
+                                </p:column>
+
+
+                            </p:dataTable>
+                            
+                            
                         </p:tab>
                     </p:tabView>
                 </p:layoutUnit>

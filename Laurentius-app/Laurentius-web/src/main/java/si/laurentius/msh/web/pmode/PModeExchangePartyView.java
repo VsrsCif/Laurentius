@@ -149,11 +149,11 @@ public class PModeExchangePartyView extends AbstractPModeJSFView<PMode.ExchangeP
 
   }
 
-  public List<PartyIdentitySetType.TransportProtocol> getEditableLocalPartyTransports() {
+  public List<PartyIdentitySetType.TransportProtocol> getEditablePartyTransports() {
      PMode.ExchangeParties.PartyInfo pi =  getEditable();
     
     if (pi != null) {
-
+      
       try {
         PartyIdentitySetType pist = mPModeInteface.getPartyIdentitySetById(pi.getPartyIdentitySetIdRef());
 

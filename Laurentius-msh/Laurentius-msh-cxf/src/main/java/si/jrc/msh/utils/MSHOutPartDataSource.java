@@ -22,6 +22,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Base64;
 import javax.activation.DataSource;
+import si.laurentius.commons.enums.MimeValue;
+import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.utils.GZIPUtil;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StorageUtils;
@@ -36,7 +38,8 @@ public class MSHOutPartDataSource implements DataSource {
   /**
    * Logger for EBMSOutInterceptor class
    */
-  protected final static SEDLogger LOG = new SEDLogger(MSHOutPartDataSource.class);
+  protected final static SEDLogger LOG = new SEDLogger(
+          MSHOutPartDataSource.class);
 
   /**
    * GZIP utils
@@ -54,45 +57,57 @@ public class MSHOutPartDataSource implements DataSource {
    * @param gzip - GZIP mime
    * @param base64 - if SMTP protocol supports only ascii characters
    */
-  public MSHOutPartDataSource(MSHOutPart op, boolean gzip, boolean base64){
+  public MSHOutPartDataSource(MSHOutPart op, boolean gzip, boolean base64) throws StorageException {
 
     this.mop = op;
     this.mb64 = base64;
     this.mbGZip = gzip;
-    fullPath = StorageUtils.getFile(mop.getFilepath());
+    try {
+      init();
+    } catch (IOException io) {
+      String msg = String.format(
+              "Error preparing file %s: gzip compress: %s, base46: %s ", mop.
+                      getFilepath(),
+              mbGZip ? "true" : "false",
+               mb64 ? "true" : "false");
+      throw new StorageException(msg, io);
+    }
+
   }
 
-  public void init()
-      throws IOException {
+  private void init() throws IOException {
     fullPath = StorageUtils.getFile(mop.getFilepath());
 
-    if (mb64) {
+    if (mbGZip) {
       fullPath = compressFile(fullPath);
     }
 
     if (mb64) {
       fullPath = base64EncodeFile(fullPath);
     }
+
   }
 
   private File compressFile(File fInput)
-      throws IOException {
+          throws IOException {
     long l = LOG.logStart();
     // create temp file
     File fattCmp = File.createTempFile(fInput.getName(), ".gzip");
     mGZIPUtils.compressGZIP(fullPath, fattCmp);
+    LOG.logEnd(l, "compress: " + fInput.getPath());
     return fattCmp;
 
   }
 
   private File base64EncodeFile(File fInput)
-      throws IOException {
+          throws IOException {
     long l = LOG.logStart();
     // create temp file
-    
+
     File fattB64 = File.createTempFile(fInput.getName(), ".b64");
-    try (OutputStream os = Base64.getEncoder().wrap(new FileOutputStream(fattB64));
-        FileInputStream fis = new FileInputStream(fInput)) {
+    try (OutputStream os = Base64.getEncoder().wrap(
+            new FileOutputStream(fattB64));
+            FileInputStream fis = new FileInputStream(fInput)) {
       byte[] buf = new byte[1024];
       int read = 0;
       while ((read = fis.read(buf)) != -1) {
@@ -100,19 +115,20 @@ public class MSHOutPartDataSource implements DataSource {
       }
       os.flush();
     }
+    LOG.logEnd(l, "base64 encode: " + fInput.getPath());
     return fattB64;
 
   }
 
   @Override
   public String getContentType() {
-    return mop.getMimeType();
+    return mbGZip?MimeValue.MIME_GZIP.getMimeType():mop.getMimeType();
   }
 
   @Override
   public InputStream getInputStream()
-      throws IOException {
-    if (fullPath == null){
+          throws IOException {
+    if (fullPath == null) {
       init();
     }
     return new FileInputStream(fullPath);
@@ -125,7 +141,7 @@ public class MSHOutPartDataSource implements DataSource {
 
   @Override
   public OutputStream getOutputStream()
-      throws IOException {
+          throws IOException {
     // class is read only wrapper
     return null;
   }
