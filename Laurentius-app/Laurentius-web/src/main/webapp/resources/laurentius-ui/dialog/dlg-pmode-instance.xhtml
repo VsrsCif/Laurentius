@@ -27,7 +27,7 @@
                             onConfirmAction="#{pModeView.addOrUpdateEditable()}" >
 
             <p:layout id="pModeInstance">
-                <p:layoutUnit position="north" size="130" minSize="120" maxSize="140">
+                <p:layoutUnit position="north" size="150" minSize="140" maxSize="160">
                     <p:panelGrid style="width:100%; height: 100% ">
                         <f:facet name="header">
                             <p:row>
@@ -56,42 +56,56 @@
                         <p:row>
                             <p:column class="grid-label"><h:outputText value="#{msg['LocalPartyId']}:" /></p:column>
                             <p:column><p:selectOneMenu value="#{pModeView.editableLocalPartyId}" 
-                                                       style="width:400px" 
+                                                       style="width:300px" 
                                                        >
                                     <p:ajax update="defLocalTransport" />
                                     <f:selectItems value="#{pModePartyView.localPartyList}" var="pis" 
                                                    itemLabel="#{pis.id}" itemValue="#{pis.id}"
 
                                                    />
-                                </p:selectOneMenu></p:column>
+                                </p:selectOneMenu>
+                            </p:column>
 
+                            <p:column class="grid-label" ><h:outputText value="#{msg['LocalPartyDefTransport']}:" /></p:column>
+                            <p:column><p:selectOneMenu id="defLocalTransport" value="#{pModeView.editableLocalPartyIdentityInfo.partyDefTransportIdRef}" 
+                                                       style="width:300px" 
+                                                       >
+                                    <f:selectItems value="#{pModeView.editableLocalParty.transportProtocols}" var="lpt" 
+                                                   itemLabel="#{lpt.id}" itemValue="#{lpt.id}"/>
+                                </p:selectOneMenu>
+                            </p:column>
 
-                            <p:column class="grid-label" >
-                                <p:selectBooleanCheckbox id="initiatorRole" itemLabel="#{msg['InitiatorRole']}:"                                                                
-                                                         value="#{pModeView.editableLocPartyHasInitiatorRole}" 
-                                                         style="width: 100%"
-                                                         >
-                                </p:selectBooleanCheckbox></p:column>
-                            <p:column><h:outputText id = "initiatorRoleLabel" value="#{pModeView.editableService.initiator.role}" /></p:column>
+                            <p:column class="grid-label" ><h:outputText value="#{msg['Test']}:" /></p:column>                            
+                            <p:column>
+                                <p:selectBooleanCheckbox                                                                 
+                                    value="#{pModeView.editable.isTest}" 
+                                    style="width: 100%"
+                                    >
+                                </p:selectBooleanCheckbox>                                
+                            </p:column>
+
 
 
                         </p:row>
                         <p:row>
-                            <p:column class="grid-label"><h:outputText value="#{msg['LocalPartyDefTransport']}:" /></p:column>
-                            <p:column><p:selectOneMenu id="defLocalTransport" value="#{pModeView.editableLocalPartyIdentityInfo.partyDefTransportIdRef}" 
-                                                       style="width:400px" 
-                                                       >
-                                    <f:selectItems value="#{pModeView.editableLocalParty.transportProtocols}" var="lpt" 
-                                                   itemLabel="#{lpt.id}" itemValue="#{lpt.id}"/>
-                                </p:selectOneMenu></p:column>
+                            <p:column class="grid-label" >
+                                <h:outputText value="#{msg['InitiatorRole']}:" />
+                                <p:selectBooleanCheckbox id="initiatorRole"                                                               
+                                                         value="#{pModeView.editableLocPartyHasInitiatorRole}"  >
+                                </p:selectBooleanCheckbox></p:column>
+                            <p:column colspan="4"><h:outputText id = "initiatorRoleLabel" value="#{pModeView.editableService.initiator.role}" /></p:column>
+                        </p:row>
+                        <p:row>
+
                             <p:column class="grid-label">
-                                <p:selectBooleanCheckbox  id="requestorRole" itemLabel="#{msg['ExecutorRole']}:"                                                                
+                                <h:outputText value="#{msg['ExecutorRole']}:" />
+                                <p:selectBooleanCheckbox  id="requestorRole"
                                                           value="#{pModeView.editableLocPartyHasExecutorRole}" 
-                                                          style="width: 100%"
+                                                        
 
                                                           >
                                 </p:selectBooleanCheckbox></p:column>
-                            <p:column><h:outputText id="requestorRoleLabel" value="#{pModeView.editableService.executor.role}" /></p:column>
+                            <p:column colspan="4"><h:outputText id="requestorRoleLabel" value="#{pModeView.editableService.executor.role}" /></p:column>
                         </p:row>
 
 
@@ -136,8 +150,8 @@
                                 <h:outputText value="#{pModeMEPView.getMEPTypeName( mep.MEPType)}" /></p:column>       
                             <p:column headerText="#{msg['MEPChannelBinding']}" width="80">
                                 <h:outputText value="#{pModeMEPView.getMEPChannelBindingName(mep.MEPChannelBinding)}" /></p:column>       
-                            
-                                <p:column headerText="#{msg['MEPActions']}">
+
+                            <p:column headerText="#{msg['MEPActions']}">
                                 <h:outputText value="#{pModeMEPView.getMEPActions(mep)}" /></p:column>       
                         </p:dataTable> 
 

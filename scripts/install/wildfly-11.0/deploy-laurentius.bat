@@ -5,7 +5,7 @@ set "SERVER_HOME="
 set "LAU_BUNDLE="
 set "LAU_HOME="
 set "INIT=false"
-set "APPL_SERVER=wildfly-10.1"
+set "APPL_SERVER=wildfly-11.0"
 
 :loop
       if ["%~1"]==[""] (
@@ -68,14 +68,13 @@ echo INIT = "%INIT%".
 
 rem -------------------------------------------------------------------------------
 rem copy library modules
-xcopy "%LAU_BUNDLE%\modules\si" "%SERVER_HOME%\modules\" /e
-copy "%LAU_BUNDLE%\%APPL_SERVER%\modules\si.laurentius.module.xml" "%SERVER_HOME%\modules\si\laurentius\main\module.xml"
-
-rem copy 'org' library modules (primefaces, pdfbox)
-xcopy "%LAU_BUNDLE%\modules\org" "%SERVER_HOME%\modules\" /e
+md "%SERVER_HOME%\modules\si"
+xcopy "%LAU_BUNDLE%\modules\si" "%SERVER_HOME%\modules\si" /e
 
 
-rem-------------------------------------------------------------------------------
+
+
+rem -------------------------------------------------------------------------------
 rem application modules
 copy "%LAU_BUNDLE%\deployments\Laurentius-dao.jar"  "%SERVER_HOME%\standalone\deployments\"
 copy "%LAU_BUNDLE%\deployments\Laurentius-msh.ear"  "%SERVER_HOME%\standalone\deployments\"
@@ -97,12 +96,16 @@ if "%INIT%" == "true" (
 		copy "%LAU_BUNDLE%\%APPL_SERVER%\modules\org.apache.ws.security.module.xml" "%SERVER_HOME%\modules\system\layers\base\org\apache\ws\security\main\module.xml"
 	)
 
+
+	copy "%LAU_BUNDLE%\%APPL_SERVER%\modules\si.laurentius.module.xml" "%SERVER_HOME%\modules\si\laurentius\main\module.xml"
+
 	rem copy 'org' library modules (primefaces, pdfbox)
-	xcopy "%LAU_BUNDLE%\modules\org" "%SERVER_HOME%\modules\" /e
+	md "%SERVER_HOME%\modules\org"
+	xcopy "%LAU_BUNDLE%\modules\org" "%SERVER_HOME%\modules\org" /e
 	
 
 	rem copy start scripts
-	copy "%LAU_BUNDLE%\%APPL_SERVER%\laurentius-demo.bat" "$SERVER_HOME\bin\"
+	copy "%LAU_BUNDLE%\%APPL_SERVER%\laurentius-demo.bat" "%SERVER_HOME%\bin\"
 
 	rem  create home folder
 	md "%LAU_HOME%\laurentius-home"

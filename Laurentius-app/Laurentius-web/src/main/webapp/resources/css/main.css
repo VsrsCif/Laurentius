@@ -39,9 +39,11 @@ h3 {
 
 
 .grid-label {
-    width: 120px !important; 
+    width: 130px !important; 
     background: lightsteelblue;
     text-align: right !important;
+    padding: 0;
+    margin: 1px;
 }
 
 

@@ -57,6 +57,9 @@
                     <p:column headerText="#{msg['Id']}" width="200">
                         <h:outputText value="#{sp.id}" />
                     </p:column>            
+                    <p:column headerText="#{msg['Test']}" width="60">
+                        <h:outputText value="#{sp.isTest}"></h:outputText>                
+                    </p:column>
                     <p:column headerText="#{msg['Service']}">
                         <h:outputText value="#{sp.serviceIdRef}"></h:outputText>                
                     </p:column>

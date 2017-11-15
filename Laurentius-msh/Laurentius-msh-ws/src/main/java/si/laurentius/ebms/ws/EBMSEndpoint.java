@@ -32,6 +32,7 @@ import si.laurentius.commons.cxf.SoapUtils;
 import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.interfaces.JMSManagerInterface;
 import si.laurentius.commons.interfaces.SEDDaoInterface;
+import si.laurentius.commons.pmode.EBMSMessageContext;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StorageUtils;
 import si.laurentius.commons.utils.StringFormater;
@@ -81,12 +82,6 @@ public class EBMSEndpoint implements Provider<SOAPMessage> {
 
   }
 
-  private String getJNDIPrefix() {
-
-    return System.getProperty(SEDSystemProperties.SYS_PROP_JNDI_PREFIX,
-            "java:/jboss/");
-  }
-
   @Override
   public SOAPMessage invoke(SOAPMessage request) {
     long l = LOG.logStart();
@@ -103,26 +98,40 @@ public class EBMSEndpoint implements Provider<SOAPMessage> {
       Message msg = wmc.getWrappedMessage();
       MSHInMail inmail = SoapUtils.getMSHInMail(msg);
       if (inmail == null) {
-
-        LOG.logWarn("No inbox message", null);
-        // todo application error
-        return null;
+        String errmsg = "No inbox message";
+        LOG.logError(l, errmsg, null);
+        throw new EBMSError(EBMSErrorCode.ApplicationError,
+                null,
+                errmsg,
+                SoapFault.FAULT_CODE_SERVER);
       }
 
       SEDBox sb = SoapUtils.getMSHInMailReceiverBox(msg);
+      EBMSMessageContext mc = SoapUtils.getEBMSMessageInContext(msg);
 
       if (sb == null) {
-        LOG.formatedWarning(
-                "Inbox message %s but no inbox found  for message: %s", inmail.
-                        getId(),
+        String errmsg = String.format(
+                "Inbox message %s but no inbox found  for message: %s",
+                inmail.getId(),
                 inmail.getReceiverEBox());
-        // return error
-      } else if (Utils.isEmptyString(inmail.getStatus())) {
+        LOG.logError(l, errmsg, null);
+        throw new EBMSError(EBMSErrorCode.ApplicationError,
+                inmail.getMessageId(),
+                errmsg,
+                SoapFault.FAULT_CODE_SERVER);
+      } else if ((mc.getPMode().getIsTest() == null || !mc.getPMode().
+              getIsTest()) && Utils.isEmptyString(inmail.getStatus())) {
         serializeMail(inmail, msg.getAttachments(), sb);
       }
 
     } catch (SOAPException ex) {
-      LOG.logError(l, ex);
+      String errmsg = String.format(
+              "SOAPException: %s", ex.getMessage());
+      LOG.logError(l, errmsg, ex);
+      throw new EBMSError(EBMSErrorCode.ApplicationError,
+              null,
+              errmsg,
+              SoapFault.FAULT_CODE_SERVER);
     }
     LOG.logEnd(l);
     return response;
@@ -154,8 +163,14 @@ public class EBMSEndpoint implements Provider<SOAPMessage> {
 
       mDB.setStatusToInMail(mail, SEDInboxMailStatus.RECEIVED, null);
     } catch (StorageException ex) {
-      LOG.logError(l, "Error setting status ERROR to MSHInMail :'" + mail.
-              getId() + "'!", ex);
+       String errmsg = "Error occured while receiving mail:'" + mail.
+              getId() + "'!";
+      LOG.logError(l, errmsg, ex);
+      throw new EBMSError(EBMSErrorCode.ApplicationError, mail.
+              getMessageId(), errmsg,
+              SoapFault.FAULT_CODE_SERVER);
+      
+      
     }
 
     try {

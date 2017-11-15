@@ -44,24 +44,24 @@ public class PModeMEPView extends AbstractPModeJSFView<MEPType> {
    *
    */
   public static final SEDLogger LOG = new SEDLogger(PModeMEPView.class);
-
+  
   @EJB(mappedName = SEDJNDI.JNDI_PMODE)
   PModeInterface mPModeInteface;
-
+  
   @Inject
   PModeView pModeView;
-
+  
   PartyIdentitySet editableParty;
-
+  
   public PModeView getpModeView() {
     return pModeView;
   }
-
+  
   public void setpModeView(PModeView pModeView) {
     this.pModeView = pModeView;
-
+    
   }
-
+  
   public MEPLegType getEditableFirstLeg() {
     MEPType mt = getEditable();
     if (mt != null) {
@@ -75,7 +75,7 @@ public class PModeMEPView extends AbstractPModeJSFView<MEPType> {
     }
     return null;
   }
-
+  
   private void buildLeg(MEPLegType mlt) {
     if (Utils.isEmptyString(mlt.getMPC())) {
       mlt.setMPC(
@@ -83,29 +83,28 @@ public class PModeMEPView extends AbstractPModeJSFView<MEPType> {
     }
     if (mlt.getTransport() == null) {
       mlt.setTransport(new MEPTransportType());
-
+      
     }
     if (mlt.getTransport().getForeChannel() == null) {
       mlt.getTransport().setForeChannel(new TransportChannelType());
-
+      
     }
     if (mlt.getTransport().getBackChannel() == null) {
       mlt.getTransport().setBackChannel(new TransportChannelType());
     }
-
+    
     if (mlt.getTransport().getForeChannel().getReceptionAwareness() == null) {
       mlt.getTransport().getForeChannel().setReceptionAwareness(
               new TransportChannelType.ReceptionAwareness());
     }
-
+    
     if (mlt.getTransport().getBackChannel().getReceptionAwareness() == null) {
       mlt.getTransport().getBackChannel().setReceptionAwareness(
               new TransportChannelType.ReceptionAwareness());
       
-      
     }
   }
-
+  
   public MEPLegType getEditableSecondLeg() {
     MEPType mt = getEditable();
     if (mt != null) {
@@ -118,7 +117,7 @@ public class PModeMEPView extends AbstractPModeJSFView<MEPType> {
     }
     return null;
   }
-
+  
   public boolean hasSecondLeg() {
     MEPType mt = getEditable();
     return mt != null && Objects.equals(mt.getMEPType(),
@@ -130,33 +129,46 @@ public class PModeMEPView extends AbstractPModeJSFView<MEPType> {
             || Objects.equals(mt.getMEPChannelBinding(),
                     MEPChannelBindingType.PushAndPush.getValue()));
   }
-
+  
   @Override
   public boolean validateData() {
     return true;
   }
-
+  
   @Override
   public void createEditable() {
     MEPType mt = new MEPType();
-
+    mt.setMEPChannelBinding(MEPChannelBindingType.Push.getValue());
+    mt.setMEPType(si.laurentius.commons.pmode.enums.MEPType.OneWay.getValue());
+    
+    MEPLegType mlt = new MEPLegType();
+    mlt.setMPC(
+            "http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/defaultMPC");
+    
+    MEPTransportType mtt = new MEPTransportType();
+    mtt.setForeChannel(new TransportChannelType());
+    mtt.setBackChannel(new TransportChannelType());
+    
+    mlt.setTransport(mtt);
+    mt.getLegs().add(mlt);
+    
     setNew(mt);
-
+    
   }
-
+  
   @Override
   public List<MEPType> getList() {
     return pModeView.getEditable() != null ? pModeView.getEditable().getMEPS()
             : Collections.emptyList();
   }
-
+  
   @Override
   public boolean persistEditable() {
     boolean bsuc = false;
-
+    
     MEPType ecj = getEditable();
     if (ecj != null && pModeView.getEditable() != null) {
-
+      
       bsuc = pModeView.getEditable().getMEPS().add(
               ecj);
     } else {
@@ -164,14 +176,14 @@ public class PModeMEPView extends AbstractPModeJSFView<MEPType> {
     }
     return bsuc;
   }
-
+  
   @Override
   public boolean removeSelected() {
     boolean bSuc = false;
     MEPType ecj = getSelected();
-
+    
     if (ecj != null && pModeView.getEditable() != null) {
-
+      
       for (int i = 0; i < pModeView.getEditable().getMEPS().size(); i++) {
         MEPType mt = pModeView.getEditable().getMEPS().get(i);
         if (mt.equals(ecj)) {
@@ -183,10 +195,10 @@ public class PModeMEPView extends AbstractPModeJSFView<MEPType> {
     } else {
       addError("No editable payload!");
     }
-
+    
     return bSuc;
   }
-
+  
   @Override
   public boolean updateEditable() {
     boolean bSuc = false;
@@ -204,23 +216,45 @@ public class PModeMEPView extends AbstractPModeJSFView<MEPType> {
           break;
         }
       }
-
+      
     } else {
       addError("No editable payload!");
     }
     return bSuc;
   }
-
+  
   @Override
   public String getSelectedDesc() {
     return getSelected() != null ? getSelected().getMEPType() : "";
   }
-
+  
   public boolean enableMEPBinnding(MEPChannelBindingType mt) {
-    return Objects.
+    return mt.isImplemented() && Objects.
             equals(mt.getMepType().getValue(), getEditable().getMEPType());
   }
-
+  
+  public void setEditableMEPType(String val) {
+    MEPType emt = getEditable();
+    if (emt != null) {
+      emt.setMEPType(val);
+      
+      for (MEPChannelBindingType mcb : MEPChannelBindingType.values()) {
+        if (enableMEPBinnding(mcb)) {
+          emt.setMEPChannelBinding(mcb.getValue());
+          break;
+        }
+      }
+      
+    }
+  }
+  
+  public String getEditableMEPType() {
+    if (getEditable() != null) {
+      getEditable().getMEPType();
+    }
+    return null;
+  }
+  
   public boolean firstLegInitLeft() {
     MEPType mt = getEditable();
     return mt == null
@@ -233,7 +267,7 @@ public class PModeMEPView extends AbstractPModeJSFView<MEPType> {
             || Objects.equals(mt.getMEPChannelBinding(),
                     MEPChannelBindingType.PushAndPush.getValue());
   }
-
+  
   public String firstLegMEP() {
     MEPType mt = getEditable();
     String mep = "";
@@ -254,11 +288,11 @@ public class PModeMEPView extends AbstractPModeJSFView<MEPType> {
               MEPChannelBindingType.Sync.getValue())) {
         mep = "sync";
       }
-
+      
     }
     return mep;
   }
-
+  
   public String secodLegMEP() {
     MEPType mt = getEditable();
     String mep = "";
@@ -272,29 +306,29 @@ public class PModeMEPView extends AbstractPModeJSFView<MEPType> {
               MEPChannelBindingType.PushAndPull.getValue())) {
         mep = "pull";
       }
-
+      
     }
     return mep;
   }
-
+  
   public boolean secondLegInitLeft() {
     MEPType mt = getEditable();
     return mt != null
             && Objects.equals(mt.getMEPChannelBinding(),
                     MEPChannelBindingType.PushAndPull.getValue());
   }
-
+  
   public String getMEPTypeName(String strVal) {
     si.laurentius.commons.pmode.enums.MEPType mt = si.laurentius.commons.pmode.enums.MEPType.
             getByValue(strVal);
     return mt != null ? mt.getName() : strVal;
   }
-
+  
   public String getMEPChannelBindingName(String strVal) {
     MEPChannelBindingType mt = MEPChannelBindingType.getByValue(strVal);
     return mt != null ? mt.getName() : strVal;
   }
-
+  
   public String getMEPActions(MEPType mt) {
     String acts = "";
     for (MEPLegType mlt : mt.getLegs()) {
@@ -306,14 +340,14 @@ public class PModeMEPView extends AbstractPModeJSFView<MEPType> {
               getForeChannel().getAction())) {
         acts += mtt.getForeChannel().getAction() + ",";
       }
-
+      
       if (mtt.getBackChannel() != null && !Utils.isEmptyString(mtt.
               getBackChannel().getAction())) {
         acts += mtt.getBackChannel().getAction() + ",";
       }
     }
     return acts;
-
+    
   }
-
+  
 }

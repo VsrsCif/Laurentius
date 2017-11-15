@@ -12,12 +12,12 @@ import java.util.Objects;
  * @author sluzba
  */
 public enum MEPChannelBindingType {
-  Push("Push", "http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/push", MEPType.OneWay, 1),
-  Pull("Pull", "http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/pull", MEPType.OneWay, 1),
-  Sync("Sync", "http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/sync", MEPType.TwoWay, 1),
-  PushAndPush("PushAndPush", "http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/pushAndPush", MEPType.TwoWay, 2),
-  PushAndPull("PushAndPull", "http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/pushAndPull", MEPType.TwoWay, 2),
-  PullAndPush("PullAndPush", "http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/pullAndPush", MEPType.TwoWay, 2),
+  Push("Push", "http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/push", MEPType.OneWay, 1, true),
+  Pull("Pull", "http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/pull", MEPType.OneWay, 1, false),
+  Sync("Sync", "http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/sync", MEPType.TwoWay, 1, true),
+  PushAndPush("PushAndPush", "http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/pushAndPush", MEPType.TwoWay, 2, true),
+  PushAndPull("PushAndPull", "http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/pushAndPull", MEPType.TwoWay, 2, false),
+  PullAndPush("PullAndPush", "http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/pullAndPush", MEPType.TwoWay, 2, false),
   
   ;
   
@@ -26,12 +26,14 @@ public enum MEPChannelBindingType {
   String mstrName;
   MEPType mepType;
   int iLegsNum;
+  boolean bImplemented;
 
-  private MEPChannelBindingType(String name, String val, MEPType mt ,int ln) {
+  private MEPChannelBindingType(String name, String val, MEPType mt ,int ln, boolean bi) {
     mstrVal = val;
     mstrName = name;
     mepType = mt;
     iLegsNum = ln;
+    bImplemented = bi;
   }
 
   /**
@@ -65,6 +67,9 @@ public enum MEPChannelBindingType {
     return iLegsNum;
   }
   
+  public boolean isImplemented(){
+    return bImplemented;
+  }
   
   
 }

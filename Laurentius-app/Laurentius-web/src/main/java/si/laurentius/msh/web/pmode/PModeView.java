@@ -187,6 +187,10 @@ public class PModeView extends AbstractPModeJSFView<PMode> {
    */
   @Override
   public void createEditable() {
+    
+    editableService = null;
+    editableLocalParty = null;
+           
 
     String sbname = "pmode_%03d";
     int i = 1;
@@ -199,15 +203,33 @@ public class PModeView extends AbstractPModeJSFView<PMode> {
     pm.setId(pmode);
 
     // -- set service
-    List<Service> lst = mPModeInteface.getServices();
-    if (!lst.isEmpty()) {
-      setEditableServiceId(lst.get(0).getId());
-    } else {
-      setEditableServiceId(null);
-    }
-
     pm.setLocalPartyInfo(new PModePartyInfo());
     pm.setExchangeParties(new PMode.ExchangeParties());
+    
+    List<Service> lst = mPModeInteface.getServices();
+    if (!lst.isEmpty()) {
+      editableService = lst.get(0);
+      pm.setServiceIdRef(editableService.getId());
+      pm.getLocalPartyInfo().getRoles().add(editableService.getInitiator() != null ?
+              editableService.getInitiator().getRole() : null);
+      pm.getLocalPartyInfo().getRoles().add(editableService.getExecutor() != null ? 
+              editableService.getExecutor().getRole() : null);
+    }
+
+    List<PartyIdentitySet> lstPs = mPModeInteface.getPartyIdentitySets();
+    for (PartyIdentitySet pi : lstPs) {
+      if (pi.getIsLocalIdentity()) {
+        editableLocalParty = pi;
+        LOG.formatedWarning("Add local party: ", pi.getId());
+        pm.getLocalPartyInfo().setPartyIdentitySetIdRef(pi.getId());
+        if (!pi.getTransportProtocols().isEmpty()) {
+          LOG.formatedWarning("Add local party protocol: ", pi.getId());
+          pm.getLocalPartyInfo().setPartyDefTransportIdRef(pi.
+                  getTransportProtocols().get(0).getId());
+        }
+        break;
+      }
+    }
 
     setNew(pm);
   }
@@ -295,7 +317,7 @@ public class PModeView extends AbstractPModeJSFView<PMode> {
     PartyIdentitySetType pist = pis != null ? mPModeInteface.
             getPartyIdentitySetById(pis) : null;
 
-    return pist != null?pist.getTransportProtocols(): Collections.emptyList();
+    return pist != null ? pist.getTransportProtocols() : Collections.emptyList();
   }
 
   /**

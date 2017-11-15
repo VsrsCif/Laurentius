@@ -22,7 +22,6 @@ import javax.inject.Named;
 import javax.inject.Inject;
 import javax.enterprise.context.SessionScoped;
 import si.laurentius.commons.SEDJNDI;
-import si.laurentius.commons.exception.PModeException;
 import si.laurentius.commons.interfaces.PModeInterface;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.Utils;
@@ -163,10 +162,29 @@ public class PModeExchangePartyView extends AbstractPModeJSFView<PMode.ExchangeP
 
   @Override
   public void createEditable() {
-
+    editableParty = null;
     PMode.ExchangeParties.PartyInfo np = new PMode.ExchangeParties.PartyInfo();
 
-    // np.setAgreementRef(new AgreementRef());
+    List<PartyIdentitySet> lstPs = mPModeInteface.getPartyIdentitySets();
+    if (!lstPs.isEmpty()) {
+      editableParty = lstPs.get(0);
+
+      np.setPartyIdentitySetIdRef(editableParty.getId());
+      if (!editableParty.getTransportProtocols().isEmpty()) {
+        np.setPartyDefTransportIdRef(editableParty.getTransportProtocols().
+                get(0).getId());
+      }
+      Service es = pModeView.getEditableService();
+      if (es != null) {
+        if (es.getInitiator() != null) {
+          np.getRoles().add(es.getInitiator().getRole());
+        }
+        if (es.getExecutor() != null) {
+          np.getRoles().add(es.getExecutor().getRole());
+        }
+        
+      }
+    }
     setNew(np);
 
   }
