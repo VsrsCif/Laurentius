@@ -1,0 +1,53 @@
+<div class="main">
+    <article class='content'>
+        <h1 >PMode eIdentitete</h1>       
+        Parametri določajo značilnost poslovnih partnerjev in lokalnih eIdentitet, ki nastopajo v elektronski 
+        izmenjavi sporočil: certifikati, domena, url naslov, itd.
+
+        Parametri eIdentitete so:
+
+        <ul>
+            <li><b>Id</b>: Enolična oznaka eIdentitete;</li>
+            <li><b>Domena</b>: Domena naslovov, ki se uporablja pri naslavljanja pošte v 
+                <code>InMail/[@senderEBox | @receiverEBox]</code> in  <code>InMail/[@senderEBox | @receiverEBox]</code>. 
+                Primer: lokalniNaslov@[domena]. V primeru lokalne domene je privzeta domena sistema;</li>
+            <li><b>Certifikati za lokalno identiteto</b>: Certifikati lokalne identitete:
+                <ul>
+                    <li><b>Podpisni ključ</b>: ključ se uporablja za podpisovanje izhodnih sporočil, kot to določa ebMS 3.0 standard in PMode nastavitve v konkretni storitvi/akciji;</li> 
+                    <li><b>Dešifrirni ključ</b>: ključ se uporablja za dešifriranje dohodnih sporočil, kot to določa ebMS 3.0 standard in PMode nastavitve v konkretni storitvi/akciji;</li> 
+                </ul>        
+            </li>
+            <li><b>Certifikati zaupanja</b>: Certifikati partnerja, kateremu se pošilja sporočilo:
+                <ul>
+                    <li><b>Cert. podpisa</b>: Certifikat s katerimi se preveri podpise dohodnih sporočil. Obliko podpisa in dele sporočila, ki morajo biti podpisani, določa ebMS 3.0 standard in PMode nastavitve v konkretni storitvi/akciji;</li> 
+                    <li><b>Cert. šifriranja</b>: Certifikat s katerim se asimetrično šifrira izhodno pošiljko. Način šifriranja in dele sporočila, ki morajo biti šifrirani, določa ebMS 3.0 standard in PMode nastavitve v konkretni storitvi/akciji ;</li> 
+                </ul>        
+            </li>
+
+            <li><b>ebMS PartyId</b>: Način zapisa identifikatorjev pošiljatelja in prejemnika v ebMS 3.0 sporočilo <code>/ns2:Messaging/ns2:UserMessage/ns2:PartyInfo/[ns2:From|ns2:To]/ns2:PartyId</code>:
+
+                <ul>
+                    <li><b>Oznaka</b>: Oznaka se zapiše ebms sporočilo:  <code>ns2:PartyId/@type</code>;</li> 
+                    <li><b>Vir:</b> Vir identitifikatorja, ki se zapiše v <code>ns2:PartyId</code>: 
+                        <ul>
+                            <li><b>name</b>: Oznaka se prebere in zapiše v/iz atributa pošiljke:  <code>InMail/[@senderName | @receiverName]</code> in  <code>InMail/[@senderName | @receiverName]</code>;</li> 
+                            <li><b>address</b>: Vir identitifikatorja, ki se zapiše v <code>InMail/[@senderEBox | @receiverEBox]</code> in  <code>InMail/[@senderEBox | @receiverEBox]</code>. 
+                             Identifikator mora vsebovati domeno naslovnika/pošiljatelja in se določi ob izdelavi pošiljke!</li>
+                            <li><b>identifier</b>: Identifikatorji se določeni v seznamu Identitet (Identitete). V  <code>ns2:PartyId</code> se zapiše samo identiteta brez domene. V izhodni/dohodni
+                                pošiljki <code> InMail/[@senderEBox | @receiverEBox]</code> mora biti [identiteta]@[domena]. 
+                            </li> 
+                        </ul>
+                    </li> 
+                    <li><b>Identite</b>: Seznam identitet, ki so v <code>ns2:PartyId</code>. V primeru lokalne identitet mora obstajati tudi predal
+                        [Identiteta]@[lokalna domena] na katerega se veže ta eIdentiteta pri pošiljanju/sprejemu pošiljk.</li> 
+                </ul>        
+            </li> 
+        </ul>
+
+
+        <img src="img/gui/pmode-eidentity.png" alt="PMode eIdentitete" width="680"/> <br />  <br />  
+
+
+
+    </article>  
+</div>

@@ -1,0 +1,80 @@
+<div class="main">
+    <article class='content'>
+       <h1 >PMode nastavitve</h1>
+    Standard predpisuje nabor parametrov, to so t. im. P-Mode parametri (angl. Processing Mode), 
+    s katerimi lahko določamo nivo in parametre varnosti in zanesljivosti transporta med MSH moduli, 
+    ter način naslavljanja in preverjanja tipov priponk v sporočilu. Parametri omogočajo izdelavo univerzalnega 
+    MSH modula za izdelavo novih integracij in poslovnih koreografij izmenjave sporočil brez poseganja v programsko kodo MSH modula. 
+    <br /><br />
+    
+    V aplikaciji laurentius so parametri razdeljeni v naslednih sklopih:
+    <ul>
+        <li><b>Storitve</b>: Parametri določajo poslovno storitev: koreografijo in obliko sporočil v  poslovni transakciji (storitev, akcijo in obliko vsebine):</li>
+        <li><b>eIdentitete</b>: Parametri določajo značilnost poslovnih partnerjev: certifikati, domena, url naslov, itd.</li>
+        <li><b>Profil varnost</b>: Parametri določajo profil varnosti: algoritme podpisa, kriptiranja,... </li>
+        <li><b>Profil zanesljivost</b>: Parametri določajo način zagotavljanja zanesljivosti prenosa sporočil. (število ponovitev itd.. )</li>
+        <li><b>PMode instance</b>:  Parametri določajo konkretne instance pmode, ki povezujejo prehodno profile, storitve in eIdentitete, ki se 
+        uporabljajo pri določeni izmenjavi sporočil.</li>
+    </ul>
+    
+    
+    <h2 id="gui/pmode:service">Storitev</h2>
+    Storitve določajo sporočila, ki se izmenjujejo v določeni poslovni transakciji t.im. storitvi.<br />  
+     Osnovni parametri storitve so:<br />  
+        <ul>
+            <li><b>Id</b>: enolična oznaka storitve. Id se uporablja pri izdelavi izhodne pošiljke v parametru service:<code>InMail/@Service</code> in  <code>OutMail/@Service</code>.</li>
+            <li><b>Naziv (Name)</b>: naziv storitve, ki se zapiše v ebMS sporočilo <code>/ns2:Messaging/ns2:UserMessage/ns2:CollaborationInfo/ns2:Service</code>.</li>
+            <li><b>Tip</b>: Tip storitve, kot se zapiše v ebMS sporočilo <code>/ns2:Messaging/ns2:UserMessage/ns2:CollaborationInfo/ns2:Service/@type</code>.</li>
+            <li><b>Vloga initiatorja</b>: Vloga initiatorja poslovne transakcije <code>/ns2:Messaging/ns2:UserMessage/ns2:PartyInfo/[ns2:From | ns2:To]/ns2:Role</code>.</li>
+            <li><b>Vloga izvršitelja</b>: Vloga izvršitelja poslovne transakcije <code>/ns2:Messaging/ns2:UserMessage/ns2:PartyInfo/[ns2:From | ns2:To]/ns2:Role</code>.</li>
+            <li><b>Laurentius parametri</b>: V sporočila storitve se dodajo splošni laurentius parametri <code>/ns2:Messaging/ns2:UserMessage/ns2:MessageProperties/ns2:Property</code>:
+                <ul>
+                    <li><b>description</b>: Opis sporočila.</li> 
+                    <li><b>sender_msg_id</b>: Enolična oznaka sporočila pošiljatelja (Producer).</li> 
+                    <li><b>submitDate</b>: Datum in čas odprave sporočila.</li>                 
+                </ul>
+                Za posamezno priponko se dodajo naslednji parametri <code>/ns2:Messaging/ns2:UserMessage/ns2:PayloadInfo/ns2:PartInfo/ns2:PartProperties/ns2:Property</code>:
+                <ul>
+                    <li><b>CharacterSet</b>: Kodna tabela</li> 
+                    <li><b>Filename</b>: Ime datoteke, kot jo je določil pošiljatelj</li> 
+                    <li><b>IsEncrypted</b>: Podatek ali je priponka dodatno kriptirana</li> 
+                    <li><b>MimeType</b>: mime tip priponke</li> 
+                    <li><b>Name</b>: Naziv priponke, kot jo je določil pošiljatelj</li> 
+                    <li><b>Type</b>: Tip priponke, kot ga je določič pošiljatelj</li>                      
+                </ul>    
+            </li>
+            
+        </ul>
+            <img src="img/gui/pmode-service.png" alt="PMode service" width="680"/> <br />  <br />  
+     
+            <h2 id="gui/pmode:action">Akcija</h2>
+     Akcija v storitvi določa konkretno sporočilo v poslovni transakciji. Lastnosti sporočila so: vsebine oz. priponke, ki jih sporočilo mora/lahko vsebuje
+     maksimalna velikost sporočila in posameznih priponk, ter metapodatki sporočila. <br />  <br />
+     toritve določajo sporočila, ki se izmenjujejo v določeni poslovni transakciji t.im. storitvi.<br />  
+     Parametri akcije so:<br />  
+        <ul>
+            <li><b>Akcija</b>: enolična oznaka akcija. Id se uporablja pri izdelavi izhodne pošiljke v parametru service:<code>InMail/@action</code> in  <code>OutMail/@action</code>. V primeru da je tip akcije UserMessage se naziv storitve zapiše v ebMS sporočilo <code>/ns2:Messaging/ns2:UserMessage/ns2:CollaborationInfo/ns2:Action</code>.</li>
+            <li><b>Tip sporočila</b>: ebMS standard pozna dva tipa sporočil: userMessage (prenos sporočil od izvornega sistema (uporabnika) do ciljnega sistema/uporabnika)
+                ter signalna sporočila (signalMessage), ki se jih izmenjujejo samo MSH moduli, kot primer:  AS4Reciept, PullSignal, Error itd. V primeru, da je določena priponka se ta zapiše
+            v ns2:Messaging/ns2:SignalMessage</li>
+            <li><b>Velikost sporočila</b>: Maksimalna dovoljena velikost vseh priponk skupaj.</li>
+            
+            <li><b>Parametri sporočila</b>: Dodatni parametri sporočila. <code>/ns2:Messaging/ns2:UserMessage/ns2:PayloadInfo/ns2:PartInfo/ns2:PartProperties/ns2:Property</code></li>
+            <li><b>Vsebine (priponke) sporočila</b>: Priponke, ki jih sporočilo vsebuje:
+             <ul>
+                    <li><b>Name</b>: Naziv priponke;</li> 
+                    <li><b>Mime tip priponke</b>: Mime tip priponkem. Npr: application/pdf, text/xml ...; </li> 
+                    <li><b>Min. </b>: Minimalno število priponk;</li> 
+                    <li><b>Max. </b>: Maksimalno število priponk;</li> 
+                    <li><b>Velikost</b>: Maksimalna velikost priponke.</li>
+                </ul>  
+            
+            </li>
+        </ul>
+     
+     <img src="img/gui/pmode-service-action.png" alt="PMode action" width="680"/> <br />  <br />  
+         
+    
+       
+    </article>  
+</div>
