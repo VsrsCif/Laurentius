@@ -74,7 +74,10 @@
 	</xsd:complexType>
 	<xsd:complexType name="Receipt">
 		<xsd:sequence>
-			<!-- changed from other to any by JRC - cef digital minder repose did not validated!-->
+			<!--                     
+                    https://issues.oasis-open.org/browse/EBXMLMSG-3
+                    https://issues.oasis-open.org/browse/EBXMLMSG-9
+                    -->
 			<xsd:any namespace="##any" processContents="lax" maxOccurs="unbounded" />
 		</xsd:sequence>
 	</xsd:complexType>
@@ -165,6 +168,8 @@
 		<xsd:simpleContent>
 			<xsd:extension base="tns:non-empty-string">
 				<xsd:attribute name="name" type="tns:non-empty-string" use="required"/>
+                                <!-- fix: https://issues.oasis-open.org/browse/EBXMLMSG-2 -->
+                                 <xsd:attribute name="type" type="tns:non-empty-string" use="optional"/> 
 			</xsd:extension>
 		</xsd:simpleContent>
 	</xsd:complexType>
