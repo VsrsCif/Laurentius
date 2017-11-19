@@ -95,7 +95,7 @@ public class EBMSParser {
             getProperties().isEmpty()) {
       List<MSHInProperty> lstProp = new ArrayList<>();
       for (Property p : um.getMessageProperties().getProperties()) {
-        if (p.getName() != null) {
+        if (!Utils.isEmptyString(p.getName())) {
           switch (p.getName()) {
             case EBMSConstants.EBMS_PROPERTY_DESC:
               mshmail.setSubject(p.getValue());
@@ -110,16 +110,13 @@ public class EBMSParser {
             default:
               MSHInProperty mp = new MSHInProperty();
               mp.setName(p.getName());
+              mp.setType(p.getType());
               mp.setValue(p.getValue());
               lstProp.add(mp);
           }
-        } else {
-          MSHInProperty mp = new MSHInProperty();
-          mp.setName(p.getName());
-          mp.setValue(p.getValue());
-          lstProp.add(mp);
-        }
+        }         
       }
+      
       if (!lstProp.isEmpty()) {
         MSHInProperties mop = new MSHInProperties();
         mop.getMSHInProperties().addAll(lstProp);
@@ -287,6 +284,7 @@ public class EBMSParser {
                 default:
                   IMPartProperty prop = new IMPartProperty();
                   prop.setName(p.getName());
+                  prop.setType(p.getType());
                   prop.setValue(p.getValue());
                   part.getIMPartProperties().add(prop);
               }

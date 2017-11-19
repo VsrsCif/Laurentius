@@ -305,6 +305,7 @@ public class EBMSBuilder {
       if (!Utils.isEmptyString(mo.getSenderMessageId())) {
         Property p = new Property();
         p.setName(EBMSConstants.EBMS_PROPERTY_SENDER_MSG_ID);
+
         p.setValue(mo.getSenderMessageId());
         lstProperties.add(p);
 
@@ -317,6 +318,9 @@ public class EBMSBuilder {
               getMSHOutProperties()) {
         Property p = new Property();
         p.setName(moutProp.getName());
+        if (!Utils.isEmptyString(moutProp.getType())) {
+          p.setType(moutProp.getType());
+        }
         p.setValue(moutProp.getValue());
         lstProperties.add(p);
       }
@@ -349,6 +353,9 @@ public class EBMSBuilder {
         for (OMPartProperty op : mp.getOMPartProperties()) {
           Property fp = new Property();
           fp.setName(op.getName());
+          if (!Utils.isEmptyString(op.getType())) {
+            fileProp.setType(op.getType());
+          }
           fp.setValue(op.getValue());
           fileProp.add(fp);
         }
