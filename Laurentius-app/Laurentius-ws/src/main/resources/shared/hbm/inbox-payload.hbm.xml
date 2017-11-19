@@ -39,6 +39,7 @@
             </generator>
         </id>		
         <property column="NAME" name="Name" type="java.lang.String"  length="128" /> 
+        <property column="TYPE" name="Type" type="java.lang.String"  length="256" /> 
         <property column="VALUE" name="Value" type="java.lang.String" length="512" />         
     </class>  
 
