@@ -129,6 +129,17 @@ Copyright 2015, Supreme Court Republic of Slovenia
                         </xs:restriction>
                     </xs:simpleType>
                 </xs:attribute>
+                <xs:attribute name="type" >
+                    <xs:annotation>
+                        <xs:documentation xml:lang="sl">Property namespace type</xs:documentation>
+                    </xs:annotation>
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                            <xs:minLength value="1"/>
+                            <xs:maxLength value="256"/>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:attribute>
             </xs:extension>
         </xs:simpleContent>
     </xs:complexType>
@@ -137,6 +148,7 @@ Copyright 2015, Supreme Court Republic of Slovenia
             <xs:maxLength value="512"/>
         </xs:restriction>
     </xs:simpleType>
+    
     <xs:complexType name="MSHPartType">
         <xs:annotation>
             <xs:documentation>MSH priponka/vsebina</xs:documentation>
