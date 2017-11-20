@@ -18,6 +18,8 @@ import java.security.cert.X509Certificate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.JAXBException;
 import si.jrc.msh.plugin.zpp.ZPPConstants;
@@ -280,15 +282,30 @@ public class ZPPUtils {
    * @throws FileNotFoundException 
    */
   public Key getEncKeyFromLocalPart(MSHOutPart encPart)
-          throws SEDSecurityException, ZPPException, StorageException, JAXBException, FileNotFoundException {
+          throws SEDSecurityException, ZPPException, StorageException {
     long l = LOG.logStart();
     File sedKey = StorageUtils.getFile(encPart.getFilepath());
-    SEDEncryptionKey sk = (SEDEncryptionKey) XMLUtils.deserialize(sedKey,
-            SEDEncryptionKey.class);
-    Key sKey = new SecretKeySpec(sk.getSecredKey(), sk.getAlgorithm());
+    
+    SEDEncryptionKey sk;
+    try {
+      sk = (SEDEncryptionKey) XMLUtils.deserialize(sedKey,
+              SEDEncryptionKey.class);
+    } catch (JAXBException ex) {
+      throw  new SEDSecurityException(SEDSecurityException.SEDSecurityExceptionCode.InvalidKey, 
+              String.format("File '%s',  partId: %d from mailId: %d!",encPart.getFilepath(), encPart.getId(), encPart.getMailId()), ex.getMessage());
+    }
+    
+    SEDCrypto.SymEncAlgorithms sa = SEDCrypto.SymEncAlgorithms.getAlgorithmByURI(sk.getAlgorithm());
+    if (sa == null){
+      throw  new SEDSecurityException(SEDSecurityException.SEDSecurityExceptionCode.NoSuchAlgorithm, sk.getAlgorithm(), String.format("Error occured while retrieving key from payload partId: %d from mailId: %d", encPart.getId(), encPart.getMailId()));
+    }
+    
+    Key sKey = new SecretKeySpec(sk.getSecredKey(),sa.getJCEName());
     LOG.logEnd(l, String.format("Got key for partId %s.", encPart.getEbmsId()));
     return sKey;
   }
+  
+
 
   /**
    * Method generates ZPP Delivery notification for mail reciever. Delivery

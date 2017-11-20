@@ -71,8 +71,8 @@
                                 <p:commandButton value="#{msg['New']}" styleClass="toolbar-Button"  
                                                  rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_OUTBOX)}" 
                                                  icon="ui-icon-size-22 ui-icon-svg-mail-send"
-                                                 actionListener="#{OutMailDataView.composeNewMail()}"
-                                                 update=":dlgCompose:mailComposeForm"
+                                                 actionListener="#{dialogCompose.composeNewMail()}"
+                                                 update=":dlgCompose:mailComposeDialog:mailComposeDialogForm"
                                                  oncomplete="PF('mailComposeDialog').show()"/>
                                 <!-- p:commandButton value="# { msg['TestAddress']}" styleClass="toolbar-Button"  
                                                  rendered="# {mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_OUTBOX)}" 
@@ -504,6 +504,7 @@
             <dlg:dlg-execute id="dlgexecute" />
 
             <dlg:dlg-compose id="dlgCompose" />
+            <dlg:dlg-compose-payload id="dlgComposePayload" />
             <dlg:dlg-certificate id="dlgcertificate" />
             <dlg:dlg-cert-import id="dlgcertimport" />
             <dlg:dlg-tasktype id="dlgTaskType" />

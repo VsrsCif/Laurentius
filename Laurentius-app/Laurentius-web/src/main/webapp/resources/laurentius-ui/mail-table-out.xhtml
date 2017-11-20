@@ -160,7 +160,7 @@
                             <p:outputPanel id="OutMailDocuments" style="text-align:center;">
                                 <p:dataTable var="plpart" value="#{OutMailDataView.currentMail.MSHOutPayload.MSHOutParts}"
                                              scrollable="true"
-                                             scrollHeight="135" >
+                                             scrollHeight="120" >
                                     <p:column style="width:16px">
                                         <p:rowToggler />
                                     </p:column>
@@ -229,7 +229,7 @@
                                 <p:dataTable var="mailEvents" 
                                              value="#{OutMailDataView.mailEvents}"
                                              scrollable="true"
-                                             scrollHeight="135">
+                                             scrollHeight="120">
                                     <p:column width="60" headerText="#{msg['Id']}">
                                         <h:outputText value="#{mailEvents.id}" />
                                     </p:column>
@@ -268,7 +268,7 @@
 
                                 <p:dataTable var="mp" value="#{OutMailDataView.currentMail.MSHOutProperties.MSHOutProperties}"
                                              scrollable="true"
-                                             scrollHeight="130" >
+                                             scrollHeight="120" >
                                     <p:column width="150" headerText="#{msg['Key']}">
                                         <h:outputText value="#{mp.name}" />
                                     </p:column>

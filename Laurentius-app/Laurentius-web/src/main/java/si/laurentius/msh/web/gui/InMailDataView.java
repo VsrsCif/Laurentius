@@ -123,6 +123,7 @@ public class InMailDataView extends AbstractMailView<MSHInMail, MSHInEvent> impl
     MSHInMail mim = getCurrentMail();
     if (mim != null) {
       mlstMailEvents = mDB.getMailEventList(MSHInEvent.class, mim.getId());
+      Collections.reverse(mlstMailEvents);
     } else {
       mlstMailEvents = null;
     }

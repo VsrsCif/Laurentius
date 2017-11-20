@@ -31,13 +31,14 @@
 
                 <h:outputText class="grid-label" value="#{msg['Source']}: "  />
                 <p:selectOneMenu id="source" value="#{pModePartyIdView.editable.valueSource}" style = "width:100%;box-sizing: border-box;">
+                    <p:ajax update="identifiers"/>
                     <f:selectItem itemLabel="name" itemValue="name" />
                     <f:selectItem itemLabel="address" itemValue="address" />
                     <f:selectItem itemLabel="identifier" itemValue="identifier" />            
                 </p:selectOneMenu>
 
                 <h:outputText class="grid-label" value="#{msg['Identifiers']}: "  />
-                <p:chips value="#{pModePartyIdView.editableIdentifiers}"  style="width:100%;"/>
+                <p:chips id='identifiers' value="#{pModePartyIdView.editableIdentifiers}" disabled="#{pModePartyIdView.editable.valueSource != 'identifier'}"  style="width:100%;"/>
             </p:panelGrid>
 
         </dlg:dlg-abstract>

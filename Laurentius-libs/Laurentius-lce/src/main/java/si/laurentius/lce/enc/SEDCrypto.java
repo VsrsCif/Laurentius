@@ -12,6 +12,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
+import java.util.Objects;
 import javax.crypto.Cipher;
 import javax.crypto.CipherOutputStream;
 import javax.crypto.KeyGenerator;
@@ -572,7 +573,21 @@ public class SEDCrypto {
     public int getKeyLength() {
       return miKey_len;
     }
-
+    public static SymEncAlgorithms getAlgorithmByURI(String uri){
+    if (uri!=null && !uri.isEmpty()){
+      for (SymEncAlgorithms sa: SymEncAlgorithms.values()){
+        if(Objects.equals(uri, sa.getURI())){
+          return sa;
+        }
+      
+      }
+    
+    }
+    return null;
   }
 
+
+  }
+  
+  
 }

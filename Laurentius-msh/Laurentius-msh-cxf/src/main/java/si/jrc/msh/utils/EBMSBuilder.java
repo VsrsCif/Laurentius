@@ -354,7 +354,7 @@ public class EBMSBuilder {
           Property fp = new Property();
           fp.setName(op.getName());
           if (!Utils.isEmptyString(op.getType())) {
-            fileProp.setType(op.getType());
+            fp.setType(op.getType());
           }
           fp.setValue(op.getValue());
           fileProp.add(fp);

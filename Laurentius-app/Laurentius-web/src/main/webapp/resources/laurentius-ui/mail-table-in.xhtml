@@ -213,7 +213,7 @@
                                         <p:dataTable var="plpartprop" 
                                                      value="#{plpart.IMPartProperties}"
                                                      scrollable="true"
-                                                     scrollHeight="135"
+                                                     scrollHeight="120"
                                                      >
                                             <p:column width="200" headerText="#{msg['Name']}">
                                                 <h:outputText value="#{plpartprop.name}" />
@@ -239,7 +239,7 @@
 
                                 <p:dataTable var="mailEvents" value="#{InMailDataView.mailEvents}"
                                              scrollable="true"
-                                             scrollHeight="130" >
+                                             scrollHeight="120" >
                                     <p:column width="60" headerText="#{msg['Id']}">
                                         <h:outputText value="#{mailEvents.id}" />
                                     </p:column>
@@ -279,7 +279,7 @@
 
                                 <p:dataTable var="mp" value="#{InMailDataView.currentMail.MSHInProperties.MSHInProperties}"
                                              scrollable="true"
-                                             scrollHeight="130" >
+                                             scrollHeight="120" >
                                     <p:column width="150" headerText="#{msg['Key']}">
                                         <h:outputText value="#{mp.name}" />
                                     </p:column>
