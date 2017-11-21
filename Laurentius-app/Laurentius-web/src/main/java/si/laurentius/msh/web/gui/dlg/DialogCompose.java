@@ -171,39 +171,7 @@ public class DialogCompose implements Serializable {
           return;
         }
 
-        MSHOutPart p = new MSHOutPart();
-        p.setEncoding("UTF-8");
-        p.setDescription("Mail body");
-        p.setIsSent(Boolean.TRUE);
-        p.setIsReceived(Boolean.FALSE);
-
-        p.setMimeType(MimeValue.MIME_TXT.getMimeType());
-
-        // mp.setValue();
-        StorageUtils su = new StorageUtils();
-        File fout = su.storeFile("body", "txt", getComposedMailBody().getBytes(
-                "UTF-8"));
-
-        String relPath = StorageUtils.getRelativePath(fout);
-        p.setFilepath(relPath);
-        String hashValue = DigestUtils.getHexSha256Digest(fout);
-        p.setSha256Value(hashValue);
-        p.setSize(BigInteger.valueOf(fout.length()));
-
-        if (Utils.isEmptyString(p.getFilename())) {
-          p.setFilename(fout.getName());
-        }
-        if (Utils.isEmptyString(p.getName())) {
-          p.setName(p.getFilename().substring(0, p.getFilename().
-                  lastIndexOf(".")));
-        }
-
-        if (newOutMail.getMSHOutPayload() == null) {
-          newOutMail.setMSHOutPayload(new MSHOutPayload());
-        }
-
-        newOutMail.getMSHOutPayload().getMSHOutParts().add(0, p);
-
+     
         newOutMail.setSubmittedDate(Calendar.getInstance().getTime());
 
         // add new out mail
@@ -211,7 +179,7 @@ public class DialogCompose implements Serializable {
         // send signal to close dialog
         RequestContext.getCurrentInstance().addCallbackParam("saved", true);
 
-      } catch (UnsupportedEncodingException | StorageException ex) {
+      } catch (StorageException ex) {
         String msg = ex.getMessage();
         facesContext().addMessage(null,
                 new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error",
@@ -243,7 +211,7 @@ public class DialogCompose implements Serializable {
 
     if (newOutMail.getMSHOutPayload().getMSHOutParts().isEmpty()) {
       suc = false;
-      addError("Missing payload");
+      addError("Missing payloads!");
     }
 
     if (newOutMail.getMSHOutProperties() != null) {
