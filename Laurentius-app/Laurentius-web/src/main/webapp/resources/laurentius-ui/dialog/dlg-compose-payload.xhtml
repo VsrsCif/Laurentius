@@ -28,9 +28,9 @@
 
 
             <p:panelGrid style="width: 100%"  columns="2" columnClasses="grid-label, value">
-                
+
                 <h:outputText rendered="#{empty dialogComposePayloadView.editable.filepath}"
-                    value="#{msg['Upload']}:" />
+                              value="#{msg['Upload']}:" />
                 <p:fileUpload fileUploadListener="#{dialogComposePayloadView.handleNewOutMailAttachmentUpload}"
                               mode="advanced" 
                               auto="true"                           
@@ -42,16 +42,20 @@
                               rendered="#{empty dialogComposePayloadView.editable.filepath}"
                               style="height: 80px"/>
 
-                <h:outputText value="#{msg['Name']}:" />
-                <p:inputText value="#{dialogComposePayloadView.editable.name}" 
+                <h:outputText rendered="#{dialogComposePayloadView.showLaurentiusProperties()}" value="#{msg['Name']}:" />
+                <p:inputText rendered="#{dialogComposePayloadView.showLaurentiusProperties()}"  value="#{dialogComposePayloadView.editable.name}" 
+                             style="width:100%"
+                             />
+                <h:outputText value="#{msg['Description']}:" />
+                <p:inputText value="#{dialogComposePayloadView.editable.description}" 
                              style="width:100%"
                              />
 
                 <h:outputText value="#{msg['Filename']}:" />
                 <p:inputText  
-                            value="#{dialogComposePayloadView.editable.filename}" 
-                             style="width:100%"
-                             />
+                    value="#{dialogComposePayloadView.editable.filename}" 
+                    style="width:100%"
+                    />
 
                 <h:outputText value="#{msg['EbmsPartId']}:" />
                 <p:inputText id="bodyEbmsId" value="#{dialogComposePayloadView.editable.ebmsId}" 
@@ -61,30 +65,37 @@
                 <h:outputText value="#{msg['MimeType']}:" />
                 <p:selectOneMenu id="bodyMime"
                                  value="#{dialogComposePayloadView.editable.mimeType}" 
-
+                                 style="width:100"
                                  filter="true"
                                  filterMatchMode="contains"
                                  >
 
+
                     <f:selectItems  value="#{LookupsData.mimeValues}" var="ar" 
                                     itemLabel="#{ar.mimeType}" itemValue="#{ar.mimeType}"/>
                 </p:selectOneMenu>
-                
+
+
+                <h:outputText value="#{msg['Charset']}:" />
+                <p:inputText id="payloadCharset" value="#{dialogComposePayloadView.editable.encoding}" 
+                             style="width:100%"   />
+
+
                 <h:outputText value="#{msg['SHA256Value']}:" />
                 <h:outputText id="digest" value="#{dialogComposePayloadView.editable.sha256Value}" 
-                             style="width:100%"                             
-                             />
-                
+                              style="width:100%"                             
+                              />
+
                 <h:outputText value="#{msg['Size']}:" />
                 <h:outputText id="size" value="#{LookupsData.getHumanReadableSize(dialogComposePayloadView.editable.size)}" 
-                             style="width:100%"                             
-                             />
-               
-                
-                
-                
+                              style="width:100%"                             
+                              />
 
-                
+
+
+
+
+
 
 
             </p:panelGrid>

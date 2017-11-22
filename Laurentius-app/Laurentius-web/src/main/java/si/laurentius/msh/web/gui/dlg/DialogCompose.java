@@ -81,7 +81,9 @@ public class DialogCompose implements Serializable {
     newOutMail.setSenderMessageId(Utils.getInstance().getGuidString());
 
     MSHOutPart mp = new MSHOutPart();
-    mp.setMimeType(MimeValue.MIME_TXT.getMimeType());
+    mp.setMimeType(MimeValue.MIME_TXT.getMimeType());    
+    mp.setEncoding("UTF-8");    
+    mp.setDescription("");
     newMailBody = "Test body";
     setBodyAttachment(mp);
     addBodyAttachment = true;
@@ -347,17 +349,21 @@ public class DialogCompose implements Serializable {
     }
   }
 
-  
+  public void clearTextPayload(){
+    
+    newMailBody = "";
+    mBodyAttachment.setEbmsId("");
+    mBodyAttachment.setMimeType(MimeValue.MIME_TXT.getMimeType());
+    mBodyAttachment.setEncoding("UTF-8");
+    mBodyAttachment.setDescription("");
+    
+    
+  }
   
 
   public void addTextPayload() {
     
     MSHOutPart p = XMLUtils.deepCopyJAXB(mBodyAttachment);
-    
-    p.setEncoding("UTF-8");
-    
-    p.setDescription("Text document");
-    
     
   
     String suffix = MimeValue.getSuffixBYMimeType(p.getMimeType());
@@ -397,12 +403,14 @@ public class DialogCompose implements Serializable {
   }
   
    public void addPayload(MSHOutPart p) {
-     
      newOutMail.getMSHOutPayload().getMSHOutParts().add(p);
+  }
+   
+   public boolean showLaurentiusProperties(){
+
+     Service srv = mPMode.getServiceById(newOutMail.getService());
+    return srv==null || srv.getUseSEDProperties()==null || srv.getUseSEDProperties();
+  }
    
   
-   
-     
-
-  }
 }

@@ -233,6 +233,10 @@ public class DialogComposePayloadView extends AbstractPModeJSFView<MSHOutPart> {
     }
   }
   
+  public boolean showLaurentiusProperties(){
+    return dialogCompose.showLaurentiusProperties();
+  }
+  
   
   
 

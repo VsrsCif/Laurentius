@@ -76,10 +76,8 @@ public class PModeServiceView extends AbstractPModeJSFView<Service> {
     srv.setInitiator(new Service.Initiator());
     srv.setExecutor(new Service.Executor());
 
-    srv.getInitiator().setRole(
-            "http://" + SEDSystemProperties.getLocalDomain() + "/requestor");
-    srv.getExecutor().setRole(
-            "http://" + SEDSystemProperties.getLocalDomain() + "/responder");
+    srv.getInitiator().setRole("http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/initiator");
+    srv.getExecutor().setRole("http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/responder");
 
     srv.setServiceType(
             "http://" + SEDSystemProperties.getLocalDomain() + "/service");
