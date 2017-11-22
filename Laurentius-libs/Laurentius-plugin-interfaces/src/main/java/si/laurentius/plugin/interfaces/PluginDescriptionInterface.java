@@ -63,5 +63,7 @@ public interface PluginDescriptionInterface {
   
 
   void exportData(File initFolder, boolean savePasswords);
+  
+  
 
 }

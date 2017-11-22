@@ -26,9 +26,14 @@ Copyright 2016, Supreme Court Republic of Slovenia
  limitations under the Licence.
 -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://laurentius.si/plugin/def" 
-           xmlns:ns2="http://laurentius.si/plugin/crontask" xmlns:ns3="http://laurentius.si/plugin/processor" xmlns:ns4="http://laurentius.si/plugin/interceptor" xmlns:ns5="http://laurentius.si/plugin/eventlistener" xmlns:ns6="http://msh.laurentius.si/pmode" 
+           xmlns:ns2="http://laurentius.si/plugin/crontask" 
+           xmlns:ns3="http://laurentius.si/plugin/processor" 
+           xmlns:ns4="http://laurentius.si/plugin/interceptor" 
+           xmlns:ns5="http://laurentius.si/plugin/eventlistener" 
+           xmlns:ns6="http://msh.laurentius.si/pmode" 
            xmlns:ns7="http://laurentius.si/interceptor" 
            xmlns:ns8="http://laurentius.si/cron" 
+           xmlns:ns9="http://laurentius.si/process" 
            
            targetNamespace="http://laurentius.si/plugin/def" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xs:import namespace="http://laurentius.si/plugin/crontask" schemaLocation="./cron-task.xsd"/>
@@ -38,6 +43,7 @@ Copyright 2016, Supreme Court Republic of Slovenia
 	<xs:import namespace="http://msh.laurentius.si/pmode" schemaLocation="../msh-settings.xsd"/>
 	<xs:import namespace="http://laurentius.si/interceptor" schemaLocation="../sed-interceptor.xsd"/>
         <xs:import namespace="http://laurentius.si/cron" schemaLocation="../sed-cron.xsd"/>
+        <xs:import namespace="http://laurentius.si/process" schemaLocation="../sed-processor.xsd"/>
 	<xs:element name="Plugin" type="ns1:Plugin"/>
 	<xs:element name="DefaultInitData" type="ns1:DefaultInitDataType"/>
 	<xs:complexType name="Plugin">
@@ -92,6 +98,7 @@ Copyright 2016, Supreme Court Republic of Slovenia
 					<xs:sequence>
 						<xs:element ref="ns7:SEDInterceptor" minOccurs="0" maxOccurs="unbounded"/>
                                                 <xs:element ref="ns8:SEDCronJob" minOccurs="0" maxOccurs="unbounded"/>
+                                                <xs:element ref="ns9:SEDProcessor" minOccurs="0" maxOccurs="unbounded"/>
 					</xs:sequence>
 				</xs:complexType>
 			</xs:element>

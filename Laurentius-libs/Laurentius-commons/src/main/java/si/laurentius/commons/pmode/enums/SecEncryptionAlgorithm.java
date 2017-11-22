@@ -12,7 +12,7 @@ import java.util.Objects;
  * @author sluzba
  */
 public enum SecEncryptionAlgorithm {
-  AES_128("http://www.w3.org/2009/xmlenc11#aes128-gcm", "AES-128"),
+  AES_128("http://www.w3.org/2001/04/xmlenc#aes128-cbc", "AES-128"),
   AES_192("http://www.w3.org/2001/04/xmlenc#aes192-cbc", "AES-192 "),
   AES_256("http://www.w3.org/2001/04/xmlenc#aes256-cbc", "AES-256"),
   AES128_GCM("http://www.w3.org/2009/xmlenc11#aes128-gcm", "AES128-GCM"),
