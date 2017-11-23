@@ -468,16 +468,12 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
         throw new ZPPException(strMsg);
       }
       
-      // get x509 keys
-      //String convId = mInMail.getConversationId();
-      //LOG.formatedlog("Get key for conversation : '%s'", convId);
-      //BigInteger moID = new BigInteger(convId.substring(0, convId.indexOf("@")));
-      //MSHOutMail mom = mDB.getMailById(MSHOutMail.class, moID);
       mom.setDeliveredDate(mInMail.getSentDate());
 
       String alias
-              = eInCtx.getSenderPartyIdentitySet().getLocalPartySecurity().
-                      getSignatureKeyAlias();
+              = eInCtx.getSenderPartyIdentitySet().getExchangePartySecurity().
+                      getSignatureCertAlias();
+      
       X509Certificate xcertSed = mCertBean.getX509CertForAlias(alias);
 
       // AdviceOfDelivery

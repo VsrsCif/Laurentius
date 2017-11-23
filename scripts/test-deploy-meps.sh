@@ -12,7 +12,7 @@ FOLDER_DEPLOY="test-deploy"
 
 
 cp ../../plugins/Laurentius-meps-plugin/target/plugin-meps.war $FOLDER_DEPLOY/$WILDFLY_HOME/standalone/deployments/
-
+cp -r ../../plugins/Laurentius-meps-plugin/src/main/resources/init/meps $FOLDER_DEPLOY/$WILDFLY_HOME/standalone/data/laurentius-home/plugins/
 
 cd "$FOLDER_DEPLOY/$WILDFLY_HOME/bin"
 

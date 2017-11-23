@@ -973,14 +973,15 @@ public class SEDDaoBean implements SEDDaoInterface {
             throw new StorageException(msg);
           }
           if (mp.getSize() == null || mp.getSize().longValue() != f.length()) {
-            mp.setSize(BigInteger.valueOf(f.length()));
+            
             LOG.formatedWarning(
-                    "Mail has wrong payload part size (sender: %s, service %s, senderMessageId: %s, filepart %s) "
-                    + "size: %d, expected size %d!",
+                    "Mail has wrong payload part size (sender: %s, service %s, senderMessageId: %s, filepart %s). New value setted!"
+                    + "expected size from payload: %d, file size %d!",
                     mail.getSenderEBox(), mail.getService(), mail.
                     getSenderMessageId(), mp.getEbmsId(),
                     mp.getSize() == null ? 0 : mp.
                     getSize().longValue(), f.length());
+            mp.setSize(BigInteger.valueOf(f.length()));
           }
 
           String digest = DigestUtils.getHexSha256Digest(f);

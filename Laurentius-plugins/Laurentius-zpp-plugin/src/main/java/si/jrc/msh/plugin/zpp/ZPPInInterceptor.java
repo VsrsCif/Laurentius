@@ -340,8 +340,10 @@ public class ZPPInInterceptor implements SoapInterceptorInterface {
     //  MSHOutMail mom = mDB.getMailById(MSHOutMail.class, moID);
       mom.setDeliveredDate(mInMail.getSentDate());
 
-      String alias = eInCtx.getSenderPartyIdentitySet().getLocalPartySecurity().
-              getSignatureKeyAlias();
+      
+      String alias = eInCtx.getSenderPartyIdentitySet().getExchangePartySecurity().
+              getSignatureCertAlias();
+      LOG.formatedlog("Get sender cert alias '%s' to validate signature", alias);
       X509Certificate xcertSed = mCertBean.getX509CertForAlias(alias);
 
       // AdviceOfDelivery

@@ -1,40 +1,41 @@
 <MSHSetings xmlns="http://msh.laurentius.si/pmode">
     <Services>
-        <Service id="DeliveryWithReceipt" serviceName="DeliveryWithReceipt" useSEDProperties="true">
+        <Service id="DeliveryWithReceipt" serviceName="DeliveryWithReceipt" serviceType="" useSEDProperties="true">
             <Initiator role="Sender"/>
             <Executor role="Receiver"/>
-            <Action name="Delivery" invokeRole="initiator">
-                <Properties>
-                    <Property name="originalSender" required="true"/>
-                    <Property name="finalRecipient" required="true"/>
-                </Properties>
+            <Action name="Delivery" invokeRole="initiator" messageType="userMessage">
+                <Properties/>
                 <PayloadProfiles maxSize="10000">
-                    <PayloadProfile name="test" maxSize="10000" maxOccurs="1"/>
+                    <PayloadProfile name="test" MIME="application/octet-stream" maxSize="10000" maxOccurs="100" minOccurs="0"/>
                 </PayloadProfiles>
             </Action>
         </Service>
-        <Service id="LegalDelivery_ZPP" serviceName="LegalDelivery_ZPP" serviceType="SVEV">
+        <Service id="LegalDelivery_ZPP" serviceName="LegalDelivery_ZPP" serviceType="SVEV" useSEDProperties="true">
             <Initiator role="Sender"/>
             <Executor role="Receiver"/>
-            <Action name="DeliveryNotification" invokeRole="initiator">
+            <Action name="DeliveryNotification" invokeRole="initiator" messageType="userMessage">
+                <Properties/>
                 <PayloadProfiles maxSize="10000">
                     <PayloadProfile name="DeliveryNotification" MIME="application/pdf" maxOccurs="1" minOccurs="1"/>
-                    <PayloadProfile name="EncryptedPayload" maxSize="10000" maxOccurs="999" minOccurs="1"/>
+                    <PayloadProfile name="EncryptedPayload" MIME="application/encrypted" maxSize="10000" maxOccurs="999" minOccurs="1"/>
                 </PayloadProfiles>
             </Action>
-            <Action name="AdviceOfDelivery"  invokeRole="executor">
+            <Action name="AdviceOfDelivery" invokeRole="executor" messageType="userMessage">
+                <Properties/>
                 <PayloadProfiles maxSize="10000">
                     <PayloadProfile name="AdviceOfDelivery" MIME="application/pdf" maxOccurs="1" minOccurs="1"/>
                 </PayloadProfiles>
             </Action>
-            <Action name="EncryptedKey" after="DeliveryNotification, AdviceOfDelivery" invokeRole="initiator">
+            <Action name="EncryptedKey" after="DeliveryNotification, AdviceOfDelivery" invokeRole="initiator" messageType="signalMessage">
+                <Properties/>
                 <PayloadProfiles maxSize="10000">
                     <PayloadProfile name="EncryptedKey" MIME="application/xml" maxOccurs="1" minOccurs="1"/>
                 </PayloadProfiles>
             </Action>
-            <Action name="FictionNotification" after="DeliveryNotification" invokeRole="initiator">
+            <Action name="FictionNotification" after="DeliveryNotification" invokeRole="initiator" messageType="userMessage">
+                <Properties/>
                 <PayloadProfiles maxSize="10000">
-                    <PayloadProfile name="FictionNotification" MIME="application/pdf" maxOccurs="1"/>
+                    <PayloadProfile name="FictionNotification" MIME="application/pdf" maxOccurs="1" minOccurs="1"/>
                     <PayloadProfile name="EncryptedKey" MIME="application/xml" maxOccurs="1" minOccurs="1"/>
                 </PayloadProfiles>
             </Action>
@@ -47,7 +48,6 @@
             <TransportProtocol id="defalut" isTwoWayProtocol="true">
                 <Address connectionTimeout="120000" receiveTimeout="180000" chunked="false">https://127.0.0.1:8443/laurentius/msh</Address>
                 <TLS serverTrustCertAlias="test-tls" disableCNAndHostnameCheck="true"/>
-                <Proxy host=""/>
                 <SOAPVersion>1.2</SOAPVersion>
             </TransportProtocol>
             <LocalPartySecurity signatureKeyAlias="test-laurentius" decryptionKeyAlias="test-laurentius"/>
@@ -59,7 +59,6 @@
             <TransportProtocol id="court-https" isTwoWayProtocol="true">
                 <Address connectionTimeout="120000" receiveTimeout="180000" chunked="false">https://b2g-test.sodisce.si/laurentius/msh</Address>
                 <TLS clientKeyAlias="test-tls" serverTrustCertAlias="b2g-test.sodisce.si" disableCNAndHostnameCheck="true"/>
-                <Proxy host=""/>
                 <SOAPVersion>1.2</SOAPVersion>
             </TransportProtocol>
             <LocalPartySecurity/>
@@ -85,7 +84,7 @@
     <ReceptionAwarenessPatterns>
         <ReceptionAwareness id="AS4ReceiptResponse" replyPattern="response" receiptType="AS4Receipt">
             <Retry maxRetries="3" multiplyPeriod="3" period="5678"/>
-            <DuplicateDetection windowPeriode="P1Y"  eliminate="true"/>
+            <DuplicateDetection windowPeriode="P1Y" eliminate="true"/>
         </ReceptionAwareness>
     </ReceptionAwarenessPatterns>
     <PMode id="DeliveryWithReceipt">
@@ -109,7 +108,7 @@
             <MEPChannelBinding>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/push</MEPChannelBinding>
             <MEPInitiatorRole>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/initiator</MEPInitiatorRole>
             <Leg>
-                <MPC xmlns:tns="http://msh.laurentius.si/pmode" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/defaultMPC</MPC>
+                <MPC>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/defaultMPC</MPC>
                 <Transport>
                     <ForeChannel action="Delivery" securityIdRef="sign_sha256">
                         <ReceptionAwareness raPatternIdRef="AS4ReceiptResponse"/>
@@ -140,7 +139,7 @@
             <MEPChannelBinding>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/push</MEPChannelBinding>
             <MEPInitiatorRole>Sender</MEPInitiatorRole>
             <Leg>
-                <MPC xmlns:tns="http://msh.laurentius.si/pmode" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/defaultMPC</MPC>
+                <MPC>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/defaultMPC</MPC>
                 <Transport>
                     <ForeChannel action="DeliveryNotification" securityIdRef="sign_sha256">
                         <ReceptionAwareness raPatternIdRef="AS4ReceiptResponse"/>
@@ -154,7 +153,7 @@
             <MEPChannelBinding>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/sync</MEPChannelBinding>
             <MEPInitiatorRole>Receiver</MEPInitiatorRole>
             <Leg>
-                <MPC xmlns:tns="http://msh.laurentius.si/pmode" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/defaultMPC</MPC>
+                <MPC>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/defaultMPC</MPC>
                 <Transport>
                     <ForeChannel action="AdviceOfDelivery" securityIdRef="sign_sha256">
                         <ReceptionAwareness raPatternIdRef="AS4ReceiptResponse"/>
@@ -168,7 +167,7 @@
             <MEPChannelBinding>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/sync</MEPChannelBinding>
             <MEPInitiatorRole>Sender</MEPInitiatorRole>
             <Leg>
-                <MPC xmlns:tns="http://msh.laurentius.si/pmode" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/defaultMPC</MPC>
+                <MPC>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/defaultMPC</MPC>
                 <Transport>
                     <ForeChannel action="FictionNotification" securityIdRef="sign_sha256">
                         <ReceptionAwareness raPatternIdRef="AS4ReceiptResponse"/>
