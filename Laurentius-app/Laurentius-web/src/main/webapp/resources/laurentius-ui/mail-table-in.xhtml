@@ -202,14 +202,7 @@
 
 
                                     <p:column width="60" headerText="#{msg['MimeType']}">
-                                        <h:outputText value="#{plpart.mimeType}" />
-                                    </p:column>
-
-                                    <p:column width="60" headerText="#{msg['Size']}">
-                                        <h:outputText value="#{LookupsData.getHumanReadableSize(plpart.size)}" />
-                                    </p:column>
-
-                                    <p:rowExpansion>
+                                        <h:outputText value="#{plpart.mimeType}" /> <p:rowExpansion>
                                         <p:dataTable var="plpartprop" 
                                                      value="#{plpart.IMPartProperties}"
                                                      scrollable="true"
@@ -224,6 +217,13 @@
                                             </p:column>
                                         </p:dataTable>
                                     </p:rowExpansion>
+                                    </p:column>
+
+                                    <p:column width="60" headerText="#{msg['Size']}">
+                                        <h:outputText value="#{LookupsData.getHumanReadableSize(plpart.size)}" />
+                                    </p:column>
+
+                                   
 
                                 </p:dataTable>
 
