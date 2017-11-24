@@ -5,8 +5,6 @@
  */
 package si.laurentius.commons.interfaces;
 
-import java.security.PrivateKey;
-import java.security.cert.X509Certificate;
 import java.util.Map;
 import java.util.Properties;
 import javax.net.ssl.X509KeyManager;

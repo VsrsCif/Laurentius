@@ -210,9 +210,9 @@ public class SEDInitData implements SEDInitDataInterface {
       
       cls.getSEDCronJobs().getSEDCronJobs().stream().forEach(
               (cb) -> {
-                cb.setId(null);
-                
+                cb.setId(null);                
                 cb.getSEDTasks().forEach(pr ->{
+                  pr.setId(null);
                   pr.getSEDTaskProperties().
                           stream().forEach((c) -> {
                             c.setId(null);
@@ -222,7 +222,6 @@ public class SEDInitData implements SEDInitDataInterface {
                 mdbLookups.addSEDCronJob(cb);
                 if (cb.getActive() != null && cb.getActive()) {
                   mshScheduler.activateCronJob(cb);
-
                 }
               });
     }

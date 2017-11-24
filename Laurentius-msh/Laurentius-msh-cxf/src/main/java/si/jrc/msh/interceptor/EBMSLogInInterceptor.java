@@ -79,6 +79,7 @@ public class EBMSLogInInterceptor extends AbstractSoapInterceptor {
   public void handleMessage(SoapMessage msg)
       throws Fault {
     long l = LOG.logStart();
+   
 
     boolean isRequestor = MessageUtils.isRequestor(msg);
     String base = (String) msg.getExchange().get(EBMSConstants.EBMS_CP_BASE_LOG_SOAP_MESSAGE_FILE);
@@ -137,24 +138,6 @@ public class EBMSLogInInterceptor extends AbstractSoapInterceptor {
 
   /**
    *
-   * @param message
-   * @param reader
-   * @param buffer
-   *
-   * protected void logReader(Message message, Reader reader, LoggingMessage buffer) { try {
-   * CachedWriter writer = new CachedWriter(); IOUtils.copyAndCloseInput(reader, writer);
-   * message.setContent(Reader.class, writer.getReader());
-   *
-   * if (writer.getTempFile() != null) { // large thing on disk...
-   * buffer.getMessage().append("\nMessage (saved to tmp file):\n");
-   * buffer.getMessage().append("Filename: ").append(writer.getTempFile().getAbsolutePath())
-   * .append("\n"); } if (writer.size() > limit && limit != -1) {
-   * buffer.getMessage().append("(message truncated to ").append(limit).append(" bytes)\n"); }
-   * writer.writeCacheTo(buffer.getPayload(), limit); } catch (Exception e) { throw new Fault(e); }
-  }
-   */
-  /**
-   *
    * @param logger
    * @param message
    * @throws Fault
@@ -162,18 +145,6 @@ public class EBMSLogInInterceptor extends AbstractSoapInterceptor {
   protected void logging( File fout, Message message)
       throws Fault {
 
-    /*// prevert duplicate logging
-    if (message.containsKey(LoggingMessage.ID_KEY)) {
-      return;
-    }
-    String id = (String) message.getExchange().get(LoggingMessage.ID_KEY);
-    if (id == null) {
-      id = LoggingMessage.nextId();
-      message.getExchange().put(LoggingMessage.ID_KEY, id);
-    }
-    
-    message.put(LoggingMessage.ID_KEY, id);
-     */
     final LoggingMessage buffer =
         new LoggingMessage(fout, "IN MESSAGE");
 
@@ -228,6 +199,7 @@ public class EBMSLogInInterceptor extends AbstractSoapInterceptor {
 
     LOG.log(buffer.toString());
     InputStream is = message.getContent(InputStream.class);
+    
     logInputStream(message, is,fout);
 
   }

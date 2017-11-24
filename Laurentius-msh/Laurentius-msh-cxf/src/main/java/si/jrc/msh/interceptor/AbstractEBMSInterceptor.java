@@ -261,6 +261,7 @@ public abstract class AbstractEBMSInterceptor extends AbstractSoapInterceptor {
 
     if (outProps != null) {
       sec = new WSS4JOutInterceptor(outProps);
+      
     } else {
       LOG.logWarn(l,
               "Sending not message with not security policy. Bad/incomplete security configuration (pmode) for message:"
