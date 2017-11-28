@@ -22,10 +22,15 @@ public enum SecEncryptionAlgorithm {
 
   String mstrVal;
   String mstrDesc;
+  
+
+  
 
   private SecEncryptionAlgorithm(String val, String strDesc) {
     mstrVal = val;
     mstrDesc = strDesc;
+    
+    
 
   }
 
@@ -46,15 +51,14 @@ public enum SecEncryptionAlgorithm {
     return mstrDesc;
   }
 
-
-  public static SecEncryptionAlgorithm getByValue(String value){
-    for(SecEncryptionAlgorithm pr: values()){
-      if (Objects.equals(pr.getValue(), value)){
+  public static SecEncryptionAlgorithm getByValue(String value) {
+    for (SecEncryptionAlgorithm pr :values()) {
+      if (Objects.equals(pr.getValue(), value)) {
         return pr;
       }
     }
     return null;
-  
+
   }
-  
+
 }

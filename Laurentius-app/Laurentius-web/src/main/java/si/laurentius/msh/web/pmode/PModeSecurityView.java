@@ -24,6 +24,9 @@ import org.primefaces.context.RequestContext;
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.interfaces.PModeInterface;
 import si.laurentius.commons.pmode.enums.SecEncryptionAlgorithm;
+import si.laurentius.commons.pmode.enums.SecEncryptionDigest;
+import si.laurentius.commons.pmode.enums.SecEncryptionKeyTransport;
+import si.laurentius.commons.pmode.enums.SecEncryptionMGFAlgorithm;
 import si.laurentius.commons.pmode.enums.SecHashFunction;
 import si.laurentius.commons.pmode.enums.SecSignatureAlgorithm;
 import si.laurentius.commons.pmode.enums.SecX509KeyIdentifier;
@@ -95,6 +98,8 @@ public class PModeSecurityView extends AbstractPModeJSFView<Security> {
     ed.getX509().setEncryption(new X509.Encryption());
     ed.getX509().getEncryption().setAlgorithm(
             "http://www.w3.org/2009/xmlenc11#aes128-gcm");
+    
+    
 
     ed.getX509().getEncryption().setMinimumStrength("128");
     ed.getX509().getEncryption().setReference(new X509.Encryption.Reference());
@@ -406,7 +411,19 @@ public class PModeSecurityView extends AbstractPModeJSFView<Security> {
   public SecEncryptionAlgorithm[] getEncryptionAlgorithm() {
     return SecEncryptionAlgorithm.values();
   }
+  
+  
+   public SecEncryptionDigest[] getEncryptionDigest() {
+    return SecEncryptionDigest.values();
+  }
 
+   public SecEncryptionMGFAlgorithm[] getEncryptionMGFAlgorithm() {
+    return SecEncryptionMGFAlgorithm.values();
+  }
+   
+    public SecEncryptionKeyTransport[] getEncryptionKeyTransport() {
+    return SecEncryptionKeyTransport.values();
+  }
 
 
 }

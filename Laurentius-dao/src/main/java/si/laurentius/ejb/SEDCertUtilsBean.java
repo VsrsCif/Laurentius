@@ -40,6 +40,7 @@ import si.laurentius.commons.enums.CertStatus;
 import si.laurentius.commons.exception.SEDSecurityException;
 import si.laurentius.commons.interfaces.SEDCertStoreInterface;
 import si.laurentius.commons.interfaces.SEDCertUtilsInterface;
+import si.laurentius.commons.pmode.enums.SecEncryptionAlgorithm;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.ejb.sec.CertKeyPasswordCallback;
 import si.laurentius.lce.KeystoreUtils;
@@ -139,10 +140,10 @@ public class SEDCertUtilsBean implements SEDCertUtilsInterface {
   @Override
   public Properties getCXFTruststoreProperties(String alias) throws SEDSecurityException {
     long l = LOG.logStart();
-    
+
     SEDCertificate aliasCrt = mdbCertStore.getSEDCertificatForAlias(alias);
     validateCertificate(aliasCrt);
-    
+
     SEDCertPassword cp = mdbCertStore.getKeyPassword(
             SEDCertStoreInterface.KEYSTORE_NAME);
     if (cp == null) {
@@ -276,7 +277,7 @@ public class SEDCertUtilsBean implements SEDCertUtilsInterface {
    */
   public Map<String, Object> createCXFEncryptionConfiguration(
           X509.Encryption enc,
-          String alias) throws SEDSecurityException{
+          String alias) throws SEDSecurityException {
     Map<String, Object> prps = null;
 
     Properties cpTrust = getCXFTruststoreProperties(alias);
@@ -297,9 +298,22 @@ public class SEDCertUtilsBean implements SEDCertUtilsInterface {
     prps.put(WSHandlerConstants.ENCRYPTION_USER, alias);
     prps.put(WSHandlerConstants.ENC_PROP_REF_ID, cpropname);
 
-    if (enc.getAlgorithm() != null || !enc.getAlgorithm().isEmpty()) {
+    if (enc.getAlgorithm() != null && !enc.getAlgorithm().isEmpty()) {
       prps.put(WSHandlerConstants.ENC_SYM_ALGO, enc.getAlgorithm());
     }
+
+    if (enc.getKeyTransport() != null && !enc.getKeyTransport().isEmpty()) {
+      prps.put(WSHandlerConstants.ENC_KEY_TRANSPORT, enc.getKeyTransport());
+
+      if (enc.getDigest() != null && !enc.getDigest().isEmpty()) {
+        prps.put(WSHandlerConstants.ENC_DIGEST_ALGO, enc.getDigest());
+      }
+
+      if (enc.getMgf1Algorithm() != null && !enc.getMgf1Algorithm().isEmpty()) {
+        prps.put(WSHandlerConstants.ENC_MGF_ALGO, enc.getMgf1Algorithm());
+      }
+    }
+
     if (enc.getKeyIdentifierType() != null && !enc.getKeyIdentifierType().
             isEmpty()) {
       prps.put(WSHandlerConstants.ENC_KEY_ID, enc.getKeyIdentifierType());
@@ -389,7 +403,7 @@ public class SEDCertUtilsBean implements SEDCertUtilsInterface {
   @Override
   public Map<String, Object> createCXFSignatureValidationConfiguration(
           X509.Signature sig,
-          String sigAliasProp) throws SEDSecurityException{
+          String sigAliasProp) throws SEDSecurityException {
 
     Map<String, Object> prps = null;
 

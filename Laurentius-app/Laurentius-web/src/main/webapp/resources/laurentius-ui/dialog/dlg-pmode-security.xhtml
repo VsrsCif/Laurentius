@@ -22,7 +22,7 @@
                             dialogTitle="#{msg['PModeSecurityDialog']}" 
                             editable="#{pModeSecurityView.editable}"
                             width="800"
-                            height="450"
+                            height="500"
                             updateOnSave=":forms:SettingsPModesSecurities:pmodeSecuritPanel:TblPModeSecurity"
                             onConfirmAction="#{pModeSecurityView.addOrUpdateEditable()}" >
 
@@ -75,6 +75,22 @@
                                            itemValue="#{plg.value}" itemDescription="#{plg.value}"
                                            />                    
                         </p:selectOneMenu>
+
+                        <h:outputText value="." />
+                        <p:selectOneMenu  value="" 
+                                          style="width:100%" 
+                                          disabled="true"
+                                          >
+
+                        </p:selectOneMenu>
+                        <h:outputText value="." />
+                        <p:selectOneMenu  value="" 
+                                          style="width:100%" 
+                                          disabled="true"
+                                          >
+
+                        </p:selectOneMenu>
+
 
                         <h:outputText value="#{msg['KeyIdentifier']}:" />                    
                         <p:selectOneMenu id="sigKeyIdent"
@@ -164,13 +180,36 @@
                                            itemValue="#{plg.value}" itemDescription="#{plg.value}"
                                            />                    
                         </p:selectOneMenu>
+                        <h:outputText value="#{msg['KeyTransport']}:" />                         
+                        <p:selectOneMenu id="encKeyTransprt" value="#{pModeSecurityView.editableEncryption.keyTransport}" 
+                                         style="width:100%" 
+                                         disabled="#{not pModeSecurityView.encryptionToEditable}"
+                                         >
+                            <f:selectItem noSelectionOption="true" />
+                            <f:selectItems value="#{pModeSecurityView.encryptionKeyTransport}"  var="plg" itemLabel="#{plg.desc}" 
+                                           itemValue="#{plg.value}" itemDescription="#{plg.value}"
+                                           />                    
+                        </p:selectOneMenu>
 
-                        <h:outputText value="." />
-                        <p:selectOneMenu  value="" 
-                                          style="width:100%" 
-                                          disabled="true"
-                                          >
-
+                        <h:outputText value="#{msg['MGF1Algorithm']}:" />                         
+                        <p:selectOneMenu id="encMGF1Alg" value="#{pModeSecurityView.editableEncryption.mgf1Algorithm}" 
+                                         style="width:100%" 
+                                         disabled="#{not pModeSecurityView.encryptionToEditable}"
+                                         >
+                            <f:selectItem noSelectionOption="true" />
+                            <f:selectItems value="#{pModeSecurityView.encryptionMGFAlgorithm}"  var="plg" itemLabel="#{plg.desc}" 
+                                           itemValue="#{plg.value}" itemDescription="#{plg.value}"
+                                           />                    
+                        </p:selectOneMenu>
+                        <h:outputText value="#{msg['Digest']}:" />                         
+                        <p:selectOneMenu id="encDigest" value="#{pModeSecurityView.editableEncryption.digest}" 
+                                         style="width:100%" 
+                                         disabled="#{not pModeSecurityView.encryptionToEditable}"
+                                         >
+                            <f:selectItem noSelectionOption="true" />
+                            <f:selectItems value="#{pModeSecurityView.encryptionDigest}"  var="plg" itemLabel="#{plg.desc}" 
+                                           itemValue="#{plg.value}" itemDescription="#{plg.value}"
+                                           />                    
                         </p:selectOneMenu>
 
                         <h:outputText value="#{msg['KeyIdentifier']}:" />                         
