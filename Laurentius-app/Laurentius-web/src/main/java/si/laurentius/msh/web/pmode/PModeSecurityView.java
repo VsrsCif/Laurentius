@@ -73,7 +73,7 @@ public class PModeSecurityView extends AbstractPModeJSFView<Security> {
   @Override
   public void createEditable() {
 
-    String sbname = "SECURITY_%03d";
+    String sbname = "security_%03d";
     int i = 1;
 
     while (mPModeInteface.getSecurityById(String.format(sbname, i)) != null) {
@@ -86,19 +86,16 @@ public class PModeSecurityView extends AbstractPModeJSFView<Security> {
     ed.setX509(new X509());
 
     ed.getX509().setSignature(new X509.Signature());
-    ed.getX509().getSignature().setAlgorithm(
-            "http://www.w3.org/2001/04/xmldsig-more#rsa-sha512");
-    ed.getX509().getSignature().setHashFunction(
-            "http://www.w3.org/2001/04/xmlenc#sha512");
-    ed.getX509().getSignature().setHashFunction("IssuerSerial");
+    ed.getX509().getSignature().setAlgorithm(SecSignatureAlgorithm.RSA_SHA256.getValue());
+    ed.getX509().getSignature().setHashFunction(SecHashFunction.SHA256.getValue());
+    ed.getX509().getSignature().setKeyIdentifierType(SecX509KeyIdentifier.X509KeyIdentifier.getValue());
 
     ed.getX509().getSignature().setReference(new X509.Signature.Reference());
     ed.getX509().getSignature().getReference().setAllAttachments(true);
 
     ed.getX509().setEncryption(new X509.Encryption());
-    ed.getX509().getEncryption().setAlgorithm(
-            "http://www.w3.org/2009/xmlenc11#aes128-gcm");
-    
+    ed.getX509().getEncryption().setAlgorithm(SecEncryptionAlgorithm.AES128_GCM.getValue());
+    ed.getX509().getEncryption().setKeyIdentifierType(SecX509KeyIdentifier.X509KeyIdentifier.getValue());
     
 
     ed.getX509().getEncryption().setMinimumStrength("128");
@@ -257,9 +254,7 @@ public class PModeSecurityView extends AbstractPModeJSFView<Security> {
         }
 
         if (ed.getX509().getEncryption() == null) {
-          ed.getX509().setEncryption(new X509.Encryption());
-          ed.getX509().getEncryption().setAlgorithm(
-                  "http://www.w3.org/2001/04/xmldsig-more#rsa-sha512");
+          ed.getX509().setEncryption(new X509.Encryption());          
           ed.getX509().getEncryption().setAlgorithm(
                   "http://www.w3.org/2009/xmlenc11#aes128-gcm");
 
@@ -314,6 +309,14 @@ public class PModeSecurityView extends AbstractPModeJSFView<Security> {
   public boolean getEncryptionToEditable() {
     return getEditable() != null && getEditable().getX509() != null && getEditable().
             getX509().getEncryption() != null;
+  }
+  public boolean getEncryptionToEditableKeyTransport() {
+    return getEditable() != null 
+            && getEditable().getX509() != null 
+            && getEditable().getX509().getEncryption() != null
+            && getEditable().getX509().getEncryption().getKeyTransport() != null
+            && !getEditable().getX509().getEncryption().getKeyTransport().isEmpty()
+            ;
   }
 
   public boolean getSignatureToEditable() {

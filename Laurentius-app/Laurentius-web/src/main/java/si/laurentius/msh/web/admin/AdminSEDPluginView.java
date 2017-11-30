@@ -14,12 +14,10 @@
  */
 package si.laurentius.msh.web.admin;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Objects;
 import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
@@ -28,17 +26,14 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.model.CheckboxTreeNode;
 import org.primefaces.model.TreeNode;
 import si.laurentius.commons.SEDJNDI;
-import si.laurentius.commons.exception.PModeException;
 import si.laurentius.commons.interfaces.PModeInterface;
 import si.laurentius.commons.interfaces.SEDLookupsInterface;
 import si.laurentius.commons.interfaces.SEDPluginManagerInterface;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.Utils;
-import si.laurentius.commons.utils.xml.XMLUtils;
 import si.laurentius.cron.SEDCronJob;
 import si.laurentius.interceptor.SEDInterceptor;
 import si.laurentius.msh.pmode.PMode;
-import si.laurentius.msh.pmode.PModePartyInfo;
 import si.laurentius.msh.pmode.PartyIdentitySet;
 import si.laurentius.msh.pmode.ReceptionAwareness;
 import si.laurentius.msh.pmode.Security;
@@ -61,6 +56,16 @@ import si.laurentius.plugin.processor.InMailProcessorDef;
 public class AdminSEDPluginView extends AbstractAdminJSFView<Plugin> {
 
   private static final SEDLogger LOG = new SEDLogger(AdminSEDPluginView.class);
+  private static final String TREE_ITEM_PMODE="PMode";
+  private static final String TREE_ITEM_PMODE_SERVICE="Service";
+  private static final String TREE_ITEM_PMODE_PARTY="Party";
+  private static final String TREE_ITEM_PMODE_SECURITY="Security";
+  private static final String TREE_ITEM_PMODE_RA="ReceptionAwareness";
+  private static final String TREE_ITEM_CRON_TASK="CronTask";
+  private static final String TREE_ITEM_INTERCEPTOR="Interceptor";
+  private static final String TREE_ITEM_PROCESSOR="InitPluginFolder";
+   
+  private static final String INIT_PLUGIN_FOLDER="InitPluginFolder";
 
   @EJB(mappedName = SEDJNDI.JNDI_SEDLOOKUPS)
   private SEDLookupsInterface mdbLookups;
@@ -129,7 +134,7 @@ public class AdminSEDPluginView extends AbstractAdminJSFView<Plugin> {
           did.getPModeData().getServices().
                   forEach((s) -> {
                     TreeNode item = new CheckboxTreeNode(new PluginTreeItem(s.
-                            getId(), s, "Service"), pluginTypeItem);
+                            getId(), s, TREE_ITEM_PMODE_SERVICE), pluginTypeItem);
                   });
         }
         
@@ -141,7 +146,7 @@ public class AdminSEDPluginView extends AbstractAdminJSFView<Plugin> {
           did.getPModeData().getPartyIdentitySets().
                   forEach((s) -> {
                     TreeNode item = new CheckboxTreeNode(new PluginTreeItem(s.
-                            getId(), s, "Party"), pluginTypeItem);
+                            getId(), s, TREE_ITEM_PMODE_PARTY), pluginTypeItem);
                   });
         }
 
@@ -152,7 +157,7 @@ public class AdminSEDPluginView extends AbstractAdminJSFView<Plugin> {
           did.getPModeData().getSecurities().
                   forEach((s) -> {
                     TreeNode item = new CheckboxTreeNode(new PluginTreeItem(s.
-                            getId(), s, "Security"), pluginTypeItem);
+                            getId(), s, TREE_ITEM_PMODE_SECURITY), pluginTypeItem);
                   });
         }
 
@@ -164,7 +169,7 @@ public class AdminSEDPluginView extends AbstractAdminJSFView<Plugin> {
           did.getPModeData().getReceptionAwarenesses().
                   forEach((s) -> {
                     TreeNode item = new CheckboxTreeNode(new PluginTreeItem(s.
-                            getId(), s, "ReceptionAwareness"), pluginTypeItem);
+                            getId(), s, TREE_ITEM_PMODE_RA), pluginTypeItem);
                   });
         }
 
@@ -175,7 +180,7 @@ public class AdminSEDPluginView extends AbstractAdminJSFView<Plugin> {
           did.getPModeData().getPModes().
                   forEach((s) -> {
                     TreeNode item = new CheckboxTreeNode(new PluginTreeItem(s.
-                            getId(), s, "PModes"), pluginTypeItem);
+                            getId(), s, TREE_ITEM_PMODE), pluginTypeItem);
                   });
         }
       }
@@ -192,7 +197,7 @@ public class AdminSEDPluginView extends AbstractAdminJSFView<Plugin> {
           did.getPluginData().getSEDInterceptors().
                   forEach((s) -> {
                     TreeNode item = new CheckboxTreeNode(new PluginTreeItem(s.
-                            getName(), s, "Interceptor"), pluginTypeItem);
+                            getName(), s, TREE_ITEM_INTERCEPTOR), pluginTypeItem);
                   });
         }
         if (did.getPluginData().getSEDCronJobs() != null) {
@@ -202,10 +207,23 @@ public class AdminSEDPluginView extends AbstractAdminJSFView<Plugin> {
           did.getPluginData().getSEDCronJobs().
                   forEach((s) -> {
                     TreeNode item = new CheckboxTreeNode(new PluginTreeItem(s.
-                            getName(), s, "CronJob"), pluginTypeItem);
+                            getName(), s, TREE_ITEM_CRON_TASK), pluginTypeItem);
+                  });
+        }
+        
+        if (did.getPluginData().getSEDProcessors() != null) {
+          TreeNode pluginTypeItem = new CheckboxTreeNode(new PluginTreeItem(
+                  "Processors", null, "Processors"), pluginItems);
+          pluginTypeItem.setExpanded(true);
+          did.getPluginData().getSEDProcessors().
+                  forEach((s) -> {
+                    TreeNode item = new CheckboxTreeNode(new PluginTreeItem(s.
+                            getName(), s, TREE_ITEM_PROCESSOR), pluginTypeItem);
                   });
         }
       }
+      
+     
     }
   }
 
@@ -265,6 +283,7 @@ public class AdminSEDPluginView extends AbstractAdminJSFView<Plugin> {
         installSEDCronJob((SEDCronJob) item.getPluginItem());
 
       }
+
 
     }
     // submit message to dialog  to close 

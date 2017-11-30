@@ -65,8 +65,6 @@ public class PModeActionPropertiesView extends AbstractPModeJSFView<Action.Prope
     Action.Properties.Property  np = new Action.Properties.Property();
     np.setName(String.format(sbname, i));
     np.setRequired(Boolean.FALSE);
-    np.setType("string");
-    
     setNew(np);
 
   }
