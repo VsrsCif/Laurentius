@@ -16,9 +16,12 @@ package si.laurentius.process;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
@@ -41,8 +44,8 @@ import si.laurentius.plugin.processor.InMailProcessorDef;
 public class ProcessExecute extends AbstractMailProcessor {
 
   private static final SEDLogger LOG = new SEDLogger(ProcessExecute.class);
-public static final String KEY_EXECUTE_COMMAND = "imp.execute.command";
-public static final String KEY_EXECUTE_PARAMETERS = "imp.execute.parameters";
+  public static final String KEY_EXECUTE_COMMAND = "imp.execute.command";
+  public static final String KEY_EXECUTE_PARAMETERS = "imp.execute.parameters";
 
   StringFormater msfFormat = new StringFormater();
 
@@ -55,13 +58,15 @@ public static final String KEY_EXECUTE_PARAMETERS = "imp.execute.parameters";
     impd.setType("execute");
     impd.setName("Execute processor");
     impd.setDescription("Execute processor");
-    
-     impd.getMailProcessorPropertyDeves().add(createProperty(
-            KEY_EXECUTE_COMMAND, "${laurentius.home}/scripts/export-appl.sh", "Execution command.", true,
-             PropertyType.String.getType(), null, null));
-     impd.getMailProcessorPropertyDeves().add(createProperty(
-            KEY_EXECUTE_PARAMETERS, "${Id} ${SenderEBox} ${Service}", "Execution parameters.", true,
-             PropertyType.String.getType(), null, null));
+
+    impd.getMailProcessorPropertyDeves().add(createProperty(
+            KEY_EXECUTE_COMMAND, "${laurentius.home}/scripts/export-appl.sh",
+            "Execution command.", true,
+            PropertyType.String.getType(), null, null));
+    impd.getMailProcessorPropertyDeves().add(createProperty(
+            KEY_EXECUTE_PARAMETERS, "${Id} ${SenderEBox} ${Service}",
+            "Execution parameters.", true,
+            PropertyType.String.getType(), null, null));
 
     return impd;
 
@@ -69,7 +74,7 @@ public static final String KEY_EXECUTE_PARAMETERS = "imp.execute.parameters";
 
   @Override
   public List<String> getInstanceIds() {
- 
+
     return Collections.emptyList();
   }
 
@@ -78,13 +83,13 @@ public static final String KEY_EXECUTE_PARAMETERS = "imp.execute.parameters";
     long l = LOG.logStart(mi.getId());
     boolean suc = false;
 
-      List<String> lst = (List<String>) map.
-              get(ProcessConstants.MP_EXPORT_FILES);
-      
-      executeProcessForMail(map, mi, lst);
+    List<String> lst = (List<String>) map.
+            get(ProcessConstants.MP_EXPORT_FILES);
 
-      suc = true;
-  
+    executeProcessForMail(map, mi, lst);
+
+    suc = true;
+
     LOG.logEnd(l, mi.getId());
     return suc;
   }
@@ -92,10 +97,10 @@ public static final String KEY_EXECUTE_PARAMETERS = "imp.execute.parameters";
   public long executeProcessForMail(Map<String, Object> map, MSHInMail mail,
           List<String> lstExportFiles)
           throws InMailProcessException {
-    
-    String strCmd = (String)map.get(KEY_EXECUTE_COMMAND);
-    String strPrms = (String)map.get(KEY_EXECUTE_PARAMETERS);
-    
+
+    String strCmd = (String) map.get(KEY_EXECUTE_COMMAND);
+    String strPrms = (String) map.get(KEY_EXECUTE_PARAMETERS);
+
     if (Utils.isEmptyString(strCmd)) {
       String errMsg = "Execution failed! No command defined!";
       throw new InMailProcessException(
@@ -107,8 +112,8 @@ public static final String KEY_EXECUTE_PARAMETERS = "imp.execute.parameters";
     String params
             = (lstExportFiles != null ? String.join(File.pathSeparator,
                             lstExportFiles) + " " : "")
-            + msfFormat.format( strPrms, mail);
-    
+            + msfFormat.format(strPrms, mail);
+
     return executeCommand(mail, command, params);
 
   }
@@ -119,11 +124,23 @@ public static final String KEY_EXECUTE_PARAMETERS = "imp.execute.parameters";
     long procRes = -1;
     try {
       String command = StringFormater.replaceProperties(cmd);
-      ProcessBuilder builder = new ProcessBuilder(command, param);
-      LOG.formatedlog(
-                      "Start execution of command '%s', params '%s' for mail %d",
-                      command, param,
-                      mail.getId());
+      // get execute folder
+      String folder = null;
+      if (command.contains(File.separator)) {
+        folder = command.substring(0, command.lastIndexOf(File.separator));
+      }
+      List<String> lstArray = new ArrayList<>();
+      lstArray.add(command);
+      if (!Utils.isEmptyString(param)) {
+        lstArray.addAll(translateCommandline(param));
+      }
+      LOG.log("Start execute command array: " +  String.join(", ", lstArray));
+      ProcessBuilder builder = new ProcessBuilder(lstArray);
+
+      if (folder != null) {
+        builder.directory(new File(folder));
+      }
+
       long lSt = LOG.getTime();
       Process process = builder.start();
       procRes = process.waitFor();
@@ -155,6 +172,78 @@ public static final String KEY_EXECUTE_PARAMETERS = "imp.execute.parameters";
     }
     LOG.logEnd(t);
     return procRes;
+  }
+
+  /**
+   * [code borrowed from
+   * org/apache/tools/ant/types/Commandline.java#Commandline.translateCommandline(java.lang.String)]
+   *
+   * @param toProcess the command line to process.
+   * @return the command line broken into strings. An empty or null toProcess
+   * parameter results in a zero sized array.
+   */
+  public static List<String> translateCommandline(String toProcess) throws InMailProcessException {
+    if (toProcess == null || toProcess.length() == 0) {
+      //no command? no string
+      return Collections.emptyList();
+    }
+    // parse with a simple finite state machine
+
+    final int normal = 0;
+    final int inQuote = 1;
+    final int inDoubleQuote = 2;
+    int state = normal;
+    final StringTokenizer tok = new StringTokenizer(toProcess, "\"\' ", true);
+    final ArrayList<String> result = new ArrayList<>();
+    final StringBuilder current = new StringBuilder();
+    boolean lastTokenHasBeenQuoted = false;
+
+    while (tok.hasMoreTokens()) {
+      String nextTok = tok.nextToken();
+      switch (state) {
+        case inQuote:
+          if ("\'".equals(nextTok)) {
+            lastTokenHasBeenQuoted = true;
+            state = normal;
+          } else {
+            current.append(nextTok);
+          }
+          break;
+        case inDoubleQuote:
+          if ("\"".equals(nextTok)) {
+            lastTokenHasBeenQuoted = true;
+            state = normal;
+          } else {
+            current.append(nextTok);
+          }
+          break;
+        default:
+          if ("\'".equals(nextTok)) {
+            state = inQuote;
+          } else if ("\"".equals(nextTok)) {
+            state = inDoubleQuote;
+          } else if (" ".equals(nextTok)) {
+            if (lastTokenHasBeenQuoted || current.length() != 0) {
+              result.add(current.toString());
+              current.setLength(0);
+            }
+          } else {
+            current.append(nextTok);
+          }
+          lastTokenHasBeenQuoted = false;
+          break;
+      }
+    }
+    if (lastTokenHasBeenQuoted || current.length() != 0) {
+      result.add(current.toString());
+    }
+    if (state == inQuote || state == inDoubleQuote) {
+      String strMsg = "unbalanced quotes in " + toProcess;
+      throw new InMailProcessException(
+              InMailProcessException.ProcessExceptionCode.ProcessException,
+              strMsg);
+    }
+    return result;
   }
 
 }
