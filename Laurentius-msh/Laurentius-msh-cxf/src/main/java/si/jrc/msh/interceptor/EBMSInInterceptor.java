@@ -149,7 +149,7 @@ public class EBMSInInterceptor extends AbstractEBMSInterceptor {
     }
 
     // validate soap request and retrieve messaging
-    Messaging msgHeader = mebmsValidation.vaildateHeader_Messaging(request,
+    Messaging msgHeader = mebmsValidation.vaildateHeader_Messaging(msg,
             SoapFault.FAULT_CODE_CLIENT);
 
     // if user message get context from user message
@@ -161,7 +161,7 @@ public class EBMSInInterceptor extends AbstractEBMSInterceptor {
       um = msgHeader.getUserMessages().get(0);
       mebmsValidation.vaildateUserMessage(msg, um, SoapFault.FAULT_CODE_CLIENT);
 
-      inmctx = EBMSParser.createEBMSContextFromUserMessage(msg, um,
+      inmctx = EBMSParser.createEBMSContextFromUserMessage(um,
               getPModeManager());
       messageId = um.getMessageInfo().getMessageId();
       // check if message already exists

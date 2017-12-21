@@ -96,7 +96,7 @@ public class SEDDaoBean implements SEDDaoInterface {
   private static final String MSG_ERR_PESIST_PARTS = "Error occured while persisting parts (%s) for class %s, id %d. Error %s";
   private static final String MSG_ERR_COMMIT_PARTS = "Error occured while commit parts (%s) for class %s, id %d. Error %s";
   private static final String MSG_ERR_REMOVE = "Error occured while removing class %s, id %d. Error %s";
-  private static final String MSG_ERR_JMS_SUBMIT = "Error occured while submitting class %s, id %d to JMS %s. Error %s";
+  private static final String MSG_ERR_JMS_SUBMIT = "Error occured while submitting mail (id:  %d) to JMS %s. Error %s";
   
   
   
@@ -396,15 +396,15 @@ public class SEDDaoBean implements SEDDaoInterface {
    * @param sortOrder
    * @return
    */
-  protected <T> CriteriaQuery createSearchCriteria(Class<T> type,
-          Object searchParams,
+  protected <T, D> CriteriaQuery createSearchCriteria(Class<T> type,
+          Object searchParams,Class<D> filterType, 
           boolean forCount, String sortField, String sortOrder) {
     long l = LOG.logStart();
     CriteriaBuilder cb = memEManager.getCriteriaBuilder();
     CriteriaQuery cq = forCount ? cb.createQuery(Long.class
     ) : cb.createQuery(
             type);
-    Root<T> om = cq.from(type);
+    Root<T> om = cq.from(filterType==null?type:filterType);
     if (forCount) {
       cq.select(cb.count(om));
     } else if (sortField != null) {
@@ -502,7 +502,8 @@ public class SEDDaoBean implements SEDDaoInterface {
     }
     return cq;
   }
-
+  
+  
   /**
    *
    * @param <T>
@@ -518,11 +519,32 @@ public class SEDDaoBean implements SEDDaoInterface {
   public <T> List<T> getDataList(Class<T> type, int startingAt, int maxResultCnt,
           String sortField,
           String sortOrder, Object filters) {
-    long l = LOG.logStart(type, startingAt, maxResultCnt, sortField, sortOrder,
+  
+    return getDataList(type, startingAt, maxResultCnt, sortField, sortOrder,
+            filters, null);
+  }
+
+  /**
+   *
+   * @param <T>
+   * @param resultType
+   * @param startingAt
+   * @param maxResultCnt
+   * @param sortField
+   * @param sortOrder
+   * @param filters
+   * @param filterType
+   * @return
+   */
+  @Override
+  public <T, D> List<T> getDataList(Class<T> resultType, int startingAt, int maxResultCnt,
+          String sortField,
+          String sortOrder, Object filters, Class<D> filterType) {
+    long l = LOG.logStart(resultType, startingAt, maxResultCnt, sortField, sortOrder,
             filters);
     List<T> lstResult;
     try {
-      CriteriaQuery<T> cq = createSearchCriteria(type, filters, false, sortField,
+      CriteriaQuery<T> cq = createSearchCriteria(resultType, filters, filterType, false, sortField,
               sortOrder);
       TypedQuery<T> q = memEManager.createQuery(cq);
       if (maxResultCnt > 0) {
@@ -535,7 +557,7 @@ public class SEDDaoBean implements SEDDaoInterface {
     } catch (NoResultException ex) {
       lstResult = new ArrayList<>();
     }
-    LOG.logEnd(l, type, startingAt, maxResultCnt, sortField, sortOrder, filters);
+    LOG.logEnd(l, resultType, startingAt, maxResultCnt, sortField, sortOrder, filters);
     return lstResult;
   }
 
@@ -549,7 +571,7 @@ public class SEDDaoBean implements SEDDaoInterface {
   @Override
   public <T> long getDataListCount(Class<T> type, Object filters) {
     long l = LOG.logStart(type, filters);
-    CriteriaQuery<Long> cqCount = createSearchCriteria(type, filters, true, null,
+    CriteriaQuery<Long> cqCount = createSearchCriteria(type, filters,null, true, null,
             null);
     Long res = memEManager.createQuery(cqCount).getSingleResult();
     LOG.logEnd(l, type, filters);
@@ -633,7 +655,8 @@ public class SEDDaoBean implements SEDDaoInterface {
     TypedQuery<T> tq = memEManager.createNamedQuery(type.getName() + ".getById",
             type);
     tq.setParameter("id", mailId);
-    T result = tq.getSingleResult();
+    T result = tq.getSingleResult();    
+    
     LOG.logEnd(l);
     return result;
   }
@@ -787,12 +810,25 @@ public class SEDDaoBean implements SEDDaoInterface {
           String applicationId)
           throws StorageException {
     long l = LOG.logStart();
+    
+    Date dt = sendOutMessage(mail.getId(), SEDOutboxMailStatus.SCHEDULE, retry,
+            delay, userId, applicationId);
+    // update values
+    mail.setStatusDate(dt);
+    mail.setStatus( SEDOutboxMailStatus.SCHEDULE.getValue());
+
+  }
+  
+  
+  public Date sendOutMessage(BigInteger id, SEDOutboxMailStatus status, 
+          int retry, long delay,
+          String userId,
+          String applicationId)
+          throws StorageException {
+    long l = LOG.logStart();
 
     // prepare mail to persist
-    Date dt = Calendar.getInstance().getTime();
-    // set current status
-    mail.setStatus(SEDOutboxMailStatus.SCHEDULE.getValue());
-    mail.setStatusDate(dt);
+    Date dtStatus = Calendar.getInstance().getTime();
 
     // --------------------
     // serialize data and submit message
@@ -813,7 +849,7 @@ public class SEDDaoBean implements SEDDaoInterface {
       }
       connection = cf.createConnection();
     }catch (NamingException | JMSException ex) {
-      String msg = String.format(MSG_ERR_JMS_SUBMIT,mail.getClass().getName(), mail.getId(),msgQueueJndiName, ex.getMessage()  );      
+      String msg = String.format(MSG_ERR_JMS_SUBMIT, id, msgQueueJndiName, ex.getMessage()  );      
       LOG.logError(l, msg, ex);
       throw new StorageException(msg, ex);
     }
@@ -824,8 +860,8 @@ public class SEDDaoBean implements SEDDaoInterface {
       
       
       message = session.createMessage();
-      message.setLongProperty(SEDValues.EBMS_QUEUE_PARAM_MAIL_ID, mail.getId().
-              longValue());
+      message.setLongProperty(SEDValues.EBMS_QUEUE_PARAM_MAIL_ID, 
+              id.longValue());
       // problem for duplicate detection on resending 
       //message.setStringProperty(SEDValues.EBMS_QUEUE_DUPLICATE_DETECTION_ID_Artemis,  mail.getId().toString());
       message.setIntProperty(SEDValues.EBMS_QUEUE_PARAM_RETRY, retry);
@@ -835,15 +871,15 @@ public class SEDDaoBean implements SEDDaoInterface {
               delay + System.currentTimeMillis());
    
       Query updq = memEManager.createNamedQuery(SEDNamedQueries.UPDATE_OUTMAIL);
-      updq.setParameter("id", mail.getId());
-      updq.setParameter("statusDate", mail.getStatusDate());
-      updq.setParameter("status", mail.getStatus());
+      updq.setParameter("id", id);
+      updq.setParameter("statusDate", dtStatus);
+      updq.setParameter("status", status.getValue());
 
       MSHOutEvent me = new MSHOutEvent();
-      me.setMailId(mail.getId());
+      me.setMailId(id);
       me.setDescription(msgDesc);
-      me.setStatus(mail.getStatus());
-      me.setDate(mail.getStatusDate());
+      me.setStatus(status.getValue());
+      me.setDate(dtStatus);
 
       me.setUserId(userId);
       me.setApplicationId(applicationId);
@@ -858,7 +894,7 @@ public class SEDDaoBean implements SEDDaoInterface {
           LOG.logWarn(l, ex1.getMessage(), ex1);
         }
         String msg
-                = "Status not setted to MSHOutMail:" + mail.getId() + " result: '" + iVal
+                = "Status not setted to MSHOutMail:" + id + " result: '" + iVal
                 + "'. Mail not exists or id duplicates?";
         LOG.logError(l, msg, null);
         throw new StorageException(msg, null);
@@ -875,7 +911,7 @@ public class SEDDaoBean implements SEDDaoInterface {
 
       LOG.formatedlog(
               "Message %d added to send queue with params: retry %d, delay %d",
-              mail.getId().longValue(), retry, delay);
+              id.longValue(), retry, delay);
 
     } catch (JMSException | NotSupportedException | SystemException | RollbackException | HeuristicMixedException
             | HeuristicRollbackException | SecurityException | IllegalStateException ex) {
@@ -892,7 +928,7 @@ public class SEDDaoBean implements SEDDaoInterface {
 
      
       String msg
-              = "Error sending mail : '" + mail.getId() + "'! Err:" + ex.
+              = "Error sending mail : '" + id + "'! Err:" + ex.
               getMessage();
       LOG.logError(l, msg, ex);
       throw new StorageException(msg, ex);
@@ -905,8 +941,10 @@ public class SEDDaoBean implements SEDDaoInterface {
 
       }
     }
+    return dtStatus;
 
   }
+
 
   /**
    *
@@ -1317,6 +1355,76 @@ public class SEDDaoBean implements SEDDaoInterface {
     LOG.logEnd(l);
 
   }
+  
+   public Date  setStatusToInMail(BigInteger id, SEDInboxMailStatus status,
+          String desc,
+          String userID,
+          String applicationId, String filePath, String mime)
+          throws StorageException {
+    long l = LOG.logStart();
+    Date dtStatus = Calendar.getInstance().getTime();
+    String statusVal = status.getValue();
+    
+    try {
+      mutUTransaction.begin();
+      
+      
+
+
+      Query updq = memEManager.createNamedQuery(SEDNamedQueries.UPDATE_INMAIL);
+      updq.setParameter("id", id);
+      updq.setParameter("statusDate", dtStatus);
+      updq.setParameter("status", statusVal);
+
+      // limit desc.
+      String strDsc = desc == null ? status.getDesc() : desc;
+      strDsc = strDsc.length() >= 512 ? strDsc.substring(0, 512) : strDsc;
+      // persist mail event
+      MSHInEvent me = new MSHInEvent();
+      me.setMailId(id);
+      me.setDescription(strDsc);
+      me.setStatus(statusVal);
+      me.setDate(dtStatus);
+      me.setUserId(userID);
+      me.setApplicationId(applicationId);
+      me.setEvidenceFilepath(filePath);
+      me.setEvidenceMimeType(mime);
+
+      int iVal = updq.executeUpdate();
+      if (iVal != 1) {
+        try {
+          mutUTransaction.rollback();
+        } catch (IllegalStateException | SecurityException | SystemException ex1) {
+          LOG.logWarn(l, ex1.getMessage(), ex1);
+        }
+        String msg
+                = "Status not setted to MSHInMail:" + id + " result: '" + iVal
+                + "'. Mail not exists or id duplicates?";
+        LOG.logError(l, msg, null);
+        throw new StorageException(msg, null);
+      }
+      memEManager.persist(me);
+      mutUTransaction.commit();
+
+    } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException
+            | HeuristicRollbackException | SecurityException | IllegalStateException ex) {
+      {
+        try {
+          mutUTransaction.rollback();
+        } catch (IllegalStateException | SecurityException | SystemException ex1) {
+          LOG.logWarn(l, ex1.getMessage(), ex1);
+        }
+        String msg
+                = "Error commiting status to incommingxmail: '" + id + "'! Err:"
+                + ex.getMessage();
+        LOG.logError(l, msg, ex);
+        throw new StorageException(msg, ex);
+      }
+    }
+    LOG.logEnd(l);
+    return dtStatus;
+
+  }
 
   /**
    *
@@ -1369,6 +1477,12 @@ public class SEDDaoBean implements SEDDaoInterface {
           throws StorageException {
     long l = LOG.logStart();
 
+    Date dt = setStatusToOutMail(mail.getId(), mail.getSenderMessageId(), mail.getSentDate(),mail.getReceivedDate(),
+            mail.getDeliveredDate(), status, desc, userID, applicationId, filePath, mime);
+    mail.setStatusDate(dt);
+    mail.setStatus(status.getValue());
+    /*
+    
     try {
       Date dt = Calendar.getInstance().getTime();
       mail.setStatusDate(dt);
@@ -1447,8 +1561,104 @@ public class SEDDaoBean implements SEDDaoInterface {
         LOG.logError(l, msg, ex);
         throw new StorageException(msg, ex);
       }
+    }*/
+    LOG.logEnd(l);
+
+  }
+  
+  
+  
+  public Date setStatusToOutMail(BigInteger id, String senderMessageID, 
+          Date sentDate, 
+          Date receivedDate,
+          Date deliveredDate, 
+          SEDOutboxMailStatus status,
+          String desc,
+          String userID,
+          String applicationId, String filePath, String mime)
+          throws StorageException {
+    long l = LOG.logStart();
+
+    Date dtStatus = null;
+    try {
+      dtStatus = Calendar.getInstance().getTime();
+      String newStatusValue = status.getValue();
+      
+
+      Query updq = memEManager.createNamedQuery(SEDNamedQueries.UPDATE_OUTMAIL);
+      updq.setParameter("id",id);
+      updq.setParameter("statusDate", dtStatus);
+      updq.setParameter("status", newStatusValue);
+
+      Query updqSD = null;
+      if (SEDOutboxMailStatus.SENT.getValue().equals(status.getValue()) 
+              && sentDate != null) {
+        updqSD = memEManager.createNamedQuery(
+                SEDNamedQueries.UPDATE_OUTMAIL_SENT_DATE);
+        updqSD.setParameter("id",id);
+        updqSD.setParameter("sentDate", sentDate);
+        updqSD.setParameter("receivedDate",
+                receivedDate == null ? ""
+                : receivedDate);
+      } else if (SEDOutboxMailStatus.DELIVERED.getValue().equals(status.
+              getValue())
+              ) {
+        updqSD = memEManager.createNamedQuery(
+                SEDNamedQueries.UPDATE_OUTMAIL_DELIVERED_DATE);
+        updqSD.setParameter("id",id);
+        updqSD.setParameter("deliveredDate", deliveredDate);
+      }
+
+      // persist mail event
+      MSHOutEvent me = new MSHOutEvent();
+      me.setMailId(id);
+      me.setDescription(desc == null ? status.getDesc()
+              : (desc.length() > 512 ? desc.substring(0, 508) + "..." : desc));
+      me.setStatus(newStatusValue);
+      me.setDate(dtStatus);
+      me.setSenderMessageId(senderMessageID);
+      me.setUserId(userID);
+      me.setApplicationId(applicationId);
+      me.setEvidenceFilepath(filePath);
+      me.setEvidenceMimeType(mime);
+      mutUTransaction.begin();
+
+      int iVal = updq.executeUpdate();
+
+      if (iVal != 1) {
+        try {
+          mutUTransaction.rollback();
+        } catch (IllegalStateException | SecurityException | SystemException ex1) {
+          LOG.logWarn(l, ex1.getMessage(), ex1);
+        }
+        String msg
+                = "Status not setted to MSHOutMail:" + id + " result: '" + iVal
+                + "'. Mail not exists or id duplicates?";
+        LOG.logError(l, msg, null);
+        throw new StorageException(msg, null);
+      }
+      if (updqSD != null) {
+        updqSD.executeUpdate();
+      }
+      memEManager.persist(me);
+      mutUTransaction.commit();
+    } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException
+            | HeuristicRollbackException | SecurityException | IllegalStateException ex) {
+      {
+        try {
+          mutUTransaction.rollback();
+        } catch (IllegalStateException | SecurityException | SystemException ex1) {
+          LOG.logWarn(l, ex1.getMessage(), ex1);
+        }
+        String msg
+                = "Error commiting status to outboxmail: '" + id + "'! Err:" + ex.
+                getMessage();
+        LOG.logError(l, msg, ex);
+        throw new StorageException(msg, ex);
+      }
     }
     LOG.logEnd(l);
+    return dtStatus;
 
   }
 

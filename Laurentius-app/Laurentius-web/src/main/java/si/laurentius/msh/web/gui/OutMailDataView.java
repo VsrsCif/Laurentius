@@ -23,6 +23,7 @@ import java.io.StringWriter;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -48,6 +49,7 @@ import si.laurentius.msh.outbox.mail.MSHOutMail;
 import si.laurentius.msh.outbox.payload.MSHOutPart;
 import si.laurentius.msh.pmode.Action;
 import si.laurentius.msh.pmode.Service;
+import si.laurentius.msh.table.mail.TableOutMail;
 import si.laurentius.msh.web.abst.AbstractMailView;
 
 /**
@@ -56,7 +58,7 @@ import si.laurentius.msh.web.abst.AbstractMailView;
  */
 @SessionScoped
 @Named("OutMailDataView")
-public class OutMailDataView extends AbstractMailView<MSHOutMail, MSHOutEvent>
+public class OutMailDataView extends AbstractMailView<TableOutMail, MSHOutMail, MSHOutEvent>
         implements
         Serializable {
 
@@ -81,12 +83,25 @@ public class OutMailDataView extends AbstractMailView<MSHOutMail, MSHOutEvent>
   public void deleteSelectedMail() {
     long l = LOG.logStart();
     if (getSelected() != null && !getSelected().isEmpty()) {
-      List<MSHOutMail> molst = getSelected();
-      for (MSHOutMail mo : molst) {
+      List<TableOutMail> molst = getSelected();
+      String userId = getUserSessionData().getUser().getUserId();
+      String desc = "Manually deleted by " +userId;
+      for (TableOutMail mo : molst) {
         try {
-          mDB.setStatusToOutMail(mo, SEDOutboxMailStatus.DELETED,
-                  "Manually deleted by "
-                  + getUserSessionData().getUser().getUserId());
+          Date dt = mDB.setStatusToOutMail(mo.getId(),
+                  mo.getSenderMessageId(), 
+                  mo.getSentDate(),
+                  mo.getReceivedDate(), 
+                  mo.getDeliveredDate(), 
+                  SEDOutboxMailStatus.DELETED,
+                  desc, 
+                  userId,
+                  AppConstant.S_APPLICATION_CODE,                  
+                  null,null);
+          // update values
+          mo.setStatusDate(dt);
+          mo.setStatus(SEDOutboxMailStatus.DELETED.getValue());
+          
         } catch (StorageException ex) {
           String mail = String.format(
                   "id: %d, sender: %s, receiver %s, service %s, action %s",
@@ -138,6 +153,7 @@ public class OutMailDataView extends AbstractMailView<MSHOutMail, MSHOutEvent>
   public StreamedContent getFile(BigInteger bi) {
     long l = LOG.logStart();
     MSHOutPart part = null;
+    /*
     MSHOutMail mom = getCurrentMail();
     if (mom == null || mom.getMSHOutPayload() == null
             || mom.getMSHOutPayload().getMSHOutParts().isEmpty()) {
@@ -159,7 +175,7 @@ public class OutMailDataView extends AbstractMailView<MSHOutMail, MSHOutEvent>
       } catch (FileNotFoundException ex) {
         LOG.logError(l, ex);
       }
-    }
+    }*/
     return null;
   }
 
@@ -169,7 +185,7 @@ public class OutMailDataView extends AbstractMailView<MSHOutMail, MSHOutEvent>
    */
   public OutMailDataModel getOutMailModel() {
     if (mMailModel == null) {
-      mMailModel = new OutMailDataModel(MSHOutMail.class, getUserSessionData(),
+      mMailModel = new OutMailDataModel(TableOutMail.class, getUserSessionData(),
               mDB);
     }
     return (OutMailDataModel) mMailModel;
@@ -203,7 +219,7 @@ public class OutMailDataView extends AbstractMailView<MSHOutMail, MSHOutEvent>
 
   @PostConstruct
   private void init() {
-    mMailModel = new OutMailDataModel(MSHOutMail.class, getUserSessionData(),
+    mMailModel = new OutMailDataModel(TableOutMail.class, getUserSessionData(),
             mDB);
   }
 
@@ -215,17 +231,22 @@ public class OutMailDataView extends AbstractMailView<MSHOutMail, MSHOutEvent>
           throws IOException {
     long l = LOG.logStart();
     if (getSelected() != null && !getSelected().isEmpty()) {
-      List<MSHOutMail> molst = getSelected();
+      List<TableOutMail> molst = getSelected();
       LOG.formatedWarning("get mail count %d to submit", molst.size());
       int iResend = 0, iNotResend = 0, iError = 0;
       StringWriter err = new StringWriter();
-      for (MSHOutMail mo : molst) {
+      for (TableOutMail mo : molst) {
         if (SEDOutboxMailStatus.DELIVERED.getValue().equals(mo.getStatus())) {
           iNotResend++;
         } else {
           try {
-            mDB.sendOutMessage(mo, 0, 0, AppConstant.S_APPLICATION_CODE,
+            Date dt = mDB.sendOutMessage(mo.getId(), SEDOutboxMailStatus.SCHEDULE, 0, 0,
+                    AppConstant.S_APPLICATION_CODE,
                     userSessionData.getUser().getUserId());
+            mo.setStatusDate(dt);
+            mo.setStatus(SEDOutboxMailStatus.SCHEDULE.getValue());
+            
+            
             iResend++;
           } catch (StorageException ex) {
             String mail = String.format(
@@ -277,13 +298,14 @@ public class OutMailDataView extends AbstractMailView<MSHOutMail, MSHOutEvent>
    *
    */
   @Override
-  public void updateEventList() {
-    MSHOutMail mpo = getCurrentMail();
-    if (mpo != null) {
-      mlstMailEvents = mDB.getMailEventList(MSHOutEvent.class, mpo.getId());
-      Collections.reverse(mlstMailEvents);
+  public void updateCurrentMailData(TableOutMail tm) {
+    if (tm != null) {
+      mCurrentMail = mDB.getMailById(MSHOutMail.class, tm.getId());
+      mlstCurrentMailEvents = mDB.getMailEventList(MSHOutEvent.class, tm.getId());
+     
     } else {
-      this.mlstMailEvents = null;
+      this.mCurrentMail = null;
+      this.mlstCurrentMailEvents = null;
     }
   }
 

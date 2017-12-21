@@ -19,6 +19,8 @@ import java.util.Calendar;
 import si.laurentius.commons.enums.SEDInboxMailStatus;
 import si.laurentius.msh.inbox.mail.MSHInMail;
 import si.laurentius.commons.interfaces.SEDDaoInterface;
+import si.laurentius.msh.table.mail.TableInMail;
+import si.laurentius.msh.table.mail.TableOutMail;
 import si.laurentius.msh.web.abst.AbstractMailDataModel;
 import si.laurentius.msh.web.gui.entities.InMailTableFilter;
 
@@ -26,7 +28,7 @@ import si.laurentius.msh.web.gui.entities.InMailTableFilter;
  *
  * @author Jože Rihtaršič
  */
-public class InMailDataModel extends AbstractMailDataModel<MSHInMail> {
+public class InMailDataModel extends AbstractMailDataModel<TableInMail> {
 
   InMailTableFilter imtFilter = null;
 
@@ -36,7 +38,7 @@ public class InMailDataModel extends AbstractMailDataModel<MSHInMail> {
    * @param userSessionData
    * @param db
    */
-  public InMailDataModel(Class<MSHInMail> type, UserSessionData userSessionData,
+  public InMailDataModel(Class<TableInMail> type, UserSessionData userSessionData,
           SEDDaoInterface db) {
     super(type);
     setUserSessionData(userSessionData, db);
@@ -48,7 +50,7 @@ public class InMailDataModel extends AbstractMailDataModel<MSHInMail> {
    * @return
    */
   @Override
-  public Object getRowKey(MSHInMail inMail) {
+  public Object getRowKey(TableInMail inMail) {
     return inMail.getId();
   }
 
@@ -58,10 +60,10 @@ public class InMailDataModel extends AbstractMailDataModel<MSHInMail> {
    * @return
    */
   @Override
-  public MSHInMail getRowData(String inMailId) {
+  public TableInMail getRowData(String inMailId) {
     BigInteger id = new BigInteger(inMailId);
 
-    for (MSHInMail player : getCurrentData()) {
+    for (TableInMail player : getCurrentData()) {
       if (id.equals(player.getId())) {
         return player;
       }

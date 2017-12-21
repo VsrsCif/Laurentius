@@ -130,7 +130,7 @@ public class TaskExecuteProcess implements TaskExecutionInterface {
       String command = StringFormater.replaceProperties(cmd);
       ProcessBuilder builder = new ProcessBuilder(command, param);
       LOG.formatedlog(
-              "Start execution of task command  '%s', params '%s'",
+              "Start execution of task: interpreter %s  command  '%s', params '%s'",
               command, param);
       long lSt = LOG.getTime();
       Process process = builder.start();

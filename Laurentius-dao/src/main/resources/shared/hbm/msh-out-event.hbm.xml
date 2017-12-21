@@ -40,7 +40,7 @@
                 and im.sender_ebox = :senderEBox
                 and (ev.mail_id = :mailId or :mailId is null)
                 and (ev.sender_msg_id = :senderMessageId or :senderMessageId='')
-                order by id asc]]>
+                order by id desc]]>
     </sql-query>    
     
     <query name="si.laurentius.msh.outbox.event.MSHOutEvent.getMailEventList">

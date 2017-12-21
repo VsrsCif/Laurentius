@@ -37,7 +37,7 @@ WHERE
   ev.mail_id = im.id
   and im.receiver_ebox = :receiverEBox
   and (ev.mail_id = :mailId or :mailId is null)  
-  order by id asc]]>
+  order by id desc]]>
     </sql-query>     
     
     <query name="si.laurentius.msh.inbox.event.MSHInEvent.getMailEventList">

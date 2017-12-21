@@ -14,6 +14,7 @@
  */
 package si.laurentius.msh.web.admin;
 
+
 import java.math.BigInteger;
 import java.util.Collections;
 import java.util.HashMap;
@@ -25,7 +26,6 @@ import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import si.laurentius.commons.enums.SEDInterceptorEvent;
 import si.laurentius.commons.SEDJNDI;
-import si.laurentius.commons.interfaces.PModeInterface;
 import si.laurentius.commons.interfaces.SEDLookupsInterface;
 import si.laurentius.commons.interfaces.SEDPluginManagerInterface;
 import si.laurentius.commons.utils.SEDLogger;

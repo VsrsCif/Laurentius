@@ -15,6 +15,7 @@
 package si.laurentius.commons.interfaces;
 
 import java.math.BigInteger;
+import java.util.Date;
 import java.util.List;
 import javax.ejb.Local;
 import javax.naming.NamingException;
@@ -45,8 +46,13 @@ public interface SEDDaoInterface {
    * @param filters
    * @return
    */
-  <T> List<T> getDataList(Class<T> type, int startingAt, int maxResultCnt, String sortField,
-      String sortOrder, Object filters);
+  <T> List<T> getDataList(Class<T> type, int startingAt, int maxResultCnt,
+          String sortField,
+          String sortOrder, Object filters);
+
+  <T, D> List<T> getDataList(Class<T> resultType, int startingAt,
+          int maxResultCnt, String sortField,
+          String sortOrder, Object filters, Class<D> filterType);
 
   /**
    *
@@ -65,7 +71,7 @@ public interface SEDDaoInterface {
    * @return
    */
   <T> List<T> getMailEventList(Class<T> type, BigInteger mailId);
-  
+
   /**
    *
    * @param <T>
@@ -83,9 +89,8 @@ public interface SEDDaoInterface {
    * @return
    */
   <T> T getMailById(Class<T> type, BigInteger mailId);
-  
-  
-    /**
+
+  /**
    *
    * @param <T>
    * @param type
@@ -93,8 +98,8 @@ public interface SEDDaoInterface {
    * @return
    */
   <T> List<T> getMailByMessageId(Class<T> type, String mailId);
-  
-   /**
+
+  /**
    *
    * @param <T>
    * @param type
@@ -117,8 +122,9 @@ public interface SEDDaoInterface {
    * @param status
    * @param desc
    */
-  void setStatusToOutMail(MSHOutMail mail, SEDOutboxMailStatus status, String desc)
-      throws StorageException;
+  void setStatusToOutMail(MSHOutMail mail, SEDOutboxMailStatus status,
+          String desc)
+          throws StorageException;
 
   /**
    *
@@ -129,12 +135,12 @@ public interface SEDDaoInterface {
    * @param applicationId
    * @throws StorageException
    */
-  void setStatusToOutMail(MSHOutMail mail, SEDOutboxMailStatus status, String desc, String userID,
-      String applicationId) throws StorageException;
-  
-  
+  void setStatusToOutMail(MSHOutMail mail, SEDOutboxMailStatus status,
+          String desc, String userID,
+          String applicationId) throws StorageException;
+
   /**
-   * 
+   *
    * @param mail
    * @param status
    * @param desc
@@ -142,10 +148,37 @@ public interface SEDDaoInterface {
    * @param applicationId
    * @param filePath
    * @param mime
-   * @throws StorageException 
+   * @throws StorageException
    */
-   void setStatusToOutMail(MSHOutMail mail, SEDOutboxMailStatus status, String desc, String userID,
-      String applicationId, String filePath, String mime) throws StorageException;
+  void setStatusToOutMail(MSHOutMail mail, SEDOutboxMailStatus status,
+          String desc, String userID,
+          String applicationId, String filePath, String mime) throws StorageException;
+
+  /**
+   *
+   * @param id
+   * @param senderMessageID
+   * @param sentDate
+   * @param receivedDate
+   * @param deliveredDate
+   * @param status
+   * @param desc
+   * @param userID
+   * @param applicationId
+   * @param filePath
+   * @param mime
+   * @return
+   * @throws StorageException
+   */
+  public Date setStatusToOutMail(BigInteger id, String senderMessageID,
+          Date sentDate,
+          Date receivedDate,
+          Date deliveredDate,
+          SEDOutboxMailStatus status,
+          String desc,
+          String userID,
+          String applicationId, String filePath, String mime)
+          throws StorageException;
 
   /**
    *
@@ -154,7 +187,7 @@ public interface SEDDaoInterface {
    * @param desc
    */
   void setStatusToInMail(MSHInMail mail, SEDInboxMailStatus status, String desc)
-      throws StorageException;
+          throws StorageException;
 
   /**
    *
@@ -165,12 +198,12 @@ public interface SEDDaoInterface {
    * @param applicationId
    * @throws StorageException
    */
-  void setStatusToInMail(MSHInMail mail, SEDInboxMailStatus status, String desc, String userID,
-      String applicationId) throws StorageException;
+  void setStatusToInMail(MSHInMail mail, SEDInboxMailStatus status, String desc,
+          String userID,
+          String applicationId) throws StorageException;
 
-  
   /**
-   * 
+   *
    * @param mail
    * @param status
    * @param desc
@@ -178,12 +211,29 @@ public interface SEDDaoInterface {
    * @param applicationId
    * @param filePath
    * @param mime
-   * @throws StorageException 
+   * @throws StorageException
    */
-   void setStatusToInMail(MSHInMail mail, SEDInboxMailStatus status, String desc, String userID,
-      String applicationId, String filePath, String mime) throws StorageException;
-  
-  
+  void setStatusToInMail(MSHInMail mail, SEDInboxMailStatus status, String desc,
+          String userID,
+          String applicationId, String filePath, String mime) throws StorageException;
+/**
+ * 
+ * @param id
+ * @param status
+ * @param desc
+ * @param userID
+ * @param applicationId
+ * @param filePath
+ * @param mime
+ * @return
+ * @throws StorageException 
+ */
+  public Date setStatusToInMail(BigInteger id, SEDInboxMailStatus status,
+          String desc,
+          String userID,
+          String applicationId, String filePath, String mime)
+          throws StorageException;
+
   /**
    *
    * @param mail
@@ -192,8 +242,8 @@ public interface SEDDaoInterface {
    * @throws StorageException
    */
   void updateInMail(MSHInMail mail, String statusDesc, String userID) throws StorageException;
-  
-   /**
+
+  /**
    *
    * @param mail
    * @param statusDesc
@@ -201,7 +251,6 @@ public interface SEDDaoInterface {
    * @throws StorageException
    */
   void updateOutMail(MSHOutMail mail, String statusDesc, String userID) throws StorageException;
-
 
   /**
    *
@@ -211,23 +260,37 @@ public interface SEDDaoInterface {
    * @param pmodeId
    * @throws StorageException
    */
-  void serializeOutMail(MSHOutMail mail, String userID, String applicationId, String pmodeId)
-      throws StorageException;
-  
+  void serializeOutMail(MSHOutMail mail, String userID, String applicationId,
+          String pmodeId)
+          throws StorageException;
+
   /**
-   *
-   * @param biPosiljkaId
-   * @param strPmodeId
+   * @param mail
    * @param retry
    * @param delay
+   * @param userId
    * @param applicationId
-   * @throws si.laurentius.commons.exception.StorageException
-
-
-   * @throws NamingException
+   * @throws StorageException
    */
   void sendOutMessage(MSHOutMail mail, int retry, long delay, String userId,
-      String applicationId) throws StorageException;
+          String applicationId) throws StorageException;
+
+  /**
+   *
+   * @param id
+   * @param status
+   * @param retry
+   * @param delay
+   * @param userId
+   * @param applicationId
+   * @return
+   * @throws StorageException
+   */
+  public Date sendOutMessage(BigInteger id, SEDOutboxMailStatus status,
+          int retry, long delay,
+          String userId,
+          String applicationId)
+          throws StorageException;
 
   /**
    *
@@ -258,11 +321,19 @@ public interface SEDDaoInterface {
    * @throws StorageException
    */
   boolean addExecutionTask(SEDTaskExecution ad) throws StorageException;
-  
-  boolean addInMailPayload(MSHInMail mi, List<MSHInPart> lstParts,  SEDInboxMailStatus status, String statusdesc, String userId, String applicationId) throws StorageException;
-  boolean addOutMailPayload(MSHOutMail mi, List<MSHOutPart> lstParts,  SEDOutboxMailStatus status, String statusdesc, String userId, String applicationId) throws StorageException;
-  boolean updateOutMailPayload(MSHOutMail mi, List<MSHOutPart> lstAddParts, List<MSHOutPart> lstUpdateParts, List<MSHOutPart> lstDeleteParts,  
-          SEDOutboxMailStatus status, String statusdesc, String userId, String applicationId) throws StorageException;
+
+  boolean addInMailPayload(MSHInMail mi, List<MSHInPart> lstParts,
+          SEDInboxMailStatus status, String statusdesc, String userId,
+          String applicationId) throws StorageException;
+
+  boolean addOutMailPayload(MSHOutMail mi, List<MSHOutPart> lstParts,
+          SEDOutboxMailStatus status, String statusdesc, String userId,
+          String applicationId) throws StorageException;
+
+  boolean updateOutMailPayload(MSHOutMail mi, List<MSHOutPart> lstAddParts,
+          List<MSHOutPart> lstUpdateParts, List<MSHOutPart> lstDeleteParts,
+          SEDOutboxMailStatus status, String statusdesc, String userId,
+          String applicationId) throws StorageException;
 
   /**
    *

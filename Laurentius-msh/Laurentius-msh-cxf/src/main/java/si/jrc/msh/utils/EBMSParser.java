@@ -303,8 +303,7 @@ public class EBMSParser {
     return mshmail;
   }
 
-  public static EBMSMessageContext createEBMSContextFromUserMessage(
-          final SoapMessage soap,
+  public static EBMSMessageContext createEBMSContextFromUserMessage(        
           final UserMessage um, final PModeInterface pmdManager) {
     long l = LOG.logStart();
 

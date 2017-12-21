@@ -48,8 +48,12 @@ import si.laurentius.commons.interfaces.SEDDaoInterface;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StorageUtils;
 import si.laurentius.commons.utils.Utils;
+import si.laurentius.msh.outbox.event.MSHOutEvent;
+import si.laurentius.msh.outbox.mail.MSHOutMail;
 import si.laurentius.msh.pmode.Action;
 import si.laurentius.msh.pmode.Service;
+import si.laurentius.msh.table.mail.TableInMail;
+import si.laurentius.msh.table.mail.TableOutMail;
 import si.laurentius.msh.web.abst.AbstractMailView;
 
 /**
@@ -58,7 +62,7 @@ import si.laurentius.msh.web.abst.AbstractMailView;
  */
 @SessionScoped
 @Named("InMailDataView")
-public class InMailDataView extends AbstractMailView<MSHInMail, MSHInEvent> implements Serializable {
+public class InMailDataView extends AbstractMailView<TableInMail, MSHInMail, MSHInEvent> implements Serializable {
 
   private static final SEDLogger LOG = new SEDLogger(InMailDataView.class);
   private static final long serialVersionUID = 1L;
@@ -77,7 +81,7 @@ public class InMailDataView extends AbstractMailView<MSHInMail, MSHInEvent> impl
 
   @PostConstruct
   private void init() {
-    mMailModel = new InMailDataModel(MSHInMail.class, userSessionData, mDB);
+    mMailModel = new InMailDataModel(TableInMail.class, userSessionData, mDB);
   }
 
   /**
@@ -115,17 +119,16 @@ public class InMailDataView extends AbstractMailView<MSHInMail, MSHInEvent> impl
     return SEDInboxMailStatus.getColor(status);
   }
 
-  /**
-   *
-   */
-  @Override
-  public void updateEventList() {
-    MSHInMail mim = getCurrentMail();
-    if (mim != null) {
-      mlstMailEvents = mDB.getMailEventList(MSHInEvent.class, mim.getId());
-      Collections.reverse(mlstMailEvents);
+  
+    @Override
+  public void updateCurrentMailData(TableInMail tm) {
+    if (tm != null) {
+      mCurrentMail = mDB.getMailById(MSHInMail.class, tm.getId());
+      mlstCurrentMailEvents = mDB.getMailEventList(MSHInEvent.class, tm.getId());
+     
     } else {
-      mlstMailEvents = null;
+      this.mCurrentMail = null;
+      this.mlstCurrentMailEvents = null;
     }
   }
 
@@ -207,14 +210,17 @@ public class InMailDataView extends AbstractMailView<MSHInMail, MSHInEvent> impl
     long l = LOG.logStart();
 
     if (getSelected() != null && !getSelected().isEmpty()) {
-      List<MSHInMail> milst = getSelected();
-      for (MSHInMail mi : milst) {
+      List<TableInMail> milst = getSelected();
+      String userId =  getUserSessionData().getUser().getUserId();
+      String desc = "Status changed to '" + status.getValue() +
+              "' by " +
+              userId;
+      for (TableInMail mi : milst) {
 
         try {
-          mDB.setStatusToInMail(mi, status, "Status changed to '" + status.getValue() +
-              "' by " +
-              getUserSessionData().getUser().getUserId(), getUserSessionData().getUser().getUserId(),
-              "laurentius-web");
+          mDB.setStatusToInMail(mi.getId(), status, desc, userId,
+                  AppConstant.S_APPLICATION_CODE,
+                  null, null);
         } catch (StorageException ex) {
           String mail = String.format("id: %d, sender: %s, receiver %s, service %s, action %s",
               mi.getId(), mi.getSenderEBox(), mi.getReceiverEBox(), mi.getService(), mi.getAction());
@@ -236,11 +242,16 @@ public class InMailDataView extends AbstractMailView<MSHInMail, MSHInEvent> impl
   public void exportSelectedMail() {
     long l = LOG.logStart();
     if (getSelected() != null && !getSelected().isEmpty()) {
-      List<MSHInMail> milst = getSelected();
-      for (MSHInMail mi : milst) {
+      List<TableInMail> milst = getSelected();
+       String userId =  getUserSessionData().getUser().getUserId();
+      String desc = "Send mail to export queue  by " +
+              userId;
+      
+      for (TableInMail mi : milst) {
         try {
-          mDB.setStatusToInMail(mi, SEDInboxMailStatus.LOCKED, "Send mail to export queue",
-              getUserSessionData().getUser().getUserId(), "laurentius-web");
+          mDB.setStatusToInMail(mi.getId(), SEDInboxMailStatus.LOCKED, desc,
+              userId,  AppConstant.S_APPLICATION_CODE,
+                  null, null);
           mJMS.exportInMail(mi.getId().longValue());
         } catch (StorageException | NamingException | JMSException ex) {
           String mail = String.format("Error submiting mail to export queue  %s",

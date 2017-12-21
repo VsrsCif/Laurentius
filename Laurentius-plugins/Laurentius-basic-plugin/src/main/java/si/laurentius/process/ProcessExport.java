@@ -24,7 +24,6 @@ import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.xml.bind.JAXBException;
-import si.laurentius.commons.enums.MimeValue;
 import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StorageUtils;
@@ -50,6 +49,7 @@ public class ProcessExport extends AbstractMailProcessor {
 
   private static final SEDLogger LOG = new SEDLogger(ProcessExport.class);
   private static final String FORMAT_PART_NS = "PART-";
+
 
  
   public static final String KEY_EXPORT_METADATA = "imp.export.metadata";

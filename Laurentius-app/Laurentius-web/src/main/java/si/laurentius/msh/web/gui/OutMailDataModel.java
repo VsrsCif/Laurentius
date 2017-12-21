@@ -19,6 +19,7 @@ import java.util.Calendar;
 import si.laurentius.commons.enums.SEDOutboxMailStatus;
 import si.laurentius.msh.outbox.mail.MSHOutMail;
 import si.laurentius.commons.interfaces.SEDDaoInterface;
+import si.laurentius.msh.table.mail.TableOutMail;
 import si.laurentius.msh.web.abst.AbstractMailDataModel;
 import si.laurentius.msh.web.gui.entities.OutMailTableFilter;
 
@@ -26,7 +27,7 @@ import si.laurentius.msh.web.gui.entities.OutMailTableFilter;
  *
  * @author Jože Rihtaršič
  */
-public class OutMailDataModel extends AbstractMailDataModel<MSHOutMail> {
+public class OutMailDataModel extends AbstractMailDataModel<TableOutMail> {
 
   OutMailTableFilter outFilter = null;
 
@@ -38,7 +39,7 @@ public class OutMailDataModel extends AbstractMailDataModel<MSHOutMail> {
    * @param messageBean
    * @param db
    */
-  public OutMailDataModel(Class<MSHOutMail> type, UserSessionData messageBean, SEDDaoInterface db) {
+  public OutMailDataModel(Class<TableOutMail> type, UserSessionData messageBean, SEDDaoInterface db) {
     super(type);
     setUserSessionData(messageBean, db);
   }
@@ -50,7 +51,7 @@ public class OutMailDataModel extends AbstractMailDataModel<MSHOutMail> {
    * @return
    */
   @Override
-  public Object getRowKey(MSHOutMail inMail) {
+  public Object getRowKey(TableOutMail inMail) {
     return inMail.getId();
   }
 
@@ -60,10 +61,10 @@ public class OutMailDataModel extends AbstractMailDataModel<MSHOutMail> {
    * @return
    */
   @Override
-  public MSHOutMail getRowData(String inMailId) {
+  public TableOutMail getRowData(String inMailId) {
     BigInteger id = new BigInteger(inMailId);
 
-    for (MSHOutMail mail : getCurrentData()) {
+    for (TableOutMail mail : getCurrentData()) {
       if (id.equals(mail.getId())) {
 
         return mail;

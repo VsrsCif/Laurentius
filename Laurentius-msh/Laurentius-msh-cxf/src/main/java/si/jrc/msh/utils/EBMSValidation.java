@@ -25,6 +25,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
+import org.apache.cxf.binding.soap.SoapFault;
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.oasis_open.docs.ebxml_msg.ebms.v3_0.ns.core._200704.AgreementRef;
 import org.oasis_open.docs.ebxml_msg.ebms.v3_0.ns.core._200704.CollaborationInfo;
@@ -65,14 +66,22 @@ public class EBMSValidation {
    * <li> existance of at most one UserMessage or/and Signal Message</li>
    * </ul>
    *
-   * @param request msginput soap message msg
+   * @param soapMsg msginput soap message msg
    * @param sv Fault code for error if occured
    * @return Messaging: serialized messaging object
    * @throws EBMSError - if validation fault occured
    */
-  public Messaging vaildateHeader_Messaging(SOAPMessage request, QName sv)
+  public Messaging vaildateHeader_Messaging(SoapMessage soapMsg, QName sv)
       throws EBMSError {
     long l = LOG.logStart();
+    
+    SOAPMessage request = soapMsg.getContent(SOAPMessage.class);
+    if (request == null) {
+      LOG.logError(l, "Message is not a SOAP message! Check log file: '"
+              + SoapUtils.getInLogFilePath(soapMsg) + "'", null);
+      throw new EBMSError(EBMSErrorCode.InvalidSoapRequest, null,
+              "Not a soap message", SoapFault.FAULT_CODE_CLIENT);
+    }
 
     // check if soap header exists
     NodeList lstND = null;
@@ -147,6 +156,10 @@ public class EBMSValidation {
       LOG.logError(l, errmsg, null);
       throw new EBMSError(EBMSErrorCode.InvalidHeader, EBMSBuilder.getFirstMessageId(msgHeader),
           errmsg, sv);
+    }
+    
+    if (!msgHeader.getUserMessages().isEmpty()){
+      vaildateUserMessage(soapMsg, msgHeader.getUserMessages().get(0), sv);
     }
 
     return msgHeader;
@@ -241,8 +254,12 @@ public class EBMSValidation {
       }
 
       for (PartInfo part : pi.getPartInfos()) {
-
         String href = part.getHref();
+        if (Utils.isEmptyString(href)){
+        throw new EBMSError(EBMSErrorCode.ValueInconsistent, msgId,
+                "Missing reference to attachment!", sv);
+        }
+        
         // validate properties
         validateProperties(part.getPartProperties(), msgId, href, sv);
 

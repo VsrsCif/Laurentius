@@ -23,8 +23,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
@@ -40,15 +38,16 @@ import si.laurentius.commons.utils.ReflectUtils;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StringFormater;
 import si.laurentius.msh.mail.MSHMailType;
-import si.laurentius.msh.web.gui.OutMailDataView;
 
 /**
  *
  * @author Jože Rihtaršič
- * @param <T>
- * @param <S>
+ * @param <T>  -- mail table data 
+ * @param <S> -- mail event data
+ * @param <M> -- mail Type
+ * 
  */
-public abstract class AbstractMailView<T, S> {
+public abstract class AbstractMailView<T, M, S> {
 
     private static final SEDLogger LOG = new SEDLogger(AbstractMailView.class);
   /**
@@ -76,7 +75,10 @@ public abstract class AbstractMailView<T, S> {
   /**
    *
    */
-  protected List<S> mlstMailEvents = null;
+  protected M mCurrentMail = null;
+
+  protected List<S> mlstCurrentMailEvents = null;
+  
 
   private DualListModel<String> msbCBExportDualList = null;
 
@@ -133,14 +135,14 @@ public abstract class AbstractMailView<T, S> {
    *
    * @return
    */
-  public T getCurrentMail() {
+  public M getCurrentMail() {
     if (selected == null || selected.isEmpty()){
-      mlstMailEvents = null;
+      mCurrentMail = null;
+      mlstCurrentMailEvents = null;
       return null;
     }else{
-      return  selected.get(0);
+      return  mCurrentMail;
     }
-
   }
 
   public List<T> getSelected() {
@@ -187,7 +189,7 @@ public abstract class AbstractMailView<T, S> {
    * @return
    */
   public List<S> getMailEvents() {
-    return mlstMailEvents;
+    return mlstCurrentMailEvents;
   }
 
   /**
@@ -218,11 +220,8 @@ public abstract class AbstractMailView<T, S> {
    * @param event
    */
   public void onRowSelect(SelectEvent event) {
-    if (event != null) {
-      setCurrentMail((T) event.getObject());
-    } else {
-      setCurrentMail(null);
-    }
+    updateCurrentMailData(event != null?(T) event.getObject():null);
+    
   }
 
   /**
@@ -230,8 +229,8 @@ public abstract class AbstractMailView<T, S> {
    * @param event
    */
   public void onRowUnselect(UnselectEvent event) {
+    updateCurrentMailData(null);
 
-    setCurrentMail(null);
   }
 
   /**
@@ -268,9 +267,7 @@ public abstract class AbstractMailView<T, S> {
    *
    * @param mail
    */
-  public void setCurrentMail(T mail) {
-    updateEventList();
-  }
+
 
   /**
    *
@@ -292,7 +289,7 @@ public abstract class AbstractMailView<T, S> {
   /**
      *
      */
-  public abstract void updateEventList();
+  public abstract void updateCurrentMailData(T mailData);
 
   /**
    *

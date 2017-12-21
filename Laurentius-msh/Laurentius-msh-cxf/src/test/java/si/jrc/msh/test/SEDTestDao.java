@@ -7,6 +7,7 @@ package si.jrc.msh.test;
 
 import java.math.BigInteger;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import si.laurentius.msh.inbox.mail.MSHInMail;
 import si.laurentius.msh.outbox.mail.MSHOutMail;
@@ -25,8 +26,23 @@ import si.laurentius.msh.outbox.payload.MSHOutPart;
 public class SEDTestDao implements SEDDaoInterface{
 
   @Override
+  public Date setStatusToInMail(BigInteger id, SEDInboxMailStatus status,
+          String desc, String userID, String applicationId, String filePath,
+          String mime) throws StorageException {
+    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+  }
+  
+  
+
+  @Override
   public boolean addExecutionTask(SEDTaskExecution ad)
       throws StorageException {
+    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+  }
+
+  @Override
+  public Date sendOutMessage(BigInteger id, SEDOutboxMailStatus status,
+          int retry, long delay, String userId, String applicationId) throws StorageException {
     throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
   }
 
@@ -45,6 +61,13 @@ public class SEDTestDao implements SEDDaoInterface{
   @Override
   public <T> List<T> getDataList(Class<T> type, int startingAt, int maxResultCnt, String sortField,
       String sortOrder, Object filters) {
+    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+  }
+
+  @Override
+  public <T, D> List<T> getDataList(Class<T> resultType, int startingAt,
+          int maxResultCnt, String sortField, String sortOrder, Object filters,
+          Class<D> filterType) {
     throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
   }
 
@@ -158,6 +181,14 @@ public class SEDTestDao implements SEDDaoInterface{
       String userID, String applicationId, String filePath, String mime)
       throws StorageException {
     // no implementation
+  }
+
+  @Override
+  public Date setStatusToOutMail(BigInteger id, String senderMessageID,
+          Date sentDate, Date receivedDate, Date deliveredDate,
+          SEDOutboxMailStatus status, String desc, String userID,
+          String applicationId, String filePath, String mime) throws StorageException {
+    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
   }
 
   @Override
