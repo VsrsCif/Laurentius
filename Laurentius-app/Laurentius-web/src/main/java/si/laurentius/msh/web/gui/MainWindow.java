@@ -9,6 +9,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import org.primefaces.event.TabChangeEvent;
 import si.laurentius.commons.utils.SEDLogger;
+import si.laurentius.msh.web.enums.GUIPanelName;
 
 /**
  *
@@ -20,10 +21,15 @@ public class MainWindow  implements Serializable{
   
   private static final SEDLogger LOG = new SEDLogger(MainWindow.class);
 
+  
+  GUIPanelName mCurrentPanel = GUIPanelName.PANEL_INBOX;
+  
+  
   String mstrWindowShow = AppConstant.S_PANEL_INBOX;
   int currentProgressVal =0;
   String currentProgressLabel ="";
-  private boolean exportLookupsWithPasswords = true;
+  
+  int activeToolbarTabIndex = 0;
   
  
   /**
@@ -46,7 +52,26 @@ public class MainWindow  implements Serializable{
   
   public void setCurrentPanel(String strVal) {
     this.mstrWindowShow = strVal;
+    mCurrentPanel = GUIPanelName.valueOf(strVal);
+    activeToolbarTabIndex = mCurrentPanel.getGroupIndex();
+    
   }
+  
+  
+  public boolean isCurrentPanel(String gpn){    
+    return gpn !=null && mCurrentPanel !=null && mCurrentPanel.getCode().equals(gpn);
+  }
+
+  public int getActiveToolbarTabIndex() {
+    return activeToolbarTabIndex;
+  }
+
+  public void setActiveToolbarTabIndex(int ati) {
+    this.activeToolbarTabIndex = ati;
+  }
+
+
+  
 
   /**
    *
@@ -55,7 +80,7 @@ public class MainWindow  implements Serializable{
   public void onToolbarButtonAction(ActionEvent event) {
     if (event != null) {
       String res = (String) event.getComponent().getAttributes().get("panel");
-      mstrWindowShow = res;
+      setCurrentPanel(res);
     }
   }
 
@@ -64,9 +89,10 @@ public class MainWindow  implements Serializable{
    * @param event
    */
   public void onToolbarTabChange(TabChangeEvent event) {
+    LOG.formatedWarning("Tab Changed ");  
     if (event != null) {
-      mstrWindowShow = event.getTab().getId();
-      LOG.formatedDebug("Tab Changed %s.", event.getTab().getId());    
+      setCurrentPanel(event.getTab().getId());
+      LOG.formatedWarning("Tab Changed %s.", event.getTab().getId());  
     }
   }
 

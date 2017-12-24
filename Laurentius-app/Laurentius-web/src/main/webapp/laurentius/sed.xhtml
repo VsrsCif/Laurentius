@@ -51,7 +51,7 @@
                                     <span class="ui-icon ui-icon-grip-dotted-vertical " />
                                 </span>
                                 <p:commandButton value="#{msg['ExportCSV']}" styleClass="toolbar-Button"  
-                                                 rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_OUTBOX)}" 
+                                                 rendered="#{mainWindow.isCurrentPanel('PANEL_OUTBOX')}" 
                                                  icon="ui-icon-size-22 ui-icon-svg-csv"
 
                                                  update=":dlgExportOutData:exportOutDataDialogForm"
@@ -59,7 +59,7 @@
                                                  />
 
                                 <p:commandButton value="#{msg['ExportCSV']}" styleClass="toolbar-Button"  
-                                                 rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_INBOX)}" 
+                                                 rendered="#{mainWindow.isCurrentPanel('PANEL_INBOX')}" 
                                                  icon="ui-icon-size-22 ui-icon-svg-csv"
                                                  update=":dlgExportInData:exportInDataDialogForm"
                                                  oncomplete="PF('exportInDataDialog').show()"
@@ -69,20 +69,20 @@
                                     <span class="ui-icon ui-icon-grip-dotted-vertical " />
                                 </span>
                                 <p:commandButton value="#{msg['New']}" styleClass="toolbar-Button"  
-                                                 rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_OUTBOX)}" 
+                                                 rendered="#{mainWindow.isCurrentPanel('PANEL_OUTBOX')}" 
                                                  icon="ui-icon-size-22 ui-icon-svg-mail-send"
                                                  actionListener="#{dialogCompose.composeNewMail()}"
                                                  update=":dlgCompose:mailComposeDialog:mailComposeDialogForm"
                                                  oncomplete="PF('mailComposeDialog').show()"/>
                                 <!-- p:commandButton value="# { msg['TestAddress']}" styleClass="toolbar-Button"  
-                                                 rendered="# {mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_OUTBOX)}" 
+                                                 rendered="# {mainWindow.isCurrentPanel('PANEL_OUTBOX')}" 
                                                  icon="ui-icon-size-22 ui-icon-svg-mail-send"
-                                                 actionListener="# {OutMailDataView.composeNewMail()}"
+                                                 actionListener="# {OutMailDataView.composeNewMail(')}"
                                                  update=":dlgTestAddress:testAddressDialogForm"
                                                  oncomplete="PF('testAddressDialog').show()"/ -->
 
                                 <p:commandButton value="#{msg['Resend selected']}" styleClass="toolbar-Button" 
-                                                 rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_OUTBOX)}"
+                                                 rendered="#{mainWindow.isCurrentPanel('PANEL_OUTBOX')}"
                                                  actionListener="#{OutMailDataView.resendSelectedMail()}" 
                                                  icon="ui-icon-size-22 ui-icon-svg-mail-resend"
                                                  update=":forms:MainPanel :forms:messages"
@@ -91,7 +91,7 @@
                                                  />
                                 <p:commandButton value="#{msg['Delete selected']}" styleClass="toolbar-Button"  
                                                  icon="ui-icon-svg-remove ui-icon-size-22" 
-                                                 rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_OUTBOX)}" 
+                                                 rendered="#{mainWindow.isCurrentPanel('PANEL_OUTBOX')}" 
                                                  actionListener="#{OutMailDataView.deleteSelectedMail()}" 
                                                  update=":forms:MainPanel"
                                                  ajax="true"
@@ -100,19 +100,19 @@
 
                                 <p:commandButton value="#{msg['Save']}" styleClass="toolbar-Button"  
                                                  icon="ui-icon-size-22 ui-icon-svg-csv"
-                                                 rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_SETT_PMODE)}" 
+                                                 rendered="#{mainWindow.isCurrentPanel('PANEL_SETT_PMODE')}" 
                                                  actionListener="#{pModeView.savePMode()}" 
                                                  update=":forms:MainPanel :forms:messages"
                                                  ajax="true"/>
                                 <p:commandButton value="#{msg['Format']}" styleClass="toolbar-Button"                                               
-                                                 rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_SETT_PMODE)}" 
+                                                 rendered="#{mainWindow.isCurrentPanel('PANEL_SETT_PMODE')}" 
                                                  actionListener="#{pModeView.formatPMode()}" 
                                                  update=":forms:MainPanel :forms:messages"
                                                  ajax="true"/>
 
                                 <p:menuButton value="#{msg['ChangeStatus']}" 
 
-                                              rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_INBOX)}" 
+                                              rendered="#{mainWindow.isCurrentPanel('PANEL_INBOX')}" 
                                               >
 
                                     <p:menuitem value="PLOCKED" 
@@ -138,7 +138,7 @@
                                 </p:menuButton >
 
                                 <p:commandButton value="#{msg['Export']}" styleClass="toolbar-Button"  
-                                                 rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_INBOX)}" 
+                                                 rendered="#{mainWindow.isCurrentPanel('PANEL_INBOX')}" 
                                                  actionListener="#{InMailDataView.exportSelectedMail()}"
                                                  icon="ui-icon-size-22 ui-icon-svg-export"
                                                  update=":forms:MainPanel :forms:messages"
@@ -160,40 +160,37 @@
                     </p:layoutUnit>
                     <p:layoutUnit id="MainPanelUnit" position="center"  gutter="0" >
                         <h:panelGroup id="MainPanel">
-                            <sui:mail-table-in id="InMailPanel" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_INBOX)  }"  />
-                            <sui:mail-table-out id="OutMailPanel" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_OUTBOX)}"  />
+                            <sui:mail-table-in id="InMailPanel" rendered="#{mainWindow.isCurrentPanel('PANEL_INBOX')}"  />
+                            <sui:mail-table-out id="OutMailPanel" rendered="#{mainWindow.isCurrentPanel('PANEL_OUTBOX')}"  />
                             <!-- Digital certificates -->
-                            <pnl:pnl-keystore id="PanelKeystore" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_SETT_CERTS)}"  />
-                            <pnl:pnl-rootca id="PanelRootCA" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_SETT_CERT_ROOT_CA)}"  />
-                            <pnl:pnl-crl id="PanelCRL" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_SETT_CERT_CRL)}"  />
+                            <pnl:pnl-keystore id="PanelKeystore" rendered="#{mainWindow.isCurrentPanel('PANEL_SETT_CERTS')}"  />
+                            <pnl:pnl-rootca id="PanelRootCA" rendered="#{mainWindow.isCurrentPanel('PANEL_SETT_CERT_ROOT_CA')}"  />
+                            <pnl:pnl-crl id="PanelCRL" rendered="#{mainWindow.isCurrentPanel('PANEL_SETT_CERT_CRL')}"  />
 
-                            <sui:settings-custom id="SettingsCustomPanel" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_SETT_CUSTOM)}"  />
+                            <sui:settings-custom id="SettingsCustomPanel" rendered="#{mainWindow.isCurrentPanel('PANEL_SETT_CUSTOM')}"  />
 
-                            <sui:settings-pmode-services id="SettingsPModesServices" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_SETT_PMODE_SERVICES)}"  />
-                            <sui:settings-pmode-parties id="SettingsPModesParties" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_SETT_PMODE_PARTIES)}"  />
-                            <sui:settings-pmode-securities id="SettingsPModesSecurities" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_SETT_PMODE_SECURITIES)}"  />
-                            <sui:settings-pmode-ra id="SettingsPModeReceptionAwarenesses" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_SETT_PMODE_AS4_RA)}"  />
-                            <sui:settings-pmode id="SettingsPModes" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_SETT_PMODE)}"  />
-                            <sui:settings-users id="SettingsUsers" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_ADMIN_USERS)}"  />
-                            <sui:settings-appl id="SettingsAppls" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_ADMIN_APPL)}"  />
-                            <sui:settings-eboxes id="SettingsSEDBoxes" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_ADMIN_EBOXES)}"  />
-                            <sui:settings-cron id="SettingsCron" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_ADMIN_CRON)}"  />
-                            <sui:settings-plugins id="SettingsPlugin" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_ADMIN_PLUGIN)}"  />
-                            <sui:settings-inmail-process id="InMailProcess" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_INMAIL_PROCESS)}"  />
-                            <sui:settings-interceptor id="SettingsInterceptor" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_INTERCEPTOR)}"  />
-                            <sui:cron-execution-table id="CronExecutions" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_CRON_EXEC)}"  />
-                            <sui:monitor-jms id="SettingsJMS" rendered="#{mainWindow.currentPanel().equalsIgnoreCase(AppConstant.s_PANEL_SETT_JMS)}"  />
+                            <sui:settings-pmode-services id="SettingsPModesServices" rendered="#{mainWindow.isCurrentPanel('PANEL_SETT_PMODE_SERVICES')}"  />
+                            <sui:settings-pmode-parties id="SettingsPModesParties" rendered="#{mainWindow.isCurrentPanel('PANEL_SETT_PMODE_PARTIES')}"  />
+                            <sui:settings-pmode-securities id="SettingsPModesSecurities" rendered="#{mainWindow.isCurrentPanel('PANEL_SETT_PMODE_SECURITIES')}"  />
+                            <sui:settings-pmode-ra id="SettingsPModeReceptionAwarenesses" rendered="#{mainWindow.isCurrentPanel('PANEL_SETT_PMODE_AS4_RA')}"  />
+                            <sui:settings-pmode id="SettingsPModes" rendered="#{mainWindow.isCurrentPanel('PANEL_SETT_PMODE')}"  />
+                            <sui:settings-users id="SettingsUsers" rendered="#{mainWindow.isCurrentPanel('PANEL_ADMIN_USERS')}"  />
+                            <sui:settings-appl id="SettingsAppls" rendered="#{mainWindow.isCurrentPanel('PANEL_ADMIN_APPL')}"  />
+                            <sui:settings-eboxes id="SettingsSEDBoxes" rendered="#{mainWindow.isCurrentPanel('PANEL_ADMIN_EBOXES')}"  />
+                            <sui:settings-cron id="SettingsCron" rendered="#{mainWindow.isCurrentPanel('PANEL_ADMIN_CRON')}"  />
+                            <sui:settings-plugins id="SettingsPlugin" rendered="#{mainWindow.isCurrentPanel('PANEL_ADMIN_PLUGIN')}"  />
+                            <sui:settings-inmail-process id="InMailProcess" rendered="#{mainWindow.isCurrentPanel('PANEL_INMAIL_PROCESS')}"  />
+                            <sui:settings-interceptor id="SettingsInterceptor" rendered="#{mainWindow.isCurrentPanel('PANEL_INTERCEPTOR')}"  />
+                            <sui:cron-execution-table id="CronExecutions" rendered="#{mainWindow.isCurrentPanel('PANEL_CRON_EXEC')}"  />
+                            <sui:monitor-jms id="SettingsJMS" rendered="#{mainWindow.isCurrentPanel('PANEL_SETT_JMS')}"  />
 
 
 
-                            <p:outputPanel id="PluginFrame" rendered="#{mainWindow.currentPanel().
-                                                                        equalsIgnoreCase(AppConstant.s_PANEL_PLUGIN) 
+                            <p:outputPanel id="PluginFrame" rendered="#{mainWindow.isCurrentPanel('PANEL_PLUGIN') 
                                                                         or 
-                                                                        mainWindow.currentPanel().
-                                                                        equalsIgnoreCase(AppConstant.s_SETTINGS_PLUGIN)}" 
+                                                                        mainWindow.isCurrentPanel('SETTINGS_PLUGIN')}" 
                                            style="width: 100%;height: 100%">  
-                                <iframe id="iframeCenter" src="#{mainWindow.currentPanel().
-                                                                 equalsIgnoreCase(AppConstant.s_PANEL_PLUGIN)?
+                                <iframe id="iframeCenter" src="#{mainWindow.isCurrentPanel('PANEL_PLUGIN')?
                                                                  pluginMenuView.selectedWebContext:
                                                                  settingsMenuView.selectedWebContext}" width="100%"  
                                         height="100%" frameborder="0" crolling="auto">  
@@ -247,8 +244,8 @@
                     </p:layoutUnit>
                     <p:layoutUnit position="west" resizable="false" size="320" minSize="320" maxSize="320">
                         <p:scrollPanel mode="native" style="width:100%;height:100%">
-                            <p:accordionPanel id="toolbars" >
-                                <p:ajax event="tabChange" listener="#{mainWindow.onToolbarTabChange}" update=":forms:MainPanel :forms:toolbar" />
+                            <p:accordionPanel id="toolbars" activeIndex="#{mainWindow.activeToolbarTabIndex}" >
+                                <p:ajax event="tabChange" listener="#{mainWindow.onToolbarTabChange}" update=":forms:MainPanel" />
                                 <p:tab id="PANEL_INBOX"  >
                                     <f:facet name="title">
 
