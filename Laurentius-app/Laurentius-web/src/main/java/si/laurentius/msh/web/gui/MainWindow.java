@@ -25,7 +25,7 @@ public class MainWindow  implements Serializable{
   GUIPanelName mCurrentPanel = GUIPanelName.PANEL_INBOX;
   
   
-  String mstrWindowShow = AppConstant.S_PANEL_INBOX;
+  //String mstrWindowShow = AppConstant.S_PANEL_INBOX;
   int currentProgressVal =0;
   String currentProgressLabel ="";
   
@@ -47,11 +47,12 @@ public class MainWindow  implements Serializable{
    * @return
    */
   public String currentPanel() {
-    return mstrWindowShow;
+    return mCurrentPanel !=null? mCurrentPanel.getCode():"";
   }
   
   public void setCurrentPanel(String strVal) {
-    this.mstrWindowShow = strVal;
+    LOG.formatedlog("Set current panel: %s",strVal);
+    
     mCurrentPanel = GUIPanelName.valueOf(strVal);
     activeToolbarTabIndex = mCurrentPanel.getGroupIndex();
     
@@ -59,7 +60,8 @@ public class MainWindow  implements Serializable{
   
   
   public boolean isCurrentPanel(String gpn){    
-    return gpn !=null && mCurrentPanel !=null && mCurrentPanel.getCode().equals(gpn);
+   
+    return gpn !=null && mCurrentPanel !=null && mCurrentPanel.getCode().equalsIgnoreCase(gpn);
   }
 
   public int getActiveToolbarTabIndex() {

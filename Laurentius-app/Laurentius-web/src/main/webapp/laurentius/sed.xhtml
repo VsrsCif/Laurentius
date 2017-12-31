@@ -245,7 +245,7 @@
                     <p:layoutUnit position="west" resizable="false" size="320" minSize="320" maxSize="320">
                         <p:scrollPanel mode="native" style="width:100%;height:100%">
                             <p:accordionPanel id="toolbars" activeIndex="#{mainWindow.activeToolbarTabIndex}" >
-                                <p:ajax event="tabChange" listener="#{mainWindow.onToolbarTabChange}" update=":forms:MainPanel" />
+                                <p:ajax event="tabChange" listener="#{mainWindow.onToolbarTabChange}" update=":forms:MainPanel :forms:toolbar" />
                                 <p:tab id="PANEL_INBOX"  >
                                     <f:facet name="title">
 
