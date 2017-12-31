@@ -38,7 +38,7 @@ import org.oasis_open.docs.ebxml_msg.ebms.v3_0.ns.core._200704.SignalMessage;
 import org.oasis_open.docs.ebxml_msg.ebms.v3_0.ns.core._200704.UserMessage;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-import si.jrc.msh.exception.EBMSError;
+import si.laurentius.commons.ebms.EBMSError;
 import si.jrc.msh.exception.EBMSErrorCode;
 import si.jrc.msh.exception.EBMSErrorMessage;
 import si.jrc.msh.interceptor.EBMSInInterceptor;

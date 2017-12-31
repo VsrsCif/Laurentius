@@ -5,24 +5,37 @@
  */
 package si.jrc.msh.plugin.zpp.enums;
 
+import si.laurentius.msh.inbox.mail.MSHInMail;
+import si.laurentius.msh.outbox.mail.MSHOutMail;
+
 /**
    *
    */
   public enum FopTransformation {
 
-    /**
-     *
-     */
-    DeliveryNotification("LegalDelivery_ZPP-DeliveryNotification.fo"),
-    AdviceOfDelivery("LegalDelivery_ZPP-AdviceOfDelivery.fo"),
-    AdviceOfDeliveryFictionNotification("LegalDelivery_ZPP-AdviceOfDeliveryFictionNotification.fo"),
-    AdviceOfDeliveryFiction("LegalDelivery_ZPP-AdviceOfDeliveryFiction.fo"),
-    DeliveryReciept("LegalDelivery_ZPP-DeliveryReciept.fo");
+    AdviceOfDelivery("LegalDelivery_ZPP-AdviceOfDelivery.fo", MSHInMail.class),
+    AdviceOfDeliveryFiction("LegalDelivery_ZPP-AdviceOfDeliveryFiction.fo", MSHOutMail.class ),
+    AdviceOfDeliveryFiction_6Odst("LegalDelivery_ZPP-AdviceOfDeliveryFiction_6Odst.fo", MSHOutMail.class),
+    AdviceOfDeliveryFictionNotification("LegalDelivery_ZPP-AdviceOfDeliveryFictionNotification.fo", MSHOutMail.class),
+    AdviceOfDeliveryFictionNotification_6Odst("LegalDelivery_ZPP-AdviceOfDeliveryFictionNotification_6Odst.fo",MSHOutMail.class),
+    DeliveryNotification("LegalDelivery_ZPP-DeliveryNotification.fo",MSHOutMail.class),
+    DeliveryNotificationB("LegalDelivery_ZPPB-DeliveryNotification.fo",MSHOutMail.class),    
+    DeliveryReciept("LegalDelivery_ZPP-DeliveryReciept.fo",MSHInMail.class),
+    DeliveryRecieptB("LegalDelivery_ZPPB-DeliveryReciept.fo",MSHInMail.class),
+    ReceiverAddressNotExists("ReceiverAddressNotExists.fo",MSHOutMail.class),
+
+    
+    ;
+    
+    
+    
 
     private final String mstrfileName;
+    private Class mcJaxbClass;
 
-    FopTransformation(String filename) {
+    FopTransformation(String filename, Class jaxbClass) {
       mstrfileName = filename;
+      mcJaxbClass = jaxbClass;
     }
 
     /**
@@ -31,5 +44,9 @@ package si.jrc.msh.plugin.zpp.enums;
      */
     public String getFileName() {
       return mstrfileName;
+    }
+    
+    public Class getJaxbClass() {
+      return mcJaxbClass;
     }
   }

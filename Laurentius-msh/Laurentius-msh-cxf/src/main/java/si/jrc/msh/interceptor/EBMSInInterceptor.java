@@ -59,7 +59,7 @@ import org.oasis_open.docs.ebxml_msg.ebms.v3_0.ns.core._200704.SignalMessage;
 import org.oasis_open.docs.ebxml_msg.ebms.v3_0.ns.core._200704.UserMessage;
 import si.laurentius.ebox.SEDBox;
 import si.jrc.msh.client.sec.SecurityUtils;
-import si.jrc.msh.exception.EBMSError;
+import si.laurentius.commons.ebms.EBMSError;
 import si.jrc.msh.exception.EBMSErrorCode;
 import si.jrc.msh.exception.EBMSErrorMessage;
 import si.jrc.msh.utils.EBMSBuilder;
@@ -214,7 +214,22 @@ public class EBMSInInterceptor extends AbstractEBMSInterceptor {
                     messageId,
                     warn + " Duplicate is eliminated.",
                     SoapFault.FAULT_CODE_CLIENT);
+            
+            
+            EBMSError warningSVEV = new EBMSError(EBMSErrorCode.IgnoredAlreadyReceivedMessage,
+                    messageId,
+                    warn + " Duplicate is eliminated.",
+                    SoapFault.FAULT_CODE_CLIENT);
+            
+            
+            
+            
             as4Receipt.getErrors().add(EBMSBuilder.createError(warning));
+            as4Receipt.getErrors().add(EBMSBuilder.createError(warningSVEV));
+            
+            
+            
+            
             msg.getExchange().put(SignalMessage.class, as4Receipt);
             Endpoint e = msg.getExchange().get(Endpoint.class);
             if (!msg.getExchange().isOneWay() && !isBackChannel) {
@@ -454,7 +469,7 @@ public class EBMSInInterceptor extends AbstractEBMSInterceptor {
       String errmsg = String.format("Receiver '%s' is not defined in this MSH!",
               receiverBox);
       LOG.logError(l, errmsg, null);
-      throw new EBMSError(EBMSErrorCode.ValueNotRecognized, mMail.getMessageId(),
+      throw new EBMSError(EBMSErrorCode.ReceiverNotExists, mMail.getMessageId(),
               errmsg,
               SoapFault.FAULT_CODE_CLIENT);
 
@@ -466,7 +481,7 @@ public class EBMSInInterceptor extends AbstractEBMSInterceptor {
       String errmsg
               = "Receiver box: '" + mMail.getReceiverEBox() + "' not exists or is not active.";
       LOG.logError(l, errmsg, null);
-      throw new EBMSError(EBMSErrorCode.ValueNotRecognized, mMail.getMessageId(),
+      throw new EBMSError(EBMSErrorCode.ReceiverNotExists, mMail.getMessageId(),
               errmsg,
               SoapFault.FAULT_CODE_CLIENT);
     }

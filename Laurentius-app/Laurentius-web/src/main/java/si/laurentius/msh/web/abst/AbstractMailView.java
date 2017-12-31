@@ -23,6 +23,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
@@ -81,6 +82,13 @@ public abstract class AbstractMailView<T, M, S> {
   
 
   private DualListModel<String> msbCBExportDualList = null;
+  
+  
+  protected void addError(String desc) {
+    facesContext().addMessage(null,
+            new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error",
+                    desc));
+  } 
 
   /**
    *

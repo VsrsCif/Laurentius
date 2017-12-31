@@ -16,10 +16,10 @@
                 </fo:simple-page-master>
             </fo:layout-master-set>
             <fo:page-sequence master-reference="A4-portrait">
-                
+               
                 <fo:flow flow-name="xsl-region-body"  >
  					<fo:block  margin-top="1.5cm" font-size="12pt" linefeed-treatment="preserve">
-                        OBVESTILO O PRISPELI POŠILJKI (141.a člen ZPP)					
+                        OBVESTILO O PRISPELI POŠILJKI (141.b člen ZPP)					
                     </fo:block>
                
                     <fo:block margin-top="1.5cm"  font-size="12pt" font-weight="bold" linefeed-treatment="preserve">					
@@ -44,21 +44,11 @@
                         Zadeva: Obvestilo o prispeli pošiljki in pravni pouk o posledicah neprevzema
                     </fo:block>
                     <fo:block margin-top="12pt" font-size="12pt" linefeed-treatment="ignore" >
-                        Obveščamo vas, da je v vaš varni elektronski predal dne
-                         <xsl:call-template name="currentDate"/> prispela pošiljka, z oznako <fo:inline font-weight="bold">
-                            <xsl:value-of select="/msh:MSHOutMail/@subject"/> (<xsl:value-of select="/msh:MSHOutMail/@messageId"/>)</fo:inline>. 
+                        Obveščamo vas, da je v vaš varni elektronski predal dne <fo:inline font-weight="bold"><xsl:call-template name="currentDate"/></fo:inline>, prispela pošiljka, z oznako <fo:inline font-weight="bold"><xsl:value-of select="/msh:MSHOutMail/@subject"/> (<xsl:value-of select="/msh:MSHOutMail/@messageId"/>)</fo:inline>, ki se po prvem odstavku 141.b člena ZPP z istim dnem šteje za vročeno. Pošiljko lahko prevzamete v vašem varnem elektronskem predalu na naslovu <fo:inline font-weight="bold"> <xsl:value-of select="/msh:MSHOutMail/@receiverEBox"/></fo:inline>.
                     </fo:block>
-                    <fo:block margin-top="6pt" font-size="12pt">
-                        Pošiljko lahko prevzamete v roku 15 dni v vašem varnem elektronskem predalu na naslovu
-                        <fo:inline font-weight="bold"><xsl:value-of select="/msh:MSHOutMail/@receiverEBox"/></fo:inline>.
-                        Rok za prevzem začne teči od dne 
-                        <fo:inline font-weight="bold">
-                             <xsl:call-template name="currentDate"/>
-                        </fo:inline>. Če v tem roku pošiljke ne boste prevzeli, se bo po sedmem odstavku 141.a člena ZPP s potekom tega roka vročitev štela za opravljeno.
-                    </fo:block>
-
-               <fo:block font-size="12pt"  margin-top="1.0cm">
-                       Storitev: Elektronska vročitev pošiljke po ZPP osebno,
+               
+			        <fo:block font-size="12pt"  margin-top="1.0cm">
+                       Storitev: Elektronska vročitev pošiljke po ZPP navadno,
                     </fo:block>                    
                     <fo:block font-size="12pt" >
                         enolična oznaka storitve: <xsl:value-of select="/msh:MSHOutMail/@conversationId"/>.
@@ -78,7 +68,7 @@
     <xsl:template name="currentDateTime">
         <xsl:value-of select="java:si.jrc.msh.plugin.zpp.utils.XSLTExtensions.currentDateTime()"/>
     </xsl:template>
-<xsl:template name="systemDomain">
+    <xsl:template name="systemDomain">
         <xsl:value-of select="java:si.jrc.msh.plugin.zpp.utils.XSLTExtensions.systemDomain()"/>
     </xsl:template>
 </xsl:stylesheet>

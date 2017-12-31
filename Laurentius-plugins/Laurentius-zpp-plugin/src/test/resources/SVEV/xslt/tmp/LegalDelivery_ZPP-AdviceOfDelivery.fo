@@ -15,10 +15,12 @@
                 </fo:simple-page-master>
             </fo:layout-master-set>
             <fo:page-sequence master-reference="A4-portrait">
-          
+                <xsl:variable name="varFormatedSentDate">
+                    <xsl:call-template name="currentDateTime" />					
+                </xsl:variable>
                 <fo:flow flow-name="xsl-region-body">
      
-                    <fo:block margin-top="2.0cm" font-size="12pt" font-weight="bold" linefeed-treatment="preserve">					
+                    <fo:block margin-top="3.0cm" font-size="12pt" font-weight="bold" linefeed-treatment="preserve">					
                         Pošiljatelj</fo:block>
                     <fo:block font-size="12pt">
                         <xsl:value-of select="/msh:MSHInMail/@senderName"/>
@@ -26,27 +28,21 @@
                     <fo:block font-size="12pt">
                         <xsl:value-of select="/msh:MSHInMail/@senderEBox"/>
                     </fo:block>
-                    
+                    <fo:block font-size="12pt" font-weight="bold" linefeed-treatment="preserve">					
+                        Naslovnik</fo:block>
+                    <fo:block font-size="12pt">
+                        <xsl:value-of select="/msh:MSHInMail/@receiverName"/>
+                    </fo:block>
+                    <fo:block font-size="12pt">
+                        <xsl:value-of select="/msh:MSHInMail/@receiverEBox"/>
+                    </fo:block>
                     <fo:block font-size="12pt" font-weight="bold" linefeed-treatment="preserve">
-                        Zadeva: Potrditev sprejema dokumenta v postopek elektronskega vročanja
-                    </fo:block>
-                    
-                    <fo:block font-size="12pt" linefeed-treatment="preserve">
-                        Potrjujemo sprejem pošiljke z oznako: <xsl:value-of select="/msh:MSHInMail/@messageId"/>. 					 
+                        Zadeva: Potrjena vročilnica po ZPP					
                     </fo:block>
                     <fo:block font-size="12pt" linefeed-treatment="preserve">
-                        naša oznaka: <xsl:value-of select="/msh:MSHInMail/@id"/>. 					 
-                    </fo:block>                    
-                    <fo:block font-size="12pt" linefeed-treatment="preserve">					
-                        Za naslovnika 
-                        <xsl:value-of select="/msh:MSHInMail/@receiverName"/> (<xsl:value-of select="/msh:MSHInMail/@receiverEBox"/>)
-                    </fo:block>
-                    
-                    <fo:block margin-top="12pt" font-size="12pt" linefeed-treatment="ignore" text-align="justify" >
-                        Potrjujemo, da smo v postopek elektronskega vročanja po Zakonu o pravdnem postopku v sistem 
-                        Laurentius (<xsl:call-template name="systemDomain"/>) sprejeli navedeno pošiljko, 
-                        ki jo bomo dostavili v naslovnikov varni elektronski predal. 
-                        Po opravljeni vročitvi vam bomo posredovali potrdilo o opravljeni elektronski vročitvi.
+                        Naslovnik potrjujem, da sem dne <xsl:call-template name="currentDateTime"/> sprejel pošiljko z oznako 
+                        <xsl:value-of select="/msh:MSHInMail/@messageId"/>. 					 
+                        To sporočilo je potrdilo o vročitvi pošiljke in opravljeni storitvi.
                     </fo:block>
                     <fo:block font-size="12pt" font-weight="bold" margin-top="1.0cm">
                         Podatki o pošiljki:
@@ -62,16 +58,18 @@
                             <xsl:value-of select="@name"/>:<xsl:value-of select="."/>
                         </fo:block>
                     </xsl:for-each>
-
+                      <!-- new line -->
                     <fo:block font-size="12pt"  margin-top="1.0cm">
-                       Storitev: Elektronska vročitev pošiljke po ZPP osebno,
-                    </fo:block>                    
-                    <fo:block font-size="12pt" >
-                        enolična oznaka storitve: <xsl:value-of select="/msh:MSHInMail/@conversationId"/>.
+                        Naša oznaka:                    
+                        <xsl:value-of select="/msh:MSHInMail/@messageId"/>
                     </fo:block>
-
-                    <fo:block font-size="12pt"   margin-top="1.0cm">	
-                        Laurentius (<xsl:call-template name="systemDomain"/>), <xsl:call-template name="currentDateTime"/>.
+                    <fo:block font-size="12pt" >
+                        Transakcija:                    
+                        <xsl:value-of select="/msh:MSHInMail/@conversationId"/>
+                    </fo:block>
+                    
+                    <fo:block font-size="12pt" font-weight="bold">	
+                        Datum: <xsl:call-template name="currentDateTime"/>
                     </fo:block>
                 </fo:flow>
             </fo:page-sequence>
@@ -80,8 +78,5 @@
 
     <xsl:template name="currentDateTime">
         <xsl:value-of select="java:si.jrc.msh.plugin.zpp.utils.XSLTExtensions.currentDateTime()"/>
-    </xsl:template>
-    <xsl:template name="systemDomain">
-        <xsl:value-of select="java:si.jrc.msh.plugin.zpp.utils.XSLTExtensions.systemDomain()"/>
     </xsl:template>
 </xsl:stylesheet>

@@ -124,11 +124,11 @@
     </SEDCronJobs>
     <SEDInterceptors>
         <ns3:SEDInterceptor id="117" name="ZPP_InMessages" active="true" interceptEvent="InMessage" interceptRole="All">
-            <ns3:SEDInterceptorRule id="118" property="Service" predicate="=" value="LegalDelivery_ZPP"/>
+            <ns3:SEDInterceptorRule id="118"  property="Service" predicate="InList" value="LegalDelivery_ZPP;LegalDelivery_ZPPB"/>
             <ns3:SEDInterceptorInstance plugin="LegalZPP" type="ZPPInInterceptor" pluginVersion="1.0.0"/>
         </ns3:SEDInterceptor>
         <ns3:SEDInterceptor id="119" name="ZPP_OutMessages" active="true" interceptEvent="OutMessage" interceptRole="All">
-            <ns3:SEDInterceptorRule id="120" property="Service" predicate="=" value="LegalDelivery_ZPP"/>
+            <ns3:SEDInterceptorRule id="120"  property="Service" predicate="InList" value="LegalDelivery_ZPP;LegalDelivery_ZPPB"/>
             <ns3:SEDInterceptorInstance plugin="LegalZPP" type="ZPPOutInterceptor" pluginVersion="1.0.0"/>
         </ns3:SEDInterceptor>
     </SEDInterceptors>

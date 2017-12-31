@@ -19,8 +19,11 @@
                     <xsl:call-template name="currentDateTime" />					
                 </xsl:variable>
                 <fo:flow flow-name="xsl-region-body">
+					<fo:block  margin-top="1.5cm" font-size="12pt" linefeed-treatment="preserve">
+                       VROČILNICA (141.a člen ZPP)
+                    </fo:block>
      
-                    <fo:block margin-top="3.0cm" font-size="12pt" font-weight="bold" linefeed-treatment="preserve">					
+                    <fo:block margin-top="1.5cm" font-size="12pt" font-weight="bold" linefeed-treatment="preserve">					
                         Pošiljatelj</fo:block>
                     <fo:block font-size="12pt">
                         <xsl:value-of select="/msh:MSHInMail/@senderName"/>
@@ -37,39 +40,24 @@
                         <xsl:value-of select="/msh:MSHInMail/@receiverEBox"/>
                     </fo:block>
                     <fo:block font-size="12pt" font-weight="bold" linefeed-treatment="preserve">
-                        Zadeva: Potrjena vročilnica po ZPP					
+                       Zadeva: Vročilnica
                     </fo:block>
                     <fo:block font-size="12pt" linefeed-treatment="preserve">
-                        Naslovnik potrjujem, da sem dne <xsl:call-template name="currentDateTime"/> sprejel pošiljko z oznako 
-                        <xsl:value-of select="/msh:MSHInMail/@messageId"/>. 					 
+                        Naslovnik potrjujem, da sem dne <fo:inline font-weight="bold"><xsl:call-template name="currentDate"/></fo:inline> sprejel pošiljko z oznako 
+						<fo:inline font-weight="bold"><xsl:value-of select="/msh:MSHInMail/@subject"/> (<xsl:value-of select="/msh:MSHInMail/@messageId"/>)</fo:inline>. 	
+				 
                         To sporočilo je potrdilo o vročitvi pošiljke in opravljeni storitvi.
                     </fo:block>
-                    <fo:block font-size="12pt" font-weight="bold" margin-top="1.0cm">
-                        Podatki o pošiljki:
-                    </fo:block>
-                    <fo:block font-size="12pt"  >
-                        Opis vsebine:  <xsl:value-of select="/msh:MSHInMail/@subject"/>                      
-                    </fo:block>
-                    <fo:block font-size="12pt"  >
-                        Število dokumentov:  <xsl:value-of select="count(/msh:MSHInMail/mpl:MSHInPayload/mpl:MSHInPart)"/> 
-                    </fo:block>
-                    <xsl:for-each select="/msh:MSHInMail/prp:MSHInProperties/prp:MSHInProperty">
-                        <fo:block font-size="12pt"  >
-                            <xsl:value-of select="@name"/>:<xsl:value-of select="."/>
-                        </fo:block>
-                    </xsl:for-each>
-                      <!-- new line -->
-                    <fo:block font-size="12pt"  margin-top="1.0cm">
-                        Naša oznaka:                    
-                        <xsl:value-of select="/msh:MSHInMail/@messageId"/>
-                    </fo:block>
+
+  					<fo:block font-size="12pt"  margin-top="1.0cm">
+                       Storitev: Elektronska vročitev pošiljke po ZPP osebno,
+                    </fo:block>                    
                     <fo:block font-size="12pt" >
-                        Transakcija:                    
-                        <xsl:value-of select="/msh:MSHInMail/@conversationId"/>
+                        enolična oznaka storitve: <xsl:value-of select="/msh:MSHInMail/@conversationId"/>.
                     </fo:block>
-                    
-                    <fo:block font-size="12pt" font-weight="bold">	
-                        Datum: <xsl:call-template name="currentDateTime"/>
+
+                    <fo:block font-size="12pt"   margin-top="1.0cm">	
+                        Laurentius (<xsl:call-template name="systemDomain"/>), <xsl:call-template name="currentDateTime"/>.
                     </fo:block>
                 </fo:flow>
             </fo:page-sequence>
@@ -78,5 +66,11 @@
 
     <xsl:template name="currentDateTime">
         <xsl:value-of select="java:si.jrc.msh.plugin.zpp.utils.XSLTExtensions.currentDateTime()"/>
+    </xsl:template>
+ <xsl:template name="currentDate">
+        <xsl:value-of select="java:si.jrc.msh.plugin.zpp.utils.XSLTExtensions.currentDate()"/>
+    </xsl:template>
+<xsl:template name="systemDomain">
+        <xsl:value-of select="java:si.jrc.msh.plugin.zpp.utils.XSLTExtensions.systemDomain()"/>
     </xsl:template>
 </xsl:stylesheet>

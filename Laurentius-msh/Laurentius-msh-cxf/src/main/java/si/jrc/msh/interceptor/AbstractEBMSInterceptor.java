@@ -27,7 +27,7 @@ import org.apache.wss4j.dom.handler.WSHandlerConstants;
 import si.laurentius.msh.pmode.PartyIdentitySetType;
 import si.laurentius.msh.pmode.Security;
 import si.laurentius.msh.pmode.X509;
-import si.jrc.msh.exception.EBMSError;
+import si.laurentius.commons.ebms.EBMSError;
 import si.jrc.msh.exception.EBMSErrorCode;
 import static si.jrc.msh.interceptor.EBMSOutInterceptor.LOG;
 import si.laurentius.commons.SEDJNDI;

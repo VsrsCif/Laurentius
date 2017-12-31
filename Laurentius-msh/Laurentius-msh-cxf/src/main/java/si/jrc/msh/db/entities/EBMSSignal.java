@@ -17,7 +17,7 @@ package si.jrc.msh.db.entities;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import si.jrc.msh.exception.EBMSError;
+import si.laurentius.commons.ebms.EBMSError;
 
 /**
  *

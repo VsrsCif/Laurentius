@@ -45,7 +45,7 @@ import si.laurentius.msh.outbox.mail.MSHOutMail;
 import si.laurentius.msh.pmode.PartyIdentitySet;
 import si.laurentius.msh.pmode.Protocol;
 
-import si.jrc.msh.exception.EBMSError;
+import si.laurentius.commons.ebms.EBMSError;
 import si.jrc.msh.exception.EBMSErrorCode;
 import si.jrc.msh.interceptor.EBMSInFaultInterceptor;
 import si.jrc.msh.interceptor.EBMSInInterceptor;
@@ -101,7 +101,7 @@ public class MshClient {
    * @param protocol: transport definition object frompmode
    * @param sec
    * @return Dispatch client for submitting message
-   * @throws si.jrc.msh.exception.EBMSError (Error creating client)
+   * @throws si.laurentius.commons.ebms.EBMSError (Error creating client)
    */
   public Dispatch<SOAPMessage> createClient(final String messageId,
           final PartyIdentitySet.TransportProtocol protocol,

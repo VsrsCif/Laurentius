@@ -31,6 +31,12 @@ public enum ZPPPartPropertyType {
   RefPartType("http://www.sodisce.si/ZPP/RefPartType"),
   PartCreated("http://www.sodisce.si/ZPP/PartCreated"),
   
+  
+  PartKeyAlg("http://www.sodisce.si/ZPP/KeyAlgorithm"),
+  PartKeyFormat("http://www.sodisce.si/ZPP/Keyformat"),
+  PartKeyValue("http://www.sodisce.si/ZPP/KeyValue"),
+  PartKeySize("http://www.sodisce.si/ZPP/KeySize"),
+  
   ;
  
 

@@ -2,7 +2,7 @@
  * To change this license header, choose License Headers in Project Properties. To change this
  * template file, choose Tools | Templates and open the template in the editor.
  */
-package si.jrc.msh.exception;
+package si.laurentius.commons.ebms;
 
 import javax.xml.namespace.QName;
 import org.apache.cxf.binding.soap.SoapFault;
@@ -13,7 +13,7 @@ import org.apache.cxf.binding.soap.SoapFault;
  */
 public class EBMSError extends SoapFault {
 
-  EBMSErrorCode ebmsErrorCode;
+  EBMSErrorCodeInterface ebmsErrorCode;
   String refToMessage;
   String subMessage;
 
@@ -23,8 +23,8 @@ public class EBMSError extends SoapFault {
    * @param refToMsg
    * @param faultCode
    */
-  public EBMSError(EBMSErrorCode ec, String refToMsg, QName faultCode) {
-    super(ec.name, faultCode);
+  public EBMSError(EBMSErrorCodeInterface ec, String refToMsg, QName faultCode) {
+    super(ec.getName(), faultCode);
     
     ebmsErrorCode = ec;
     refToMessage = refToMsg;
@@ -37,7 +37,7 @@ public class EBMSError extends SoapFault {
    * @param message
    * @param faultCode
    */
-  public EBMSError(EBMSErrorCode ec, String refToMsg, String message, QName faultCode) {
+  public EBMSError(EBMSErrorCodeInterface ec, String refToMsg, String message, QName faultCode) {
     super(message,  faultCode);
     ebmsErrorCode = ec;
     refToMessage = refToMsg;
@@ -53,7 +53,7 @@ public class EBMSError extends SoapFault {
    * @param cause
    * @param faultCode
    */
-  public EBMSError(EBMSErrorCode ec, String refToMsg, String message, Throwable cause, QName faultCode) {
+  public EBMSError(EBMSErrorCodeInterface ec, String refToMsg, String message, Throwable cause, QName faultCode) {
     super(message, cause, faultCode);
     ebmsErrorCode = ec;
     refToMessage = refToMsg;
@@ -67,8 +67,8 @@ public class EBMSError extends SoapFault {
    * @param cause
    * @param faultCode
    */
-  public EBMSError(EBMSErrorCode ec, String refToMsg, Throwable cause, QName faultCode) {
-    super(ec.name, cause, faultCode);
+  public EBMSError(EBMSErrorCodeInterface ec, String refToMsg, Throwable cause, QName faultCode) {
+    super(ec.getName(), cause, faultCode);
     ebmsErrorCode = ec;
     refToMessage = refToMsg;
 
@@ -78,7 +78,7 @@ public class EBMSError extends SoapFault {
    *
    * @return
    */
-  public EBMSErrorCode getEbmsErrorCode() {
+  public EBMSErrorCodeInterface getEbmsErrorCode() {
     return ebmsErrorCode;
   }
 

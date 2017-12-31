@@ -18,7 +18,7 @@
           
                 <fo:flow flow-name="xsl-region-body">
      
-                    <fo:block margin-top="2.0cm" font-size="12pt" font-weight="bold" linefeed-treatment="preserve">					
+                    <fo:block margin-top="3.0cm" font-size="12pt" font-weight="bold" linefeed-treatment="preserve">					
                         Pošiljatelj</fo:block>
                     <fo:block font-size="12pt">
                         <xsl:value-of select="/msh:MSHInMail/@senderName"/>
@@ -44,7 +44,7 @@
                     
                     <fo:block margin-top="12pt" font-size="12pt" linefeed-treatment="ignore" text-align="justify" >
                         Potrjujemo, da smo v postopek elektronskega vročanja po Zakonu o pravdnem postopku v sistem 
-                        Laurentius (<xsl:call-template name="systemDomain"/>) sprejeli navedeno pošiljko, 
+                        <xsl:call-template name="systemDomain"/> sprejeli navedeno pošiljko, 
                         ki jo bomo dostavili v naslovnikov varni elektronski predal. 
                         Po opravljeni vročitvi vam bomo posredovali potrdilo o opravljeni elektronski vročitvi.
                     </fo:block>
@@ -62,16 +62,18 @@
                             <xsl:value-of select="@name"/>:<xsl:value-of select="."/>
                         </fo:block>
                     </xsl:for-each>
-
+                      <!-- new line -->
                     <fo:block font-size="12pt"  margin-top="1.0cm">
-                       Storitev: Elektronska vročitev pošiljke po ZPP osebno,
-                    </fo:block>                    
-                    <fo:block font-size="12pt" >
-                        enolična oznaka storitve: <xsl:value-of select="/msh:MSHInMail/@conversationId"/>.
+                        Naša oznaka:                    
+                        <xsl:value-of select="/msh:MSHInMail/@messageId"/>
                     </fo:block>
-
-                    <fo:block font-size="12pt"   margin-top="1.0cm">	
-                        Laurentius (<xsl:call-template name="systemDomain"/>), <xsl:call-template name="currentDateTime"/>.
+                    <fo:block font-size="12pt" >
+                        Transakcija:                    
+                        <xsl:value-of select="/msh:MSHInMail/@conversationId"/>
+                    </fo:block>
+                    
+                    <fo:block font-size="12pt" font-weight="bold">	
+                        Datum: <xsl:call-template name="currentDateTime"/>
                     </fo:block>
                 </fo:flow>
             </fo:page-sequence>

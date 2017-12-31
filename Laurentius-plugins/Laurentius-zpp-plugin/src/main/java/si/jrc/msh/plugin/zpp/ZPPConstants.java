@@ -49,21 +49,12 @@ public class ZPPConstants {
      *
      */
   public static final String S_ZPP_ACTION_ADVICE_OF_DELIVERY = "AdviceOfDelivery";
-
-  /**
-     *
-     */
   public static final String S_ZPP_ACTION_DELIVERY_NOTIFICATION = "DeliveryNotification";
-
-  /**
-     *
-     */
   public static final String S_ZPP_ACTION_FICTION_NOTIFICATION = "FictionNotification";
-  
-    /**
-     *
-     */
   public static final String S_ZPP_ACTION_ADVICE_OF_DELIVERY_FICTION = "AdviceOfDeliveryFiction";
+  //public static final String S_ZPP_ACTION_DELIVERY_RECIEPT = "DeliveryReciept";
+  public static final String S_ZPP_ACTION_ADDRESS_NOT_EXISTS = "ReceiverAddressNotExists";
+  
 
   /**
      *
@@ -89,6 +80,7 @@ public class ZPPConstants {
      *
      */
   public static final String S_ZPP_SERVICE = "LegalDelivery_ZPP";
+  public static final String S_ZPPB_SERVICE = "LegalDelivery_ZPPB";
 
   /**
      *

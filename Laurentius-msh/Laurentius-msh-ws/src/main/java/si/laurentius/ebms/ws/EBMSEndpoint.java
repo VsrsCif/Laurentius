@@ -21,7 +21,7 @@ import org.apache.cxf.binding.soap.SoapFault;
 import org.apache.cxf.jaxws.context.WrappedMessageContext;
 import org.apache.cxf.message.Attachment;
 import org.apache.cxf.message.Message;
-import si.jrc.msh.exception.EBMSError;
+
 import si.jrc.msh.exception.EBMSErrorCode;
 import si.laurentius.msh.inbox.mail.MSHInMail;
 import si.laurentius.ebox.SEDBox;
@@ -29,6 +29,7 @@ import si.laurentius.commons.enums.SEDInboxMailStatus;
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.cxf.SoapUtils;
+import si.laurentius.commons.ebms.EBMSError;
 import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.interfaces.JMSManagerInterface;
 import si.laurentius.commons.interfaces.SEDDaoInterface;

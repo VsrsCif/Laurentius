@@ -4,9 +4,13 @@ import java.io.File;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import javax.ejb.EJB;
 import javax.inject.Named;
@@ -51,7 +55,6 @@ public class DialogCompose implements Serializable {
   String newMailBody;
   MSHOutMail newOutMail;
 
-
   MSHOutPart mBodyAttachment;
   boolean addBodyAttachment;
 
@@ -81,8 +84,8 @@ public class DialogCompose implements Serializable {
     newOutMail.setSenderMessageId(Utils.getInstance().getGuidString());
 
     MSHOutPart mp = new MSHOutPart();
-    mp.setMimeType(MimeValue.MIME_TXT.getMimeType());    
-    mp.setEncoding("UTF-8");    
+    mp.setMimeType(MimeValue.MIME_TXT.getMimeType());
+    mp.setEncoding("UTF-8");
     mp.setDescription("");
     newMailBody = "Test body";
     setBodyAttachment(mp);
@@ -140,19 +143,16 @@ public class DialogCompose implements Serializable {
             emptyList();
   }
 
-
-
-
-
   /**
    *
+   * @param part
    */
   public boolean removePayload(MSHOutPart part) {
 
     if (part != null && newOutMail != null
             && newOutMail.getMSHOutPayload() != null) {
-      return  newOutMail.getMSHOutPayload() .getMSHOutParts().remove(
-                      part);
+      return newOutMail.getMSHOutPayload().getMSHOutParts().remove(
+              part);
     }
     return false;
 
@@ -173,7 +173,6 @@ public class DialogCompose implements Serializable {
           return;
         }
 
-     
         newOutMail.setSubmittedDate(Calendar.getInstance().getTime());
 
         // add new out mail
@@ -206,27 +205,75 @@ public class DialogCompose implements Serializable {
       suc = false;
       addError("Missing service");
     }
-    if (Utils.isEmptyString(newOutMail.getAction())) {
-      suc = false;
-      addError("Missing action");
-    }
-
+    
     if (newOutMail.getMSHOutPayload().getMSHOutParts().isEmpty()) {
       suc = false;
       addError("Missing payloads!");
     }
+    
+    if (Utils.isEmptyString(newOutMail.getAction())) {
+      suc = false;
+      addError("Missing action");
+    } else {
+      suc = suc && validateMailProperties();
+    }
 
+
+    return suc;
+
+  }
+
+  boolean validateMailProperties() {
+    boolean suc = true;
+    Action act = getCurrentServiceAction(newOutMail.getAction());
+    if (act.getProperties() == null
+            && act.getProperties().getProperties().isEmpty()) {
+
+      if (newOutMail.getMSHOutProperties() != null && !newOutMail.
+              getMSHOutProperties().getMSHOutProperties().isEmpty()) {
+        LOG.formatedlog("Clear mail (service %s, actin %s) properties, "
+                + "action type do not contains any properies",
+                newOutMail.getService(), newOutMail.getAction());
+        newOutMail.getMSHOutProperties().getMSHOutProperties().clear();
+      }
+
+    }
+
+    List<Action.Properties.Property> plst = act.getProperties().getProperties();
+    List<MSHOutProperty> mopNewLst = new ArrayList<>();
+
+    Map<String, String> mprp = new HashMap<>();
     if (newOutMail.getMSHOutProperties() != null) {
       for (MSHOutProperty mo : newOutMail.getMSHOutProperties().
               getMSHOutProperties()) {
-        if (Utils.isEmptyString(mo.getValue())) {
+        mprp.put(mo.getName(), mo.getValue());
+      }
+    }
+
+    for (Action.Properties.Property p : plst) {
+      if (mprp.containsKey(p.getName())) {
+        if (!Utils.isEmptyString(mprp.get(p.getName()))) {
+          MSHOutProperty mop = new MSHOutProperty();
+          mop.setName(p.getName());
+          mop.setType(p.getType());
+          mop.setValue(mprp.get(p.getName()));
+          mopNewLst.add(mop);
+        } else if (p.getRequired() != null && p.getRequired()) {
           suc = false;
-          addError("Missing property: " + mo.getName());
+          addError("Missing property: " + p.getName());
         }
       }
     }
-    return suc;
+    
+    // if ok  - then set new list
+    if (suc && newOutMail.getMSHOutProperties() != null){
+      newOutMail.getMSHOutProperties().getMSHOutProperties().clear();
+      newOutMail.getMSHOutProperties().getMSHOutProperties().addAll(mopNewLst);    
+    }
 
+    
+
+    return suc;
   }
 
   protected void addError(String desc) {
@@ -255,8 +302,6 @@ public class DialogCompose implements Serializable {
   public void setNewOutMail(MSHOutMail newOutMail) {
     this.newOutMail = newOutMail;
   }
-
-
 
   public List<Action> getCurrentServiceActionList() {
     if (getNewOutMail() != null
@@ -349,23 +394,20 @@ public class DialogCompose implements Serializable {
     }
   }
 
-  public void clearTextPayload(){
-    
+  public void clearTextPayload() {
+
     newMailBody = "";
     mBodyAttachment.setEbmsId("");
     mBodyAttachment.setMimeType(MimeValue.MIME_TXT.getMimeType());
     mBodyAttachment.setEncoding("UTF-8");
     mBodyAttachment.setDescription("");
-    
-    
+
   }
-  
 
   public void addTextPayload() {
-    
+
     MSHOutPart p = XMLUtils.deepCopyJAXB(mBodyAttachment);
-    
-  
+
     String suffix = MimeValue.getSuffixBYMimeType(p.getMimeType());
 
     // mp.setValue();
@@ -395,22 +437,23 @@ public class DialogCompose implements Serializable {
 
       newOutMail.getMSHOutPayload().getMSHOutParts().add(p);
     } catch (UnsupportedEncodingException | StorageException ex) {
-      String errMsg = "Error occured while adding text payload: " +ex.getMessage();
+      String errMsg = "Error occured while adding text payload: " + ex.
+              getMessage();
       addError(errMsg);
-      LOG.logError(errMsg, ex);      
+      LOG.logError(errMsg, ex);
     }
 
   }
-  
-   public void addPayload(MSHOutPart p) {
-     newOutMail.getMSHOutPayload().getMSHOutParts().add(p);
-  }
-   
-   public boolean showLaurentiusProperties(){
 
-     Service srv = mPMode.getServiceById(newOutMail.getService());
-    return srv==null || srv.getUseSEDProperties()==null || srv.getUseSEDProperties();
+  public void addPayload(MSHOutPart p) {
+    newOutMail.getMSHOutPayload().getMSHOutParts().add(p);
   }
-   
-  
+
+  public boolean showLaurentiusProperties() {
+
+    Service srv = mPMode.getServiceById(newOutMail.getService());
+    return srv == null || srv.getUseSEDProperties() == null || srv.
+            getUseSEDProperties();
+  }
+
 }

@@ -14,11 +14,13 @@
  */
 package si.jrc.msh.exception;
 
+import si.laurentius.commons.ebms.EBMSErrorCodeInterface;
+
 /**
  *
  * @author Jože Rihtaršič
  */
-public enum EBMSErrorCode {
+public enum EBMSErrorCode implements EBMSErrorCodeInterface {
 
   /**
      *
@@ -249,7 +251,23 @@ public enum EBMSErrorCode {
       "failure", 
       "Processing",
       "Unexpected program error", 
-      "application");
+      "application"),
+  
+  
+   IgnoredAlreadyReceivedMessage("SVEV:0201", "IgnoredAlreadyReceivedMessage", "warning",
+      "Processing", "Message was already received in receivers duplicate detection time window! " +
+          "According to receivers settings duplicate is eliminated!",
+      "reliability"),
+   
+   
+   ReceiverNotExists("SVEV:0202", "Receiver address not exists", "failure",
+      "Content", "Message receiver not exists!",
+      "application"),
+           
+           
+           ;
+           
+         
   
   
   
@@ -275,6 +293,7 @@ public enum EBMSErrorCode {
    *
    * @return
    */
+  @Override
   public String getCode() {
     return code;
   }
@@ -283,6 +302,7 @@ public enum EBMSErrorCode {
    *
    * @return
    */
+  @Override
   public String getName() {
     return name;
   }
@@ -291,6 +311,7 @@ public enum EBMSErrorCode {
    *
    * @return
    */
+  @Override
   public String getSeverity() {
     return severity;
   }
@@ -299,6 +320,7 @@ public enum EBMSErrorCode {
    *
    * @return
    */
+  @Override
   public String getCategory() {
     return category;
   }
@@ -307,6 +329,7 @@ public enum EBMSErrorCode {
    *
    * @return
    */
+  @Override
   public String getDescription() {
     return description;
   }
@@ -315,6 +338,7 @@ public enum EBMSErrorCode {
    *
    * @return
    */
+  @Override
   public String getOrigin() {
     return origin;
   }

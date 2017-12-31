@@ -18,9 +18,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.math.BigInteger;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Calendar;
 import java.util.UUID;
 import javax.xml.bind.JAXBContext;
@@ -61,6 +59,7 @@ public class FOPUtilsTest {
   protected static final String LAU_HOME = "target/TEST-LAU_HOME/";
   protected final SEDLogger LOG = new SEDLogger(ZPPOutInterceptor.class);
   FOPUtils mfpFop = null;
+  private static File fOutDir = null;
 
   /**
    *
@@ -75,8 +74,8 @@ public class FOPUtilsTest {
   @BeforeClass
   public static void startClass()
       throws IOException {
-    if (! (new File(LAU_HOME)).exists()) {
-      Files.createDirectory(Paths.get(LAU_HOME));
+    if (! (fOutDir = new File(LAU_HOME)).exists()) {
+       Files.createDirectory(fOutDir.toPath());
       System.getProperties().put(SEDSystemProperties.SYS_PROP_HOME_DIR, LAU_HOME);
     }
 
@@ -88,6 +87,27 @@ public class FOPUtilsTest {
   @After
   public void tearDown() {
   }
+  
+  
+    @Test
+  public void testGenerateDeliveryVisualizations()
+      throws JAXBException, IOException, FOPException {
+
+    MSHInMail im = createInMail();
+    MSHOutMail om = createOutMail();
+    FOPUtils instance = new FOPUtils(new File(FOP_CONFIG_FILE), XSLT_FO_FOLDER);
+    
+    for (FopTransformation tp: FopTransformation.values()){
+      System.out.println("Generate vizualization: " + tp.name() );
+    File fpdf = new File(fOutDir, String.format("test_%s.pdf", tp.name()) );
+    
+    instance.generateVisualization(tp.getJaxbClass() == MSHInMail.class?im:om , fpdf, tp,
+        MimeConstants.MIME_PDF);
+    
+    }
+    
+  }
+  
 
   @Test
   public void testGenerateDeliveryNotificationVisualization()
@@ -160,6 +180,9 @@ Naša oznaka
         MimeConstants.MIME_PDF);
 
   }
+  
+
+  
   /**
    * 
    * 
@@ -317,6 +340,7 @@ Datum opravljene storitve : <Datum opravljene storitve>
     im.setSenderName("Mr. Sender Name");
     im.setSenderEBox("izvrsba@test-sed.si");
     im.setSubject("Test content");
+    im.setReceivedDate(Calendar.getInstance().getTime());
 
     im.setMSHInPayload(new MSHInPayload());
     MSHInPart ip = new MSHInPart();
@@ -351,6 +375,8 @@ Datum opravljene storitve : <Datum opravljene storitve>
   private MSHOutMail createOutMail() {
 
     MSHOutMail om = new MSHOutMail();
+    Calendar cDelivered = Calendar.getInstance();
+    cDelivered.add(Calendar.DAY_OF_MONTH, 1);
 
     om.setSenderMessageId("SM_ID-" + UUID.randomUUID().toString());
     om.setAction("DeliveryNotification");
@@ -359,7 +385,9 @@ Datum opravljene storitve : <Datum opravljene storitve>
     om.setMessageId(UUID.randomUUID().toString() + "@domain.com");
     om.setReceiverName("Mr. Receiver Name");
     om.setReceiverEBox("receiver.name@test-sed.si");
+    
     om.setSentDate(Calendar.getInstance().getTime());
+    om.setDeliveredDate(cDelivered.getTime());
     
     om.setSenderName("Mr. Sender Name");
     om.setSenderEBox("izvrsba@test-sed.si");

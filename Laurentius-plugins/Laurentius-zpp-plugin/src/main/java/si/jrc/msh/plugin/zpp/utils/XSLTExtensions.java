@@ -33,14 +33,14 @@ public class XSLTExtensions {
   private static final ThreadLocal<DateFormat> S_DATE_FORMAT = new ThreadLocal<DateFormat>() {
     @Override
     protected DateFormat initialValue() {
-      return new SimpleDateFormat("dd.MM.yyyy");
+      return new SimpleDateFormat("dd. MM. yyyy");
     }
   };
 
   private static final ThreadLocal<DateFormat> S_DATE_TIME_FORMAT = new ThreadLocal<DateFormat>() {
     @Override
     protected DateFormat initialValue() {
-      return new SimpleDateFormat("dd.MM.yyyy HH:mm");
+      return new SimpleDateFormat("dd. MM. yyyy HH:mm");
     }
   };
 
@@ -98,6 +98,12 @@ public class XSLTExtensions {
    */
   public static String systemDomain() {
     return SEDSystemProperties.getLocalDomain();
+
+  }
+  
+  public static String domainForAddress(String address) {
+    return address!=null && address.contains("@") ? 
+            address.substring(address.indexOf('@')):"";
 
   }
   

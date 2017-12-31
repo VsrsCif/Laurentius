@@ -153,7 +153,7 @@ public class OutMailDataView extends AbstractMailView<TableOutMail, MSHOutMail, 
   public StreamedContent getFile(BigInteger bi) {
     long l = LOG.logStart();
     MSHOutPart part = null;
-    /*
+    
     MSHOutMail mom = getCurrentMail();
     if (mom == null || mom.getMSHOutPayload() == null
             || mom.getMSHOutPayload().getMSHOutParts().isEmpty()) {
@@ -174,8 +174,9 @@ public class OutMailDataView extends AbstractMailView<TableOutMail, MSHOutMail, 
                 part.getFilename());
       } catch (FileNotFoundException ex) {
         LOG.logError(l, ex);
+        addError("File '"+part.getFilepath()+"' reading error: " + ex.getMessage());
       }
-    }*/
+    }
     return null;
   }
 

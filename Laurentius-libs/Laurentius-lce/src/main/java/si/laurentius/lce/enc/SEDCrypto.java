@@ -107,6 +107,37 @@ public class SEDCrypto {
     return keyDec;
 
   }
+  
+  public Key decryptEncryptedKey(EncryptedKey key, Key rsaKey, SymEncAlgorithms targetKeyAlg)
+      throws SEDSecurityException {
+
+    Key keyDec = null;
+
+    XMLCipher keyCipher;
+    try {
+      keyCipher = XMLCipher.getInstance(ENC_SIMETRIC_KEY_ALG);
+      keyCipher.init(XMLCipher.UNWRAP_MODE, null);
+    } catch (XMLEncryptionException ex) {
+      throw new SEDSecurityException(SEDSecurityException.SEDSecurityExceptionCode.NoSuchAlgorithm,
+          ex, ENC_SIMETRIC_KEY_ALG);
+    }
+
+   
+
+    XMLCipher chDec;
+    try {
+      chDec = XMLCipher.getInstance();
+      chDec.init(XMLCipher.UNWRAP_MODE, rsaKey);
+      keyDec = chDec.decryptKey(key, targetKeyAlg.getURI());
+    } catch (XMLEncryptionException ex) {
+      throw new SEDSecurityException(
+          SEDSecurityException.SEDSecurityExceptionCode.EncryptionException, ex, ex.getMessage());
+    }
+
+    return keyDec;
+
+  }
+
 
   /**
    * Method encrypts input stream to output stream with given key

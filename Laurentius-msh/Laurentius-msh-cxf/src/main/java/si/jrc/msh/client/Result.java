@@ -6,7 +6,7 @@
 package si.jrc.msh.client;
 
 import javax.xml.soap.SOAPMessage;
-import si.jrc.msh.exception.EBMSError;
+import si.laurentius.commons.ebms.EBMSError;
 
 /**
  *

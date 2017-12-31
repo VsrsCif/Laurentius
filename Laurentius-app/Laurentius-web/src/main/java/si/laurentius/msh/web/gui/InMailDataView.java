@@ -139,6 +139,7 @@ public class InMailDataView extends AbstractMailView<TableInMail, MSHInMail, MSH
    */
   @Override
   public StreamedContent getFile(BigInteger bi) {
+    long l = LOG.logStart();
     MSHInPart inpart = null;
     MSHInMail mim = getCurrentMail();
     if (mim == null || mim.getMSHInPayload() == null ||
@@ -158,7 +159,8 @@ public class InMailDataView extends AbstractMailView<TableInMail, MSHInMail, MSH
         return new DefaultStreamedContent(new FileInputStream(f), inpart.getMimeType(),
             inpart.getFilename());
       } catch (FileNotFoundException ex) {
-        Logger.getLogger(InMailDataView.class.getName()).log(Level.SEVERE, null, ex);
+        LOG.logError(l, ex);
+        addError("File '"+inpart.getFilepath()+"' reading error: " + ex.getMessage());
       }
     }
     return null;

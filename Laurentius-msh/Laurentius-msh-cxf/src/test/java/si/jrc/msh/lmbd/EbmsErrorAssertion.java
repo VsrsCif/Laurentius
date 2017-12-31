@@ -7,7 +7,7 @@ package si.jrc.msh.lmbd;
 
 import static org.hamcrest.CoreMatchers.*;
 import org.junit.Assert;
-import si.jrc.msh.exception.EBMSError;
+import si.laurentius.commons.ebms.EBMSError;
 import si.jrc.msh.exception.EBMSErrorCode;
 import static org.junit.Assert.*;
 

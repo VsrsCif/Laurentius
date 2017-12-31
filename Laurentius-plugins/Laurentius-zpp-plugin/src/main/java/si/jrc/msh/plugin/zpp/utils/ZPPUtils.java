@@ -17,18 +17,22 @@ import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Base64;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.JAXBException;
+import org.apache.cxf.binding.soap.SoapFault;
 import si.jrc.msh.plugin.zpp.ZPPConstants;
 import si.jrc.msh.plugin.zpp.enums.FopTransformation;
 import si.jrc.msh.plugin.zpp.enums.ZPPPartPropertyType;
 import si.jrc.msh.plugin.zpp.enums.ZPPPartType;
+import si.jrc.msh.plugin.zpp.exception.ZPPErrorCode;
 import si.jrc.msh.plugin.zpp.exception.ZPPException;
 import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.SEDValues;
+import si.laurentius.commons.ebms.EBMSError;
 import si.laurentius.commons.exception.FOPException;
 import si.laurentius.commons.exception.HashException;
 import si.laurentius.commons.exception.SEDSecurityException;
@@ -208,7 +212,7 @@ public class ZPPUtils {
     // create local encryption key
     SEDEncryptionKey sk = new SEDEncryptionKey();
     sk.setAlgorithm(alg.getURI());
-    sk.setKeyformat(skey.getFormat());
+      sk.setKeyformat(skey.getFormat());
     sk.setSecredKey(skey.getEncoded());
     sk.setKeySize(BigInteger.valueOf(skey.getEncoded().length));
     sk.setEbmsId(mail.getMessageId());
@@ -234,6 +238,23 @@ public class ZPPUtils {
 
     addOrUpdatePartProperty(ptNew, ZPPPartPropertyType.PartCreated.getType(),
             LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME));
+    
+    
+    addOrUpdatePartProperty(ptNew, ZPPPartPropertyType.PartKeyAlg.getType(),
+            sk.getAlgorithm());
+    addOrUpdatePartProperty(ptNew, ZPPPartPropertyType.PartKeyFormat.getType(),
+            sk.getKeyformat());
+    if (sk.getKeySize()!= null) {
+      addOrUpdatePartProperty(ptNew, ZPPPartPropertyType.PartKeySize.getType(),
+            sk.getKeySize().toString());
+    }
+    
+    if (sk.getSecredKey()!= null) {
+      addOrUpdatePartProperty(ptNew, ZPPPartPropertyType.PartKeyValue.getType(),
+              Base64.getEncoder().encodeToString(sk.getSecredKey())
+            );
+    }
+    
 
     return ptNew;
   }
@@ -307,26 +328,6 @@ public class ZPPUtils {
   
 
 
-  /**
-   * Method generates ZPP Delivery notification for mail reciever. Delivery
-   * notification is part is human readably notification ZPP Delivery message.
-   *
-   * @param outMail MSHOutMail -
-   * @param pk
-   * @param xcert
-   * @return
-   * @throws SEDSecurityException
-   * @throws StorageException
-   * @throws HashException
-   * @throws FOPException
-   */
-  public MSHOutPart createSignedDeliveryNotification(MSHOutMail outMail,
-          PrivateKey pk, X509Certificate xcert)
-          throws SEDSecurityException, StorageException, HashException, FOPException {
-
-    return createMSHOutPart(outMail, ZPPPartType.DeliveryNotification,
-            FopTransformation.DeliveryNotification, pk, xcert);
-  }
 
   /**
    * Method generates AdviceOfDelivery for incomming mail.
@@ -346,6 +347,13 @@ public class ZPPUtils {
 
     return createMSHOutPart(mail, ZPPPartType.AdviceOfDelivery,
             FopTransformation.AdviceOfDelivery, pk, xcert);
+  }
+  
+  public MSHOutPart createSignedZPPBDeliveryReciept(MSHInMail mail,
+          PrivateKey pk, X509Certificate xcert){
+
+    return createMSHOutPart(mail, ZPPPartType.DeliveryReciept,
+            FopTransformation.DeliveryNotificationB, pk, xcert);
   }
 
   /**
@@ -472,17 +480,37 @@ long l = LOG.logStart();
    */
   public MSHOutPart createMSHOutPart(MSHMailType outMail, ZPPPartType partType,
           FopTransformation ft, PrivateKey pk, X509Certificate xcert)
-          throws SEDSecurityException, StorageException, HashException, FOPException {
+           {
     long l = LOG.logStart();
 
-    // create nofitication
-    File fDNViz
-            = StorageUtils.getNewStorageFile(partType.getFileSuffix(),
-                    partType.name() + "-");
+    // create visualization
+    File fDNViz;
+    String relativePath;
+    try {
+      fDNViz = StorageUtils.getNewStorageFile(partType.getFileSuffix(),
+              partType.name() + "-");
+      relativePath =StorageUtils.getRelativePath(fDNViz);
+    } catch (StorageException ex) {
+      String msg = String.format("Server error occured while creating file visualization %s  for out mail: %d, Error: %s.", 
+              ft.name(), outMail.getId(), ex.getMessage());      
+      LOG.logError(l, msg, ex);
+      throw new EBMSError(ZPPErrorCode.ServerError, outMail.getRefToMessageId(),
+              msg, SoapFault.FAULT_CODE_SERVER);
+    }
+    
+    
 
-    getFOP().generateVisualization(outMail, fDNViz,
-            ft,
-            partType.getMimeType());
+    try {
+      getFOP().generateVisualization(outMail, fDNViz,
+              ft,
+              partType.getMimeType());
+    } catch (FOPException ex) {
+      String msg = String.format("Server error occured while generationg visualization %s  for out mail: %d, Error: %s.", 
+              ft.name(), outMail.getId(), ex.getMessage());      
+      LOG.logError(l, msg, ex);
+      throw new EBMSError(ZPPErrorCode.ServerError, outMail.getRefToMessageId(),
+              msg, SoapFault.FAULT_CODE_SERVER);
+    }
 
     signPDFDocument(pk, xcert, fDNViz, true);
 
@@ -495,7 +523,7 @@ long l = LOG.logStart();
     ptNew.setName(partType.getPartName());
     ptNew.setType(partType.getPartType());
     ptNew.setDescription(partType.getDescription(null));
-    ptNew.setFilepath(StorageUtils.getRelativePath(fDNViz));
+      ptNew.setFilepath(relativePath);
     ptNew.setFilename(String.format("%s-%d.%s", partType.getPartName(),
             outMail.getId(), partType.getFileSuffix()));
 

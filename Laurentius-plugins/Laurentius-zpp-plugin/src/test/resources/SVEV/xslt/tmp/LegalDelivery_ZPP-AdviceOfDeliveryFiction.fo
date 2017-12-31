@@ -31,11 +31,8 @@
                 </xsl:variable>                
                 
                 <fo:flow flow-name="xsl-region-body">
-					<fo:block  margin-top="1.5cm" font-size="12pt" linefeed-treatment="preserve">
-                       VROČILNICA NA PODLAGI FIKCIJE (sedmi odstavek 141.a člen ZPP)
-                    </fo:block>
                     
-                    <fo:block margin-top="1.5cm" font-size="12pt" font-weight="bold" linefeed-treatment="preserve">					
+                    <fo:block margin-top="3.0cm" font-size="12pt" font-weight="bold" linefeed-treatment="preserve">					
                         Pošiljatelj</fo:block>
                     <fo:block font-size="12pt">
                         <xsl:value-of select="/msh:MSHOutMail/@senderName"/>
@@ -43,7 +40,6 @@
                     <fo:block font-size="12pt">
                         <xsl:value-of select="/msh:MSHOutMail/@senderEBox"/>
                     </fo:block>
-
                     <fo:block font-size="12pt" font-weight="bold" linefeed-treatment="preserve">					
                         Naslovnik</fo:block>
                     <fo:block font-size="12pt">
@@ -52,7 +48,6 @@
                     <fo:block font-size="12pt">
                         <xsl:value-of select="/msh:MSHOutMail/@receiverEBox"/>
                     </fo:block>
-
                     <fo:block font-size="12pt" font-weight="bold" linefeed-treatment="preserve">
                         Zadeva: Potrdilo o opravljeni vročitvi na podlagi fikcije po ZPP			
                     </fo:block>
@@ -65,8 +60,7 @@
                                 <fo:block><fo:inline>•</fo:inline></fo:block>
                             </fo:list-item-label>
                             <fo:list-item-body start-indent="body-start()">
-                                <fo:block>da je naslovnik pošiljke z oznako <fo:inline font-weight="bold"><xsl:value-of select="/msh:MSHOutMail/@subject"/> (<xsl:value-of select="/msh:MSHOutMail/@messageId"/>)</fo:inline>
-dne <xsl:value-of select="$varFormatedSentDate"/> prejel obvestilo o tej pošiljki s poukom o pravnih posledicah neprevzema v 15 dneh,</fo:block>
+                                <fo:block>da je naslovnik pošiljke z oznako <xsl:value-of select="/msh:MSHOutMail/@messageId"/> dne <xsl:value-of select="$varFormatedSentDate"/> prejel obvestilo o tej pošiljki s pravnim poukom o posledicah neprevzema v 15 dneh,</fo:block>
                             </fo:list-item-body>
                         </fo:list-item>
                         <fo:list-item>
@@ -74,23 +68,39 @@ dne <xsl:value-of select="$varFormatedSentDate"/> prejel obvestilo o tej pošilj
                                 <fo:block><fo:inline >•</fo:inline></fo:block>
                             </fo:list-item-label>
                             <fo:list-item-body start-indent="body-start()">
-                                <fo:block>da naslovnik pošiljke v 15 dneh od dneva obvestila o prispeli pošiljki ni prevzel, zato se po sedmem odstavku 141.a člena ZPP šteje, da je bila vročitev opravljena dne <fo:inline font-weight="bold"><xsl:value-of select="$varFictionDate"/></fo:inline>.</fo:block>
+                                <fo:block>da naslovnik pošiljke v 15 dneh od dneva obvestila o prispeli pošiljki ni prevzel, zato se po sedmem odstavku 141.a člena ZPP šteje, da je bila vročitev opravljena dne <xsl:value-of select="$varFictionDate"/>.</fo:block>
                             </fo:list-item-body>
                         </fo:list-item>
                     </fo:list-block>
-				    <fo:block font-size="12pt" linefeed-treatment="preserve">
-                        To sporočilo je potrdilo o vročitvi pošiljke in opravljeni storitvi.
-                    </fo:block>
 
-  					<fo:block font-size="12pt"  margin-top="1.0cm">
-                       Storitev: Elektronska vročitev pošiljke po ZPP osebno,
-                    </fo:block>                    
+        
+                    <fo:block font-size="12pt" font-weight="bold" margin-top="1.0cm">
+                        Podatki o pošiljki:
+                    </fo:block>
+                    <fo:block font-size="12pt"  >
+                        Opis vsebine:  <xsl:value-of select="/msh:MSHOutMail/@subject"/>                      
+                    </fo:block>
+                    <fo:block font-size="12pt"  >
+                        Število dokumentov:  <xsl:value-of select="count(/msh:MSHOutMail/mpl:MSHOutPayload/mpl:MSHOutPart)"/>                                                                         
+                    </fo:block>
+                    <xsl:for-each select="/msh:MSHOutMail/prp:MSHOutProperties/prp:MSHOutProperty">
+                        <fo:block font-size="12pt"  >
+                            <xsl:value-of select="@name"/>:<xsl:value-of select="."/>
+                        </fo:block>
+                    </xsl:for-each>
+                
+                    
+                    <!-- new line -->
+                    <fo:block font-size="12pt"  margin-top="1.0cm">
+                        Naša oznaka:                    
+                        <xsl:value-of select="/msh:MSHOutMail/@messageId"/>
+                    </fo:block>
                     <fo:block font-size="12pt" >
-                        enolična oznaka storitve: <xsl:value-of select="/msh:MSHOutMail/@conversationId"/>.
+                        Transakcija:                    
+                        <xsl:value-of select="/msh:MSHOutMail/@conversationId"/>
                     </fo:block>
-
-                    <fo:block font-size="12pt"   margin-top="1.0cm">	
-                        Laurentius (<xsl:call-template name="systemDomain"/>), <xsl:call-template name="currentDateTime"/>.
+                    <fo:block font-size="12pt" >	
+                        Datum: <xsl:call-template name="currentDate"/>
                     </fo:block>
                 </fo:flow>
             </fo:page-sequence>
@@ -104,11 +114,11 @@ dne <xsl:value-of select="$varFormatedSentDate"/> prejel obvestilo o tej pošilj
     <xsl:template name="currentDateTime">
         <xsl:value-of select="java:si.jrc.msh.plugin.zpp.utils.XSLTExtensions.currentDateTime()"/>
     </xsl:template>
+    <xsl:template name="currentDate">
+        <xsl:value-of select="java:si.jrc.msh.plugin.zpp.utils.XSLTExtensions.currentDate()"/>
+    </xsl:template>
     <xsl:template name="getZPPFictionDate">
         <xsl:param name="date"/>
         <xsl:value-of select="java:si.jrc.msh.plugin.zpp.utils.XSLTExtensions.getZPPFictionDate($date)"/>
-    </xsl:template>
-<xsl:template name="systemDomain">
-        <xsl:value-of select="java:si.jrc.msh.plugin.zpp.utils.XSLTExtensions.systemDomain()"/>
     </xsl:template>
 </xsl:stylesheet>

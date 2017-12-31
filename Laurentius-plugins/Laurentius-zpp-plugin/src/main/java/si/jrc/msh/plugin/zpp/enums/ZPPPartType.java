@@ -24,12 +24,14 @@ public enum ZPPPartType {
    *
    */
   DeliveryNotification("http://www.sodisce.si/ZPP/DeliveryNotification", "ObvestiloOPosiljki", "Obvestilo o prispeli pošiljki", "application/pdf", "pdf"),
+  DeliveryReciept("http://www.sodisce.si/ZPP/DeliveryReciept", "Potrdilo o vročitvi", "Potrdilo o vročitvi v varni ePredal", "application/pdf", "pdf"),
   AdviceOfDelivery("http://www.sodisce.si/ZPP/AdviceOfDelivery", "Vrocilnica", "Vročilnica", "application/pdf", "pdf"),
   FictionNotification("http://www.sodisce.si/ZPP/FictionNotification", "ObvestiloOFikciji", "Obvestilo naslovniku o fiktivni vročitvi", "application/pdf", "pdf"),
   AdviceOfDeliveryFiction("http://www.sodisce.si/ZPP/AdviceOfDeliveryFiction", "FiktivnaVrocitev", "Obvestilo pošiljatelju o fiktivni vročitvi", "application/pdf", "pdf"),  
   EncryptedPart("http://www.sodisce.si/ZPP/EncryptedPart", "SifriranaPosiljka", "Sifriran dok.: %s", "application/octet-stream", "zpp.enc"),
   LocalEncryptionKey("http://www.sodisce.si/ZPP/LocalEncryptionKey", "LocalEncryptionKey", "Kljuc za sifriranje priponk", "application/xml", "xml"),
   EncryptedKey("http://www.sodisce.si/ZPP/EncryptedKey", "EncryptedKey", "Kljuc za desifriranje priponk", "application/xml", "xml"),
+  RecieptAddressNotExists("http://www.sodisce.si/ZPP/RecieptAddressNotExists", "RecieptAddressNotExists", "Naslovnik ne obstaja", "application/pdf", "pdf"),
   
     ;
  
