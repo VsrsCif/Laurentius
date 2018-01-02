@@ -9,6 +9,7 @@ import java.math.BigInteger;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import si.laurentius.msh.inbox.mail.MSHInMail;
 import si.laurentius.msh.outbox.mail.MSHOutMail;
 import si.laurentius.cron.SEDTaskExecution;
@@ -24,6 +25,12 @@ import si.laurentius.msh.outbox.payload.MSHOutPart;
  * @author Jože Rihtaršič
  */
 public class SEDTestDao implements SEDDaoInterface{
+
+  @Override
+  public <T> List<T> getDataList(Class<T> type, String hql,
+          Map<String, Object> params) {
+    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+  }
 
   @Override
   public Date setStatusToInMail(BigInteger id, SEDInboxMailStatus status,
