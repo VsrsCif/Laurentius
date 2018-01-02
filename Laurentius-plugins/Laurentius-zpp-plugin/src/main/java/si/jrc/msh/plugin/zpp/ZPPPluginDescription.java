@@ -53,6 +53,8 @@ public class ZPPPluginDescription extends AbstractPluginDescription {
 
             registerPluginComponentInterface(ZPPTask.class);
             registerPluginComponentInterface(ZPPTaskFiction.class);
+            registerPluginComponentInterface(ZPPTaskFictionByLastDelivery.class);
+            
 
             // register plugin
             registerPlugin();

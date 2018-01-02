@@ -17,6 +17,7 @@ package si.laurentius.commons.interfaces;
 import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import javax.ejb.Local;
 import javax.naming.NamingException;
 import si.laurentius.msh.inbox.mail.MSHInMail;
@@ -53,6 +54,9 @@ public interface SEDDaoInterface {
   <T, D> List<T> getDataList(Class<T> resultType, int startingAt,
           int maxResultCnt, String sortField,
           String sortOrder, Object filters, Class<D> filterType);
+  
+  
+   <T> List<T> getDataList(Class<T> type, String hql , Map<String, Object> params);
 
   /**
    *

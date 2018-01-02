@@ -80,5 +80,8 @@
     <query name="si.laurentius.msh.outbox.mail.MSHOutMail.updateDeliveredDate" >
         <![CDATA[UPDATE MSHOutMail p set p.DeliveredDate = :deliveredDate where p.Id = :id]]>
     </query>
+    
+ 
+
 
 </hibernate-mapping>
