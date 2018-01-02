@@ -19,10 +19,10 @@ ADD  $LAU_PROJECT/scripts/install/$SERVER_VERSION/modules/si.laurentius.module.x
 COPY $LAU_PROJECT/scripts/install/modules/org/  $WILDFLY_HOME/modules/org/
 
 # copy configuration
-ADD $LAU_PROJECT/scripts/install/$SERVER_VERSION/config/laurentius-roles.properties $WILDFLY_HOME/standalone/configuration/"
-ADD $LAU_PROJECT/scripts/install/$SERVER_VERSION/config/laurentius-users.properties $WILDFLY_HOME/standalone/configuration/"
-ADD $LAU_PROJECT/scripts/install/$SERVER_VERSION/config/standalone-laurentius.xml $WILDFLY_HOME/standalone/configuration/"
-ADD $LAU_PROJECT/scripts/install/$SERVER_VERSION/config/test-tls-keystore.jks $WILDFLY_HOME/standalone/configuration/"
+ADD $LAU_PROJECT/scripts/install/$SERVER_VERSION/config/laurentius-roles.properties $WILDFLY_HOME/standalone/configuration/
+ADD $LAU_PROJECT/scripts/install/$SERVER_VERSION/config/laurentius-users.properties $WILDFLY_HOME/standalone/configuration/
+ADD $LAU_PROJECT/scripts/install/$SERVER_VERSION/config/standalone-laurentius.xml $WILDFLY_HOME/standalone/configuration/
+ADD $LAU_PROJECT/scripts/install/$SERVER_VERSION/config/test-tls-keystore.jks $WILDFLY_HOME/standalone/configuration/
 
 
 
