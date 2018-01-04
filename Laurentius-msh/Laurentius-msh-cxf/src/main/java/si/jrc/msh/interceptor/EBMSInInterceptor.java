@@ -166,8 +166,9 @@ public class EBMSInInterceptor extends AbstractEBMSInterceptor {
       inmctx = EBMSParser.createEBMSContextFromUserMessage(um,
               getPModeManager());
       messageId = um.getMessageInfo().getMessageId();
+      
+/*
       // check if message already exists
-
       List<MSHInMail> dupllst = getDAO().getMailByMessageId(MSHInMail.class,
               messageId);
       List<MSHInMail> dupInclusionllst = new ArrayList<>();
@@ -262,7 +263,7 @@ public class EBMSInInterceptor extends AbstractEBMSInterceptor {
             return;
           }
         }
-      }
+      }*/
 
       if (mebmsValidation.isTestUserMessage(um)) {
         LOG.formatedWarning(
@@ -399,8 +400,117 @@ public class EBMSInInterceptor extends AbstractEBMSInterceptor {
 
       }
     }
+    
+    if (inmctx!= null && um != null) {
+      testDuplicateMail(messageId, inmctx, msg, request);
+    }
 
     LOG.logEnd(l);
+  }
+  
+  
+  
+  public  void testDuplicateMail(String messageId, EBMSMessageContext inmctx, SoapMessage msg, SOAPMessage request){
+      long l = LOG.logStart();
+      boolean isBackChannel = SoapUtils.isRequestMessage(msg);
+       
+      List<MSHInMail> dupllst = getDAO().getMailByMessageId(MSHInMail.class,
+              messageId);
+      List<MSHInMail> dupInclusionllst = new ArrayList<>();
+
+      LOG.formatedlog("Got %d in messages with message id: %s", dupllst.size(),
+              messageId);
+
+      if (!dupllst.isEmpty()
+              && inmctx.getReceptionAwareness() != null
+              && inmctx.getReceptionAwareness().getDuplicateDetection() != null
+              && inmctx.getReceptionAwareness().getDuplicateDetection().
+                      getWindowPeriode() != null) {
+
+        ReceptionAwareness.DuplicateDetection dd
+                = inmctx.getReceptionAwareness().getDuplicateDetection();
+        Duration dTime = dd.getWindowPeriode();
+        Date dt = Calendar.getInstance().getTime();
+        dTime.negate().addTo(dt);
+
+        StringWriter sw = new StringWriter();
+        for (MSHInMail dmi : dupllst) {
+          Date recDate = dmi.getReceivedDate();
+          if (recDate.after(dt)) {
+            sw.append(String.format(
+                    "Message with id %s (receiver id: %d) already received in conversation %s date:  %s",
+                    messageId, dmi.getId(), dmi.getConversationId(),
+                    SimpleDateFormat.getDateTimeInstance().format(recDate)));
+            dupInclusionllst.add(dmi);
+          }
+
+        }
+        dupllst.clear();
+
+        String warn = sw.toString();
+
+        if (!dupInclusionllst.isEmpty()) {
+          LOG.logWarn(warn, null);
+          if (dd.getEliminate()) {
+            SignalMessage as4Receipt
+                    = EBMSBuilder.generateAS4ReceiptSignal(messageId,
+                            SEDSystemProperties.getLocalDomain(), request.
+                            getSOAPPart()
+                            .getDocumentElement(), Calendar.getInstance().
+                                    getTime());
+            EBMSError warning = new EBMSError(EBMSErrorCode.DuplicateDeteced,
+                    messageId,
+                    warn + " Duplicate is eliminated.",
+                    SoapFault.FAULT_CODE_CLIENT);
+
+            EBMSError warningSVEV = new EBMSError(
+                    EBMSErrorCode.IgnoredAlreadyReceivedMessage,
+                    messageId,
+                    warn + " Duplicate is eliminated.",
+                    SoapFault.FAULT_CODE_CLIENT);
+
+            as4Receipt.getErrors().add(EBMSBuilder.createError(warning));
+            as4Receipt.getErrors().add(EBMSBuilder.createError(warningSVEV));
+
+            msg.getExchange().put(SignalMessage.class, as4Receipt);
+            Endpoint e = msg.getExchange().get(Endpoint.class);
+            if (!msg.getExchange().isOneWay() && !isBackChannel) {
+              Message responseMsg = new MessageImpl();
+              responseMsg.setExchange(msg.getExchange());
+              responseMsg = e.getBinding().createMessage(responseMsg);
+              msg.getExchange().setOutMessage(responseMsg);
+
+              MessageFactory mf;
+              try {
+                mf = MessageFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
+                SOAPMessage soapMessage = mf.createMessage();
+
+                responseMsg.setContent(SOAPMessage.class, soapMessage);
+
+                InterceptorChain chainOut
+                        = OutgoingChainInterceptor.getOutInterceptorChain(msg
+                                .getExchange());
+
+                LOG.logWarn("got out interceptor:" + chainOut, null);
+                responseMsg.setInterceptorChain(chainOut);
+                SoapUtils.setEBMSMessageOutContext(
+                        createOutContextFromInContext(inmctx, messageId),
+                        responseMsg);
+                chainOut.doIntercept(responseMsg);
+
+              } catch (SOAPException ex) {
+                LOG.logError(l, ex);
+              }
+            }
+
+            LOG.formatedWarning("Duplicate %s eliminated", messageId);
+            msg.getInterceptorChain().abort();
+            return;
+          }
+        }
+      }
+  
+  
   }
 
   public EBMSMessageContext createOutContextFromInContext(
