@@ -390,6 +390,10 @@ public class EBMSValidation {
           om.setReceivedDate(sm.getMessageInfo().getTimestamp());          
         }
     }
+    
+    if (sm.getErrors() != null) {
+      SoapUtils.setInErrors(sm.getErrors(), soap);
+    }
 
     LOG.logEnd(l, msgId);
   }

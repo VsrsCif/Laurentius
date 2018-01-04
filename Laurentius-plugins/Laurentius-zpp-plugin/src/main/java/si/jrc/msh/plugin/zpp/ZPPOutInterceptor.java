@@ -117,22 +117,14 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
    */
   protected final SEDCrypto.SymEncAlgorithms mAlgorithem = SEDCrypto.SymEncAlgorithms.AES256_CBC;
 
-  /**
-   *
-   */
-  @PersistenceContext(unitName = "ebMS_ZPP_PU", name = "ebMS_ZPP_PU")
-  public EntityManager memEManager;
+
   FOPUtils mfpFop = null;
   ;
   SEDCrypto mscCrypto = new SEDCrypto();
   KeystoreUtils mksu = new KeystoreUtils();
   ZPPUtils mzppZPPUtils = new ZPPUtils();
   KeystoreUtils mKeystoreUtils = new KeystoreUtils();
-  /**
-   *
-   */
-  @Resource
-  public UserTransaction mutUTransaction;
+
 
   /**
    *

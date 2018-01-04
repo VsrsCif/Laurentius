@@ -33,8 +33,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.Local;
@@ -43,16 +41,9 @@ import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
 import javax.jms.JMSException;
 import javax.naming.NamingException;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
 import javax.transaction.UserTransaction;
-import javax.xml.bind.JAXBException;
-import javax.xml.namespace.QName;
-import javax.xml.parsers.ParserConfigurationException;
 import org.apache.cxf.binding.soap.SoapFault;
 import org.apache.cxf.binding.soap.SoapMessage;
-import org.apache.cxf.message.MessageUtils;
 import org.apache.xml.security.encryption.EncryptedKey;
 import org.apache.xml.security.keys.keyresolver.KeyResolverException;
 import si.laurentius.msh.inbox.mail.MSHInMail;
@@ -60,14 +51,13 @@ import si.laurentius.msh.inbox.payload.MSHInPart;
 import si.laurentius.msh.outbox.mail.MSHOutMail;
 import si.laurentius.ebox.SEDBox;
 import org.w3c.dom.Element;
-import org.xml.sax.SAXException;
 import si.jrc.msh.plugin.zpp.doc.DocumentSodBuilder;
+import si.jrc.msh.plugin.zpp.enums.ZPPPartType;
 import si.jrc.msh.plugin.zpp.exception.ZPPErrorCode;
 import si.jrc.msh.plugin.zpp.exception.ZPPException;
 import si.jrc.msh.plugin.zpp.utils.FOPUtils;
 import si.jrc.msh.plugin.zpp.utils.ZPPUtils;
 import si.laurentius.lce.enc.SEDCrypto;
-import si.laurentius.lce.enc.SEDKey;
 import si.laurentius.commons.enums.MimeValue;
 import si.laurentius.commons.enums.SEDInboxMailStatus;
 import si.laurentius.commons.SEDJNDI;
@@ -86,7 +76,6 @@ import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StorageUtils;
 import si.laurentius.commons.utils.StringFormater;
 
-import si.laurentius.commons.utils.xml.XMLUtils;
 import si.laurentius.lce.KeystoreUtils;
 import si.laurentius.commons.interfaces.SEDCertStoreInterface;
 import si.laurentius.commons.pmode.EBMSMessageContext;
@@ -133,17 +122,9 @@ public class ZPPInInterceptor implements SoapInterceptorInterface {
   @EJB(mappedName = SEDJNDI.JNDI_DBCERTSTORE)
   SEDCertStoreInterface mCertBean;
 
-  /**
-   *
-   */
-  @Resource
-  public UserTransaction mutUTransaction;
 
-  /**
-   *
-   */
-  @PersistenceContext(unitName = "ebMS_ZPP_PU", name = "ebMS_ZPP_PU")
-  public EntityManager memEManager;
+
+
 
   @Override
   public MailInterceptorDef getDefinition() {
@@ -629,7 +610,7 @@ public class ZPPInInterceptor implements SoapInterceptorInterface {
     long l = LOG.logStart();
     EncryptedKey ek = null;
     for (MSHInPart mip : inMail.getMSHInPayload().getMSHInParts()) {
-      if (Objects.equals(mip.getType(), ZPPConstants.ELM_SIGNAL_ENCRYPTED_KEY)) {
+      if (Objects.equals(mip.getType(), ZPPPartType.EncryptedKey.getPartType())) {
         ek = getEncryptedKeyFromInPart(mip, inMail);
         break;
       }
@@ -720,21 +701,7 @@ public class ZPPInInterceptor implements SoapInterceptorInterface {
     return mfpFop;
   }
 
-  /**
-   *
-   * @param mailId
-   * @return
-   * @throws IOException
-   */
-  public Key getEncryptionKeyForDeliveryAdvice(BigInteger mailId)
-          throws IOException {
-    TypedQuery<SEDKey> q
-            = memEManager.createNamedQuery("si.jrc.msh.sec.SEDKey.getById",
-                    SEDKey.class);
-    q.setParameter("id", mailId);
-    return q.getSingleResult();
 
-  }
 
   /**
    *

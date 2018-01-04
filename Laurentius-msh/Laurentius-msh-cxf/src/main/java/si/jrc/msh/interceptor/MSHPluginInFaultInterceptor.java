@@ -17,11 +17,8 @@ package si.jrc.msh.interceptor;
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.interceptor.Fault;
 import org.apache.cxf.phase.Phase;
-import si.laurentius.commons.cxf.SoapUtils;
 import si.laurentius.commons.enums.SEDInterceptorEvent;
-import si.laurentius.commons.pmode.EBMSMessageContext;
 import si.laurentius.commons.utils.SEDLogger;
-import si.laurentius.msh.inbox.mail.MSHInMail;
 
 /**
  *

@@ -556,6 +556,7 @@ long l = LOG.logStart();
     signPDFDocument(pk, xcert, fDNViz, true);
 
     MSHInPart ptNew = new MSHInPart();
+    ptNew.setEbmsId(Utils.getUUIDWithLocalDomain());
     ptNew.setSource(ZPPConstants.S_ZPP_PLUGIN_TYPE);
     ptNew.setEncoding(SEDValues.ENCODING_BASE64);
     ptNew.setIsSent(Boolean.FALSE);

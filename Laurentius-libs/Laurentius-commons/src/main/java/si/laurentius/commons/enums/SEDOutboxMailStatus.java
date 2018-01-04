@@ -61,6 +61,8 @@ public enum SEDOutboxMailStatus {
    *
    */
   DELIVERED("DELIVERED", "Message is delivered to consumer", "darkblue"),
+  
+  NOTDELIVERED("NOTDELIVERED", "Message is not delivered to consumer", "violet"),
 
   /**
    *

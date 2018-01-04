@@ -27,7 +27,6 @@ import si.laurentius.msh.inbox.mail.MSHInMail;
 import si.laurentius.ebox.SEDBox;
 import si.laurentius.commons.enums.SEDInboxMailStatus;
 import si.laurentius.commons.SEDJNDI;
-import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.cxf.SoapUtils;
 import si.laurentius.commons.ebms.EBMSError;
 import si.laurentius.commons.exception.StorageException;

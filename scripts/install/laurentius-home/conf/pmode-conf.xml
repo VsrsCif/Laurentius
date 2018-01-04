@@ -77,6 +77,16 @@
                 </PayloadProfiles>
             </Action>
             
+        </Service>
+		<Service id="TestService" serviceName="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/service" serviceType="" useSEDProperties="false">
+            <Initiator role="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/initiator"/>
+            <Executor role="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/responder"/>
+            <Action name="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/test" invokeRole="initiator" messageType="userMessage">
+                <Properties/>
+                <PayloadProfiles maxSize="10485760">
+                    <PayloadProfile name="payload" MIME="application/octet-stream" maxSize="10485760" maxOccurs="100" minOccurs="1"/>
+                </PayloadProfiles>
+            </Action>
         </Service>     
     </Services>
     <Parties>
@@ -257,7 +267,41 @@
                     <BackChannel action="EncryptedKey" securityIdRef="sign_sha256"/>
                 </Transport>
             </Leg>
+        </MEP>        
+    </PMode>
+    <PMode id="TestService" isTest="true">
+        <ServiceIdRef>TestService</ServiceIdRef>
+        <LocalPartyInfo partyIdentitySetIdRef="test-laurentius" partyDefTransportIdRef="defalut">
+            <Role>Sender</Role>
+            <Role>Receiver</Role>
+            <Role>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/initiator</Role>
+            <Role>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/responder</Role>
+        </LocalPartyInfo>
+        <ExchangeParties>
+            <PartyInfo partyIdentitySetIdRef="test-laurentius" partyDefTransportIdRef="defalut">
+                <Role>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/initiator</Role>
+                <Role>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/responder</Role>
+            </PartyInfo>
+            <PartyInfo partyIdentitySetIdRef="court-laurentius" partyDefTransportIdRef="court-https">
+                <Role>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/initiator</Role>
+                <Role>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/responder</Role>
+            </PartyInfo>
+        </ExchangeParties>
+        <MEP>
+            <MEPType>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/oneWay</MEPType>
+            <MEPChannelBinding>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/push</MEPChannelBinding>
+            <MEPInitiatorRole>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/initiator</MEPInitiatorRole>
+            <Leg>
+                <MPC>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/defaultMPC</MPC>
+                <Transport>
+                    <ForeChannel action="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/test" securityIdRef="sign_sha256">
+                        <ReceptionAwareness raPatternIdRef="AS4ReceiptResponse"/>
+                    </ForeChannel>
+                    <BackChannel securityIdRef="sign_sha256">
+                        <ReceptionAwareness/>
+                    </BackChannel>
+                </Transport>
+            </Leg>
         </MEP>
-        
     </PMode>
 </MSHSetings>

@@ -16,6 +16,7 @@ package si.laurentius.msh.jms;
 
 import java.io.File;
 import java.math.BigInteger;
+import java.util.Calendar;
 import java.util.Collections;
 import javax.ejb.ActivationConfigProperty;
 import javax.ejb.EJB;
@@ -27,6 +28,8 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.persistence.NoResultException;
+import org.apache.cxf.endpoint.Client;
+import org.oasis_open.docs.ebxml_msg.ebms.v3_0.ns.core._200704.SignalMessage;
 import si.jrc.msh.client.MSHPluginOutEventHandler;
 import si.laurentius.msh.outbox.mail.MSHOutMail;
 import si.laurentius.msh.pmode.ReceptionAwareness;
@@ -51,6 +54,7 @@ import si.laurentius.commons.utils.Utils;
 import si.laurentius.lce.DigestUtils;
 import si.laurentius.msh.outbox.payload.MSHOutPart;
 import si.laurentius.plugin.interfaces.OutMailEventInterface;
+
 
 /**
  *
@@ -203,6 +207,8 @@ public class MSHQueueBean implements MessageListener {
       setStatusToOutMail(mail, SEDOutboxMailStatus.PUSHING,
               "Start pushing to receiver MSH");
 
+      mail.setSentDate(Calendar.getInstance().getTime());
+      
       Result sm = mmshClient.pushMessage(mail, sd, mCertBean);
 
       if (sm.getError() != null) {
@@ -230,7 +236,14 @@ public class MSHQueueBean implements MessageListener {
 
           }
 
+        } else if (sm.getError().getEbmsErrorCode().equals(
+                EBMSErrorCode.ReceiverNotExists)) {
+          setStatusToOutMail(mail, SEDOutboxMailStatus.NOTDELIVERED,
+                  sm.getError().getSubMessage(),
+                  null, sm.getMimeType());
+
         } else {
+
           setStatusToOutMail(mail, SEDOutboxMailStatus.FAILED,
                   "Configuration error: " + sm.getError().getSubMessage(),
                   null, sm.getMimeType());
@@ -240,15 +253,15 @@ public class MSHQueueBean implements MessageListener {
         }
 
       } else {
-        
+
         String resPath = sm.getResultFile();
         File fRes = StorageUtils.getFile(resPath);
-             
+
         MSHOutPart mipt = new MSHOutPart();
 
         mipt.setIsSent(Boolean.FALSE);
         mipt.setIsReceived(Boolean.TRUE);
-        
+
         mipt.setMailId(mail.getId());
         mipt.setDescription("Soap response");
         mipt.setEbmsId(Utils.getUUIDWithLocalDomain()); // set response id?
@@ -261,24 +274,29 @@ public class MSHQueueBean implements MessageListener {
         mipt.setSha256Value(DigestUtils.getHexSha256Digest(fRes));
         mipt.setFilepath(resPath);
         mail.getMSHOutPayload().getMSHOutParts().add(mipt);
-        
+
         try {
+
+          mDB.addOutMailPayload(mail, Collections.singletonList(mipt),
+                  SEDOutboxMailStatus.SENT, "Message sent to receiver MSH", null,
+                  "ebms"
+          );
           
-          mDB.addOutMailPayload(mail, Collections.singletonList(mipt), SEDOutboxMailStatus.SENT, "Message sent to receiver MSH", null, "ebms"
-                  );
+          mDB.setStatusToOutMail(mail.getId(), 
+                  mail.getSenderMessageId(), mail.getSentDate(),
+                          mail.getReceivedDate(), null, SEDOutboxMailStatus.SENT,
+                          "Get delivery receipt",null, "ebms",null, null);
           mPluginOutEventHandler.outEvent(mail, sd,
-                OutMailEventInterface.PluginOutEvent.SEND);
+                  OutMailEventInterface.PluginOutEvent.SEND);
         } catch (StorageException ex) {
           LOG.logError(resPath, ex);
         }
 
-               
-               /*
+        /*
         setStatusToOutMail(mail, SEDOutboxMailStatus.SENT,
                 "Message sent to receiver MSH",
                 sm.getResultFile(), sm.getMimeType());
-*/
-        
+         */
       }
 
     }

@@ -16,8 +16,6 @@ import java.util.Properties;
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.xml.bind.JAXBException;
 import si.laurentius.msh.inbox.mail.MSHInMail;
 import si.laurentius.msh.outbox.mail.MSHOutMail;
@@ -81,13 +79,8 @@ public class ZPPTaskFiction implements TaskExecutionInterface {
   KeystoreUtils mkeyUtils = new KeystoreUtils();
   ZPPUtils mzppZPPUtils = new ZPPUtils();
 
-  /**
-   *
-   */
-  @PersistenceContext(unitName = "ebMS_ZPP_PU", name = "ebMS_ZPP_PU")
-  public EntityManager memEManager;
+  
 
-  // TODO externalize
   /**
    *
    * @param p

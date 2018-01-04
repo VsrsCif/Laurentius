@@ -14,7 +14,7 @@
  */
 package si.jrc.msh.interceptor;
 
-import com.google.common.base.Objects;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
@@ -26,6 +26,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import javax.activation.DataHandler;
 import javax.xml.datatype.Duration;
@@ -80,6 +81,7 @@ import si.laurentius.commons.utils.Utils;
 import si.laurentius.lce.DigestUtils;
 import si.laurentius.msh.inbox.payload.IMPartProperty;
 import si.laurentius.msh.inbox.payload.MSHInPayload;
+import si.laurentius.msh.outbox.mail.MSHOutMail;
 import si.laurentius.msh.pmode.ReceptionAwareness;
 import si.laurentius.msh.pmode.Security;
 
@@ -214,22 +216,16 @@ public class EBMSInInterceptor extends AbstractEBMSInterceptor {
                     messageId,
                     warn + " Duplicate is eliminated.",
                     SoapFault.FAULT_CODE_CLIENT);
-            
-            
-            EBMSError warningSVEV = new EBMSError(EBMSErrorCode.IgnoredAlreadyReceivedMessage,
+
+            EBMSError warningSVEV = new EBMSError(
+                    EBMSErrorCode.IgnoredAlreadyReceivedMessage,
                     messageId,
                     warn + " Duplicate is eliminated.",
                     SoapFault.FAULT_CODE_CLIENT);
-            
-            
-            
-            
+
             as4Receipt.getErrors().add(EBMSBuilder.createError(warning));
             as4Receipt.getErrors().add(EBMSBuilder.createError(warningSVEV));
-            
-            
-            
-            
+
             msg.getExchange().put(SignalMessage.class, as4Receipt);
             Endpoint e = msg.getExchange().get(Endpoint.class);
             if (!msg.getExchange().isOneWay() && !isBackChannel) {
@@ -289,6 +285,7 @@ public class EBMSInInterceptor extends AbstractEBMSInterceptor {
     }
     // validate signals
     for (SignalMessage sm : msgHeader.getSignalMessages()) {
+
       mebmsValidation.processSignalMessage(msg, sm, SoapFault.FAULT_CODE_CLIENT);
 
     }
@@ -303,7 +300,7 @@ public class EBMSInInterceptor extends AbstractEBMSInterceptor {
                 msgERr, SoapFault.FAULT_CODE_CLIENT);
       }
 
-      if (inmctx != null && Objects.equal(inmctx.getPMode().getId(), outmctx.
+      if (inmctx != null && Objects.equals(inmctx.getPMode().getId(), outmctx.
               getPMode().getId())) {
         String msgERr = String.format("In pmode id: '%s' out pmode id: '%s'!",
                 inmctx.getPMode().getId(), outmctx.getPMode().getId());
@@ -389,7 +386,18 @@ public class EBMSInInterceptor extends AbstractEBMSInterceptor {
 
     // validate signals
     for (SignalMessage sm : msgHeader.getSignalMessages()) {
-      // process signal
+      if (isBackChannel && sm.getReceipt() != null) {
+        MSHOutMail mo = SoapUtils.getMSHOutMail(msg);
+        if (mo != null && Objects.equals(sm.getMessageInfo().getRefToMessageId(),
+                mo.getMessageId())) {
+          SoapUtils.setMSHOutMailReciept(sm, msg);
+          LOG.formatedWarning("Signal Reciept for message %s, ref %s, date %s",
+                  sm.getMessageInfo().getMessageId(),
+                  sm.getMessageInfo().getRefToMessageId(),
+                  sm.getMessageInfo().getTimestamp().toString());
+        }
+
+      }
     }
 
     LOG.logEnd(l);
@@ -448,9 +456,6 @@ public class EBMSInInterceptor extends AbstractEBMSInterceptor {
     long l = LOG.logStart();
 
     SOAPMessage request = msg.getContent(SOAPMessage.class);
-    
-   
-    
 
     MSHInMail mMail = mebmsParser.parseUserMessage(um, ectx,
             SoapFault.FAULT_CODE_CLIENT);
@@ -487,30 +492,29 @@ public class EBMSInInterceptor extends AbstractEBMSInterceptor {
     }
     // set inbox to message context
     SoapUtils.setMSHInMailReceiverBox(inSb, msg);
-    
-     try {
-       MimeValue soapPartMime = MimeValue.MIME_XML;
-       File f = storeSoapPart(request.getSOAPPart(), soapPartMime);
-       if (mMail.getMSHInPayload() == null) {
-         mMail.setMSHInPayload(new MSHInPayload());
-       }
-       MSHInPart p = new MSHInPart();
-       p.setIsSent(Boolean.FALSE);
-       p.setIsReceived(Boolean.TRUE);
-       p.setEbmsId(msgId);
-       p.setMimeType(soapPartMime.getMimeType());
-       p.setDescription("SOAP Part");
-       p.setName("SOAPPart");
-       p.setSource(SEDMailPartSource.EBMS.getValue());
-       p.setFilename(f.getName());
-       p.setFilepath(StorageUtils.getRelativePath(f));
-       mMail.getMSHInPayload().getMSHInParts().add(p);
-      
-      
+
+    try {
+      MimeValue soapPartMime = MimeValue.MIME_XML;
+      File f = storeSoapPart(request.getSOAPPart(), soapPartMime);
+      if (mMail.getMSHInPayload() == null) {
+        mMail.setMSHInPayload(new MSHInPayload());
+      }
+      MSHInPart p = new MSHInPart();
+      p.setIsSent(Boolean.FALSE);
+      p.setIsReceived(Boolean.TRUE);
+      p.setEbmsId(msgId);
+      p.setMimeType(soapPartMime.getMimeType());
+      p.setDescription("SOAP Part");
+      p.setName("SOAPPart");
+      p.setSource(SEDMailPartSource.EBMS.getValue());
+      p.setFilename(f.getName());
+      p.setFilepath(StorageUtils.getRelativePath(f));
+      mMail.getMSHInPayload().getMSHInParts().add(p);
+
       // store 
     } catch (StorageException ex) {
-     
-      LOG.logError(l, ex.getMessage(),ex);
+
+      LOG.logError(l, ex.getMessage(), ex);
       throw new EBMSError(EBMSErrorCode.Other, mMail.getMessageId(),
               ex.getMessage(),
               SoapFault.FAULT_CODE_CLIENT);
@@ -573,7 +577,6 @@ public class EBMSInInterceptor extends AbstractEBMSInterceptor {
 
   private File storeSoapPart(SOAPPart sp, MimeValue mv) throws StorageException {
 
-    
     File f = StorageUtils.getNewStorageFile(mv.getSuffix(), "embs-header");
 
     try {
@@ -582,8 +585,7 @@ public class EBMSInInterceptor extends AbstractEBMSInterceptor {
               new StreamResult(f));
     } catch (TransformerException | SOAPException e) {
       throw new StorageException("Error occured while storing ebms header", e);
-    } 
-    
+    }
 
     return f;
 

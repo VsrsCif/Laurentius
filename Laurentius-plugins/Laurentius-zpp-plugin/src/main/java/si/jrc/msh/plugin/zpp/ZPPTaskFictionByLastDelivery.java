@@ -15,12 +15,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.function.Consumer;
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.xml.bind.JAXBException;
 import si.jrc.msh.plugin.zpp.entities.LastDeliveredMail;
 import si.jrc.msh.plugin.zpp.enums.FopTransformation;
@@ -70,7 +67,7 @@ public class ZPPTaskFictionByLastDelivery implements TaskExecutionInterface {
   private static final SEDLogger LOG = new SEDLogger(
           ZPPTaskFictionByLastDelivery.class);
   private static final String SIGN_ALIAS = "zpp.sign.key.alias";
-
+  private static final String MINUTES_DELAY = "zpp.fiction.p6.delayInMinutes";
 
   @EJB(mappedName = SEDJNDI.JNDI_SEDDAO)
   SEDDaoInterface mDB;
@@ -99,10 +96,12 @@ public class ZPPTaskFictionByLastDelivery implements TaskExecutionInterface {
           throws TaskException {
 
     long l = LOG.logStart();
+
     StringWriter sw = new StringWriter();
     sw.append("Start zpp plugin task: \n");
 
     String signKeyAlias = "";
+    int iDelayMin = -10;
     if (!p.containsKey(SIGN_ALIAS)) {
       throw new TaskException(TaskException.TaskExceptionCode.InitException,
               "Missing parameter:  '" + SIGN_ALIAS + "'!");
@@ -110,13 +109,28 @@ public class ZPPTaskFictionByLastDelivery implements TaskExecutionInterface {
       signKeyAlias = p.getProperty(SIGN_ALIAS);
     }
 
-  
-
-    List<LastDeliveredMail> lstLastDM = getLastDeliveredMail();
-    for (LastDeliveredMail ldm: lstLastDM) {
-      fictionalDeliveryMail(ldm, signKeyAlias);
+    if (p.containsKey(MINUTES_DELAY)) {
+      String val = p.getProperty(MINUTES_DELAY);
+      if (!Utils.isEmptyString(val)) {
+        try {
+          iDelayMin = Integer.parseInt(val) * -1;
+        } catch (NumberFormatException nfe) {
+          LOG.logError(String.format(
+                  "Error parameter '%s'. Value '%s' is not a number Mail count 100 is setted!",
+                  MINUTES_DELAY, val), nfe);
+        }
+      }
     }
 
+
+
+    List<LastDeliveredMail> lstLastDM = getLastDeliveredMail();
+    LOG.formatedWarning(
+            "Execute ZPPTaskFictionByLastDelivery delivered mail %d ",
+            lstLastDM.size());
+    for (LastDeliveredMail ldm : lstLastDM) {
+      fictionalDeliveryMail(ldm, signKeyAlias, iDelayMin);
+    }
 
     sw.append("End zpp fiction plugin task");
     return sw.toString();
@@ -127,7 +141,7 @@ public class ZPPTaskFictionByLastDelivery implements TaskExecutionInterface {
     Calendar c = Calendar.getInstance();
     c.add(Calendar.DAY_OF_MONTH, -15);
     String hql
-            = "select new si.laurentius.ejb.entity.TestEntity(om.ReceiverEBox, max(om.DeliveredDate) AS DeliveredDate) "
+            = "select new si.jrc.msh.plugin.zpp.entities.LastDeliveredMail(om.ReceiverEBox, max(om.DeliveredDate) AS DeliveredDate) "
             + "	from MSHOutMail om,  MSHInMail im "
             + "	where om.ConversationId = im.ConversationId "
             + "	 and om.Service =im.Service "
@@ -148,7 +162,7 @@ public class ZPPTaskFictionByLastDelivery implements TaskExecutionInterface {
 
   }
 
-  public void fictionalDeliveryMail(LastDeliveredMail da, String signKeyAlias) {
+  public void fictionalDeliveryMail(LastDeliveredMail da, String signKeyAlias, int delayMinutes) {
     long l = LOG.logStart();
     Calendar cStart = Calendar.getInstance();
     cStart.add(Calendar.DAY_OF_MONTH, -15);
@@ -156,7 +170,8 @@ public class ZPPTaskFictionByLastDelivery implements TaskExecutionInterface {
     Date lastDate = da.getDeliveredDate();
     Calendar cld = Calendar.getInstance();
     cld.setTime(lastDate);
-    cld.add(Calendar.MINUTE, -10);
+    cld.add(Calendar.MINUTE, delayMinutes);
+    
 
     String hql2
             = "select om"
@@ -165,8 +180,12 @@ public class ZPPTaskFictionByLastDelivery implements TaskExecutionInterface {
             + "  and om.Action=:outAction "
             + "  and om.ReceivedDate > :receivedDate "
             + "  and om.ReceivedDate < :lastDeliveredDate "
-            + "  and om.Status < :status "
-            + "  and om.DeliveredDate is null ";
+            + "  and om.ReceiverEBox = :receiverEBox "
+            + "  and om.Status = :status ";
+
+    LOG.formatedWarning("Get outmail from %s to %s for receiverBox %s",
+            cStart.getTime().toString(), cld.getTime().toString(), da.
+            getReceiverEBox());
 
     Map<String, Object> prms = new HashMap<>();
     prms.put("service", ZPPConstants.S_ZPP_SERVICE);
@@ -174,11 +193,15 @@ public class ZPPTaskFictionByLastDelivery implements TaskExecutionInterface {
     prms.put("status", SEDOutboxMailStatus.SENT.getValue());
     prms.put("receivedDate", cStart.getTime());
     prms.put("lastDeliveredDate", cld.getTime());
+    prms.put("receiverEBox", da.getReceiverEBox());
 
     List<MSHOutMail> lst = mDB.getDataList(MSHOutMail.class, hql2, prms);
 
+    LOG.formatedWarning("Got %d mail to deliver", lst.size());
+
     for (MSHOutMail m : lst) {
       try {
+        m.setDeliveredDate(lastDate);
         processZPPFictionDelivery(m, signKeyAlias);
       } catch (SEDSecurityException | StorageException | FOPException | HashException | ZPPException ex) {
         String msg = String.format(
@@ -206,6 +229,9 @@ public class ZPPTaskFictionByLastDelivery implements TaskExecutionInterface {
     tt.getCronTaskPropertyDeves().add(createTTProperty(SIGN_ALIAS,
             "Signature key alias defined in keystore.", true, PropertyType.List.
                     getType(), null, PropertyListType.KeystoreCertKeys.getType()));
+    tt.getCronTaskPropertyDeves().add(createTTProperty(MINUTES_DELAY,
+            "Delay in minutes from last delivery.", true, PropertyType.Integer.getType(),
+            null, "-10"));
 
     return tt;
   }
@@ -245,8 +271,7 @@ public class ZPPTaskFictionByLastDelivery implements TaskExecutionInterface {
 
     // do it in transaction!
     mDB.serializeInMail(fi, "ZPP-plugin");
-    mDB.serializeOutMail(fn, null, "ZPP-plugin", null);
-    mOutMail.setDeliveredDate(Calendar.getInstance().getTime());
+    mDB.serializeOutMail(fn, null, "ZPP-plugin", null);   
     mDB.setStatusToOutMail(mOutMail, SEDOutboxMailStatus.DELIVERED, "Fiction ",
             "ZPP plugin", "");
     LOG.logEnd(l);
@@ -312,7 +337,7 @@ public class ZPPTaskFictionByLastDelivery implements TaskExecutionInterface {
       X509Certificate xcert = mCertBean.getX509CertForAlias(sigAlias);
       MSHOutPart mp = mzppZPPUtils.createMSHOutPart(
               mOutMail, ZPPPartType.AdviceOfDeliveryFiction,
-              FopTransformation.AdviceOfDeliveryFictionNotification_6Odst, 
+              FopTransformation.AdviceOfDeliveryFictionNotification_6Odst,
               pk, xcert);
 
       // create ecrypted key:
@@ -393,10 +418,9 @@ public class ZPPTaskFictionByLastDelivery implements TaskExecutionInterface {
       X509Certificate xcert = mCertBean.getX509CertForAlias(signAlias);
 
       MSHInPart mp = mzppZPPUtils
-              .createMSHInPart(mOutMail, ZPPPartType.FictionNotification,
-            FopTransformation.AdviceOfDeliveryFictionNotification_6Odst
-                      , pk, xcert);
-      
+              .createMSHInPart(mOutMail, ZPPPartType.AdviceOfDeliveryFiction,
+                      FopTransformation.AdviceOfDeliveryFiction_6Odst,
+                       pk, xcert);
 
       moADF.getMSHInPayload().getMSHInParts().add(mp);
 

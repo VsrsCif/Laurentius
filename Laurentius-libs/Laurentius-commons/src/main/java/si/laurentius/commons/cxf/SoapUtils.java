@@ -58,6 +58,12 @@ public class SoapUtils {
   public static MSHOutMail getMSHOutMail(Message message) {
     return (MSHOutMail) message.getExchange().get(EBMSConstants.EBMS_CP_OUTMAIL);
   }
+  
+  
+  public static void setMSHOutMailReciept(Object reciept, Message message) {
+    message.put(EBMSConstants.EBMS_CP_OUTMAIL_RECIEPT, reciept);
+    message.getExchange().put(EBMSConstants.EBMS_CP_OUTMAIL_RECIEPT, reciept);
+  }
 
   public static void setMSHOutnMail(MSHOutMail omail, Message message) {
     message.getExchange().put(EBMSConstants.EBMS_CP_OUTMAIL, omail);
@@ -84,12 +90,20 @@ public class SoapUtils {
   }
   
    public static void setInSignals(List<Element> lst, Message message) {
+     
     message.getExchange().put(EBMSConstants.EBMS_SIGNAL_ELEMENTS, lst);
+  }
+   public static void setInErrors(Object lst, Message message) {
+     message.put(EBMSConstants.EBMS_SIGNAL_ERRORS, lst);
+    message.getExchange().put(EBMSConstants.EBMS_SIGNAL_ERRORS, lst);
   }
   
   
   public static List<Element> getInSignals(Message message) {
     return (List<Element> ) message.getExchange().get(EBMSConstants.EBMS_SIGNAL_ELEMENTS);
+  }
+  public static Object getInErrors(Message message) {
+    return  message.getExchange().get(EBMSConstants.EBMS_SIGNAL_ERRORS);
   }
   
  public static EBMSMessageContext getEBMSMessageOutContext(Message message) {

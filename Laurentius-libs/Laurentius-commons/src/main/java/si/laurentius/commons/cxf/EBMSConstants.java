@@ -14,6 +14,8 @@ public class EBMSConstants {
    * Interceptor context parammeter for out mail
    */
   public static final String EBMS_CP_OUTMAIL = "sed.ebms.cp.outmail";
+  
+  public static final String EBMS_CP_OUTMAIL_RECIEPT = "sed.ebms.cp.outmail.reciept";
   /**
    * Interceptor context parammeter for in mail
    */
@@ -52,6 +54,8 @@ public class EBMSConstants {
    *
    */
   public static final String EBMS_SIGNAL_ELEMENTS = "SIGNAL_ELEMENTS";
+  
+  public static final String EBMS_SIGNAL_ERRORS = "SIGNAL_ERRORS";
 
   /**
    *

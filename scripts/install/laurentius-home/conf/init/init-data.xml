@@ -13,10 +13,13 @@
                 <ns2:SEDTaskProperty id="36" key="zpp.max.mail.count">100</ns2:SEDTaskProperty>
             </ns2:SEDTask>
         </ns2:SEDCronJob>
-        <ns2:SEDCronJob id="37" name="ZPPFiction" active="true" second="0" minute="*/10" hour="*" dayOfMonth="*" month="*" dayOfWeek="*">
-            <ns2:SEDTask name="ZPPCreateFiction" active="true" plugin="LegalZPP" type="zpp-fiction-plugin" pluginVersion="1.0.0">
-                <ns2:SEDTaskProperty id="38" key="zpp.sign.key.alias">test-laurentius</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty id="39" key="zpp.max.mail.count">100</ns2:SEDTaskProperty>
+ <ns2:SEDCronJob id="38" name="ZPPFiction" active="true" second="0" minute="0" hour="1" dayOfMonth="*" month="*" dayOfWeek="*">
+            <ns2:SEDTask plugin="LegalZPP" type="zpp-fiction-plugin" pluginVersion="1.0.0" id="151" name="ZPPCreateFiction" active="true">
+                <ns2:SEDTaskProperty id="152" key="zpp.sign.key.alias">test-laurentius</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="153" key="zpp.max.mail.count">100</ns2:SEDTaskProperty>
+            </ns2:SEDTask>
+            <ns2:SEDTask plugin="LegalZPP" type="zpp-fiction-by-last-delivery" pluginVersion="1.0.0" id="154" name="ZPPFictionByLastDelivery" active="true">
+                <ns2:SEDTaskProperty id="155" key="zpp.sign.key.alias">test-laurentius</ns2:SEDTaskProperty>
             </ns2:SEDTask>
         </ns2:SEDCronJob>
         <ns2:SEDCronJob id="40" name="Archive" active="true" second="0" minute="10" hour="01" dayOfMonth="*" month="*" dayOfWeek="6">
@@ -130,6 +133,9 @@
         <ns3:SEDInterceptor id="119" name="ZPP_OutMessages" active="true" interceptEvent="OutMessage" interceptRole="All">
             <ns3:SEDInterceptorRule id="120"  property="Service" predicate="InList" value="LegalDelivery_ZPP;LegalDelivery_ZPPB"/>
             <ns3:SEDInterceptorInstance plugin="LegalZPP" type="ZPPOutInterceptor" pluginVersion="1.0.0"/>
+        </ns3:SEDInterceptor>
+		<ns3:SEDInterceptor  name="LegalZPPFault" active="true" interceptEvent="InFaultMessage" interceptRole="Requestor">
+            <ns3:SEDInterceptorInstance plugin="LegalZPP" type="ZPPFaultInInterceptor" pluginVersion="1.0.0"/>
         </ns3:SEDInterceptor>
     </SEDInterceptors>
     <SEDProcessors>

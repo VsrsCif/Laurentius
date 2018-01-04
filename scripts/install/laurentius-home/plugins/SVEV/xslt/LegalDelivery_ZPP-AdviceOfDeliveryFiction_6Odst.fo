@@ -15,7 +15,13 @@
                 </fo:simple-page-master>
             </fo:layout-master-set>
             <fo:page-sequence master-reference="A4-portrait">
-                
+                <xsl:variable name="varFormatedSentDate">
+                    <xsl:call-template name="formatDate">
+                        <xsl:with-param name="date">
+                            <xsl:value-of select="/msh:MSHOutMail/@sentDate"/>
+                        </xsl:with-param>
+                    </xsl:call-template>				
+                </xsl:variable>
                 <xsl:variable name="varFictionDate">
                     <xsl:call-template name="formatDate">
                         <xsl:with-param name="date">
@@ -90,7 +96,9 @@
     <xsl:template name="currentDateTime">
         <xsl:value-of select="java:si.jrc.msh.plugin.zpp.utils.XSLTExtensions.currentDateTime()"/>
     </xsl:template>
-    
+    <xsl:template name="currentDate">
+        <xsl:value-of select="java:si.jrc.msh.plugin.zpp.utils.XSLTExtensions.currentDate()"/>
+    </xsl:template>
     <xsl:template name="getZPPFictionDate">
         <xsl:param name="date"/>
         <xsl:value-of select="java:si.jrc.msh.plugin.zpp.utils.XSLTExtensions.getZPPFictionDate($date)"/>

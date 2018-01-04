@@ -50,6 +50,7 @@ public class ZPPPluginDescription extends AbstractPluginDescription {
             // and log further application specific info
             registerPluginComponentInterface(ZPPOutInterceptor.class);
             registerPluginComponentInterface(ZPPInInterceptor.class);
+            registerPluginComponentInterface(ZPPFaultInInterceptor.class);
 
             registerPluginComponentInterface(ZPPTask.class);
             registerPluginComponentInterface(ZPPTaskFiction.class);

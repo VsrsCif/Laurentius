@@ -21,6 +21,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Calendar;
+import java.util.List;
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.TrustManager;
 import javax.xml.namespace.QName;
@@ -41,6 +43,7 @@ import org.apache.cxf.staxutils.W3CDOMStreamWriter;
 import org.apache.cxf.transport.ConduitInitiatorManager;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
+import org.oasis_open.docs.ebxml_msg.ebms.v3_0.ns.core._200704.SignalMessage;
 import si.laurentius.msh.outbox.mail.MSHOutMail;
 import si.laurentius.msh.pmode.PartyIdentitySet;
 import si.laurentius.msh.pmode.Protocol;
@@ -60,6 +63,7 @@ import si.jrc.msh.interceptor.MSHPluginOutInterceptor;
 import si.jrc.msh.transport.SMTPConduit;
 import si.jrc.msh.transport.SMTPTransportFactory;
 import si.laurentius.commons.SEDSystemProperties;
+import si.laurentius.commons.cxf.EBMSConstants;
 import si.laurentius.commons.enums.MimeValue;
 import si.laurentius.commons.cxf.SoapUtils;
 import si.laurentius.commons.exception.SEDSecurityException;
@@ -198,14 +202,14 @@ public class MshClient {
         // set http client policy
         HTTPClientPolicy httpClientPolicy = new HTTPClientPolicy();
         String host = System.getProperty(
-                url_protocol.equals("http") ? SEDSystemProperties.PROXY_HTTP_HOST 
-                        : SEDSystemProperties.PROXY_HTTPS_HOST);
+                url_protocol.equals("http") ? SEDSystemProperties.PROXY_HTTP_HOST
+                : SEDSystemProperties.PROXY_HTTPS_HOST);
         String port = System.getProperty(
                 url_protocol.equals("http") ? SEDSystemProperties.PROXY_HTTP_PORT
-                        : SEDSystemProperties.PROXY_HTTPS_PORT);
+                : SEDSystemProperties.PROXY_HTTPS_PORT);
         String noProxy = System.getProperty(
-                url_protocol.equals("http") ? SEDSystemProperties.PROXY_HTTP_NO_PROXY 
-                        : SEDSystemProperties.PROXY_HTTPS_NO_PROXY);
+                url_protocol.equals("http") ? SEDSystemProperties.PROXY_HTTP_NO_PROXY
+                : SEDSystemProperties.PROXY_HTTPS_NO_PROXY);
 
         if (!Utils.isEmptyString(host)) {
           int iport = 80;
@@ -274,6 +278,7 @@ public class MshClient {
       // set context parameters!
       SoapUtils.setEBMSMessageOutContext(ebms, client);
       SoapUtils.setMSHOutnMail(mail, client);
+      mail.setSentDate(Calendar.getInstance().getTime());
 
       // create empty soap mesage
       MessageFactory mf = MessageFactory.newInstance(
@@ -287,6 +292,15 @@ public class MshClient {
       r.setResult(soapRes);
       LOG.formatedlog("Submit mail %s in ( %d ms).", mail.getMessageId(), (LOG.
               getTime() - st));
+      
+      
+      if (client.getResponseContext().containsKey(EBMSConstants.EBMS_CP_OUTMAIL_RECIEPT)) {
+        SignalMessage sm = (SignalMessage)client.getResponseContext().get(EBMSConstants.EBMS_CP_OUTMAIL_RECIEPT);
+        mail.setReceivedDate(sm.getMessageInfo().getTimestamp());
+      } else {
+        mail.setReceivedDate(Calendar.getInstance().getTime());
+      }
+      
 
       if (soapRes != null) {
         File file;
@@ -298,9 +312,7 @@ public class MshClient {
             String respFilePath = StorageUtils.getRelativePath(file);
             r.setResultFile(respFilePath);
             r.setMimeType(MimeValue.MIME_XML.getMimeType());
-            
-            
-            
+
           } catch (IOException ex) {
             LOG.logError(l, "ERROR saving response to file!", ex);
           }
@@ -315,10 +327,32 @@ public class MshClient {
       Throwable initCause = Utils.getInitCause(ex);
 
       if (client != null && client.getResponseContext().containsKey(key)) {
-        r.setError(new EBMSError(EBMSErrorCode.ApplicationError, mail.
-                getMessageId(),
-                "Soap fault error: " + ex.getMessage(), ex,
-                SoapFault.FAULT_CODE_CLIENT));
+
+        EBMSError err = null;
+
+        if ( client.getResponseContext().containsKey(
+                EBMSConstants.EBMS_SIGNAL_ERRORS)) {
+          List<org.oasis_open.docs.ebxml_msg.ebms.v3_0.ns.core._200704.Error> lst
+                  = (List<org.oasis_open.docs.ebxml_msg.ebms.v3_0.ns.core._200704.Error>) client.
+                          getResponseContext().get(
+                                  EBMSConstants.EBMS_SIGNAL_ERRORS);
+          if (!lst.isEmpty()) {
+            EBMSErrorCode ec = EBMSErrorCode.
+                    getByCode(lst.get(0).getErrorCode());
+            err = new EBMSError(ec, mail.
+                    getMessageId(), ex.getMessage(), ex,
+                    SoapFault.FAULT_CODE_CLIENT);
+          }
+        }
+
+        if (err == null) {
+          err = new EBMSError(EBMSErrorCode.ApplicationError, mail.
+                  getMessageId(),
+                  "Soap fault error: " + ex.getMessage(), ex,
+                  SoapFault.FAULT_CODE_CLIENT);
+
+        }
+        r.setError(err);
 
         W3CDOMStreamWriter wr = (W3CDOMStreamWriter) client.getResponseContext().
                 get(key);
@@ -339,8 +373,10 @@ public class MshClient {
           LOG.logError(l, "ERROR saving saop fault to file!", ex);
         }
       } else if (initCause instanceof EBMSError) {
+     
         r.setError((EBMSError) initCause);
       } else {
+     
         r.setError(new EBMSError(EBMSErrorCode.DeliveryFailure, mail.
                 getMessageId(),
                 "HTTP error: " + Utils.getInitCauseMessage(ex), ex,
@@ -354,6 +390,30 @@ public class MshClient {
         }
       }
     } catch (SOAPException ex) {
+      EBMSError err = null;
+
+      if (client != null && client.getResponseContext().containsKey(
+              EBMSConstants.EBMS_SIGNAL_ERRORS)) {
+        List<org.oasis_open.docs.ebxml_msg.ebms.v3_0.ns.core._200704.Error> lst
+                = (List<org.oasis_open.docs.ebxml_msg.ebms.v3_0.ns.core._200704.Error>) client.
+                        getResponseContext().get(
+                                EBMSConstants.EBMS_SIGNAL_ERRORS);
+        if (!lst.isEmpty()) {
+          EBMSErrorCode ec = EBMSErrorCode.getByCode(lst.get(0).getErrorCode());
+          err = new EBMSError(ec, mail.
+                  getMessageId(), ex.getMessage(), ex,
+                  SoapFault.FAULT_CODE_CLIENT);
+        }
+      }
+
+      if (err == null) {
+        err = new EBMSError(EBMSErrorCode.ApplicationError, mail.
+                getMessageId(),
+                "Error occured while creating soap message!", ex,
+                SoapFault.FAULT_CODE_CLIENT);
+
+      }
+
       try {
         String res = msStorageUtils.storeThrowableAndGetRelativePath(ex);
         r.setMimeType(MimeValue.MIME_TXT.getMimeType());
@@ -361,10 +421,7 @@ public class MshClient {
       } catch (StorageException ex1) {
         LOG.logError(l, "ERROR saving saop fault to file!", ex);
       }
-      r.setError(new EBMSError(EBMSErrorCode.ApplicationError, mail.
-              getMessageId(),
-              "Error occured while creating soap message!", ex,
-              SoapFault.FAULT_CODE_CLIENT));
+      r.setError(err);
     } catch (EBMSError ex) {
       try {
         String res = msStorageUtils.storeThrowableAndGetRelativePath(ex);
