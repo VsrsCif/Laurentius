@@ -1,7 +1,7 @@
 #/!bin/sh
 
 # laurentius version
-VERSION="2.0-SNAPSHOT"
+VERSION="2.0"
 # releases folder 
 LAU_RELEASE_FOLDER="releases"
 # release zip file name
