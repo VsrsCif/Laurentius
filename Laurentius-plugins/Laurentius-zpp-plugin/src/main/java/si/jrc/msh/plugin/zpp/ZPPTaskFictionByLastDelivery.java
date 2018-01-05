@@ -349,7 +349,7 @@ public class ZPPTaskFictionByLastDelivery implements TaskExecutionInterface {
       Key key;
       try {
         key = mzppZPPUtils.getEncKeyFromOut(mOutMail);
-      } catch (IOException | StorageException | JAXBException ex) {
+      } catch (StorageException ex) {
         LOG.logError(ex.getMessage(), ex);
         throw new ZPPException(ex);
       }
@@ -359,9 +359,9 @@ public class ZPPTaskFictionByLastDelivery implements TaskExecutionInterface {
       moFNotification.getMSHOutPayload().getMSHOutParts().add(mp);
       moFNotification.getMSHOutPayload().getMSHOutParts().add(mpEncKey);
 
-    } catch (IOException | HashException | FOPException | StorageException ex) {
+    } catch (IOException | StorageException ex) {
       String msg = "Error creating visiualization";
-      LOG.logError(l, msg, null);
+      LOG.logError(l, msg, ex);
       throw new ZPPException(msg);
     }
 

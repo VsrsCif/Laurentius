@@ -532,7 +532,7 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
 
       }
 
-    } catch (NoSuchProviderException | SEDSecurityException | StorageException | JAXBException | IOException | CertificateException | NoSuchAlgorithmException | InvalidKeyException | SignatureException ex) {
+    } catch (NoSuchProviderException | SEDSecurityException | StorageException | IOException | CertificateException | NoSuchAlgorithmException | InvalidKeyException | SignatureException ex) {
       LOG.logError(l, ex);
       throw new ZPPException("Error processing AdviceOfDelivery", ex);
     } 
@@ -623,7 +623,7 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
 
       }
 
-    } catch (NoSuchProviderException | SEDSecurityException | StorageException | JAXBException | IOException | CertificateException | NoSuchAlgorithmException | InvalidKeyException | SignatureException ex) {
+    } catch (NoSuchProviderException | SEDSecurityException | StorageException | IOException | CertificateException | NoSuchAlgorithmException | InvalidKeyException | SignatureException ex) {
       LOG.logError(l, ex);
       throw new ZPPException("Error processing AdviceOfDelivery", ex);
     } 

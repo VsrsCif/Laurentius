@@ -19,8 +19,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 import java.util.Objects;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.JAXBException;
 import org.apache.cxf.binding.soap.SoapFault;
@@ -60,7 +58,7 @@ import si.laurentius.msh.outbox.payload.OMPartProperty;
  */
 public class ZPPUtils {
 
-  protected final SEDLogger LOG = new SEDLogger(ZPPUtils.class);
+  protected final static SEDLogger LOG = new SEDLogger(ZPPUtils.class);
   SEDCrypto mscCrypto = new SEDCrypto();
   FOPUtils mfpFop = null;
 
@@ -71,10 +69,9 @@ public class ZPPUtils {
    * @return
    * @throws SEDSecurityException
    * @throws StorageException
-   * @throws HashException
    */
   public MSHOutPayload createEncryptedPayloads(Key skey, MSHOutMail mail)
-          throws SEDSecurityException, StorageException, HashException {
+          throws SEDSecurityException, StorageException {
     long l = LOG.logStart();
     MSHOutPayload op = new MSHOutPayload();
 
@@ -97,7 +94,7 @@ public class ZPPUtils {
    * @throws HashException
    */
   public MSHOutPart createEncryptedPart(Key skey, MSHOutPart ptSource)
-          throws SEDSecurityException, StorageException, HashException {
+          throws SEDSecurityException, StorageException {
     long l = LOG.logStart();
 
     // get files
@@ -117,7 +114,7 @@ public class ZPPUtils {
     ptNew.setIsSent(Boolean.TRUE);
     ptNew.setIsReceived(Boolean.FALSE);
     ptNew.setGeneratedFromPartId(ptSource.getId());
-    
+
     ptNew.setFilepath(StorageUtils.getRelativePath(fOut));
 
     ptNew.setSha256Value(DigestUtils.getHexSha256Digest(fOut));
@@ -163,7 +160,6 @@ public class ZPPUtils {
     LOG.logEnd(l, String.format(
             "Generated encrypted part (new part id: %s) for mail: %d,  part id: %d '",
             ptNew.getEbmsId(), ptSource.getMailId(), ptSource.getId()));
-    ;
     return ptNew;
   }
 
@@ -172,12 +168,9 @@ public class ZPPUtils {
    * @param mail
    * @param skey
    * @return
-   * @throws SEDSecurityException
-   * @throws ZPPException
    */
   public SEDEncryptionKey createNewKeyForMail(MSHOutMail mail,
-          Key skey)
-          throws SEDSecurityException, ZPPException {
+          Key skey) {
 
     long l = LOG.logStart(mail.getId());
 
@@ -192,27 +185,25 @@ public class ZPPUtils {
   }
 
   /**
-   * 
+   *
    * @param mail
    * @param skey
    * @param alg
    * @return
-   * @throws SEDSecurityException
-   * @throws ZPPException
    * @throws StorageException
    * @throws JAXBException
-   * @throws FileNotFoundException 
+   * @throws FileNotFoundException
    */
   public MSHOutPart createLocalEncKeyPart(MSHOutMail mail,
           Key skey, SEDCrypto.SymEncAlgorithms alg)
-          throws SEDSecurityException, ZPPException, StorageException, JAXBException, FileNotFoundException {
+          throws StorageException, JAXBException, FileNotFoundException {
 
     long l = LOG.logStart(mail.getId());
 
     // create local encryption key
     SEDEncryptionKey sk = new SEDEncryptionKey();
     sk.setAlgorithm(alg.getURI());
-      sk.setKeyformat(skey.getFormat());
+    sk.setKeyformat(skey.getFormat());
     sk.setSecredKey(skey.getEncoded());
     sk.setKeySize(BigInteger.valueOf(skey.getEncoded().length));
     sk.setEbmsId(mail.getMessageId());
@@ -233,45 +224,47 @@ public class ZPPUtils {
     ptNew.setFilepath(StorageUtils.getRelativePath(fdek));
     ptNew.setFilename(String.format("%s-%d.%s",
             ZPPPartType.LocalEncryptionKey.getPartName(),
-            mail.getId()!=null?mail.getId():0, ZPPPartType.LocalEncryptionKey.getFileSuffix()));
+            mail.getId() != null ? mail.getId() : 0,
+            ZPPPartType.LocalEncryptionKey.getFileSuffix()));
     ptNew.setIsEncrypted(Boolean.FALSE);
 
     addOrUpdatePartProperty(ptNew, ZPPPartPropertyType.PartCreated.getType(),
             LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME));
-    
-    
+
     addOrUpdatePartProperty(ptNew, ZPPPartPropertyType.PartKeyAlg.getType(),
             sk.getAlgorithm());
     addOrUpdatePartProperty(ptNew, ZPPPartPropertyType.PartKeyFormat.getType(),
             sk.getKeyformat());
-    if (sk.getKeySize()!= null) {
+    if (sk.getKeySize() != null) {
       addOrUpdatePartProperty(ptNew, ZPPPartPropertyType.PartKeySize.getType(),
-            sk.getKeySize().toString());
+              sk.getKeySize().toString());
     }
-    
-    if (sk.getSecredKey()!= null) {
+
+    if (sk.getSecredKey() != null) {
       addOrUpdatePartProperty(ptNew, ZPPPartPropertyType.PartKeyValue.getType(),
               Base64.getEncoder().encodeToString(sk.getSecredKey())
-            );
+      );
     }
-    
 
+    LOG.logEnd(l, mail.getId());
     return ptNew;
   }
 
   /**
-   * Method returns secred key from mail's LocalEncryptionKey part. If outmail does not contain 
-   * payload part LocalEncryptionKey than ZPPException is returned
+   * Method returns secred key from mail's LocalEncryptionKey part. If outmail
+   * does not contain payload part LocalEncryptionKey than ZPPException is
+   * returned
+   *
    * @param om
    * @return
    * @throws SEDSecurityException
    * @throws ZPPException
    * @throws StorageException
    * @throws JAXBException
-   * @throws FileNotFoundException 
+   * @throws FileNotFoundException
    */
   public Key getEncKeyFromOut(MSHOutMail om)
-          throws SEDSecurityException, ZPPException, StorageException, JAXBException, FileNotFoundException {
+          throws SEDSecurityException, ZPPException, StorageException {
     long l = LOG.logStart();
     MSHOutPart encPart = null;
     for (MSHOutPart op : om.getMSHOutPayload().getMSHOutParts()) {
@@ -293,41 +286,45 @@ public class ZPPUtils {
   }
 
   /**
-   * Method returns key from LocalEncryptionKey part. 
+   * Method returns key from LocalEncryptionKey part.
+   *
    * @param encPart
    * @return
    * @throws SEDSecurityException
    * @throws ZPPException
    * @throws StorageException
-   * @throws JAXBException
-   * @throws FileNotFoundException 
    */
   public Key getEncKeyFromLocalPart(MSHOutPart encPart)
-          throws SEDSecurityException, ZPPException, StorageException {
+          throws SEDSecurityException {
     long l = LOG.logStart();
     File sedKey = StorageUtils.getFile(encPart.getFilepath());
-    
+
     SEDEncryptionKey sk;
     try {
       sk = (SEDEncryptionKey) XMLUtils.deserialize(sedKey,
               SEDEncryptionKey.class);
     } catch (JAXBException ex) {
-      throw  new SEDSecurityException(SEDSecurityException.SEDSecurityExceptionCode.InvalidKey, 
-              String.format("File '%s',  partId: %d from mailId: %d!",encPart.getFilepath(), encPart.getId(), encPart.getMailId()), ex.getMessage());
+      throw new SEDSecurityException(
+              SEDSecurityException.SEDSecurityExceptionCode.InvalidKey,
+              String.format("File '%s',  partId: %d from mailId: %d!", encPart.
+                      getFilepath(), encPart.getId(), encPart.getMailId()), ex.
+              getMessage());
     }
-    
-    SEDCrypto.SymEncAlgorithms sa = SEDCrypto.SymEncAlgorithms.getAlgorithmByURI(sk.getAlgorithm());
-    if (sa == null){
-      throw  new SEDSecurityException(SEDSecurityException.SEDSecurityExceptionCode.NoSuchAlgorithm, sk.getAlgorithm(), String.format("Error occured while retrieving key from payload partId: %d from mailId: %d", encPart.getId(), encPart.getMailId()));
+
+    SEDCrypto.SymEncAlgorithms sa = SEDCrypto.SymEncAlgorithms.
+            getAlgorithmByURI(sk.getAlgorithm());
+    if (sa == null) {
+      throw new SEDSecurityException(
+              SEDSecurityException.SEDSecurityExceptionCode.NoSuchAlgorithm, sk.
+                      getAlgorithm(), String.format(
+                      "Error occured while retrieving key from payload partId: %d from mailId: %d",
+                      encPart.getId(), encPart.getMailId()));
     }
-    
-    Key sKey = new SecretKeySpec(sk.getSecredKey(),sa.getJCEName());
+
+    Key sKey = new SecretKeySpec(sk.getSecredKey(), sa.getJCEName());
     LOG.logEnd(l, String.format("Got key for partId %s.", encPart.getEbmsId()));
     return sKey;
   }
-  
-
-
 
   /**
    * Method generates AdviceOfDelivery for incomming mail.
@@ -336,21 +333,17 @@ public class ZPPUtils {
    * @param pk
    * @param xcert
    * @return
-   * @throws SEDSecurityException
-   * @throws StorageException
-   * @throws HashException
-   * @throws FOPException
+   *
    */
   public MSHOutPart createSignedAdviceOfDelivery(MSHInMail mail,
-          PrivateKey pk, X509Certificate xcert)
-          throws SEDSecurityException, StorageException, HashException, FOPException {
+          PrivateKey pk, X509Certificate xcert) {
 
     return createMSHOutPart(mail, ZPPPartType.AdviceOfDelivery,
             FopTransformation.AdviceOfDelivery, pk, xcert);
   }
-  
+
   public MSHOutPart createSignedZPPBDeliveryReciept(MSHInMail mail,
-          PrivateKey pk, X509Certificate xcert){
+          PrivateKey pk, X509Certificate xcert) {
 
     return createMSHOutPart(mail, ZPPPartType.DeliveryReciept,
             FopTransformation.DeliveryRecieptB, pk, xcert);
@@ -364,14 +357,10 @@ public class ZPPUtils {
    * @param pk
    * @param xcert
    * @return
-   * @throws SEDSecurityException
-   * @throws StorageException
-   * @throws HashException
-   * @throws FOPException
+   *
    */
   public MSHOutPart createSignedAdviceOfFictionNotification(MSHOutMail mail,
-          PrivateKey pk, X509Certificate xcert)
-          throws SEDSecurityException, StorageException, HashException, FOPException {
+          PrivateKey pk, X509Certificate xcert) {
 
     return createMSHOutPart(mail, ZPPPartType.FictionNotification,
             FopTransformation.AdviceOfDeliveryFictionNotification, pk, xcert);
@@ -421,28 +410,28 @@ public class ZPPUtils {
             ZPPPartType.DeliveryNotification,
             FopTransformation.DeliveryNotification, pk, xcert);
   }
-  
-  public MSHOutPart createEncryptedKey(Key key, X509Certificate xcert, String receiverBox, String convId)
-          throws SEDSecurityException, StorageException, HashException, FOPException, IOException {
-long l = LOG.logStart();
+
+  public MSHOutPart createEncryptedKey(Key key, X509Certificate xcert,
+          String receiverBox, String convId)
+          throws SEDSecurityException, StorageException, IOException {
+    long l = LOG.logStart(receiverBox,  convId);
 
     ZPPPartType partType = ZPPPartType.EncryptedKey;
-    
+
     // generate ecrypted key
     File fEncryptedKey
             = StorageUtils.getNewStorageFile(partType.getFileSuffix(),
                     partType.name() + "-");
-    
+
     try (FileOutputStream fos = new FileOutputStream(fEncryptedKey)) {
       String strKey = mscCrypto.encryptKeyWithReceiverPublicKey(key, xcert,
               receiverBox, convId);
       fos.write(strKey.getBytes());
       fos.flush();
 
-    } 
-    
+    }
+
     // generate mshout part
-    
     MSHOutPart ptNew = new MSHOutPart();
     ptNew.setSource(ZPPConstants.S_ZPP_PLUGIN_TYPE);
     ptNew.setEncoding(SEDValues.ENCODING_UTF8);
@@ -450,18 +439,17 @@ long l = LOG.logStart();
     ptNew.setName(partType.getPartName());
     ptNew.setType(partType.getPartType());
     ptNew.setDescription(partType.getDescription(null));
-    
-    
-    
+
     ptNew.setFilepath(StorageUtils.getRelativePath(fEncryptedKey));
-    ptNew.setFilename(String.format("%s.%s", partType.getPartName()
-       , partType.getFileSuffix()));
+    ptNew.setFilename(String.format("%s.%s", partType.getPartName(),
+             partType.getFileSuffix()));
 
     ptNew.setIsEncrypted(Boolean.FALSE);
 
     addOrUpdatePartProperty(ptNew, ZPPPartPropertyType.PartCreated.getType(),
             LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME));
-    
+
+    LOG.logEnd(l, receiverBox, convId);
     return ptNew;
   }
 
@@ -479,8 +467,7 @@ long l = LOG.logStart();
    * @throws FOPException
    */
   public MSHOutPart createMSHOutPart(MSHMailType outMail, ZPPPartType partType,
-          FopTransformation ft, PrivateKey pk, X509Certificate xcert)
-           {
+          FopTransformation ft, PrivateKey pk, X509Certificate xcert) {
     long l = LOG.logStart();
 
     // create visualization
@@ -489,24 +476,24 @@ long l = LOG.logStart();
     try {
       fDNViz = StorageUtils.getNewStorageFile(partType.getFileSuffix(),
               partType.name() + "-");
-      relativePath =StorageUtils.getRelativePath(fDNViz);
+      relativePath = StorageUtils.getRelativePath(fDNViz);
     } catch (StorageException ex) {
-      String msg = String.format("Server error occured while creating file visualization %s  for out mail: %d, Error: %s.", 
-              ft.name(), outMail.getId(), ex.getMessage());      
+      String msg = String.format(
+              "Server error occured while creating file visualization %s  for out mail: %d, Error: %s.",
+              ft.name(), outMail.getId(), ex.getMessage());
       LOG.logError(l, msg, ex);
       throw new EBMSError(ZPPErrorCode.ServerError, outMail.getRefToMessageId(),
               msg, SoapFault.FAULT_CODE_SERVER);
     }
-    
-    
 
     try {
       getFOP().generateVisualization(outMail, fDNViz,
               ft,
               partType.getMimeType());
     } catch (FOPException ex) {
-      String msg = String.format("Server error occured while generationg visualization %s  for out mail: %d, Error: %s.", 
-              ft.name(), outMail.getId(), ex.getMessage());      
+      String msg = String.format(
+              "Server error occured while generationg visualization %s  for out mail: %d, Error: %s.",
+              ft.name(), outMail.getId(), ex.getMessage());
       LOG.logError(l, msg, ex);
       throw new EBMSError(ZPPErrorCode.ServerError, outMail.getRefToMessageId(),
               msg, SoapFault.FAULT_CODE_SERVER);
@@ -523,9 +510,9 @@ long l = LOG.logStart();
     ptNew.setName(partType.getPartName());
     ptNew.setType(partType.getPartType());
     ptNew.setDescription(partType.getDescription(null));
-      ptNew.setFilepath(relativePath);
-    ptNew.setFilename(String.format("%s-%d.%s", partType.getPartName(),
-            outMail.getId()!=null?outMail.getId():0, partType.getFileSuffix()));
+    ptNew.setFilepath(relativePath);
+    ptNew.setFilename(String.format("%s.%s", partType.getPartName(),
+            partType.getFileSuffix()));
 
     ptNew.setIsEncrypted(Boolean.FALSE);
 
@@ -566,8 +553,8 @@ long l = LOG.logStart();
     ptNew.setType(partType.getPartType());
     ptNew.setDescription(partType.getDescription(null));
     ptNew.setFilepath(StorageUtils.getRelativePath(fDNViz));
-    ptNew.setFilename(String.format("%s-%d.%s", partType.getPartName(),
-             outMail.getId()!=null?outMail.getId():0, partType.getFileSuffix()));
+    ptNew.setFilename(String.format("%s.%s", partType.getPartName(),
+            partType.getFileSuffix()));
 
     ptNew.setIsEncrypted(Boolean.FALSE);
 
