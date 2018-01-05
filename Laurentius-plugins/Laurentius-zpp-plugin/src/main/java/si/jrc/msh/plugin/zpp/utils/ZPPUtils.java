@@ -233,7 +233,7 @@ public class ZPPUtils {
     ptNew.setFilepath(StorageUtils.getRelativePath(fdek));
     ptNew.setFilename(String.format("%s-%d.%s",
             ZPPPartType.LocalEncryptionKey.getPartName(),
-            mail.getId(), ZPPPartType.LocalEncryptionKey.getFileSuffix()));
+            mail.getId()!=null?mail.getId():0, ZPPPartType.LocalEncryptionKey.getFileSuffix()));
     ptNew.setIsEncrypted(Boolean.FALSE);
 
     addOrUpdatePartProperty(ptNew, ZPPPartPropertyType.PartCreated.getType(),
@@ -353,7 +353,7 @@ public class ZPPUtils {
           PrivateKey pk, X509Certificate xcert){
 
     return createMSHOutPart(mail, ZPPPartType.DeliveryReciept,
-            FopTransformation.DeliveryNotificationB, pk, xcert);
+            FopTransformation.DeliveryRecieptB, pk, xcert);
   }
 
   /**
@@ -373,8 +373,8 @@ public class ZPPUtils {
           PrivateKey pk, X509Certificate xcert)
           throws SEDSecurityException, StorageException, HashException, FOPException {
 
-    return createMSHOutPart(mail, ZPPPartType.AdviceOfDeliveryFiction,
-            FopTransformation.AdviceOfDeliveryFiction, pk, xcert);
+    return createMSHOutPart(mail, ZPPPartType.FictionNotification,
+            FopTransformation.AdviceOfDeliveryFictionNotification, pk, xcert);
   }
 
   /**
@@ -395,8 +395,8 @@ public class ZPPUtils {
           PrivateKey pk, X509Certificate xcert)
           throws SEDSecurityException, StorageException, HashException, FOPException {
 
-    return createMSHInPart(mail, ZPPPartType.FictionNotification,
-            FopTransformation.AdviceOfDeliveryFictionNotification, pk, xcert);
+    return createMSHInPart(mail, ZPPPartType.AdviceOfDeliveryFiction,
+            FopTransformation.AdviceOfDeliveryFiction, pk, xcert);
   }
 
   /**
@@ -525,7 +525,7 @@ long l = LOG.logStart();
     ptNew.setDescription(partType.getDescription(null));
       ptNew.setFilepath(relativePath);
     ptNew.setFilename(String.format("%s-%d.%s", partType.getPartName(),
-            outMail.getId(), partType.getFileSuffix()));
+            outMail.getId()!=null?outMail.getId():0, partType.getFileSuffix()));
 
     ptNew.setIsEncrypted(Boolean.FALSE);
 
@@ -567,7 +567,7 @@ long l = LOG.logStart();
     ptNew.setDescription(partType.getDescription(null));
     ptNew.setFilepath(StorageUtils.getRelativePath(fDNViz));
     ptNew.setFilename(String.format("%s-%d.%s", partType.getPartName(),
-            outMail.getId(), partType.getFileSuffix()));
+             outMail.getId()!=null?outMail.getId():0, partType.getFileSuffix()));
 
     ptNew.setIsEncrypted(Boolean.FALSE);
 
