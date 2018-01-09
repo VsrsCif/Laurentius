@@ -660,7 +660,7 @@
             <tr>
                 <td><b>ZBS_007</b></td>
                 <td>Pošiljatelj vroči sporočilo k Naslovniku v
-                    načinu &quot;ZPP&quot; preko vročevalca skladno z ZPP.</td>
+                    načinu &quot;ZPP&quot; preko vročevalca skladno z ZPP Osebno.</td>
                 <td>Sporočilo je vročeno. Vmesnik to odraža na obeh
                     straneh. Celoten postopek ZPP (priprava obvestil, podpisovanje
                     vročilnice z obeh strani, dostava vročilnice, pridobitev ključa,
@@ -672,8 +672,8 @@
             </tr>
             <tr>
                 <td><b>ZBS_008</b></td>
-                <td>Pošiljatelj vroči sporočilo k Naslovniku v
-                    načinu &quot;ZPP&quot; skladno z ZPP s pomočjo
+                <td>Pošiljatelj vroči sporočilo Naslovniku po postopku
+                         ZPP Osebno s pomočjo
                     fikcije.</td>
                 <td>Na prejemnikovem predalu prispe pošiljka. Ker je ta v zakonsko določenem 
                     času ne prevzame se fiktivno vroči. Pošiljatelj dobi fiktivno vročilnico, 
@@ -773,8 +773,27 @@
                 </td>
                  <td style="width:30px; background-color: green"></td>
             </tr>
-
+            
+             <tr>
+                <td><b>ZBS_069</b></td>
+                <td>Naslovnik ne obstaja. 
+                </td>
+                <td>Pošiljatelj poskuša v naslovnikov sistem posredovati sporočila za naslovnika, ki ne obstaja. 
+                    Naslovnikov sistem vrne ustrezno napako na podlagi kateregega se izdela 
+                    obvestilo pošiljatelju o neobstoječem naslovu.</td>
+                <td><a target="_blank" href="testcase/zbs/TS-ZBS_069.odt">TS-ZBS_069.odt</a><br />
+                    <a target="_blank" href="testcase/zbs/pdf/TS-ZBS_069.odt">TS-ZBS_069.pdf</a>
+                </td>
+                 <td style="width:30px; background-color: green"></td>
+            </tr>
+            
+            
+            ZBS_069
+            
         </table>
+        
+        
+        
         <h2 id="testcases/testcase:admin">Administracija</h2>
         <table class="styled-table" style="font-size: 12px">
             <tr>

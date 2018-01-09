@@ -1,0 +1,94 @@
+<style>
+    del { 
+        text-decoration: line-through;
+    }
+</style>
+<div class="main">
+    <article class='content'>
+        <h1 id="testcases/zpp-tc">Namen testiranja</h1>
+        Namen testnih scenarijev sklopa „ZPP“ je preveriti pravilnost delovanja elektronske 
+        izmenjave sporočil v postopku elektronskega vročanja skladnega z Zakonom o pravdnem postopku 
+        (Uradni list RS, št. 73/07 – uradno prečiščeno besedilo, 45/08 – ZArbit, 45/08, 111/08 – odl. US, 57/09 – odl. US in 12/10 – odl. US, 50/10 – odl. US, 
+        107/10 – odl. US, 75/12 – odl. US, 40/13 – odl. US, 92/13 – odl. US, 10/14 – odl. US, 48/15 – odl. US, 6/17 – odl. US in 10/17; v nadaljnjem besedilu: ZPP), 
+        1. točko drugega odstavka 7. člena Pravilnika o elektronskem poslovanju v civilnih sodnih postopkih (Uradni list RS, št. 49/17; v nadaljnjem besedilu: PEPCSP) 
+        ter skladnost z funkcionalnimi in tehničnimi zahtevami informacijskega sistema za varno elektronsko vročanje v civilnih sodnih postopkih: različica A, verzija 2.1.
+        <br /> <br /> 
+
+        <h2 id="testcases/zpp-tc:version-a">Testiraje vročanje po ZPP različica A</h2>
+        <table class="styled-table" style="font-size: 12px">
+            <tr>
+                <th>Oznaka</th>
+                <th>Opis testnega primera</th>
+                <th>Pričakovani rezultat</th>
+                <th>Testni scenarij</th>
+            </tr>
+            <tr>
+                <td><b>ZPP_001</b></td>
+                <td>Pošiljatelj vroči sporočilo k Naslovniku v
+                    načinu &quot;ZPP Osebno&quot.</td>
+                <td>Sporočilo je vročeno. Vmesnik to odraža na obeh
+                    straneh. Celoten postopek ZPP Osebno(priprava obvestil, podpisovanje
+                    vročilnice z obeh strani, dostava vročilnice, pridobitev ključa,
+                    dešifriranje, odlaganje v predal) je spoštovan. Po uspešni vročitvi naslovnik lahko vpogleda v vsebine, 
+                    pošiljatelj prejme podpisano povratnico s strani naslovnika.</td>
+                <td><a target="_blank" href="testcase/zpp/TS-ZPP_A_001.odt">TS-ZPP_A_001.odt</a><br />
+                    <a target="_blank" href="testcase/zpp/pdf/TS-ZPP_A_001.pdf">TS-ZPP_A_001.pdf</a>
+                </td>
+                <td style="width:30px; background-color: green"></td>
+            </tr>
+            <tr>
+                <td><b>ZPP_002</b></td>
+                <td>Pošiljatelj vroči sporočilo Naslovniku po postopku
+                    ZPP Osebno po fikciji skladno s sedmim odstavkom 141.a člena ZPP.</td>
+                <td>Na prejemnikovem predalu prispe pošiljka. Ker je ta v zakonsko določenem 
+                    času ne prevzame se fiktivno vroči. Pošiljatelj dobi fiktivno vročilnico, 
+                    naslovnik dobi obvestilo o fiktivni vročitvi ter možnost vpogleda v vsebino pošiljke.</td>
+                <td><a target="_blank" href="testcase/zpp/TS-ZPP_A_002.odt">TS-ZPP_A_002.odt</a><br />
+                    <a target="_blank" href="testcase/zpp/pdf/TS-ZPP_A_002.pdf">TS-ZPP_A_002.pdf</a>
+                </td>
+                <td style="width:30px; background-color: green"></td>
+            </tr>
+             <tr>
+                <td><b>ZPP_003</b></td>
+                <td>Pošiljatelj vroči sporočilo Naslovniku po postopku
+                    ZPP Osebno po fikciji skladno s šestim odstavkom 141.a člena ZPP.</td>
+                <td>Na prejemnikovem predalu prispe več pošiljk. Ker naslovnik prevzame samo eno pošiljko 
+                    se naslednji dan preostale pošiljke vročijo po fikciji skladno s šestim odstavkom 141.a člena ZPP.
+                    Pošiljatelj dobi fiktivno vročilnico,naslovnik dobi obvestilo o fiktivni vročitvi ter možnost vpogleda v vsebino pošiljke.</td>
+                <td><a target="_blank" href="testcase/zpp/TS-ZPP_A_003.odt">TS-ZPP_A_003.odt</a><br />
+                    <a target="_blank" href="testcase/zpp/pdf/TS-ZPP_A_003.pdf">TS-ZPP_A_003.pdf</a>
+                </td>
+                <td style="width:30px; background-color: green"></td>
+            </tr>
+            
+            <tr>
+                <td><b>ZPP_004</b></td>
+                <td>Pošiljatelj vroči sporočilo Naslovniku po postopku
+                    "ZPP Navadno".</td>
+                <td>Sporočilo je vročeno. Vmesnik to odraža na obeh
+                    straneh. Celoten postopek ZPP Osebno (priprava obvestil, podpisovanje
+                    obvestil in potrdil z obeh strani, dostava vročilnice, pridobitev ključa,
+                    dešifriranje, odlaganje v predal) je spoštovan. Po uspešni vročitvi naslovnik lahko vpogleda v vsebine, 
+                    pošiljatelj prejme podpisano povratnico s strani naslovnika.</td>
+                <td><a target="_blank" href="testcase/zpp/TS-ZPP_A_004.odt">TS-ZPP_A_004.odt</a><br />
+                    <a target="_blank" href="testcase/zpp/pdf/TS-ZPP_A_004.pdf">TS-ZPP_A_004.pdf</a>
+                </td>
+                <td style="width:30px; background-color: green"></td>
+            </tr>
+            <tr>
+                <td><b>ZPP_05</b></td>
+                <td>Naslovnik ne obstaja. 
+                </td>
+                <td>Pošiljatelj poskuša v naslovnikov sistem v storitvah ZPP Osebno in ZPP navasno posredovati sporočila za naslovnika, ki ne obstaja. 
+                    Naslovnikov sistem vrne ustrezno napako na podlagi kateregega se izdela 
+                    obvestilo pošiljatelju o neobstoječem naslovu.</td>
+                <td><a target="_blank" href="testcase/zpp/TS-ZPP_A_005.odt">TS-ZPP_A_005.odt</a><br />
+                    <a target="_blank" href="testcase/zpp/pdf/TS-ZPP_A_005.pdf">TS-ZPP_A_005.pdf</a>
+                </td>
+                <td style="width:30px; background-color: green"></td>
+            </tr>
+        </table>
+
+
+    </article>  
+</div>
