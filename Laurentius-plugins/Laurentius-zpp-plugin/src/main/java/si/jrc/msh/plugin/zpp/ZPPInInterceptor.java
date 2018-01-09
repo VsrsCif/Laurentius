@@ -33,6 +33,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.Local;
@@ -81,6 +83,7 @@ import si.laurentius.commons.interfaces.SEDCertStoreInterface;
 import si.laurentius.commons.pmode.EBMSMessageContext;
 import si.laurentius.commons.utils.Utils;
 import si.laurentius.lce.DigestUtils;
+import si.laurentius.lce.sign.pdf.SignatureInfo;
 import si.laurentius.lce.sign.pdf.ValidateSignatureUtils;
 import si.laurentius.msh.inbox.payload.IMPartProperty;
 import si.laurentius.msh.outbox.payload.MSHOutPart;
@@ -368,13 +371,27 @@ public class ZPPInInterceptor implements SoapInterceptorInterface {
                       get(0).getFilepath());
 
       ValidateSignatureUtils vsu = new ValidateSignatureUtils();
-      List<X509Certificate> lvc = vsu.getSignatureCerts(advOfDelivery.
-              getAbsolutePath());
+      
+       List<SignatureInfo> lvc;
+      try {
+        lvc = vsu.validateSignatures(advOfDelivery);
+        /*List<X509Certificate> lvc = vsu.getSignatureCerts(advOfDelivery.
+        getAbsolutePath());*/
+      } catch (SignatureException ex) {
+          String strMsg = String.format(
+              "Error occured while validating AdviceOfDelivery signatures: %s  for ref message: %s! Ex: %s!",
+              mInMail.getMessageId(), mInMail.getRefToMessageId(), ex.getMessage());
+      
+      LOG.logError(l, strMsg, ex);
+      throw new EBMSError(ZPPErrorCode.InvalidDeliveryAdvice, mInMail.
+              getMessageId(),
+              strMsg, SoapFault.FAULT_CODE_CLIENT);
+      }
 
       // AdviceOfDelivery must have two signatures: recipient and 
       // delivery system
-      if (lvc.size() != 2 || !(lvc.get(1).equals(xcertSed) || lvc.get(0).equals(
-              xcertSed))) {
+      if (lvc.size() != 2 && !(lvc.get(1).isSignerCertEquals(xcertSed) 
+              || lvc.get(0).isSignerCertEquals(xcertSed))) {
         String strMsg = 
                 "AdviceOfDelivery must have two signatures: recipient's and "
                 + " signature of recipient delivery system";
@@ -385,7 +402,7 @@ public class ZPPInInterceptor implements SoapInterceptorInterface {
               strMsg, SoapFault.FAULT_CODE_CLIENT);
 
       }
-    } catch (IOException | CertificateException | NoSuchAlgorithmException | InvalidKeyException | NoSuchProviderException | SignatureException | SEDSecurityException ex) {
+    } catch (NoSuchAlgorithmException | IOException | CertificateException | SEDSecurityException ex) {
       String strMsg = String.format(
               "Error occured while validating AdviceOfDelivery: %s  for ref message: %s! Ex: %s!",
               mInMail.getMessageId(), mInMail.getRefToMessageId(), ex.getMessage());

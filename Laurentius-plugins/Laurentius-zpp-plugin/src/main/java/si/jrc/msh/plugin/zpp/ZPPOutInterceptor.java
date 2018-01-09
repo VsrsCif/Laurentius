@@ -31,6 +31,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -85,6 +86,7 @@ import si.laurentius.lce.KeystoreUtils;
 import si.laurentius.msh.inbox.mail.MSHInMail;
 import si.laurentius.commons.interfaces.SEDCertStoreInterface;
 import si.laurentius.commons.utils.Utils;
+import si.laurentius.lce.sign.pdf.SignatureInfo;
 import si.laurentius.plugin.interceptor.MailInterceptorDef;
 import si.laurentius.plugin.interfaces.SoapInterceptorInterface;
 
@@ -117,14 +119,12 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
    */
   protected final SEDCrypto.SymEncAlgorithms mAlgorithem = SEDCrypto.SymEncAlgorithms.AES256_CBC;
 
-
   FOPUtils mfpFop = null;
   ;
   SEDCrypto mscCrypto = new SEDCrypto();
   KeystoreUtils mksu = new KeystoreUtils();
   ZPPUtils mzppZPPUtils = new ZPPUtils();
   KeystoreUtils mKeystoreUtils = new KeystoreUtils();
-
 
   /**
    *
@@ -179,10 +179,10 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
     MSHOutMail outMail = SoapUtils.getMSHOutMail(msg);
     MSHInMail mInMail = SoapUtils.getMSHInMail(msg);
 
-    if (outMail != null && (
-            ZPPConstants.S_ZPP_SERVICE.equals(ectx.getService().getServiceName())
-          || ZPPConstants.S_ZPPB_SERVICE.equals(ectx.getService().getServiceName())  
-            )) {
+    if (outMail != null && (ZPPConstants.S_ZPP_SERVICE.equals(ectx.getService().
+            getServiceName())
+            || ZPPConstants.S_ZPPB_SERVICE.equals(ectx.getService().
+                    getServiceName()))) {
 
       if (ZPPConstants.S_ZPP_ACTION_DELIVERY_NOTIFICATION.equals(ectx.
               getAction().getName())) {
@@ -199,10 +199,9 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
                       outMail.getAction())) {
         processOutZPPAdviceOfDelivery(outMail, ectx, msg);
       }
-      
+
     }
-    
-    
+
     if (mInMail != null) {
       if (Objects.equals(ZPPConstants.S_ZPP_SERVICE, mInMail.getService())
               && Objects.equals(ZPPConstants.S_ZPP_ACTION_ADVICE_OF_DELIVERY,
@@ -210,17 +209,17 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
         try {
           processInZPPAdviceOfDelivery(mInMail, eInctx, msg);
         } catch (ZPPException ex) {
-           throw new SoapFault(ex.getMessage(), sv);
+          throw new SoapFault(ex.getMessage(), sv);
         }
       }
-      
+
       if (Objects.equals(ZPPConstants.S_ZPPB_SERVICE, mInMail.getService())
               && Objects.equals(ZPPConstants.S_ZPP_ACTION_ADVICE_OF_DELIVERY,
                       mInMail.getAction())) {
         try {
           processInZPPBDeliveryReciept(mInMail, eInctx, msg);
         } catch (ZPPException ex) {
-           throw new SoapFault(ex.getMessage(), sv);
+          throw new SoapFault(ex.getMessage(), sv);
         }
       }
     }
@@ -306,8 +305,7 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
       // generate new key     
       skey = mscCrypto.getKey(mAlgorithem);
       mEncKey = mzppZPPUtils.createLocalEncKeyPart(outMail, skey, mAlgorithem);
-      
-      
+
       // add key to mail
       lstAddMailParts.add(mEncKey);
 
@@ -337,29 +335,28 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
         mzppZPPUtils.updateMSHOutPartVisualization(outMail,
                 mDeliveryNotification,
                 ZPPPartType.DeliveryNotification,
-                ZPPConstants.S_ZPPB_SERVICE.equals(outMail.getService())?
-                FopTransformation.DeliveryNotificationB:
-                FopTransformation.DeliveryNotification,
+                ZPPConstants.S_ZPPB_SERVICE.equals(outMail.getService())
+                ? FopTransformation.DeliveryNotificationB
+                : FopTransformation.DeliveryNotification,
                 pk,
                 xcert);
         lstUpdateMailParts.add(mDeliveryNotification);
       } else {
         mDeliveryNotification = mzppZPPUtils.createMSHOutPart(
-                outMail, 
+                outMail,
                 ZPPPartType.DeliveryNotification,
-                ZPPConstants.S_ZPPB_SERVICE.equals(outMail.getService())?
-                FopTransformation.DeliveryNotificationB:
-                FopTransformation.DeliveryNotification,                
+                ZPPConstants.S_ZPPB_SERVICE.equals(outMail.getService())
+                ? FopTransformation.DeliveryNotificationB
+                : FopTransformation.DeliveryNotification,
                 pk, xcert);
         lstAddMailParts.add(mDeliveryNotification);
 
       }
     }
 
-    
     // encrypt payloads
     for (MSHOutPart op : lstMailParts) {
-      if (op.getIsSent()){
+      if (op.getIsSent()) {
         // non enc. part is not sent to receiver 
         // update message
         op.setIsSent(Boolean.FALSE);
@@ -460,38 +457,41 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
           EBMSMessageContext eInCtx, SoapMessage msg) throws ZPPException {
     long l = LOG.logStart();
     try {
-      
-      
-      List<MSHOutMail> momLst = mDB.getMailByMessageId(MSHOutMail.class, mInMail.getRefToMessageId());
-      if (momLst.isEmpty()){
-        String strMsg = String.format("No out mail (refId %s) for deliveryAdvice %s ", mInMail.getMessageId(), mInMail.getRefToMessageId());
+
+      List<MSHOutMail> momLst = mDB.getMailByMessageId(MSHOutMail.class,
+              mInMail.getRefToMessageId());
+      if (momLst.isEmpty()) {
+        String strMsg = String.format(
+                "No out mail (refId %s) for deliveryAdvice %s ", mInMail.
+                        getMessageId(), mInMail.getRefToMessageId());
         throw new ZPPException(strMsg);
       }
-      
+
       MSHOutMail mom = null;
-      for (MSHOutMail mdn: momLst){
+      for (MSHOutMail mdn : momLst) {
         if (Objects.equals(ZPPConstants.S_ZPP_SERVICE, mdn.getService())
-               && Objects.equals(ZPPConstants.S_ZPP_ACTION_DELIVERY_NOTIFICATION, mdn.getAction())
-                && Objects.equals(mInMail.getConversationId(), mdn.getConversationId())
-                ){
+                && Objects.equals(
+                        ZPPConstants.S_ZPP_ACTION_DELIVERY_NOTIFICATION, mdn.
+                                getAction())
+                && Objects.equals(mInMail.getConversationId(), mdn.
+                        getConversationId())) {
           mom = mdn;
           break;
         }
-       
-      
+
       }
-      
-      if (mom == null){
-        String strMsg = String.format("Found out mail (refId %s) but with wrong conversation id, service or action!", mInMail.getMessageId(), mInMail.getRefToMessageId());
+
+      if (mom == null) {
+        String strMsg = String.format(
+                "Found out mail (refId %s) but with wrong conversation id, service or action!",
+                mInMail.getMessageId(), mInMail.getRefToMessageId());
         throw new ZPPException(strMsg);
       }
-      
-      mom.setDeliveredDate(mInMail.getSentDate());
 
-      String alias
-              = eInCtx.getSenderPartyIdentitySet().getExchangePartySecurity().
-                      getSignatureCertAlias();
-      
+      String alias = eInCtx.getSenderPartyIdentitySet().
+              getExchangePartySecurity().
+              getSignatureCertAlias();
+
       X509Certificate xcertSed = mCertBean.getX509CertForAlias(alias);
 
       // AdviceOfDelivery
@@ -500,16 +500,22 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
                       get(0).getFilepath());
 
       ValidateSignatureUtils vsu = new ValidateSignatureUtils();
-      List<X509Certificate> lvc = vsu.getSignatureCerts(advOfDelivery.
-              getAbsolutePath());
+
+      List<SignatureInfo> lvc = vsu.validateSignatures(advOfDelivery);
 
       // AdviceOfDelivery must have two signatures: recipient and 
       // delivery system
-      if (lvc.size() == 2 && (lvc.get(1).equals(xcertSed) || lvc.get(0).equals(
-              xcertSed))) {
+      Calendar minDate = null;
+      if (lvc.size() == 2 && (lvc.get(1).isSignerCertEquals(xcertSed)
+              || lvc.get(0).isSignerCertEquals(xcertSed))) {
 
         // add secred key for all signed certificates
-        for (X509Certificate xc : lvc) {
+        for (SignatureInfo sigInfo : lvc) {
+          minDate = minDate == null || minDate.after(sigInfo.getDate())
+                  ? sigInfo.getDate()
+                  : minDate;
+
+          X509Certificate xc = sigInfo.getSignerCert();
 
           // get key
           Key key = mzppZPPUtils.getEncKeyFromOut(mom);
@@ -525,6 +531,8 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
           signal.getAnies().add(elKey);
         }
 
+        //mom.setDeliveredDate(mInMail.getSentDate());
+        mom.setDeliveredDate(minDate==null?mInMail.getSentDate():minDate.getTime());
         mDB.setStatusToOutMail(mom, SEDOutboxMailStatus.DELIVERED,
                 "Received ZPP advice of delivery",
                 null, null, StorageUtils.getRelativePath(advOfDelivery),
@@ -532,57 +540,65 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
 
       }
 
-    } catch (NoSuchProviderException | SEDSecurityException | StorageException | IOException | CertificateException | NoSuchAlgorithmException | InvalidKeyException | SignatureException ex) {
+    } catch (SEDSecurityException | StorageException | IOException | CertificateException | SignatureException ex) {
       LOG.logError(l, ex);
       throw new ZPPException("Error processing AdviceOfDelivery", ex);
-    } 
+    } catch (NoSuchAlgorithmException ex) {
+      Logger.getLogger(ZPPOutInterceptor.class.getName()).
+              log(Level.SEVERE, null, ex);
+    }
     LOG.logEnd(l);
   }
-  
+
   /**
-   * 
+   *
    * @param mInMail
    * @param eInCtx
    * @param msg
-   * @throws ZPPException 
+   * @throws ZPPException
    */
-   public void processInZPPBDeliveryReciept(MSHInMail mInMail,
+  public void processInZPPBDeliveryReciept(MSHInMail mInMail,
           EBMSMessageContext eInCtx, SoapMessage msg) throws ZPPException {
     long l = LOG.logStart();
     try {
-      
-      
-      List<MSHOutMail> momLst = mDB.getMailByMessageId(MSHOutMail.class, mInMail.getRefToMessageId());
-      if (momLst.isEmpty()){
-        String strMsg = String.format("No out mail (refId %s) for deliveryAdvice %s ", mInMail.getMessageId(), mInMail.getRefToMessageId());
+
+      List<MSHOutMail> momLst = mDB.getMailByMessageId(MSHOutMail.class,
+              mInMail.getRefToMessageId());
+      if (momLst.isEmpty()) {
+        String strMsg = String.format(
+                "No out mail (refId %s) for deliveryAdvice %s ", mInMail.
+                        getMessageId(), mInMail.getRefToMessageId());
         throw new ZPPException(strMsg);
       }
-      
-      MSHOutMail mom = null;
-      for (MSHOutMail mdn: momLst){
 
-        
+      MSHOutMail mom = null;
+      for (MSHOutMail mdn : momLst) {
+
         if (Objects.equals(ZPPConstants.S_ZPPB_SERVICE, mdn.getService())
-               && Objects.equals(ZPPConstants.S_ZPP_ACTION_DELIVERY_NOTIFICATION, mdn.getAction())
-                && Objects.equals(mInMail.getConversationId(), mdn.getConversationId())
-                ){
+                && Objects.equals(
+                        ZPPConstants.S_ZPP_ACTION_DELIVERY_NOTIFICATION, mdn.
+                                getAction())
+                && Objects.equals(mInMail.getConversationId(), mdn.
+                        getConversationId())) {
           mom = mdn;
           break;
         }
-      
+
       }
-      
-      if (mom == null){
-        String strMsg = String.format("Found out mail (refId %s) but with wrong conversation id, service or action!", mInMail.getMessageId(), mInMail.getRefToMessageId());
+
+      if (mom == null) {
+        String strMsg = String.format(
+                "Found out mail (refId %s) but with wrong conversation id, service or action!",
+                mInMail.getMessageId(), mInMail.getRefToMessageId());
         throw new ZPPException(strMsg);
       }
-      
+
       mom.setDeliveredDate(mInMail.getSentDate());
 
       String alias
               = eInCtx.getSenderPartyIdentitySet().getExchangePartySecurity().
                       getSignatureCertAlias();
-      
+
       X509Certificate xcertSed = mCertBean.getX509CertForAlias(alias);
 
       // AdviceOfDelivery
@@ -626,7 +642,7 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
     } catch (NoSuchProviderException | SEDSecurityException | StorageException | IOException | CertificateException | NoSuchAlgorithmException | InvalidKeyException | SignatureException ex) {
       LOG.logError(l, ex);
       throw new ZPPException("Error processing AdviceOfDelivery", ex);
-    } 
+    }
     LOG.logEnd(l);
   }
 
