@@ -82,6 +82,7 @@ public class SEDSystemProperties {
    */
   public static final String SYS_PROP_JNDI_PREFIX = "laurentius.jndi.prefix";
   public static final String SYS_PROP_KEYSTORE_FILE = "laurentius.certstore.file";
+  public static final String SYS_PROP_KEYSTORE_TYPE = "laurentius.certstore.type";
   /**
    * System property for domain.
    */
@@ -108,6 +109,8 @@ public class SEDSystemProperties {
           = "si.laurentius.msh.sender.workers.count";
 
   public static final String SYS_PROP_ROOT_CA_FILE = "laurentius.root_ca.file";
+  public static final String SYS_PROP_ROOT_CA_TYPE = "laurentius.root_ca.type";
+  
   /**
    * System property for set security folder (keystor, crl list, root ca ).
    */
@@ -147,7 +150,9 @@ public class SEDSystemProperties {
 
     S_DEF_VALUES.put(SYS_PROP_PMODE_FILE, "pmode-conf.xml");
     S_DEF_VALUES.put(SYS_PROP_KEYSTORE_FILE, "laurentius.jks");
+    S_DEF_VALUES.put(SYS_PROP_KEYSTORE_TYPE, "JKS");   
     S_DEF_VALUES.put(SYS_PROP_ROOT_CA_FILE, "root-ca.jks");
+    S_DEF_VALUES.put(SYS_PROP_ROOT_CA_TYPE, "JKS");   
 
     S_DEF_VALUES.put(SYS_PROP_LAU_DOMAIN, "test-laurentius.org");
 
@@ -179,6 +184,10 @@ public class SEDSystemProperties {
   public static File getCertstoreFile() {
     return getFile(getSecurityFolder(), SYS_PROP_KEYSTORE_FILE,
             false);
+  }
+  public static String getCertstoreType() {
+    return System.getProperty(SYS_PROP_KEYSTORE_TYPE,
+            S_DEF_VALUES.get(SYS_PROP_KEYSTORE_TYPE));
   }
 
   public static File getConfFolder() {
@@ -264,7 +273,11 @@ public class SEDSystemProperties {
     return getFile(getSecurityFolder(), SYS_PROP_ROOT_CA_FILE,
             false);
   }
-
+  public static String getRootCAStoreType() {
+    return System.getProperty(SYS_PROP_ROOT_CA_TYPE,
+            S_DEF_VALUES.get(SYS_PROP_ROOT_CA_TYPE));
+  }
+  
   public static File getSecurityCRLFolder() {
     return getFile(SYS_PROP_CRL_DIR, true);
 

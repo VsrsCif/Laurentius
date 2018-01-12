@@ -104,6 +104,10 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
   SimpleListCache mscCacheList = new SimpleListCache();
 
   private String mstrCrlUpdateMessage = null;
+  private KeyStore mRootCAStore = null;
+  private KeyStore mKeyStore = null;
+  String mKeyStoreOpenFilePath = null;
+  
 
   /**
    *
@@ -388,10 +392,18 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
   @Override
   public KeyStore getCertStore() throws SEDSecurityException {
     File fStore = SEDSystemProperties.getCertstoreFile();
-    SEDCertPassword cp = getKeyPassword(KEYSTORE_NAME);
-    return openKeystore(fStore, KEYSTORE_NAME, cp != null && !Utils.
-            isEmptyString(
-                    cp.getPassword()) ? cp.getPassword().toCharArray() : null);
+    //if (mKeyStore == null || !fStore.exists() ||  !Objects.equals(mKeyStoreOpenFilePath, fStore.getAbsoluteFile())) {
+      
+      SEDCertPassword cp = getKeyPassword(KEYSTORE_NAME);
+      mKeyStore = openKeystore(SEDSystemProperties.getCertstoreType(), fStore,
+              KEYSTORE_NAME, cp != null && !Utils.
+                      isEmptyString(
+                              cp.getPassword()) ? cp.getPassword().toCharArray() : null);
+      
+     // mKeyStoreOpenFilePath= fStore.getAbsolutePath();
+      
+    //}
+    return mKeyStore;
   }
 
   /**
@@ -549,10 +561,14 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
    * @throws SEDSecurityException
    */
   protected KeyStore getRootCAStore() throws SEDSecurityException {
-    File fStore = SEDSystemProperties.getRootCAStoreFile();
-    SEDCertPassword cp = getKeyPassword(ROOTCA_NAME);
-    return openKeystore(fStore, ROOTCA_NAME, cp != null && !Utils.isEmptyString(
-            cp.getPassword()) ? cp.getPassword().toCharArray() : null);
+    if (mRootCAStore == null) {
+      File fStore = SEDSystemProperties.getRootCAStoreFile();
+      SEDCertPassword cp = getKeyPassword(ROOTCA_NAME);
+      mRootCAStore = openKeystore(SEDSystemProperties.getRootCAStoreType(),
+              fStore, ROOTCA_NAME, cp != null && !Utils.isEmptyString(
+                      cp.getPassword()) ? cp.getPassword().toCharArray() : null);
+    }
+    return mRootCAStore;
 
   }
 
@@ -697,7 +713,8 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
 
   }
 
-  private KeyStore openKeystore(File fStore, String alias, char[] psswd) throws SEDSecurityException {
+  private KeyStore openKeystore(String storetype, File fStore, String alias,
+          char[] psswd) throws SEDSecurityException {
     KeyStore ks = null;
     if (!fStore.exists()) {
       LOG.formatedWarning(
@@ -736,7 +753,7 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
         }
 
       } else {
-        ks = mku.getKeystore(fStore, psswd);
+        ks = mku.getKeystore(fStore, storetype, psswd);
       }
     }
 

@@ -40,7 +40,6 @@ import si.laurentius.commons.enums.CertStatus;
 import si.laurentius.commons.exception.SEDSecurityException;
 import si.laurentius.commons.interfaces.SEDCertStoreInterface;
 import si.laurentius.commons.interfaces.SEDCertUtilsInterface;
-import si.laurentius.commons.pmode.enums.SecEncryptionAlgorithm;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.ejb.sec.CertKeyPasswordCallback;
 import si.laurentius.lce.KeystoreUtils;
@@ -126,7 +125,7 @@ public class SEDCertUtilsBean implements SEDCertUtilsInterface {
     signProperties.put(SEC_MERLIN_KEYSTORE_PASS, cp.getPassword());
     signProperties.put(SEC_MERLIN_KEYSTORE_FILE,
             SEDSystemProperties.getCertstoreFile().getAbsolutePath());
-    signProperties.put(SEC_MERLIN_KEYSTORE_TYPE, "JKS");
+    signProperties.put(SEC_MERLIN_KEYSTORE_TYPE,  SEDSystemProperties.getCertstoreType());
     LOG.logEnd(l);
     return signProperties;
   }
@@ -155,7 +154,7 @@ public class SEDCertUtilsBean implements SEDCertUtilsInterface {
     signVerProperties.put(SEC_MERLIN_TRUSTSTORE_PASS, cp.getPassword());
     signVerProperties.put(SEC_MERLIN_TRUSTSTORE_FILE,
             SEDSystemProperties.getCertstoreFile().getAbsolutePath());
-    signVerProperties.put(SEC_MERLIN_TRUSTSTORE_TYPE, "JKS");
+    signVerProperties.put(SEC_MERLIN_TRUSTSTORE_TYPE,  SEDSystemProperties.getCertstoreType());
     LOG.logEnd(l);
 
     return signVerProperties;

@@ -19,6 +19,14 @@
             <comments>European Free/Open Source Software (F/OSS) licence</comments>
         </license>
     </licenses>
+    <repositories>
+        <repository>
+  <id>cefdigital</id>
+  <name>cefdigital</name>
+  <url>https://ec.europa.eu/cefdigital/artifact/content/repositories/esignaturedss/</url>
+</repository>
+        
+    </repositories>
 
     <developers>
         <developer>

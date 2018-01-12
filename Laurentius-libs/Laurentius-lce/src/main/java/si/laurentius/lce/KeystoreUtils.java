@@ -387,32 +387,31 @@ public class KeystoreUtils {
     return keyStore;
   }
 
-  public KeyStore getKeystore(File fpath, char[] pswd)
-          throws SEDSecurityException {
-    return getKeystore(fpath, "JKS", pswd);
 
-  }
 
   /**
    *
    * @param isTrustStore
-   * @param trustStoreType
+   * @param storeType
    * @param password
    * @return
    * @throws SEDSecurityException
    */
-  public KeyStore getKeystore(InputStream isTrustStore, String trustStoreType,
+  public KeyStore getKeystore(InputStream isTrustStore, String storeType,
           char[] password)
           throws SEDSecurityException {
     KeyStore keyStore = null;
     try {
-      keyStore = getInstance(trustStoreType);
-
-      keyStore.load(isTrustStore, password);
+      keyStore = getInstance(storeType);
+      
     } catch (KeyStoreException ex) {
-      throw new SEDSecurityException(KeyStoreException, ex, ex.getMessage());
+      throw new SEDSecurityException(KeyStoreException, String.format("KeyStoreException '%s' for store type %s", ex.getMessage(), storeType), ex.getMessage());
+    }
+    
+    try {
+      keyStore.load(isTrustStore, password);
     } catch (NoSuchAlgorithmException ex) {
-      throw new SEDSecurityException(NoSuchAlgorithm, ex, ex.getMessage());
+      throw new SEDSecurityException(NoSuchAlgorithm, ex, String.format("NoSuchAlgorithmException '%s' for store type %s", ex.getMessage(), storeType)) ;
     } catch (CertificateException ex) {
       throw new SEDSecurityException(CertificateException, ex, ex.getMessage());
     } catch (IOException ex) {
@@ -574,7 +573,7 @@ public class KeystoreUtils {
               .getDefaultAlgorithm());
     } catch (NoSuchAlgorithmException ex) {
 
-      throw new SEDSecurityException(NoSuchAlgorithm, ex, "JKS", ex.
+      throw new SEDSecurityException(NoSuchAlgorithm, ex, ex.
               getMessage());
     }
 

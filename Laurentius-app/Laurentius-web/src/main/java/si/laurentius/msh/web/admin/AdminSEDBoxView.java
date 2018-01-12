@@ -43,8 +43,7 @@ import si.laurentius.user.SEDUser;
 public class AdminSEDBoxView extends AbstractAdminJSFView<SEDBox> {
 
   private static final SEDLogger LOG = new SEDLogger(AdminSEDBoxView.class);
-  String ePattern = "^(?:[a-z0-9!#$%&'*+\\/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+\\/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")$";
-  Pattern regExpPattern = Pattern.compile(ePattern);
+  String ePattern = "^(?:[a-zA-Z0-9!#$%&'*+\\/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+\\/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")$";  Pattern regExpPattern = Pattern.compile(ePattern);
 
   @EJB(mappedName = SEDJNDI.JNDI_SEDLOOKUPS)
   private SEDLookupsInterface mdbLookups;

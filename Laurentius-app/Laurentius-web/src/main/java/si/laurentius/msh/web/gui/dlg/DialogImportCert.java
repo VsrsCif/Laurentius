@@ -159,7 +159,7 @@ public class DialogImportCert  implements Serializable{
     }
     filepath = null;
     filename = null;
-    keystoreType = "JKS";
+    keystoreType = "PKCS12";
     certificates.clear();
     selectedCertificate = null;
     selectedX509Cert = null;

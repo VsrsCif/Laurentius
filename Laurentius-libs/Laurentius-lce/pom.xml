@@ -83,6 +83,13 @@ certificate validation tools.</description>
             <artifactId>log4j</artifactId>		
             <!-- scope>provided</scope -->
         </dependency>
+        
+           <dependency>
+            <groupId>eu.europa.ec.joinup.sd-dss</groupId>
+            <artifactId>dss-pades</artifactId>	
+            <version>5.2</version>	
+            <!-- scope>provided</scope -->
+        </dependency>
 
         <dependency>
             <groupId>junit</groupId>

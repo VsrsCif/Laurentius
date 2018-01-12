@@ -13,8 +13,6 @@ import java.security.KeyStore;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 import java.util.List;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -41,6 +39,7 @@ public class SEDCertStoreBeanTest extends TestUtils {
     "test-entrust.crt", "test-symantec.crt", "test-sigovca-web.cer"};
 
   public SEDCertStoreBeanTest() {
+
   }
 
   @BeforeClass
@@ -74,7 +73,7 @@ public class SEDCertStoreBeanTest extends TestUtils {
     }
 
     assertFalse("File certstore not exists", cs.exists());
-    // get certsore  creates new keystore in not exists  
+    // get certsore  creates new keystore if not exists  
     KeyStore ks = mTestInstance.getCertStore();
     assertNotNull("Keystore must not be null", ks);
     assertTrue("File '" + cs.getAbsolutePath() + "' exists", cs.exists());
@@ -82,7 +81,7 @@ public class SEDCertStoreBeanTest extends TestUtils {
     assertFalse("File csRootCA not exists", csRootCA.exists());
     ks = mTestInstance.getRootCAStore();
     assertNotNull("csRootCA must not be null", ks);
-    assertTrue("File csRootCA exists", cs.exists());
+    assertTrue("File csRootCA exists", csRootCA.exists());
 
   }
 
@@ -144,6 +143,7 @@ public class SEDCertStoreBeanTest extends TestUtils {
     assertNotNull("Test X509Certificate must not be null", xc);
 
     // get certstore  
+    System.out.println("CA FILE: " + System.getProperty(SEDSystemProperties.SYS_PROP_ROOT_CA_FILE));
     KeyStore ks = mTestInstance.getRootCAStore();
     assertNotNull("Keystore must not be null", ks);
     int iSize = ks.size();
