@@ -23,27 +23,37 @@
 
 
             <h2>#{msg['ExportBackup']}</h2>
-
-
-            <p:panelGrid  class="width:100%" >
-                <p:row > 
-                    <p:column class="grid-label"><h:outputText value="#{msg['ExportLookupsToFile']}:" /></p:column>
-                    <p:column><h:outputText value="#{msg['ExportLookupsToFile']}: #{ApplicationData.exportDataFolder}" /></p:column>
-                    <p:column><p:selectBooleanCheckbox value="#{adminCustomSettings.exportLookupsWithPasswords}"
-                                                       itemLabel="#{msg['ExportWithPasswords']}" /></p:column>
-                    <p:column><p:commandButton value="#{msg['Export']}" styleClass="toolbar-Button"
+            <p:panelGrid  style="width:100%" columns="2" columnClasses="grid-label-long, value">
+                    
+                    <h:outputText value="#{msg['Folder']}:" />
+                    <h:outputText value="#{ApplicationData.exportDataFolder}" />
+                    
+                    <h:outputText value="#{msg['ExportWithPasswords']}:" />
+                    <p:selectBooleanCheckbox value="#{adminCustomSettings.exportLookupsWithPasswords}" />
+                    
+                    <h:outputText value="#{msg['ExportLookupsToFile']}:" />
+                   <p:commandButton value="#{msg['Export']}" styleClass="toolbar-Button"
                                                icon="ui-icon-size-22 ui-icon-svg-csv"                                 
-                                               actionListener="#{adminCustomSettings.exportLookups()}" /></p:column>
-                </p:row>
-
-                <p:row > 
-                    <p:column class="grid-label" colspan="3"><h:outputText value="#{msg['ConfigureProxies']}:" /></p:column>
-                    <p:column><p:commandButton value="#{msg['Proxy']}" styleClass="toolbar-Button"
+                                               actionListener="#{adminCustomSettings.exportLookups()}" />
+            </p:panelGrid>
+            <hr />
+            <h2>#{msg['Settings']}</h2>
+            <p:panelGrid  style="width: 100%;" columns="2" columnClasses="grid-label-long, value">
+                    
+                    <h:outputText value="#{msg['ConfigureProxies']}:" />
+                    <p:commandButton value="#{msg['Proxy']}" styleClass="toolbar-Button"
                                                icon="ui-icon-size-22 ui-icon-svg-csv"   
                                                actionListener="#{adminCustomSettings.updateProxyFromSystemProperties()}"
                                                oncomplete="PF('proxyDialog').show()"
-                                               update=":dlgProxy:proxyDialog:proxyDialogForm"/></p:column>
-                </p:row>
+                                               update=":dlgProxy:proxyDialog:proxyDialogForm"/>
+
+                    <h:outputText value="#{msg['EditWorkFreeDays']}:" />
+                    <p:commandButton value="#{msg['Edit']}" styleClass="toolbar-Button"
+                                               icon="ui-icon-size-22 ui-icon-svg-csv"   
+                                               actionListener="#{adminCustomSettings.updateWorkFreeDaysFromSystemProperties()}"
+                                               oncomplete="PF('WorFreeDaysDialog').show()"
+                                               update=":dlgWokFreeDays:WorFreeDaysDialog:WorFreeDaysDialogForm"/>
+            
 
             </p:panelGrid>
 
@@ -60,7 +70,7 @@
                           scrollHeight="150"
 
                           >
-                <p:column headerText="#{msg['Key']}">
+                <p:column headerText="#{msg['Key']}" width="200">
                     <h:outputText value="#{sp}" />
                 </p:column>
                 <p:column headerText="#{msg['Value']}">
@@ -79,13 +89,13 @@
                 scrollHeight="150"
 
                 >
-                <p:column headerText="#{msg['Key']}">
+                <p:column headerText="#{msg['Key']}" width="200" >
                     <h:outputText value="#{sp.key}" />
                 </p:column>
                 <p:column headerText="#{msg['Value']}">
                     <h:outputText value="#{sp.value}" />
                 </p:column>
-                <p:column headerText="#{msg['Group']}">
+                <p:column headerText="#{msg['Group']}"  width="200">
                     <h:outputText value="#{sp.group}" />
                 </p:column>
             </p:dataTable>

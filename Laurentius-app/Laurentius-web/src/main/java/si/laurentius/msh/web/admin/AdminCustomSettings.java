@@ -1,16 +1,24 @@
 package si.laurentius.msh.web.admin;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
-import org.primefaces.context.RequestContext;
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.SEDSystemProperties;
+import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.interfaces.DBSettingsInterface;
 import si.laurentius.commons.interfaces.SEDInitDataInterface;
 import si.laurentius.commons.utils.SEDLogger;
+import si.laurentius.commons.utils.StringFormater;
 import si.laurentius.commons.utils.Utils;
 import si.laurentius.msh.web.abst.AbstractJSFView;
 
@@ -20,13 +28,14 @@ import si.laurentius.msh.web.abst.AbstractJSFView;
  */
 @SessionScoped
 @Named("adminCustomSettings")
-public class AdminCustomSettings extends AbstractJSFView{
+public class AdminCustomSettings extends AbstractJSFView {
 
   private static final SEDLogger LOG = new SEDLogger(AdminCustomSettings.class);
 
   private boolean exportLookupsWithPasswords = true;
 
   ProxySettings mpsProxy = new ProxySettings();
+  WorkFreeDaysSettings mWFD = new WorkFreeDaysSettings();
 
   @EJB(mappedName = SEDJNDI.JNDI_DATA_INIT)
   private SEDInitDataInterface msedInitData;
@@ -43,8 +52,17 @@ public class AdminCustomSettings extends AbstractJSFView{
   }
 
   public void exportLookups() {
-    msedInitData.exportLookups(SEDSystemProperties.getInitFolder(),
-            isExportLookupsWithPasswords());
+    try {
+      File  exportFolder= SEDSystemProperties.getInitFolder();
+      msedInitData.exportLookups(SEDSystemProperties.getInitFolder(),
+              isExportLookupsWithPasswords());
+       addMessage("Backup saved!", String.format("Backup saved to folder: %s with %s passwords.",
+       exportFolder.getAbsolutePath(), isExportLookupsWithPasswords()?"":"NO")
+       );
+    } catch (StorageException ex) {
+      LOG.logError(ex.getMessage(), ex);
+      addError(ex.getMessage());
+    }
   }
 
   /**
@@ -64,15 +82,21 @@ public class AdminCustomSettings extends AbstractJSFView{
 
   public void updateProxyFromSystemProperties() {
 
-    mpsProxy.setHttpHost(System.getProperty(SEDSystemProperties.PROXY_HTTP_HOST));
-    mpsProxy.setHttpPort(getPort(System.getProperty(SEDSystemProperties.PROXY_HTTP_PORT)));
-    mpsProxy.setNoProxyHosts(System.getProperty(SEDSystemProperties.PROXY_HTTP_NO_PROXY));
+    mpsProxy.
+            setHttpHost(System.getProperty(SEDSystemProperties.PROXY_HTTP_HOST));
+    mpsProxy.setHttpPort(getPort(System.getProperty(
+            SEDSystemProperties.PROXY_HTTP_PORT)));
+    mpsProxy.setNoProxyHosts(System.getProperty(
+            SEDSystemProperties.PROXY_HTTP_NO_PROXY));
 
-    mpsProxy.setHttpsHost(System.getProperty(SEDSystemProperties.PROXY_HTTPS_HOST));
-    mpsProxy.setHttpsPort(getPort(System.getProperty(SEDSystemProperties.PROXY_HTTPS_PORT)));
+    mpsProxy.setHttpsHost(System.getProperty(
+            SEDSystemProperties.PROXY_HTTPS_HOST));
+    mpsProxy.setHttpsPort(getPort(System.getProperty(
+            SEDSystemProperties.PROXY_HTTPS_PORT)));
 
     mpsProxy.setFtpHost(System.getProperty(SEDSystemProperties.PROXY_FTP_HOST));
-    mpsProxy.setFtpPort(getPort(System.getProperty(SEDSystemProperties.PROXY_FTP_PORT)));
+    mpsProxy.setFtpPort(getPort(System.getProperty(
+            SEDSystemProperties.PROXY_FTP_PORT)));
 
   }
 
@@ -93,15 +117,19 @@ public class AdminCustomSettings extends AbstractJSFView{
               DBSettingsInterface.SYSTEM_SETTINGS);
       msedSettingsData.removeSEDProperty(SEDSystemProperties.PROXY_HTTP_PORT,
               DBSettingsInterface.SYSTEM_SETTINGS);
-      msedSettingsData.removeSEDProperty(SEDSystemProperties.PROXY_HTTP_NO_PROXY,
-              DBSettingsInterface.SYSTEM_SETTINGS);
+      msedSettingsData.
+              removeSEDProperty(SEDSystemProperties.PROXY_HTTP_NO_PROXY,
+                      DBSettingsInterface.SYSTEM_SETTINGS);
     } else {
-      msedSettingsData.setSEDProperty(SEDSystemProperties.PROXY_HTTP_HOST, mpsProxy.
-              getHttpHost(), DBSettingsInterface.SYSTEM_SETTINGS);
-      msedSettingsData.setSEDProperty(SEDSystemProperties.PROXY_HTTP_PORT, mpsProxy.
-              getHttpPort() + "", DBSettingsInterface.SYSTEM_SETTINGS);
-      msedSettingsData.setSEDProperty(SEDSystemProperties.PROXY_HTTP_NO_PROXY, mpsProxy.
-              getNoProxyHosts(), DBSettingsInterface.SYSTEM_SETTINGS);
+      msedSettingsData.setSEDProperty(SEDSystemProperties.PROXY_HTTP_HOST,
+              mpsProxy.
+                      getHttpHost(), DBSettingsInterface.SYSTEM_SETTINGS);
+      msedSettingsData.setSEDProperty(SEDSystemProperties.PROXY_HTTP_PORT,
+              mpsProxy.
+                      getHttpPort() + "", DBSettingsInterface.SYSTEM_SETTINGS);
+      msedSettingsData.setSEDProperty(SEDSystemProperties.PROXY_HTTP_NO_PROXY,
+              mpsProxy.
+                      getNoProxyHosts(), DBSettingsInterface.SYSTEM_SETTINGS);
     }
 
     if (Utils.isEmptyString(mpsProxy.getHttpsHost())) {
@@ -109,15 +137,19 @@ public class AdminCustomSettings extends AbstractJSFView{
               DBSettingsInterface.SYSTEM_SETTINGS);
       msedSettingsData.removeSEDProperty(SEDSystemProperties.PROXY_HTTPS_PORT,
               DBSettingsInterface.SYSTEM_SETTINGS);
-      msedSettingsData.removeSEDProperty(SEDSystemProperties.PROXY_HTTPS_NO_PROXY,
+      msedSettingsData.removeSEDProperty(
+              SEDSystemProperties.PROXY_HTTPS_NO_PROXY,
               DBSettingsInterface.SYSTEM_SETTINGS);
     } else {
-      msedSettingsData.setSEDProperty(SEDSystemProperties.PROXY_HTTPS_HOST, mpsProxy.
-              getHttpsHost(), DBSettingsInterface.SYSTEM_SETTINGS);
-      msedSettingsData.setSEDProperty(SEDSystemProperties.PROXY_HTTPS_PORT, mpsProxy.
-              getHttpsPort() + "", DBSettingsInterface.SYSTEM_SETTINGS);
-      msedSettingsData.setSEDProperty(SEDSystemProperties.PROXY_HTTPS_NO_PROXY, mpsProxy.
-              getNoProxyHosts(), DBSettingsInterface.SYSTEM_SETTINGS);
+      msedSettingsData.setSEDProperty(SEDSystemProperties.PROXY_HTTPS_HOST,
+              mpsProxy.
+                      getHttpsHost(), DBSettingsInterface.SYSTEM_SETTINGS);
+      msedSettingsData.setSEDProperty(SEDSystemProperties.PROXY_HTTPS_PORT,
+              mpsProxy.
+                      getHttpsPort() + "", DBSettingsInterface.SYSTEM_SETTINGS);
+      msedSettingsData.setSEDProperty(SEDSystemProperties.PROXY_HTTPS_NO_PROXY,
+              mpsProxy.
+                      getNoProxyHosts(), DBSettingsInterface.SYSTEM_SETTINGS);
     }
 
     if (Utils.isEmptyString(mpsProxy.getFtpHost())) {
@@ -128,19 +160,21 @@ public class AdminCustomSettings extends AbstractJSFView{
       msedSettingsData.removeSEDProperty(SEDSystemProperties.PROXY_FTP_NO_PROXY,
               DBSettingsInterface.SYSTEM_SETTINGS);
     } else {
-      msedSettingsData.setSEDProperty(SEDSystemProperties.PROXY_FTP_HOST, mpsProxy.
-              getFtpHost(), DBSettingsInterface.SYSTEM_SETTINGS);
-      msedSettingsData.setSEDProperty(SEDSystemProperties.PROXY_FTP_PORT, mpsProxy.
-              getFtpPort() + "", DBSettingsInterface.SYSTEM_SETTINGS);
-      msedSettingsData.setSEDProperty(SEDSystemProperties.PROXY_FTP_NO_PROXY, mpsProxy.
-              getNoProxyHosts(), DBSettingsInterface.SYSTEM_SETTINGS);
+      msedSettingsData.setSEDProperty(SEDSystemProperties.PROXY_FTP_HOST,
+              mpsProxy.
+                      getFtpHost(), DBSettingsInterface.SYSTEM_SETTINGS);
+      msedSettingsData.setSEDProperty(SEDSystemProperties.PROXY_FTP_PORT,
+              mpsProxy.
+                      getFtpPort() + "", DBSettingsInterface.SYSTEM_SETTINGS);
+      msedSettingsData.setSEDProperty(SEDSystemProperties.PROXY_FTP_NO_PROXY,
+              mpsProxy.
+                      getNoProxyHosts(), DBSettingsInterface.SYSTEM_SETTINGS);
     }
 
-   
-    
     addCallbackParam("saved", true);
-    update(":forms:SettingsCustomPanel:settingsPanel:sysProperties", ":forms:SettingsCustomPanel:settingsPanel:sedProperties");
-    
+    update(":forms:SettingsCustomPanel:settingsPanel:sysProperties",
+            ":forms:SettingsCustomPanel:settingsPanel:sedProperties");
+
   }
 
   protected int getPort(String port) {
@@ -152,11 +186,88 @@ public class AdminCustomSettings extends AbstractJSFView{
     }
   }
 
-  static public class ProxySettings {
+  public WorkFreeDaysSettings getWorkFreeDays() {
+    return mWFD;
+  }
 
+  public void updateWorkFreeDaysFromSystemProperties() {
+    mWFD.getDays().clear();
+    mWFD.setLastSelectedDate(null);
+
+    String wfd = System.getProperty(SEDSystemProperties.SYS_PROP_WORK_FREE_DAYS, "");
+    if (!wfd.isEmpty()) {
+      mWFD.getDays().addAll(Arrays.asList(wfd.split(";")));
+    }
+  }
+
+  public void updateWorkFreeDaysToSystemProperties() {
+    msedSettingsData.setSEDProperty(SEDSystemProperties.SYS_PROP_WORK_FREE_DAYS,
+            mWFD.getWorkFreeDaysAsString(), DBSettingsInterface.SYSTEM_SETTINGS);
     
+    addCallbackParam("saved", true);
+    update(":forms:SettingsCustomPanel:settingsPanel:sysProperties",
+            ":forms:SettingsCustomPanel:settingsPanel:sedProperties");
+  }
 
-    ;
+  public void removeSelectedDayFromList() {
+    String sl = mWFD.getSelectedDateFromList();
+    if (sl!=null && mWFD.getDays().contains(sl)){
+      mWFD.getDays().remove(sl);
+    }
+  }
+
+  static public class WorkFreeDaysSettings {
+
+    Date lastSelectedDate;
+    List<String> workFreeDays = new ArrayList<>();
+    String selecteDateFromList;
+
+    public WorkFreeDaysSettings() {
+    }
+
+    public Date getLastSelectedDate() {
+      return lastSelectedDate;
+    }
+
+    public void setLastSelectedDate(Date lastSelectedDate) {
+      if (this.lastSelectedDate != lastSelectedDate) {
+        this.lastSelectedDate = lastSelectedDate;
+
+        if (lastSelectedDate != null) {
+          String val = StringFormater.formatToISO8601Date(lastSelectedDate);
+          if (!workFreeDays.contains(val)) {
+            workFreeDays.add(val);
+            // sort list
+            java.util.Collections.sort(workFreeDays);
+            
+          }
+        }
+      }
+    }
+
+    public List<String> getDays() {
+      return workFreeDays;
+    }
+
+    public void setDays(List<String> workfreeDays) {
+      this.workFreeDays = workfreeDays;
+    }
+
+    public String getWorkFreeDaysAsString() {
+      return String.join(";", this.workFreeDays);
+    }
+
+    public String getSelectedDateFromList() {
+      return selecteDateFromList;
+    }
+
+    public void setSelectedDateFromList(String select) {
+      this.selecteDateFromList = select;
+    }
+
+  }
+
+  static public class ProxySettings {
 
     String httpHost;
     int httpPort = 80;

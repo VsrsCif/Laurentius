@@ -17,8 +17,11 @@ package si.laurentius.commons;
 import java.io.File;
 import static java.lang.System.getProperty;
 import static java.lang.System.setProperty;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import si.laurentius.commons.utils.StringFormater;
 
 /**
  *
@@ -29,6 +32,7 @@ public class SEDSystemProperties {
   private static final int IN_BRACKET = 2;
   private static final int NORMAL = 0;
   private static final int SEEN_DOLLAR = 1;
+  
   /**
    * System property configuration folder .
    */
@@ -132,10 +136,12 @@ public class SEDSystemProperties {
   public static final String PROXY_FTP_HOST = "ftp.proxHost";
   public static final String PROXY_FTP_PORT = "ftp.proxyPort";
   public static final String PROXY_FTP_NO_PROXY = "ftp.nonProxyHosts";
+  public static final String SYS_PROP_WORK_FREE_DAYS = "laurentius.work.free.days";
 
 
   private static final Map<String, String> S_DEF_VALUES = new HashMap<>();
   private static final Map<String, File> S_INIT_FILES_FOLDERS = new HashMap<>();
+  
 
   static {
     S_DEF_VALUES.put(SYS_PROP_HOME_DIR, System.getProperty(
@@ -290,6 +296,13 @@ public class SEDSystemProperties {
 
   public static File getStorageFolder() {
     return getFile(SYS_PROP_STORAGE_DIR, true);
+  }
+  
+  
+  public static boolean isWorkFreeDay(){
+     String wfd = System.getProperty(SYS_PROP_WORK_FREE_DAYS, "");
+     String cdISO = StringFormater.geFormatedISO8601CurrentDate();    
+    return wfd.contains(cdISO);
   }
 
   public static boolean isInitData() {

@@ -110,7 +110,7 @@
                 <SOAPVersion>1.2</SOAPVersion>
             </TransportProtocol>
             <LocalPartySecurity/>
-            <ExchangePartySecurity signatureCertAlias="court-laurentius"/>
+            <ExchangePartySecurity signatureCertAlias="b2g-test.sodisce.si" encryptionCertAlias="b2g-test.sodisce.si"/>
         </PartyIdentitySet>
     </Parties>
     <SecurityPolicies>
@@ -131,7 +131,7 @@
     </SecurityPolicies>
     <ReceptionAwarenessPatterns>
         <ReceptionAwareness id="AS4ReceiptResponse" replyPattern="response" receiptType="AS4Receipt">
-            <Retry maxRetries="3" multiplyPeriod="3" period="5678"/>
+            <Retry maxRetries="10" multiplyPeriod="3" period="5678"/>
             <DuplicateDetection windowPeriode="P1Y" eliminate="true"/>
         </ReceptionAwareness>
     </ReceptionAwarenessPatterns>

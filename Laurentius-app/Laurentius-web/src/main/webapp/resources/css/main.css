@@ -46,6 +46,15 @@ h3 {
     margin: 1px;
 }
 
+.grid-label-long {
+    width: 270px !important; 
+    background: lightsteelblue;
+    text-align: right !important;
+    padding: 0;
+    margin: 1px;
+}
+
+
 
 
 .ui-widget .ui-layout-unit, 

@@ -65,5 +65,7 @@ public interface DBSettingsInterface {
 
   @Lock(value = LockType.WRITE)
   SEDProperty getSEDProperty(String key, String group);
+  
+  
 
 }

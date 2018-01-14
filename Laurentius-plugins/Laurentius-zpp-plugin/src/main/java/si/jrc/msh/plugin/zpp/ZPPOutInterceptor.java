@@ -394,7 +394,7 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
               "Mail ready to deliver by ZPP delivery protocol", null,
               ZPPConstants.S_ZPP_PLUGIN_TYPE);
     } else {
-      mDB.setStatusToOutMail(outMail, SEDOutboxMailStatus.SENT,
+      mDB.setStatusToOutMail(outMail, SEDOutboxMailStatus.PROCESS,
               "Deliver mail by ZPP delivery protocol", null,
               ZPPConstants.S_ZPP_PLUGIN_TYPE);
     }

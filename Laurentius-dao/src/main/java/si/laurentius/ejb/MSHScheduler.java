@@ -38,6 +38,7 @@ import si.laurentius.cron.SEDCronJob;
 import si.laurentius.cron.SEDTaskExecution;
 import si.laurentius.cron.SEDTaskProperty;
 import si.laurentius.commons.SEDJNDI;
+import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.SEDValues;
 import si.laurentius.commons.enums.SEDTaskStatus;
 import si.laurentius.commons.exception.StorageException;
@@ -69,6 +70,7 @@ public class MSHScheduler implements SEDSchedulerInterface {
 
   @EJB(mappedName = SEDJNDI.JNDI_SEDLOOKUPS)
   private SEDLookupsInterface mdbLookups;
+  
 
   @EJB(mappedName = SEDJNDI.JNDI_PLUGIN)
   private SEDPluginManagerInterface mpmPluginManager;
@@ -136,13 +138,20 @@ public class MSHScheduler implements SEDSchedulerInterface {
     String name = (String) (timer.getInfo());
     // get cron job
     SEDCronJob mj = mdbLookups.getSEDCronJobByName(name);
+
     if (mj == null) {
       String logMsg = String.format(
               "Timeout for cron job %s , but cronjob not exists!!", name);
       LOG.logError(l, logMsg, null);
     } else if (!mj.getActive()) {
       LOG.formatedDebug("Cron job %s  not active!", name);
-    } else {
+    }  else if (mj.getIgnoreOnWorkFreeDays()!=null 
+            && mj.getIgnoreOnWorkFreeDays()
+            && SEDSystemProperties.isWorkFreeDay()) {
+      LOG.formatedDebug("Cron job %s  not active!", name);
+    } 
+    
+    else {
       executeCronJob(mj);
     }
     LOG.logEnd(l, String.format("Timeout for Cron job %s !'", name));
@@ -151,6 +160,8 @@ public class MSHScheduler implements SEDSchedulerInterface {
   @Override
   public String executeCronJob(SEDCronJob mj) {
     long l = LOG.logStart(mj.getName());
+    
+    
     StringWriter sw = new StringWriter();
     for (SEDTask tsk : mj.getSEDTasks()) {
       if (tsk.getActive()) {

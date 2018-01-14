@@ -88,6 +88,11 @@ Copyright 2015, Supreme Court Republic of Slovenia
                     Allowable values : a four-digit calendar year </xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
+                <xs:attribute name="ignoreOnWorkFreeDays" type="xs:boolean" >
+			<xs:annotation>
+				<xs:documentation xml:lang="en">Ignore execution on work free days as hollidays. Work free days must be setted in laurentius settings</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
 	</xs:complexType>
 	<xs:complexType name="SEDTaskProperty">
 		<xs:annotation>

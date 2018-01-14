@@ -23,6 +23,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import static java.lang.System.getProperty;
+import java.util.Calendar;
 
 /**
  * class contains methods for formattig string using the specified format string
@@ -37,6 +38,8 @@ public class StringFormater {
   private static final int NORMAL = 0;
   private static final int SEEN_DOLLAR = 1;
   private static final Object[] EMPTY_ARRAY = new Object[0];
+  private static final String FORMAT_ISO8601_DATE ="%04d-%02d-%02d";
+  private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
   /**
    * Method is "borrowed" from org.jboss.util.StringPropertyReplacer; Go through
@@ -56,6 +59,20 @@ public class StringFormater {
   public static String format(final String formatedString, Object obj) {
 
     return format(formatedString, obj, null, null);
+  }
+  
+  public static String formatToISO8601Date(Calendar date){
+    return date == null?"":String.format(FORMAT_ISO8601_DATE, 
+            date.get(Calendar.YEAR),
+            date.get(Calendar.MONTH)+1,
+            date.get(Calendar.DAY_OF_MONTH));            
+  }
+  public static String formatToISO8601Date(Date date){
+    return date == null?"":sdf.format(date);            
+  }
+  
+  public static String geFormatedISO8601CurrentDate(){
+    return formatToISO8601Date(Calendar.getInstance());
   }
 
   public static String format(final String formatedString,

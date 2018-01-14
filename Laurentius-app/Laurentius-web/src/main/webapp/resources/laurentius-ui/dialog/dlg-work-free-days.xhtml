@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      xmlns:dlg="http://java.sun.com/jsf/composite/laurentius-ui/dialog"
+      >
+    <h:head>
+        <title>Laurentius</title>       
+    </h:head>
+    <composite:interface>
+    </composite:interface>
+
+    <composite:implementation >      
+        <dlg:dlg-abstract   id="WorFreeDaysDialog"
+                            formId="WorFreeDaysDialogForm"
+                            dialogTitle="#{msg['SEDWorkFreeDaysDialog']}" 
+                            editable="#{adminCustomSettings.workFreeDays}"
+                            width="520"
+                            height="250"
+                            updateOnSave=":forms:MainPanel"
+                            onConfirmAction="#{adminCustomSettings.updateWorkFreeDaysToSystemProperties()}" >
+            <p:layout>
+                <p:layoutUnit position="center"> 
+                    <h2>#{msg['SelectWorkFreeDay']} </h2>
+                    <p:calendar id="inline" value="#{adminCustomSettings.workFreeDays.lastSelectedDate}" mode="inline" >
+                        <p:ajax event="dateSelect" update="tblWorkDays"/>
+                    </p:calendar>
+
+                </p:layoutUnit>
+                <p:layoutUnit position="east" size="240" maxSize="240" minSize="240">
+                    <h2>#{msg['WorkFreeDays']} </h2>
+                    <p:dataTable  id="tblWorkDays" value="#{adminCustomSettings.workFreeDays.days}" var="day" selectionMode="single" 
+                                 selection="#{adminCustomSettings.workFreeDays.selectedDateFromList}" 
+                                 rowKey="#{day}"
+                                   scrollable="true" 
+                                   scrollHeight="120"
+                                 >
+                        <f:facet name="header">
+                             <p:commandButton value="#{msg['Delete']}" styleClass="toolbar-Button"                                                          
+                                                 update="tblWorkDays"
+                                                 icon="ui-icon-svg-remove ui-icon-size-22"  
+                                                 actionListener="#{adminCustomSettings.removeSelectedDayFromList()}"                                                 
+                                                 />
+                        </f:facet>
+                        <p:column headerText="Id">
+                            <h:outputText value="#{day}" />
+                        </p:column>
+
+                    </p:dataTable>
+                </p:layoutUnit>
+            </p:layout>
+
+        </dlg:dlg-abstract>
+    </composite:implementation>
+
+</html>

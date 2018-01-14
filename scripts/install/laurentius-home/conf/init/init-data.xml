@@ -171,7 +171,10 @@
         <ns5:SEDBox localBoxName="a.department" activeFromDate="2010-04-20+02:00"/>
         <ns5:SEDBox localBoxName="b.department" activeFromDate="2010-04-20+02:00"/>
     </SEDBoxes>
-    <SEDProperties/>
+<SEDProperties>
+        <ns6:SEDProperty key="laurentius.network.test.addresses" value="www.google.com,www.amazon.com" group="SED"/>
+		<ns6:SEDProperty key="laurentius.work.free.days" value="2018-01-01;2018-01-02;2018-02-08;2018-04-01;2018-04-02;2018-04-27;2018-05-01;2018-05-02;2018-06-25;2018-08-15;2018-10-31;2018-11-01;2018-12-25;2018-12-26" group="SYSTEM"/>
+    </SEDProperties>
     <SEDUsers>
         <ns7:SEDUser userId="user" activeFromDate="2010-04-20+02:00">
             <ns5:SEDBox localBoxName="a.department" activeFromDate="2010-04-20+02:00"/>

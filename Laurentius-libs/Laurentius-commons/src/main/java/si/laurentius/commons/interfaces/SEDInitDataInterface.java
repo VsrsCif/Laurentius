@@ -16,6 +16,7 @@ package si.laurentius.commons.interfaces;
 
 import java.io.File;
 import javax.ejb.Local;
+import si.laurentius.commons.exception.StorageException;
 
 /**
  *
@@ -30,7 +31,7 @@ public interface SEDInitDataInterface {
    * @param f
    * @param saveCertPasswords
    */
-  void exportLookups(File f, boolean saveCertPasswords);
+  void exportLookups(File f, boolean saveCertPasswords) throws StorageException;
 
   
 }

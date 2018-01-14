@@ -20,6 +20,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
@@ -379,7 +381,9 @@ public class TaskBackup implements TaskExecutionInterface {
 
       sw.append("- Backup settings and lookups:");
       lst = LOG.getTime();
-      mLookups.exportLookups(bckFolder, bBackupPassword);
+     
+        mLookups.exportLookups(bckFolder, bBackupPassword);
+     
       sw.append((lst - LOG.getTime()) + " ms\n");
 
       sw.append("- Backup out mail:");
@@ -399,7 +403,7 @@ public class TaskBackup implements TaskExecutionInterface {
       sw.append(rs);
       sw.append("\n");
       
-    } catch (IOException ex) {
+    } catch (StorageException | IOException ex) {
       throw new TaskException(TaskException.TaskExceptionCode.InitException,
               "Error opening archive list file:  '" + ferrLogMail.
                       getAbsolutePath() + "'!", ex);

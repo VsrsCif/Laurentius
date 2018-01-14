@@ -38,6 +38,7 @@ import si.laurentius.cert.SEDCertPassword;
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.exception.SEDSecurityException;
+import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.interfaces.DBSettingsInterface;
 import si.laurentius.commons.interfaces.SEDCertStoreInterface;
 import si.laurentius.commons.interfaces.SEDInitDataInterface;
@@ -86,7 +87,7 @@ public class SEDInitData implements SEDInitDataInterface {
    * @param saveCertPasswords
    */
   @Override
-  public void exportLookups(File f, boolean saveCertPasswords) {
+  public void exportLookups(File f, boolean saveCertPasswords) throws  StorageException{
     long l = LOG.logStart();
     SedLookups slps = new SedLookups();
     slps.setExportDate(Calendar.getInstance().getTime());
@@ -100,6 +101,9 @@ public class SEDInitData implements SEDInitDataInterface {
     slps.setSEDInterceptors(new SedLookups.SEDInterceptors());
     slps.setSEDCertPassword(new SedLookups.SEDCertPassword());
     slps.setSEDCertCRLs(new SedLookups.SEDCertCRLs());
+    // set properties
+    slps.getSEDProperties().getSEDProperties().addAll(mdbSettings.getSEDProperties());
+    
 
     slps.getSEDBoxes().getSEDBoxes().addAll(mdbLookups.getSEDBoxes());
     slps.getSEDUsers().getSEDUsers().addAll(mdbLookups.getSEDUsers());
@@ -133,7 +137,9 @@ public class SEDInitData implements SEDInitDataInterface {
       }
       XMLUtils.serialize(slps, fdata);
     } catch (JAXBException | IOException ex) {
-      LOG.logError(l, ex.getMessage(), ex);
+      String strMsg ="Error occured while serializing init data. Error:" + ex.getMessage();
+      LOG.logError(l, strMsg, ex);
+      throw new StorageException(strMsg, ex);
     }
     exportPluginData(f, saveCertPasswords);
     LOG.logEnd(l);
@@ -152,6 +158,7 @@ public class SEDInitData implements SEDInitDataInterface {
         initLookups(cls);
         initSettings(cls);
         initSEDKeystores(cls);
+        
 
       } catch (JAXBException ex) {
         String msgErr = String.format(
@@ -312,7 +319,7 @@ public class SEDInitData implements SEDInitDataInterface {
     
   }
 
-  public void exportPluginData(File initFolder, boolean savePasswords) {
+  public void exportPluginData(File initFolder, boolean savePasswords) throws StorageException {
     long l = LOG.logStart();
 
     for (Plugin p : mPluginManager.getRegistredPlugins()) {
@@ -325,12 +332,16 @@ public class SEDInitData implements SEDInitDataInterface {
                 "NamingException occured while exporting data for plugin '%s' JNDI '%s'. Error '%s'. ",
                 p.getName(), p.getJndi(),
                 ex.getMessage());
+        
         LOG.logError(l, errmsg, ex);
+      
+        throw new StorageException(errmsg, ex);
       } catch (Throwable ex) {
         String errmsg = String.format(
                 "Throwable error occured while exporting data for  plugin '%s' JNDI '%s'. Error '%s'. ",
                 p.getName(), p.getJndi(), ex.getMessage());
         LOG.logError(l, errmsg, ex);
+         throw new StorageException(errmsg, ex);
       }
     }
   }

@@ -468,7 +468,7 @@ public class TaskArchive implements TaskExecutionInterface {
 
       fwArhMail.flush();
       fwErrLogMail.flush();
-    } catch (IOException ex) {
+    } catch (StorageException | IOException ex) {
       throw new TaskException(TaskException.TaskExceptionCode.InitException,
               "Error opening archive list file:  '" + fArhMail.
                       getAbsolutePath() + "'!", ex);

@@ -57,6 +57,9 @@
 
                             <h:outputText id="cDOfW" value="#{msg['DayOfWeek']}:" />
                             <p:inputText value="#{adminSEDCronJobView.editable.dayOfWeek}" style="width: 120px" />
+                            
+                            <h:outputText value="#{msg['SkipOnWorkFreeDay']}:" />
+                            <h:selectBooleanCheckbox id="onwfd" value="#{adminSEDCronJobView.editable.ignoreOnWorkFreeDays}"  />
                         </p:panelGrid>
                     </p:layoutUnit>
                     
