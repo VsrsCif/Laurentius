@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.Local;
@@ -53,6 +55,7 @@ import javax.transaction.NotSupportedException;
 import javax.transaction.RollbackException;
 import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
+import javax.xml.bind.JAXBException;
 import si.laurentius.msh.inbox.event.MSHInEvent;
 import si.laurentius.msh.inbox.mail.MSHInMail;
 import si.laurentius.msh.outbox.event.MSHOutEvent;
@@ -73,6 +76,7 @@ import si.laurentius.commons.interfaces.SEDDaoInterface;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StorageUtils;
 import si.laurentius.commons.utils.Utils;
+import si.laurentius.commons.utils.xml.XMLUtils;
 import si.laurentius.lce.DigestUtils;
 import si.laurentius.msh.outbox.payload.MSHOutPart;
 
@@ -757,6 +761,14 @@ public class SEDDaoBean implements SEDDaoInterface {
             mp.setMimeType(MimeValue.getMimeTypeByFileName(f.getName()));
           }
         }
+      }
+      
+      try {
+        System.out.println(XMLUtils.serializeToString(mail));
+      } catch (JAXBException ex) {
+        String msg = "Error occurred on serializing mail! Err:" + ex.
+                getMessage();
+        LOG.logError(l, msg, ex);
       }
 
       memEManager.persist(mail);

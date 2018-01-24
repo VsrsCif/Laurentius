@@ -124,22 +124,18 @@ public class ProcessExecute extends AbstractMailProcessor {
     long procRes = -1;
     try {
       String command = StringFormater.replaceProperties(cmd);
-      // get execute folder
-      String folder = null;
-      if (command.contains(File.separator)) {
-        folder = command.substring(0, command.lastIndexOf(File.separator));
-      }
+      
+      String[] commandAarray = command.split(" ");
+      
       List<String> lstArray = new ArrayList<>();
-      lstArray.add(command);
+      lstArray.addAll(Arrays.asList(commandAarray));
       if (!Utils.isEmptyString(param)) {
         lstArray.addAll(translateCommandline(param));
       }
       LOG.log("Start execute command array: " +  String.join(", ", lstArray));
+      
       ProcessBuilder builder = new ProcessBuilder(lstArray);
 
-      if (folder != null) {
-        builder.directory(new File(folder));
-      }
 
       long lSt = LOG.getTime();
       Process process = builder.start();

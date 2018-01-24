@@ -47,6 +47,12 @@
                 <ns2:SEDTaskProperty id="56" key="senderEBox"></ns2:SEDTaskProperty>
             </ns2:SEDTask>
         </ns2:SEDCronJob>
+		<ns2:SEDCronJob name="FileSubmitterXML-DRW" active="true" second="0" minute="*/5" hour="*" dayOfMonth="*" month="*" dayOfWeek="*">
+            <ns2:SEDTask plugin="BasicTaskPlugin" type="xmlfilesubmitter" pluginVersion="1.0.0">
+                <ns2:SEDTaskProperty id="127" key="file.submit.folder">${laurentius.home}/submit/xml-dwr/</ns2:SEDTaskProperty>
+            </ns2:SEDTask>
+        </ns2:SEDCronJob>
+
         <ns2:SEDCronJob id="57" name="Report-InMail-ADepartment" active="false" second="0" minute="*/5" hour="7-16" dayOfMonth="*" month="*" dayOfWeek="1-5">
             <ns2:SEDTask plugin="BasicTaskPlugin" type="statusreport" pluginVersion="1.0.0">
                 <ns2:SEDTaskProperty id="125" key="mail.config.jndi">java:jboss/mail/Default</ns2:SEDTaskProperty>
