@@ -84,12 +84,12 @@ certificate validation tools.</description>
             <!-- scope>provided</scope -->
         </dependency>
         
-           <dependency>
+           <!-- dependency>
             <groupId>eu.europa.ec.joinup.sd-dss</groupId>
             <artifactId>dss-pades</artifactId>	
             <version>5.2</version>	
-            <!-- scope>provided</scope -->
-        </dependency>
+            
+        </dependency -->
 
         <dependency>
             <groupId>junit</groupId>
