@@ -7,7 +7,7 @@
         <id name="Id" type="java.math.BigInteger" >
             <column name="ID" scale="0" />
             <generator class="sequence">
-                <param name="sequence_name">SEQ_LAU_INBOX</param>
+                <param name="sequence_name"> SEQ_LAU_INBOX</param>
             </generator>
         </id>
         <property column="MSG_ID" name="MessageId"  length="256" type="java.lang.String" index="Idx_in_msg_id" not-null="true"/>
@@ -54,7 +54,7 @@
         <id name="Id" type="java.math.BigInteger">
             <column name="ID" scale="0" />
             <generator class="sequence">
-                <param name="sequence_name">SEQ_LAU_INBOX_PROP</param>
+                <param name="sequence_name"> SEQ_LAU_INBOX_PROP</param>
             </generator>
         </id>		
         <property column="NAME" name="Name" type="java.lang.String"  length="128" /> 

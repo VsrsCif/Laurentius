@@ -7,7 +7,7 @@
         <id name="Id" type="java.math.BigInteger" >
             <column name="ID" scale="0" />
             <generator class="sequence">
-                <param name="sequence_name">SEQ_LAU_INTERCEPTOR</param>
+                <param name="sequence_name"> SEQ_LAU_INTERCEPTOR</param>
             </generator>
         </id>
         <property column="NAME" name="Name"  length="128" type="java.lang.String" unique="true"/>
@@ -39,7 +39,7 @@
         <id name="Id" type="java.math.BigInteger">
             <column name="ID" scale="0" />
             <generator class="sequence">
-                <param name="sequence_name">SEQ_LAU_INTERC_RULE</param>                
+                <param name="sequence_name"> SEQ_LAU_INTERC_RULE</param>                
             </generator>
         </id>		
         <property column="RULE_PROPERTY" name="Property" type="java.lang.String"  length="64" /> 
@@ -52,7 +52,7 @@
         <id name="Id" type="java.math.BigInteger">
             <column name="ID" scale="0" />
             <generator class="sequence">
-                <param name="sequence_name">SEQ_LAU_INTERC_INST_PROP</param>                
+                <param name="sequence_name"> SEQ_LAU_INTERC_INST_PROP</param>                
             </generator>
         </id>		
         <property column="INTC_PROP_KEY" name="Key" type="java.lang.String"  length="64" /> 

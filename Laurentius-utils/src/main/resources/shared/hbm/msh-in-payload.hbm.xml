@@ -6,7 +6,7 @@
         <id name="Id" type="java.math.BigInteger" >
             <column name="ID" scale="0" />
             <generator class="sequence">
-                <param name="sequence_name">SEQ_LAU_INBOX_PAYLOAD</param>
+                <param name="sequence_name"> SEQ_LAU_INBOX_PAYLOAD</param>
             </generator>
         </id>
         <property column="MAIL_ID" name="MailId" type="java.math.BigInteger" scale="0" index="idx_inpart_mid" />
@@ -39,7 +39,7 @@
         <id name="Id" type="java.math.BigInteger">
             <column name="ID" scale="0" />
             <generator class="sequence">
-                <param name="sequence_name">SEQ_LAU_INBOX_PAYLOAD_PROP</param>
+                <param name="sequence_name"> SEQ_LAU_INBOX_PAYLOAD_PROP</param>
             </generator>
         </id>		
         <property column="NAME" name="Name" type="java.lang.String"  length="128" /> 

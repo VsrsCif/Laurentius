@@ -7,7 +7,7 @@
         <id name="Id" type="java.math.BigInteger" >
             <column name="ID" scale="0" />
             <generator class="sequence">
-                <param name="sequence_name">SEQ_LAU_CRON</param>
+                <param name="sequence_name"> SEQ_LAU_CRON</param>
             </generator>
         </id>
         <property column="NAME" name="name"  length="128" type="java.lang.String" unique="true"/>
@@ -35,7 +35,7 @@
         <id name="Id" type="java.math.BigInteger">
             <column name="TASK_ID" scale="0" />
             <generator class="sequence">
-                <param name="sequence_name">SEQ_LAU_TASK_INSTANCE</param>                
+                <param name="sequence_name"> SEQ_LAU_TASK_INSTANCE</param>                
             </generator>
         </id>		
         
@@ -62,7 +62,7 @@
         <id name="Id" type="java.math.BigInteger">
             <column name="ID" scale="0" />
             <generator class="sequence">
-                <param name="sequence_name">SEQ_LAU_TASK_PROP</param>                
+                <param name="sequence_name"> SEQ_LAU_TASK_PROP</param>                
             </generator>
         </id>		
         <property column="TASK_PROP_KEY" name="Key" type="java.lang.String"  length="64" /> 

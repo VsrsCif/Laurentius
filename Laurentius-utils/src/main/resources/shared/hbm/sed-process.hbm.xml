@@ -7,7 +7,7 @@
         <id name="Id" type="java.math.BigInteger">
             <column name="ID" scale="0" />
             <generator class="sequence">
-                <param name="sequence_name">SEQ_LAU_PROCESS_INSTANCE</param>                
+                <param name="sequence_name"> SEQ_LAU_PROCESS_INSTANCE</param>                
             </generator>
         </id>		
         <property column="TYPE" name="Type"  length="64" type="java.lang.String"/>
@@ -25,7 +25,7 @@
         <id name="Id" type="java.math.BigInteger">
             <column name="ID" scale="0" />
             <generator class="sequence">
-                <param name="sequence_name">SEQ_LAU_PROC_INST_PROP</param>                
+                <param name="sequence_name"> SEQ_LAU_PROC_INST_PROP</param>                
             </generator>
         </id>		
         <property column="PROC_PROP_KEY" name="Key" type="java.lang.String"  length="64" /> 
@@ -37,7 +37,7 @@
         <id name="Id" type="java.math.BigInteger" >
             <column name="ID" scale="0" />
             <generator class="sequence">
-                <param name="sequence_name">SEQ_LAU_PROCESSOR</param>
+                <param name="sequence_name"> SEQ_LAU_PROCESSOR</param>
             </generator>
         </id>
         <property column="NAME" name="Name"  length="128" type="java.lang.String" unique="true" index="Idx_proc_name"/>
@@ -61,7 +61,7 @@
         <id name="Id" type="java.math.BigInteger">
             <column name="ID" scale="0" />
             <generator class="sequence">
-                <param name="sequence_name">SEQ_LAU_PROCESSOR_RULE</param>                
+                <param name="sequence_name"> SEQ_LAU_PROCESSOR_RULE</param>                
             </generator>
         </id>		
         <property column="RULE_PROPERTY" name="Property" type="java.lang.String"  length="64" /> 

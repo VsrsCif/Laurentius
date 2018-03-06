@@ -6,7 +6,7 @@
         <id name="Id" type="java.math.BigInteger" >
             <column name="ID" scale="0" />
             <generator class="sequence">
-                <param name="sequence_name">SEQ_LAU_OUTBOX_EVENT</param>
+                <param name="sequence_name"> SEQ_LAU_OUTBOX_EVENT</param>
             </generator>
         </id>
         <property column="MAIL_ID" name="MailId" type="java.math.BigInteger" scale="0" index="idx_outev_mid" />

@@ -8,7 +8,7 @@
         <id name="Id" type="java.math.BigInteger">
             <column name="ID" scale="0" />
             <generator class="sequence">
-                <param name="sequence_name">SEQ_LAU_TASK_EXEC</param>                
+                <param name="sequence_name"> SEQ_LAU_TASK_EXEC</param>                
             </generator>
         </id>		
         <property column="CRON_ID" name="CronId"  type="java.math.BigInteger"/>
