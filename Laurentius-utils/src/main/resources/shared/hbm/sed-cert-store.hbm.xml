@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>    
+    <class name="si.laurentius.cert.SEDCertPassword" table="LAU_CERT_PASSWD">
+        <id column="ALIAS" name="Alias" type="java.lang.String" length="64"/>
+        <property column="PASSWORD" name="Password" type="java.lang.String" length="64" />  
+        <property column="KEY_PASSWORD" name="KeyPassword" type="java.lang.Boolean" />
+    </class>
+    <query name="si.laurentius.cert.SEDCertPassword.getAll" ><![CDATA[SELECT p FROM SEDCertPassword p]]></query>
+    <query name="si.laurentius.cert.SEDCertPassword.getByAlias" ><![CDATA[SELECT p FROM SEDCertPassword p where p.Alias=:alias]]></query>
+    
+    
+</hibernate-mapping>

@@ -79,6 +79,7 @@ public class TaskFileSubmitter implements TaskExecutionInterface {
   private static final String PROP_SENDER_EBOX = "senderEBox";
   private static final String PROP_SENDER_MSG_ID = "senderMessageId";
   private static final String PROP_SERVICE = "service";
+  private static final String PROP_PROPERTY = "mail.property.";
   private final DateFormat SDF = SimpleDateFormat.getDateTimeInstance(
           SimpleDateFormat.DEFAULT, SimpleDateFormat.DEFAULT);
   @EJB(mappedName = SEDJNDI.JNDI_SEDLOOKUPS)

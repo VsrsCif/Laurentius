@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>
+    
+    <class name="si.laurentius.msh.table.mail.TableInMail"
+           table="LAU_INBOX" >
+        <id name="Id" column="ID" type="java.math.BigInteger" />
+       
+        <property column="MSG_ID" name="MessageId"  length="256" type="java.lang.String" not-null="true"/>
+        <property column="REF_TO_MSG_ID" name="RefToMessageId"  length="256" type="java.lang.String" />
+        <property column="SENDER_MSG_ID" name="SenderMessageId"  length="256" type="java.lang.String"  />
+        <property column="SERVICE" name="Service"  length="512" type="java.lang.String" not-null="true"/>
+        <property column="ACTION" name="Action"  length="512" type="java.lang.String" not-null="true"/>
+        <property column="CONV_ID" name="ConversationId"  length="512" type="java.lang.String" index="Idx_conv_id"/>
+        <property column="SUBJECT" name="Subject"  length="512" type="java.lang.String" />
+        <property column="RECEIVER_EBOX" name="ReceiverEBox"  length="512" type="java.lang.String" not-null="true"/>
+        <property column="RECEIVER_NAME" name="ReceiverName"  length="512" type="java.lang.String" />
+        <property column="SENDER_EBOX" name="SenderEBox"  length="512" type="java.lang.String" not-null="true"/>
+        <property column="SENDER_NAME" name="SenderName"  length="512" type="java.lang.String" />
+        
+        <property column="STATUS" name="Status"  length="32" type="java.lang.String"  />
+        <property column="DATE_STATUS" name="StatusDate"   type="java.util.Date" />
+        <property column="DATE_SUBMITTED" name="SubmittedDate"   type="java.util.Date"  />
+        <property column="DATE_SENT" name="SentDate"  type="java.util.Date"/>
+        <property column="DATE_RECEIVED" name="ReceivedDate"   type="java.util.Date" />
+        <property column="DATE_DELIVERED" name="DeliveredDate"  type="java.util.Date" />
+    </class>
+
+    <class name="si.laurentius.msh.table.mail.TableOutMail"
+           table="LAU_OUTBOX" >
+        <id name="Id" column="ID" type="java.math.BigInteger" />
+       
+        <property column="MSG_ID" name="MessageId"  length="256" type="java.lang.String"  not-null="true"/>
+        <property column="REF_TO_MSG_ID" name="RefToMessageId"  length="256" type="java.lang.String" />
+        <property column="SENDER_MSG_ID" name="SenderMessageId"  length="256" type="java.lang.String" />
+        <property column="SERVICE" name="Service"  length="512" type="java.lang.String" not-null="true"/>
+        <property column="ACTION" name="Action"  length="512" type="java.lang.String" not-null="true"/>
+        <property column="CONV_ID" name="ConversationId"  length="512" type="java.lang.String"/>
+        <property column="SUBJECT" name="Subject"  length="512" type="java.lang.String" />
+        <property column="RECEIVER_EBOX" name="ReceiverEBox"  length="512" type="java.lang.String" not-null="true"/>
+        <property column="RECEIVER_NAME" name="ReceiverName"  length="512" type="java.lang.String" />
+        <property column="SENDER_EBOX" name="SenderEBox"  length="512" type="java.lang.String" not-null="true"/>
+        <property column="SENDER_NAME" name="SenderName"  length="512" type="java.lang.String" />
+        
+        <property column="STATUS" name="Status"  length="32" type="java.lang.String"/>
+        <property column="DATE_STATUS" name="StatusDate"   type="java.util.Date" />
+        <property column="DATE_SUBMITTED" name="SubmittedDate"   type="java.util.Date" />
+        <property column="DATE_SENT" name="SentDate"  type="java.util.Date" />
+        <property column="DATE_RECEIVED" name="ReceivedDate"   type="java.util.Date" />
+        <property column="DATE_DELIVERED" name="DeliveredDate"  type="java.util.Date"  />
+    </class>
+
+    
+</hibernate-mapping>

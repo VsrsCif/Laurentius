@@ -16,7 +16,7 @@
         <id name="Id" type="java.math.BigInteger">
             <column name="ID" scale="0" />
             <generator class="sequence">
-                <param name="sequence">SEQ_PLG_BSC_XSLT_RULE</param>                
+                <param name="sequence_name">SEQ_PLG_BSC_XSLT_RULE</param>                
             </generator>
         </id>	
         <component name="XPath" class="si.laurentius.plugin.imp.XPath">
@@ -39,7 +39,7 @@
         <id name="Id" type="java.math.BigInteger">
             <column name="ID" scale="0" />
             <generator class="sequence">
-                <param name="sequence">SEQ_PLG_BSC_XSLT_NS</param>                
+                <param name="sequence_name">SEQ_PLG_BSC_XSLT_NS</param>                
             </generator>
         </id>	
         <property column="PREFIX" name="Prefix"  length="32" type="java.lang.String" />       

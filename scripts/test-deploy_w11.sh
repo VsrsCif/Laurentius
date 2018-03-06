@@ -16,5 +16,5 @@ cd "$FOLDER_DEPLOY/$BOUNDLE_NAME/wildfly-11.0"
 
 cd "../../$WILDFLY_HOME/bin"
 
-./laurentius-demo.sh --init -d mb-laurentius.si
+./laurentius-init.sh --init -d mb-laurentius.si
 

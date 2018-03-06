@@ -94,6 +94,9 @@ do
 	
 	cp "$LAU_PROJECT/scripts/install/$asItem/laurentius-demo.sh" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/$asItem"
 	cp "$LAU_PROJECT/scripts/install/$asItem/laurentius-demo.bat" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/$asItem"
+	
+	cp "$LAU_PROJECT/scripts/install/$asItem/laurentius-init.sh" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/$asItem"
+	cp "$LAU_PROJECT/scripts/install/$asItem/laurentius-init.bat" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/$asItem"
 done
 
 
