@@ -122,6 +122,8 @@ public class BasicPluginDescription extends AbstractPluginDescription {
       registerPluginComponentInterface(TaskArchive.class);
       registerPluginComponentInterface(TaskBackup.class);
       registerPluginComponentInterface(TaskFileSubmitter.class);
+      registerPluginComponentInterface(TaskXMLDataFileSubmitter.class);
+      
       registerPluginComponentInterface(TaskExecuteProcess.class);
       registerPluginComponentInterface(TaskEmailStatusReport.class);
 

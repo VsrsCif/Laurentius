@@ -16,4 +16,4 @@ cp -r ../../plugins/Laurentius-meps-plugin/src/main/resources/init/meps $FOLDER_
 
 cd "$FOLDER_DEPLOY/$WILDFLY_HOME/bin"
 
-./laurentius-demo.sh --init -d mb-laurentius.si
+./laurentius-init.sh --init -d mb-laurentius.si

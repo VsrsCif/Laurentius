@@ -16,6 +16,7 @@ package si.laurentius.task;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.StringWriter;
@@ -49,6 +50,7 @@ import si.laurentius.msh.outbox.mail.MSHOutMail;
 import si.laurentius.msh.outbox.payload.MSHOutPart;
 import si.laurentius.plugin.crontask.CronTaskDef;
 import si.laurentius.plugin.crontask.CronTaskPropertyDef;
+import si.laurentius.plugin.interfaces.PropertyType;
 import si.laurentius.plugin.interfaces.TaskExecutionInterface;
 import si.laurentius.plugin.interfaces.exception.TaskException;
 import si.laurentius.task.exception.FSException;
@@ -64,15 +66,21 @@ public class TaskXMLDataFileSubmitter implements TaskExecutionInterface {
   /**
    *
    */
-  public static final String KEY_EXPORT_FOLDER = "file.submit.folder";
+  public static final String KEY_ROOT_FOLDER = "file.submit.root.folder";
+  public static final String KEY_MAIL_TYPE = "file.submit.mail.type";
   private static final SEDLogger LOG = new SEDLogger(
           TaskXMLDataFileSubmitter.class);
 
   private static final String OUTMAIL_FILENAME = "outmail";
   private static final String OUTMAIL_SUFFIX = ".xml";
+  private static final String OUTMAIL_SUFFIX_READY = ".ready";
   private static final String OUTMAIL_SUFFIX_ERROR = ".error";
   private static final String OUTMAIL_SUFFIX_PROCESS = ".process";
   private static final String OUTMAIL_SUFFIX_SUBMITTED = ".submitted";
+  
+  private static final String OUTMAIL_SUFFIX_STATUS = ".status";
+
+  
 
   private final DateFormat SDF = SimpleDateFormat.getDateTimeInstance(
           SimpleDateFormat.DEFAULT, SimpleDateFormat.DEFAULT);
@@ -113,14 +121,22 @@ public class TaskXMLDataFileSubmitter implements TaskExecutionInterface {
     StringWriter sw = new StringWriter();
     int iVal = 0;
     String sfolder;
-    if (!p.containsKey(KEY_EXPORT_FOLDER)) {
+    if (!p.containsKey(KEY_ROOT_FOLDER)) {
       throw new TaskException(TaskException.TaskExceptionCode.InitException,
-              "Missing parameter:  '" + KEY_EXPORT_FOLDER + "'!");
+              "Missing parameter:  '" + KEY_ROOT_FOLDER + "'!");
     } else {
-      sfolder = p.getProperty(KEY_EXPORT_FOLDER);
+      sfolder = p.getProperty(KEY_ROOT_FOLDER);
     }
     sfolder = StringFormater.replaceProperties(sfolder);
     sw.append("Submit from folder: " + sfolder);
+
+    String mailType;
+    if (!p.containsKey(KEY_MAIL_TYPE)) {
+      throw new TaskException(TaskException.TaskExceptionCode.InitException,
+              "Missing parameter:  '" + KEY_MAIL_TYPE + "'!");
+    } else {
+      mailType = p.getProperty(KEY_MAIL_TYPE);
+    }
 
     File fRoot = new File(sfolder);
     if (!fRoot.exists()) {
@@ -128,94 +144,173 @@ public class TaskXMLDataFileSubmitter implements TaskExecutionInterface {
     } else if (!fRoot.isDirectory()) {
       sw.append("Submit folder is not a folder!");
     } else {
-      File[] flst
-              = fRoot.listFiles((File dir, String name) -> name.startsWith(
-              OUTMAIL_FILENAME)
-              && name.endsWith(OUTMAIL_SUFFIX));
-      for (File file : flst) {
-        try {
-          if (isFileLocked(file)) {
-            LOG.formatedDebug(
-                    "File: " + file.getName() + " is locked or submitted: abort submitting file");
-          } else {
-            Properties lock = new Properties();
-            lock.setProperty("start.submitting", SDF.format(Calendar.
-                    getInstance().getTime()));
-
-            File fMetaData = new File(
-                    file.getAbsolutePath() + OUTMAIL_SUFFIX_PROCESS);
-            try (FileOutputStream fosMD = new FileOutputStream(fMetaData)) {
-              LOG.
-                      log("Lock file: " + file.getName() + " - create new process file");
-              lock.store(fosMD, "OutMail proccessed");
-            }
-
-            try {
-              BigInteger bi = processOutMail(p, file, fRoot);
-              LOG.formatedDebug("Submit file %s. MailId %d", file.getName(), bi);
-              File fewFMetaData = new File(
-                      file.getAbsolutePath() + OUTMAIL_SUFFIX_SUBMITTED);
-              if (fMetaData.renameTo(fewFMetaData)) {
-                fMetaData = fewFMetaData;
-                iVal++;
-                try (FileOutputStream fos = new FileOutputStream(fMetaData, true);
-                        PrintStream ps = new PrintStream(fos)) {
-
-                  if (bi != null) {
-                    ps.append("Laurentius.id=");
-                    ps.append(bi.toString());
-                    ps.append("\n");
-                  }
-                }
-              } else {
-                LOG.logError(l, "Error rename status file fpr: " + file.
-                        getAbsolutePath(), null);
-              }
-
-            } catch (IOException ex) {
-              LOG.logError(l, "Error reading outmail data: " + file.
-                      getAbsolutePath(), ex);
-              File fewFMetaData = new File(
-                      file.getAbsolutePath() + OUTMAIL_SUFFIX_ERROR);
-              if (fMetaData.renameTo(fewFMetaData)) {
-                try (FileOutputStream fos = new FileOutputStream(fMetaData, true)) {
-                  PrintStream ps = new PrintStream(fos);
-                  ex.printStackTrace(ps);
-                }
-              } else {
-                LOG.logError(l, "Error rename status file fpr: " + file.
-                        getAbsolutePath(), null);
-              }
-            } catch (FSException ex) {
-              LOG.logError(l, "Error subbmitting mail: " + file.
-                      getAbsolutePath(), ex);
-              File fewFMetaData = new File(
-                      file.getAbsolutePath() + OUTMAIL_SUFFIX_ERROR);
-              if (fMetaData.renameTo(fewFMetaData)) {
-                fMetaData = fewFMetaData;
-                try (FileOutputStream fos = new FileOutputStream(fMetaData, true)) {
-                  PrintStream ps = new PrintStream(fos);
-                  ex.printStackTrace(ps);
-                }
-              } else {
-                LOG.logError(l, "Error rename status file fpr: " + file.
-                        getAbsolutePath(), null);
-              }
-            }
-          }
-
-        } catch (IOException ex) {
-          LOG.logError(l, "Errror reading outmail data: " + file.
-                  getAbsolutePath(), ex);
-        }
-
+      if (mailType.equalsIgnoreCase("file")) {
+        iVal = submitFileType(fRoot, p);
+      } else {
+        iVal = submitFolderType(fRoot, p);
       }
-
     }
     sw.append("Submited '" + iVal + "'");
     sw.append(" in : " + (LOG.getTime() - l) + " ms\n");
     LOG.logEnd(l);
     return sw.toString();
+  }
+
+  private int submitFolderType(File fRoot, Properties p) {
+    long l = LOG.logStart();
+    int iVal = 0;
+    File[] flst = fRoot.listFiles((File current, String name)
+            -> name.endsWith(OUTMAIL_SUFFIX_READY)
+            && new File(current, name).isDirectory()
+    );
+
+    for (File fld : flst) {
+
+      File fNew = changeExtension(fld, OUTMAIL_SUFFIX_PROCESS);
+
+      try {
+        // set property file
+        Properties lock = new Properties();
+        lock.setProperty("start.submitting", SDF.format(Calendar.
+                getInstance().getTime()));
+
+        File fMetaData = new File(fNew, changeExtension(fld.getName() , OUTMAIL_SUFFIX_STATUS));
+        try (FileOutputStream fosMD = new FileOutputStream(fMetaData)) {
+          LOG.log("Lock file: " + fNew.getName() + " - create new process file");
+          lock.store(fosMD, "OutMail proccessed");
+        }
+
+        File fmXML = new File(fNew, OUTMAIL_FILENAME + OUTMAIL_SUFFIX);
+
+        try {
+
+          BigInteger bi = processOutMail(p, fmXML, fNew);
+
+          iVal++;
+          try (FileOutputStream fos = new FileOutputStream(fMetaData, true);
+                  PrintStream ps = new PrintStream(fos)) {
+            if (bi != null) {
+              ps.append("Laurentius.id=");
+              ps.append(bi.toString());
+              ps.append("\n");
+            }
+          }
+          changeExtension(fNew, OUTMAIL_SUFFIX_SUBMITTED);
+
+        } catch (IOException ex) {
+          LOG.logError(l, "Error reading outmail data: " + fNew.
+                  getAbsolutePath(), ex);
+
+          try (FileOutputStream fos = new FileOutputStream(fMetaData, true)) {
+            PrintStream ps = new PrintStream(fos);
+            ex.printStackTrace(ps);
+          }
+          changeExtension(fNew, OUTMAIL_SUFFIX_ERROR);
+
+        } catch (FSException ex) {
+          LOG.logError(l, "Error subbmitting mail: " + fNew.
+                  getAbsolutePath(), ex);
+
+          try (FileOutputStream fos = new FileOutputStream(fMetaData, true)) {
+            PrintStream ps = new PrintStream(fos);
+            ex.printStackTrace(ps);
+          }
+          changeExtension(fNew, OUTMAIL_SUFFIX_ERROR);
+
+        }
+
+      } catch (IOException ex) {
+        LOG.logError(l, "Errror reading outmail data: " + fNew.
+                getAbsolutePath(), ex);
+      }
+    }
+    return iVal;
+  }
+
+  private int submitFileType(File fRoot, Properties p) {
+    long l = LOG.logStart();
+    int iVal = 0;
+    File[] flst = fRoot.listFiles((File dir, String name) -> name.startsWith(
+            OUTMAIL_FILENAME)
+            && name.endsWith(OUTMAIL_SUFFIX));
+    for (File file : flst) {
+      try {
+        if (isFileLocked(file)) {
+          LOG.formatedDebug(
+                  "File: " + file.getName() + " is locked or submitted: abort submitting file");
+        } else {
+          Properties lock = new Properties();
+          lock.setProperty("start.submitting", SDF.format(Calendar.
+                  getInstance().getTime()));
+
+          File fMetaData = new File(
+                  file.getAbsolutePath() + OUTMAIL_SUFFIX_PROCESS);
+          try (FileOutputStream fosMD = new FileOutputStream(fMetaData)) {
+            LOG.
+                    log("Lock file: " + file.getName() + " - create new process file");
+            lock.store(fosMD, "OutMail proccessed");
+          }
+
+          try {
+            BigInteger bi = processOutMail(p, file, fRoot);
+            LOG.formatedDebug("Submit file %s. MailId %d", file.getName(), bi);
+            File fewFMetaData = new File(
+                    file.getAbsolutePath() + OUTMAIL_SUFFIX_SUBMITTED);
+            if (fMetaData.renameTo(fewFMetaData)) {
+              fMetaData = fewFMetaData;
+              iVal++;
+              try (FileOutputStream fos = new FileOutputStream(fMetaData, true);
+                      PrintStream ps = new PrintStream(fos)) {
+
+                if (bi != null) {
+                  ps.append("Laurentius.id=");
+                  ps.append(bi.toString());
+                  ps.append("\n");
+                }
+              }
+            } else {
+              LOG.logError(l, "Error rename status file fpr: " + file.
+                      getAbsolutePath(), null);
+            }
+
+          } catch (IOException ex) {
+            LOG.logError(l, "Error reading outmail data: " + file.
+                    getAbsolutePath(), ex);
+            File fewFMetaData = new File(
+                    file.getAbsolutePath() + OUTMAIL_SUFFIX_ERROR);
+            if (fMetaData.renameTo(fewFMetaData)) {
+              try (FileOutputStream fos = new FileOutputStream(fMetaData, true)) {
+                PrintStream ps = new PrintStream(fos);
+                ex.printStackTrace(ps);
+              }
+            } else {
+              LOG.logError(l, "Error rename status file fpr: " + file.
+                      getAbsolutePath(), null);
+            }
+          } catch (FSException ex) {
+            LOG.logError(l, "Error subbmitting mail: " + file.
+                    getAbsolutePath(), ex);
+            File fewFMetaData = new File(
+                    file.getAbsolutePath() + OUTMAIL_SUFFIX_ERROR);
+            if (fMetaData.renameTo(fewFMetaData)) {
+              fMetaData = fewFMetaData;
+              try (FileOutputStream fos = new FileOutputStream(fMetaData, true)) {
+                PrintStream ps = new PrintStream(fos);
+                ex.printStackTrace(ps);
+              }
+            } else {
+              LOG.logError(l, "Error rename status file fpr: " + file.
+                      getAbsolutePath(), null);
+            }
+          }
+        }
+
+      } catch (IOException ex) {
+        LOG.logError(l, "Errror reading outmail data: " + file.
+                getAbsolutePath(), ex);
+      }
+    }
+    return iVal;
   }
 
   /**
@@ -229,9 +324,14 @@ public class TaskXMLDataFileSubmitter implements TaskExecutionInterface {
     tt.setName("XML File subbmiter");
     tt.setDescription(
             "Task submits mail in given folder. '");
-    tt.getCronTaskPropertyDeves().add(createTTProperty(KEY_EXPORT_FOLDER,
+    tt.getCronTaskPropertyDeves().add(createTTProperty(KEY_ROOT_FOLDER,
             "Submit folder", true,
-            "string", null, null, "${laurentius.home}/submit/dwr/"));
+            PropertyType.String.getType(), null, null,
+            "${laurentius.home}/submit/dwr/"));
+
+    tt.getCronTaskPropertyDeves().add(createTTProperty(KEY_MAIL_TYPE,
+            "Mail type", true,
+            PropertyType.List.getType(), null, "File,Folder", "File"));
 
     return tt;
   }
@@ -253,6 +353,19 @@ public class TaskXMLDataFileSubmitter implements TaskExecutionInterface {
 
     }
     return bVal;
+  }
+
+  public File changeExtension(File file, String extension) {
+    File fNewFile = new File(file.getParentFile(), changeExtension(file.
+            getName(), extension));
+    file.renameTo(fNewFile);
+    return fNewFile;
+  }
+
+  public String changeExtension(String filename, String extension) {
+    return (filename.contains(".")
+            ? filename.substring(0, filename.lastIndexOf('.'))
+            : filename) + extension;
   }
 
   private BigInteger processOutMail(Properties p, File fMetaData,

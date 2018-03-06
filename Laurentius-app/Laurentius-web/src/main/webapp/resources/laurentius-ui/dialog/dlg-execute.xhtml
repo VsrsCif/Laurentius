@@ -22,6 +22,11 @@
                     <p:messages id="messagesExecuteDialog"
                                 autoUpdate="true"
                                 showDetail="true" />
+                    
+                      <p:blockUI block="dlgExecute" widgetVar="blockDlgExecute" >
+                            <h:graphicImage value="#{resource['images:/ajax-progress.gif']}"  /> 
+                            <h:outputText value="#{msg['Process']}" />
+                        </p:blockUI>
 
                     <p:layout id="dlgExecute" style="min-width:300px;height:180px;">
                         <p:layoutUnit position="center"  >
@@ -84,8 +89,10 @@
                                                      styleClass="toolbar-Button" 
                                                      icon="ui-icon-svg-ok ui-icon-size-22" 
                                                      actionListener="#{executeDialog.executeSelectedRow()}"                                                     
-                                                     oncomplete="if (args &amp;&amp; args.success) PF('executeDialog').hide()" 
+                                                     oncomplete="PF('blockDlgExecute').hide(); if (args &amp;&amp; args.success) PF('executeDialog').hide()" 
                                                      update="#{executeDialog.targetTable}"
+                                                     ajax="true"
+                                                     onclick="PF('blockDlgExecute').show();"
                                                      />
                                     <p:commandButton value="#{msg['Cancel']}"
                                                      styleClass="toolbar-Button"

@@ -1,0 +1,23 @@
+<ns4:MSHOutMail 
+	senderMessageId="SM_ID-2" 
+	service="DeliveryWithReceipt" 
+	action="Delivery" 
+	subject="[VL 1/2018] Test example 4" 
+	receiverEBox="a.department@mb-laurentius.si" 
+	receiverName="Okrajno sodišče v Črnomlju" 
+	senderEBox="b.department@mb-laurentius.si" 
+	senderName="b Department" 
+	xmlns:ns1="http://msh.laurentius.si/outbox/property" 
+	xmlns:ns2="http://msh.laurentius.si/outbox/payload" 
+	xmlns:ns4="http://msh.laurentius.si/outbox/mail" 
+	>
+	<ns1:MSHOutProperties>
+		<ns1:MSHOutProperty name="SodiSif">S44</ns1:MSHOutProperty>
+		<ns1:MSHOutProperty name="TipVloge">1</ns1:MSHOutProperty>
+		<ns1:MSHOutProperty name="VpisnikKratica">VL</ns1:MSHOutProperty>
+		<ns1:MSHOutProperty name="OpravilnaSt">1/2018</ns1:MSHOutProperty>
+	</ns1:MSHOutProperties>
+	<ns2:MSHOutPayload>
+		<ns2:MSHOutPart description="Sklep" filename="test-1.pdf" mimeType="application/pdf" filepath="test-1.pdf"  size="-1" sha256Value="" encoding="bin"  />
+	</ns2:MSHOutPayload>
+</ns4:MSHOutMail>
