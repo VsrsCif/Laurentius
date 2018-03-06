@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 (http://www.altova.com) by XMLSpy 2007 Professional Ed., Installed for 5 users (with SMP from 2007-02-06 to 2008-02-07) (CIF VSRS) -->
+<!--Metadata: 
+Owner: Supreme Court Republic of Slovenia 
+Product: SVEV-MSH
+Product Version: 1.0.0
+Artifact Type: Schema
+Descriptive Name: Payload part of user mail message
+Date: 20170112 (12 January 2017)
+Author: Joze Rihtarsic
+-->
+<!-- 
+Copyright 2017, Supreme Court Republic of Slovenia 
+
+ Licensed under the EUPL, Version 1.1 or – as soon they will be approved by 
+ the European Commission - subsequent versions of the EUPL (the "Licence");
+ You may not use this work except in compliance with the Licence.
+ You may obtain a copy of the Licence at:
+
+ https://joinup.ec.europa.eu/software/page/eupl
+
+ Unless required by applicable law or agreed to in writing, software 
+ distributed under the Licence is distributed on an "AS IS" basis, WITHOUT 
+ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the Licence for the specific language governing permissions and  
+ limitations under the Licence.
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://laurentius.si/process" xmlns:ns2="http://laurentius.si/rule" targetNamespace="http://laurentius.si/process" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:import namespace="http://laurentius.si/rule" schemaLocation="./sed-decision-rule.xsd"/>
+	<xs:element name="SEDProcessor"  type="ns1:SEDProcessor"/>
+	<xs:complexType name="SEDProcessorRule">
+		<xs:complexContent>
+			<xs:extension base="ns2:SEDDecisionRule"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="SEDProcessorInstance">
+		<xs:sequence>
+			<xs:element name="SEDProcessorProperty" type="ns1:SEDProcessorProperty" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:integer" use="required"/>
+		<xs:attribute name="type" use="required"/>
+		<xs:attribute name="plugin" use="required"/>
+		<xs:attribute name="pluginVersion" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="SEDProcessor">
+		<xs:sequence>
+			<xs:element name="SEDProcessorRule" type="ns1:SEDProcessorRule" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="SEDProcessorInstance" type="ns1:SEDProcessorInstance" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:integer" use="required"/>
+		<xs:attribute name="name" type="xs:string">
+			<xs:annotation>
+				<xs:documentation>Processor  name</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+               <xs:attribute name="active" type="xs:boolean">
+			<xs:annotation>
+				<xs:documentation>Is process active</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+                <xs:attribute name="deliveredOnSuccess" type="xs:boolean">
+			<xs:annotation>
+				<xs:documentation>Set status to delivered  on success</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="SEDProcessorProperty">
+		<xs:annotation>
+			<xs:documentation>Processor property</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="ns1:propertyValue">
+				<xs:attribute name="id" type="xs:integer" use="optional">
+					<xs:annotation>
+						<xs:documentation xml:lang="sl">Enolična oznaka lastnosti</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="key" use="required">
+					<xs:annotation>
+						<xs:documentation xml:lang="sl">Naziv lastnosti </xs:documentation>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:minLength value="1"/>
+							<xs:maxLength value="64"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:attribute>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:simpleType name="propertyValue">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="512"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

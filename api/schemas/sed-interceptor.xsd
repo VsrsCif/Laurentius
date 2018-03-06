@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 (http://www.altova.com) by XMLSpy 2007 Professional Ed., Installed for 5 users (with SMP from 2007-02-06 to 2008-02-07) (CIF VSRS) -->
+<!--Metadata: 
+Owner: Supreme Court Republic of Slovenia 
+Product: SVEV-MSH
+Product Version: 1.0.0
+Artifact Type: Schema
+Descriptive Name: Payload part of user mail message
+Date: 20170112 (12 January 2017)
+Author: Joze Rihtarsic
+-->
+<!-- 
+Copyright 2017, Supreme Court Republic of Slovenia 
+
+ Licensed under the EUPL, Version 1.1 or – as soon they will be approved by 
+ the European Commission - subsequent versions of the EUPL (the "Licence");
+ You may not use this work except in compliance with the Licence.
+ You may obtain a copy of the Licence at:
+
+ https://joinup.ec.europa.eu/software/page/eupl
+
+ Unless required by applicable law or agreed to in writing, software 
+ distributed under the Licence is distributed on an "AS IS" basis, WITHOUT 
+ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the Licence for the specific language governing permissions and  
+ limitations under the Licence.
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns2="http://laurentius.si/rule" xmlns:ns1="http://laurentius.si/interceptor" targetNamespace="http://laurentius.si/interceptor" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:import namespace="http://laurentius.si/rule" schemaLocation="./sed-decision-rule.xsd"/>
+	<xs:element name="SEDInterceptor" type="ns1:SEDInterceptor"/>
+	<xs:complexType name="SEDInterceptorRule">
+		<xs:complexContent>
+			<xs:extension base="ns2:SEDDecisionRule"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="SEDInterceptor">
+		<xs:annotation>
+			<xs:documentation xml:lang="sl">Nastavitve prestreznika sporocil opravila</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="SEDInterceptorRule" type="ns1:SEDInterceptorRule" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="SEDInterceptorInstance" type="ns1:SEDInterceptorInstance"/>
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:integer">
+			<xs:annotation>
+				<xs:documentation>Intercept rule id</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="name" type="xs:string">
+			<xs:annotation>
+				<xs:documentation>Interceptor rule name</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="active" type="xs:boolean">
+			<xs:annotation>
+				<xs:documentation>Is task active</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="interceptEvent">
+			<xs:annotation>
+				<xs:documentation>Intercept event</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="InMessage"/>
+					<xs:enumeration value="OutMessage"/>
+					<xs:enumeration value="InFaultMessage"/>
+					<xs:enumeration value="OutFaultMessage"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+                <xs:attribute name="interceptRole">
+			<xs:annotation>
+				<xs:documentation>Intercept Role</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="Requestor"/>
+					<xs:enumeration value="Responder"/>
+					<xs:enumeration value="All"/>
+					<xs:enumeration value="OutFaultMessage"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="SEDInterceptorProperty">
+		<xs:annotation>
+			<xs:documentation>Nastavitve interceptorja</xs:documentation>
+		</xs:annotation>
+		<xs:simpleContent>
+			<xs:extension base="ns1:propertyValue">
+				<xs:attribute name="id" type="xs:integer" use="optional">
+					<xs:annotation>
+						<xs:documentation xml:lang="sl">Enolična oznaka lastnosti</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="key" use="required">
+					<xs:annotation>
+						<xs:documentation xml:lang="sl">Naziv lastnosti </xs:documentation>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:minLength value="1"/>
+							<xs:maxLength value="64"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:attribute>
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:simpleType name="propertyValue">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="512"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="SEDInterceptorInstance">
+		<xs:sequence>
+			<xs:element name="SEDInterceptorProperty" type="ns1:SEDInterceptorProperty" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="plugin" type="xs:string" use="required">
+			<xs:annotation>
+				<xs:documentation xml:lang="en">  </xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="type" type="xs:string" use="required">
+			<xs:annotation>
+				<xs:documentation xml:lang="en">  </xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="pluginVersion" type="xs:string" use="required">
+			<xs:annotation>
+				<xs:documentation xml:lang="en">  </xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+</xs:schema>

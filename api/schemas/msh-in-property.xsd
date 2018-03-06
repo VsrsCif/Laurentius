@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 (http://www.altova.com) by XMLSpy 2007 Professional Ed., Installed for 5 users (with SMP from 2007-02-06 to 2008-02-07) (CIF VSRS) -->
+<!--Metadata: 
+Owner: Supreme Court Republic of Slovenia 
+Product: SVEV-MSH
+Product Version: 1.0.0
+Artifact Type: Schema
+Descriptive Name: Payload part of user mail message
+Date: 20150612 (12 June 2015)
+Author: Joze Rihtarsic
+-->
+<!-- 
+Copyright 2015, Supreme Court Republic of Slovenia 
+
+ Licensed under the EUPL, Version 1.1 or – as soon they will be approved by 
+ the European Commission - subsequent versions of the EUPL (the "Licence");
+ You may not use this work except in compliance with the Licence.
+ You may obtain a copy of the Licence at:
+
+ https://joinup.ec.europa.eu/software/page/eupl
+
+ Unless required by applicable law or agreed to in writing, software 
+ distributed under the Licence is distributed on an "AS IS" basis, WITHOUT 
+ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the Licence for the specific language governing permissions and  
+ limitations under the Licence.
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://msh.laurentius.si/inbox/property" xmlns:ns2="http://msh.laurentius.si/mail" targetNamespace="http://msh.laurentius.si/inbox/property" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:import namespace="http://msh.laurentius.si/mail" schemaLocation="msh-mail.xsd"/>
+	<xs:complexType name="MSHInProperty">
+		<xs:annotation>
+			<xs:documentation>MSH lastnosi sporočila, določeni v p-mode konfiguraciji</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="ns2:MSHPropertyType"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="MSHInProperties">
+		<xs:annotation>
+			<xs:documentation>MSH parametri, ki so določeni v pmode konfiguraciji</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="MSHInProperty" type="ns1:MSHInProperty" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

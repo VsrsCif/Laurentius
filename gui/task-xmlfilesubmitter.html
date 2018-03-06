@@ -1,0 +1,79 @@
+<div class="main">
+    <article class='content'>
+
+        <h2 id="gui/task-xmlfilesubmitter">Opravilo: Pošiljanje datotek z XML metapodatki </h2>
+        Opravilo "Pošiljanje datotek" je namenjen pošiljanju sporočil iz datotečnega sistema. Metapodatki 
+        o pošiljki so podani v XML zapisu po shemi:
+        Shema poizvedbe: <a href="api/schemas/msh-out-mail.xsd">msh-out-mail.xsd</a><br />
+        
+        Poleg časa izvajanja je opravilu treba določiti parametre:
+        <ul>
+            <li><b>Mapa  (file.submit.root.folder)</b>. Mapa, iz katere se pošilja sporočila določimo kot absolutno pot oz. z uporabo sistemskih spremenljivke: c:\izhodna-mapa\ ali ${laurentius.home}/submit/xml-dwr-folder/. </li>
+            <li><b>Tip sporočila (file.submit.mail.type)</b>: Oblika sporočila
+                <ul>
+                    <li><b>Datoteka (File)</b>Pošiljke so v mapi (file.submit.root.folder), kjer so metapodatki posamezne pošiljke v obliki <b>outmail[***].xml</b>.  </li>
+                    <li><b>Mapa (Folder)</b>Pošiljke so grupirane po podmapah. Podmape, ki imajo končnico <b>.ready</b> se bodo poslale </li>
+            </ul>
+            </li>            
+        </ul>
+        
+        <h2 id="gui/task-xmlfilesubmitter">Pošiljanje v načinu "XML datoteke" </h2>
+        Pošiljke so v mapi (file.submit.root.folder), kjer so metapodatki posamezne pošiljke v obliki <b>outmail[***].xml</b>. Pošiljajo se samo 
+        pošiljke brez statusne datoteka. Statusna datoteka je datoteka z enakim nazivom kot datoteka z metapodatki in se 
+        izdela v trenutku pošiljanja ter ima eno izmed naslenjih pripon:
+        <ul>
+            <li><b>V obdelavi (.process)</b> Pošiljka je v dodajanju v laurentius.</li>
+            <li><b>Dodana (.submitted)</b> Pošiljka je v dodana v laurentius za odpremo.</li>
+            <li><b>Napaka (.error)</b> Pri dodajanju je prišlo do napake. V statusni datoteki je opis napake!</li>
+        </ul>
+        <br /><br />
+        Primer nastavitve: <br />
+        <img class="img-locale" src="img/gui/cron-task-FS-XML-File-en.png" alt="cron task XML File" width="680"/> <br />
+         Primer metapodatkov: <br />
+         <pre><code>
+&lt;ns4:MSHOutMail 
+	senderMessageId="SM_ID-50952dbd-b0f9-4a94-8a3c-028e5b5002ca" 
+	service="DeliveryWithReceipt" 
+	action="Delivery" 
+	subject="[VL 1/2018] Test example 4" 
+	receiverEBox="a.department@mb-laurentius.si" 
+	receiverName="Okrajno sodišče v Črnomlju" 
+	senderEBox="b.department@mb-laurentius.si" 
+	senderName="b Department" 
+	xmlns:ns1="http://msh.laurentius.si/outbox/property" 
+	xmlns:ns2="http://msh.laurentius.si/outbox/payload" 
+	xmlns:ns4="http://msh.laurentius.si/outbox/mail" 
+	>
+	&lt;ns1:MSHOutProperties>
+		&lt;ns1:MSHOutProperty name="SodiSif">S44&lt;/ns1:MSHOutProperty>
+		&lt;ns1:MSHOutProperty name="TipVloge">1&lt;/ns1:MSHOutProperty>
+		&lt;ns1:MSHOutProperty name="VpisnikKratica">VL&lt;/ns1:MSHOutProperty>
+		&lt;ns1:MSHOutProperty name="OpravilnaSt">1/2018&lt;/ns1:MSHOutProperty>
+	&lt;/ns1:MSHOutProperties>
+	&lt;ns2:MSHOutPayload>
+		&lt;ns2:MSHOutPart description="Sklep" filename="test-1.pdf" mimeType="application/pdf" filepath="test-1.pdf"  size="-1" sha256Value="" encoding="bin"  />
+	&lt;/ns2:MSHOutPayload>
+&lt;/ns4:MSHOutMail>
+        </code></pre><br /><br />
+        Ponovno pošiljanje pošiljk se proži tako, da se izbriše statusna datoteka.
+
+        <h2 id="gui/task-xmlfilesubmitter">Pošiljanje v načinu "XML mape" </h2>
+        Pošiljke so urejene po podmapah. Pošiljajo se podmape, ki imajo kočnico <b>.ready</b>. V podmapi 
+        so vse priponke ter datoteka z metapodatki o pošiljki <b>outmail.xml</b>.
+        Med pošiljanjem se lahko kočnica mape spremeni v naslednje statuse:
+        <ul>
+            <li><b>V obdelavi (.process)</b> Pošiljka je v dodajanju v laurentius.</li>
+            <li><b>Dodana (.submitted)</b> Pošiljka je v dodana v laurentius za odpremo.</li>
+            <li><b>Napaka (.error)</b> Pri dodajanju je prišlo do napake. V statusni datoteki je opis napake!</li>
+            <li><b>Pripravljena (.ready)</b> Pošiljka je pripravljena na pošiljanje</li>
+        </ul>
+        V času pošiljanja se v mapi se pojavi statusna datoteka, ki ima enak naziv kot mapa s kočnico <b>.status</b>.
+        Ponovno pošiljanje pošiljk se proži tako, da se mapi ponovno nastavi kočnico <b>.ready</b>.
+
+
+
+
+
+
+    </article>  
+</div>

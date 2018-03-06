@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 (http://www.altova.com) by XMLSpy 2007 Professional Ed., Installed for 5 users (with SMP from 2007-02-06 to 2008-02-07) (CIF VSRS) -->
+<!--Metadata: 
+Owner: Supreme Court Republic of Slovenia 
+Product: Laurentius
+Product Version: 1.0.0
+Artifact Type: Schema
+Descriptive Name: cetrtificate
+Date: 20160309 (09 March 2016)
+Author: Joze Rihtarsic
+-->
+<!-- 
+Copyright 2016, Supreme Court Republic of Slovenia 
+
+ Licensed under the EUPL, Version 1.1 or – as soon they will be approved by 
+ the European Commission - subsequent versions of the EUPL (the "Licence");
+ You may not use this work except in compliance with the Licence.
+ You may obtain a copy of the Licence at:
+
+ https://joinup.ec.europa.eu/software/page/eupl
+
+ Unless required by applicable law or agreed to in writing, software 
+ distributed under the Licence is distributed on an "AS IS" basis, WITHOUT 
+ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the Licence for the specific language governing permissions and  
+ limitations under the Licence.
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:crl="http://laurentius.si/cert/crl" targetNamespace="http://laurentius.si/cert/crl" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="SEDCertCRL" type="crl:SEDCertCRLType"/>
+	<xs:complexType name="SEDCertCRLType">
+		<xs:annotation>
+			<xs:documentation xml:lang="sl"/>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Url" minOccurs="0" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="xs:string">
+							<xs:attribute name="protocol" use="required"/>
+						</xs:extension>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="issuerDN" type="xs:string" use="required">
+			<xs:annotation>
+				<xs:documentation>CRL name</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="issuerDigestValue" type="xs:string" use="required">
+			<xs:annotation>
+				<xs:documentation>IssuerDigest value</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="effectiveDate" type="xs:dateTime" use="required"/>
+		<xs:attribute name="nextUpdateDate" type="xs:dateTime"/>
+		<xs:attribute name="retrievedDate" type="xs:dateTime" use="required"/>
+		<xs:attribute name="filePath" type="xs:string" use="required"/>
+	</xs:complexType>
+</xs:schema>

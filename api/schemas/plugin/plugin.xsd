@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 (http://www.altova.com) by XMLSpy 2007 Professional Ed., Installed for 5 users (with SMP from 2007-02-06 to 2008-02-07) (CIF VSRS) -->
+<!--Metadata: 
+Owner: Supreme Court Republic of Slovenia 
+Product: Laurentius
+Product Version: 1.0.0
+Artifact Type: Schema
+Descriptive Name: plugin
+Date: 20160309 (09 March 2016)
+Author: Joze Rihtarsic
+-->
+<!-- 
+Copyright 2016, Supreme Court Republic of Slovenia 
+
+ Licensed under the EUPL, Version 1.1 or – as soon they will be approved by 
+ the European Commission - subsequent versions of the EUPL (the "Licence");
+ You may not use this work except in compliance with the Licence.
+ You may obtain a copy of the Licence at:
+
+ https://joinup.ec.europa.eu/software/page/eupl
+
+ Unless required by applicable law or agreed to in writing, software 
+ distributed under the Licence is distributed on an "AS IS" basis, WITHOUT 
+ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the Licence for the specific language governing permissions and  
+ limitations under the Licence.
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://laurentius.si/plugin/def" 
+           xmlns:ns2="http://laurentius.si/plugin/crontask" 
+           xmlns:ns3="http://laurentius.si/plugin/processor" 
+           xmlns:ns4="http://laurentius.si/plugin/interceptor" 
+           xmlns:ns5="http://laurentius.si/plugin/eventlistener" 
+           xmlns:ns6="http://msh.laurentius.si/pmode" 
+           xmlns:ns7="http://laurentius.si/interceptor" 
+           xmlns:ns8="http://laurentius.si/cron" 
+           xmlns:ns9="http://laurentius.si/process" 
+           
+           targetNamespace="http://laurentius.si/plugin/def" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:import namespace="http://laurentius.si/plugin/crontask" schemaLocation="./cron-task.xsd"/>
+	<xs:import namespace="http://laurentius.si/plugin/processor" schemaLocation="./inmail-processor.xsd"/>
+	<xs:import namespace="http://laurentius.si/plugin/interceptor" schemaLocation="./mail-interceptor.xsd"/>
+	<xs:import namespace="http://laurentius.si/plugin/eventlistener" schemaLocation="./outmail-event-listener.xsd"/>
+	<xs:import namespace="http://msh.laurentius.si/pmode" schemaLocation="../msh-settings.xsd"/>
+	<xs:import namespace="http://laurentius.si/interceptor" schemaLocation="../sed-interceptor.xsd"/>
+        <xs:import namespace="http://laurentius.si/cron" schemaLocation="../sed-cron.xsd"/>
+        <xs:import namespace="http://laurentius.si/process" schemaLocation="../sed-processor.xsd"/>
+	<xs:element name="Plugin" type="ns1:Plugin"/>
+	<xs:element name="DefaultInitData" type="ns1:DefaultInitDataType"/>
+	<xs:complexType name="Plugin">
+		<xs:annotation>
+			<xs:documentation xml:lang="sl">Plugin data</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element ref="ns2:CronTaskDef" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="ns3:InMailProcessorDef" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="ns4:MailInterceptorDef" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="ns5:OutMailEventListenerDef" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="WebRole" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="MainMenu" type="ns1:MenuItem" minOccurs="0"/>
+			<xs:element name="ProcessMenu" type="ns1:MenuItem" minOccurs="0"/>
+			<xs:element ref="ns1:DefaultInitData" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute name="webContext" type="xs:string" use="required">
+			<xs:annotation>
+				<xs:documentation xml:lang="sl">Url address</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="active" type="xs:boolean"/>
+		<xs:attribute name="type" type="xs:string" use="required"/>
+		<xs:attribute name="name" type="xs:string" use="required"/>
+		<xs:attribute name="version" type="xs:string" use="required"/>
+		<xs:attribute name="description" type="xs:string" use="required"/>
+		<xs:attribute name="jndi" type="xs:string" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="MenuItem">
+		<xs:sequence>
+			<xs:element name="MenuItem" type="ns1:MenuItem" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string" use="required"/>
+		<xs:attribute name="pageId" type="xs:string" use="required"/>
+		<xs:attribute name="role" type="xs:string" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="DefaultInitDataType">
+		<xs:sequence>
+			<xs:element name="PModeData" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element ref="ns6:Service" minOccurs="0" maxOccurs="unbounded"/>
+                                                <xs:element ref="ns6:PartyIdentitySet" minOccurs="0" maxOccurs="unbounded"/>
+						<xs:element ref="ns6:Security" minOccurs="0" maxOccurs="unbounded"/>
+						<xs:element ref="ns6:ReceptionAwareness" minOccurs="0" maxOccurs="unbounded"/>
+						<xs:element ref="ns6:PMode" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="PluginData" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element ref="ns7:SEDInterceptor" minOccurs="0" maxOccurs="unbounded"/>
+                                                <xs:element ref="ns8:SEDCronJob" minOccurs="0" maxOccurs="unbounded"/>
+                                                <xs:element ref="ns9:SEDProcessor" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>
