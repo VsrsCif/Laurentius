@@ -28,6 +28,8 @@ create sequence SEQ_LAU_PROCESSOR start with [NextVal] increment by 1;
 create sequence SEQ_LAU_PROCESSOR_RULE start with [NextVal] increment by 1;
 create sequence SEQ_LAU_TASK_INSTANCE start with [NextVal] increment by 1;
 create sequence SEQ_LAU_TASK_PROP start with [NextVal] increment by 1;
+create sequence SEQ_LAU_TASK_EXEC start with [NextVal] increment by 1;
+
 
 
 ---------------------------------------------------------------
@@ -74,6 +76,9 @@ ALTER TABLE LAU_INBOX_PROPERTY ADD TYPE varchar2(256 char);
 ALTER TABLE LAU_OUTBOX_PAYLOAD ADD (PART_IS_RECEIVED number(1,0), PART_IS_SENT number(1,0), PART_GENERATED_FROM_PART number(19,0));
 ALTER TABLE LAU_OUTBOX_PAYLOAD_PROPERTY ADD TYPE varchar2(256 char);
 ALTER TABLE LAU_OUTBOX_PROPERTY ADD TYPE varchar2(256 char);
+
+ALTER TABLE LAU_OUTBOX_PAYLOAD  MODIFY (MAIL_ID NULL);
+ALTER TABLE LAU_INBOX_PAYLOAD  MODIFY (MAIL_ID NULL);
 
 
 ---------------------------------------------------------------
