@@ -50,7 +50,7 @@ public interface TaskExecutionInterface {
         vstico, se prikaže dialog za dodajanje/urejanje urnika posameznega opravila.
         <br /><br />
         <center>
-            <img src="img/gui/task-backup-cron.png" alt="SEDBox admin" width="450"/> <br />
+            <img src="img/gui/task.png" alt="SEDBox admin" width="450"/> <br />
         </center><br />
         Na levi strani dialoga za urejanje urnika opravila se določi čas izvajanja:
 
@@ -104,8 +104,29 @@ public interface TaskExecutionInterface {
                     <td><p><i>*</i></p></td>
                     <td><p>Štirimestno število. Primer:  <i>year="2011"</i>.</p></td>
                 </tr>
+                <tr><td><p><i>Preskoči na dela proste dni:</i></p></td>
+                    <td><p>true/false</p></td>
+                    <td><p><i>false</i></p></td>
+                    <td><p>Preskoči dela proste dni, ki se določijo v Nastavitve/Splošno /Urejanje seznama dela prostih dni (glej sliko spodaj)</p></td>
+                </tr>
             </tbody>
         </table>
+         
+         <h2>Urejanje prosti dnevi</h2>
+          Prosti dnevi se zapišejo v tabelo 
+          LAU_SETTINGS. Primer: <br /><br />
+          
+          PROP_KEY=laurentius.work.free.days<br />
+          PROP_VALUE=2018-01-01;2018-01-02;2018-02-08;2018-04-01;2018-04-02;2018-04-27;2018-05-01;2018-05-02;2018-06-25;2018-08-15;2018-10-31;2018-11-01;2018-12-25;2018-12-26 <br />
+          LAU_GROUP=SYSTEM<br /><br />
+          
+          V grafičnem vmesniku se ureja v Nastavitve/Splošno /Urejanje seznama dela prostih dni, kjer se v koledarju izberejo dela prosti dnevi:
+          <br /><br />
+          
+           <center>
+            <img src="img/gui/workfreedays.png" alt="Work free days" width="650"/> <br />
+        </center><br />
+          
 
         <h2>Koledarski izrazi in pravila</h2>
    
