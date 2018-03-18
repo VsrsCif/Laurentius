@@ -51,6 +51,7 @@ public class SecurityUtils {
          sc.getX509().getSignature().getReference().getElements() != null) {
       X509.Signature snc = sc.getX509().getSignature();
       X509.Signature.Reference rsgn = snc.getReference();
+      
 
       for (XPath el : rsgn.getElements().getXPaths()) {
         for (XPath.Namespace ns : el.getNamespaces()) {
@@ -77,6 +78,7 @@ public class SecurityUtils {
     }
 
     cc = new CryptoCoverageChecker(prefixes, xpaths);
+    
     return cc;
   }
   

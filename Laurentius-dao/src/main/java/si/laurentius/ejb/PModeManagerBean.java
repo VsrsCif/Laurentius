@@ -87,6 +87,11 @@ public class PModeManagerBean implements PModeInterface {
   public PMode getPModeById(String pmodeId) {
     return getPModeManager().getPModeById(pmodeId);
   }
+  
+  @Override
+  public PMode getPModeMSHOutMail(MSHOutMail mail) throws PModeException {
+    return getPModeManager().getPModeMSHOutMail(mail);
+  }
 
   @Override
   public PMode getPModeForExchangePartyAsSender(String senderRefId,

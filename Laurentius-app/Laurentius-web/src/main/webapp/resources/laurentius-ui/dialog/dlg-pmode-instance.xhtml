@@ -27,15 +27,18 @@
                             onConfirmAction="#{pModeView.addOrUpdateEditable()}" >
 
             <p:layout id="pModeInstance">
-                <p:layoutUnit position="north" size="150" minSize="140" maxSize="160">
-                    <p:panelGrid style="width:100%; height: 100% ">
-                        <f:facet name="header">
+                <p:layoutUnit position="north" size="180" minSize="180" maxSize="180">
+                    <f:facet name="header">
+                        <p:panelGrid style="width:100%; height: 100% "> 
                             <p:row>
                                 <p:column ><h:outputText value="#{msg['Id']}" /></p:column>
                                 <p:column colspan="3"><h:inputText value="#{pModeView.editable.id}" 
                                                                    disabled="#{empty pModeView.new}"  style="width:100%;" /></p:column>
                             </p:row>
+                            </p:panelGrid>
                         </f:facet>
+                    <p:panelGrid style="width:100%; height: 100% ">
+                        
 
                         <p:row>
                             <p:column class="grid-label"><h:outputText value="#{msg['ServiceId']}:" /></p:column>
@@ -51,6 +54,17 @@
                                                    itemLabel="#{sr.id} (#{sr.serviceType}:#{sr.serviceName})" itemValue="#{sr.id}"
                                                    />
                                 </p:selectOneMenu></p:column>
+                            
+                            <p:column class="grid-label" ><h:outputText value="#{msg['Test']}:" /></p:column>                            
+                            <p:column>
+                                <p:selectBooleanCheckbox                                                                 
+                                    value="#{pModeView.editable.isTest}" 
+                                    style="width: 40px"
+                                    >
+                                </p:selectBooleanCheckbox>                                
+                            </p:column>
+                            
+                            
 
                         </p:row>
                         <p:row>
@@ -75,16 +89,19 @@
                                 </p:selectOneMenu>
                             </p:column>
 
-                            <p:column class="grid-label" ><h:outputText value="#{msg['Test']}:" /></p:column>                            
+                            <p:column class="grid-label" ><h:outputText value="#{msg['Priority']}:" /></p:column>                            
                             <p:column>
-                                <p:selectBooleanCheckbox                                                                 
-                                    value="#{pModeView.editable.isTest}" 
-                                    style="width: 100%"
+                                <p:inputNumber                                   
+                                    decimalPlaces="0"
+                                    minValue="0"
+                                    maxValue="9"
+                                    value="#{pModeView.editable.priority}" 
+                                    style="width: 40px"
                                     >
-                                </p:selectBooleanCheckbox>                                
+                                </p:inputNumber>
                             </p:column>
 
-
+                            
 
                         </p:row>
                         <p:row>

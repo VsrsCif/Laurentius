@@ -85,7 +85,7 @@ rem  application plugins
 copy "%LAU_BUNDLE%\deployments\plugin-zpp.war"  "%SERVER_HOME%\standalone\deployments\"
 copy "%LAU_BUNDLE%\deployments\plugin-basic.war"  "%SERVER_HOME%\standalone\deployments\"
 copy "%LAU_BUNDLE%\deployments\plugin-testcase.war"  "%SERVER_HOME%\standalone\deployments\"
-copy "%LAU_BUNDLE%\deployments\example-web-plugin.war"  "%SERVER_HOME%\standalone\deployments\"
+#copy "%LAU_BUNDLE%\deployments\plugin-court-filing.jar"  "%SERVER_HOME%\standalone\deployments\"
 
 
 

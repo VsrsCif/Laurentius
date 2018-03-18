@@ -1,7 +1,7 @@
 <ns4:MSHOutMail 
 	senderMessageId="SM_ID-50952dbd-b0f9-4a94-8a3c-028e5b5002cd" 
-	service="DeliveryWithReceipt" 
-	action="Delivery" 
+	service="CourtFiling" 
+	action="ServeFiling" 
 	subject="[VL 1/2018] Test example 4" 
 	receiverEBox="a.department@mb-laurentius.si" 
 	receiverName="Okrajno sodišče v Črnomlju" 

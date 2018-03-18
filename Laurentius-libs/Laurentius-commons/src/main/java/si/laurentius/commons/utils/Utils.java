@@ -66,30 +66,8 @@ public class Utils {
     return mInstance = mInstance == null ? new Utils() : mInstance;
   }
 
-  /**
-   *
-   * @param mim
-   * @return
-   */
-  public static String getPModeIdFromInMail(MSHInMail mim) {
-    if (mim == null) {
-      return null;
-    }
-    return mim.getService() + ":" + getDomainFromAddress(mim.getSenderEBox());
-  }
 
-  /**
-   *
-   * @param mom
-   * @return
-   */
-  public static String getPModeIdFromOutMail(MSHOutMail mom) {
-    if (mom == null) {
-      return null;
-    }
-    return mom.getService() + ":" + getDomainFromAddress(mom.getReceiverEBox());
-  }
-
+ 
   /**
    *
    * @param strVal

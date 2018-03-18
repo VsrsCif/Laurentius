@@ -1,16 +1,12 @@
 #!/bin/sh
 
-# Method starts wildfly server
-
-
 # inet mask for access 0.0.0.0 - all access
 LISTEN_MASK=0.0.0.0
 
 quit () {
 	echo "\nUsage:\n"
-	echo "laurentius-demo.sh --init -d [DOMAIN] -l [LAU_HOME]\n"
-	echo "  --init  initialize laurentius (database and demo data are loaded to database)"
-	echo "  -d DOMAIN  -  if --init is setted than domain must be given (ex.: company.org, test-bank.org, etc.)"
+	echo "laurentius-demo.sh -l [LAU_HOME]\n"
+	echo "  -s WILDFLY_HOME   - server home: default value: '../?"
 	echo "  -l LAU_HOME  - path tom application home folder  (laurentius.home) if is not given and --init is setted than '[WILDFLY_HOME]\standalone\data\' is setted."	
         exit
 }
@@ -21,7 +17,7 @@ do
 key="$1"
 
   case $key in
-    -w|--wildfly)
+    -s|--server)
       WILDFLY_HOME="$2"
       shift # past argument
     ;;
@@ -29,13 +25,8 @@ key="$1"
       LAU_HOME="$2"
       shift # past argument
     ;;
-    --init)
-      INIT="TRUE"      
-    ;;
-   -d|--domain)
-      LAU_DOMAIN="$2"
-      shift # past argument
-    ;;
+   
+   
 
     *)
       # unknown option
@@ -85,11 +76,10 @@ LAU_OPTS=" -c standalone-laurentius.xml -Dlaurentius.home=$LAU_HOME/";
 echo "*********************************************************************************************************************************"
 echo "* WILDFLY_HOME =  $WILDFLY_HOME"
 echo "* LAU_HOME     =  $LAU_HOME"
-echo "* INIT         =  $INIT"
 echo "* LAU_OPTS     =  $LAU_OPTS"
 echo "*********************************************************************************************************************************"
 
-#org.hibernate.dialect.H2Dialect
+
 $WILDFLY_HOME/bin/standalone.sh $LAU_OPTS -b $LISTEN_MASK
 
 

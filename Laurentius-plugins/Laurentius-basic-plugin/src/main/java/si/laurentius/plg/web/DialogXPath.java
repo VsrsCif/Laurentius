@@ -1,9 +1,11 @@
 package si.laurentius.plg.web;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.enterprise.context.SessionScoped;
+import javax.inject.Named;
+
 import org.primefaces.context.RequestContext;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.xml.XMLUtils;
@@ -16,8 +18,8 @@ import si.laurentius.plugin.imp.XSLTRule;
  * @author Jože Rihtaršič
  */
 @SessionScoped
-@ManagedBean(name = "dialogXPath")
-public class DialogXPath {
+@Named("dialogXPath")
+public class DialogXPath implements Serializable {
 
   private static final SEDLogger LOG = new SEDLogger(DialogXPath.class);
 

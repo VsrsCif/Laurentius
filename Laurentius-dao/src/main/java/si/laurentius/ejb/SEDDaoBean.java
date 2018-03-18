@@ -26,6 +26,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.Local;
@@ -72,8 +74,10 @@ import si.laurentius.commons.enums.SEDTaskStatus;
 import si.laurentius.commons.SEDValues;
 import si.laurentius.commons.enums.MimeValue;
 import si.laurentius.commons.enums.SEDMailPartSource;
+import si.laurentius.commons.exception.PModeException;
 import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.interfaces.JMSManagerInterface;
+import si.laurentius.commons.interfaces.PModeInterface;
 import si.laurentius.commons.interfaces.SEDDaoInterface;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StorageUtils;
@@ -82,6 +86,7 @@ import si.laurentius.commons.utils.xml.XMLUtils;
 import si.laurentius.lce.DigestUtils;
 import si.laurentius.msh.inbox.payload.MSHInPart;
 import si.laurentius.msh.outbox.payload.MSHOutPart;
+import si.laurentius.msh.pmode.PMode;
 
 /**
  *
@@ -106,6 +111,9 @@ public class SEDDaoBean implements SEDDaoInterface {
 
   @EJB(mappedName = SEDJNDI.JNDI_JMSMANAGER)
   JMSManagerInterface mJMS;
+  
+  @EJB(mappedName = SEDJNDI.JNDI_PMODE)
+  PModeInterface mpModeManager;
 
   /**
    *
@@ -823,21 +831,23 @@ public class SEDDaoBean implements SEDDaoInterface {
 
   @Override
   public void sendOutMessage(MSHOutMail mail, int retry, long delay,
+          int iPriority,
           String userId,
           String applicationId)
           throws StorageException {
     long l = LOG.logStart();
 
     Date dt = sendOutMessage(mail.getId(), SEDOutboxMailStatus.SCHEDULE, retry,
-            delay, userId, applicationId);
+            delay, iPriority, userId, applicationId);
     // update values
     mail.setStatusDate(dt);
     mail.setStatus(SEDOutboxMailStatus.SCHEDULE.getValue());
 
   }
 
+  @Override
   public Date sendOutMessage(BigInteger id, SEDOutboxMailStatus status,
-          int retry, long delay,
+          int retry, long delay, int iPriority,
           String userId,
           String applicationId)
           throws StorageException {
@@ -850,6 +860,7 @@ public class SEDDaoBean implements SEDDaoInterface {
     // serialize data and submit message
     String msgFactoryJndiName = getJNDIPrefix() + SEDValues.EBMS_JMS_CONNECTION_FACTORY_JNDI;
     String msgQueueJndiName = getJNDI_JMSPrefix() + SEDValues.JNDI_QUEUE_EBMS;
+    iPriority = iPriority > 9 ? 9 : (iPriority < 0 ? 0 : iPriority);
     Connection connection = null;
 
     String msgDesc = String.format(
@@ -922,7 +933,7 @@ public class SEDDaoBean implements SEDDaoInterface {
       //sender.send(message);
       mutUTransaction.commit();
       // transaction is not working TODO!!!
-
+      sender.setPriority(iPriority);
       sender.send(message);
       session.commit();
 
@@ -1139,15 +1150,24 @@ public class SEDDaoBean implements SEDDaoInterface {
    * @param mail
    * @param userID
    * @param applicationId
-   * @param pmodeId
+   * @param pmode
    * @throws StorageException
    */
   @Override
   public void serializeOutMail(MSHOutMail mail, String userID,
-          String applicationId, String pmodeId)
+          String applicationId, PMode pmode)
           throws StorageException {
     long l = LOG.logStart();
     String locadomain = SEDSystemProperties.getLocalDomain();
+    
+    if (pmode == null){
+      try {
+        pmode = mpModeManager.getPModeMSHOutMail(mail);
+      } catch (PModeException ex) {
+            throw new StorageException(ex.getMessage(), ex);
+      }
+    }
+
     try {
       // check mail parts
       if (mail.getMSHOutPayload() != null) {
@@ -1238,8 +1258,10 @@ public class SEDDaoBean implements SEDDaoInterface {
 
       mutUTransaction.commit();
 
+      int iPriority = pmode.getPriority() == null ? 4 : pmode.getPriority();
+      iPriority = iPriority > 9 ? 9 : (iPriority < 0 ? 0 : iPriority);
       // add message to queue
-      sendOutMessage(mail, 0, 0, userID, applicationId);
+      sendOutMessage(mail, 0, 0, iPriority, userID, applicationId);
       //mJMS.sendMessage(mail.getId().longValue(), 0, 0, false);
 
     } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException

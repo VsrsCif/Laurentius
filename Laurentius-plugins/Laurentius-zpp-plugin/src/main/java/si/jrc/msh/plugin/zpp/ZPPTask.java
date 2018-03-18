@@ -27,14 +27,17 @@ import si.laurentius.commons.enums.SEDOutboxMailStatus;
 import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.exception.FOPException;
 import si.laurentius.commons.exception.HashException;
+import si.laurentius.commons.exception.PModeException;
 import si.laurentius.commons.exception.SEDSecurityException;
 import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.interfaces.JMSManagerInterface;
+import si.laurentius.commons.interfaces.PModeInterface;
 import si.laurentius.commons.interfaces.SEDDaoInterface;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.Utils;
 import si.laurentius.lce.KeystoreUtils;
 import si.laurentius.commons.interfaces.SEDCertStoreInterface;
+import si.laurentius.msh.pmode.PMode;
 import si.laurentius.plugin.crontask.CronTaskDef;
 import si.laurentius.plugin.crontask.CronTaskPropertyDef;
 import si.laurentius.plugin.interfaces.PropertyListType;
@@ -65,6 +68,9 @@ public class ZPPTask implements TaskExecutionInterface {
 
   @EJB(mappedName = SEDJNDI.JNDI_DBCERTSTORE)
   SEDCertStoreInterface mCertBean;
+
+  @EJB(mappedName = SEDJNDI.JNDI_PMODE)
+  PModeInterface mpModeManager;
 
   KeystoreUtils mkeyUtils = new KeystoreUtils();
   ZPPUtils mzppZPPUtils = new ZPPUtils();
@@ -98,7 +104,7 @@ public class ZPPTask implements TaskExecutionInterface {
     } else {
       sedBox = p.getProperty(REC_SEDBOX);
     }
-    
+
     int maxMailProc = 100;
     if (p.containsKey(PROCESS_MAIL_COUNT)) {
       String val = p.getProperty(PROCESS_MAIL_COUNT);
@@ -224,21 +230,23 @@ public class ZPPTask implements TaskExecutionInterface {
     mout.setSubmittedDate(dt);
     mout.setStatusDate(dt);
 
-   
     try {
-      
+
       // sign with receiver certificate 
       PrivateKey pk = mCertBean.getPrivateKeyForAlias(signAlias);
       X509Certificate xcert = mCertBean.getX509CertForAlias(signAlias);
-      
-      MSHOutPart mp  = mzppZPPUtils.createSignedAdviceOfDelivery(inMail, pk, xcert);
+
+      MSHOutPart mp = mzppZPPUtils.createSignedAdviceOfDelivery(inMail, pk,
+              xcert);
       mout.setMSHOutPayload(new MSHOutPayload());
       mout.getMSHOutPayload().getMSHOutParts().add(mp);
-      
-      mDB.serializeOutMail(mout, "", ZPPConstants.S_ZPP_PLUGIN_TYPE, "");
+
+      PMode pmd = mpModeManager.getPModeMSHOutMail(mout);
+
+      mDB.serializeOutMail(mout, "", ZPPConstants.S_ZPP_PLUGIN_TYPE, pmd);
       mDB.setStatusToInMail(inMail, SEDInboxMailStatus.PREADY,
               "AdviceOfDelivery created and submitted to out queue");
-    } catch (SEDSecurityException | StorageException ex) {
+    } catch (SEDSecurityException | StorageException | PModeException ex) {
       String msg = ex.getMessage();
       LOG.logError(l, msg, ex);
       throw new ZPPException(msg);
@@ -247,5 +255,4 @@ public class ZPPTask implements TaskExecutionInterface {
     LOG.logEnd(l);
   }
 
-  
 }

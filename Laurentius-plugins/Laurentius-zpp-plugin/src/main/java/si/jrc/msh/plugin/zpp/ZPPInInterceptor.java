@@ -550,7 +550,7 @@ public class ZPPInInterceptor implements SoapInterceptorInterface {
       mDB.serializeInMail(mInMail, "ZPP plugin");
 
       // create out mail
-      mDB.serializeOutMail(mout, "", ZPPConstants.S_ZPP_PLUGIN_TYPE, "");
+      mDB.serializeOutMail(mout, "", ZPPConstants.S_ZPP_PLUGIN_TYPE, eInCtx.getPMode());
       //mDB.setStatusToInMail(inMail, SEDInboxMailStatus.PREADY,
       //        "AdviceOfDelivery created and submitted to out queue");
 

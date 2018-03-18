@@ -16,6 +16,7 @@ import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import si.jrc.msh.plugin.tc.web.dlg.ProcessAbstract;
+import si.laurentius.commons.exception.PModeException;
 import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.utils.SEDLogger;
 
@@ -87,10 +88,8 @@ public class ProcessLM extends ProcessAbstract {
                 "Created large mail by service %s.",
                 service));
 
-      } catch (StorageException ex) {
+      } catch (StorageException |  PModeException  | IOException ex) {
         LOG.logError(ex.getMessage(), ex);
-      } catch (IOException ex) {
-        Logger.getLogger(ProcessLM.class.getName()).log(Level.SEVERE, null, ex);
       }
     });
 

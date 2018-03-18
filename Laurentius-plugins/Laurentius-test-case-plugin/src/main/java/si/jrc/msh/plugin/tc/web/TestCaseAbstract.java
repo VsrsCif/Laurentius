@@ -18,6 +18,7 @@ import javax.faces.context.FacesContext;
 import si.jrc.msh.plugin.tc.utils.TestUtils;
 import si.jrc.msh.plugin.tc.web.dlg.DialogProgress;
 import si.laurentius.commons.SEDJNDI;
+import si.laurentius.commons.exception.PModeException;
 import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.interfaces.PModeInterface;
 import si.laurentius.commons.interfaces.SEDDaoInterface;
@@ -25,6 +26,7 @@ import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.Utils;
 import si.laurentius.msh.outbox.mail.MSHOutMail;
 import si.laurentius.msh.pmode.Action;
+import si.laurentius.msh.pmode.PMode;
 import si.laurentius.msh.pmode.Service;
 
 /**
@@ -125,11 +127,13 @@ public class TestCaseAbstract {
   }
 
   public void createOutMail(String userName, String senderBox, String recBox, String subject,
-          String service, String action, List<File> lstfiles) throws StorageException {
+          String service, String action, List<File> lstfiles) throws StorageException, PModeException {
 
     MSHOutMail mom = mtUtils.createOutMail(senderBox, senderBox, recBox, recBox,
             service, action, subject, lstfiles);
-    mDB.serializeOutMail(mom, userName, AppConstant.PLUGIN_NAME, "");
+
+    PMode pmd = mPMode.getPModeMSHOutMail(mom);
+    mDB.serializeOutMail(mom, userName, AppConstant.PLUGIN_NAME,pmd);
 
     
   }

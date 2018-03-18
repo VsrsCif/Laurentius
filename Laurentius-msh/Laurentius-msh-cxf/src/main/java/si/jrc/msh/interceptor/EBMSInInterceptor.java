@@ -709,6 +709,7 @@ public class EBMSInInterceptor extends AbstractEBMSInterceptor {
 
   private void handleMessageSecurity(SoapMessage msg, EBMSMessageContext ectx,
           String messageId) {
+    
     PartyIdentitySet rPID = ectx.getReceiverPartyIdentitySet();
     PartyIdentitySet sPID = ectx.getSenderPartyIdentitySet();
     long l = LOG.logStart();

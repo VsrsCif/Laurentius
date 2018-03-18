@@ -393,7 +393,7 @@ public class TaskFileSubmitter implements TaskExecutionInterface {
     
 
     try {
-      mdao.serializeOutMail(mout, "", "file-submitter", ectx.getPMode().getId());
+      mdao.serializeOutMail(mout, "", "file-submitter", ectx.getPMode());
       res = mout.getId();
     } catch (StorageException ex) {
       throw new FSException("Error serializing mail", ex);

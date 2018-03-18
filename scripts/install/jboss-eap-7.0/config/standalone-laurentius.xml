@@ -50,6 +50,14 @@
 					<properties path="application-roles.properties" relative-to="jboss.server.config.dir"/>
 				</authorization>
 			</security-realm>
+			<!-- security-domain  LaurentiusTLSRealm added by JRC 31.8.2017 -->
+				<security-realm name="LaurentiusTLSRealm">
+                <server-identities>
+                    <ssl>
+                        <keystore path="test-tls-keystore.jks" relative-to="jboss.server.config.dir" keystore-password="test1234" alias="test-tls" key-password="key1234"/>
+                    </ssl>
+                </server-identities>
+            </security-realm>
 		</security-realms>
 		<audit-log>
 			<formatters>
@@ -140,6 +148,21 @@
 						<password>sa</password>
 					</security>
 				</datasource>
+<!-- datasource ebMSSEDPool added by JRC 31.8.2017 -->
+				<datasource jndi-name="java:/dsEBMS_SED" pool-name="ebMSSEDPool" enabled="true" statistics-enabled="true">
+                    <connection-url>jdbc:h2:file:${jboss.home.dir}/standalone/data/laurentius-db;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=TRUE;AUTO_SERVER=TRUE</connection-url>
+                    <driver>h2</driver>
+		<pool>
+		   <min-pool-size>1</min-pool-size>
+		   <max-pool-size>3</max-pool-size>
+		   <prefill>true</prefill>
+		  </pool>
+
+                    <security>
+                        <user-name>laurentius</user-name>
+                        <password>laurentius</password>
+                    </security>
+                </datasource>
 				<drivers>
 					<driver name="h2" module="com.h2database.h2">
 						<xa-datasource-class>org.h2.jdbcx.JdbcDataSource</xa-datasource-class>
@@ -370,7 +393,7 @@
 						<auth-module code="Dummy"/>
 					</authentication-jaspi>
 				</security-domain>
-				<!-- security-domain  laurentius-realm added by JRC 31.8.2017-->
+				<!-- security-domain  laurentius-realm added by JRC 31.8.2017 -->
 				<security-domain name="laurentius-realm" cache-type="default">
 					
 					<authentication>
@@ -380,14 +403,7 @@
 						</login-module>
 					</authentication>
 				</security-domain>
-				<!-- security-domain  LaurentiusTLSRealm added by JRC 31.8.2017-->
-				<security-realm name="LaurentiusTLSRealm">
-                <server-identities>
-                    <ssl>
-                        <keystore path="test-tls-keystore.jks" relative-to="jboss.server.config.dir" keystore-password="test1234" alias="test-tls" key-password="key1234"/>
-                    </ssl>
-                </server-identities>
-            </security-realm>
+				
 			</security-domains>
 		</subsystem>
 		<subsystem xmlns="urn:jboss:domain:transactions:3.0">
@@ -404,10 +420,22 @@
 				<http-listener name="default" socket-binding="http" redirect-socket="https"/>
 				<host name="default-host" alias="localhost">
 					<location name="/" handler="welcome-content"/>
+					<single-sign-on path="/laurentius-web" /> <!--  added by JRC for single session over plugins -->				  
 					<filter-ref name="server-header"/>
 					<filter-ref name="x-powered-by-header"/>
 				</host>
 			</server>
+			<!-- server laurentius-msh-server added by JRC 31.8.2017 -->
+ 			<server name="laurentius-msh-server" default-host="laurentius-msh-host">         
+                <http-listener name="laurentius-msh-http" socket-binding="laurentius-msh-http" max-post-size="150000000" max-parameters="10000"/>       
+                <https-listener name="laurentius-msh-https" socket-binding="laurentius-msh-https" security-realm="LaurentiusTLSRealm" max-post-size="150000000" max-parameters="10000"/>
+                <host name="laurentius-msh-host" alias="localhost">
+                    <location name="/" handler="welcome-content"/>
+                    <access-log pattern="%h %l %u [%t] &quot;%r&quot; %s %b &quot;%{i,Referer}&quot; &quot;%{i,User-Agent}&quot;"/>
+                    <filter-ref name="server-header"/>
+                    <filter-ref name="x-powered-by-header"/>
+                </host>
+            </server>
 			<servlet-container name="default">
 				<jsp-config/>
 				<websockets/>
@@ -446,6 +474,8 @@
 		<socket-binding name="ajp" port="${jboss.ajp.port:8009}"/>
 		<socket-binding name="http" port="${jboss.http.port:8080}"/>
 		<socket-binding name="https" port="${jboss.https.port:8443}"/>
+        <socket-binding name="laurentius-msh-https" port="${jboss.https.port:8443}"/>
+        <socket-binding name="laurentius-msh-http" port="${jboss.msh.http.port:8081}"/>
 		<socket-binding name="txn-recovery-environment" port="4712"/>
 		<socket-binding name="txn-status-manager" port="4713"/>
 		<outbound-socket-binding name="mail-smtp">

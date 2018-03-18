@@ -4,19 +4,20 @@
  */
 package si.laurentius.plg.web;
 
+import java.io.Serializable;
 import java.util.Locale;
 import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
+import javax.inject.Named;
 
 /**
  *
  * @author Jože Rihtaršič
  */
-@ManagedBean
 @SessionScoped
-public class LocaleManager {
+@Named("LocaleManager")
+public class LocaleManager implements Serializable{
 
   private Locale locale;
 

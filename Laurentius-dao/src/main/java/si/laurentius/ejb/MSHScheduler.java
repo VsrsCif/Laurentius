@@ -64,13 +64,13 @@ import si.laurentius.plugin.interfaces.exception.TaskException;
 @Startup
 public class MSHScheduler implements SEDSchedulerInterface {
 
+  private static final String ERR_MSG_DB_UPADTE_FAILED = "Error occurred while add/update db cront  task for:  type %s!. Error: %s";
   private static final SEDLogger LOG = new SEDLogger(MSHScheduler.class);
   @EJB(mappedName = SEDJNDI.JNDI_SEDDAO)
   private SEDDaoInterface mdbDao;
 
   @EJB(mappedName = SEDJNDI.JNDI_SEDLOOKUPS)
   private SEDLookupsInterface mdbLookups;
-  
 
   @EJB(mappedName = SEDJNDI.JNDI_PLUGIN)
   private SEDPluginManagerInterface mpmPluginManager;
@@ -145,13 +145,11 @@ public class MSHScheduler implements SEDSchedulerInterface {
       LOG.logError(l, logMsg, null);
     } else if (!mj.getActive()) {
       LOG.formatedDebug("Cron job %s  not active!", name);
-    }  else if (mj.getIgnoreOnWorkFreeDays()!=null 
+    } else if (mj.getIgnoreOnWorkFreeDays() != null
             && mj.getIgnoreOnWorkFreeDays()
             && SEDSystemProperties.isWorkFreeDay()) {
       LOG.formatedDebug("Cron job %s  not active!", name);
-    } 
-    
-    else {
+    } else {
       executeCronJob(mj);
     }
     LOG.logEnd(l, String.format("Timeout for Cron job %s !'", name));
@@ -160,8 +158,7 @@ public class MSHScheduler implements SEDSchedulerInterface {
   @Override
   public String executeCronJob(SEDCronJob mj) {
     long l = LOG.logStart(mj.getName());
-    
-    
+
     StringWriter sw = new StringWriter();
     for (SEDTask tsk : mj.getSEDTasks()) {
       if (tsk.getActive()) {
@@ -175,7 +172,7 @@ public class MSHScheduler implements SEDSchedulerInterface {
 
   private String executeTask(SEDCronJob mj, SEDTask tsk) {
     long l = LOG.logStart(mj.getName(), tsk.getName());
-    LOG.formatedWarning("Execute cron %s, task %s", mj.getName(), tsk.getName());
+
     String result = "";
 
     SEDTaskExecution te = new SEDTaskExecution();
@@ -190,9 +187,8 @@ public class MSHScheduler implements SEDSchedulerInterface {
     try {
       mdbDao.addExecutionTask(te);
     } catch (StorageException ex) {
-      result = String.format(
-              "Error occurred while executing task type %s!. Error: %s", te.
-                      getType(), ex.getMessage());
+      result = String.format(ERR_MSG_DB_UPADTE_FAILED,
+              te.getType(), ex.getMessage());
       LOG.logEnd(l, result, ex);
       return result;
     }
@@ -200,22 +196,22 @@ public class MSHScheduler implements SEDSchedulerInterface {
     Plugin plg = mpmPluginManager.getPluginByType(tsk.getPlugin());
 
     if (plg == null) {
-      result = String.format(
-              "Not plugin %s!", tsk.getPlugin(), tsk.getType());
+      result = String.format("Not plugin %s!", tsk.getPlugin(), tsk.getType());
+      LOG.logWarn(l, result, null);
       te.setStatus(SEDTaskStatus.ERROR.getValue());
       te.setResult(result);
       te.setEndTimestamp(Calendar.getInstance().getTime());
       try {
         mdbDao.updateExecutionTask(te);
       } catch (StorageException ex) {
-        LOG.logEnd(l, "Error updating task: '" + te.getType() + "' ", ex);
+        LOG.logError(l, String.format(ERR_MSG_DB_UPADTE_FAILED,
+                te.getType(), ex.getMessage()), ex);
       }
+      LOG.logEnd(l, result, null);
       return result;
     } else if (!Objects.equals(plg.getVersion(), tsk.getPluginVersion())) {
-      LOG.
-              formatedWarning(
-                      "Plugin version mismatch for cron task execution %s",
-                      mj.getName());
+      LOG.formatedWarning("Plugin version mismatch for cron task execution %s",
+              mj.getName());
       te.setPluginVersion(plg.getVersion());
     }
 
@@ -233,7 +229,8 @@ public class MSHScheduler implements SEDSchedulerInterface {
       try {
         mdbDao.updateExecutionTask(te);
       } catch (StorageException ex) {
-        LOG.logEnd(l, "Error updating task: '" + te.getType() + "' ", ex);
+        LOG.logError(l, String.format(ERR_MSG_DB_UPADTE_FAILED,
+                te.getType(), ex.getMessage()), ex);
       }
       return result;
     }
@@ -252,7 +249,8 @@ public class MSHScheduler implements SEDSchedulerInterface {
       try {
         mdbDao.updateExecutionTask(te);
       } catch (StorageException ex2) {
-        LOG.logEnd(l, "Error updating task: '" + te.getType() + "' ", ex2);
+        LOG.logError(l, String.format(ERR_MSG_DB_UPADTE_FAILED,
+                te.getType(), ex.getMessage()), ex2);
       }
       return result;
     }
@@ -285,10 +283,8 @@ public class MSHScheduler implements SEDSchedulerInterface {
       try {
         mdbDao.updateExecutionTask(te);
       } catch (StorageException ex2) {
-        result = String.format(
-                "Error occurred while updating task  type %s!. Error: %s. Task executed with result:",
-                te.
-                        getType(), ex2.getMessage(), result);
+        result = String.format(ERR_MSG_DB_UPADTE_FAILED,
+                te.getType(), ex2.getMessage());
         LOG.logEnd(l, result, ex2);
         return result;
       }
@@ -303,11 +299,9 @@ public class MSHScheduler implements SEDSchedulerInterface {
       try {
         mdbDao.updateExecutionTask(te);
       } catch (StorageException ex2) {
-        result = String.format(
-                "Error occurred while updating task  type %s!. Error: %s. Task executed with result:",
-                te.
-                        getType(), ex2.getMessage(), result);
-        LOG.logEnd(l, result, ex2);
+        LOG.logError(l, String.format(ERR_MSG_DB_UPADTE_FAILED,
+                te.getType(), ex.getMessage()), ex2);
+
         return result;
       }
     }

@@ -453,8 +453,7 @@ public class TaskXMLDataFileSubmitter implements TaskExecutionInterface {
     }
 
     try {
-      mdao.serializeOutMail(mom, "", "xml-file-submitter", ectx.getPMode().
-              getId());
+      mdao.serializeOutMail(mom, "", "xml-file-submitter", ectx.getPMode());
       res = mom.getId();
     } catch (StorageException ex) {
       throw new FSException("Error serializing mail", ex);

@@ -14,10 +14,15 @@
  */
 package si.laurentius.ejb;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.StringWriter;
+import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +36,7 @@ import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.X509KeyManager;
 import javax.net.ssl.X509TrustManager;
+import java.security.cert.X509Certificate;
 import org.apache.wss4j.dom.handler.WSHandlerConstants;
 import si.laurentius.cert.SEDCertPassword;
 import si.laurentius.cert.SEDCertificate;
@@ -38,6 +44,7 @@ import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.enums.CertStatus;
 import si.laurentius.commons.exception.SEDSecurityException;
+import static si.laurentius.commons.exception.SEDSecurityException.SEDSecurityExceptionCode.ReadWriteFileException;
 import si.laurentius.commons.interfaces.SEDCertStoreInterface;
 import si.laurentius.commons.interfaces.SEDCertUtilsInterface;
 import si.laurentius.commons.utils.SEDLogger;
@@ -70,10 +77,7 @@ public class SEDCertUtilsBean implements SEDCertUtilsInterface {
    *
    */
   public static final String SEC_MERLIN_KEYSTORE_TYPE = "org.apache.ws.security.crypto.merlin.keystore.type";
-  /**
-   *
-   */
-  public static final String SEC_MERLIN_TRUSTSTORE_ALIAS = "org.apache.ws.security.crypto.merlin.truststore.alias";
+
   /**
    *
    */
@@ -97,7 +101,10 @@ public class SEDCertUtilsBean implements SEDCertUtilsInterface {
 
   private static final SEDLogger LOG = new SEDLogger(SEDCertStoreBean.class);
 
-  private final KeystoreUtils mku = new KeystoreUtils();
+  private static final HashMap<X509Certificate, File> mpX509CertCacheKeystores = new HashMap<>();
+  private static final String mCacheKeySecret = KeystoreUtils.generateSecret();
+
+  private static final KeystoreUtils S_KEYSTORE_UTILS = new KeystoreUtils();
 
   @EJB(mappedName = SEDJNDI.JNDI_DBCERTSTORE)
   private SEDCertStoreInterface mdbCertStore;
@@ -107,6 +114,7 @@ public class SEDCertUtilsBean implements SEDCertUtilsInterface {
     long l = LOG.logStart();
     SEDCertificate aliasCrt = mdbCertStore.getSEDCertificatForAlias(alias);
     validateCertificate(aliasCrt);
+
     if (aliasCrt == null) {
       String msg = "Key for alias '" + alias + "' do not exists!";
       throw new SEDSecurityException(
@@ -125,7 +133,8 @@ public class SEDCertUtilsBean implements SEDCertUtilsInterface {
     signProperties.put(SEC_MERLIN_KEYSTORE_PASS, cp.getPassword());
     signProperties.put(SEC_MERLIN_KEYSTORE_FILE,
             SEDSystemProperties.getCertstoreFile().getAbsolutePath());
-    signProperties.put(SEC_MERLIN_KEYSTORE_TYPE,  SEDSystemProperties.getCertstoreType());
+    signProperties.put(SEC_MERLIN_KEYSTORE_TYPE, SEDSystemProperties.
+            getCertstoreType());
     LOG.logEnd(l);
     return signProperties;
   }
@@ -141,6 +150,7 @@ public class SEDCertUtilsBean implements SEDCertUtilsInterface {
     long l = LOG.logStart();
 
     SEDCertificate aliasCrt = mdbCertStore.getSEDCertificatForAlias(alias);
+
     validateCertificate(aliasCrt);
 
     SEDCertPassword cp = mdbCertStore.getKeyPassword(
@@ -150,11 +160,36 @@ public class SEDCertUtilsBean implements SEDCertUtilsInterface {
     }
     Properties signVerProperties = new Properties();
     signVerProperties.put(SEC_PROVIDER, SEC_PROIDER_MERLIN);
-    signVerProperties.put(SEC_MERLIN_TRUSTSTORE_ALIAS, alias);
+    //signVerProperties.put(SEC_MERLIN_TRUSTSTORE_ALIAS, alias);
     signVerProperties.put(SEC_MERLIN_TRUSTSTORE_PASS, cp.getPassword());
     signVerProperties.put(SEC_MERLIN_TRUSTSTORE_FILE,
             SEDSystemProperties.getCertstoreFile().getAbsolutePath());
-    signVerProperties.put(SEC_MERLIN_TRUSTSTORE_TYPE,  SEDSystemProperties.getCertstoreType());
+    signVerProperties.put(SEC_MERLIN_TRUSTSTORE_TYPE, SEDSystemProperties.
+            getCertstoreType());
+    LOG.logEnd(l);
+
+    return signVerProperties;
+  }
+
+  public Properties getCXFSigValidateProperties(X509Certificate cert,
+          String alias) throws SEDSecurityException {
+    long l = LOG.logStart();
+
+    SEDCertificate aliasCrt = mdbCertStore.getSEDCertificatForAlias(alias);
+
+    validateCertificate(aliasCrt);
+
+    File fCachedKey = getCachedTruststoreFile(cert, alias);
+
+    Properties signVerProperties = new Properties();
+    signVerProperties.put(SEC_PROVIDER, SEC_PROIDER_MERLIN);
+    //signVerProperties.put(SEC_MERLIN_TRUSTSTORE_ALIAS, alias);
+    signVerProperties.put(SEC_MERLIN_TRUSTSTORE_PASS, mCacheKeySecret);
+
+    signVerProperties.put(SEC_MERLIN_TRUSTSTORE_TYPE, SEDSystemProperties.
+            getCertstoreType());
+    signVerProperties.put(SEC_MERLIN_TRUSTSTORE_FILE, fCachedKey.
+            getAbsolutePath());
     LOG.logEnd(l);
 
     return signVerProperties;
@@ -224,6 +259,7 @@ public class SEDCertUtilsBean implements SEDCertUtilsInterface {
    * @param key
    * @return
    */
+  @Override
   public Map<String, Object> createCXFSignatureConfiguration(X509.Signature sig,
           String sigAlias) throws SEDSecurityException {
 
@@ -406,25 +442,34 @@ public class SEDCertUtilsBean implements SEDCertUtilsInterface {
 
     Map<String, Object> prps = null;
 
-    Properties tstCP = getCXFTruststoreProperties(sigAliasProp);
-
+    X509Certificate xc = mdbCertStore.getX509CertForAlias(sigAliasProp);
+    if (xc == null) {
+      throw new SEDSecurityException(
+              SEDSecurityException.SEDSecurityExceptionCode.CertificateException,
+              String.format("Certificate for alias %s not exists", sigAliasProp));
+    }
+    Properties tstCP = getCXFSigValidateProperties(xc, sigAliasProp);
     if (sig == null || sig.getReference() == null) {
       return prps;
     }
     // create signature priperties
     String cpropname = "SIG-VAL." + UUID.randomUUID().toString();
 
-    // Properties cp = KeystoreUtils.getTruststoreProperties(crt.getAlias(), truststore);
     prps = new HashMap<>();
     prps.put(cpropname, tstCP);
     // set wss properties
     prps.put(WSHandlerConstants.ACTION, WSHandlerConstants.SIGNATURE);
-    // prps.put(WSHandlerConstants.SIGNATURE_PARTS, strReference);
     prps.put(WSHandlerConstants.SIG_VER_PROP_REF_ID, cpropname);
+    prps.put(WSHandlerConstants.SIGNATURE_USER, sigAliasProp);
 
+    //prps.put(WSHandlerConstants.SIG_SUBJECT_CERT_CONSTRAINTS, ".*test-laurentius.*");
+    //.*CN=Colm.*O=Apache.*
+    //http://coheigea.blogspot.si/2012/08/subject-dn-certificate-constraint.html
+    // did not work solution in getCXFSigValidateProperties!! 
     if (sig.getAlgorithm() != null || !sig.getAlgorithm().isEmpty()) {
       prps.put(WSHandlerConstants.SIG_ALGO, sig.getAlgorithm());
     }
+
     if (sig.getHashFunction() != null || !sig.getHashFunction().isEmpty()) {
       prps.put(WSHandlerConstants.SIG_DIGEST_ALGO, sig.getHashFunction());
     }
@@ -434,6 +479,51 @@ public class SEDCertUtilsBean implements SEDCertUtilsInterface {
     }
 
     return prps;
+  }
+
+  public static File getCachedTruststoreFile(X509Certificate cert, String alias) throws SEDSecurityException {
+    File f = null;
+    if (mpX509CertCacheKeystores.containsKey(cert)) {
+      f = mpX509CertCacheKeystores.get(cert);
+      if (!f.exists()) {
+        f = null;
+      }
+    }
+
+    if (f == null) {
+      try {
+        f = File.createTempFile("x509_", ".jks");
+        f.deleteOnExit();
+        KeyStore ks = S_KEYSTORE_UTILS.
+                createNewKeyStore(mCacheKeySecret, f.getAbsolutePath());
+
+        S_KEYSTORE_UTILS.addCertificateToStore(ks, cert, alias, true);
+        try (FileOutputStream keyStoreOutputStream = new FileOutputStream(f)) {
+          ks.store(keyStoreOutputStream, mCacheKeySecret.toCharArray());
+
+        } catch (IOException | NoSuchAlgorithmException | KeyStoreException
+                | CertificateException ex) {
+
+          throw new SEDSecurityException(ReadWriteFileException,
+                  "Error occured while saving cache cert JKS", ex.
+                          getMessage());
+        }
+
+        synchronized (mpX509CertCacheKeystores) {
+          if (mpX509CertCacheKeystores.containsKey(cert)) {
+            mpX509CertCacheKeystores.replace(cert, f);
+          } else {
+            mpX509CertCacheKeystores.put(cert, f);
+          }
+        }
+      } catch (IOException ex) {
+        throw new SEDSecurityException(ReadWriteFileException,
+                "Error creating cache truststore value", ex.
+                        getMessage());
+      }
+
+    }
+    return f;
   }
 
   private void validateCertificate(SEDCertificate sc) throws SEDSecurityException {

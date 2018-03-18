@@ -53,6 +53,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Objects;
+import java.util.Random;
 import javax.net.ssl.X509KeyManager;
 import si.laurentius.commons.enums.CertStatus;
 import si.laurentius.commons.utils.Utils;
@@ -67,6 +68,7 @@ import si.laurentius.lce.tls.X509KeyManagerForAlias;
 public class KeystoreUtils {
 
   public static final String CF_X509 = "X.509";
+  public static final String  strChars="qwertzuiopasdfghjklyxcvbnm...,,,,,????!!!!MNBVCXYLKJHGFDSAPOIUZTREWQ1234567890";
   /**
    *
    */
@@ -695,6 +697,16 @@ public class KeystoreUtils {
 
     Key k = getPrivateKeyForAlias(ks, alias, passwd);
     return k != null;
+  }
+  
+  public static String generateSecret(){
+      Random r = new Random(Calendar.getInstance().getTimeInMillis());
+      String secret = "";      
+      while(secret.length() <  8) {
+        secret+=strChars.charAt(r.nextInt(strChars.length()));
+      }
+      return secret;
+      
   }
 
 }

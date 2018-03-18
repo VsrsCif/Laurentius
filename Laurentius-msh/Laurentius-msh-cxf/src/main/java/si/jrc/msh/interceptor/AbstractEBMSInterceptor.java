@@ -14,7 +14,9 @@
  */
 package si.jrc.msh.interceptor;
 
+import java.io.StringWriter;
 import java.util.Map;
+import java.util.Properties;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.xml.namespace.QName;
@@ -29,7 +31,6 @@ import si.laurentius.msh.pmode.Security;
 import si.laurentius.msh.pmode.X509;
 import si.laurentius.commons.ebms.EBMSError;
 import si.jrc.msh.exception.EBMSErrorCode;
-import static si.jrc.msh.interceptor.EBMSOutInterceptor.LOG;
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.exception.SEDSecurityException;
 import si.laurentius.commons.interfaces.DBSettingsInterface;
@@ -180,19 +181,20 @@ public abstract class AbstractEBMSInterceptor extends AbstractSoapInterceptor {
   public abstract void handleMessage(SoapMessage t)
           throws Fault;
 
+  
   public WSS4JOutInterceptor configureOutSecurityInterceptors(Security sc,
           PartyIdentitySetType.LocalPartySecurity lps,
           PartyIdentitySetType.ExchangePartySecurity epx,
           String msgId, QName sv)
           throws EBMSError {
-    long l = LOG.logStart();
+    long l = A_LOG.logStart();
     WSS4JOutInterceptor sec = null;
     Map<String, Object> outProps = null;
     
     
 
     if (sc.getX509() == null) {
-      LOG.logWarn(l,
+      A_LOG.logWarn(l,
               "Sending not message with not security policy. No security configuration (pmode) for message:"
               + msgId, null);
       return null;
@@ -205,22 +207,23 @@ public abstract class AbstractEBMSInterceptor extends AbstractSoapInterceptor {
       String sigAlias = lps.getSignatureKeyAlias();
 
       try {
+        A_LOG.formatedlog("Validate message: '%s' signed width: %s", msgId, sigAlias);
         outProps = getCertUtilsStore().createCXFSignatureConfiguration(sig,
                 sigAlias);
       } catch (SEDSecurityException ex) {
-        String msg = "Error occurred while creating signature configuration for alias '" + sigAlias + "'! Error: " + ex.
+        String msg = "Error occurred while creating signature configuration for message: "+msgId+" and cert alias '" + sigAlias + "'! Error: " + ex.
                 getMessage();
-        LOG.logError(l, msg, ex);
+        A_LOG.logError(l, msg, ex);
         throw new EBMSError(EBMSErrorCode.PModeConfigurationError, msgId, msg,
                 sv);
       }
       if (outProps == null) {
-        LOG.logWarn(l,
+        A_LOG.logWarn(l,
                 "Sending not signed message. Incomplete configuration: X509/Signature for message:  "
                 + msgId, null);
       }
     } else {
-      LOG.logWarn(l,
+      A_LOG.logWarn(l,
               "Sending not signed message. No configuration: X509/Signature/Sign for message:  " + msgId,
               null);
     }
@@ -242,7 +245,7 @@ public abstract class AbstractEBMSInterceptor extends AbstractSoapInterceptor {
       }
 
       if (enc == null) {
-        LOG.logWarn(l,
+        A_LOG.logWarn(l,
                 "Sending not encrypted message. Incomplete configuration: X509/Encryption/Encryp for message:  "
                 + msgId, null);
       } else if (outProps == null) {
@@ -254,20 +257,22 @@ public abstract class AbstractEBMSInterceptor extends AbstractSoapInterceptor {
         outProps.put(WSHandlerConstants.ACTION, action);
       }
     } else {
-      LOG.logWarn(l,
+      A_LOG.logWarn(l,
               "Sending not encrypted message. No configuration: X509/Encryption/Encrypt for message:  "
               + msgId, null);
     }
 
     if (outProps != null) {
+      
+   A_LOG.formatedlog("Message %s security properties: %s", msgId, getLogSecurityProperitesStringForMail(outProps));
       sec = new WSS4JOutInterceptor(outProps);
       
     } else {
-      LOG.logWarn(l,
+      A_LOG.logWarn(l,
               "Sending not message with not security policy. Bad/incomplete security configuration (pmode) for message:"
               + msgId, null);
     }
-    LOG.logEnd(l);
+    A_LOG.logEnd(l);
     return sec;
   }
 
@@ -277,12 +282,12 @@ public abstract class AbstractEBMSInterceptor extends AbstractSoapInterceptor {
           String msgId, QName sv)
           throws EBMSError {
 
-    long l = LOG.logStart();
+    long l = A_LOG.logStart();
     WSS4JInInterceptor sec = null;
-    Map<String, Object> outProps = null;
+    Map<String, Object> inProps = null;
 
     if (sc.getX509() == null) {
-      LOG.logWarn(l,
+      A_LOG.logWarn(l,
               "Sending not message with not security policy. No security configuration (pmode) for message:"
               + msgId, null);
       return null;
@@ -293,18 +298,18 @@ public abstract class AbstractEBMSInterceptor extends AbstractSoapInterceptor {
       String sigAliasProp = eps.getSignatureCertAlias();
      
       try {
-        outProps = getCertUtilsStore().createCXFSignatureValidationConfiguration(sig, sigAliasProp);
+        inProps = getCertUtilsStore().createCXFSignatureValidationConfiguration(sig, sigAliasProp);
       } catch (SEDSecurityException ex) {
          throw new EBMSError(EBMSErrorCode.PolicyNoncompliance, msgId, ex.getMessage(),
                 sv);
       }
-      if (outProps == null) {
-        LOG.logWarn(l,
+      if (inProps == null) {
+        A_LOG.logWarn(l,
                 "Sending not signed message. Incomplete configuration: X509/Signature for message:  "
                 + msgId, null);
       }
     } else {
-      LOG.logWarn(l,
+      A_LOG.logWarn(l,
               "Sending not signed message. No configuration: X509/Signature/Sign for message:  " + msgId,
               null);
     }
@@ -321,38 +326,73 @@ public abstract class AbstractEBMSInterceptor extends AbstractSoapInterceptor {
        } catch (SEDSecurityException ex) {
         String msg = "Error occured while creating CXFDecryptionConfiguration alias '" + decAlias
                 + "' do not exist in keystore. Error:" + ex.getMessage();
-        LOG.logError(l, msg, ex);
+        A_LOG.logError(l, msg, ex);
         throw new EBMSError(EBMSErrorCode.PModeConfigurationError, msgId, msg,
                 sv);
       }
       
       if (enc == null) {
-        LOG.logWarn(l,
+        A_LOG.logWarn(l,
                 "Sending not encrypted message. Incomplete configuration: X509/Encryption/Encryp for message:  "
                 + msgId, null);
-      } else if (outProps == null) {
-        outProps = penc;
+      } else if (inProps == null) {
+        inProps = penc;
       } else {
-        String action = (String) outProps.get(WSHandlerConstants.ACTION);
+        String action = (String) inProps.get(WSHandlerConstants.ACTION);
         action += " " + (String) penc.get(WSHandlerConstants.ACTION);
-        outProps.putAll(penc);
-        outProps.put(WSHandlerConstants.ACTION, action);
+        inProps.putAll(penc);
+        inProps.put(WSHandlerConstants.ACTION, action);
       }
     } else {
-      LOG.logWarn(l,
+      A_LOG.logWarn(l,
               "Sending not encypted message. No configuration: X509/Encryption/Encrypt for message:  "
               + msgId, null);
     }
 
-    if (outProps != null) {
-      sec = new WSS4JInInterceptor(outProps);
+    if (inProps != null) {
+      A_LOG.formatedlog("Message %s security properties: %s", msgId, getLogSecurityProperitesStringForMail(inProps));
+      sec = new WSS4JInInterceptor(inProps);
     } else {
-      LOG.logWarn(l,
+      A_LOG.logWarn(l,
               "Sending not message with not security policy. Bad/incomplete security configuration (pmode) for message:"
               + msgId, null);
     }
 
-    LOG.logEnd(l);
+    A_LOG.logEnd(l);
     return sec;
+  }
+  
+  private String getLogSecurityProperitesStringForMail(Map<String, Object> prop){
+   StringWriter sw = new StringWriter();
+      sw.append('[');
+      for (String key: prop.keySet()){
+        sw.append(key);
+        sw.append('=');
+        Object o = prop.getOrDefault(key, "null");
+         if (o instanceof Properties) {
+          Properties prp = (Properties)o;
+          sw.append('[');
+          for (String prpKey: prp.stringPropertyNames()){
+            sw.append("\n\t");
+            sw.append(prpKey);
+            sw.append('=');
+            if (prpKey.contains("pass")) {
+              sw.append("****"); 
+            } else {
+              sw.append(prp.getProperty(prpKey, "null")); 
+            }            
+          }
+          sw.append("\n]\n");        
+        } else {        
+        if (!key.contains("pass")) {          
+          sw.append(o.toString());        
+        } else {
+          sw.append("****");
+        }
+        sw.append(";\n");        
+         }
+      }
+      sw.append(']');
+      return sw.toString();
   }
 }

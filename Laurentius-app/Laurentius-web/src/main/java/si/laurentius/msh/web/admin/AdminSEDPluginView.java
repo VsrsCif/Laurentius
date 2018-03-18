@@ -34,6 +34,7 @@ import si.laurentius.commons.utils.Utils;
 import si.laurentius.cron.SEDCronJob;
 import si.laurentius.interceptor.SEDInterceptor;
 import si.laurentius.msh.pmode.PMode;
+import si.laurentius.msh.pmode.PModePartyInfo;
 import si.laurentius.msh.pmode.PartyIdentitySet;
 import si.laurentius.msh.pmode.ReceptionAwareness;
 import si.laurentius.msh.pmode.Security;
@@ -379,6 +380,28 @@ public class AdminSEDPluginView extends AbstractAdminJSFView<Plugin> {
                 p.getId(), p.getServiceIdRef());
         return bAdd;
       }
+      
+      List<PartyIdentitySet> pisLst =  mPModeManager.getPartyIdentitySets();
+      for (PartyIdentitySet pis: pisLst){
+        if (pis.getIsLocalIdentity()) {
+          PModePartyInfo pmdLParty = new PModePartyInfo();
+          
+          pmdLParty.setPartyIdentitySetIdRef(pis.getId());
+          if (!pis.getTransportProtocols().isEmpty()){
+            pmdLParty.setPartyDefTransportIdRef(pis.getTransportProtocols().get(0).getId());
+          }
+          pmdLParty.getRoles().add(sv.getInitiator().getRole());
+          pmdLParty.getRoles().add(sv.getExecutor().getRole());
+          
+          
+          p.setLocalPartyInfo(pmdLParty);
+          
+          
+          break;
+        }
+      }
+
+      
       mPModeManager.addPMode(p);
       bAdd = true;
     }

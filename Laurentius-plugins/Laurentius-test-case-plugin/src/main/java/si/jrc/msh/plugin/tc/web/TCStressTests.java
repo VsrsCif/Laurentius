@@ -6,8 +6,8 @@
 package si.jrc.msh.plugin.tc.web;
 
 import java.io.Serializable;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.enterprise.context.SessionScoped;
+import javax.inject.Named;
 import org.primefaces.context.RequestContext;
 import si.jrc.msh.plugin.tc.web.dlg.DialogProgress;
 import si.jrc.msh.plugin.tc.web.tc.ProcessLAOM;
@@ -15,7 +15,7 @@ import si.jrc.msh.plugin.tc.web.tc.ProcessLM;
 import si.laurentius.commons.utils.SEDLogger;
 
 @SessionScoped
-@ManagedBean(name = "tcStressTests")
+@Named("tcStressTests")
 public class TCStressTests extends TestCaseAbstract implements Serializable {
 
   private static final SEDLogger LOG = new SEDLogger(TCStressTests.class);

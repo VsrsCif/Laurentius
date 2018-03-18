@@ -42,8 +42,9 @@
     </developers>
 
     <modules>
-	<module>Laurentius-basic-plugin</module>
+		<module>Laurentius-basic-plugin</module>
+		<module>Laurentius-ecf-plugin</module>
         <module>Laurentius-zpp-plugin</module>
-	<module>Laurentius-test-case-plugin</module>
+		<module>Laurentius-test-case-plugin</module>
     </modules>
 </project>

@@ -16,6 +16,7 @@ import java.util.concurrent.Executors;
 import si.jrc.msh.plugin.tc.utils.TestUtils;
 import si.jrc.msh.plugin.tc.web.dlg.ProcessAbstract;
 import si.laurentius.commons.SEDSystemProperties;
+import si.laurentius.commons.exception.PModeException;
 import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StringFormater;
@@ -124,7 +125,7 @@ public class ProcessLAOM extends ProcessAbstract {
                 "Created %s mail by service %s.",
                 icnt, service));
 
-      } catch (StorageException ex) {
+      } catch (StorageException | PModeException ex) {
         LOG.logError(ex.getMessage(), ex);
       }
     });

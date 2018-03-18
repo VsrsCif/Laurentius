@@ -106,7 +106,7 @@ cp "$LAU_BUNDLE/deployments/laurentius-web.war"  "$SERVER_HOME/standalone/deploy
 cp "$LAU_BUNDLE/deployments/plugin-zpp.war"  "$SERVER_HOME/standalone/deployments/"
 cp "$LAU_BUNDLE/deployments/plugin-basic.war"  "$SERVER_HOME/standalone/deployments/"
 cp "$LAU_BUNDLE/deployments/plugin-testcase.war"  "$SERVER_HOME/standalone/deployments/"
-cp "$LAU_BUNDLE/deployments/example-web-plugin.war"  "$SERVER_HOME/standalone/deployments/"
+cp "$LAU_BUNDLE/deployments/plugin-court-filing.jar"  "$SERVER_HOME/standalone/deployments/"
 
 
 if [ "$INIT" = "TRUE" ]; then

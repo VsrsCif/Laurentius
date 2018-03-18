@@ -17,6 +17,7 @@ package si.laurentius.plg.web;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,12 +25,13 @@ import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.SessionScoped;
+import javax.enterprise.context.SessionScoped;
+
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.ws.WebServiceContext;
 import si.laurentius.commons.SEDGUIConstants;
@@ -44,8 +46,8 @@ import si.laurentius.user.SEDUser;
  * @author Jože Rihtaršič
  */
 @SessionScoped
-@ManagedBean(name = "basicWebPluginData")
-public class BasicWebPluginData {
+@Named("basicWebPluginData")
+public class BasicWebPluginData implements Serializable{
 
   private static final SEDLogger LOG = new SEDLogger(BasicWebPluginData.class);
 
@@ -53,7 +55,7 @@ public class BasicWebPluginData {
   WebServiceContext context;
   String currentPanel  =AppConstant.S_PANEL_IMP_XSLT;
 
-  @ManagedProperty(value = "#{loginManager}")
+  @Inject
   private LoginManager loginManager;
 
   @EJB(mappedName = SEDJNDI.JNDI_SEDLOOKUPS)

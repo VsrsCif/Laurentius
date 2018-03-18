@@ -11,7 +11,7 @@ ZIP_TEST="Laurentius-test"
 FOLDER_DEPLOY="test-deploy"
 
 
-AS_WILDFLY_10_1="wildfly-10.1"
+#AS_WILDFLY_10_1="wildfly-10.1"
 AS_WILDFLY_11_0="wildfly-11.0"
 AS_JBOSS_EAP_7_0="jboss-eap-7.0"
 
@@ -78,8 +78,8 @@ cp "$LAU_PROJECT/Laurentius-app/Laurentius-web/target/laurentius-web.war"  "$LAU
 cp "$LAU_PROJECT/Laurentius-plugins/Laurentius-zpp-plugin/target/plugin-zpp.war"  "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/deployments/"
 cp "$LAU_PROJECT/Laurentius-plugins/Laurentius-basic-plugin/target/plugin-basic.war"  "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/deployments/"
 cp "$LAU_PROJECT/Laurentius-plugins/Laurentius-test-case-plugin/target/plugin-testcase.war"  "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/deployments/"
-cp "$LAU_PROJECT/Laurentius-examples/example-web-plugin/target/example-web-plugin.war" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/deployments/"
-
+cp "$LAU_PROJECT/Laurentius-plugins/Laurentius-ecf-plugin/target/plugin-court-filing.jar"  "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/deployments/"
+#cp "$LAU_PROJECT/Laurentius-examples/example-web-plugin/target/example-web-plugin.war" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/deployments/"
 
 #--------------------------------------------------------------------------------------
 # SET APPLICATION SETTINGS AND DEMO DEPLOY/START SCRIPT

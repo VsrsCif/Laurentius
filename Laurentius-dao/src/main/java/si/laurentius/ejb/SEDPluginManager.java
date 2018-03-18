@@ -24,8 +24,6 @@ import javax.ejb.Lock;
 import javax.ejb.LockType;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
-import javax.ejb.TransactionManagement;
-import javax.ejb.TransactionManagementType;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import si.laurentius.commons.interfaces.SEDPluginManagerInterface;
@@ -42,9 +40,9 @@ import si.laurentius.plugin.processor.InMailProcessorDef;
  */
 @Startup
 @Singleton
+@Lock(LockType.READ)
 @AccessTimeout(value = 30000)
 @Local(SEDPluginManagerInterface.class)
-@TransactionManagement(TransactionManagementType.BEAN)
 public class SEDPluginManager implements SEDPluginManagerInterface {
 
   /**
@@ -55,6 +53,7 @@ public class SEDPluginManager implements SEDPluginManagerInterface {
   List<Plugin> mlstRegistredPlugins = new ArrayList<>();
 
   @Override
+  @Lock(LockType.READ)
   public CronTaskDef getCronTaskDef(String plugin, String task) {
     Plugin plg = getPluginByType(plugin);
     if (plg != null && !plg.getCronTaskDeves().isEmpty()) {
@@ -69,6 +68,7 @@ public class SEDPluginManager implements SEDPluginManagerInterface {
   }
 
   @Override
+  @Lock(LockType.READ)
   public List<CronTaskDef> getCronTasksForPlugin(String plugin) {
 
     for (Plugin plg : mlstRegistredPlugins) {
@@ -80,6 +80,7 @@ public class SEDPluginManager implements SEDPluginManagerInterface {
   }
 
   @Override
+  @Lock(LockType.READ)
   public InMailProcessorDef getInMailProcessor(String plugin, String task) {
     Plugin plg = getPluginByType(plugin);
     if (plg != null && !plg.getInMailProcessorDeves().isEmpty()) {
@@ -94,6 +95,7 @@ public class SEDPluginManager implements SEDPluginManagerInterface {
   }
 
   @Override
+  @Lock(LockType.READ)
   public MailInterceptorDef getMailInterceptoDef(String plugin, String task) {
     Plugin plg = getPluginByType(plugin);
     if (plg != null && !plg.getMailInterceptorDeves().isEmpty()) {
@@ -107,6 +109,7 @@ public class SEDPluginManager implements SEDPluginManagerInterface {
   }
 
   @Override
+  @Lock(LockType.READ)
   public List<InMailProcessorDef> getInMailProcessorForPlugin(String plugin) {
     for (Plugin plg : mlstRegistredPlugins) {
       if (Objects.equals(plg.getType(), plugin)) {
@@ -118,6 +121,7 @@ public class SEDPluginManager implements SEDPluginManagerInterface {
   }
 
   @Override
+  @Lock(LockType.READ)
   public List<String> getInMailProcessorInstances(String plugin, String type) {
     InMailProcessorDef imp = getInMailProcessor(plugin, type);
     if (imp == null) {
@@ -138,6 +142,7 @@ public class SEDPluginManager implements SEDPluginManagerInterface {
   }
 
   @Override
+  @Lock(LockType.READ)
   public List<MailInterceptorDef> getMailInterceptorForPlugin(String plugin) {
     for (Plugin plg : mlstRegistredPlugins) {
       if (Objects.equals(plg.getType(), plugin)) {
@@ -149,6 +154,7 @@ public class SEDPluginManager implements SEDPluginManagerInterface {
   }
 
   @Override
+  @Lock(LockType.READ)
   public List<OutMailEventListenerDef> getOutMailEventListenerForPlugin(
           String plugin) {
     for (Plugin plg : mlstRegistredPlugins) {
@@ -160,6 +166,7 @@ public class SEDPluginManager implements SEDPluginManagerInterface {
   }
 
   @Override
+  @Lock(LockType.READ)
   public Plugin getPluginByType(String type) {
     for (Plugin plg : mlstRegistredPlugins) {
       if (Objects.equals(plg.getType(), type)) {
@@ -170,6 +177,7 @@ public class SEDPluginManager implements SEDPluginManagerInterface {
   }
 
   @Override
+  @Lock(LockType.READ)
   public List<Plugin> getRegistredPlugins() {
     return mlstRegistredPlugins;
   }

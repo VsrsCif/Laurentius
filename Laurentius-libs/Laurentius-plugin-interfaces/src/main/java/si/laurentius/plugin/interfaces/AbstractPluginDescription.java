@@ -63,9 +63,6 @@ public abstract class AbstractPluginDescription implements
   }
 
 
-  @EJB(mappedName = SEDJNDI.JNDI_PLUGIN)
-  private SEDPluginManagerInterface mPluginManager;
-
   public void registerPluginComponentInterface(Class plg)
           throws PluginException {
     if (plg == null) {

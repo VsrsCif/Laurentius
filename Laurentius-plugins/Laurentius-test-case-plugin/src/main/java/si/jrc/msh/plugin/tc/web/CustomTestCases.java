@@ -15,16 +15,18 @@
 package si.jrc.msh.plugin.tc.web;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.annotation.Resource;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.inject.Named;
 import javax.xml.ws.WebServiceContext;
 import si.jrc.msh.plugin.tc.utils.TestUtils;
 import si.laurentius.commons.SEDSystemProperties;
+import si.laurentius.commons.exception.PModeException;
 import si.laurentius.commons.exception.StorageException;
 
 import si.laurentius.commons.utils.SEDLogger;
@@ -36,8 +38,8 @@ import si.laurentius.testcase.MailTestCases;
  * @author Jože Rihtaršič
  */
 @SessionScoped
-@ManagedBean(name = "customTestCases")
-public class CustomTestCases extends TestCaseAbstract{
+@Named("customTestCases")
+public class CustomTestCases extends TestCaseAbstract implements Serializable{
 
   private static final SEDLogger LOG = new SEDLogger(CustomTestCases.class);
 
@@ -88,7 +90,7 @@ public class CustomTestCases extends TestCaseAbstract{
               action, lstfile);
       facesContext().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
           String.format("Test %s completed", mtc.getName()), "Mail added to delivery!"));
-    } catch (StorageException ex) {
+    } catch (StorageException | PModeException ex) {
        addError(String.format("Error occured while dispatching test %s", mtc.getName()), ex.getMessage());
     }
    

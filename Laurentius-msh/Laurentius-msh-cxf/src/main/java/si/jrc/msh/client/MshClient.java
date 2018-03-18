@@ -73,7 +73,6 @@ import si.laurentius.commons.pmode.EBMSMessageContext;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StorageUtils;
 import si.laurentius.commons.utils.Utils;
-import si.laurentius.lce.KeystoreUtils;
 
 /**
  * Sets up MSH client and submits message.
@@ -95,7 +94,7 @@ public class MshClient {
   /**
    * Keystore tools
    */
-  private final KeystoreUtils mKSUtis = new KeystoreUtils();
+
   StorageUtils msStorageUtils = new StorageUtils();
 
   /**
@@ -274,6 +273,8 @@ public class MshClient {
 
       client = createClient(mail.getMessageId(), ebms.getTransportProtocol(),
               sec);
+      LOG.formatedlog("Create client for message  %s at %d", mail.getMessageId(), (LOG.getTime()-l));
+       
 
       // set context parameters!
       SoapUtils.setEBMSMessageOutContext(ebms, client);
@@ -284,11 +285,12 @@ public class MshClient {
       MessageFactory mf = MessageFactory.newInstance(
               SOAPConstants.SOAP_1_2_PROTOCOL);
       SOAPMessage soapReq = mf.createMessage();
+      LOG.formatedlog("Before send message  %s at %d", mail.getMessageId(), (LOG.getTime()-l));
 
       long st = LOG.getTime();
       LOG.formatedlog("Start submiting mail %s", mail.getMessageId());
       SOAPMessage soapRes = client.invoke(soapReq);
-
+      LOG.formatedlog("Sent message  %s at %d", mail.getMessageId(), (LOG.getTime()-l));
       r.setResult(soapRes);
       LOG.formatedlog("Submit mail %s in ( %d ms).", mail.getMessageId(), (LOG.
               getTime() - st));
@@ -300,7 +302,7 @@ public class MshClient {
       } else {
         mail.setReceivedDate(Calendar.getInstance().getTime());
       }
-      
+      LOG.formatedlog("Parse signalmessage  %s at %d", mail.getMessageId(), (LOG.getTime()-l));
 
       if (soapRes != null) {
         File file;
@@ -320,6 +322,7 @@ public class MshClient {
           LOG.logError(l, "ERROR saving response to file!", ex);
         }
       }
+      LOG.formatedlog("Signalmessage stored  %s at %d", mail.getMessageId(), (LOG.getTime()-l));
 
     } catch (javax.xml.ws.WebServiceException ex) {
 
@@ -444,7 +447,8 @@ public class MshClient {
               "Unexpected error!", ex, SoapFault.FAULT_CODE_CLIENT));
     }
 
-    LOG.logEnd(l);
+    
+    LOG.logEnd(l,  mail.getMessageId());
     return r;
   }
 
@@ -459,6 +463,7 @@ public class MshClient {
    */
   private void setupTLS(String messageId, HTTPConduit httpConduit,
           Protocol.TLS tls, SEDCertUtilsInterface sec) {
+    long l = LOG.logStart();
     TLSClientParameters tlsCP = null;
     // create 
     String serverTrustAlias = tls.getServerTrustCertAlias();
@@ -508,6 +513,7 @@ public class MshClient {
       }
       httpConduit.setTlsClientParameters(tlsCP);
     }
+    LOG.logEnd(l,messageId);
   }
 
 }

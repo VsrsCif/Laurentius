@@ -163,7 +163,8 @@ public interface PModeInterface {
   
   public boolean partyIdentitySetExists(String id);
   
-  public List<PMode> getPModes() ;
+  public List<PMode> getPModes();
+  public PMode getPModeMSHOutMail(MSHOutMail outMail) throws PModeException ;
   public List<Service> getServices() ;
   public List<PartyIdentitySet> getPartyIdentitySets() ;
   public List<Security> getSecurities() ;

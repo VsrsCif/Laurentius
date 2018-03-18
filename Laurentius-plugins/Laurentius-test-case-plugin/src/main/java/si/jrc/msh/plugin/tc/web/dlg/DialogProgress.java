@@ -1,10 +1,12 @@
 package si.jrc.msh.plugin.tc.web.dlg;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
-import javax.faces.event.ActionEvent;
+
+
+import java.io.Serializable;
+import javax.enterprise.context.SessionScoped;
+import javax.inject.Named;
 import org.primefaces.context.RequestContext;
-import si.jrc.msh.plugin.tc.web.TestCaseAbstract;
+
 import si.laurentius.commons.utils.SEDLogger;
 
 
@@ -13,8 +15,8 @@ import si.laurentius.commons.utils.SEDLogger;
  * @author Jože Rihtaršič
  */
 @SessionScoped
-@ManagedBean(name = "dialogProgress")
-public class DialogProgress {
+@Named( "dialogProgress")
+public class DialogProgress implements Serializable{
 
   private static final SEDLogger LOG = new SEDLogger(DialogProgress.class);
   

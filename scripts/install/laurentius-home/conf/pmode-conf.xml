@@ -135,7 +135,7 @@
             <DuplicateDetection windowPeriode="P1Y" eliminate="true"/>
         </ReceptionAwareness>
     </ReceptionAwarenessPatterns>
-    <PMode id="DeliveryWithReceipt">
+    <PMode id="DeliveryWithReceipt" isTest="false" priority="4">
         <ServiceIdRef>DeliveryWithReceipt</ServiceIdRef>
         <LocalPartyInfo partyIdentitySetIdRef="test-laurentius">
             <Role>Sender</Role>
@@ -166,7 +166,7 @@
             </Leg>
         </MEP>
     </PMode>
-    <PMode id="ZPP-legal">
+    <PMode id="ZPP-legal" isTest="false" priority="5">
         <ServiceIdRef>LegalDelivery_ZPP</ServiceIdRef>
         <LocalPartyInfo partyIdentitySetIdRef="test-laurentius" partyDefTransportIdRef="defalut">
             <Role>Sender</Role>
@@ -224,7 +224,7 @@
             </Leg>
         </MEP>
     </PMode>
- <PMode id="ZPPB-legal">
+ <PMode id="ZPPB-legal"  isTest="false" priority="5">
         <ServiceIdRef>LegalDelivery_ZPPB</ServiceIdRef>
         <LocalPartyInfo partyIdentitySetIdRef="test-laurentius" partyDefTransportIdRef="defalut">
             <Role>Sender</Role>
@@ -269,7 +269,7 @@
             </Leg>
         </MEP>        
     </PMode>
-    <PMode id="TestService" isTest="true">
+    <PMode id="TestService" isTest="true" priority="4">
         <ServiceIdRef>TestService</ServiceIdRef>
         <LocalPartyInfo partyIdentitySetIdRef="test-laurentius" partyDefTransportIdRef="defalut">
             <Role>Sender</Role>

@@ -115,7 +115,7 @@
                         <manifestEntries>                            
                             <implementation-version>${project.version}</implementation-version>             
                             <Implementation-Build>${buildNumber}</Implementation-Build>                            
-                            <Dependencies>si.laurentius, org.primefaces</Dependencies>
+                            <Dependencies>si.laurentius, org.primefaces, org.apache.pdfbox</Dependencies>
                         </manifestEntries>
                     </archive>                                 
                 </configuration>                 

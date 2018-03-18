@@ -24,12 +24,12 @@ import java.util.Set;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 import javax.annotation.Resource;
+import javax.enterprise.context.ApplicationScoped;
 import javax.faces.application.ViewHandler;
-import javax.faces.bean.ApplicationScoped;
-import javax.faces.bean.ManagedBean;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.ws.WebServiceContext;
 import org.primefaces.event.RowEditEvent;
@@ -40,7 +40,7 @@ import si.laurentius.commons.SEDSystemProperties;
  * @author Jože Rihtaršič
  */
 @ApplicationScoped
-@ManagedBean(name = "ZppPluginData")
+@Named( "ZppPluginData")
 public class ZppPluginData {
 
   @Resource

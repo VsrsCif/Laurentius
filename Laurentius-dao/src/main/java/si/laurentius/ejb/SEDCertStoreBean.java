@@ -48,6 +48,8 @@ import java.util.Objects;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.Local;
+import javax.ejb.Lock;
+import static javax.ejb.LockType.READ;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.ejb.TransactionManagement;
@@ -192,7 +194,7 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
     try {
       dbCP = tg.getSingleResult();
     } catch (NoResultException ignore) {
-      LOG.log("No key found for %s, key data will be added to db!", alias);
+      LOG.formatedlog("No key found for %s, key data will be added to db!", alias);
     }
 
     if (dbCP == null) {
@@ -390,6 +392,7 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
    * @throws SEDSecurityException
    */
   @Override
+  @Lock(READ)
   public KeyStore getCertStore() throws SEDSecurityException {
     File fStore = SEDSystemProperties.getCertstoreFile();
     //if (mKeyStore == null || !fStore.exists() ||  !Objects.equals(mKeyStoreOpenFilePath, fStore.getAbsoluteFile())) {
@@ -411,6 +414,7 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
    * @return
    */
   @Override
+  @Lock(READ)
   public List<SEDCertificate> getCertificates() throws SEDSecurityException {
     long l = LOG.logStart();
     List<SEDCertificate> lstRes = null;
@@ -426,6 +430,7 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
 
   }
 
+  @Lock(READ)
   public SEDCertCRL getCrlForCert(X509Certificate x509, boolean forceRefresh) {
     long l = LOG.logStart();
 
@@ -468,12 +473,13 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
     return crlExists;
 
   }
-
+  @Lock(READ)
   public String getCurrentUpdateCRLErrorlMessage() {
     return mstrCrlUpdateMessage;
   }
 
   @Override
+  @Lock(READ)
   public SEDCertPassword getKeyPassword(String alias) {
     long l = LOG.logStart(alias);
     assert !Utils.isEmptyString(alias) : "Alias must not be null!";
@@ -501,6 +507,7 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
    * @return
    */
   @Override
+  @Lock(READ)
   public List<String> getKeystoreAliases(boolean onlyKeys) {
 
     long l = LOG.logStart();
@@ -531,6 +538,7 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
    * @return @throws si.laurentius.commons.exception.SEDSecurityException
    */
   @Override
+  @Lock(READ)
   public List<X509Certificate> getRootCA509Certs() throws SEDSecurityException {
     long l = LOG.logStart();
     List<X509Certificate> lst = mku.
@@ -540,7 +548,8 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
 
   }
 
-  @Override
+  @Override  
+  @Lock(READ)
   public List<SEDCertificate> getRootCACertificates() {
     long l = LOG.logStart();
     List<SEDCertificate> lstRes = null;
@@ -560,6 +569,7 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
    * @return KeyStore
    * @throws SEDSecurityException
    */
+  @Lock(READ)
   protected KeyStore getRootCAStore() throws SEDSecurityException {
     if (mRootCAStore == null) {
       File fStore = SEDSystemProperties.getRootCAStoreFile();
@@ -577,6 +587,7 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
    * @return
    */
   @Override
+  @Lock(READ)
   public List<SEDCertCRL> getSEDCertCRLs() {
     return new ArrayList(mlstCertCRL.values());
   }
@@ -587,6 +598,7 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
    * @return
    */
   @Override
+  @Lock(READ)
   public SEDCertificate getSEDCertificatForAlias(String alias) {
     long l = LOG.logStart();
     SEDCertificate crt = null;
@@ -613,6 +625,7 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
    * @return
    */
   @Override
+  @Lock(READ)
   public X509Certificate getX509CertForAlias(String alias) throws SEDSecurityException {
     long l = LOG.logStart();
     KeyStore ks = getCertStore();
@@ -666,6 +679,7 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
     sc.setStatusMessage(String.join(",", lstMsg));
   }
 
+  @Lock(READ)
   public boolean isRootCAInvalid(X509Certificate crt) throws SEDSecurityException {
     boolean suc = true;
 
@@ -686,6 +700,7 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
     return suc;
   }
 
+  @Lock(READ)
   public Boolean isCertificateRevoked(X509Certificate x509Cert) {
     long l = LOG.logStart();
 
@@ -802,7 +817,8 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
     mscCacheList.cacheList(lst, KEYSTORE_NAME);
     LOG.logEnd(l);
   }
-
+  
+  @Lock(READ)
   private void validateCertificates() throws SEDSecurityException {
     long l = LOG.logStart();
     List<SEDCertificate> lst = getCertificates();

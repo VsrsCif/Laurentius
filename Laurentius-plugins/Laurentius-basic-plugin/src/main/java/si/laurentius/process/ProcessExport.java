@@ -20,10 +20,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.xml.bind.JAXBException;
+import si.laurentius.commons.enums.MimeValue;
 import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StorageUtils;
@@ -33,6 +36,8 @@ import si.laurentius.commons.utils.xml.XMLUtils;
 import si.laurentius.msh.inbox.mail.MSHInMail;
 import si.laurentius.msh.inbox.payload.MSHInPart;
 import si.laurentius.plg.db.IMPDBInterface;
+import si.laurentius.plg.pdf.PDFException;
+import si.laurentius.plg.pdf.PDFUtil;
 import si.laurentius.plugin.interfaces.InMailProcessorInterface;
 import si.laurentius.plugin.interfaces.PropertyType;
 import si.laurentius.plugin.interfaces.exception.InMailProcessException;
@@ -60,6 +65,7 @@ public class ProcessExport extends AbstractMailProcessor {
   public static final String KEY_PDF_JOIN_FILENAMEMASK = "imp.pdf.join.filename.mask";
 
   StorageUtils msStorageUtils = new StorageUtils();
+  PDFUtil mpdfUtils = new PDFUtil();
 
   @EJB
   private IMPDBInterface mDB;
@@ -109,7 +115,7 @@ public class ProcessExport extends AbstractMailProcessor {
             KEY_PDF_JOIN_FILENAMEMASK,
             "joined_${Id}.pdf",
             "Join filename mask if '" + KEY_PDF_JOIN + "' is true.", false,
-            PropertyType.Boolean.getType(), null, null));
+            PropertyType.String.getType(), null, null));
 
     return impd;
 
@@ -146,7 +152,7 @@ public class ProcessExport extends AbstractMailProcessor {
             getOrDefault(KEY_EXPORT_METADATA_FILENAME, "metadata_${Id}.xml");
 
     String joinPDFFileNameMask = (String) map.
-            getOrDefault(KEY_EXPORT_METADATA_FILENAME, "joined_${Id}.pdf");
+            getOrDefault(KEY_PDF_JOIN_FILENAMEMASK, "joined_${Id}.pdf");
 
     String sources = (String) map.get(KEY_EXPORT_SOURCE);
     List<String> lstSources = null;
@@ -167,6 +173,8 @@ public class ProcessExport extends AbstractMailProcessor {
             "false")).equalsIgnoreCase("true");
 
     expFolderPath = StringFormater.format(expFolderPath, inMail);
+    joinPDFFileNameMask = StringFormater.format(joinPDFFileNameMask, inMail);
+
     File exportFolder = new File(expFolderPath);
 
     List<String> listFiles = new ArrayList<>();
@@ -181,10 +189,23 @@ public class ProcessExport extends AbstractMailProcessor {
     }
 
     MSHInMail cpMail = XMLUtils.deepCopyJAXB(inMail);
-    /*
+
+    File outFile = null;
     if (joinPDF) {
-      MSHInPart mip = joinPDFS()
-    }*/
+      outFile = new File(exportFolder, joinPDFFileNameMask);
+      try {
+        joinMailPartPDFs(cpMail, outFile, lstSources);
+      } catch (PDFException ex) {
+        String errMsg = String.format(
+                "Failed to concatenate PDF files! Error %s",
+                ex.getMessage());
+        outFile.delete();
+        throw new InMailProcessException(
+                InMailProcessException.ProcessExceptionCode.ProcessException,
+                errMsg);
+      }
+
+    }
 
     for (MSHInPart mip : cpMail.getMSHInPayload().getMSHInParts()) {
 
@@ -204,9 +225,15 @@ public class ProcessExport extends AbstractMailProcessor {
       }
 
       try {
-        f = msStorageUtils.copyFileToFolder(mip.getFilepath(), exportFolder,
-                overwriteFiles, fileName);
-        mip.setFilepath(f.getAbsolutePath());
+        if (joinPDF && outFile != null && outFile.getAbsolutePath().equals(
+                mip.getFilepath())) {
+          f = outFile;
+        } else {
+
+          f = msStorageUtils.copyFileToFolder(mip.getFilepath(), exportFolder,
+                  overwriteFiles, fileName);
+          mip.setFilepath(f.getAbsolutePath());
+        }
 
         listFiles.add(f.getAbsolutePath());
       } catch (StorageException ex) {
@@ -241,6 +268,42 @@ public class ProcessExport extends AbstractMailProcessor {
     }
 
     return listFiles;
+  }
+
+  public void joinMailPartPDFs(MSHInMail cpMail, File outFile, List lstSources) throws PDFException {
+    List<MSHInPart> lstParts = cpMail.getMSHInPayload().getMSHInParts();
+    List<MSHInPart> lstNewParts = new ArrayList<>();
+
+    List<File> lstFiles = new ArrayList<>();
+
+    for (MSHInPart mi : lstParts) {
+      if (lstSources != null
+              && mi.getSource() != null
+              && !lstSources.contains(mi.getSource())) {
+        // do not export source
+        continue;
+      }
+      if (MimeValue.MIME_PDF.getMimeType().equalsIgnoreCase(mi.getMimeType())) {
+        lstFiles.add(StorageUtils.getFile(mi.getFilepath()));
+      } else {
+        lstNewParts.add(mi);
+      }
+    }
+
+    if (lstFiles.size() > 1) {
+      mpdfUtils.concatenatePdfFiles(lstFiles, outFile);
+
+      MSHInPart mi = new MSHInPart();
+      mi.setDescription("Concatenated PDF");
+      mi.setName(outFile.getName());
+      mi.setFilename(outFile.getName());
+      mi.setFilepath(outFile.getAbsolutePath());
+      lstNewParts.add(mi);
+
+      cpMail.getMSHInPayload().getMSHInParts().clear();
+      cpMail.getMSHInPayload().getMSHInParts().addAll(lstNewParts);
+    }
+
   }
 
 }

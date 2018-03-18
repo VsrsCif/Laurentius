@@ -44,7 +44,7 @@
     </sql-query>    
     
     <query name="si.laurentius.msh.outbox.event.MSHOutEvent.getMailEventList">
-      <![CDATA[from MSHOutEvent p where p.MailId = :mailId]]>
+      <![CDATA[from MSHOutEvent p where p.MailId = :mailId order by Id asc]]>
     </query>
     
     

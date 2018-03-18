@@ -28,6 +28,7 @@ import si.laurentius.commons.enums.SEDOutboxMailStatus;
 import si.laurentius.commons.exception.StorageException;
 import si.laurentius.msh.inbox.payload.MSHInPart;
 import si.laurentius.msh.outbox.payload.MSHOutPart;
+import si.laurentius.msh.pmode.PMode;
 
 /**
  *
@@ -261,11 +262,11 @@ public interface SEDDaoInterface {
    * @param mail
    * @param userID
    * @param applicationId
-   * @param pmodeId
+   * @param pmode
    * @throws StorageException
    */
   void serializeOutMail(MSHOutMail mail, String userID, String applicationId,
-          String pmodeId)
+          PMode pmode)
           throws StorageException;
 
   /**
@@ -276,7 +277,7 @@ public interface SEDDaoInterface {
    * @param applicationId
    * @throws StorageException
    */
-  void sendOutMessage(MSHOutMail mail, int retry, long delay, String userId,
+  void sendOutMessage(MSHOutMail mail, int retry, long delay, int iPriority, String userId,
           String applicationId) throws StorageException;
 
   /**
@@ -291,7 +292,7 @@ public interface SEDDaoInterface {
    * @throws StorageException
    */
   public Date sendOutMessage(BigInteger id, SEDOutboxMailStatus status,
-          int retry, long delay,
+          int retry, long delay,int iPriority,
           String userId,
           String applicationId)
           throws StorageException;

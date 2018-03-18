@@ -84,6 +84,7 @@ public class DialogComposePayloadView extends AbstractPModeJSFView<MSHOutPart> {
     
     if (ecj != null ) {
       dialogCompose.addPayload(ecj);
+      bsuc = true;
     } else {
       addError("No editable payload!");
     }

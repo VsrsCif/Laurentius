@@ -22,29 +22,26 @@ public class PDFUtil {
 
   private static final SEDLogger LOG = new SEDLogger(PDFUtil.class);
 
-  public synchronized PDFContentData concatenatePdfFiles(List<File> strFiles) throws PDFException {
+  public synchronized PDFContentData concatenatePdfFiles(List<File> strFiles, File outFile) throws PDFException {
 
-    File outFile;
-    try {
-      outFile = File.createTempFile("concFile", ".pdf");
-    } catch (IOException ex) {
-      String strMessage = "Error occured while creating temp PDF file; Exception: " + ex.
-              getMessage();
-      LOG.logError(strMessage, ex);
-      throw new PDFException(strMessage, ex);
-    }
+ 
 
     PDFMergerUtility pdfUtility = new PDFMergerUtility();
     MemoryUsageSetting memUsageSettings = MemoryUsageSetting.setupMixed(1000000); // 1MB max memory usage
     memUsageSettings.setTempDir(new java.io.File(System.getProperty(
             "java.io.tmpdir"))); // To OS temp
 
-    try (FileOutputStream fis = new FileOutputStream(outFile)) {
+    try (FileOutputStream fos = new FileOutputStream(outFile)) {
       for (File fIn : strFiles) {
         pdfUtility.addSource(fIn);
       }
+      pdfUtility.setDestinationStream(fos);
 
       pdfUtility.mergeDocuments(memUsageSettings);
+      
+      
+      
+      
 
     } catch (IOException ex) {
       String strMessage = "Error occured while creating concatenated PDF file; Exception: " + ex.

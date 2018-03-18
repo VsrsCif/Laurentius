@@ -10,9 +10,9 @@ import java.math.BigInteger;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.inject.Named;
 import si.laurentius.commons.enums.SEDOutboxMailStatus;
 import si.laurentius.commons.exception.StorageException;
 
@@ -20,7 +20,7 @@ import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.msh.outbox.mail.MSHOutMail;
 
 @SessionScoped
-@ManagedBean(name = "tcFictionDeliveryTests")
+@Named("tcFictionDeliveryTests")
 public class TCFictionDeliveryTests extends TestCaseAbstract implements Serializable {
 
   private static final SEDLogger LOG = new SEDLogger(TCFictionDeliveryTests.class);

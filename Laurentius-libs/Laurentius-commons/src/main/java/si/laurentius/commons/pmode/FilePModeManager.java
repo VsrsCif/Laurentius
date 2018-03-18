@@ -43,8 +43,6 @@ import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.Utils;
 import java.util.Collections;
 import static java.lang.String.format;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import static si.laurentius.commons.pmode.FilePModeManager.LOG;
 import si.laurentius.commons.pmode.enums.ActionRole;
 import static si.laurentius.commons.utils.xml.XMLUtils.deserialize;
@@ -311,6 +309,35 @@ public class FilePModeManager implements PModeInterface {
     }
     return null;
   }
+  
+   @Override
+  public PMode getPModeMSHOutMail(MSHOutMail mail) throws PModeException {
+    
+   PartyIdentitySet sPID = getPartyIdentitySetForSEDAddress(mail.
+            getSenderEBox());
+    if (!sPID.getIsLocalIdentity()) {
+      String msg = String.format(
+              "Sender '%s' (identityId '%s') for mail '%d' is not local identity and can not send messages!",
+              mail.getSenderEBox(), sPID.getId(), mail.getId());
+      LOG.logWarn(msg, null);
+      throw new PModeException(msg);
+    }
+
+    PartyIdentitySet rPID = getPartyIdentitySetForSEDAddress(mail.
+            getReceiverEBox());
+    Service srv = getServiceById(mail.getService());
+    Action act = PModeUtils.getActionFromService(mail.getAction(), srv);
+    //receiving role
+    String sendingRole = Objects.equals(act.getInvokeRole(),
+            ActionRole.Executor.getValue())
+            ? srv.getExecutor().getRole() : srv.getInitiator().getRole();
+
+    
+    return getPModeForLocalPartyAsSender(sPID.getId(), sendingRole,
+            rPID.getId(),
+            mail.getService());
+  
+  } ;
 
   /**
    *

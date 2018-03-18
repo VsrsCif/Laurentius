@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import javax.ejb.EJB;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.enterprise.context.SessionScoped;
+import javax.inject.Named;
 import si.jrc.msh.plugin.tc.TestCaseInInterceptor;
 import si.jrc.msh.plugin.tc.TestCasePluginDescription;
 import si.laurentius.commons.SEDJNDI;
@@ -25,7 +25,7 @@ import si.laurentius.interceptor.SEDInterceptorInstance;
 import si.laurentius.interceptor.SEDInterceptorRule;
 
 @SessionScoped
-@ManagedBean(name = "tcReliablityTests")
+@Named("tcReliablityTests")
 public class TCReliablityTests extends TestCaseAbstract implements Serializable {
 
   private static final SEDLogger LOG = new SEDLogger(TCReliablityTests.class);

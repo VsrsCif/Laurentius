@@ -14,15 +14,16 @@
  */
 package si.laurentius.plg.web;
 
-import javax.faces.bean.ApplicationScoped;
-import javax.faces.bean.ManagedBean;
+
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Named;
 
 /**
  *
  * @author Jože Rihtaršič
  */
 @ApplicationScoped
-@ManagedBean(name = "AppConstant")
+@Named("AppConstant")
 public class AppConstant {
 
   

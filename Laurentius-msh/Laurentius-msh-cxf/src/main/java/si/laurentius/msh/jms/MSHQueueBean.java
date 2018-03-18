@@ -28,8 +28,6 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.persistence.NoResultException;
-import org.apache.cxf.endpoint.Client;
-import org.oasis_open.docs.ebxml_msg.ebms.v3_0.ns.core._200704.SignalMessage;
 import si.jrc.msh.client.MSHPluginOutEventHandler;
 import si.laurentius.msh.outbox.mail.MSHOutMail;
 import si.laurentius.msh.pmode.ReceptionAwareness;
@@ -53,8 +51,8 @@ import si.laurentius.commons.utils.StorageUtils;
 import si.laurentius.commons.utils.Utils;
 import si.laurentius.lce.DigestUtils;
 import si.laurentius.msh.outbox.payload.MSHOutPart;
+import si.laurentius.msh.pmode.PMode;
 import si.laurentius.plugin.interfaces.OutMailEventInterface;
-
 
 /**
  *
@@ -71,7 +69,7 @@ import si.laurentius.plugin.interfaces.OutMailEventInterface;
       @ActivationConfigProperty(propertyName = "destination", propertyValue = "queue/MSHQueue")
           ,
       @ActivationConfigProperty(propertyName = "maxSession",
-                  propertyValue = "5")})
+                  propertyValue = "8")})
 @TransactionManagement(TransactionManagementType.BEAN)
 public class MSHQueueBean implements MessageListener {
 
@@ -208,7 +206,7 @@ public class MSHQueueBean implements MessageListener {
               "Start pushing to receiver MSH");
 
       mail.setSentDate(Calendar.getInstance().getTime());
-      
+
       Result sm = mmshClient.pushMessage(mail, sd, mCertBean);
 
       if (sm.getError() != null) {
@@ -281,11 +279,11 @@ public class MSHQueueBean implements MessageListener {
                   SEDOutboxMailStatus.SENT, "Message sent to receiver MSH", null,
                   "ebms"
           );
-          
-          mDB.setStatusToOutMail(mail.getId(), 
+
+          mDB.setStatusToOutMail(mail.getId(),
                   mail.getSenderMessageId(), mail.getSentDate(),
-                          mail.getReceivedDate(), null, SEDOutboxMailStatus.SENT,
-                          "Get delivery receipt",null, "ebms",null, null);
+                  mail.getReceivedDate(), null, SEDOutboxMailStatus.SENT,
+                  "Get delivery receipt", null, "ebms", null, null);
           mPluginOutEventHandler.outEvent(mail, sd,
                   OutMailEventInterface.PluginOutEvent.SEND);
         } catch (StorageException ex) {
@@ -315,6 +313,11 @@ public class MSHQueueBean implements MessageListener {
   public boolean resendMail(MSHOutMail mail, EBMSMessageContext sd,
           int jmsRetryCount,
           long jmsRetryDelay) {
+
+    PMode pmd = sd.getPMode();
+    int iPriority = pmd.getPriority() == null ? 4 : pmd.getPriority();
+    iPriority = iPriority > 9 ? 9 : (iPriority < 0 ? 0 : iPriority);
+
     long t = LOG.logStart();
     boolean bResend = false;
     if (sd.getReceptionAwareness() != null && sd.getReceptionAwareness().
@@ -332,7 +335,8 @@ public class MSHQueueBean implements MessageListener {
           LOG.formatedWarning("Resend mail: %d retry %d delay %d", mail.getId(),
                   jmsRetryCount,
                   jmsRetryDelay);
-          mDB.sendOutMessage(mail, jmsRetryCount, jmsRetryDelay, null, null);
+          mDB.sendOutMessage(mail, jmsRetryCount, jmsRetryDelay, iPriority,
+                          null, null);
 
           bResend = true;
         } catch (StorageException ex1) {

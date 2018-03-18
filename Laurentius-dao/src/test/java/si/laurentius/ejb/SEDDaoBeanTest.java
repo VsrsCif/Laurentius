@@ -59,6 +59,7 @@ import si.laurentius.msh.inbox.payload.MSHInPart;
 import si.laurentius.msh.outbox.event.MSHOutEvent;
 import si.laurentius.msh.outbox.mail.MSHOutMail;
 import si.laurentius.msh.outbox.payload.MSHOutPart;
+import si.laurentius.msh.pmode.PMode;
 
 /**
  *
@@ -104,9 +105,11 @@ public class SEDDaoBeanTest extends TestUtils {
     init.setSenderName(null);
     init.setReceiverName(null);
     init.setSubmittedDate(null);
+    PMode pmd  =new PMode();
+    
 
     mTestInstance.serializeOutMail(init, "testUser", "testApplication",
-            "pmodeid");
+            pmd);
 
     assertNotNull(init.getId());
 
@@ -136,9 +139,10 @@ public class SEDDaoBeanTest extends TestUtils {
 
     int iCount = getMessagesCountForOutQueue();
     MSHOutMail init = TestLookupUtils.createOutMail();
+    PMode pmd = new PMode();
 
     mTestInstance.serializeOutMail(init, "testUser", "testApplication",
-            "pmodeid");
+           pmd);
 
     assertNotNull(init.getId());
     clearEntityManagerCahche();  // make sure to read from db
@@ -169,6 +173,7 @@ public class SEDDaoBeanTest extends TestUtils {
 
     int iCount = getMessagesCountForOutQueue();
     MSHOutMail init = TestLookupUtils.createOutMail();
+    PMode pmd = new PMode();
     for (MSHOutPart op : init.getMSHOutPayload().getMSHOutParts()) {
       op.setMimeType(null);
       op.setSha256Value(null);
@@ -180,7 +185,7 @@ public class SEDDaoBeanTest extends TestUtils {
     assertTrue(init.getMSHOutPayload().getMSHOutParts().size() > 0);
 
     mTestInstance.serializeOutMail(init, "testUser", "testApplication",
-            "pmodeid");
+            pmd);
 
     assertNotNull(init.getId());
     clearEntityManagerCahche();  // make sure to read from db

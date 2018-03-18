@@ -37,6 +37,7 @@ import org.primefaces.model.StreamedContent;
 import si.laurentius.commons.enums.MimeValue;
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.enums.SEDOutboxMailStatus;
+import si.laurentius.commons.exception.PModeException;
 import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.interfaces.PModeInterface;
 import si.laurentius.commons.interfaces.SEDDaoInterface;
@@ -48,6 +49,7 @@ import si.laurentius.msh.outbox.event.MSHOutEvent;
 import si.laurentius.msh.outbox.mail.MSHOutMail;
 import si.laurentius.msh.outbox.payload.MSHOutPart;
 import si.laurentius.msh.pmode.Action;
+import si.laurentius.msh.pmode.PMode;
 import si.laurentius.msh.pmode.Service;
 import si.laurentius.msh.table.mail.TableOutMail;
 import si.laurentius.msh.web.abst.AbstractMailView;
@@ -239,9 +241,17 @@ public class OutMailDataView extends AbstractMailView<TableOutMail, MSHOutMail, 
       for (TableOutMail mo : molst) {
         if (SEDOutboxMailStatus.DELIVERED.getValue().equals(mo.getStatus())) {
           iNotResend++;
+          
         } else {
           try {
-            Date dt = mDB.sendOutMessage(mo.getId(), SEDOutboxMailStatus.SCHEDULE, 0, 0,
+            MSHOutMail mshom = mDB.getMailById(MSHOutMail.class, mo.getId());
+            
+            
+            PMode pmd = mPMode.getPModeMSHOutMail(mshom);
+            int iPriority = pmd.getPriority()== null ? 4 : pmd.getPriority();
+            iPriority = iPriority >9 ? 9 : (iPriority <0 ? 0 : iPriority);
+            
+            Date dt = mDB.sendOutMessage(mo.getId(), SEDOutboxMailStatus.SCHEDULE, 0, 0, iPriority,
                     AppConstant.S_APPLICATION_CODE,
                     userSessionData.getUser().getUserId());
             mo.setStatusDate(dt);
@@ -249,7 +259,7 @@ public class OutMailDataView extends AbstractMailView<TableOutMail, MSHOutMail, 
             
             
             iResend++;
-          } catch (StorageException ex) {
+          } catch (StorageException | PModeException ex) {
             String mail = String.format(
                     "id: %d, sender: %s, receiver %s, service %s, action %s\n",
                     mo.getId(), mo.getSenderEBox(), mo.getReceiverEBox(), mo.
@@ -322,11 +332,12 @@ public class OutMailDataView extends AbstractMailView<TableOutMail, MSHOutMail, 
     return Collections.emptyList();
   }
 
-  public void addNewMail(MSHOutMail newOutMail) throws StorageException {
-    String pmodeId = Utils.getPModeIdFromOutMail(newOutMail);
+  public void addNewMail(MSHOutMail newOutMail) throws StorageException, PModeException {
+    
+    PMode pmd = mPMode.getPModeMSHOutMail(newOutMail);
     mDB.serializeOutMail(newOutMail, userSessionData.getUser().getUserId(),
             "Laurentius-web",
-            pmodeId);
+            pmd);
   }
 
 }

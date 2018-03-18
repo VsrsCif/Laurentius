@@ -16,14 +16,15 @@ package si.jrc.msh.plugin.zpp.web;
  * the Licence.
  */
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.faces.view.ViewScoped;
+import javax.inject.Named;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -36,8 +37,8 @@ import si.laurentius.commons.utils.SEDLogger;
  * @author Jože Rihtaršič
  */
 @ViewScoped
-@ManagedBean(name = "loginManager")
-public class LoginManager {
+@Named("loginManager")
+public class LoginManager implements Serializable {
 
   private static final String HOME_PAGE = "/";
   private static final String PAGE_AFTER_LOGOUT = HOME_PAGE; // Another good option is the login

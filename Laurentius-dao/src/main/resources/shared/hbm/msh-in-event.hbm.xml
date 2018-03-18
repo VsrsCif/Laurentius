@@ -41,7 +41,7 @@ WHERE
     </sql-query>     
     
     <query name="si.laurentius.msh.inbox.event.MSHInEvent.getMailEventList">
-      <![CDATA[from MSHInEvent p where p.MailId = :mailId]]>
+      <![CDATA[from MSHInEvent p where p.MailId = :mailId order by Id asc]]>
     </query>
     
     <!-- sql-query name="si.laurentius.msh.inbox.event.MSHInEvent.getMailEventList">

@@ -967,12 +967,19 @@ public class SEDMailBox implements SEDMailBoxWS {
   }
 
   private void serializeMail(OutMail mail, String userID, String applicationId,
-          String pmodeId)
+          PMode pmode)
           throws SEDException_Exception {
-    long l = LOG.logStart(userID, applicationId, pmodeId);
+    long l = LOG.logStart(userID, applicationId, pmode.getId());
     String locadomain = SEDSystemProperties.getLocalDomain();
     // prepare mail to persist
     Date dt = Calendar.getInstance().getTime();
+    
+    int iPriority = pmode.getPriority()== null ? 4 : pmode.getPriority();
+    iPriority = iPriority >9 ? 9 : (iPriority <0 ? 0 : iPriority);
+    
+    
+                    
+    
     // set current status
     mail.setStatus(SEDOutboxMailStatus.SUBMITTED.getValue());
     mail.setSubmittedDate(dt);
@@ -1078,14 +1085,15 @@ public class SEDMailBox implements SEDMailBoxWS {
               longValue());
       message.setIntProperty(SEDValues.EBMS_QUEUE_PARAM_RETRY, 0);
       message.setLongProperty(SEDValues.EBMS_QUEUE_PARAM_DELAY, 0);
-      LOG.log(mail.getId(), pmodeId);
+      LOG.log(mail.getId(),  pmode.getId());
+      sender.setPriority(iPriority);
       sender.send(message);
 
       ut.commit();
       session.commit();
       LOG.formatedlog("Transaction commited: user %s, appl %s, pmodeId %s",
               userID, applicationId,
-              pmodeId);
+               pmode.getId());
 
     } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException
             | HeuristicRollbackException | SecurityException | IllegalStateException ex) {
@@ -1130,7 +1138,7 @@ public class SEDMailBox implements SEDMailBoxWS {
 
     }
 
-    LOG.logEnd(l, userID, applicationId, pmodeId);
+    LOG.logEnd(l, userID, applicationId,  pmode.getId());
   }
 
   private void addMailToSubmitQueue(OutMail mail)
@@ -1339,7 +1347,7 @@ public class SEDMailBox implements SEDMailBoxWS {
       // serialize payload to cache FS and data to db
       serializeMail(mail, submitMailRequest.getControl().getUserId(),
               submitMailRequest
-                      .getControl().getApplicationId(), pmd.getId());
+                      .getControl().getApplicationId(), pmd);
 
     }
     // generate response

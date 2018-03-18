@@ -55,7 +55,7 @@ import si.laurentius.msh.outbox.mail.MSHOutMail;
  */
 public class EBMSValidation {
 
-  protected final static SEDLogger LOG = new SEDLogger(EBMSInInterceptor.class);
+  protected final static SEDLogger LOG = new SEDLogger(EBMSValidation.class);
 
   /**
    * Method validates:
@@ -183,7 +183,6 @@ public class EBMSValidation {
     String msgId = EBMSBuilder.getUserMessageId(um);
     if (um.getMpc() == null) {
       LOG.logWarn(l, "Null MPC for inbound user message: '" + msgId + "'.", null);
-
     }
 
     CollaborationInfo ci = um.getCollaborationInfo();
@@ -252,6 +251,7 @@ public class EBMSValidation {
 
         });
       }
+     
 
       for (PartInfo part : pi.getPartInfos()) {
         String href = part.getHref();
@@ -259,6 +259,8 @@ public class EBMSValidation {
         throw new EBMSError(EBMSErrorCode.ValueInconsistent, msgId,
                 "Missing reference to attachment!", sv);
         }
+        
+    
         
         // validate properties
         validateProperties(part.getPartProperties(), msgId, href, sv);

@@ -15,11 +15,13 @@
 package si.laurentius.plg.web;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 import javax.ejb.EJB;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.enterprise.context.SessionScoped;
+import javax.inject.Named;
+
 import org.primefaces.context.RequestContext;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.Utils;
@@ -33,8 +35,9 @@ import si.laurentius.plugin.imp.XSLTRule;
  * @author Jože Rihtaršič
  */
 @SessionScoped
-@ManagedBean(name = "adminIMPXsltView")
-public class AdminIMPXsltView extends AbstractAdminJSFView<IMPXslt> {
+@Named("adminIMPXsltView")
+public class AdminIMPXsltView extends AbstractAdminJSFView<IMPXslt>   
+        implements Serializable {
 
   private static final SEDLogger LOG = new SEDLogger(AdminIMPXsltView.class);
 

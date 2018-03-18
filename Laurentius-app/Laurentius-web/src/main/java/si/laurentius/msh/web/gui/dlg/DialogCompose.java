@@ -22,6 +22,7 @@ import org.primefaces.context.RequestContext;
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.enums.MimeValue;
+import si.laurentius.commons.exception.PModeException;
 import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.interfaces.PModeInterface;
 import si.laurentius.commons.utils.SEDLogger;
@@ -180,7 +181,7 @@ public class DialogCompose implements Serializable {
         // send signal to close dialog
         RequestContext.getCurrentInstance().addCallbackParam("saved", true);
 
-      } catch (StorageException ex) {
+      } catch (StorageException | PModeException ex) {
         String msg = ex.getMessage();
         facesContext().addMessage(null,
                 new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error",

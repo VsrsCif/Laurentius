@@ -19,6 +19,7 @@ import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.interfaces.SEDDaoInterface;
 import si.laurentius.msh.inbox.payload.MSHInPart;
 import si.laurentius.msh.outbox.payload.MSHOutPart;
+import si.laurentius.msh.pmode.PMode;
 
 /**
  *
@@ -49,7 +50,7 @@ public class SEDTestDao implements SEDDaoInterface{
 
   @Override
   public Date sendOutMessage(BigInteger id, SEDOutboxMailStatus status,
-          int retry, long delay, String userId, String applicationId) throws StorageException {
+          int retry, long delay,int priority, String userId, String applicationId) throws StorageException {
     throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
   }
 
@@ -132,7 +133,7 @@ public class SEDTestDao implements SEDDaoInterface{
   }
 
   @Override
-  public void sendOutMessage(MSHOutMail mail, int retry, long delay, String userId,
+  public void sendOutMessage(MSHOutMail mail, int retry, long delay,int priority, String userId,
       String applicationId)
       throws StorageException {
     throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -145,7 +146,7 @@ public class SEDTestDao implements SEDDaoInterface{
   }
 
   @Override
-  public void serializeOutMail(MSHOutMail mail, String userID, String applicationId, String pmodeId)
+  public void serializeOutMail(MSHOutMail mail, String userID, String applicationId, PMode pmodeId)
       throws StorageException {
     // no implementation
   }
