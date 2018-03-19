@@ -203,7 +203,7 @@
                 <artifactId>primefaces</artifactId>
                 <version>${org.primefaces.version}</version>            		
             </dependency>	
-            <dependency>
+            <!-- dependency>
                 <groupId>org.primefaces.extensions</groupId>
                 <artifactId>primefaces-extensions</artifactId>
                 <version>${org.primefaces.extensions.version}</version>           
@@ -212,7 +212,7 @@
                 <groupId>org.primefaces.extensions</groupId>
                 <artifactId>resources-codemirror</artifactId>
                 <version>${org.primefaces.extensions.version}</version>
-            </dependency>
+            </dependency -->
             
             <!--  UNIT TESTING -->
             <dependency>

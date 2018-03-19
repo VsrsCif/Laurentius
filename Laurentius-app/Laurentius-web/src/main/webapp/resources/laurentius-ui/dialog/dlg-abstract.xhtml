@@ -16,6 +16,7 @@
         <cc:attribute name="height" type="java.lang.Integer" default="600" />
         <cc:attribute name="editable" type="java.lang.Object" />
         <cc:attribute name="updateOnSave" type="java.lang.String" />
+        <cc:attribute name="updateOnStart" type="java.lang.String" />
         <cc:attribute name="onConfirmAction" method-signature="void actionListener()" />
         <cc:attribute name="formId" type="java.lang.String" />
 
@@ -59,6 +60,7 @@
                                                   oncomplete="if (args &amp;&amp; args.saved) { PF('#{cc.attrs.id}').hide()}
                                                   else {PF('btnOk').enable();PF('btnCancel').enable();}" 
                                                   update="#{cc.attrs.updateOnSave}"
+                                                  onstart="#{cc.attrs.updateOnStart}"
                                                   onclick="PF('btnOk').disable();PF('btnCancel').disable();"
                                                   />
                                 <p:commandButton widgetVar="btnCancel"                          

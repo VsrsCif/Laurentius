@@ -5,7 +5,7 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:pe="http://primefaces.org/ui/extensions"
+
       xmlns:composite="http://java.sun.com/jsf/composite"
       xmlns:dlg="http://java.sun.com/jsf/composite/laurentius-ui/dialog"
       >
@@ -24,9 +24,8 @@
                             height="600"
                             updateOnSave=":forms:SettingsPModes:pmodePanel:TblPMode"
                             onConfirmAction="#{pModeView.addOrUpdateEditable()}" >
-
-            <pe:codeMirror id="codeMirror" mode="xml"  class="CodeMirrorXML"
-                           theme="eclipse" value="#{pModeView.currentObjectAsString}" lineNumbers="true"/>  
+            <p:inputTextarea id="codeMirror"  class="CodeMirrorXML"
+                           value="#{pModeView.currentObjectAsString}" />  
         </dlg:dlg-abstract>
     </composite:implementation>
 

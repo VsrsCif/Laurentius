@@ -208,8 +208,9 @@ public class ZPPUtils {
     sk.setKeySize(BigInteger.valueOf(skey.getEncoded().length));
     sk.setEbmsId(mail.getMessageId());
 
-    File fdek = StorageUtils.getNewStorageFile(ZPPPartType.LocalEncryptionKey.
-            name(), ZPPPartType.LocalEncryptionKey.getFileSuffix());
+    File fdek = StorageUtils.getNewStorageFile(
+            ZPPPartType.LocalEncryptionKey.getFileSuffix(), 
+            ZPPPartType.LocalEncryptionKey.name());
     XMLUtils.serialize(sk, fdek);
 
     MSHOutPart ptNew = new MSHOutPart();

@@ -140,8 +140,7 @@ public class DialogComposePayloadView extends AbstractPModeJSFView<MSHOutPart> {
     UploadedFile uf = event.getFile();
     StorageUtils su = new StorageUtils();
     String fileName = uf.getFileName();
-    String name = fileName.substring(fileName.lastIndexOf(
-              '.') + 1);
+    String name = fileName.substring(0, fileName.lastIndexOf('.'));
    
 
     try {

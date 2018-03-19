@@ -22,7 +22,7 @@
                             editable="#{dialogCompose.newOutMail}"
                             width="1024"
                             height="500"
-                            updateOnSave=":forms:MainPanel"
+                            updateOnSave=":forms:MainPanel"    
                             onConfirmAction="#{dialogCompose.sendComposedMail()}"
                             > 
 
@@ -98,6 +98,7 @@
                                          scrollHeight="105"                   
                                          editable="true"
                                          editMode="cell"
+                                         saveOnCellBlur="true"
 
                                          >
 
