@@ -111,7 +111,7 @@ public class SEDDaoBean implements SEDDaoInterface {
 
   @EJB(mappedName = SEDJNDI.JNDI_JMSMANAGER)
   JMSManagerInterface mJMS;
-  
+
   @EJB(mappedName = SEDJNDI.JNDI_PMODE)
   PModeInterface mpModeManager;
 
@@ -984,96 +984,7 @@ public class SEDDaoBean implements SEDDaoInterface {
     long l = LOG.logStart();
     try {
 
-      if (Utils.isEmptyString(mail.getMessageId())) {
-        String msg = "Missing mail ebms Id";
-        throw new StorageException(msg);
-      }
-      if (Utils.isEmptyString(mail.getSenderEBox())) {
-        String msg = String.format(
-                "Missing SenderEBox for mail (ebmsId)  %s", mail.getMessageId());
-        throw new StorageException(msg);
-      }
-      if (Utils.isEmptyString(mail.getReceiverEBox())) {
-        String msg = String.format(
-                "Missing ReceiverEBox for mail (ebmsId)  %s", mail.
-                        getMessageId());
-        throw new StorageException(msg);
-      }
-
-      if (Utils.isEmptyString(mail.getConversationId())) {
-        String msg = String.format(
-                "Missing ConversationId for mail (ebmsId)  %s", mail.
-                        getMessageId());
-        throw new StorageException(msg);
-      }
-      if (Utils.isEmptyString(mail.getService())) {
-        String msg = String.format(
-                "Missing Service for mail (ebmsId)  %s", mail.getMessageId());
-        throw new StorageException(msg);
-      }
-
-      if (Utils.isEmptyString(mail.getAction())) {
-        String msg = String.format(
-                "Missing Action for mail (ebmsId)  %s", mail.getMessageId());
-        throw new StorageException(msg);
-      }
-
-      // check mail parts
-      if (mail.getMSHInPayload() != null) {
-        for (MSHInPart mp : mail.getMSHInPayload().getMSHInParts()) {
-          if (Utils.isEmptyString(mp.getEbmsId())) {
-
-            String msg = String.format(
-                    "Missing Payload part's ebmsId (name %s, path %s)!", mp.
-                            getName(), mp.getFilepath());
-            throw new StorageException(msg);
-          }
-
-          File f = StorageUtils.getFile(mp.getFilepath());
-          if (!f.exists()) {
-            String msg = String.format(
-                    "Mail part: %s (path %s) does not exist in storage!", mp.
-                            getName(), mp.getFilepath());
-            throw new StorageException(msg);
-          }
-          if (mp.getSize() == null || mp.getSize().longValue() != f.length()) {
-
-            LOG.formatedWarning(
-                    "Mail has wrong payload part size (sender: %s, service %s, senderMessageId: %s, filepart %s). New value setted!"
-                    + "expected size from payload: %d, file size %d!",
-                    mail.getSenderEBox(), mail.getService(), mail.
-                    getSenderMessageId(), mp.getEbmsId(),
-                    mp.getSize() == null ? 0 : mp.
-                    getSize().longValue(), f.length());
-            mp.setSize(BigInteger.valueOf(f.length()));
-          }
-
-          String digest = DigestUtils.getHexSha256Digest(f);
-          if (Utils.isEmptyString(mp.getSha256Value())) {
-            mp.setSha256Value(digest);
-          } else if (!mp.getSha256Value().equals(digest)) {
-            mp.setSha256Value(digest);
-            LOG.formatedWarning(
-                    "Mail has wrong payload part digest (sender: %s, service %s, senderMessageId: %s, filepart %s) "
-                    + "digest: %s, expected digest %s!",
-                    mail.getSenderEBox(), mail.getService(), mail.
-                    getSenderMessageId(), mp.getFilepath(), mp.getSha256Value(),
-                    digest);
-          }
-
-          if (Utils.isEmptyString(mp.getMimeType())) {
-            mp.setMimeType(MimeValue.getMimeTypeByFileName(f.getName()));
-          }
-          if (Utils.isEmptyString(mp.getSource())) {
-            mp.setSource(SEDMailPartSource.MAIL.getValue());
-          }
-        }
-      } else {
-        LOG.formatedWarning(
-                "Serialize mail (sender: %s, service %s, senderMessageId: %s ) with no payload!",
-                mail.getSenderEBox(), mail.getService(), mail.
-                getSenderMessageId());
-      }
+      validateAndPrepareInMailToStore(mail);
 
       Date dt = Calendar.getInstance().getTime();
 
@@ -1129,6 +1040,314 @@ public class SEDDaoBean implements SEDDaoInterface {
   }
 
   /**
+   * Method stores metadata for in and out mail in transaction. Message parts
+   * must already exists in Laurentius store. Path in element "part/filepath"
+   * must be relative path in laurentius store.Purpose of method is to store
+   * incomming mail and its coresponding out message
+   *
+   * <ul>
+   * <li>set ebms messageId if null</li>
+   * <li>set conversation id as mail id if null</li>
+   * <li>set ebms sender name from senderbox if null </li>
+   * <li>set ebms receiver name from receiverbox if null </li>
+   * <li>serialize payload to laurentius store:
+   * <ul>
+   * <li>sets ebms part messageId if null</li>
+   * <li>sets part's sha256 and size</li>
+   * <li>sets mimetype from filname if null</li>
+   * </ul></li>
+   * <li>sets status to submitted</li>
+   * <li><b>Add mail to submit queue</b></li>
+   * </ul>
+   *
+   * @param inMail
+   * @param outMail
+   * @param applicationId
+   * @param pmode
+   * @throws StorageException
+   */
+  @Override
+  public void serializeInOutMail(MSHInMail inMail, MSHOutMail outMail,
+          String applicationId,
+          PMode pmode)
+          throws StorageException {
+
+    long l = LOG.logStart();
+
+    String locadomain = SEDSystemProperties.getLocalDomain();
+
+    if (pmode == null) {
+      try {
+        pmode = mpModeManager.getPModeMSHOutMail(outMail);
+      } catch (PModeException ex) {
+        throw new StorageException(ex.getMessage(), ex);
+      }
+    }
+    int iPriority = pmode.getPriority() == null ? 4 : pmode.getPriority();
+    iPriority = iPriority > 9 ? 9 : (iPriority < 0 ? 0 : iPriority);
+    Date storeDate = Calendar.getInstance().getTime();
+
+    //------------------------------------------------------------
+    // prepare in mail:
+    validateAndPrepareInMailToStore(inMail);
+
+    if (Utils.isEmptyString(inMail.getStatus())) {
+      inMail.setStatus(SEDInboxMailStatus.RECEIVED.getValue());
+      inMail.setReceivedDate(storeDate);
+      inMail.setStatusDate(storeDate);
+    }
+
+    if (inMail.getStatusDate() == null) {
+      inMail.setStatusDate(storeDate);
+    }
+
+    if (inMail.getReceivedDate() == null) {
+      inMail.setReceivedDate(storeDate);
+    }
+
+    // persist mail event
+    MSHInEvent eventInMail = new MSHInEvent();
+
+    eventInMail.setStatus(inMail.getStatus());
+    eventInMail.setDescription("Mail stored to inbox");
+    eventInMail.setApplicationId(applicationId);
+    eventInMail.setDate(inMail.getStatusDate());
+
+    //------------------------------------------------------------
+    // prepare out mail:
+    validateAndPrepareOutMailToStore(outMail);
+    outMail.setStatus(SEDOutboxMailStatus.SUBMITTED.getValue());
+    outMail.setStatusDate(storeDate);
+    outMail.setSubmittedDate(storeDate);
+
+    // create out event
+    MSHOutEvent eventOutMail = new MSHOutEvent();
+    eventOutMail.setDescription("Mail stored to outbox.");
+    eventOutMail.setStatus(outMail.getStatus());
+    eventOutMail.setDate(storeDate);
+    eventOutMail.setSenderMessageId(outMail.getSenderMessageId());
+    eventOutMail.setUserId("");
+    eventOutMail.setApplicationId(applicationId);
+
+    try {
+
+      mutUTransaction.begin();
+
+      // ----------------------------------------------
+      // persist in mail
+      memEManager.persist(inMail);
+
+      if (inMail.getMSHInPayload() != null) {
+        for (MSHInPart mp : inMail.getMSHInPayload().getMSHInParts()) {
+          mp.setMailId(inMail.getId());
+          memEManager.persist(mp);
+        }
+      }
+      // save event
+      eventInMail.setMailId(inMail.getId());
+      memEManager.persist(eventInMail);
+
+      // ----------------------------------------------
+      // persist out mail
+      memEManager.persist(outMail);
+      // update payload
+      if (outMail.getMSHOutPayload() != null) {
+        for (MSHOutPart mp : outMail.getMSHOutPayload().getMSHOutParts()) {
+          mp.setMailId(outMail.getId());
+          memEManager.persist(mp);
+        }
+      }
+      // set conversation id
+      if (Utils.isEmptyString(outMail.getConversationId())) {
+        outMail.setConversationId(outMail.getId().toString() + "@" + locadomain);
+        memEManager.merge(outMail);
+      }
+      // set event mail id
+      eventOutMail.setMailId(outMail.getId());
+      memEManager.persist(eventOutMail);
+
+      mutUTransaction.commit();
+
+      // --------------------------------------
+      // sumbmit out mail to queue
+      sendOutMessage(outMail, 0, 0, iPriority, "", applicationId);
+
+    } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException
+            | HeuristicRollbackException | SecurityException | IllegalStateException ex) {
+      {
+        try {
+          mutUTransaction.rollback();
+        } catch (IllegalStateException | SecurityException | SystemException ex1) {
+          LOG.logWarn(l, "", ex);
+        }
+        String msg = "Error occurred on serializing mail! Err:" + ex.
+                getMessage();
+        LOG.logError(l, msg, ex);
+        throw new StorageException(msg, ex);
+      }
+    }
+
+    LOG.logEnd(l);
+  }
+
+  private void validateAndPrepareOutMailToStore(MSHOutMail mail) throws StorageException {
+
+    // set message id
+    if (Utils.isEmptyString(mail.getMessageId())) {
+      mail.setMessageId(Utils.getUUIDWithLocalDomain());
+    }
+
+    // set sender name
+    if (Utils.isEmptyString(mail.getSenderName())) {
+      mail.setSenderName(mail.getSenderEBox());
+    }
+
+    // set receiver id
+    if (Utils.isEmptyString(mail.getReceiverName())) {
+      mail.setReceiverName(mail.getReceiverEBox());
+    }
+
+    // check mail parts
+    if (mail.getMSHOutPayload() != null) {
+      for (MSHOutPart mp : mail.getMSHOutPayload().getMSHOutParts()) {
+        if (Utils.isEmptyString(mp.getEbmsId())) {
+          mp.setEbmsId(Utils.getUUIDWithLocalDomain());
+        }
+        File f = StorageUtils.getFile(mp.getFilepath());
+        if (!f.exists()) {
+          String msg = String.format(
+                  "Mail part: %s (path %s) does not exist in storage!", mp.
+                          getName(), mp.getFilepath());
+          throw new StorageException(msg);
+        }
+        mp.setSize(BigInteger.valueOf(f.length()));
+        String digest = DigestUtils.getHexSha256Digest(f);
+        if (Utils.isEmptyString(mp.getSha256Value())) {
+          mp.setSha256Value(digest);
+        } else if (!mp.getSha256Value().equals(digest)) {
+          mp.setSha256Value(digest);
+          LOG.formatedWarning(
+                  "Mail has wrong payload part digest (sender: %s, service %s, senderMessageId: %s, filepart %s) "
+                  + "digest: %s, expected digest %s!",
+                  mail.getSenderEBox(), mail.getService(), mail.
+                  getSenderMessageId(), mp.getFilepath(), mp.getSha256Value(),
+                  digest);
+        }
+
+        if (Utils.isEmptyString(mp.getMimeType())) {
+          mp.setMimeType(MimeValue.getMimeTypeByFileName(f.getName()));
+        }
+        if (Utils.isEmptyString(mp.getSource())) {
+          mp.setSource(SEDMailPartSource.MAIL.getValue());
+        }
+      }
+    } else {
+      LOG.formatedWarning(
+              "Serialize mail (sender: %s, service %s, senderMessageId: %s ) with no payload!",
+              mail.getSenderEBox(), mail.getService(), mail.
+              getSenderMessageId());
+    }
+
+  }
+
+  private void validateAndPrepareInMailToStore(MSHInMail mail) throws StorageException {
+    long l = LOG.logStart();
+
+    if (Utils.isEmptyString(mail.getMessageId())) {
+      String msg = "Missing mail ebms Id";
+      throw new StorageException(msg);
+    }
+    if (Utils.isEmptyString(mail.getSenderEBox())) {
+      String msg = String.format(
+              "Missing SenderEBox for mail (ebmsId)  %s", mail.getMessageId());
+      throw new StorageException(msg);
+    }
+    if (Utils.isEmptyString(mail.getReceiverEBox())) {
+      String msg = String.format(
+              "Missing ReceiverEBox for mail (ebmsId)  %s", mail.
+                      getMessageId());
+      throw new StorageException(msg);
+    }
+
+    if (Utils.isEmptyString(mail.getConversationId())) {
+      String msg = String.format(
+              "Missing ConversationId for mail (ebmsId)  %s", mail.
+                      getMessageId());
+      throw new StorageException(msg);
+    }
+    if (Utils.isEmptyString(mail.getService())) {
+      String msg = String.format(
+              "Missing Service for mail (ebmsId)  %s", mail.getMessageId());
+      throw new StorageException(msg);
+    }
+
+    if (Utils.isEmptyString(mail.getAction())) {
+      String msg = String.format(
+              "Missing Action for mail (ebmsId)  %s", mail.getMessageId());
+      throw new StorageException(msg);
+    }
+
+    // check mail parts
+    if (mail.getMSHInPayload() != null) {
+      for (MSHInPart mp : mail.getMSHInPayload().getMSHInParts()) {
+        if (Utils.isEmptyString(mp.getEbmsId())) {
+
+          String msg = String.format(
+                  "Missing Payload part's ebmsId (name %s, path %s)!", mp.
+                          getName(), mp.getFilepath());
+          throw new StorageException(msg);
+        }
+
+        File f = StorageUtils.getFile(mp.getFilepath());
+        if (!f.exists()) {
+          String msg = String.format(
+                  "Mail part: %s (path %s) does not exist in storage!", mp.
+                          getName(), mp.getFilepath());
+          throw new StorageException(msg);
+        }
+        if (mp.getSize() == null || mp.getSize().longValue() != f.length()) {
+
+          LOG.formatedWarning(
+                  "Mail has wrong payload part size (sender: %s, service %s, senderMessageId: %s, filepart %s). New value setted!"
+                  + "expected size from payload: %d, file size %d!",
+                  mail.getSenderEBox(), mail.getService(), mail.
+                  getSenderMessageId(), mp.getEbmsId(),
+                  mp.getSize() == null ? 0 : mp.
+                  getSize().longValue(), f.length());
+          mp.setSize(BigInteger.valueOf(f.length()));
+        }
+
+        String digest = DigestUtils.getHexSha256Digest(f);
+        if (Utils.isEmptyString(mp.getSha256Value())) {
+          mp.setSha256Value(digest);
+        } else if (!mp.getSha256Value().equals(digest)) {
+          mp.setSha256Value(digest);
+          LOG.formatedWarning(
+                  "Mail has wrong payload part digest (sender: %s, service %s, senderMessageId: %s, filepart %s) "
+                  + "digest: %s, expected digest %s!",
+                  mail.getSenderEBox(), mail.getService(), mail.
+                  getSenderMessageId(), mp.getFilepath(), mp.getSha256Value(),
+                  digest);
+        }
+
+        if (Utils.isEmptyString(mp.getMimeType())) {
+          mp.setMimeType(MimeValue.getMimeTypeByFileName(f.getName()));
+        }
+        if (Utils.isEmptyString(mp.getSource())) {
+          mp.setSource(SEDMailPartSource.MAIL.getValue());
+        }
+      }
+    } else {
+      LOG.formatedWarning(
+              "Serialize mail (sender: %s, service %s, senderMessageId: %s ) with no payload!",
+              mail.getSenderEBox(), mail.getService(), mail.
+              getSenderMessageId());
+    }
+    LOG.logEnd(l);
+
+  }
+
+  /**
    * Method stores metadata for out mail. Message parts must already exists in
    * Laurentius store. Path in element "part/filepath" must be relative path in
    * laurentius store.
@@ -1159,75 +1378,21 @@ public class SEDDaoBean implements SEDDaoInterface {
           throws StorageException {
     long l = LOG.logStart();
     String locadomain = SEDSystemProperties.getLocalDomain();
-    
-    if (pmode == null){
+
+    if (pmode == null) {
       try {
         pmode = mpModeManager.getPModeMSHOutMail(mail);
       } catch (PModeException ex) {
-            throw new StorageException(ex.getMessage(), ex);
+        throw new StorageException(ex.getMessage(), ex);
       }
     }
 
     try {
-      // check mail parts
-      if (mail.getMSHOutPayload() != null) {
-        for (MSHOutPart mp : mail.getMSHOutPayload().getMSHOutParts()) {
-          if (Utils.isEmptyString(mp.getEbmsId())) {
-            mp.setEbmsId(Utils.getUUIDWithLocalDomain());
-          }
-          File f = StorageUtils.getFile(mp.getFilepath());
-          if (!f.exists()) {
-            String msg = String.format(
-                    "Mail part: %s (path %s) does not exist in storage!", mp.
-                            getName(), mp.getFilepath());
-            throw new StorageException(msg);
-          }
-          mp.setSize(BigInteger.valueOf(f.length()));
-          String digest = DigestUtils.getHexSha256Digest(f);
-          if (Utils.isEmptyString(mp.getSha256Value())) {
-            mp.setSha256Value(digest);
-          } else if (!mp.getSha256Value().equals(digest)) {
-            mp.setSha256Value(digest);
-            LOG.formatedWarning(
-                    "Mail has wrong payload part digest (sender: %s, service %s, senderMessageId: %s, filepart %s) "
-                    + "digest: %s, expected digest %s!",
-                    mail.getSenderEBox(), mail.getService(), mail.
-                    getSenderMessageId(), mp.getFilepath(), mp.getSha256Value(),
-                    digest);
-          }
-
-          if (Utils.isEmptyString(mp.getMimeType())) {
-            mp.setMimeType(MimeValue.getMimeTypeByFileName(f.getName()));
-          }
-          if (Utils.isEmptyString(mp.getSource())) {
-            mp.setSource(SEDMailPartSource.MAIL.getValue());
-          }
-        }
-      } else {
-        LOG.formatedWarning(
-                "Serialize mail (sender: %s, service %s, senderMessageId: %s ) with no payload!",
-                mail.getSenderEBox(), mail.getService(), mail.
-                getSenderMessageId());
-      }
+      validateAndPrepareOutMailToStore(mail);
 
       mail.setStatus(SEDOutboxMailStatus.SUBMITTED.getValue());
       mail.setStatusDate(Calendar.getInstance().getTime());
       mail.setSubmittedDate(mail.getStatusDate());
-
-      // set message id
-      if (Utils.isEmptyString(mail.getMessageId())) {
-        mail.setMessageId(Utils.getUUIDWithLocalDomain());
-      }
-
-      // set sender name
-      if (Utils.isEmptyString(mail.getSenderName())) {
-        mail.setSenderName(mail.getSenderEBox());
-      }
-
-      // set receiver id
-      if (Utils.isEmptyString(mail.getReceiverName())) {
-        mail.setReceiverName(mail.getReceiverEBox());
-      }
 
       mutUTransaction.begin();
       memEManager.persist(mail);
@@ -1507,7 +1672,9 @@ public class SEDDaoBean implements SEDDaoInterface {
   public void setStatusToOutMail(MSHOutMail mail, SEDOutboxMailStatus status,
           String desc,
           String userID,
-          String applicationId, String filePath, String mime)
+          String applicationId, 
+          String filePath, 
+          String mime)
           throws StorageException {
     long l = LOG.logStart();
 
@@ -1515,89 +1682,10 @@ public class SEDDaoBean implements SEDDaoInterface {
             getSentDate(), mail.getReceivedDate(),
             mail.getDeliveredDate(), status, desc, userID, applicationId,
             filePath, mime);
+    
     mail.setStatusDate(dt);
     mail.setStatus(status.getValue());
-    /*
-    
-    try {
-      Date dt = Calendar.getInstance().getTime();
-      mail.setStatusDate(dt);
-      mail.setStatus(status.getValue());
-
-      Query updq = memEManager.createNamedQuery(SEDNamedQueries.UPDATE_OUTMAIL);
-      updq.setParameter("id", mail.getId());
-      updq.setParameter("statusDate", mail.getStatusDate());
-      updq.setParameter("status", mail.getStatus());
-
-      Query updqSD = null;
-      if (SEDOutboxMailStatus.SENT.getValue().equals(status.getValue()) && mail.
-              getSentDate()
-              != null) {
-        updqSD = memEManager.createNamedQuery(
-                SEDNamedQueries.UPDATE_OUTMAIL_SENT_DATE);
-        updqSD.setParameter("id", mail.getId());
-        updqSD.setParameter("sentDate", mail.getSentDate() == null ? "" : mail.
-                getSentDate());
-        updqSD.setParameter("receivedDate",
-                mail.getReceivedDate() == null ? ""
-                : mail.getReceivedDate());
-      } else if (SEDOutboxMailStatus.DELIVERED.getValue().equals(status.
-              getValue())
-              && mail.getSentDate() != null) {
-        updqSD = memEManager.createNamedQuery(
-                SEDNamedQueries.UPDATE_OUTMAIL_DELIVERED_DATE);
-        updqSD.setParameter("id", mail.getId());
-        updqSD.setParameter("deliveredDate", mail.getDeliveredDate());
-      }
-
-      // persist mail event
-      MSHOutEvent me = new MSHOutEvent();
-      me.setMailId(mail.getId());
-      me.setDescription(desc == null ? status.getDesc()
-              : (desc.length() > 512 ? desc.substring(0, 508) + "..." : desc));
-      me.setStatus(mail.getStatus());
-      me.setDate(mail.getStatusDate());
-      me.setSenderMessageId(mail.getSenderMessageId());
-      me.setUserId(userID);
-      me.setApplicationId(applicationId);
-      me.setEvidenceFilepath(filePath);
-      me.setEvidenceMimeType(mime);
-      mutUTransaction.begin();
-
-      int iVal = updq.executeUpdate();
-
-      if (iVal != 1) {
-        try {
-          mutUTransaction.rollback();
-        } catch (IllegalStateException | SecurityException | SystemException ex1) {
-          LOG.logWarn(l, ex1.getMessage(), ex1);
-        }
-        String msg
-                = "Status not setted to MSHOutMail:" + mail.getId() + " result: '" + iVal
-                + "'. Mail not exists or id duplicates?";
-        LOG.logError(l, msg, null);
-        throw new StorageException(msg, null);
-      }
-      if (updqSD != null) {
-        updqSD.executeUpdate();
-      }
-      memEManager.persist(me);
-      mutUTransaction.commit();
-    } catch (NotSupportedException | SystemException | RollbackException | HeuristicMixedException
-            | HeuristicRollbackException | SecurityException | IllegalStateException ex) {
-      {
-        try {
-          mutUTransaction.rollback();
-        } catch (IllegalStateException | SecurityException | SystemException ex1) {
-          LOG.logWarn(l, ex1.getMessage(), ex1);
-        }
-        String msg
-                = "Error commiting status to outboxmail: '" + mail.getId() + "'! Err:" + ex.
-                getMessage();
-        LOG.logError(l, msg, ex);
-        throw new StorageException(msg, ex);
-      }
-    }*/
+   
     LOG.logEnd(l);
 
   }

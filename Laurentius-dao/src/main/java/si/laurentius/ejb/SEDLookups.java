@@ -201,8 +201,7 @@ public class SEDLookups implements SEDLookupsInterface {
                 = "Missing domain parameter in configuration. Did you init application with domain parameter?";
         LOG.logError(msg, null);
         throw new RuntimeException(msg);
-      }
-      LOG.formatedWarning("DOMAIN IS %s", domain);
+      }      
       domain = "@" + domain;
 
       if (!sedBox.toLowerCase().endsWith(domain.toLowerCase())) {

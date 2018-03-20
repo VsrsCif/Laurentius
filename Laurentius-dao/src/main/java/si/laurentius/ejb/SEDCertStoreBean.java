@@ -49,6 +49,7 @@ import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Lock;
+import javax.ejb.LockType;
 import static javax.ejb.LockType.READ;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
@@ -124,6 +125,7 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
    * @throws SEDSecurityException
    */
   @Override
+  @Lock(LockType.WRITE)
   public void addCertToCertStore(X509Certificate crt, String alias) throws SEDSecurityException {
     long l = LOG.logStart();
     KeyStore ks = getCertStore();
@@ -139,6 +141,7 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
    * @throws SEDSecurityException
    */
   @Override
+  @Lock(LockType.WRITE)
   public void addCertToRootCA(X509Certificate crt, String alias) throws SEDSecurityException {
     long l = LOG.logStart();
     KeyStore ks = getRootCAStore();
@@ -159,6 +162,7 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
    * @throws SEDSecurityException
    */
   @Override
+  @Lock(LockType.WRITE)
   public void addKeyToToCertStore(String alias, Key privateKey,
           Certificate[] certs, String passwd)
           throws SEDSecurityException {
@@ -178,6 +182,7 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
    * @throws SEDSecurityException
    */
   @Override
+  @Lock(LockType.WRITE)
   public void addPassword(String alias, String pswd) throws SEDSecurityException {
     long l = LOG.logStart(alias);
 
@@ -253,6 +258,7 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
    * @throws SEDSecurityException
    */
   @Override
+  @Lock(LockType.WRITE)
   public void changeAlias(String oldAlias, String newAlias)
           throws SEDSecurityException {
     long l = LOG.logStart(oldAlias, newAlias);
@@ -281,6 +287,7 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
    * @param newAlias
    * @throws SEDSecurityException
    */
+  @Lock(LockType.WRITE)
   public void changeAliasForCertificate(SEDCertificate cert,
           final String newAlias) throws SEDSecurityException {
     long l = LOG.logStart(cert.getAlias(), newAlias);
@@ -356,6 +363,7 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
    * @throws SEDSecurityException
    */
   @Override
+  @Lock(LockType.WRITE)
   public void changeKeystorePassword(String newPasswd) throws SEDSecurityException {
     throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
   }
@@ -367,6 +375,7 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
    * @throws SEDSecurityException
    */
   @Override
+  @Lock(LockType.WRITE)
   public void changeRootCAAlias(String oldAlias, String newAlias) throws SEDSecurityException {
     long l = LOG.logStart();
     KeyStore ks = getRootCAStore();
@@ -381,6 +390,7 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
    * @throws SEDSecurityException
    */
   @Override
+  @Lock(LockType.WRITE)
   public void changeRootCAPassword(String newPasswd) throws SEDSecurityException {
     throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
   }
@@ -775,6 +785,7 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
     return ks;
   }
 
+  @Lock(LockType.WRITE)
   private void refreshCertificates() throws SEDSecurityException {
     long l = LOG.logStart();
     KeyStore ks = getCertStore();
@@ -853,6 +864,7 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
     LOG.logEnd(l);
   }
 
+  @Lock(LockType.WRITE)
   public void refreshPasswords() {
     long l = LOG.logStart();
 
@@ -867,6 +879,7 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
     LOG.logEnd(l);
   }
 
+  @Lock(LockType.WRITE)
   private void refreshRootCACertificates() {
     long l = LOG.logStart();
     try {
@@ -884,6 +897,7 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
    * @throws SEDSecurityException
    */
   @Override
+  @Lock(LockType.WRITE)
   public void removeCertificateFromRootCAStore(SEDCertificate crt) throws SEDSecurityException {
     long l = LOG.logStart();
     KeyStore ks = getRootCAStore();
@@ -904,6 +918,7 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
    * @throws SEDSecurityException
    */
   @Override
+  @Lock(LockType.WRITE)
   public void removeCertificateFromStore(SEDCertificate crt) throws SEDSecurityException {
     long l = LOG.logStart();
 
@@ -938,6 +953,7 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
     LOG.logEnd(l);
   }
 
+  @Lock(LockType.WRITE)
   private void saveKeystore(KeyStore ks, String alias) throws SEDSecurityException {
     File fStore = null;
     SEDCertPassword cp = getKeyPassword(alias);
@@ -984,7 +1000,8 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
     }
 
   }
-
+  
+@Lock(LockType.WRITE)
   public boolean updateCrlCache(SEDCertCRL crl) {
     X509CRL cres = null;
     boolean bSuc = false;
@@ -1059,6 +1076,7 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
    * @throws si.laurentius.commons.exception.SEDSecurityException
    */
   @Override
+  @Lock(LockType.READ)
   public PrivateKey getPrivateKeyForAlias(String alias) throws SEDSecurityException {
     long l = LOG.logStart();
     SEDCertPassword cp = getKeyPassword(alias);
@@ -1080,6 +1098,7 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
    * @return
    */
   @Override
+  @Lock(LockType.READ)
   public PrivateKey getPrivateKeyForX509Cert(X509Certificate xrc) throws SEDSecurityException {
     long l = LOG.logStart();
     KeyStore ks = getCertStore();
@@ -1089,6 +1108,8 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
     return pk;
   }
 
+  
+  @Lock(LockType.READ)
   public boolean isReachable(String host) {
     int timeout = 5000;
     boolean bsuc = false;

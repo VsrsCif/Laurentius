@@ -92,6 +92,8 @@ public class InMailDataModel extends AbstractMailDataModel<TableInMail> {
       imtFilter.getReceiverEBoxList().addAll(getUserSessionData().
               getUserEBoxesWithDomain());
       imtFilter.getStatusList().addAll(SEDInboxMailStatus.listOfValues());
+      // do not check deleted values - user's request
+      imtFilter.getStatusList().remove(SEDInboxMailStatus.DELETED.getValue());
       Calendar c = Calendar.getInstance();
       c.add(Calendar.DATE, -30);
       c.clear(Calendar.MILLISECOND);

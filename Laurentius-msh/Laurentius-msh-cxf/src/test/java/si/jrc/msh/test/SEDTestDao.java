@@ -152,6 +152,12 @@ public class SEDTestDao implements SEDDaoInterface{
   }
 
   @Override
+  public void serializeInOutMail(MSHInMail inMail, MSHOutMail outMail,
+          String applicationId, PMode pmode) throws StorageException {
+      // no implementation
+  }
+
+  @Override
   public void setStatusToInMail(MSHInMail mail, SEDInboxMailStatus status, String desc)
       throws StorageException {
     // no implementation

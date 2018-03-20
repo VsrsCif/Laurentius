@@ -204,11 +204,11 @@ public class ZPPTaskFiction implements TaskExecutionInterface {
     MSHInMail fi = createZPPAdviceOfDeliveryFiction(mOutMail, sigAlias);
 
     // do it in transaction!
-    mDB.serializeInMail(fi, "ZPP-plugin");
-    mDB.serializeOutMail(fn, null, "ZPP-plugin", null);
+    mDB.serializeInOutMail(fi, fn,ZPPConstants.S_ZPP_PLUGIN_TYPE,null);
     mOutMail.setDeliveredDate(Calendar.getInstance().getTime());
     mDB.setStatusToOutMail(mOutMail, SEDOutboxMailStatus.DELIVERED, "Fiction ",
             "ZPP plugin", "");
+    
     LOG.logEnd(l);
   }
 

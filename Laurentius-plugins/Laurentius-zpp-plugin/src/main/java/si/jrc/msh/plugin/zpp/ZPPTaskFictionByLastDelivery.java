@@ -122,8 +122,6 @@ public class ZPPTaskFictionByLastDelivery implements TaskExecutionInterface {
       }
     }
 
-
-
     List<LastDeliveredMail> lstLastDM = getLastDeliveredMail();
     LOG.formatedWarning(
             "Execute ZPPTaskFictionByLastDelivery delivered mail %d ",
@@ -162,7 +160,8 @@ public class ZPPTaskFictionByLastDelivery implements TaskExecutionInterface {
 
   }
 
-  public void fictionalDeliveryMail(LastDeliveredMail da, String signKeyAlias, int delayMinutes) {
+  public void fictionalDeliveryMail(LastDeliveredMail da, String signKeyAlias,
+          int delayMinutes) {
     long l = LOG.logStart();
     Calendar cStart = Calendar.getInstance();
     cStart.add(Calendar.DAY_OF_MONTH, -15);
@@ -171,7 +170,6 @@ public class ZPPTaskFictionByLastDelivery implements TaskExecutionInterface {
     Calendar cld = Calendar.getInstance();
     cld.setTime(lastDate);
     cld.add(Calendar.MINUTE, delayMinutes);
-    
 
     String hql2
             = "select om"
@@ -230,7 +228,8 @@ public class ZPPTaskFictionByLastDelivery implements TaskExecutionInterface {
             "Signature key alias defined in keystore.", true, PropertyType.List.
                     getType(), null, PropertyListType.KeystoreCertKeys.getType()));
     tt.getCronTaskPropertyDeves().add(createTTProperty(MINUTES_DELAY,
-            "Delay in minutes from last delivery.", true, PropertyType.Integer.getType(),
+            "Delay in minutes from last delivery.", true, PropertyType.Integer.
+                    getType(),
             null, "-10"));
 
     return tt;
@@ -269,9 +268,8 @@ public class ZPPTaskFictionByLastDelivery implements TaskExecutionInterface {
     MSHOutMail fn = createZPPFictionNotification(mOutMail, sigAlias);
     MSHInMail fi = createZPPAdviceOfDeliveryFiction(mOutMail, sigAlias);
 
-    // do it in transaction!
-    mDB.serializeInMail(fi, "ZPP-plugin");
-    mDB.serializeOutMail(fn, null, "ZPP-plugin", null);   
+    
+    mDB.serializeInOutMail(fi, fn, ZPPConstants.S_ZPP_PLUGIN_TYPE, null);
     mDB.setStatusToOutMail(mOutMail, SEDOutboxMailStatus.DELIVERED, "Fiction ",
             "ZPP plugin", "");
     LOG.logEnd(l);
@@ -420,7 +418,7 @@ public class ZPPTaskFictionByLastDelivery implements TaskExecutionInterface {
       MSHInPart mp = mzppZPPUtils
               .createMSHInPart(mOutMail, ZPPPartType.AdviceOfDeliveryFiction,
                       FopTransformation.AdviceOfDeliveryFiction_6Odst,
-                       pk, xcert);
+                      pk, xcert);
 
       moADF.getMSHInPayload().getMSHInParts().add(mp);
 

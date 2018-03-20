@@ -268,6 +268,10 @@ public interface SEDDaoInterface {
   void serializeOutMail(MSHOutMail mail, String userID, String applicationId,
           PMode pmode)
           throws StorageException;
+  
+   void serializeInOutMail(MSHInMail inMail, MSHOutMail outMail, String applicationId,
+          PMode pmode)
+          throws StorageException;
 
   /**
    * @param mail
@@ -304,6 +308,9 @@ public interface SEDDaoInterface {
    * @throws StorageException
    */
   void serializeInMail(MSHInMail mail, String applicationId) throws StorageException;
+  
+  
+  
 
   /**
    *

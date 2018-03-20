@@ -176,6 +176,11 @@ public class SEDCertUtilsBean implements SEDCertUtilsInterface {
     long l = LOG.logStart();
 
     SEDCertificate aliasCrt = mdbCertStore.getSEDCertificatForAlias(alias);
+    if (aliasCrt == null) {
+       throw new SEDSecurityException(
+              SEDSecurityException.SEDSecurityExceptionCode.CertificateException,
+              String.format("Certficate for alias: %s not exists!", alias) );
+    }
 
     validateCertificate(aliasCrt);
 

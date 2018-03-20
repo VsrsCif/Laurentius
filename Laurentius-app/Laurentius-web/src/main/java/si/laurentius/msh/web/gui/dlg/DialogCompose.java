@@ -228,7 +228,7 @@ public class DialogCompose implements Serializable {
     boolean suc = true;
     Action act = getCurrentServiceAction(newOutMail.getAction());
     if (act.getProperties() == null
-            && act.getProperties().getProperties().isEmpty()) {
+            || act.getProperties().getProperties().isEmpty()) {
 
       if (newOutMail.getMSHOutProperties() != null && !newOutMail.
               getMSHOutProperties().getMSHOutProperties().isEmpty()) {

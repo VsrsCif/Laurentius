@@ -48,6 +48,8 @@
                             </f:facet>
 
                             <p:ajax event="rowSelect"  
+                                    onstart="PF('blockMainPanel').show();"
+                                    oncomplete="PF('blockMainPanel').hide();"
                                     listener="#{InMailDataView.onRowSelect}" 
                                     update=":forms:InMailPanel:InMailPanelData:InMailTab" />                          
                             <p:ajax event="page"

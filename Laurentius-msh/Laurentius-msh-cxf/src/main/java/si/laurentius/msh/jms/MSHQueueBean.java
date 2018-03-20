@@ -129,13 +129,15 @@ public class MSHQueueBean implements MessageListener {
               "JMS message for queue: 'MSHQueue' with no property: '%s'",
               SEDValues.EBMS_QUEUE_PARAM_DELAY), ex);
     }
-    LOG.formatedWarning(
-            "******************************************** submit mail: %s ",
+    LOG.formatedlog(
+            "Start pushing out mail with ID: %s ",
             jmsMessageId);
 
     MSHOutMail mail;
     try {
       mail = mDB.getMailById(MSHOutMail.class, BigInteger.valueOf(jmsMessageId));
+       LOG.formatedlog("Got out mail with ID: %s, ebmsId: %s ",
+            jmsMessageId, mail.getMessageId());
     } catch (NoResultException ex) {
       LOG.logError(t,
               "Message with id: '" + jmsMessageId + "' not exists in DB!", ex);

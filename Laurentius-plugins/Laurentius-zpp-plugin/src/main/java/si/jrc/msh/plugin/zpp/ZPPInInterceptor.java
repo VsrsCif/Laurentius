@@ -534,28 +534,24 @@ public class ZPPInInterceptor implements SoapInterceptorInterface {
     LOG.logEnd(l);
   }
 
-  public void processInZPPBDelivery(MSHInMail mInMail, EBMSMessageContext eInCtx) {
+  public void processInZPPBDelivery(MSHInMail inMail, EBMSMessageContext eInCtx) {
     long l = LOG.logStart();
 
-    mInMail.setStatus(SEDInboxMailStatus.PLOCKED.getValue());
-    mInMail.setStatusDate(Calendar.getInstance().getTime());
+    inMail.setStatus(SEDInboxMailStatus.PLOCKED.getValue());
+    inMail.setStatusDate(Calendar.getInstance().getTime());
 
     try {
       String signAlias = eInCtx.getReceiverPartyIdentitySet().
               getLocalPartySecurity().
               getSignatureKeyAlias();
 
-      MSHOutMail mout = createZPPBDeliveryReciept(mInMail, signAlias);
-
-      mDB.serializeInMail(mInMail, "ZPP plugin");
-
-      // create out mail
-      mDB.serializeOutMail(mout, "", ZPPConstants.S_ZPP_PLUGIN_TYPE, eInCtx.getPMode());
-      //mDB.setStatusToInMail(inMail, SEDInboxMailStatus.PREADY,
-      //        "AdviceOfDelivery created and submitted to out queue");
-
+      MSHOutMail mout = createZPPBDeliveryReciept(inMail, signAlias);
+    
+      
+      mDB.serializeInOutMail(inMail, mout,ZPPConstants.S_ZPP_PLUGIN_TYPE, eInCtx.getPMode());
+      
     } catch (StorageException ex) {
-      LOG.logError(l, "Error setting status ERROR to MSHInMail :'" + mInMail.
+      LOG.logError(l, "Error setting status ERROR to MSHInMail :'" + inMail.
               getId() + "'!", ex);
     }
 
