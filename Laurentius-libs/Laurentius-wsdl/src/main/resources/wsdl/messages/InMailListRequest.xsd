@@ -74,7 +74,7 @@ Copyright 2015, Supreme Court Republic of Slovenia
                                 <xs:documentation>Če je podatek "vnesen", servis vrača vse pošiljke z datumom sprejema manjšim  od vnesenega datuma </xs:documentation>
                             </xs:annotation>
                         </xs:attribute>
-                        <xs:attribute name="status" use="optional" base="xs:token" default="RECEIVED" >
+                        <xs:attribute name="status" use="optional" default="RECEIVED" >
                             <xs:annotation>
                                 <xs:documentation>Status pošiljke. Če status ni podan  je prevzeti status za pošiljke za 'RECEIVED'  
                                 </xs:documentation>
