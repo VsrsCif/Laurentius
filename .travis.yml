@@ -25,13 +25,14 @@ jobs:
   include:
     - stage: build_and_analyse
       script: 
-         - mvn clean install org.jacoco:jacoco-maven-plugin:prepare-agent package sonar:sonar           
-    - stage: build_docker_image
-      script:
-      - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
-      - docker build -t laurentius .
-      - docker tag laurentius $DOCKER_USERNAME/laurentius
-      - docker push $DOCKER_USERNAME/laurentius
+         - mvn clean install org.jacoco:jacoco-maven-plugin:prepare-agent package sonar:sonar 
+# buiding docker image is bronken  - new wildfly  - fix this
+#    - stage: build_docker_image 
+#      script:
+#      - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+#      - docker build -t laurentius .
+#      - docker tag laurentius $DOCKER_USERNAME/laurentius
+#      - docker push $DOCKER_USERNAME/laurentius
 
 #    - stage: test
 #      script: docker run --rm $DOCKER_USERNAME/laurentius
