@@ -36,6 +36,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -55,6 +56,8 @@ import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.message.MessageUtils;
 import org.oasis_open.docs.ebxml_msg.ebms.v3_0.ns.core._200704.SignalMessage;
 import org.w3c.dom.Element;
+import static si.jrc.msh.plugin.zpp.ZPPConstants.S_MAIL_PROPERTY_FINAL_RECIPIENT;
+import static si.jrc.msh.plugin.zpp.ZPPConstants.S_MAIL_PROPERTY_ORIGINAL_SENDER;
 import si.laurentius.msh.outbox.mail.MSHOutMail;
 import si.laurentius.msh.outbox.payload.MSHOutPart;
 import si.jrc.msh.plugin.zpp.doc.DocumentSodBuilder;
@@ -87,6 +90,8 @@ import si.laurentius.msh.inbox.mail.MSHInMail;
 import si.laurentius.commons.interfaces.SEDCertStoreInterface;
 import si.laurentius.commons.utils.Utils;
 import si.laurentius.lce.sign.pdf.SignatureInfo;
+import si.laurentius.msh.outbox.property.MSHOutProperties;
+import si.laurentius.msh.outbox.property.MSHOutProperty;
 import si.laurentius.plugin.interceptor.MailInterceptorDef;
 import si.laurentius.plugin.interfaces.SoapInterceptorInterface;
 
@@ -178,6 +183,16 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
     EBMSMessageContext eInctx = SoapUtils.getEBMSMessageInContext(msg);
     MSHOutMail outMail = SoapUtils.getMSHOutMail(msg);
     MSHInMail mInMail = SoapUtils.getMSHInMail(msg);
+    
+    if (outMail != null && (ZPPConstants.S_ZPP_B_SERVICE.equals(ectx.getService().
+            getServiceName()) || ZPPConstants.S_ZPPB_B_SERVICE.equals(ectx.getService().
+            getServiceName()) )){
+        
+        updateMailProperty(outMail,S_MAIL_PROPERTY_ORIGINAL_SENDER, outMail.getSenderEBox());
+        updateMailProperty(outMail,S_MAIL_PROPERTY_FINAL_RECIPIENT , outMail.getReceiverEBox());
+        
+      
+    }
 
     if (outMail != null && (ZPPConstants.S_ZPP_SERVICE.equals(ectx.getService().
             getServiceName())
@@ -225,6 +240,28 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
     }
     LOG.logEnd(l);
     return true;
+  }
+  
+  
+  private void updateMailProperty(MSHOutMail mom, String  key, String value){
+      MSHOutProperties mop = mom.getMSHOutProperties();
+      if (mop == null) {
+          mop = new MSHOutProperties();
+          mom.setMSHOutProperties(mop);
+      }
+      
+      Optional<MSHOutProperty> oPrp =  mop.getMSHOutProperties().stream()
+              .filter(p -> p.getName().equalsIgnoreCase(key)).findFirst();
+      if (oPrp.isPresent()){
+          oPrp.get().setValue(value);
+      }else {
+          MSHOutProperty p = new MSHOutProperty();
+          p.setName(key);
+          p.setValue(value);
+          mop.getMSHOutProperties().add(p);
+      }
+      
+  
   }
 
   /**
