@@ -521,7 +521,7 @@ public class ZPPInInterceptor implements SoapInterceptorInterface {
     long l = LOG.logStart();
     mInMail.setStatus(SEDInboxMailStatus.PLOCKED.getValue());
     mInMail.setStatusDate(Calendar.getInstance().getTime());
-    try {
+    try { 
       mDB.serializeInMail(mInMail, ZPPConstants.S_ZPP_PLUGIN_TYPE);
     } catch (StorageException ex) {
       String msg = String.format(
