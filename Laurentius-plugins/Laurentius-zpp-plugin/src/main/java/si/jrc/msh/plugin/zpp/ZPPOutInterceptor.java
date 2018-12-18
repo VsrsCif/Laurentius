@@ -187,7 +187,7 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
     if (outMail != null && (ZPPConstants.S_ZPP_B_SERVICE.equals(ectx.getService().
             getServiceName()) || ZPPConstants.S_ZPPB_B_SERVICE.equals(ectx.getService().
             getServiceName()) )){
-        
+      
         updateMailProperty(outMail,S_MAIL_PROPERTY_ORIGINAL_SENDER, outMail.getSenderEBox());
         updateMailProperty(outMail,S_MAIL_PROPERTY_FINAL_RECIPIENT , outMail.getReceiverEBox());
         
@@ -252,16 +252,12 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
       
       Optional<MSHOutProperty> oPrp =  mop.getMSHOutProperties().stream()
               .filter(p -> p.getName().equalsIgnoreCase(key)).findFirst();
-      if (oPrp.isPresent()){
-          oPrp.get().setValue(value);
-      }else {
+      if (!oPrp.isPresent()){
           MSHOutProperty p = new MSHOutProperty();
           p.setName(key);
           p.setValue(value);
           mop.getMSHOutProperties().add(p);
       }
-      
-  
   }
 
   /**

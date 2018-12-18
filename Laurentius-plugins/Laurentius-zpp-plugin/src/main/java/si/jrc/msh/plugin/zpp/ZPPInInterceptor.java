@@ -275,7 +275,7 @@ public class ZPPInInterceptor implements SoapInterceptorInterface {
           } catch (SEDSecurityException ex) {
             String msg = "Error occured while accessing private key for cert: " + xc.
                     toString();
-            LOG.logWarn(l, msg, null);
+            LOG.logWarn(l, msg, ex);
             continue;
           }
 
@@ -487,10 +487,11 @@ public class ZPPInInterceptor implements SoapInterceptorInterface {
       // delivery system
       if (lvc.size() != 1 || !(lvc.get(0).equals(xcertSed))) {
         String strMsg = 
-                "AdviceOfDelivery must have two signatures: recipient's and "
-                + " signature of recipient delivery system";
+                "AdviceOfDelivery must have on signature which must match sender AP!";
         
-        LOG.logError(l, strMsg, null);
+        String certStr = String.format(" Expected subject: %s, got %s", xcertSed.getSubjectX500Principal().getName(), lvc.get(0).getSubjectX500Principal().getName());
+        
+        LOG.logError(l, strMsg + certStr, null);
       throw new EBMSError(ZPPErrorCode.InvalidDeliveryAdvice, mInMail.
               getMessageId(),
               strMsg, SoapFault.FAULT_CODE_CLIENT);
