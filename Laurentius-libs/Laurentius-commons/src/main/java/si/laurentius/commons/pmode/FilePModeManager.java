@@ -538,7 +538,7 @@ public class FilePModeManager implements PModeInterface {
   }
 
   /**
-   * Method returns PartyIdentitySet for partyId and type. Method returs
+   * Method returns PartyIdentitySet for partyId and type. Method returns
    * PartyIdentitySet if one of partyID has matches with given type and
    * partyIdValue ebmsMessage
    * <ns2:PartyId type="urn:oasis:names:tc:ebcore:partyid-type:unregistered">test</ns2:PartyId>
@@ -586,11 +586,14 @@ public class FilePModeManager implements PModeInterface {
         // check if ID is SED 
         if (srcType.equals(PModeConstants.PARTY_ID_SOURCE_TYPE_ADDRESS)
                 && partyIdValue.contains("@")) {
+            
           String domain = partyIdValue.substring(partyIdValue.indexOf("@") + 1);
-
+          // domain is case insensitive
+          domain = domain.toLowerCase();
+          
           if (pis.getIsLocalIdentity()
-                  ? Objects.equals(domain, getLocalDomain())
-                  : Objects.equals(domain, pis.getDomain())) {
+                  ?domain.endsWith(getLocalDomain().toLowerCase())
+                  :domain.endsWith(pis.getDomain().toLowerCase()) ) {
             candidates.add(pis);
           }
         }
@@ -616,9 +619,9 @@ public class FilePModeManager implements PModeInterface {
 
     String[] addrTb = address.split("@");
     String localPart = addrTb[0];
-    String domainPart = addrTb[1];
+    String domainPart = addrTb[1].toLowerCase();
 
-    String localDomain = getLocalDomain();
+    String localDomain = getLocalDomain().toLowerCase();
 
     if (Utils.isEmptyString(localDomain)) {
       throw new PModeException(
@@ -630,8 +633,8 @@ public class FilePModeManager implements PModeInterface {
     for (PartyIdentitySet pis : getPartyIdentitySets()) {
       // check domain
       if (pis.getIsLocalIdentity()
-              ? Objects.equals(domainPart, localDomain)
-              : Objects.equals(domainPart, pis.getDomain())) {
+             ? domainPart.endsWith(localDomain)
+              : domainPart.endsWith(pis.getDomain().toLowerCase()) ) {
         iDomainCount++;
         boolean bContaisIdetifierId = false;
         for (PartyIdentitySetType.PartyId pi : pis.getPartyIds()) {
