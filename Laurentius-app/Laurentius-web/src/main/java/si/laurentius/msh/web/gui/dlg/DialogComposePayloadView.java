@@ -160,7 +160,7 @@ public class DialogComposePayloadView extends AbstractPModeJSFView<MSHOutPart> {
       mo.setFilepath(StorageUtils.getRelativePath(f));
       mo.setMimeType(MimeValue.getMimeTypeByFileName(fileName));
 
-      String hashValue = DigestUtils.getHexSha256Digest(f);
+      String hashValue = DigestUtils.getBase64Sha256Digest(f);
       mo.setSha256Value(hashValue);
       mo.setSize(BigInteger.valueOf(f.length()));
 

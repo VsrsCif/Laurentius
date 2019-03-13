@@ -1446,7 +1446,7 @@ public class SEDMailBox implements SEDMailBoxWS {
     if (!Objects.equals(c.getApplicationId(), getAuthenticatedPrincipal())) {
       throw SEDRequestUtils.createSEDException(
               String.format(
-                      "applicationId %s does not match authenticatedPrincipal %s ",
+                      "applicationId %s does not match authenticated principal %s ",
                       c.getApplicationId(), getAuthenticatedPrincipal()),
               SEDExceptionCode.MISSING_DATA);
     }
