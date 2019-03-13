@@ -223,7 +223,7 @@ public class SEDDaoBeanTest extends TestUtils {
       assertNotNull(part.getSize());
       assertNotNull(part.getMimeType());
       assertEquals(SEDMailPartSource.MAIL.getValue(), part.getSource());
-      assertEquals(DigestUtils.getHexSha256Digest(f), part.getSha256Value());
+      assertEquals(DigestUtils.getBase64Sha256Digest(f), part.getSha256Value());
       assertEquals(f.length(), part.getSize().longValue());
     }
 
@@ -308,7 +308,7 @@ public class SEDDaoBeanTest extends TestUtils {
       assertNotNull(part.getSize());
       assertNotNull(part.getMimeType());
       assertEquals(SEDMailPartSource.MAIL.getValue(), part.getSource());
-      assertEquals(DigestUtils.getHexSha256Digest(f), part.getSha256Value());
+      assertEquals(DigestUtils.getBase64Sha256Digest(f), part.getSha256Value());
       assertEquals(f.length(), part.getSize().longValue());
     }
   }
