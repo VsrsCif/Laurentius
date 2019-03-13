@@ -308,7 +308,7 @@ public class MshClient {
         File file;
         try {
           file = StorageUtils.getNewStorageFile(MimeValue.MIME_XML.getSuffix(),
-                  "RSP_");
+                  EBMSConstants.SOAP_PART_RESPONSE_PREFIX);
           try (FileOutputStream fos = new FileOutputStream(file)) {
             soapRes.writeTo(fos);
             String respFilePath = StorageUtils.getRelativePath(file);
@@ -362,7 +362,7 @@ public class MshClient {
 
         try {
           File file = StorageUtils.getNewStorageFile(MimeValue.MIME_XML.
-                  getSuffix(), "ERR_");
+                  getSuffix(), EBMSConstants.SOAP_PART_FAULT_PREFIX);
           try (FileWriter fileWriter = new FileWriter(file)) {
             fileWriter.write(wr.toString());
             //  wr.getDocument().
