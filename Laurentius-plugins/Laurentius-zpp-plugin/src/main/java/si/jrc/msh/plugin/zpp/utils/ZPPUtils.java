@@ -116,8 +116,8 @@ public class ZPPUtils {
     ptNew.setGeneratedFromPartId(ptSource.getId());
 
     ptNew.setFilepath(StorageUtils.getRelativePath(fOut));
-
-    ptNew.setSha256Value(DigestUtils.getHexSha256Digest(fOut));
+    ptNew.setEbmsId(Utils.getUUIDWithLocalDomain());
+    ptNew.setSha256Value(DigestUtils.getBase64Sha256Digest(fOut));
     ptNew.setSize(BigInteger.valueOf(fOut.length()));
     ptNew.setName(ptSource.getName());
 
