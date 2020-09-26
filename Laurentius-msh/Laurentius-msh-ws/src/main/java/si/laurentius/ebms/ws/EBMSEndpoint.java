@@ -23,6 +23,7 @@ import org.apache.cxf.message.Attachment;
 import org.apache.cxf.message.Message;
 
 import si.jrc.msh.exception.EBMSErrorCode;
+import si.jrc.msh.interceptor.EBMSOutFaultInterceptor;
 import si.laurentius.msh.inbox.mail.MSHInMail;
 import si.laurentius.ebox.SEDBox;
 import si.laurentius.commons.enums.SEDInboxMailStatus;
@@ -52,7 +53,8 @@ import si.laurentius.commons.utils.Utils;
 @org.apache.cxf.interceptor.OutInterceptors(interceptors = {
   "si.jrc.msh.interceptor.EBMSLogOutInterceptor",
   "si.jrc.msh.interceptor.EBMSOutInterceptor",
-  "si.jrc.msh.interceptor.MSHPluginOutInterceptor"})
+  "si.jrc.msh.interceptor.MSHPluginOutInterceptor"
+})
 @org.apache.cxf.interceptor.OutFaultInterceptors(interceptors = {
   "si.jrc.msh.interceptor.EBMSLogOutInterceptor",
   "si.jrc.msh.interceptor.EBMSOutFaultInterceptor",
