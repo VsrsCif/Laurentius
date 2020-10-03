@@ -197,10 +197,9 @@ public class CRLVerifier {
                 u.setProtocol(S_PROTOCOL_HTTPS);
               } else if ( val.startsWith(S_PROTOCOL_HTTP+"://")) {
                    u.setProtocol(S_PROTOCOL_HTTP);               
-              } else if (val.startsWith(S_PROTOCOL_LDAP+"://") ) {
-                u.setProtocol(S_PROTOCOL_LDAP);  
               } else {
                 LOG.formatedWarning("Unsupported crl protocol '%s'!",val);
+                continue;
               }
               scrl.getUrls().add(u);
             }

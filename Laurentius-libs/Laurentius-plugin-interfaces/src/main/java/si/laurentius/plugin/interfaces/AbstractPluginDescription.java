@@ -151,7 +151,7 @@ public abstract class AbstractPluginDescription implements
         throw new PluginException(
                 PluginException.PluginExceptionCode.InitPluginException,
                 String.format(
-                        "Could not instatiate EJB for class '%s' and JNDI '%s'! Missing ComponentBase!",
+                        "Could not instantiate EJB for class '%s' and JNDI '%s'! Missing ComponentBase!",
                         plg.getName(), JNDI));
       }
       cb.setJndi(JNDI);
@@ -159,7 +159,7 @@ public abstract class AbstractPluginDescription implements
       throw new PluginException(
               PluginException.PluginExceptionCode.InitPluginException,
               String.format(
-                      "Could not instatiate EJB for class '%s' and JNDI '%s'!",
+                      "Could not instantiate EJB for class '%s' and JNDI '%s'!",
                       plg.getName(),
                       JNDI), ex);
     }

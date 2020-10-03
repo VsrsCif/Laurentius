@@ -36,18 +36,8 @@ public class CRLVerifierTest {
 
   final public static String S_CRL_DEST_POINTS = "2.5.29.31";
   final static String[][] LST_DATA_CRT = new String[][]{
-    {"sigov-ca.crt",
-      "OU=sigov-ca,O=state-institutions,C=si",
-      "http://www.sigov-ca.gov.si/crl/sigov-ca.crl",
-      "ldap://x500.gov.si/ou=sigov-ca,o=state-institutions,c=si?certificaterevocationlist?base"},
-    {"sigen-ca.crt",
-      "CN=SIGEN-CA G2,2.5.4.97=#130e56415453492d3137363539393537,O=Republika Slovenija,C=SI",
-      "http://www.sigen-ca.si/crl/sigen-ca-g2.crl",
-      "ldap://x500.gov.si/cn=SIGEN-CA%20G2,organizationIdentifier=VATSI-17659957,o=Republika%20Slovenija,c=SI?certificateRevocationList"},
-    {"halcom-ca.crt",
-      "CN=Halcom CA PO 2,O=Halcom,C=SI",
-      null,
-      "ldap://ldap.halcom.si/cn=Halcom%20CA%20PO%202,o=Halcom,c=SI?certificaterevocationlist;binary"},
+
+
     {"symantec.crt",
       "CN=Symantec Class 3 EV SSL CA - G3,OU=Symantec Trust Network,O=Symantec Corporation,C=US",
       "http://sr.symcb.com/sr.crl",
