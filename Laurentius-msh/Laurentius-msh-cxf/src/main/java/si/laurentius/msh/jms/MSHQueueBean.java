@@ -18,6 +18,8 @@ import java.io.File;
 import java.math.BigInteger;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.ActivationConfigProperty;
 import javax.ejb.EJB;
 import javax.ejb.EJBException;
@@ -60,200 +62,234 @@ import si.laurentius.plugin.interfaces.OutMailEventInterface;
  */
 @MessageDriven(
         activationConfig = {
-          @ActivationConfigProperty(propertyName = "acknowledgeMode",
-                  propertyValue = "Auto-acknowledge")
-          ,
+            @ActivationConfigProperty(propertyName = "acknowledgeMode",
+                    propertyValue = "Auto-acknowledge")
+            ,
       @ActivationConfigProperty(propertyName = "destinationType",
-                  propertyValue = "javax.jms.Queue")
-          ,
+                    propertyValue = "javax.jms.Queue")
+            ,
       @ActivationConfigProperty(propertyName = "destination", propertyValue = "queue/MSHQueue")
-          ,
+            ,
       @ActivationConfigProperty(propertyName = "maxSession",
-                  propertyValue = "8")})
+                    propertyValue = "8")})
 @TransactionManagement(TransactionManagementType.BEAN)
 public class MSHQueueBean implements MessageListener {
 
-  /**
-   *
-   */
-  public static final SEDLogger LOG = new SEDLogger(MSHQueueBean.class);
+    /**
+     *
+     */
+    public static final SEDLogger LOG = new SEDLogger(MSHQueueBean.class);
 
-  @EJB(mappedName = SEDJNDI.JNDI_SEDDAO)
-  SEDDaoInterface mDB;
+    @EJB(mappedName = SEDJNDI.JNDI_SEDDAO)
+    SEDDaoInterface mDB;
 
-  @EJB(mappedName = SEDJNDI.JNDI_DBCERTUTILS)
-  SEDCertUtilsInterface mCertBean;
+    @EJB(mappedName = SEDJNDI.JNDI_DBCERTUTILS)
+    SEDCertUtilsInterface mCertBean;
 
-  MshClient mmshClient = new MshClient();
+    MshClient mmshClient = new MshClient();
 
-  @EJB(mappedName = SEDJNDI.JNDI_PMODE)
-  PModeInterface mpModeManager;
+    @EJB(mappedName = SEDJNDI.JNDI_PMODE)
+    PModeInterface mpModeManager;
 
-  StorageUtils msStorageUtils = new StorageUtils();
-  MSHPluginOutEventHandler mPluginOutEventHandler = new MSHPluginOutEventHandler();
+    StorageUtils msStorageUtils = new StorageUtils();
+    MSHPluginOutEventHandler mPluginOutEventHandler = new MSHPluginOutEventHandler();
 
-  /**
-   * implementation of onMessage methods for submiting MSH out user message.
-   *
-   * @param msg jms wiht parameters Mail id, jmsRetryCount and jmsRetryDelay
-   */
-  @Override
-  public void onMessage(Message msg) {
-    long t = LOG.logStart();
-    // parse JMS Message data 
-    long jmsMessageId; // 
-    int jmsRetryCount = 0;
-    long jmsRetryDelay = -1;
+    /**
+     * implementation of onMessage methods for submiting MSH out user message.
+     *
+     * @param msg jms wiht parameters Mail id, jmsRetryCount and jmsRetryDelay
+     */
+    @Override
+    public void onMessage(Message msg) {
+        long t = LOG.logStart();
+        // parse JMS Message data 
+        long jmsMessageId; // 
+        int jmsRetryCount = 0;
+        long jmsRetryDelay = -1;
 
-    // Read property Mail ID
-    try {
-      jmsMessageId = msg.getLongProperty(SEDValues.EBMS_QUEUE_PARAM_MAIL_ID);
-    } catch (JMSException ex) {
-      LOG.logError(t, String.format(
-              "Bad JMS message for queue: 'MSHQueue' with no property: '%s'",
-              SEDValues.EBMS_QUEUE_PARAM_MAIL_ID), ex);
-      return;
-    }
-
-    try {
-      jmsRetryCount = msg.getIntProperty(SEDValues.EBMS_QUEUE_PARAM_RETRY);
-    } catch (JMSException ex) {
-      LOG.logError(t, String.format(
-              "JMS message for queue: 'MSHQueue' with no property: '%s'",
-              SEDValues.EBMS_QUEUE_PARAM_RETRY), ex);
-    }
-    try {
-      jmsRetryDelay = msg.getLongProperty(SEDValues.EBMS_QUEUE_PARAM_DELAY);
-    } catch (JMSException ex) {
-      LOG.logError(t, String.format(
-              "JMS message for queue: 'MSHQueue' with no property: '%s'",
-              SEDValues.EBMS_QUEUE_PARAM_DELAY), ex);
-    }
-    LOG.formatedlog(
-            "Start pushing out mail with ID: %s ",
-            jmsMessageId);
-
-    MSHOutMail mail;
-    try {
-      mail = mDB.getMailById(MSHOutMail.class, BigInteger.valueOf(jmsMessageId));
-       LOG.formatedlog("Got out mail with ID: %s, ebmsId: %s ",
-            jmsMessageId, mail.getMessageId());
-    } catch (NoResultException ex) {
-      LOG.logError(t,
-              "Message with id: '" + jmsMessageId + "' not exists in DB!", ex);
-      return;
-    }
-    LOG.formatedlog("Get EBMSMessageContext for message: %s", jmsMessageId);
-
-    if (SEDOutboxMailStatus.DELIVERED.getValue().equals(mail.getStatus())
-            || SEDOutboxMailStatus.DELETED.getValue().equals(mail.getStatus())
-            || SEDOutboxMailStatus.SENT.getValue().equals(mail.getStatus())) {
-      String strMsg = String.format(
-              "Out mail '%d' in wrong status: '%s'. Mail sending suppresed! ",
-              jmsMessageId, mail.getStatus());
-      LOG.logError(t, strMsg, null);
-      return;
-
-    }
-    // get pmode EBMSMessageContext
-
-    EBMSMessageContext sd;
-    try {
-      sd = mpModeManager.createMessageContextForOutMail(mail);
-    } catch (PModeException ex) {
-      String errDesc = String.format(
-              "Error retrieving EBMSMessageContext for message id: '%d'. Error: %s",
-              jmsMessageId, ex.getMessage());
-      LOG.logError(t, errDesc, ex);
-      setStatusToOutMail(mail, SEDOutboxMailStatus.FAILED, errDesc, ex);
-      mPluginOutEventHandler.outEvent(mail, null,
-              OutMailEventInterface.PluginOutEvent.FAILED);
-      return;
-    } catch (EJBException ex) {
-      Exception exc = ex.getCausedByException();
-      String errDesc = String.format(
-              "Error retrieving EBMSMessageContext for message id: '%d'. Error: %s",
-              jmsMessageId, Utils.getInitCauseMessage(exc));
-      LOG.logError(t, errDesc, ex);
-      setStatusToOutMail(mail, SEDOutboxMailStatus.FAILED, errDesc, ex);
-      mPluginOutEventHandler.outEvent(mail, null,
-              OutMailEventInterface.PluginOutEvent.FAILED);
-      return;
-    }
-
-    if (sd.getReceiverPartyIdentitySet().getActive() != null
-            && !sd.getReceiverPartyIdentitySet().getActive()) {
-      String errDesc = String.format(
-              "Receiver %s is inactive. (Check pmode settings.) Message is set to pending status.",
-              sd.getReceiverPartyIdentitySet().getId());
-      LOG.logWarn(t, errDesc, null);
-      setStatusToOutMail(mail, SEDOutboxMailStatus.PENDING, errDesc, null);
-
-      return;
-    }
-
-    // create ebms-message id
-    if (Utils.isEmptyString(mail.getMessageId())) {
-      mail.setMessageId(Utils.getUUIDWithDomain(SEDSystemProperties.
-              getLocalDomain()));
-    }
-
-    if (!sd.isPushTransfrer()) {
-      setStatusToOutMail(mail, SEDOutboxMailStatus.PULLREADY,
-              "Message ready for pull signal!");
-      LOG.formatedlog("Start pushing  message: %s", jmsMessageId);
-    } else {
-      LOG.formatedlog("Start pushing  message: %s", jmsMessageId);
-      setStatusToOutMail(mail, SEDOutboxMailStatus.PUSHING,
-              "Start pushing to receiver MSH");
-
-      mail.setSentDate(Calendar.getInstance().getTime());
-
-      Result sm = mmshClient.pushMessage(mail, sd, mCertBean);
-
-      if (sm.getError() != null) {
-
-        mPluginOutEventHandler.outEvent(mail, sd,
-                OutMailEventInterface.PluginOutEvent.ERROR);
-
-        setStatusToOutMail(mail, SEDOutboxMailStatus.ERROR, sm.getError().
-                getSubMessage(),
-                sm.getResultFile(), sm.getMimeType());
-
-        if ((sm.getError().getEbmsErrorCode().equals(
-                EBMSErrorCode.ConnectionFailure)
-                || sm.getError().getEbmsErrorCode().equals(
-                        EBMSErrorCode.DeliveryFailure)
-                || sm.getError().getEbmsErrorCode().equals(EBMSErrorCode.Other))) {
-
-          if (resendMail(mail, sd, jmsRetryCount, jmsRetryDelay)) {
-            mPluginOutEventHandler.outEvent(mail, sd,
-                    OutMailEventInterface.PluginOutEvent.RESEND);
-          } else {
-            setStatusToOutMail(mail, SEDOutboxMailStatus.FAILED,
-                    "Max resend mail reached",
-                    null, sm.getMimeType());
-
-          }
-
-        } else if (sm.getError().getEbmsErrorCode().equals(
-                EBMSErrorCode.ReceiverNotExists)) {
-          setStatusToOutMail(mail, SEDOutboxMailStatus.NOTDELIVERED,
-                  sm.getError().getSubMessage(),
-                  null, sm.getMimeType());
-
-        } else {
-
-          setStatusToOutMail(mail, SEDOutboxMailStatus.FAILED,
-                  "Configuration error: " + sm.getError().getSubMessage(),
-                  null, sm.getMimeType());
-
-          mPluginOutEventHandler.outEvent(mail, sd,
-                  OutMailEventInterface.PluginOutEvent.FAILED);
+        // Read property Mail ID
+        try {
+            jmsMessageId = msg.getLongProperty(SEDValues.EBMS_QUEUE_PARAM_MAIL_ID);
+        } catch (JMSException ex) {
+            LOG.logError(t, String.format(
+                    "Bad JMS message for queue: 'MSHQueue' with no property: '%s'",
+                    SEDValues.EBMS_QUEUE_PARAM_MAIL_ID), ex);
+            return;
         }
 
-      } else {
+        try {
+            jmsRetryCount = msg.getIntProperty(SEDValues.EBMS_QUEUE_PARAM_RETRY);
+        } catch (JMSException ex) {
+            LOG.logError(t, String.format(
+                    "JMS message for queue: 'MSHQueue' with no property: '%s'",
+                    SEDValues.EBMS_QUEUE_PARAM_RETRY), ex);
+        }
+        try {
+            jmsRetryDelay = msg.getLongProperty(SEDValues.EBMS_QUEUE_PARAM_DELAY);
+        } catch (JMSException ex) {
+            LOG.logError(t, String.format(
+                    "JMS message for queue: 'MSHQueue' with no property: '%s'",
+                    SEDValues.EBMS_QUEUE_PARAM_DELAY), ex);
+        }
+        LOG.formatedlog(
+                "Start pushing out mail with ID: %s ",
+                jmsMessageId);
 
+        MSHOutMail mail;
+        try {
+            mail = mDB.getMailById(MSHOutMail.class, BigInteger.valueOf(jmsMessageId));
+            LOG.formatedlog("Got out mail with ID: %s, ebmsId: %s ",
+                    jmsMessageId, mail.getMessageId());
+        } catch (NoResultException ex) {
+            LOG.logError(t,
+                    "Message with id: '" + jmsMessageId + "' not exists in DB!", ex);
+            return;
+        }
+        LOG.formatedlog("Get EBMSMessageContext for message: %s", jmsMessageId);
+
+        if (SEDOutboxMailStatus.DELIVERED.getValue().equals(mail.getStatus())
+                || SEDOutboxMailStatus.DELETED.getValue().equals(mail.getStatus())
+                || SEDOutboxMailStatus.SENT.getValue().equals(mail.getStatus())) {
+            String strMsg = String.format(
+                    "Out mail '%d' in wrong status: '%s'. Mail sending suppresed! ",
+                    jmsMessageId, mail.getStatus());
+            LOG.logError(t, strMsg, null);
+            return;
+
+        }
+        // get pmode EBMSMessageContext
+
+        EBMSMessageContext sd;
+        try {
+            sd = mpModeManager.createMessageContextForOutMail(mail);
+        } catch (PModeException ex) {
+            String errDesc = String.format(
+                    "Error retrieving EBMSMessageContext for message id: '%d'. Error: %s",
+                    jmsMessageId, ex.getMessage());
+            LOG.logError(t, errDesc, ex);
+            setStatusToOutMail(mail, SEDOutboxMailStatus.FAILED, errDesc, ex);
+            mPluginOutEventHandler.outEvent(mail, null,
+                    OutMailEventInterface.PluginOutEvent.FAILED);
+            return;
+        } catch (EJBException ex) {
+            Exception exc = ex.getCausedByException();
+            String errDesc = String.format(
+                    "Error retrieving EBMSMessageContext for message id: '%d'. Error: %s",
+                    jmsMessageId, Utils.getInitCauseMessage(exc));
+            LOG.logError(t, errDesc, ex);
+            setStatusToOutMail(mail, SEDOutboxMailStatus.FAILED, errDesc, ex);
+            mPluginOutEventHandler.outEvent(mail, null,
+                    OutMailEventInterface.PluginOutEvent.FAILED);
+            return;
+        }
+
+        if (sd.getReceiverPartyIdentitySet().getActive() != null
+                && !sd.getReceiverPartyIdentitySet().getActive()) {
+            String errDesc = String.format(
+                    "Receiver %s is inactive. (Check pmode settings.) Message is set to pending status.",
+                    sd.getReceiverPartyIdentitySet().getId());
+            LOG.logWarn(t, errDesc, null);
+            setStatusToOutMail(mail, SEDOutboxMailStatus.PENDING, errDesc, null);
+
+            return;
+        }
+
+        // create ebms-message id
+        if (Utils.isEmptyString(mail.getMessageId())) {
+            mail.setMessageId(Utils.getUUIDWithDomain(SEDSystemProperties.
+                    getLocalDomain()));
+        }
+
+        if (!sd.isPushTransfrer()) {
+            setStatusToOutMail(mail, SEDOutboxMailStatus.PULLREADY,
+                    "Message ready for pull signal!");
+            LOG.formatedlog("Start pushing  message: %s", jmsMessageId);
+        } else {
+            LOG.formatedlog("Start pushing  message: %s", jmsMessageId);
+            setStatusToOutMail(mail, SEDOutboxMailStatus.PUSHING,
+                    "Start pushing to receiver MSH");
+
+            mail.setSentDate(Calendar.getInstance().getTime());
+
+            Result sm = mmshClient.pushMessage(mail, sd, mCertBean);
+
+            if (sm.getError() != null) {
+
+                mPluginOutEventHandler.outEvent(mail, sd,
+                        OutMailEventInterface.PluginOutEvent.ERROR);
+
+               
+                setStatusToOutMail(mail, SEDOutboxMailStatus.ERROR, sm.getError().
+                        getSubMessage(),
+                        sm.getResultFile(), sm.getMimeType());
+
+                if ((sm.getError().getEbmsErrorCode().equals(
+                        EBMSErrorCode.ConnectionFailure)
+                        || sm.getError().getEbmsErrorCode().equals(
+                                EBMSErrorCode.DeliveryFailure)
+                        || sm.getError().getEbmsErrorCode().equals(EBMSErrorCode.Other))) {
+
+                    if (resendMail(mail, sd, jmsRetryCount, jmsRetryDelay)) {
+                        mPluginOutEventHandler.outEvent(mail, sd,
+                                OutMailEventInterface.PluginOutEvent.RESEND);
+                    } else {
+                        
+                        
+                        setStatusToOutMail(mail, SEDOutboxMailStatus.FAILED,
+                                "Max resend mail reached",
+                                null, sm.getMimeType());
+
+                    }
+
+                } else if (sm.getError().getEbmsErrorCode().equals(
+                        EBMSErrorCode.ReceiverNotExists)) {
+                    
+                    try {
+                        addPartToMessage(sm, SEDOutboxMailStatus.NOTDELIVERED, "Add error to message", mail);
+                    } catch (StorageException ex) {
+                        LOG.logError(sm.getResultFile(), ex);
+                    }
+                    
+                    setStatusToOutMail(mail, SEDOutboxMailStatus.NOTDELIVERED,
+                            sm.getError().getSubMessage(),
+                            null, sm.getMimeType());
+
+                } else {
+                    try {
+                        addPartToMessage(sm, SEDOutboxMailStatus.ERROR, "Add error to message", mail);
+                    } catch (StorageException ex) {
+                        LOG.logError(sm.getResultFile(), ex);
+                    }
+                    setStatusToOutMail(mail, SEDOutboxMailStatus.FAILED,
+                            "Configuration error: " + sm.getError().getSubMessage(),
+                            null, sm.getMimeType());
+
+                    mPluginOutEventHandler.outEvent(mail, sd,
+                            OutMailEventInterface.PluginOutEvent.FAILED);
+                }
+
+            } else {
+                String resPath = sm.getResultFile();
+               
+                try {
+                    
+                    addPartToMessage(sm, SEDOutboxMailStatus.SENT, "Add AS4Reciept to mail", mail);
+
+                    mDB.setStatusToOutMail(mail.getId(),
+                            mail.getSenderMessageId(), mail.getSentDate(),
+                            mail.getReceivedDate(), null, SEDOutboxMailStatus.SENT,
+                            "Get delivery receipt", null, "ebms", null, null);
+                    mPluginOutEventHandler.outEvent(mail, sd,
+                            OutMailEventInterface.PluginOutEvent.SEND);
+                } catch (StorageException ex) {
+                    LOG.logError(resPath, ex);
+                }
+            }
+        }
+        LOG.logEnd(t, jmsMessageId);
+    }
+
+    private void addPartToMessage(Result sm, SEDOutboxMailStatus status, String message,  MSHOutMail mail) throws StorageException {
         String resPath = sm.getResultFile();
         File fRes = StorageUtils.getFile(resPath);
 
@@ -271,153 +307,132 @@ public class MSHQueueBean implements MessageListener {
         mipt.setFilename(fRes.getName());
 
         mipt.setSize(BigInteger.valueOf(fRes.length()));
-        mipt.setSha256Value(DigestUtils.getHexSha256Digest(fRes));
+        mipt.setSha256Value(DigestUtils.getBase64Sha256Digest(fRes));
         mipt.setFilepath(resPath);
         mail.getMSHOutPayload().getMSHOutParts().add(mipt);
 
-        try {
-
-          mDB.addOutMailPayload(mail, Collections.singletonList(mipt),
-                  SEDOutboxMailStatus.SENT, "Message sent to receiver MSH", null,
-                  "ebms"
-          );
-
-          mDB.setStatusToOutMail(mail.getId(),
-                  mail.getSenderMessageId(), mail.getSentDate(),
-                  mail.getReceivedDate(), null, SEDOutboxMailStatus.SENT,
-                  "Get delivery receipt", null, "ebms", null, null);
-          mPluginOutEventHandler.outEvent(mail, sd,
-                  OutMailEventInterface.PluginOutEvent.SEND);
-        } catch (StorageException ex) {
-          LOG.logError(resPath, ex);
-        }
-
-        /*
-        setStatusToOutMail(mail, SEDOutboxMailStatus.SENT,
-                "Message sent to receiver MSH",
-                sm.getResultFile(), sm.getMimeType());
-         */
-      }
+        mDB.addOutMailPayload(mail, Collections.singletonList(mipt),
+                status, message, null,
+                "ebms"
+        );
 
     }
-    LOG.logEnd(t, jmsMessageId);
-  }
 
-  /**
-   * Method sets message back in queue for sending
-   *
-   * @param mail - mail to be resend
-   * @param sd
-   * @param jmsRetryCount
-   * @param jmsRetryDelay
-   * @return
-   */
-  public boolean resendMail(MSHOutMail mail, EBMSMessageContext sd,
-          int jmsRetryCount,
-          long jmsRetryDelay) {
+    /**
+     * Method sets message back in queue for sending
+     *
+     * @param mail - mail to be resend
+     * @param sd
+     * @param jmsRetryCount
+     * @param jmsRetryDelay
+     * @return
+     */
+    public boolean resendMail(MSHOutMail mail, EBMSMessageContext sd,
+            int jmsRetryCount,
+            long jmsRetryDelay) {
 
-    PMode pmd = sd.getPMode();
-    int iPriority = pmd.getPriority() == null ? 4 : pmd.getPriority();
-    iPriority = iPriority > 9 ? 9 : (iPriority < 0 ? 0 : iPriority);
+        PMode pmd = sd.getPMode();
+        int iPriority = pmd.getPriority() == null ? 4 : pmd.getPriority();
+        iPriority = iPriority > 9 ? 9 : (iPriority < 0 ? 0 : iPriority);
 
-    long t = LOG.logStart();
-    boolean bResend = false;
-    if (sd.getReceptionAwareness() != null && sd.getReceptionAwareness().
-            getRetry() != null) {
-      ReceptionAwareness.Retry rty = sd.getReceptionAwareness().getRetry();
+        long t = LOG.logStart();
+        boolean bResend = false;
+        if (sd.getReceptionAwareness() != null && sd.getReceptionAwareness().
+                getRetry() != null) {
+            ReceptionAwareness.Retry rty = sd.getReceptionAwareness().getRetry();
 
-      if (jmsRetryCount < rty.getMaxRetries()) {
-        jmsRetryCount++;
-        if (jmsRetryDelay <= 0) {
-          jmsRetryDelay = rty.getPeriod();
+            if (jmsRetryCount < rty.getMaxRetries()) {
+                jmsRetryCount++;
+                if (jmsRetryDelay <= 0) {
+                    jmsRetryDelay = rty.getPeriod();
+                } else {
+                    jmsRetryDelay *= rty.getMultiplyPeriod();
+                }
+                try {
+                    LOG.formatedWarning("Resend mail: %d retry %d delay %d", mail.getId(),
+                            jmsRetryCount,
+                            jmsRetryDelay);
+                    mDB.sendOutMessage(mail, jmsRetryCount, jmsRetryDelay, iPriority,
+                            null, null);
+
+                    bResend = true;
+                } catch (StorageException ex1) {
+                    String errDesc = String.format(
+                            "Mail resend %d  error occured. Err: %s", mail.getId(),
+                            ex1.getMessage());
+                    LOG.logError(t, errDesc, ex1);
+                    setStatusToOutMail(mail, SEDOutboxMailStatus.ERROR,
+                            errDesc + " " + ex1.getMessage());
+                }
+            }
+        }
+        return bResend;
+    }
+
+    /**
+     * Set status to out mail - method chages mail status log event to "event
+     * table"
+     *
+     * @param mail -
+     * @param status - status
+     * @param desc - description of event
+     * @param ex - if throwable not nul "getMessage()" is appended to desc
+     * parameter
+     */
+    public void setStatusToOutMail(MSHOutMail mail, SEDOutboxMailStatus status,
+            String desc,
+            Throwable ex) {
+        String strpath = null;
+        if (ex != null) {
+
+            try {
+                strpath = msStorageUtils.storeThrowableAndGetRelativePath(ex);
+            } catch (StorageException ex1) {
+                LOG.logError(LOG.getTime(), "Error storing evidence error", ex1);
+            }
+        }
+        if (Utils.isEmptyString(strpath)) {
+            setStatusToOutMail(mail, status, desc);
         } else {
-          jmsRetryDelay *= rty.getMultiplyPeriod();
+            setStatusToOutMail(mail, status, desc, strpath, MimeValue.MIME_TXT.
+                    getMimeType());
         }
+
+    }
+
+    /**
+     * Set status to out mail - method chages mail status log event to "event
+     * table"
+     *
+     * @param mail -
+     * @param status - status
+     * @param desc - description of event
+     */
+    public void setStatusToOutMail(MSHOutMail mail, SEDOutboxMailStatus status,
+            String desc) {
+        long l = LOG.logStart();
         try {
-          LOG.formatedWarning("Resend mail: %d retry %d delay %d", mail.getId(),
-                  jmsRetryCount,
-                  jmsRetryDelay);
-          mDB.sendOutMessage(mail, jmsRetryCount, jmsRetryDelay, iPriority,
-                          null, null);
-
-          bResend = true;
-        } catch (StorageException ex1) {
-          String errDesc = String.format(
-                  "Mail resend %d  error occured. Err: %s", mail.getId(),
-                  ex1.getMessage());
-          LOG.logError(t, errDesc, ex1);
-          setStatusToOutMail(mail, SEDOutboxMailStatus.ERROR,
-                  errDesc + " " + ex1.getMessage());
+            mDB.setStatusToOutMail(mail, status, desc);
+        } catch (StorageException ex2) {
+            LOG.logError(l,
+                    "Error occurred while setting status " + status.getValue() + " to MSHOutMail :'"
+                    + mail.getId()
+                    + "'!", ex2);
         }
-      }
-    }
-    return bResend;
-  }
-
-  /**
-   * Set status to out mail - method chages mail status log event to "event
-   * table"
-   *
-   * @param mail -
-   * @param status - status
-   * @param desc - description of event
-   * @param ex - if throwable not nul "getMessage()" is appended to desc
-   * parameter
-   */
-  public void setStatusToOutMail(MSHOutMail mail, SEDOutboxMailStatus status,
-          String desc,
-          Throwable ex) {
-    String strpath = null;
-    if (ex != null) {
-
-      try {
-        strpath = msStorageUtils.storeThrowableAndGetRelativePath(ex);
-      } catch (StorageException ex1) {
-        LOG.logError(LOG.getTime(), "Error storing evidence error", ex1);
-      }
-    }
-    if (Utils.isEmptyString(strpath)) {
-      setStatusToOutMail(mail, status, desc);
-    } else {
-      setStatusToOutMail(mail, status, desc, strpath, MimeValue.MIME_TXT.
-              getMimeType());
     }
 
-  }
-
-  /**
-   * Set status to out mail - method chages mail status log event to "event
-   * table"
-   *
-   * @param mail -
-   * @param status - status
-   * @param desc - description of event
-   */
-  public void setStatusToOutMail(MSHOutMail mail, SEDOutboxMailStatus status,
-          String desc) {
-    long l = LOG.logStart();
-    try {
-      mDB.setStatusToOutMail(mail, status, desc);
-    } catch (StorageException ex2) {
-      LOG.logError(l,
-              "Error occurred while setting status " + status.getValue() + " to MSHOutMail :'"
-              + mail.getId()
-              + "'!", ex2);
+    public void setStatusToOutMail(MSHOutMail mail, SEDOutboxMailStatus status,
+            String desc,
+            String fileName, String mime) {
+        long l = LOG.logStart();
+        try {
+            mDB.setStatusToOutMail(mail, status, desc, null, null, fileName, mime);
+        } catch (StorageException ex2) {
+            LOG.logError(l,
+                    "Error occurred while setting status " + status.getValue() + " to MSHOutMail :'"
+                    + mail.getId()
+                    + "'!", ex2);
+        }
     }
-  }
-
-  public void setStatusToOutMail(MSHOutMail mail, SEDOutboxMailStatus status,
-          String desc,
-          String fileName, String mime) {
-    long l = LOG.logStart();
-    try {
-      mDB.setStatusToOutMail(mail, status, desc, null, null, fileName, mime);
-    } catch (StorageException ex2) {
-      LOG.logError(l,
-              "Error occurred while setting status " + status.getValue() + " to MSHOutMail :'"
-              + mail.getId()
-              + "'!", ex2);
-    }
-  }
 
 }

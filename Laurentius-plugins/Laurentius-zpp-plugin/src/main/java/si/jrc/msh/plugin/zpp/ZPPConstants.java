@@ -63,6 +63,10 @@ public class ZPPConstants {
   
   public static final String S_PART_PROPERTY_ORIGIN_MIMETYPE = "OriginMimeType";
   public static final String S_PART_PROPERTY_REF_ID = "REF_ID";
+  
+  public static final String S_MAIL_PROPERTY_ORIGINAL_SENDER = "originalSender";
+  public static final String S_MAIL_PROPERTY_FINAL_RECIPIENT = "finalRecipient";
+  
 
   
   
@@ -81,6 +85,9 @@ public class ZPPConstants {
      */
   public static final String S_ZPP_SERVICE = "LegalDelivery_ZPP";
   public static final String S_ZPPB_SERVICE = "LegalDelivery_ZPPB";
+  
+  public static final String S_ZPP_B_SERVICE = "LegalDelivery_ZPP_B";
+  public static final String S_ZPPB_B_SERVICE = "LegalDelivery_ZPPB_B";
 
   /**
      *

@@ -24,87 +24,92 @@ import si.laurentius.plugin.def.Plugin;
 @SessionScoped
 public class PluginMenuView implements Serializable {
 
-  private static final SEDLogger LOG = new SEDLogger(PluginMenuView.class);
+    private static final SEDLogger LOG = new SEDLogger(PluginMenuView.class);
 
-  @Inject
-  private MainWindow mainWindow;
+    @Inject
+    private MainWindow mainWindow;
 
-  @EJB(mappedName = SEDJNDI.JNDI_PLUGIN)
-  private SEDPluginManagerInterface mPluginManager;
+    @EJB(mappedName = SEDJNDI.JNDI_PLUGIN)
+    private SEDPluginManagerInterface mPluginManager;
 
-  private TreeNode selectedNode;
-  TreeNode mtnRootNode = null;
+    private TreeNode selectedNode;
+    TreeNode mtnRootNode = null;
 
-  public MainWindow getMainWindow() {
-    return mainWindow;
-  }
-
-  public void setMainWindow(MainWindow mainWindow) {
-    this.mainWindow = mainWindow;
-  }
-
-  public TreeNode getRoot() {
-    
-
-    return updateMenu();
-  }
-
-  public TreeNode getSelectedNode() {
-    if (selectedNode == null && mtnRootNode!= null && mtnRootNode.getChildCount()>0) {
-      selectedNode = mtnRootNode.getChildren().get(0);
-    }
-    return selectedNode;
-  }
-
-  public void setSelectedNode(TreeNode selectedNode) {
-    this.selectedNode = selectedNode;
-  }
-
-  public void onSelection() {
-    if (selectedNode != null) {
-      mainWindow.setCurrentPanel(AppConstant.S_PANEL_PLUGIN);
+    public MainWindow getMainWindow() {
+        return mainWindow;
     }
 
-  }
+    public void setMainWindow(MainWindow mainWindow) {
+        this.mainWindow = mainWindow;
+    }
 
-  public String getSelectedWebContext() {
-    if (selectedNode != null) {
-      LOG.formatedWarning("get selected web context %s",
-              ((MenuItem) selectedNode.getData()).getWebUrl());
-      return ((MenuItem) selectedNode.getData()).getWebUrl();
+    public TreeNode getRoot() {
+
+        return updateMenu();
+    }
+
+    public TreeNode getSelectedNode() {
+        if (selectedNode == null && mtnRootNode != null && mtnRootNode.getChildCount() > 0) {
+            selectedNode = mtnRootNode.getChildren().get(0);
+        }
+        return selectedNode;
+    }
+
+    public void setSelectedNode(TreeNode selectedNode) {
+        this.selectedNode = selectedNode;
+    }
+
+    public void onSelection() {
+        if (selectedNode != null) {
+            mainWindow.setCurrentPanel(AppConstant.S_PANEL_PLUGIN);
+        }
 
     }
-    LOG.formatedWarning("get selected web context null");
-    return null;
-  }
 
-  private TreeNode updateMenu() {
-    if (mtnRootNode == null) {
-      mtnRootNode = new DefaultTreeNode(
-              new MenuItem("Plugin Menu", "ROOT", ""), null);
+    public String getSelectedWebContext() {
+        if (selectedNode != null) {
+            LOG.formatedWarning("get selected web context %s",
+                    ((MenuItem) selectedNode.getData()).getWebUrl());
+            return ((MenuItem) selectedNode.getData()).getWebUrl();
 
+        }
+        LOG.formatedWarning("get selected web context null");
+        return null;
+    }
 
-      for (Plugin p : mPluginManager.getRegistredPlugins()) {
-        if (!Utils.isEmptyString(p.getWebContext()) && p.getMainMenu() != null) {
+    private TreeNode updateMenu() {
+        if (mtnRootNode == null) {
+            mtnRootNode = new DefaultTreeNode(
+                    new MenuItem("Plugin Menu", "ROOT", ""), null);
 
-          TreeNode rootMI = new DefaultTreeNode(new MenuItem(p.getMainMenu().
-                  getName(), null, "ui-icon-svg-plugin ui-icon-size-22", p.
-                          getWebContext()), mtnRootNode);
-          rootMI.setExpanded(true);
+            for (Plugin p : mPluginManager.getRegistredPlugins()) {
+                if (!Utils.isEmptyString(p.getWebContext()) && p.getMainMenu() != null) {
 
-          for (si.laurentius.plugin.def.MenuItem pmi : p.getMainMenu().
-                  getMenuItems()) {
-            TreeNode plugin = new DefaultTreeNode(
+                    TreeNode rootMI = new DefaultTreeNode(new MenuItem(p.getMainMenu().
+                            getName(), null, "ui-icon-svg-plugin ui-icon-size-22", p.
+                                    getWebContext()), mtnRootNode);
+                    rootMI.setExpanded(true);
+
+                    buildMenuTree(p.getMainMenu(), p, rootMI);
+                }
+            }
+        }
+
+        return mtnRootNode;
+    }
+
+    private void buildMenuTree(si.laurentius.plugin.def.MenuItem menu, Plugin p, TreeNode rootMI) {
+        for (si.laurentius.plugin.def.MenuItem pmi : menu.getMenuItems()) {
+            TreeNode treeNode = new DefaultTreeNode(
                     new MenuItem(pmi.getName(), null,
                             "ui-icon-svg-plugin ui-icon-size-16", String.format(
-                                    "%s?page=%s&navigator=false", p.
-                                            getWebContext(), pmi.getPageId())),
-                    rootMI);
-          }
-        }
-      }
-    }
+                                    "%s?page=%s&navigator=false", p.getWebContext(), 
+                                    pmi.getPageId()+(Utils.isEmptyString(pmi.getSubpageId())?"":"&subpage="+pmi.getSubpageId()) )),rootMI);
+            if (!pmi.getMenuItems().isEmpty()) {
+                treeNode.setExpanded(true);
+                buildMenuTree(pmi, p, treeNode);
+            }                        
 
-    return mtnRootNode;
-  }
+        }
+    }
 }

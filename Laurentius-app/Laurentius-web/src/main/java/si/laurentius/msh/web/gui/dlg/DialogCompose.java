@@ -420,7 +420,7 @@ public class DialogCompose implements Serializable {
       String relPath = StorageUtils.getRelativePath(fout);
       p.setFilepath(relPath);
 
-      String hashValue = DigestUtils.getHexSha256Digest(fout);
+      String hashValue = DigestUtils.getBase64Sha256Digest(fout);
       p.setSha256Value(hashValue);
       p.setSize(BigInteger.valueOf(fout.length()));
 

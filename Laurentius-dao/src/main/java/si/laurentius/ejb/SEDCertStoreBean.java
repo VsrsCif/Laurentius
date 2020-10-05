@@ -14,6 +14,7 @@
  */
 package si.laurentius.ejb;
 
+import si.laurentius.commons.interfaces.SEDInitDataInterface;
 import si.laurentius.ejb.cache.SimpleListCache;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -45,16 +46,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
-import javax.ejb.EJB;
-import javax.ejb.Local;
-import javax.ejb.Lock;
-import javax.ejb.LockType;
+import javax.ejb.*;
+
 import static javax.ejb.LockType.READ;
-import javax.ejb.Singleton;
-import javax.ejb.Startup;
-import javax.ejb.TransactionManagement;
-import javax.ejb.TransactionManagementType;
+
 import javax.naming.NamingException;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -89,6 +86,7 @@ import si.laurentius.lce.crl.CRLVerifier;
  */
 @Startup
 @Singleton
+@DependsOn("SEDInitData")
 @Local(SEDCertStoreInterface.class)
 @TransactionManagement(TransactionManagementType.BEAN)
 public class SEDCertStoreBean implements SEDCertStoreInterface {
@@ -118,6 +116,17 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
   @Resource
   public UserTransaction mutUTransaction;
 
+
+  @PostConstruct
+  public void initCachedListsValues(){
+    refreshPasswords();
+    refreshCrlLists();
+    try {
+      refreshCertificates();
+    } catch (SEDSecurityException error) {
+      LOG.formatedError("Error occurred while initializing certificate list:" + error.getMessage(), error);
+    }
+  }
   /**
    *
    * @param crt
@@ -232,7 +241,7 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
             | SecurityException
             | IllegalStateException ex) {
       String msg = String.format(
-              "Error occured while saving passwd for alias %s. Err %s", cp.
+              "Error occured while saving password for alias %s. Err %s", cp.
                       getAlias(),
               ex.getMessage());
       LOG.logError(l, msg, ex);
@@ -405,17 +414,14 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
   @Lock(READ)
   public KeyStore getCertStore() throws SEDSecurityException {
     File fStore = SEDSystemProperties.getCertstoreFile();
-    //if (mKeyStore == null || !fStore.exists() ||  !Objects.equals(mKeyStoreOpenFilePath, fStore.getAbsoluteFile())) {
-      
+
       SEDCertPassword cp = getKeyPassword(KEYSTORE_NAME);
       mKeyStore = openKeystore(SEDSystemProperties.getCertstoreType(), fStore,
               KEYSTORE_NAME, cp != null && !Utils.
                       isEmptyString(
                               cp.getPassword()) ? cp.getPassword().toCharArray() : null);
       
-     // mKeyStoreOpenFilePath= fStore.getAbsolutePath();
-      
-    //}
+
     return mKeyStore;
   }
 
@@ -752,7 +758,7 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
 
       } catch (SEDSecurityException ex) {
         LOG.formatedWarning(
-                "Error occured while creating keystore %s, Error: %s!",
+                "Error occurred while creating keystore %s, Error: %s!",
                 fStore.getAbsolutePath(), ex.getMessage());
         throw ex;
       }
@@ -771,7 +777,7 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
 
         } catch (IOException ex) {
           LOG.formatedWarning(
-                  "Error occured while creating backup %s, error: %s!",
+                  "Error occurred while creating backup %s, error: %s!",
                   fStore.getAbsolutePath(), ex.getMessage());
           throw new SEDSecurityException(ReadWriteFileException, ex, ex.
                   getMessage());

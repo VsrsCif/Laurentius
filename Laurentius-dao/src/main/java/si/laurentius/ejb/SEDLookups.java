@@ -19,11 +19,7 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.Objects;
 import javax.annotation.Resource;
-import javax.ejb.Local;
-import javax.ejb.Singleton;
-import javax.ejb.Startup;
-import javax.ejb.TransactionManagement;
-import javax.ejb.TransactionManagementType;
+import javax.ejb.*;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
@@ -47,10 +43,11 @@ import si.laurentius.process.SEDProcessorInstance;
 import si.laurentius.process.SEDProcessor;
 
 /**
- * @author Jože Rihtaršič
+ * @author Joze Rihtarsic
  */
 @Startup
 @Singleton
+@DependsOn("SEDInitData")
 @Local(SEDLookupsInterface.class)
 @TransactionManagement(TransactionManagementType.BEAN)
 public class SEDLookups implements SEDLookupsInterface {

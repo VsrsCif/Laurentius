@@ -275,7 +275,7 @@ public class ZPPInInterceptor implements SoapInterceptorInterface {
           } catch (SEDSecurityException ex) {
             String msg = "Error occured while accessing private key for cert: " + xc.
                     toString();
-            LOG.logWarn(l, msg, null);
+            LOG.logWarn(l, msg, ex);
             continue;
           }
 
@@ -487,10 +487,11 @@ public class ZPPInInterceptor implements SoapInterceptorInterface {
       // delivery system
       if (lvc.size() != 1 || !(lvc.get(0).equals(xcertSed))) {
         String strMsg = 
-                "AdviceOfDelivery must have two signatures: recipient's and "
-                + " signature of recipient delivery system";
+                "AdviceOfDelivery must have on signature which must match sender AP!";
         
-        LOG.logError(l, strMsg, null);
+        String certStr = String.format(" Expected subject: %s, got %s", xcertSed.getSubjectX500Principal().getName(), lvc.get(0).getSubjectX500Principal().getName());
+        
+        LOG.logError(l, strMsg + certStr, null);
       throw new EBMSError(ZPPErrorCode.InvalidDeliveryAdvice, mInMail.
               getMessageId(),
               strMsg, SoapFault.FAULT_CODE_CLIENT);
@@ -520,7 +521,7 @@ public class ZPPInInterceptor implements SoapInterceptorInterface {
     long l = LOG.logStart();
     mInMail.setStatus(SEDInboxMailStatus.PLOCKED.getValue());
     mInMail.setStatusDate(Calendar.getInstance().getTime());
-    try {
+    try { 
       mDB.serializeInMail(mInMail, ZPPConstants.S_ZPP_PLUGIN_TYPE);
     } catch (StorageException ex) {
       String msg = String.format(
@@ -796,7 +797,7 @@ public class ZPPInInterceptor implements SoapInterceptorInterface {
               miDec.setType(mip.getType());
               miDec.setIsEncrypted(Boolean.FALSE);
 
-              miDec.setSha256Value(DigestUtils.getHexSha256Digest(fNew));
+              miDec.setSha256Value(DigestUtils.getBase64Sha256Digest(fNew));
               miDec.setSize(BigInteger.valueOf(fNew.length()));
 
               miDec.setFilepath(StorageUtils.getRelativePath(fNew));

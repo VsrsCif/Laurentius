@@ -213,6 +213,18 @@ public class PModePartyView extends AbstractPModeJSFView<PartyIdentitySet> {
     return lstLP;
 
   }
+  
+    public void setUseFourCornerModel(boolean bVal) {
+        if (getEditable() != null) {
+            getEditable().setUseFourCornerModel(bVal);
+        }
+    }
+
+    public boolean getUseFourCornerModel() {
+        return getEditable() != null && getEditable().getUseFourCornerModel() != null ? getEditable().
+                getUseFourCornerModel()
+                : false;
+    }
 
   public void setEditableIdentityActive(boolean bVal) {
     if (getEditable() != null) {

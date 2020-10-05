@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
+import javax.ejb.DependsOn;
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
@@ -61,6 +62,7 @@ import si.laurentius.msh.pmode.XPath;
  * @author Jože Rihtaršič
  */
 @Stateless
+@DependsOn("SEDInitData")
 @Local(SEDCertUtilsInterface.class)
 public class SEDCertUtilsBean implements SEDCertUtilsInterface {
 
@@ -510,7 +512,7 @@ public class SEDCertUtilsBean implements SEDCertUtilsInterface {
                 | CertificateException ex) {
 
           throw new SEDSecurityException(ReadWriteFileException,
-                  "Error occured while saving cache cert JKS", ex.
+                  "Error occurred while saving cache cert JKS", ex.
                           getMessage());
         }
 

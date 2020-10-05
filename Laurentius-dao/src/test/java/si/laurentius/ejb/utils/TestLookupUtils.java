@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.Random;
 import java.util.UUID;
 import si.laurentius.application.SEDApplication;
+import si.laurentius.cert.SEDCertPassword;
 import si.laurentius.commons.enums.MimeValue;
 import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.utils.StorageUtils;
@@ -36,6 +37,7 @@ import si.laurentius.process.SEDProcessorInstance;
 import si.laurentius.process.SEDProcessorProperty;
 import si.laurentius.process.SEDProcessor;
 import si.laurentius.process.SEDProcessorRule;
+import si.laurentius.property.SEDProperty;
 import si.laurentius.rule.SEDDecisionRule;
 
 import si.laurentius.user.SEDUser;
@@ -94,11 +96,11 @@ public class TestLookupUtils {
   
   public static SEDTask createSEDTask() {
     SEDTask st = new SEDTask();
-    st.setPlugin("PLUGIN");
+    st.setPlugin(UUID.randomUUID().toString());
     st.setPluginVersion("VERSION");
     st.setType("TYPE");
     st.setActive(Boolean.TRUE);
-    st.setName("Name task");
+    st.setName(UUID.randomUUID().toString());
     int iPropSize = RANDOM_VALUE.nextInt(10) + 3;
 
     for (int i = 0; i < iPropSize; i++) {
@@ -244,6 +246,22 @@ public class TestLookupUtils {
     return sb;
   }
 
+  static public SEDCertPassword createSEDCertPassword() {
+    SEDCertPassword entity = new SEDCertPassword();
+    entity.setAlias(UUID.randomUUID().toString());
+    entity.setKeyPassword(true);
+    entity.setPassword(UUID.randomUUID().toString());
+    return entity;
+  }
+
+  static public SEDProperty createSEDProperty() {
+    SEDProperty entity = new SEDProperty();
+    entity.setGroup(UUID.randomUUID().toString().substring(0, 32));
+    entity.setKey(UUID.randomUUID().toString());
+    entity.setValue(UUID.randomUUID().toString());
+    return entity;
+  }
+
   public static MSHOutMail createOutMail() throws StorageException {
 
     MSHOutMail om = new MSHOutMail();
@@ -327,7 +345,8 @@ public class TestLookupUtils {
     im.getMSHInPayload().getMSHInParts().add(ip);
 
     return im;
-
   }
+
+
 
 }

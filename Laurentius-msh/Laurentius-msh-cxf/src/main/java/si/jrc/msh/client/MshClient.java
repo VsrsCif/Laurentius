@@ -44,22 +44,13 @@ import org.apache.cxf.transport.ConduitInitiatorManager;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 import org.oasis_open.docs.ebxml_msg.ebms.v3_0.ns.core._200704.SignalMessage;
+import si.jrc.msh.interceptor.*;
 import si.laurentius.msh.outbox.mail.MSHOutMail;
 import si.laurentius.msh.pmode.PartyIdentitySet;
 import si.laurentius.msh.pmode.Protocol;
 
 import si.laurentius.commons.ebms.EBMSError;
 import si.jrc.msh.exception.EBMSErrorCode;
-import si.jrc.msh.interceptor.EBMSInFaultInterceptor;
-import si.jrc.msh.interceptor.EBMSInInterceptor;
-import si.jrc.msh.interceptor.EBMSLogInInterceptor;
-import si.jrc.msh.interceptor.EBMSLogOutInterceptor;
-import si.jrc.msh.interceptor.EBMSOutFaultInterceptor;
-import si.jrc.msh.interceptor.EBMSOutInterceptor;
-import si.jrc.msh.interceptor.MSHPluginInFaultInterceptor;
-import si.jrc.msh.interceptor.MSHPluginInInterceptor;
-import si.jrc.msh.interceptor.MSHPluginOutFaultInterceptor;
-import si.jrc.msh.interceptor.MSHPluginOutInterceptor;
 import si.jrc.msh.transport.SMTPConduit;
 import si.jrc.msh.transport.SMTPTransportFactory;
 import si.laurentius.commons.SEDSystemProperties;
@@ -163,7 +154,6 @@ public class MshClient {
     cxfClient.getOutInterceptors().add(new MSHPluginOutInterceptor());
     cxfClient.getOutInterceptors().add(new EBMSOutInterceptor());
     cxfClient.getOutInterceptors().add(new EBMSLogOutInterceptor());
-
     cxfClient.getInFaultInterceptors().add(new EBMSLogInInterceptor());
     cxfClient.getInFaultInterceptors().add(new EBMSInFaultInterceptor());
     cxfClient.getInFaultInterceptors().add(new MSHPluginInFaultInterceptor());
@@ -308,7 +298,7 @@ public class MshClient {
         File file;
         try {
           file = StorageUtils.getNewStorageFile(MimeValue.MIME_XML.getSuffix(),
-                  "RSP_");
+                  EBMSConstants.SOAP_PART_RESPONSE_PREFIX);
           try (FileOutputStream fos = new FileOutputStream(file)) {
             soapRes.writeTo(fos);
             String respFilePath = StorageUtils.getRelativePath(file);
@@ -362,7 +352,7 @@ public class MshClient {
 
         try {
           File file = StorageUtils.getNewStorageFile(MimeValue.MIME_XML.
-                  getSuffix(), "ERR_");
+                  getSuffix(), EBMSConstants.SOAP_PART_FAULT_PREFIX);
           try (FileWriter fileWriter = new FileWriter(file)) {
             fileWriter.write(wr.toString());
             //  wr.getDocument().

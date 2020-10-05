@@ -10,6 +10,11 @@ package si.laurentius.commons.cxf;
  */
 public class EBMSConstants {
 
+    
+    
+  public static final String  SOAP_PART_REQUEST_PREFIX="SoapRequestEnv_";
+  public static final String SOAP_PART_RESPONSE_PREFIX = "SoapResponseEnv_";
+    public static final String SOAP_PART_FAULT_PREFIX = "SoapFaultEnv_";
   /**
    * Interceptor context parammeter for out mail
    */
@@ -38,7 +43,12 @@ public class EBMSConstants {
    */
   public static final String EBMS_CP_INMAIL_RECEIVER = "sed.ebms.cp.inmail.receiver";
   
-  
+    public static final String EBMS_PROP_4CM_FINAL_RECIPIENT
+            = "finalRecipient";
+    public static final String EBMS_PROP_4CM_ORIGINAL_SENDER
+            = "originalSender";
+
+    
   /**
    *
    */
@@ -118,6 +128,11 @@ public class EBMSConstants {
   public static final String EBMS_PARTY_TYPE_EBOX =
       "urn:oasis:names:tc:ebcore:partyid-type:unregistered:si-svev:sed-box";
 
+    /**
+     * SVEV PartyInfoID Type for address
+     */
+    public static final String EBMS_ECORE_PARTY_TYPE_UNREGISTERED
+            = "urn:oasis:names:tc:ebcore:partyid-type:unregistered";
   /**
    *SVEV PartyInfoID Type for name
    */
