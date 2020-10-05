@@ -10,8 +10,8 @@
         <property column="DESCRIPTION" name="Desc" length="1024"  type="java.lang.String" />
         <property column="EMAIL" name="Email" length="512"  type="java.lang.String" />
         <property column="Active_Date_From" name="ActiveFromDate" type="java.util.Date" />       
-        <property column="Active_Date_To" name="ActiveToDate" type="java.util.Date" />        
-        
+        <property column="Active_Date_To" name="ActiveToDate" type="java.util.Date" />
+
         <bag name="sedBoxes"  access="field" table="lau_user_sedbox" 
              inverse="false"  fetch="select" lazy="false" >
             <key>

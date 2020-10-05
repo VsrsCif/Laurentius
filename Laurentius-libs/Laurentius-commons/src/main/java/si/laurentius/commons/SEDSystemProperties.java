@@ -32,7 +32,8 @@ public class SEDSystemProperties {
   private static final int IN_BRACKET = 2;
   private static final int NORMAL = 0;
   private static final int SEEN_DOLLAR = 1;
-  
+
+
   /**
    * System property configuration folder .
    */
@@ -56,6 +57,11 @@ public class SEDSystemProperties {
    */
   public static final String SYS_PROP_EXECUTION_WORKERS
           = "si.laurentius.msh.execution.workers.count";
+
+
+  public static final String S_KEY_TEST_NETOWRK = "laurentius.network.test.addresses";
+  public static final String S_KEY_TEST_NETOWRK_DEF = "www.google.com,www.amazon.com";
+
 
   /**
    * System property for SED home directory.

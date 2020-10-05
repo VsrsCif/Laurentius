@@ -19,14 +19,7 @@ import java.util.List;
 import java.util.Objects;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
-import javax.ejb.AccessTimeout;
-import javax.ejb.Local;
-import javax.ejb.Lock;
-import javax.ejb.LockType;
-import javax.ejb.Singleton;
-import javax.ejb.Startup;
-import javax.ejb.TransactionManagement;
-import javax.ejb.TransactionManagementType;
+import javax.ejb.*;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
@@ -36,7 +29,6 @@ import javax.transaction.NotSupportedException;
 import javax.transaction.RollbackException;
 import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
-import si.laurentius.commons.SEDProperties;
 import si.laurentius.property.SEDProperty;
 import si.laurentius.commons.interfaces.DBSettingsInterface;
 import si.laurentius.commons.utils.SEDLogger;
@@ -51,6 +43,7 @@ import si.laurentius.commons.utils.Utils;
 @Local(DBSettingsInterface.class)
 @AccessTimeout(value = 60000)
 @TransactionManagement(TransactionManagementType.BEAN)
+@DependsOn("SEDInitData")
 public class DBSettings implements DBSettingsInterface {
 
   
@@ -74,20 +67,6 @@ public class DBSettings implements DBSettingsInterface {
   void init() {
     // init system properties
     getSEDProperties();
-    if (getSEDProperty(SEDProperties.S_KEY_TEST_NETOWRK, LAU_SETTINGS) == null) {
-      setData(SEDProperties.S_KEY_TEST_NETOWRK,SEDProperties.S_KEY_TEST_NETOWRK_DEF, LAU_SETTINGS);
-    }
-
-    /*
-    if (getSEDProperty(SEDSystemProperties.SYS_PROP_LAU_DOMAIN, SYSTEM_SETTINGS) == null) {
-      setData(SEDSystemProperties.SYS_PROP_LAU_DOMAIN, "no-domain.org",
-              SYSTEM_SETTINGS);
-    }
-    if (getSEDProperty(SEDSystemProperties.SYS_PROP_HOME_DIR, SYSTEM_SETTINGS) == null) {
-      setData(SEDSystemProperties.SYS_PROP_HOME_DIR, System.getProperty(
-              "user.home") + File.separator + "laurentius-home", SYSTEM_SETTINGS);
-    }*/
-
   }
 
   /**

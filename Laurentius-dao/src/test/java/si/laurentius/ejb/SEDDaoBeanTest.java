@@ -76,20 +76,17 @@ public class SEDDaoBeanTest extends TestUtils {
     // set logger
     setLogger(SEDDaoBeanTest.class.getSimpleName());
 
-    // create initial context factory 
-    System.setProperty(Context.INITIAL_CONTEXT_FACTORY,
-            InitialContextFactoryForTest.class.getName());
+    // create initial context factory
+    System.setProperty(Context.INITIAL_CONTEXT_FACTORY, InitialContextFactoryForTest.class.getName());
 
     mTestInstance.memEManager = TestUtils.createEntityManager();
-    mTestInstance.mutUTransaction
-            = new MockUserTransaction(mTestInstance.memEManager.getTransaction());
+    mTestInstance.mutUTransaction = new MockUserTransaction(mTestInstance.memEManager.getTransaction());
 
     System.setProperty(SEDSystemProperties.SYS_PROP_LAU_DOMAIN, LAU_TEST_DOMAIN);
 
     setUpStorage("target/storage/SEDDaoBeanTest");
 
-    setupJMS(S_JMS_JNDI_CF, "java:/jms/", Collections.
-            singletonList(S_JMS_QUEUE));
+    setupJMS(S_JMS_JNDI_CF, "java:/jms/", Collections.singletonList(S_JMS_QUEUE));
 
   }
 
@@ -106,7 +103,7 @@ public class SEDDaoBeanTest extends TestUtils {
     init.setReceiverName(null);
     init.setSubmittedDate(null);
     PMode pmd  =new PMode();
-    
+
 
     mTestInstance.serializeOutMail(init, "testUser", "testApplication",
             pmd);
@@ -489,9 +486,9 @@ public class SEDDaoBeanTest extends TestUtils {
   public void clearEntityManagerCahche() {
     mTestInstance.memEManager.clear();
   }
-  
+
   private void addTestConversation(Calendar c1, String receiverBox) throws StorageException{
-  
+
   MSHOutMail mo1 = TestLookupUtils.createOutMail();
     mo1.setMessageId(Utils.getUUID("test"));
     mo1.setSentDate(c1.getTime());
@@ -550,7 +547,7 @@ public class SEDDaoBeanTest extends TestUtils {
             + "  and om.Action=:outAction "
             + "  and im.Action=:inAction "
             + "  and om.ReceivedDate >=:receivedDate "
-            + "  and om.DeliveredDate is not null "            
+            + "  and om.DeliveredDate is not null "
             + "  group by om.ReceiverEBox";
 
     Map<String, Object> prms = new HashMap<>();
@@ -561,7 +558,7 @@ public class SEDDaoBeanTest extends TestUtils {
 
     List<TestEntity> lst = mTestInstance.
             getDataList(TestEntity.class, hql, prms);
-    
+
     System.out.println("lst " + lst.size());
     for (TestEntity te : lst) {
       System.out.println("Test :" + te.getReceiverEBox() + " lastDeliveryDate" + te.getDeliveredDate()  + " last  " + c1.getTime().toString() );
@@ -586,10 +583,10 @@ public class SEDDaoBeanTest extends TestUtils {
      List<MSHOutMail> lst2 = mTestInstance.
             getDataList(MSHOutMail.class, hql2, prms);
      */
-     
-     
 
-    
+
+
+
 
   }
 
