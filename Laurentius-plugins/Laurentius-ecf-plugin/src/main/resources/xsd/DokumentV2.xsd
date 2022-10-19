@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://sodisce.si/common/Dokument/v2"
+            xmlns:xs="http://www.w3.org/2001/XMLSchema"
+            attributeFormDefault="unqualified"
+            elementFormDefault="qualified"
+            targetNamespace="http://sodisce.si/common/Dokument/v2">
+
+    <xs:complexType name="DokumentType">
+          <xs:sequence>
+            <xs:element type="xs:string" name="DokumentHash">
+              <xs:annotation>
+                <xs:documentation>Hash dokumenta</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+			<xs:element type="xs:anyURI" name="HashAlgoritem" minOccurs="0">
+              <xs:annotation>
+                <xs:documentation>Izbran algoritem za izračun hash-a dokumenta</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+            <xs:element type="xs:boolean" name="JeVodilni">
+              <xs:annotation>
+                <xs:documentation>Indikator ali je dokument vodilni</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+            <xs:element type="xs:string" name="DokumentId" minOccurs="0">
+              <xs:annotation>
+                <xs:documentation>Id dokumenta</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+            <xs:element type="xs:string" name="Ime" minOccurs="0">
+              <xs:annotation>
+                <xs:documentation>Ime dokumenta</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+            <xs:element type="xs:string" name="Komentar" minOccurs="0">
+              <xs:annotation>
+                <xs:documentation>Komentar dokumenta</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+            <xs:element type="xs:string" name="MetaPodatek1" minOccurs="0">
+              <xs:annotation>
+                <xs:documentation>MetaPodatek1</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+            <xs:element type="xs:string" name="MetaPodatek2" minOccurs="0">
+              <xs:annotation>
+                <xs:documentation>MetaPodatek2</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+</xs:complexType>
+</xs:schema>
