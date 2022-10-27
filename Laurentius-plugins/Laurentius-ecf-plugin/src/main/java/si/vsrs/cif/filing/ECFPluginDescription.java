@@ -50,7 +50,7 @@ public class ECFPluginDescription extends  AbstractPluginDescription {
       registerPluginComponentInterface(ECFInInterceptor.class);
       registerPlugin();
     } catch (PluginException ex) {
-      LOG.logError("Error occured while registering plugin: " + ex.getMessage(), ex);
+      LOG.logError("Error occurred while registering plugin: " + ex.getMessage(), ex);
     }
   }
   
@@ -69,13 +69,13 @@ public class ECFPluginDescription extends  AbstractPluginDescription {
    */
   @Override
   public String getDesc() {
-    return "ECF plugin";
+    return "Dodatek za elektronsko vlaganje";
   }
 
 
   @Override
   public String getVersion() {
-    return "1.0.0";
+    return "0.1.0";
   }
 
 
@@ -85,7 +85,7 @@ public class ECFPluginDescription extends  AbstractPluginDescription {
    */
   @Override
   public String getName() {
-    return "ECF plugin";
+    return "eOdlozisce";
   }
 
   /**

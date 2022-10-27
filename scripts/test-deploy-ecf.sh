@@ -7,12 +7,8 @@ BOUNDLE_TEST="Laurentius-test"
 FOLDER_DEPLOY="test-deploy"
 
 
-#rm -rf "$FOLDER_DEPLOY/$MEPS_UNZIP"
-#unzip -q plugin-meps-*.zip -d $MEPS_UNZIP
-
-
-cp ../../plugins/Laurentius-meps-plugin/target/plugin-meps.war $FOLDER_DEPLOY/$WILDFLY_HOME/standalone/deployments/
-cp -r ../../plugins/Laurentius-meps-plugin/src/main/resources/init/meps $FOLDER_DEPLOY/$WILDFLY_HOME/standalone/data/laurentius-home/plugins/
+cp ../Laurentius-plugins/Laurentius-ecf-plugin/target/plugin-odlozisce.war $FOLDER_DEPLOY/$WILDFLY_HOME/standalone/deployments/
+cp -r ../Laurentius-plugins/Laurentius-ecf-plugin/src/main/resources/init/def-init-data.xml $FOLDER_DEPLOY/$WILDFLY_HOME/standalone/data/laurentius-home/plugins/
 
 cd "$FOLDER_DEPLOY/$WILDFLY_HOME/bin"
 

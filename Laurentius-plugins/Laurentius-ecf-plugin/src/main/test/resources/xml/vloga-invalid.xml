@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+	<ns3:SplosnaVloga xmlns:ns1="http://sodisce.si/common/Vloga/v1" xmlns:ns3="http://sodisce.si/SplosnaVloga/v2" xmlns:ns4="http://sodisce.si/common/Dokument/v2" id="splosnaVlogaId">
+		<ns3:Vloga id="_24073">
+			broken XML>
+			<ns1:SodiSif>S13</ns1:SodiSif>
+			<ns1:PravnoPodrocjeSif>27</ns1:PravnoPodrocjeSif>
+			<ns3:VlozeniDokumenti>
+				<ns3:SeznamDokumentov>
+					<ns4:DokumentHash>bff4468c1d3c7b12958732499032d7f301bca24c158d0dd916a3a9714b13e93c</ns4:DokumentHash>
+					<ns4:JeVodilni>true</ns4:JeVodilni>
+					<ns4:Ime>Tožba.pdf</ns4:Ime>
+				</ns3:SeznamDokumentov>
+				<ns3:SeznamDokumentov>
+					<ns4:DokumentHash>2674b4fafbddd0100825b50b7ac4233c24b98f37d5f4ddc00041a359850e09fc</ns4:DokumentHash>
+					<ns4:JeVodilni>false</ns4:JeVodilni>
+					<ns4:Ime>Tožba_priloga_1.pdf</ns4:Ime>
+				</ns3:SeznamDokumentov>
+				<ns3:SeznamDokumentov>
+					<ns4:DokumentHash>2ddc1b45270fa18bba3a5e3cdf4be68014b74159b1ff0ca1a36b708c71b56bc6</ns4:DokumentHash>
+					<ns4:JeVodilni>false</ns4:JeVodilni>
+					<ns4:Ime>Tožba_priloga_2.pdf</ns4:Ime>
+				</ns3:SeznamDokumentov>
+				<ns3:SeznamDokumentov>
+					<ns4:DokumentHash>d587b41d06d7bef4ca90d6b64e0bb402178d6eb6ff75db2e6e3d11270c79bf10</ns4:DokumentHash>
+					<ns4:JeVodilni>false</ns4:JeVodilni>
+					<ns4:Ime>Tožba_priloga_3.pdf</ns4:Ime>
+				</ns3:SeznamDokumentov>
+			</ns3:VlozeniDokumenti>
+		</ns3:Vloga>
+	</ns3:SplosnaVloga>

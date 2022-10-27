@@ -11,14 +11,10 @@
     </parent>
     
     <artifactId>Laurentius-ecf-plugin</artifactId>
-    <packaging>jar</packaging>
+    <packaging>war</packaging>
 
     <name>Laurentius-ecf-plugin</name>
     <description>Laurentius eFiling plugin</description>
-    <organization>
-        <name>Supreme Court Republic of Slovenia</name>
-        <url>http://www.sodisce.si/</url>
-    </organization>
     <licenses>
         <license>
             <name>European Union Public Licence (EUPL)</name>
@@ -32,9 +28,6 @@
         <developer>
             <id>jrc</id>
             <name>Jože Rihtaršič</name>
-            <email>joze.rihtarsic@sodisce.si</email>
-            <organization>Supreme Court Republic of Slovenia</organization>
-            <organizationUrl>http://www.sodisce.si/</organizationUrl>
             <roles>
                 <role>architect</role>
                 <role>developer</role>
@@ -57,20 +50,13 @@
         <url>scm:svn:http://none</url>
     </scm>
 
-
     <properties>
-        <jar.final.name>plugin-court-filing</jar.final.name>
-        
+        <plugin.final.name>plugin-odlozisce</plugin.final.name>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        
-
     </properties>
-
     <dependencies>
-
-
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>Laurentius-commons</artifactId>
@@ -90,10 +76,10 @@
             <version>${org.apache.pdfbox.version}</version>     
             <scope>provided</scope>   
         </dependency>
-
-
-
-        
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-frontend-jaxws</artifactId>
@@ -107,30 +93,23 @@
             <version>${log4j.version}</version>		
             <scope>provided</scope>
         </dependency>
-
         <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-api</artifactId>
             <version>${javax.javaee-api.version}</version>
             <scope>provided</scope>
         </dependency>
-        
-      
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
-       
     </dependencies>
 
     <build>
-        <finalName>${jar.final.name}</finalName>
+        <finalName>${plugin.final.name}</finalName>
         <plugins>
-            
-           
-            
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -142,8 +121,6 @@
                     <showWarnings>true</showWarnings>
                 </configuration>
             </plugin>         
-           
-           
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-ejb-plugin</artifactId>
@@ -154,19 +131,18 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>${maven.jar.plugin.version}</version>
+                <artifactId>maven-war-plugin</artifactId>
                 <configuration>
+                    <!-- for missing WEB-INF/web.xml-->
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
                     <archive>
-                        <manifestEntries>                            
- 
+                        <manifestEntries>
+                            <implementation-version>${project.version}</implementation-version>
                             <Dependencies>org.apache.cxf, org.apache.cxf.impl, si.laurentius, org.apache.activemq.artemis, org.apache.ws.security, org.apache.pdfbox</Dependencies>
                         </manifestEntries>
-                
                     </archive>
                 </configuration>
             </plugin>
-           
         </plugins>
     </build>
 </project>

@@ -24,22 +24,14 @@ public enum ECFService {
   
   CourtFiling("CourtFiling", "http://laurentius.si/ecf" );
 
-;// 2kg -30kg
-  
-  
-  
-  
-  
   String service;
   String namespace;
   
 
-  private ECFService(String service, String namespace){
+  ECFService(String service, String namespace){
     this.service = service;
     this.namespace = namespace; 
   }
-  
-  
 
   public String getService() {
     return service;
@@ -49,8 +41,6 @@ public enum ECFService {
     return namespace;
   }
 
-
-  
   public static ECFService getValueByService(String service){
     for (ECFService ms: values()){
       if (Objects.equals(ms.getService(),service) ){
