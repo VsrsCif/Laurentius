@@ -144,13 +144,13 @@
                             <h:outputText value="#{msg['Certificate']}" />                                 
                         </f:facet>
                         <h:outputText value="#{msg['Alias']}:" />
-                        <h:outputText value="#{dialogImportCert.selectedCertificate.alias}" style="width: 260px"  />
+                        <h:inputText value="#{dialogImportCert.selectedCertificate.alias}" style="width: 100%"/>
 
                         <h:outputText value="#{msg['SubjectDN']}:" />
-                        <h:outputText  value="#{dialogImportCert.selectedX509Cert.subjectDN}" style="width: 260px"  />
+                        <h:outputText  value="#{dialogImportCert.selectedX509Cert.subjectDN}" style="width: 100%"/>
 
                         <h:outputText value="#{msg['IssuerDN']}:" />
-                        <h:outputText  value="#{dialogImportCert.selectedX509Cert.issuerDN}" style="width: 260px"  />
+                        <h:outputText  value="#{dialogImportCert.selectedX509Cert.issuerDN}" style="width: 100%"/>
 
                         <h:outputText value="#{msg['ValidFrom']}:" />
                         <h:outputText  value="#{dialogImportCert.selectedX509Cert.notBefore}" style="width: 100%">
