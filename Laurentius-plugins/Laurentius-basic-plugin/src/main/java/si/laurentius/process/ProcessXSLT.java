@@ -211,7 +211,7 @@ public class ProcessXSLT extends AbstractMailProcessor {
             mipt.setFilename(filename);
 
             mipt.setSize(BigInteger.valueOf(fRes.length()));
-            mipt.setSha256Value(DigestUtils.getHexSha256Digest(fRes));
+            mipt.setSha256Value(DigestUtils.getBase64Sha256Digest(fRes));
             mipt.setFilepath(StorageUtils.getRelativePath(fRes));
           
             transExecuted = true;

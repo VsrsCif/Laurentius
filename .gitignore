@@ -1,79 +1,83 @@
-/Laurentius-libs/Laurentius-msh-xsd/target/
-/Laurentius-libs/Laurentius-wsdl/target/
-/Laurentius-libs/Laurentius-commons/target/
-/Laurentius-app/Laurentius-ws/target/
-/Laurentius-msh/Laurentius-msh-cxf/target/
-/Laurentius-msh/Laurentius-msh-ejb/target/
-/Laurentius-msh/Laurentius-msh-ws/target/
-/Laurentius-msh/Laurentius-msh-ear/target/
-/Laurentius-libs (kopija)/Laurentius-msh-xsd/target/
-/Laurentius-libs (kopija)/Laurentius-commons/target/
-/Laurentius-libs (kopija)/Laurentius-wsdl/target/
-/Laurentius-msh-plugins/Laurentius-msh-xsd/target/
-/Laurentius-msh-plugins/Laurentius-commons/target/
-/Laurentius-msh-plugins/Laurentius-wsdl/target/
-/ebms-plugins/Laurentius-msh-xsd/target/
 /ebms-plugins/Laurentius-commons/target/
+/ebms-plugins/Laurentius-msh-xsd/target/
 /ebms-plugins/Laurentius-wsdl/target/
-/Laurentius-plugins/Laurentius-msh-xsd/target/
-/Laurentius-plugins/Laurentius-commons/target/
-/Laurentius-plugins/Laurentius-wsdl/target/
-/Laurentius-plugins/Laurentius-msh-xsd/Laurentius-wsdl/target/
-/Laurentius-plugins/Laurentius-zpp-plugin/target/
-/Laurentius-libs/Laurentius-msh-cxf/target/
-/Laurentius-libs/Laurentius-msh-plugin/target/
-/Laurentius-libs/Laurentius-commons/nbproject/
-/Laurentius-libs/Laurentius-commons/test.html
-/Laurentius-libs/Laurentius-commons/test.txt
-/Laurentius-libs/Laurentius-commons/test.pdf
-/Laurentius-app/Laurentius-ws/nbproject/
-/Laurentius-standalone/target/
-/target/
-/Laurentius-app/Laurentius-ws (kopija)/target/
+/Laurentius-app (kopija)/Laurentius-web/target/
+/Laurentius-app (kopija)/Laurentius-ws/target/
 /Laurentius-app/Laurentius-web/target/
+/Laurentius-app/Laurentius-ws (kopija)/target/
+/Laurentius-app/Laurentius-ws/nbproject/
+/Laurentius-app/Laurentius-ws/target/
+/Laurentius-app/Laurentius-ws/derby.log
+/Laurentius-app/target/
+/Laurentius-dao/derby.log
+/Laurentius-dao/target/
+/Laurentius-examples/example-web-plugin/nbproject/
+/Laurentius-examples/example-web-plugin/target/
+/Laurentius-examples/Laurentius-test-case-plugin/nbproject/
+/Laurentius-examples/Laurentius-test-case-plugin/target/
+/Laurentius-examples/Laurentius-web/target/
+/Laurentius-examples/Laurentius-ws/target/
+/Laurentius-examples/ws-client/target/
+/Laurentius-libs (kopija)/Laurentius-commons/target/
+/Laurentius-libs (kopija)/Laurentius-msh-xsd/target/
+/Laurentius-libs (kopija)/Laurentius-wsdl/target/
 /Laurentius-libs/Laurentius-commons (kopija)/nbproject/
 /Laurentius-libs/Laurentius-commons (kopija)/target/
+/Laurentius-libs/Laurentius-commons/nbproject/
+/Laurentius-libs/Laurentius-commons/target/
+/Laurentius-libs/Laurentius-commons/test.html
+/Laurentius-libs/Laurentius-commons/test.log
+/Laurentius-libs/Laurentius-commons/test.pdf
+/Laurentius-libs/Laurentius-commons/test.txt
 /Laurentius-libs/Laurentius-db/nbproject/
 /Laurentius-libs/Laurentius-db/target/
 /Laurentius-libs/Laurentius-jpa/nbproject/
 /Laurentius-libs/Laurentius-jpa/target/
-/Laurentius-libs/Laurentius-commons/test.log
-/Laurentius-libs/Laurentius-wsdl/src/main/java/org/
-/Laurentius-standalone/src/main/webapp/home_dir_template/security/banka-koper.p12
-/Laurentius-libs/Laurentius-viz/target/
-/Laurentius-dao/target/
-/Laurentius-tasks/sed-basic-tasks/target/
-/Laurentius-plugins/Laurentius-meps-plugin/target/
-/Laurentius-msh/Laurentius-msh-cxf/nbproject/
-/Laurentius-plugins/Laurentius-esens-plugin/target/
-/Laurentius-tasks/Laurentius-basic-tasks/target/
-/Laurentius-libs/target/
-/Laurentius-app/target/
-/Laurentius-msh/target/
-/Laurentius-tasks/target/
-/Laurentius-plugins/target/
-/Laurentius-plugins/Laurentius-zpp-plugin (kopija)/target/
-/Laurentius-plugins/Laurentius-cef-plugin/target/
-/Laurentius-msh/Laurentius-msh-ws (kopija)/target/
-/Laurentius-plugins/Laurentius-test-case-plugin/target/
-/Laurentius-plugins/Laurentius-zpp-plugin/nbproject/
-/Laurentius-msh/Laurentius-msh-ws/nbproject/
-/Laurentius-libs/Laurentius-viz (kopija)/target/
 /Laurentius-libs/Laurentius-lce/target/
-/Laurentius-plugins/Laurentius-test-case-plugin/nbproject/
-/Laurentius-app (kopija)/Laurentius-web/target/
-/Laurentius-app (kopija)/Laurentius-ws/target/
-/Laurentius-examples/Laurentius-web/target/
-/Laurentius-examples/Laurentius-ws/target/
-/Laurentius-examples/ws-client/target/
-/scripts/test-deploy/
-/Laurentius-tasks/Laurentius-basic-process/target/
-/Laurentius-plugins/Laurentius-cef-plugin (kopija)/target/
+/Laurentius-libs/Laurentius-msh-cxf/target/
+/Laurentius-libs/Laurentius-msh-plugin/target/
+/Laurentius-libs/Laurentius-msh-xsd/target/
 /Laurentius-libs/Laurentius-plugin-interfaces/nbproject/
 /Laurentius-libs/Laurentius-plugin-interfaces/target/
-/Laurentius-plugins/Laurentius-basic-tasks/target/
+/Laurentius-libs/Laurentius-viz (kopija)/target/
+/Laurentius-libs/Laurentius-viz/target/
+/Laurentius-libs/Laurentius-wsdl/src/main/java/org/
+/Laurentius-libs/Laurentius-wsdl/target/
+/Laurentius-libs/target/
+/Laurentius-msh/Laurentius-msh-cxf/nbproject/
+/Laurentius-msh/Laurentius-msh-cxf/target/
+/Laurentius-msh/Laurentius-msh-ear/target/
+/Laurentius-msh/Laurentius-msh-ejb/target/
+/Laurentius-msh/Laurentius-msh-ws (kopija)/target/
+/Laurentius-msh/Laurentius-msh-ws/nbproject/
+/Laurentius-msh/Laurentius-msh-ws/target/
+/Laurentius-msh-plugins/Laurentius-commons/target/
+/Laurentius-msh-plugins/Laurentius-msh-xsd/target/
+/Laurentius-msh-plugins/Laurentius-wsdl/target/
+/Laurentius-msh/target/
 /Laurentius-plugins/Laurentius-basic-plugin/target/
-/Laurentius-examples/Laurentius-test-case-plugin/nbproject/
-/Laurentius-examples/Laurentius-test-case-plugin/target/
-/Laurentius-examples/example-web-plugin/nbproject/
-/Laurentius-examples/example-web-plugin/target/
+/Laurentius-plugins/Laurentius-basic-tasks/target/
+/Laurentius-plugins/Laurentius-cef-plugin (kopija)/target/
+/Laurentius-plugins/Laurentius-cef-plugin/target/
+/Laurentius-plugins/Laurentius-commons/target/
+/Laurentius-plugins/Laurentius-esens-plugin/target/
+/Laurentius-plugins/Laurentius-meps-plugin/target/
+/Laurentius-plugins/Laurentius-msh-xsd/Laurentius-wsdl/target/
+/Laurentius-plugins/Laurentius-msh-xsd/target/
+/Laurentius-plugins/Laurentius-test-case-plugin/nbproject/
+/Laurentius-plugins/Laurentius-test-case-plugin/target/
+/Laurentius-plugins/Laurentius-wsdl/target/
+/Laurentius-plugins/Laurentius-zpp-plugin (kopija)/target/
+/Laurentius-plugins/Laurentius-zpp-plugin/nbproject/
+/Laurentius-plugins/Laurentius-zpp-plugin/target/
+/Laurentius-plugins/target/
+/Laurentius-standalone/src/main/webapp/home_dir_template/security/banka-koper.p12
+/Laurentius-standalone/target/
+/Laurentius-tasks/Laurentius-basic-process/target/
+/Laurentius-tasks/Laurentius-basic-tasks/target/
+/Laurentius-tasks/sed-basic-tasks/target/
+/Laurentius-tasks/target/
+/nb-configuration.xml
+/scripts/releases/
+/scripts/test-deploy/
+/target/
