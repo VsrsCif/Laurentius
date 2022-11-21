@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -9,10 +10,9 @@
         <version>2.0</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
-    
+
     <artifactId>Laurentius-ecf-plugin</artifactId>
     <packaging>war</packaging>
-
     <name>Laurentius-ecf-plugin</name>
     <description>Laurentius eFiling plugin</description>
     <licenses>
@@ -24,26 +24,14 @@
         </license>
     </licenses>
 
-    <developers>
-        <developer>
-            <id>jrc</id>
-            <name>Jože Rihtaršič</name>
-            <roles>
-                <role>architect</role>
-                <role>developer</role>
-            </roles>
-        </developer>
-    </developers>
-     
-
     <repositories>
         <repository>
             <id>laurentius-maven-repo</id>
             <name>laurentius-maven-repo</name>
             <url>https://github.com/VsrsCif/laurentius-maven-repo/raw/master/</url>
         </repository>
-    </repositories>  
-    
+    </repositories>
+
     <scm>
         <connection>scm:svn:http://none</connection>
         <developerConnection>scm:svn:http://none</developerConnection>
@@ -55,26 +43,42 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+
+        <si.src.src-esign.version>1.0.0-SNAPSHOT</si.src.src-esign.version>
+        <si.src.src-utils.version>1.5.31-SNAPSHOT</si.src.src-utils.version>
+
+        <swagger-core-version>1.5.24</swagger-core-version>
+        <jersey-version>2.29.1</jersey-version>
+        <jackson-version>2.11.4</jackson-version>
+        <jboss.resteasy.version>4.7.7.Final</jboss.resteasy.version>
+        <jboss.logging.version>3.3.1.Final</jboss.logging.version>
+        <httpclient.version>4.2.4</httpclient.version>
     </properties>
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>Laurentius-commons</artifactId>
-            <version>${project.version}</version>		
-            <scope>provided</scope>	
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>Laurentius-lce</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>Laurentius-plugin-interfaces</artifactId>
-            <version>${project.version}</version>		
+            <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
-        
+
         <dependency>
             <groupId>org.apache.pdfbox</groupId>
             <artifactId>preflight</artifactId>
-            <version>${org.apache.pdfbox.version}</version>     
-            <scope>provided</scope>   
+            <version>${org.apache.pdfbox.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -86,11 +90,15 @@
             <version>${cxf-rt.version}</version>
             <scope>provided</scope>
         </dependency>
-       
+        <dependency>
+            <groupId>javax.annotation</groupId>
+            <artifactId>javax.annotation-api</artifactId>
+            <version>${javax.annotation.version}</version>
+        </dependency>
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
-            <version>${log4j.version}</version>		
+            <version>${log4j.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -105,28 +113,180 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
+
+
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-annotations</artifactId>
+            <version>${swagger-core-version}</version>
+        </dependency>
+
+        <!-- JSON processing: jackson -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>${jackson-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>${jackson-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>${jackson-version}</version>
+        </dependency>
+        <!-- tried to use resteasy but did not serialize mimetype OK-->
+        <dependency>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>resteasy-client</artifactId>
+            <version>${jboss.resteasy.version}</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.jboss.resteasy/resteasy-multipart-provider -->
+        <dependency>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>resteasy-multipart-provider</artifactId>
+            <version>${jboss.resteasy.version}</version>
+        </dependency>
+        <!-- httpcomponents is used for simple and robust "PDFAValidation RS invoking"-->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>${httpclient.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpmime</artifactId>
+            <version>${httpclient.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.logging</groupId>
+            <artifactId>jboss-logging</artifactId>
+            <version>${jboss.logging.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>axis</groupId>
+            <artifactId>axis</artifactId>
+            <version>1.4</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.3</version>
+        </dependency>
+        <dependency>
+            <groupId>si.src</groupId>
+            <artifactId>src-utils</artifactId>
+            <version>${si.src.src-utils.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>si.src</groupId>
+            <artifactId>src-esign</artifactId>
+            <version>${si.src.src-esign.version}</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>si.src</groupId>
+            <artifactId>src-setccesign</artifactId>
+            <version>${si.src.src-esign.version}</version>
+            <type>jar</type>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.xmlbeans</groupId>
+            <artifactId>xmlbeans</artifactId>
+            <version>2.3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.caucho</groupId>
+            <artifactId>hessian</artifactId>
+            <version>4.0.7</version>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.1.0</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
+
 
     <build>
         <finalName>${plugin.final.name}</finalName>
         <plugins>
+            <!-- generate the web client for pdfa valiation service-->
+            <plugin>
+                <groupId>io.swagger</groupId>
+                <artifactId>swagger-codegen-maven-plugin</artifactId>
+                <version>2.4.29</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${project.basedir}/src/main/resources/open-api/service-pdfa-cert-validator.json
+                            </inputSpec>
+
+                            <!-- target to generate java client code -->
+                            <language>java</language>
+                            <apiPackage>gen.si.vsrs.cif.validator.api</apiPackage>
+                            <modelPackage>gen.si.vsrs.cif.validator.model</modelPackage>
+                            <!-- pass any necessary config options -->
+                            <configOptions>
+                                <dateLibrary>legacy</dateLibrary>
+                                <java8>true</java8>
+                                <dateLibrary>java8</dateLibrary>
+                            </configOptions>
+
+                            <!-- override the default library to jersey2 -->
+                            <library>resteasy</library>
+                            <generateApiTests>false</generateApiTests>
+                            <generateApiDocumentation>false</generateApiDocumentation>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>${maven.compiler.plugin.version}</version>                    
+                <version>${maven.compiler.plugin.version}</version>
                 <configuration>
                     <source>${maven.compiler.source}</source>
                     <target>${maven.compiler.target}</target>
                     <showDeprecation>true</showDeprecation>
                     <showWarnings>true</showWarnings>
                 </configuration>
-            </plugin>         
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jaxb2-maven-plugin</artifactId>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-ejb-plugin</artifactId>
                 <version>${maven.ejb.plugin.version}</version>
                 <configuration>
                     <ejbVersion>3.0</ejbVersion>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <systemPropertyVariables>
+                        <laurentius.home>target/laurentius-home/</laurentius.home>
+                    </systemPropertyVariables>
                 </configuration>
             </plugin>
             <plugin>
@@ -138,9 +298,30 @@
                     <archive>
                         <manifestEntries>
                             <implementation-version>${project.version}</implementation-version>
-                            <Dependencies>org.apache.cxf, org.apache.cxf.impl, si.laurentius, org.apache.activemq.artemis, org.apache.ws.security, org.apache.pdfbox</Dependencies>
+                            <Dependencies>org.apache.cxf, org.apache.cxf.impl, si.laurentius,
+                                org.apache.activemq.artemis, org.apache.ws.security, org.apache.pdfbox, org.apache.santuario.xmlsec
+                            </Dependencies>
                         </manifestEntries>
                     </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.asciidoctor</groupId>
+                <artifactId>asciidoctor-maven-plugin</artifactId>
+                <version>2.2.2</version>
+                <executions>
+                    <execution>
+                        <id>output-html</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>process-asciidoc</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <sourceDirectory>${basedir}/src/doc</sourceDirectory>
+                    <backend>html</backend>
+                    <doctype>pdf</doctype>
                 </configuration>
             </plugin>
         </plugins>

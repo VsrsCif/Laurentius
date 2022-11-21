@@ -6,15 +6,18 @@
 package si.vsrs.cif.filing.enums;
 
 /**
+ * eCourt eFiling Action names as described in document:
+ *  - Funkcionalne in tehnične zahteve za e-Vlaganje v varni elektronski predal sodišča 1.0. Date: 5.05.2022
  *
- * @author sluzba
+ * @author Jože Rihtaršič
+ * @since 2.0
  */
 public enum ECFAction {
   ServeFiling("ServeFiling");
   
   
   String value;
-  private ECFAction(String act){
+  ECFAction(String act){
     value = act;
   }
 
