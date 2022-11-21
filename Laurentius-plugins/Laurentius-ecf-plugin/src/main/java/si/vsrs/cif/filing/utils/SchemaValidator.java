@@ -8,17 +8,16 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URL;
+
+
 
 public class SchemaValidator {
     static final SEDLogger LOG = new SEDLogger(SchemaValidator.class);
 
 
-    public static final String SCHEME_VLOGA = "/xsd/SplosnaVlogaV2.xsd";
+    public static final String SCHEME_VLOGA = "/schemas/SplosnaVlogaV2.xsd";
 
     /**
      * thread safe validator
@@ -28,10 +27,11 @@ public class SchemaValidator {
         URL xsdFilePath = SchemaValidator.class.getResource(SCHEME_VLOGA);
         try {
             Schema schema = schemaFactory.newSchema(xsdFilePath);
-            Validator vaInstance = schema.newValidator();
-            vaInstance.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
-            vaInstance.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
-            return vaInstance;
+            // to be compliant, completely disable DOCTYPE declaration:
+            schemaFactory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+            //schemaFactory.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, StringUtils.EMPTY);
+            //schemaFactory.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, StringUtils.EMPTY);
+            return schema.newValidator();
         } catch (SAXException e) {
             throw new IllegalStateException("Unable to initialize 'SplosnaVlogaV2' schema validator.", e);
         }
@@ -41,14 +41,11 @@ public class SchemaValidator {
         return validator.get();
     }
 
-    public boolean isValid(File file) {
+    public void validateXMLBySplosnaVloga(File file) throws IOException, SAXException {
         Validator validator = getValidator();
+        LOG.log("got Validator : " + file.getAbsolutePath());
         try (InputStream stream = new FileInputStream(file)) {
             validator.validate(new StreamSource(stream));
-            return true;
-        } catch (SAXException | IOException e) {
-            LOG.logError("Error occurred while validating the XML!" + e.getMessage(), e);
-            return false;
         }
     }
 

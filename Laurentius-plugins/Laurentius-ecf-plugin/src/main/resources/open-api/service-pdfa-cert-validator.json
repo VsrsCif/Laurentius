@@ -1,0 +1,1096 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "Spletna storitev za:\n- Preverjanje skladnosti PDF dokumentov s standardom PDF/A. Spletni servis omogoča preverjanje skladnosti PDF dokumentov s standardi PDF/A-1a, PDF/A-1b, PDF/A-2a, PDF/A-2b, PDF/A-2u, PDF/A-3a, PDF/A-3b in PDF/A-3u; PDF/A-4 ni še ni v celoti sprejet in bo temeljil na PDF 2.0 standardu.\n\n\tImplementacija preverjanja skladnosti je izvedena z uporabo <a href=\"https://verapdf.org/\">VeraPDF knjižnice, verzija 1.14.105</a>\n- Preverjanje pravilnosti elektronskih podpisov v PDF in XML dokumentih. Spletni servis omogoča preverjanje elektronskih podpisov znotraj PDF/XML dokumentov in se prepričati o pristnosti podpisnikov in podpisane vsebine. Veljavnost podpisa se ugotovi s preverjanjem pristnosti stanja potrdila elektronskega ID-ja podpisnika, vključno s celotno verigo elektronskih podpisov, in celovitosti dokumenta. S preverjanjem celovitosti dokumenta se potrdi, da vsebina po elektronskem podpisu ni bila spremenjena. Elektronski podpisi so preverjani v skladu z eIDAS regulativo ETSI 119 172-4.\n\n\tImplementacija preverjanja elektronskih podpisov je izvedena z uporabo <a href=\"https://ec.europa.eu/cefdigital/wiki/display/CEFDIGITAL/eSignature\">DSS eSignature knjižnice, verzija 5.5</a>\n",
+    "version": "1.0.0",
+    "title": "PDF/A validator in validator elektronskih podpisov v PDF in XML datotekah",
+    "contact": {
+      "name": "Vrhovno sodišče Republike Slovenije",
+      "url": "http://www.sodisce.si/vsrs/",
+      "email": "urad.vsrs@sodisce.si"
+    }
+  },
+  "host": "localhost:9085",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "PDF/A validator",
+      "description": "Metode za preverjanje skladnosti PDF dokumentov s PDF/A standardi"
+    },
+    {
+      "name": "Validator elektronskih podpisov v PDF/XML datotekah",
+      "description": "Metode za preverjanje elektronskih podpisov v PDF in XML dokumente"
+    }
+  ],
+  "paths": {
+    "/api/v1/pdfa/application-latest-version": {
+      "get": {
+        "tags": [
+          "PDF/A validator"
+        ],
+        "summary": "Metoda vrača zadnjo verzijo konfiguracije za podano šifro aplikacije",
+        "operationId": "validatorUsingGET",
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "parameters": [
+          {
+            "name": "applicationId",
+            "in": "query",
+            "description": "Šifra aplikacije iz šifranta aplikacij",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ResponseWrapper«string»"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/v1/pdfa/health": {
+      "get": {
+        "tags": [
+          "PDF/A validator"
+        ],
+        "summary": "Preverjanje dosegljivosti spletne storitve",
+        "operationId": "healthUsingGET_1",
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ResponseWrapper«string»"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/v1/pdfa/validator": {
+      "post": {
+        "tags": [
+          "PDF/A validator"
+        ],
+        "summary": "Preverjanje skladnosti PDF dokumenta s PDF/A standardi",
+        "operationId": "validatorUsingPOST",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "parameters": [
+          {
+            "name": "applicationId",
+            "in": "query",
+            "description": "Šifra aplikacije iz šifranta aplikacij",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "includeReport",
+            "in": "query",
+            "description": "Ali se v odgovoru posreduje tudi podrobno poročilo obdelave zahteve?",
+            "required": true,
+            "type": "boolean"
+          },
+          {
+            "name": "file",
+            "in": "formData",
+            "description": "PDF dokument",
+            "required": true,
+            "type": "file"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ResponseWrapper«PdfAModel»"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/v1/signature/health": {
+      "get": {
+        "tags": [
+          "Validator elektronskih podpisov v PDF/XML datotekah"
+        ],
+        "summary": "Preverjanje dosegljivosti spletne storitve",
+        "operationId": "healthUsingGET",
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ResponseWrapper«string»"
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/v1/signature/pdf/validator": {
+      "post": {
+        "tags": [
+          "Validator elektronskih podpisov v PDF/XML datotekah"
+        ],
+        "summary": "Preverjanje elektronskega podpisa v PDF dokumentu",
+        "operationId": "pdfValidatorUsingPOST",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "parameters": [
+          {
+            "name": "file",
+            "in": "formData",
+            "description": "PDF dokument",
+            "required": true,
+            "type": "file"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ResponseWrapper«List«CertificateModel»»"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/v1/signature/pdf/validator-with-policy": {
+      "post": {
+        "tags": [
+          "Validator elektronskih podpisov v PDF/XML datotekah"
+        ],
+        "summary": "Preverjanje elektronskega podpisa v PDF dokumentu, ki je opcijsko lahko preverjan po podanih pravilih",
+        "operationId": "pdfValidatorWithPolicyUsingPOST",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "parameters": [
+          {
+            "name": "file",
+            "in": "formData",
+            "description": "PDF dokument",
+            "required": true,
+            "type": "file"
+          },
+          {
+            "name": "policy",
+            "in": "query",
+            "description": "Pravila za preverjanje elektronskih podpisov podane v XML obliki; oblika/vsebina pravil je definirana v dokumentaciji DSS eSignature knjižnjice",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ResponseWrapper«List«CertificateModel»»"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/v1/signature/pdf/validator-with-policy-and-reports": {
+      "post": {
+        "tags": [
+          "Validator elektronskih podpisov v PDF/XML datotekah"
+        ],
+        "summary": "Preverjanje elektronskega podpisa v PDF dokumentu, ki je opcijsko lahko preverjan po podanih pravilih in omogoča vpogled poročila generirana s strani DSS eSignature knjižnjice",
+        "operationId": "pdfValidatorWithPolicyAndReportsUsingPOST",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "parameters": [
+          {
+            "name": "file",
+            "in": "formData",
+            "description": "PDF dokument",
+            "required": true,
+            "type": "file"
+          },
+          {
+            "name": "policy",
+            "in": "query",
+            "description": "Pravila za preverjanje elektronskih podpisov podane v XML obliki; oblika/vsebina pravil je definirana v dokumentaciji DSS eSignature knjižnjice",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "includeSimpleReport",
+            "in": "query",
+            "description": "Ali se v odgovoru posreduje tudi osnovno poročilo obdelave zahteve?",
+            "required": true,
+            "type": "boolean"
+          },
+          {
+            "name": "includeDetailedReport",
+            "in": "query",
+            "description": "Ali se v odgovoru posreduje tudi podrobno poročilo obdelave zahteve?",
+            "required": true,
+            "type": "boolean"
+          },
+          {
+            "name": "includeValidationReport",
+            "in": "query",
+            "description": "Ali se v odgovoru posreduje tudi validacijsko poročilo obdelave zahteve?",
+            "required": true,
+            "type": "boolean"
+          },
+          {
+            "name": "includeDiagnosticDataReport",
+            "in": "query",
+            "description": "Ali se v odgovoru posreduje tudi diagnostično poročilo obdelave zahteve?",
+            "required": true,
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ResponseWrapper«List«CertificateModel»»"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/v1/signature/pdf/validator-with-reports": {
+      "post": {
+        "tags": [
+          "Validator elektronskih podpisov v PDF/XML datotekah"
+        ],
+        "summary": "Preverjanje elektronskega podpisa v PDF dokumentu in omogoča vpogled poročila generirana s strani DSS eSignature knjižnjice",
+        "operationId": "pdfValidatorWithReportsUsingPOST",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "parameters": [
+          {
+            "name": "file",
+            "in": "formData",
+            "description": "PDF dokument",
+            "required": true,
+            "type": "file"
+          },
+          {
+            "name": "includeSimpleReport",
+            "in": "query",
+            "description": "Ali se v odgovoru posreduje tudi osnovno poročilo obdelave zahteve?",
+            "required": true,
+            "type": "boolean"
+          },
+          {
+            "name": "includeDetailedReport",
+            "in": "query",
+            "description": "Ali se v odgovoru posreduje tudi podrobno poročilo obdelave zahteve?",
+            "required": true,
+            "type": "boolean"
+          },
+          {
+            "name": "includeValidationReport",
+            "in": "query",
+            "description": "Ali se v odgovoru posreduje tudi validacijsko poročilo obdelave zahteve?",
+            "required": true,
+            "type": "boolean"
+          },
+          {
+            "name": "includeDiagnosticDataReport",
+            "in": "query",
+            "description": "Ali se v odgovoru posreduje tudi diagnostično poročilo obdelave zahteve?",
+            "required": true,
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ResponseWrapper«List«CertificateModel»»"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/v1/signature/xml/validator": {
+      "post": {
+        "tags": [
+          "Validator elektronskih podpisov v PDF/XML datotekah"
+        ],
+        "summary": "Preverjanje elektronskega podpisa v XML dokumentu",
+        "operationId": "xmlValidatorUsingPOST",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "parameters": [
+          {
+            "name": "file",
+            "in": "formData",
+            "description": "XML dokument",
+            "required": true,
+            "type": "file"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ResponseWrapper«List«CertificateModel»»"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/v1/signature/xml/validator-with-policy": {
+      "post": {
+        "tags": [
+          "Validator elektronskih podpisov v PDF/XML datotekah"
+        ],
+        "summary": "Preverjanje elektronskega podpisa v XML dokumentu, ki je opcijsko lahko preverjan po podanih pravilih",
+        "operationId": "xmlValidatorWithPolicyUsingPOST",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "parameters": [
+          {
+            "name": "file",
+            "in": "formData",
+            "description": "XML dokument",
+            "required": true,
+            "type": "file"
+          },
+          {
+            "name": "policy",
+            "in": "query",
+            "description": "Pravila za preverjanje elektronskih podpisov podane v XML obliki; oblika/vsebina pravil je definirana v dokumentaciji DSS eSignature knjižnjice",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ResponseWrapper«List«CertificateModel»»"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/v1/signature/xml/validator-with-policy-and-reports": {
+      "post": {
+        "tags": [
+          "Validator elektronskih podpisov v PDF/XML datotekah"
+        ],
+        "summary": "Preverjanje elektronskega podpisa v XML dokumentu, ki je opcijsko lahko preverjan po podanih pravilih in omogoča vpogled poročila generirana s strani DSS eSignature knjižnjice",
+        "operationId": "xmlValidatorWithPolicyAndReportsUsingPOST",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "parameters": [
+          {
+            "name": "file",
+            "in": "formData",
+            "description": "XML dokument",
+            "required": true,
+            "type": "file"
+          },
+          {
+            "name": "policy",
+            "in": "query",
+            "description": "Pravila za preverjanje elektronskih podpisov podane v XML obliki; oblika/vsebina pravil je definirana v dokumentaciji DSS eSignature knjižnjice",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "includeSimpleReport",
+            "in": "query",
+            "description": "Ali se v odgovoru posreduje tudi osnovno poročilo obdelave zahteve?",
+            "required": true,
+            "type": "boolean"
+          },
+          {
+            "name": "includeDetailedReport",
+            "in": "query",
+            "description": "Ali se v odgovoru posreduje tudi podrobno poročilo obdelave zahteve?",
+            "required": true,
+            "type": "boolean"
+          },
+          {
+            "name": "includeValidationReport",
+            "in": "query",
+            "description": "Ali se v odgovoru posreduje tudi validacijsko poročilo obdelave zahteve?",
+            "required": true,
+            "type": "boolean"
+          },
+          {
+            "name": "includeDiagnosticDataReport",
+            "in": "query",
+            "description": "Ali se v odgovoru posreduje tudi diagnostično poročilo obdelave zahteve?",
+            "required": true,
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ResponseWrapper«List«CertificateModel»»"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/v1/signature/xml/validator-with-reports": {
+      "post": {
+        "tags": [
+          "Validator elektronskih podpisov v PDF/XML datotekah"
+        ],
+        "summary": "Preverjanje elektronskega podpisa v XML dokumentu in omogoča vpogled poročila generirana s strani DSS eSignature knjižnjice",
+        "operationId": "xmlValidatorWithReportsUsingPOST",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "produces": [
+          "application/json;charset=UTF-8"
+        ],
+        "parameters": [
+          {
+            "name": "file",
+            "in": "formData",
+            "description": "XML dokument",
+            "required": true,
+            "type": "file"
+          },
+          {
+            "name": "includeSimpleReport",
+            "in": "query",
+            "description": "Ali se v odgovoru posreduje tudi osnovno poročilo obdelave zahteve?",
+            "required": true,
+            "type": "boolean"
+          },
+          {
+            "name": "includeDetailedReport",
+            "in": "query",
+            "description": "Ali se v odgovoru posreduje tudi podrobno poročilo obdelave zahteve?",
+            "required": true,
+            "type": "boolean"
+          },
+          {
+            "name": "includeValidationReport",
+            "in": "query",
+            "description": "Ali se v odgovoru posreduje tudi validacijsko poročilo obdelave zahteve?",
+            "required": true,
+            "type": "boolean"
+          },
+          {
+            "name": "includeDiagnosticDataReport",
+            "in": "query",
+            "description": "Ali se v odgovoru posreduje tudi diagnostično poročilo obdelave zahteve?",
+            "required": true,
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ResponseWrapper«List«CertificateModel»»"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "CertificateModel": {
+      "type": "object",
+      "properties": {
+        "certCa": {
+          "type": "string",
+          "description": "Izdajatelj certifikata; CA elektronskega potrdila",
+          "allowEmptyValue": false
+        },
+        "certCn": {
+          "type": "string",
+          "description": "Ime in priimek podpisnika; CN elektronskega potrdila",
+          "allowEmptyValue": false
+        },
+        "certSerial": {
+          "type": "string",
+          "description": "Serijska številka elektronskega potrdila",
+          "allowEmptyValue": false
+        },
+        "certSignatureTime": {
+          "type": "string",
+          "description": "Datum in ura podpisa",
+          "allowEmptyValue": false
+        },
+        "certSubjectSerial": {
+          "type": "string",
+          "description": "Serijska številka subjekta elektronskega potrdila",
+          "allowEmptyValue": false
+        },
+        "detailedReport": {
+          "type": "string",
+          "description": "Podrobno poročilo preverjanja",
+          "allowEmptyValue": false
+        },
+        "diagnosticData": {
+          "type": "string",
+          "description": "Diagnostično poročilo preverjanja",
+          "allowEmptyValue": false
+        },
+        "signatureType": {
+          "type": "string",
+          "description": "Tip podpisa; možne vrednosti so: SES, AdES ali QES",
+          "allowEmptyValue": false
+        },
+        "simpleReport": {
+          "type": "string",
+          "description": "Osnovno poročilo preverjanja",
+          "allowEmptyValue": false
+        },
+        "timestampInfo": {
+          "type": "string",
+          "description": "Informacija o časovnem žigu",
+          "allowEmptyValue": false
+        },
+        "valid": {
+          "type": "boolean",
+          "example": false,
+          "description": "Oznaka veljavnosti podpisa",
+          "allowEmptyValue": false
+        },
+        "validByEidas": {
+          "type": "boolean",
+          "example": false,
+          "description": "Skladnost elektronskega podpisa z eIDAS",
+          "allowEmptyValue": false
+        },
+        "validFrom": {
+          "type": "string",
+          "description": "Začetek veljavnosti elektronskega potrdila",
+          "allowEmptyValue": false
+        },
+        "validTo": {
+          "type": "string",
+          "description": "Konec veljavnosti elektronskega potrdila",
+          "allowEmptyValue": false
+        },
+        "validationReport": {
+          "type": "string",
+          "description": "Validacijsko poročilo preverjanja",
+          "allowEmptyValue": false
+        },
+        "validationTime": {
+          "type": "string",
+          "description": "Čas preverjanja elektronskega podpisa",
+          "allowEmptyValue": false
+        }
+      },
+      "title": "CertificateModel"
+    },
+    "PdfAModel": {
+      "type": "object",
+      "properties": {
+        "applicationId": {
+          "type": "string",
+          "description": "Šifra aplikacije",
+          "allowEmptyValue": false
+        },
+        "metadataAuthor": {
+          "type": "string",
+          "description": "Metapoddatek dokument: avtor",
+          "allowEmptyValue": false
+        },
+        "metadataCreationDate": {
+          "type": "string",
+          "description": "Metapoddatek dokument: datum kreiranja dokumenta",
+          "allowEmptyValue": false
+        },
+        "metadataKeywords": {
+          "type": "string",
+          "description": "Metapoddatek dokument: ključne besede",
+          "allowEmptyValue": false
+        },
+        "metadataModificationDate": {
+          "type": "string",
+          "description": "Metapoddatek dokument: datum zadnje spremembe dokumenta",
+          "allowEmptyValue": false
+        },
+        "metadataSubject": {
+          "type": "string",
+          "description": "Metapoddatek dokument: opis",
+          "allowEmptyValue": false
+        },
+        "metadataTitle": {
+          "type": "string",
+          "description": "Metapoddatek dokument: naslov",
+          "allowEmptyValue": false
+        },
+        "validationPdfFlavour": {
+          "type": "string",
+          "description": "Različica PDF/A standarda",
+          "allowEmptyValue": false
+        },
+        "validationReport": {
+          "type": "string",
+          "description": "Poročilo preverjanja",
+          "allowEmptyValue": false
+        },
+        "validationResult": {
+          "type": "string",
+          "description": "Rezultati preverjanja",
+          "allowEmptyValue": false,
+          "enum": [
+            "VALID",
+            "INVALID"
+          ]
+        },
+        "validationTime": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Datum in ura preverjanja",
+          "allowEmptyValue": false
+        },
+        "validationVersion": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Verzija konfiguracije s katero je bilo izvedeno preverjanje",
+          "allowEmptyValue": false
+        }
+      },
+      "title": "PdfAModel"
+    },
+    "ResponseWrapper«List«CertificateModel»»": {
+      "type": "object",
+      "properties": {
+        "body": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CertificateModel"
+          }
+        },
+        "statusCode": {
+          "type": "string",
+          "enum": [
+            "100 CONTINUE",
+            "101 SWITCHING_PROTOCOLS",
+            "102 PROCESSING",
+            "103 CHECKPOINT",
+            "200 OK",
+            "201 CREATED",
+            "202 ACCEPTED",
+            "203 NON_AUTHORITATIVE_INFORMATION",
+            "204 NO_CONTENT",
+            "205 RESET_CONTENT",
+            "206 PARTIAL_CONTENT",
+            "207 MULTI_STATUS",
+            "208 ALREADY_REPORTED",
+            "226 IM_USED",
+            "300 MULTIPLE_CHOICES",
+            "301 MOVED_PERMANENTLY",
+            "302 FOUND",
+            "302 MOVED_TEMPORARILY",
+            "303 SEE_OTHER",
+            "304 NOT_MODIFIED",
+            "305 USE_PROXY",
+            "307 TEMPORARY_REDIRECT",
+            "308 PERMANENT_REDIRECT",
+            "400 BAD_REQUEST",
+            "401 UNAUTHORIZED",
+            "402 PAYMENT_REQUIRED",
+            "403 FORBIDDEN",
+            "404 NOT_FOUND",
+            "405 METHOD_NOT_ALLOWED",
+            "406 NOT_ACCEPTABLE",
+            "407 PROXY_AUTHENTICATION_REQUIRED",
+            "408 REQUEST_TIMEOUT",
+            "409 CONFLICT",
+            "410 GONE",
+            "411 LENGTH_REQUIRED",
+            "412 PRECONDITION_FAILED",
+            "413 PAYLOAD_TOO_LARGE",
+            "413 REQUEST_ENTITY_TOO_LARGE",
+            "414 URI_TOO_LONG",
+            "414 REQUEST_URI_TOO_LONG",
+            "415 UNSUPPORTED_MEDIA_TYPE",
+            "416 REQUESTED_RANGE_NOT_SATISFIABLE",
+            "417 EXPECTATION_FAILED",
+            "418 I_AM_A_TEAPOT",
+            "419 INSUFFICIENT_SPACE_ON_RESOURCE",
+            "420 METHOD_FAILURE",
+            "421 DESTINATION_LOCKED",
+            "422 UNPROCESSABLE_ENTITY",
+            "423 LOCKED",
+            "424 FAILED_DEPENDENCY",
+            "425 TOO_EARLY",
+            "426 UPGRADE_REQUIRED",
+            "428 PRECONDITION_REQUIRED",
+            "429 TOO_MANY_REQUESTS",
+            "431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+            "451 UNAVAILABLE_FOR_LEGAL_REASONS",
+            "500 INTERNAL_SERVER_ERROR",
+            "501 NOT_IMPLEMENTED",
+            "502 BAD_GATEWAY",
+            "503 SERVICE_UNAVAILABLE",
+            "504 GATEWAY_TIMEOUT",
+            "505 HTTP_VERSION_NOT_SUPPORTED",
+            "506 VARIANT_ALSO_NEGOTIATES",
+            "507 INSUFFICIENT_STORAGE",
+            "508 LOOP_DETECTED",
+            "509 BANDWIDTH_LIMIT_EXCEEDED",
+            "510 NOT_EXTENDED",
+            "511 NETWORK_AUTHENTICATION_REQUIRED"
+          ]
+        },
+        "statusCodeValue": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "title": "ResponseWrapper«List«CertificateModel»»"
+    },
+    "ResponseWrapper«PdfAModel»": {
+      "type": "object",
+      "properties": {
+        "body": {
+          "$ref": "#/definitions/PdfAModel"
+        },
+        "statusCode": {
+          "type": "string",
+          "enum": [
+            "100 CONTINUE",
+            "101 SWITCHING_PROTOCOLS",
+            "102 PROCESSING",
+            "103 CHECKPOINT",
+            "200 OK",
+            "201 CREATED",
+            "202 ACCEPTED",
+            "203 NON_AUTHORITATIVE_INFORMATION",
+            "204 NO_CONTENT",
+            "205 RESET_CONTENT",
+            "206 PARTIAL_CONTENT",
+            "207 MULTI_STATUS",
+            "208 ALREADY_REPORTED",
+            "226 IM_USED",
+            "300 MULTIPLE_CHOICES",
+            "301 MOVED_PERMANENTLY",
+            "302 FOUND",
+            "302 MOVED_TEMPORARILY",
+            "303 SEE_OTHER",
+            "304 NOT_MODIFIED",
+            "305 USE_PROXY",
+            "307 TEMPORARY_REDIRECT",
+            "308 PERMANENT_REDIRECT",
+            "400 BAD_REQUEST",
+            "401 UNAUTHORIZED",
+            "402 PAYMENT_REQUIRED",
+            "403 FORBIDDEN",
+            "404 NOT_FOUND",
+            "405 METHOD_NOT_ALLOWED",
+            "406 NOT_ACCEPTABLE",
+            "407 PROXY_AUTHENTICATION_REQUIRED",
+            "408 REQUEST_TIMEOUT",
+            "409 CONFLICT",
+            "410 GONE",
+            "411 LENGTH_REQUIRED",
+            "412 PRECONDITION_FAILED",
+            "413 PAYLOAD_TOO_LARGE",
+            "413 REQUEST_ENTITY_TOO_LARGE",
+            "414 URI_TOO_LONG",
+            "414 REQUEST_URI_TOO_LONG",
+            "415 UNSUPPORTED_MEDIA_TYPE",
+            "416 REQUESTED_RANGE_NOT_SATISFIABLE",
+            "417 EXPECTATION_FAILED",
+            "418 I_AM_A_TEAPOT",
+            "419 INSUFFICIENT_SPACE_ON_RESOURCE",
+            "420 METHOD_FAILURE",
+            "421 DESTINATION_LOCKED",
+            "422 UNPROCESSABLE_ENTITY",
+            "423 LOCKED",
+            "424 FAILED_DEPENDENCY",
+            "425 TOO_EARLY",
+            "426 UPGRADE_REQUIRED",
+            "428 PRECONDITION_REQUIRED",
+            "429 TOO_MANY_REQUESTS",
+            "431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+            "451 UNAVAILABLE_FOR_LEGAL_REASONS",
+            "500 INTERNAL_SERVER_ERROR",
+            "501 NOT_IMPLEMENTED",
+            "502 BAD_GATEWAY",
+            "503 SERVICE_UNAVAILABLE",
+            "504 GATEWAY_TIMEOUT",
+            "505 HTTP_VERSION_NOT_SUPPORTED",
+            "506 VARIANT_ALSO_NEGOTIATES",
+            "507 INSUFFICIENT_STORAGE",
+            "508 LOOP_DETECTED",
+            "509 BANDWIDTH_LIMIT_EXCEEDED",
+            "510 NOT_EXTENDED",
+            "511 NETWORK_AUTHENTICATION_REQUIRED"
+          ]
+        },
+        "statusCodeValue": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "title": "ResponseWrapper«PdfAModel»"
+    },
+    "ResponseWrapper«string»": {
+      "type": "object",
+      "properties": {
+        "body": {
+          "type": "string"
+        },
+        "statusCode": {
+          "type": "string",
+          "enum": [
+            "100 CONTINUE",
+            "101 SWITCHING_PROTOCOLS",
+            "102 PROCESSING",
+            "103 CHECKPOINT",
+            "200 OK",
+            "201 CREATED",
+            "202 ACCEPTED",
+            "203 NON_AUTHORITATIVE_INFORMATION",
+            "204 NO_CONTENT",
+            "205 RESET_CONTENT",
+            "206 PARTIAL_CONTENT",
+            "207 MULTI_STATUS",
+            "208 ALREADY_REPORTED",
+            "226 IM_USED",
+            "300 MULTIPLE_CHOICES",
+            "301 MOVED_PERMANENTLY",
+            "302 FOUND",
+            "302 MOVED_TEMPORARILY",
+            "303 SEE_OTHER",
+            "304 NOT_MODIFIED",
+            "305 USE_PROXY",
+            "307 TEMPORARY_REDIRECT",
+            "308 PERMANENT_REDIRECT",
+            "400 BAD_REQUEST",
+            "401 UNAUTHORIZED",
+            "402 PAYMENT_REQUIRED",
+            "403 FORBIDDEN",
+            "404 NOT_FOUND",
+            "405 METHOD_NOT_ALLOWED",
+            "406 NOT_ACCEPTABLE",
+            "407 PROXY_AUTHENTICATION_REQUIRED",
+            "408 REQUEST_TIMEOUT",
+            "409 CONFLICT",
+            "410 GONE",
+            "411 LENGTH_REQUIRED",
+            "412 PRECONDITION_FAILED",
+            "413 PAYLOAD_TOO_LARGE",
+            "413 REQUEST_ENTITY_TOO_LARGE",
+            "414 URI_TOO_LONG",
+            "414 REQUEST_URI_TOO_LONG",
+            "415 UNSUPPORTED_MEDIA_TYPE",
+            "416 REQUESTED_RANGE_NOT_SATISFIABLE",
+            "417 EXPECTATION_FAILED",
+            "418 I_AM_A_TEAPOT",
+            "419 INSUFFICIENT_SPACE_ON_RESOURCE",
+            "420 METHOD_FAILURE",
+            "421 DESTINATION_LOCKED",
+            "422 UNPROCESSABLE_ENTITY",
+            "423 LOCKED",
+            "424 FAILED_DEPENDENCY",
+            "425 TOO_EARLY",
+            "426 UPGRADE_REQUIRED",
+            "428 PRECONDITION_REQUIRED",
+            "429 TOO_MANY_REQUESTS",
+            "431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+            "451 UNAVAILABLE_FOR_LEGAL_REASONS",
+            "500 INTERNAL_SERVER_ERROR",
+            "501 NOT_IMPLEMENTED",
+            "502 BAD_GATEWAY",
+            "503 SERVICE_UNAVAILABLE",
+            "504 GATEWAY_TIMEOUT",
+            "505 HTTP_VERSION_NOT_SUPPORTED",
+            "506 VARIANT_ALSO_NEGOTIATES",
+            "507 INSUFFICIENT_STORAGE",
+            "508 LOOP_DETECTED",
+            "509 BANDWIDTH_LIMIT_EXCEEDED",
+            "510 NOT_EXTENDED",
+            "511 NETWORK_AUTHENTICATION_REQUIRED"
+          ]
+        },
+        "statusCodeValue": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "title": "ResponseWrapper«string»"
+    }
+  }
+}
