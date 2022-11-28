@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+	<ns3:SplosnaVloga xmlns="http://sodisce.si/common/Vloga/v1" xmlns:ns3="http://sodisce.si/SplosnaVloga/v2" xmlns:ns4="http://sodisce.si/common/Dokument/v2" id="splosnaVlogaId">
+		<ns3:Vloga id="_24073">
+			<SodiSif>S13</SodiSif>
+			<PravnoPodrocjeSif>27</PravnoPodrocjeSif>
+			<ns3:VlozeniDokumenti>
+				<ns3:SeznamDokumentov>
+					<ns4:DokumentHash>bff4468c1d3c7b12958732499032d7f301bca24c158d0dd916a3a9714b13e93c</ns4:DokumentHash>
+					<ns4:JeVodilni>true</ns4:JeVodilni>
+					<ns4:DokumentId>077fa2fd-77b1-497d-b115-80b047c504d8</ns4:DokumentId>
+					<ns4:Ime>Tožba.pdf</ns4:Ime>
+				</ns3:SeznamDokumentov>
+				<ns3:SeznamDokumentov>
+					<ns4:DokumentHash>2674b4fafbddd0100825b50b7ac4233c24b98f37d5f4ddc00041a359850e09fc</ns4:DokumentHash>
+					<ns4:JeVodilni>false</ns4:JeVodilni>
+					<ns4:DokumentId>31d5a1e8-dbca-4b88-86b4-956e18879748</ns4:DokumentId>
+					<ns4:Ime>Tožba_priloga_1.pdf</ns4:Ime>
+				</ns3:SeznamDokumentov>
+				<ns3:SeznamDokumentov>
+					<ns4:DokumentHash>2ddc1b45270fa18bba3a5e3cdf4be68014b74159b1ff0ca1a36b708c71b56bc6</ns4:DokumentHash>
+					<ns4:JeVodilni>false</ns4:JeVodilni>
+					<ns4:DokumentId>b2a35470-8d9f-4877-a706-c5d2e2dee85e</ns4:DokumentId>
+					<ns4:Ime>Tožba_priloga_2.pdf</ns4:Ime>
+				</ns3:SeznamDokumentov>
+				<ns3:SeznamDokumentov>
+					<ns4:DokumentHash>d587b41d06d7bef4ca90d6b64e0bb402178d6eb6ff75db2e6e3d11270c79bf10</ns4:DokumentHash>
+					<ns4:JeVodilni>false</ns4:JeVodilni>
+					<ns4:DokumentId>aef13802-7305-49da-90ad-e75e3d2dab5a</ns4:DokumentId>
+					<ns4:Ime>Tožba_priloga_3.pdf</ns4:Ime>
+				</ns3:SeznamDokumentov>
+			</ns3:VlozeniDokumenti>
+		</ns3:Vloga>
+		<Signature xmlns="http://www.w3.org/2000/09/xmldsig#" Id="Signature-7de4c9d7-595f-4d95-8001-b2e8be9466f4">
+			<SignedInfo>
+				<CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315#WithComments"/>
+				<SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+				<Reference URI="#_24073">
+					<Transforms>
+						<Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+					</Transforms>
+					<DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+					<DigestValue>sVcib/0PQI6oaLqBSqPN77bsfsg=</DigestValue>
+				</Reference>
+			</SignedInfo>
+			<SignatureValue Id="SignatureValue-08ecdfb9-dac3-4be0-938c-c84bfe20f9c1">J17iXPWV4BiuwmmlD5vtJ1g2y/37oRttgIBBi5vsQY/e3Q3RtwVpricmEElgugiQDzp1cU6ck2uf&#13;
+s8dg6YZBL/fZKzGZ8BZPGAJyLsssaoHgrFgHTtgGXbE0aqnICsTxg6VowfYhWw1+IlGE8IGkelza&#13;
+TM2sewtDmx31BbpsxLCr0bwv5ymLupcSr89LNGbsL0Rij1oHU6YGW+bUEkHAwO5FB0dU/kza8SO6&#13;
+p+qwR31Xu2WYz9OOQvZVj74gcwsgNhnfd6nHq8NMpI4JfX6HLbLEM1LIOrLgKzlTtEfSBHLzqLa2&#13;
+4wL+11vepn/KL+snNPh+TkvYqUgokWrEfJUSGg==</SignatureValue>
+			<KeyInfo>
+				<X509Data>
+					<X509Certificate>MIIG4zCCBMugAwIBAgIQVSd4CYtbrpcNplaSdOc50DANBgkqhkiG9w0BAQsFADA+MQswCQYDVQQG&#13;
+EwJzaTEbMBkGA1UEChMSc3RhdGUtaW5zdGl0dXRpb25zMRIwEAYDVQQLEwlzaXRlc3QtY2EwHhcN&#13;
+MjAxMTI3MDgyNzI2WhcNMjUxMTI3MDg1NzI2WjCBojELMAkGA1UEBhMCU0kxHjAcBgNVBAgTFVNs&#13;
+b3ZlbmlqYSAoU0lURVNULUNBKTEUMBIGA1UECxMLaW5kaXZpZHVhbHMxXTALBgNVBAQTBHRlc3Qw&#13;
+FAYDVQQFEw0yNzExMjAyMDAwMTAwMBQGA1UEKgwNU29kacOCxaHEgsKoZTAiBgNVBAMMG1NvZGnD&#13;
+gsWhxILCqGUgdGVzdCBwcm94c2lnbjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBANYz&#13;
+ooM/lvhRkM7klqpjhFm7PFDwtqpQ27lM6V3Ul9p0Gk3SMbTWZg8eCoRtTcSJo7AQZJ0DEkmWLFqn&#13;
+rdgtxwlUhiLPWOC+QQr+1LqVAq6q4hkRo55cpNRLa8/zx83je04r/k2RTKasoD3mMzaasjDF16uM&#13;
+nMSS/CC2bqUDoNLbovUa9NwoELMeIUx8a9MSBng5hlVtzWcl1AZWhw+i8PnYVym5/rfy7eJLPXY9&#13;
+Qtz5zmTilOqldKx6d2oYtKRfnYPVPFeaVEfM9BCAt0bvVgYNI57I/Te6ceeq2lUMBzo3i00Om6YA&#13;
+ks34VeGDQwDeK/j7jo0SztC9QucLk7HFM+8CAwEAAaOCAnYwggJyMA4GA1UdDwEB/wQEAwIF4DBL&#13;
+BgNVHSAERDBCMDYGCysGAQQBr1kCAgMDMCcwJQYIKwYBBQUHAgEWGWh0dHA6Ly93d3cuY2EuZ292&#13;
+LnNpL2Nwcy8wCAYGBACLMAECMBgGCCsGAQUFBwEDBAwwCjAIBgYEAI5GAQEwgYMGCCsGAQUFBwEB&#13;
+BHcwdTBEBggrBgEFBQcwAoY4aHR0cDovL3d3dy5zaXRlc3QtY2EuZ292LnNpL2NydC10ZXN0L3Np&#13;
+dGVzdC1jYS1jZXJ0cy5wN2MwLQYIKwYBBQUHMAGGIWh0dHA6Ly9vY3NwLXRlc3Quc2l0ZXN0LWNh&#13;
+Lmdvdi5zaTAaBgNVHREEEzARgQ90ZXN0QHNvZGlzY2Uuc2kwggEKBgNVHR8EggEBMIH+MFWgU6BR&#13;
+pE8wTTELMAkGA1UEBhMCc2kxGzAZBgNVBAoTEnN0YXRlLWluc3RpdHV0aW9uczESMBAGA1UECxMJ&#13;
+c2l0ZXN0LWNhMQ0wCwYDVQQDEwRDUkw1MIGkoIGhoIGehmpsZGFwOi8veDUwMC5nb3Yuc2kvY249&#13;
+V2luQ29tYmluZWQxLG91PXNpdGVzdC1jYSxvPXN0YXRlLWluc3RpdHV0aW9ucyxjPXNpP2NlcnRp&#13;
+ZmljYXRlUmV2b2NhdGlvbkxpc3Q7YmluYXJ5hjBodHRwOi8vd3d3LnNpZ2VuLWNhLnNpL2NybC9z&#13;
+aXRlc3Qvc2l0ZXN0LWNhMS5jcmwwHwYDVR0jBBgwFoAUal/qvgukZi6G88vjOkxREON3SvYwHQYD&#13;
+VR0OBBYEFKTTyTmzmxi4DWiHltWVyzfe4z1aMAkGA1UdEwQCMAAwDQYJKoZIhvcNAQELBQADggIB&#13;
+AMUhObheSj4JOg+eThWQnl0+7Pmbax6XNIVCu0L9NiRIOzgXCMoAthl+4U7RldJJlJOuSaMNEWQG&#13;
+3SgvD8GanJ55NSPScUASsHyBY76LgiEIFvkcBdA/foh21P7PsvqRctwXf5UOX5d+8o8mxSTIGMZa&#13;
+CXeg8l347aeo0x2lxNhl3ePXnxrn+NtY6b7zcVXG8TylC/v0FrImwI9SMvSFAROq0gn9vgY90YCv&#13;
+hNhCpsI/TRNUY8PFZilnRH3lbh89Km7aFnylcLIQ+yYOLQ4Ip0DitRxxObknVjCh6gnRBGibEM7B&#13;
+nR92JVZksBw/7VsQBHTALcgJnpe8whTdt5mb0s+bm9YEwVrbBoVIcDZklJxKLs/OlBIZGLZDUIYd&#13;
+jGYCnKyZ1stcOOJY6lr1seSIbRd3uz9552/Ov5YdzK+S8KdGcVCkKCquUlJbzxLHWQKyVGb6rnR2&#13;
+qthwfdRSpsc8kQA/CAMfg1Rv7ijMA7qn8QZtrXWCbvPMwq7CAbQ3SwQ+zeXepBPG5MPrQpaCZL7b&#13;
+ZlWFyloyxQ/EoRHuZ5Irr5B2zaAoktr3iKkRcYVEgkEjxhwc3HF+023S0rUInq6Kq6aLPJ+VVqnY&#13;
+6JYhULHUoVFlKkXk54t9XadjBSeaf3e7HT5EX372+z4pTK7T7CSDz0I6HfxuJpiNjNBm35vtkihp</X509Certificate>
+					<X509IssuerSerial>
+						<X509IssuerName>OU=sitest-ca, O=state-institutions, C=si</X509IssuerName>
+						<X509SerialNumber>1131893138645358613961</X509SerialNumber>
+					</X509IssuerSerial>
+					<X509SubjectName>2.5.4.4=#130474657374+2.5.4.5=#130d32373131323032303030313030+2.5.4.42=#0c0d536f6469c382c5a1c482c2a865+CN=SodiÂšĂ¨e test proxsign,OU=individuals,ST=Slovenija (SITEST-CA),C=SI</X509SubjectName>
+				</X509Data>
+				<KeyValue>
+					<RSAKeyValue>
+						<Modulus>1jOigz+W+FGQzuSWqmOEWbs8UPC2qlDbuUzpXdSX2nQaTdIxtNZmDx4KhG1NxImjsBBknQMSSZYs&#13;
+Wqet2C3HCVSGIs9Y4L5BCv7UupUCrqriGRGjnlyk1Etrz/PHzeN7Tiv+TZFMpqygPeYzNpqyMMXX&#13;
+q4ycxJL8ILZupQOg0tui9Rr03CgQsx4hTHxr0xIGeDmGVW3NZyXUBlaHD6Lw+dhXKbn+t/Lt4ks9&#13;
+dj1C3PnOZOKU6qV0rHp3ahi0pF+dg9U8V5pUR8z0EIC3Ru9WBg0jnsj9N7px56raVQwHOjeLTQ6b&#13;
+pgCSzfhV4YNDAN4r+PuOjRLO0L1C5wuTscUz7w==</Modulus>
+						<Exponent>AQAB</Exponent>
+					</RSAKeyValue>
+				</KeyValue>
+			</KeyInfo>
+			<Object>
+				<xds:QualifyingProperties xmlns:xds="http://uri.etsi.org/01903/v1.1.1#" Target="#Signature-7de4c9d7-595f-4d95-8001-b2e8be9466f4">
+					<xds:UnsignedProperties>
+						<xds:UnsignedSignatureProperties>
+							<xds:SignatureTimeStamp>
+								<xds:HashDataInfo uri="#SignatureValue-08ecdfb9-dac3-4be0-938c-c84bfe20f9c1"/>
+								<xds:XMLTimeStamp>
+									<dsig:Signature xmlns:dsig="http://www.w3.org/2000/09/xmldsig#" Id="TimeStampToken">
+										<dsig:SignedInfo>
+											<dsig:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+											<dsig:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+											<dsig:Reference URI="#TimeStampInfo-17545F19034357F1B6B0000000000565C91">
+												<dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+												<dsig:DigestValue>SQhuFIsr6Y7qabmJdKidM3/k2EE=</dsig:DigestValue>
+											</dsig:Reference>
+											<dsig:Reference URI="#TimeStampAuthority">
+												<dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+												<dsig:DigestValue>p9BF/PIDVpc8+884AeG5NSbVCjg=</dsig:DigestValue>
+											</dsig:Reference>
+										</dsig:SignedInfo>
+										<dsig:SignatureValue>lNo7QIpdffrJOqbeDRHIdQmZ3sU6jiueQPqkMB918B+OlCpAK+Jz0/OYGP9TQmTNjJRS8fIAmTf/zEeHzj+yctjgYxgYnYTjpnacJD4Df82YfgBx4pCh0RlU6uzebQaa4wSlaIO9OycsCJz7uMlgYLecqGV5/VZZeN/RHBNcDODyhuk0vCFUxoGpKp3weEZmdt5oinCGSdG6iAC+NFkRSzds3SLgM4hnPe/MScJglEXdZqHctxjn+sgJOBemDGwmBg9MwagVO1ON8awIwTH4Pcuv1y0WUT50XeUMZ+tD4Eli3HxMS1QSeShxkPdbliGP3YgGB6tl3kzU1ym4s0XtsQ==</dsig:SignatureValue>
+										<dsig:KeyInfo Id="TimeStampAuthority">
+											<dsig:KeyValue>
+												<dsig:RSAKeyValue>
+													<dsig:Modulus>sUjRtMcjONRJuR6eOc34eltLrxI5IqRPb+oPq0Gmvwf8oVwUGmOMHqD7ud9unoDoZMSicB/keVs0CSVUJ3hvFlz28w+FigGFqHzgjIzuNzy2A2Yol4GU+7tKFxYq6XBJSDFlsdJqiRIQcvgyLoSETezQDsxtk8hsf1PzgiYId86vXcF/EvqtvZV9ueZJlCgWFG9ILlf/pDj7oicP0TyCID86YIcLVROuk51znzOc/5z7Is1EPhQrQyDsKOtPBFrptM+PI5bVOsAC4pvzhxDioc6nDlYdg28GGWoc8g2B2boj9PxLu2Q60Oowudnx2/AsOjmrHPnNBlaqYX2jUQChvQ==</dsig:Modulus>
+													<dsig:Exponent>AQAB</dsig:Exponent>
+												</dsig:RSAKeyValue>
+											</dsig:KeyValue>
+											<dsig:X509Data>
+												<dsig:X509Certificate>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</dsig:X509Certificate>
+											</dsig:X509Data>
+										</dsig:KeyInfo>
+										<dsig:Object Id="TimeStampInfo-17545F19034357F1B6B0000000000565C91">
+											<ts:TimeStampInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:ts="http://www.entrust.com/schemas/timestamp-protocol-20020207">
+												<ts:Policy id="https://www.si-trust.gov.si/assets/Politike/si-tsa/verzija-7-2/SI-TSA-politika-OID-1-3-6-1-4-1-6105-3-1-7.pdf"/>
+												<ts:Digest>
+													<ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+													<ds:DigestValue>MU/L/yHe5syGbveAR+We5DFtp3M=</ds:DigestValue>
+												</ts:Digest>
+												<ts:SerialNumber>127018293861565516705687172712007648828561</ts:SerialNumber>
+												<ts:CreationTime>2021-02-09T20:38:31.605Z</ts:CreationTime>
+												<ts:Accuracy milliseconds="999"/>
+												<ts:Nonce>2376587872813388064</ts:Nonce>
+											</ts:TimeStampInfo>
+										</dsig:Object>
+									</dsig:Signature>
+								</xds:XMLTimeStamp>
+							</xds:SignatureTimeStamp>
+						</xds:UnsignedSignatureProperties>
+					</xds:UnsignedProperties>
+				</xds:QualifyingProperties>
+			</Object>
+		</Signature>
+	</ns3:SplosnaVloga>

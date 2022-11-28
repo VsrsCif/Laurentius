@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://sodisce.si/SplosnaVloga/v2" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:vl="http://sodisce.si/common/Vloga/v1" xmlns:dok="http://sodisce.si/common/Dokument/v2" xmlns:ns2="http://www.w3.org/2000/09/xmldsig#" targetNamespace="http://sodisce.si/SplosnaVloga/v2" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:import namespace="http://sodisce.si/common/Vloga/v1" schemaLocation="Vloga.xsd"/>
+	<xs:import namespace="http://sodisce.si/common/Dokument/v2" schemaLocation="DokumentV2.xsd"/>
+	<xs:import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="xmldsig-core-schema.xsd"/>
+	<xs:element name="SplosnaVloga" type="splosnaVlogaType"/>
+	<xs:complexType name="splosnaVlogaType">
+		<xs:sequence>
+			<xs:element name="Vloga" type="vlogaType"/>
+			<xs:element ref="ns2:Signature" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Digitalni podpis</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:ID">
+			<xs:annotation>
+				<xs:documentation>Neobvezen id elementa - uporabno za digitalni podpis ali časovno žigosanje</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="vlogaType">
+		<xs:complexContent>
+			<xs:extension base="vl:vlogaType">
+				<xs:sequence>
+					<xs:element name="VlozeniDokumenti" type="DokumentComplexType" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>Seznam vloženih dokumentov</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="DokumentComplexType">
+		<xs:annotation>
+			<xs:documentation>Seznam dokumentov</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="SeznamDokumentov" type="dok:DokumentType" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

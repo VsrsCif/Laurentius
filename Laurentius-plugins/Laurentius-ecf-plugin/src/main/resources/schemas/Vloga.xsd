@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://sodisce.si/common/Vloga/v1"
+            xmlns:xs="http://www.w3.org/2001/XMLSchema"
+            attributeFormDefault="unqualified"
+            elementFormDefault="qualified"
+            targetNamespace="http://sodisce.si/common/Vloga/v1">
+
+
+  <xs:element type="xs:string" name="OprSt">
+    <xs:annotation>
+      <xs:documentation>Opravilna številka</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:element type="xs:string" name="PravnoPodrocjeSif">
+    <xs:annotation>
+      <xs:documentation>Šifra pravnega področja</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+
+  <xs:complexType name="vlogaType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="SodiSif" minOccurs="1" maxOccurs="1">
+        <xs:annotation>
+          <xs:documentation>Šifra sodišča</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:choice>
+        <xs:element ref="OprSt"/>
+        <xs:element ref="PravnoPodrocjeSif"/>
+      </xs:choice>
+    </xs:sequence>
+    <xs:attribute name="id" type="xs:ID">
+      <xs:annotation>
+        <xs:documentation>Neobvezen id elementa - uporabno za digitalni podpis ali časovno žigosanje</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
+
+
+
+
+</xs:schema>

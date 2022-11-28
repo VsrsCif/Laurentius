@@ -1,0 +1,13 @@
+[ {
+  "sif" : "I",
+  "naziv" : "Izvršilni postopki",
+  "defVpisnik" : "1"
+}, {
+  "sif" : "ZK",
+  "naziv" : "Zemljiškoknjižni postopki",
+  "defVpisnik" : "783"
+}, {
+  "sif" : "ST",
+  "naziv" : "stečaji,insolventni postopki",
+  "defVpisnik" : "760"
+} ]

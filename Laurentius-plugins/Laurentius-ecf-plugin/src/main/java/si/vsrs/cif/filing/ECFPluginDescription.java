@@ -17,7 +17,9 @@ import si.laurentius.plugin.def.DefaultInitData;
 import si.laurentius.plugin.def.MenuItem;
 import si.laurentius.plugin.interfaces.AbstractPluginDescription;
 import si.laurentius.plugin.interfaces.PluginDescriptionInterface;
+import si.laurentius.plugin.interfaces.PropertyType;
 import si.laurentius.plugin.interfaces.exception.PluginException;
+import si.laurentius.plugin.processor.InMailProcessorDef;
 
 /**
  *
@@ -29,7 +31,17 @@ import si.laurentius.plugin.interfaces.exception.PluginException;
 public class ECFPluginDescription extends  AbstractPluginDescription {
 
   private static final SEDLogger LOG = new SEDLogger(ECFPluginDescription.class);
-  
+
+  @PostConstruct
+  private void postConstruct() {
+    try {
+      // and log further application specific info
+      registerPluginComponentInterface(ECFInInterceptor.class);
+      registerPlugin();
+    } catch (PluginException ex) {
+      LOG.logError("Error occurred while registering plugin: " + ex.getMessage(), ex);
+    }
+  }
   
   @Override
   public DefaultInitData getDefaultInitData() {
@@ -43,17 +55,7 @@ public class ECFPluginDescription extends  AbstractPluginDescription {
     }
     return null;
   }
-  @PostConstruct
-  private void postConstruct() {    
-    try {
-      // and log further application specific info
-      registerPluginComponentInterface(ECFInInterceptor.class);
-      registerPlugin();
-    } catch (PluginException ex) {
-      LOG.logError("Error occured while registering plugin: " + ex.getMessage(), ex);
-    }
-  }
-  
+
    @Override
   public MenuItem getMenu() {
     return null;
@@ -69,13 +71,13 @@ public class ECFPluginDescription extends  AbstractPluginDescription {
    */
   @Override
   public String getDesc() {
-    return "ECF plugin";
+    return "Dodatek za elektronsko vlaganje";
   }
 
 
   @Override
   public String getVersion() {
-    return "1.0.0";
+    return "0.1.0";
   }
 
 
@@ -85,7 +87,7 @@ public class ECFPluginDescription extends  AbstractPluginDescription {
    */
   @Override
   public String getName() {
-    return "ECF plugin";
+    return "eOdlozisce";
   }
 
   /**
