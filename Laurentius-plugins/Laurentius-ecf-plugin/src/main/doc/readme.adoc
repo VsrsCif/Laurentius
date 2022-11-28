@@ -13,10 +13,6 @@ verzija: {version}, {date}
 Dodatek *eOdložišče* je implementacija funkcionalnih zahtev določenih v dokumentu:
 link:resources/FTZ-vlaganje-1.0.0.pdf[Funkcionalne in tehnične zahteve za e-Vlaganje v varni elektronski predal sodišča]. (Verzija: 1.0.0, 20. 04. 2022)
 
-== Namen dokumenta
-Dokument opisuje izgradjo in namestive dodatka
-
-
 == Nastavitve
 
 Nastavitve se urejajo v dialogu za registracijo dodatka
@@ -25,43 +21,56 @@ image::resources/images/dialog-intercepor.png[]
 
 
 - *ecf.payload.metadata.name*: Naziv priponke, ki vsebuje obvezne meta-podatke pošiljke. Naziv se uporabi v primeru, da sporočilo vsebuje več priponk tipa XML.
-- *ecf.service.pdf-validation.url*: URL sevisa za preverjanje ustreznosti PDF vsebin (Primer:  http://localhost:9085/).
+- *ecf.service.pdf-validation.url*: URL servisa za preverjanje ustreznosti PDF vsebin (Primer:  http://localhost:9085/).
 - *ecf.service.pdf-validation.aplik-id*: Vhodni parameter 'applicationId' za preverjanje ustreznosti PDF vsebin.
 - *ecf.service.pdf-validation.report.return*: Vhodni parameter 'includeReport' za preverjanje ustreznosti PDF vsebin. Porocilo se izpise log datoteko!
 - *ecf.payload.mimetypes*: Seznam dovoljenih mime tipov priponk ločenih z vejico. Primer: [application/xml,text/xml,application/pdf])
-- *ecf.payload.metadata.oprst.regexp*: 'RegExp' za preverjanje opravilne stevilke in lociranja podatka za vpisnik! (Primer: "^(\\S*\\s+)?(?<vpisnik>\\S*)\\s+(\\d*\\/\\d{2,4})$")
-- *ecf.payload.digest.encoding*: Nacin kodiranja zgostivene vrednosti: moznosti: hex,base64
-- *ecf.payload.digest.algorithm*: Dovoljen algoritem za izracun zgostivene vrednosti: SHA1,SHA256,SHA512
-- *ecf.service.timestamp.url*: URL naslov za casovno zigosanje.
-- *ecf.service.timestamp.timeout_in_ms*: Timeout za klic casovneg zigosanja v ms.
-- *ecf.signature.mandatory*: V primer "true": splosna vloga mora biti podpisa sicer se podpise z uporabo kljuca: dolocenega v "ecf.sign.key.alias"
+- *ecf.payload.metadata.oprst.regexp*: 'RegExp' za preverjanje opravilne številke in lociranja podatka za vpisnik! (Primer: ^(\S*\s+)?(?<vpisnik>\S*)\s+((?<stevilka>\d*)\/(?<leto>\d{2,4}))\S*$)
+                                       izraz mora vsebovati grupe z nazivi: vpisnik, številka in leto
+- *ecf.payload.digest.encoding*: Način kodiranja zgostivene vrednosti: možnosti: hex,base64
+- *ecf.payload.digest.algorithm*: Dovoljen algoritem za izračun zgostivene vrednosti: SHA1,SHA256,SHA512
+- *ecf.service.timestamp.url*: URL naslov za časovno žigosanje.
+- *ecf.service.timestamp.timeout_in_ms*: Timeout za klic časovnega žigosanja v ms.
+- *ecf.signature.mandatory*: V primer "true": splošna vloga mora biti podpisa sicer se podpise z uporabo kljuca: dolocenega v "ecf.sign.key.alias"
 - *ecf.sign.key.alias*: Alias kljuca za podpis vloge.
 
 
 Preverjanje priponk dohodne pošte
 
-Obstoj priponke z metapodatki. V primeru, da je v priponkah vec datotek tipa XML, se isce datoteka z oznako dolocena v "ecf.payload.metadata.name" : SplosnaVlogaV2.xsd
-Preverjane, da je datotaka skladna shemo "SplosnaVloga". Shema je sestavni del "dodatka" eOdlozisce.
+Obstoj priponke z metapodatki. V primeru, da je v priponkah vec datotek tipa XML, se privzame datoteka z oznako določena v "ecf.payload.metadata.name" : SplosnaVloga
+Preverjane, da je datoteka skladna shemo "SplosnaVloga". Shema je sestavni del "dodatka" eOdlozisce.
 Preverjanje pravilnosti metapodatkov:
 
- - SodiSif: mora biti vrednost iz sifranta
- - OprSt mora biti izdelana po formatu dolocenem v "regexp" in vpisnik mora biti v sifrantu:
- - PravnoPodrocjeSif mora biti iz sifranta...
- - Poleg metapodatkov mora biti dodan vsaj end dokment tipa XML ali PDF
- - vsi dokumenti imajo izracunan hash
+ - SodiSif: mora biti vrednost v šifrantu primer: link:/resources/sifrant-sodisca.json[sifrant-sodisca.json]
+ - OprSt mora biti izdelana po formatu določenem v "regexp" in vpisnik mora biti v šifrantu primer: link:/resources/sifrant-vpisniki.json[sifrant-vpisniki.json]
+ - PravnoPodrocjeSif mora biti iz šifranta primer:  link:/resources/sifrant-pravna-podrocja.json[sifrant-pravna-podrocja.json]
+ - Poleg metapodatkov mora biti dodan vsaj en dokument tipa XML ali PDF
+ - Vsi dokumenti imajo izračunan hash
  - V primeru, da je podan HashAlgoritem: mora biti eden izmed dovoljenih hash algoritmov po:SHA1,SHA256,SHA512
- - V primeru, da hash ni podan, potem je prevzeti hash
- - Natanko en dokument v priponki mora biti oznacen kot vodilni dokument (in to ne sme biti splosna vloga)
+ - V primeru, da hash ni podan, potem je prevzeta hash funkcija: SHA256
+ - Natanko en dokument v priponki mora biti označen kot vodilni dokument (in to ne sme biti splošna vloga)
 
+Po uspešnem izvajanju kontrole metapodatkov se dodajajo naslednji podatki na pošiljko
+v rubriki:  Lastnosti pošiljke:
 
-== Sifranti
+- *evip.ecf-plugin.sodi-sif*: Koda sodisca:	S13
+- *evip.ecf-plugin.aplik-sif*: Koda informacijskega sistema:	INSVP
+- *evip.ecf-plugin.vpisnik*: Vpisnik ID:	760
+- *evip.ecf-plugin.vpisnik-kratica*: Vpisnik kratica:	St
+- *evip.ecf-plugin.opr-st*: (Optional) Opravilna številka:	St 12/2022
+- *evip.ecf-plugin.opr-st-stevilka*: (Optional) številka OprSt :	12
+- *evip.ecf-plugin.opr-st-leto*: (Optional) Leto OprSt:	2022
 
-Sifranti se nahajajo v mapi
+image::resources/images/routing-properties.png[]
+
+== Šifranti
+
+Šifranti se nahajajo v mapi
 
     $laurentius-home/plugins/ecf-plugin/data
 
-Sifranti
+Šifranti
 
  - link:/resources/sifrant-pravna-podrocja.json[sifrant-pravna-podrocja.json]
  - link:/resources/sifrant-sodisca.json[sifrant-sodisca.json]
- - link:/resources/sifrant-vpisniki.json[sifrant-sodisca.json]
+ - link:/resources/sifrant-vpisniki.json[sifrant-vpisniki.json]
