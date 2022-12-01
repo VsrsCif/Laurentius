@@ -23,13 +23,10 @@ import org.xml.sax.SAXException;
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.cxf.SoapUtils;
 import si.laurentius.commons.enums.MimeValue;
-import si.laurentius.commons.enums.SEDInboxMailStatus;
 import si.laurentius.commons.enums.SEDMailPartSource;
 import si.laurentius.commons.exception.SEDSecurityException;
 import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.interfaces.SEDCertStoreInterface;
-import si.laurentius.commons.interfaces.SEDDaoInterface;
-import si.laurentius.commons.pmode.enums.SecSignatureAlgorithm;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StorageUtils;
 import si.laurentius.commons.utils.xml.XMLUtils;
@@ -38,6 +35,9 @@ import si.laurentius.lce.DigestUtils;
 import si.laurentius.lce.sign.xml.XMLSignatureUtils;
 import si.laurentius.msh.inbox.mail.MSHInMail;
 import si.laurentius.msh.inbox.payload.MSHInPart;
+import si.laurentius.msh.inbox.property.MSHInProperties;
+import si.laurentius.msh.inbox.property.MSHInProperty;
+import si.laurentius.plugin.component.PluginPropertyDef;
 import si.laurentius.plugin.interceptor.MailInterceptorDef;
 import si.laurentius.plugin.interceptor.MailInterceptorPropertyDef;
 import si.laurentius.plugin.interfaces.PropertyListType;
@@ -99,8 +99,10 @@ public class ECFInInterceptor implements SoapInterceptorInterface {
     protected static final String SIGNATURE_REASON = "Prispela vloga";
 
     public static final List<MimeValue> DEFAULT_ALLOWED_MIMETYPES = Arrays.asList(MimeValue.MIME_XML, MimeValue.MIME_XML1, MimeValue.MIME_PDF);
-    public static final String DEFAULT_OPRST_REGEXP = "^(\\S*\\s+)?(?<vpisnik>\\S*)\\s+(\\d*\\/\\d{2,4})$";
+    public static final String DEFAULT_OPRST_REGEXP = "^(\\S*\\s+)?(?<vpisnik>\\S*)\\s+((?<stevilka>\\d*)\\/(?<leto>\\d{2,4}))\\S*$";
     public static final String OPRST_REGEXP_VPISNIK = "vpisnik";
+    public static final String OPRST_REGEXP_STEVILKA = "stevilka";
+    public static final String OPRST_REGEXP_LETO = "leto";
 
     public static final String KEY_PAYLOAD_METADATA_NAME = "ecf.payload.metadata.name";
     public static final String KEY_METADAT_OPRST_REGEXP = "ecf.payload.metadata.oprst.regexp";
@@ -119,6 +121,14 @@ public class ECFInInterceptor implements SoapInterceptorInterface {
     public static final String KEY_PAYLOAD_DIGEST_ENCODING = "ecf.payload.digest.encoding";
     public static final String KEY_PAYLOAD_DIGEST_ALGORITHM = "ecf.payload.digest.algorithm";
 
+    protected static final String ECF_PROP_SODI_SIF = "evip.ecf-plugin.sodi-sif";
+    protected static final String ECF_PROP_APLIK_SIF = "evip.ecf-plugin.aplik-sif";
+    protected static final String ECF_PROP_VPISNIK = "evip.ecf-plugin.vpisnik";
+    protected static final String ECF_PROP_VPISNIK_KRATICA = "evip.ecf-plugin.vpisnik-kratica";
+    protected static final String ECF_PROP_OPR_ST = "evip.ecf-plugin.opr-st";
+    protected static final String ECF_PROP_OPR_ST_STEVILKA = "evip.ecf-plugin.opr-st-stevilka";
+    protected static final String ECF_PROP_OPR_ST_LETO = "evip.ecf-plugin.opr-st-leto";
+
 
     MailInterceptorDef mailIntcDef = null;
     ECFLookups lookups = new ECFLookups();
@@ -132,9 +142,6 @@ public class ECFInInterceptor implements SoapInterceptorInterface {
     TimeStampServiceImpl timeStampService;
     @EJB(mappedName = SEDJNDI.JNDI_DBCERTSTORE)
     SEDCertStoreInterface mCertBean;
-    @EJB(mappedName = SEDJNDI.JNDI_SEDDAO)
-    SEDDaoInterface mDatabaseDao;
-
 
     @Override
     public MailInterceptorDef getDefinition() {
@@ -164,7 +171,7 @@ public class ECFInInterceptor implements SoapInterceptorInterface {
                 PropertyType.Boolean.getType(), null, null));
 
         String defaultMimeTypes = DEFAULT_ALLOWED_MIMETYPES.stream()
-                .map(mimeValue -> mimeValue.getMimeType()).collect(Collectors.joining(","));
+                .map(MimeValue::getMimeType).collect(Collectors.joining(","));
         mailIntcDef.getMailInterceptorPropertyDeves().add(createProperty(
                 KEY_PAYLOAD_MIMETYPES, defaultMimeTypes, "Seznam dovoljenih mime tipov priponk ločenih z vejico. Primer: [" + defaultMimeTypes + "])", false,
                 PropertyType.String.getType(), null, null));
@@ -224,7 +231,7 @@ public class ECFInInterceptor implements SoapInterceptorInterface {
         boolean isBackChannel = SoapUtils.isRequestMessage(msg);
         MSHInMail mInMail = SoapUtils.getMSHInMail(msg);
 
-        if (isBackChannel || mInMail == null) {
+        if (isBackChannel) {
             // ignore isBackChannel processing
             LOG.formatedDebug("Skip backChannel processing!");
             return true;
@@ -251,11 +258,11 @@ public class ECFInInterceptor implements SoapInterceptorInterface {
         MSHInPart metadataPart = getMetadataPayload(mailPayloads, payloadName, conversationId, messageId, senderId);
 
         // validate if payloads exits and if hashes between metadata and mail payloads matches
-        List<MSHInPart> mailContentPayloads = validatePayloads(metadataPart, mailPayloads, conversationId, messageId, senderId, contextProperties);
+        List<MSHInPart> mailContentPayloads = validatePayloads(metadataPart, mailPayloads, mInMail, contextProperties);
         // validate pdf payloads
         validatePDFPayloads(mailContentPayloads, conversationId, messageId, senderId, contextProperties);
         //sign and timestamp
-        signAndTimestampMetadata(mInMail, metadataPart,conversationId, messageId, senderId, contextProperties);
+        signAndTimestampMetadata(mInMail, metadataPart, conversationId, messageId, senderId, contextProperties);
 
         return true;
     }
@@ -282,7 +289,7 @@ public class ECFInInterceptor implements SoapInterceptorInterface {
             if (signatureMandatory) {
                 throwFault(messageId, EFCError.MISSING_SIGNATURE, conversationId, senderId);
             }
-            if (StringUtils.isBlank(signatureAlias)){
+            if (StringUtils.isBlank(signatureAlias)) {
                 LOG.logWarn("Can not sign usigned incoming mail SplosnaVloga, because alisa does not exists!", null);
                 return;
             }
@@ -315,7 +322,7 @@ public class ECFInInterceptor implements SoapInterceptorInterface {
 
     public void createNewSplosnaVlogaPart(Document document, MSHInPart metadataPart, MSHInMail inMail) throws StorageException, FileNotFoundException {
 
-        File newFileName = StorageUtils.getNewStorageFile("xml","ecf-vloga");
+        File newFileName = StorageUtils.getNewStorageFile("xml", "ecf-vloga");
         XMLUtils.serialize(document, true, newFileName);
 
         MSHInPart miNewDoc = new MSHInPart();
@@ -327,9 +334,9 @@ public class ECFInInterceptor implements SoapInterceptorInterface {
         miNewDoc.setDescription("New: " + metadataPart.getDescription());
         miNewDoc.setEbmsId(metadataPart.getEbmsId() + "-dec");
         miNewDoc.setEncoding(metadataPart.getEncoding());
-        miNewDoc.setFilename("ecf-"+metadataPart.getFilename());
+        miNewDoc.setFilename("ecf-" + metadataPart.getFilename());
         miNewDoc.setMimeType(metadataPart.getMimeType());
-        miNewDoc.setName("ecf-"+metadataPart.getName());
+        miNewDoc.setName("ecf-" + metadataPart.getName());
         miNewDoc.setType(metadataPart.getType());
         miNewDoc.setIsEncrypted(Boolean.FALSE);
 
@@ -337,11 +344,6 @@ public class ECFInInterceptor implements SoapInterceptorInterface {
         miNewDoc.setSize(BigInteger.valueOf(newFileName.length()));
         miNewDoc.setFilepath(StorageUtils.getRelativePath(newFileName));
         inMail.getMSHInPayload().getMSHInParts().add(miNewDoc);
-
-        /*mDatabaseDao.addInMailPayload(inMail, Collections.singletonList(miNewDoc), SEDInboxMailStatus.PROCESS,
-                "Sign/Timestamp SplosnaVloga",
-                null, getDefinition().getType());
-*/
     }
 
     /**
@@ -375,11 +377,10 @@ public class ECFInInterceptor implements SoapInterceptorInterface {
      *
      * @param metadataPart
      * @param mailPayloads
-     * @param messageId
-     * @param conversationId
+     * @param mInMail
      * @return mail content parts
      */
-    public List<MSHInPart> validatePayloads(MSHInPart metadataPart, List<MSHInPart> mailPayloads, String conversationId, String messageId, String senderId, Properties contextProperties) {
+    public List<MSHInPart> validatePayloads(MSHInPart metadataPart, List<MSHInPart> mailPayloads, MSHInMail mInMail, Properties contextProperties) {
         // settings
         String allowedMimeTypes = getPropertyValue(KEY_PAYLOAD_MIMETYPES, contextProperties);
 
@@ -391,11 +392,11 @@ public class ECFInInterceptor implements SoapInterceptorInterface {
             List<MimeValue> documentMimeTypes = MimeTypeUtils.convertStringListToMimeList(allowedMimeTypes);
             // check payload mimetypes
             Optional<MSHInPart> wrongMimeType = contentPayloads.stream().filter(mshInPart -> !MimeTypeUtils.matchMimeTypes(mshInPart, documentMimeTypes)).findFirst();
-            if (wrongMimeType.isPresent()) {
-                throwFault(messageId, INVALID_PAYLOAD_MIMETYPE, conversationId, senderId, wrongMimeType.get().getMimeType());
-            }
+            wrongMimeType.ifPresent(
+                    mshInPart -> throwFault(mInMail.getMessageId(), INVALID_PAYLOAD_MIMETYPE,
+                            mInMail.getConversationId(), mInMail.getConversationId(), mshInPart.getMimeType()));
         }
-        validateMetadata(metadataPart, contentPayloads, conversationId, messageId, senderId, contextProperties);
+        validateMetadata(metadataPart, contentPayloads, mInMail, contextProperties);
         return contentPayloads;
     }
 
@@ -405,7 +406,7 @@ public class ECFInInterceptor implements SoapInterceptorInterface {
         boolean returnReport = Boolean.parseBoolean(getPropertyValue(KEY_PAYLOAD_PDF_VALIDATION_REPORT, contextProperties));
         LOG.log("Validate PDFS using the URL [" + validationUrl + "], AppId: [" + validationApplicationID + "]");
         // validate pdf parts
-        List<MSHInPart> pdfParts = MimeTypeUtils.filterPayloadsByMimeTypes(contentPayloads, Arrays.asList(MimeValue.MIME_PDF));
+        List<MSHInPart> pdfParts = MimeTypeUtils.filterPayloadsByMimeTypes(contentPayloads, Collections.singletonList(MimeValue.MIME_PDF));
         for (MSHInPart mip : pdfParts) {
             File fPDF = StorageUtils.getFile(mip.getFilepath());
             pdfValidationService.validatePDF(fPDF, mip.getName(), validationUrl, validationApplicationID, returnReport, conversationId, messageId, senderId);
@@ -419,7 +420,7 @@ public class ECFInInterceptor implements SoapInterceptorInterface {
     public String getDefaultPropertyValue(String key) {
         return getDefinition().getMailInterceptorPropertyDeves().stream()
                 .filter(prop -> StringUtils.equalsIgnoreCase(key, prop.getKey()))
-                .map(prop -> prop.getDefValue()).findAny().orElse(null);
+                .map(PluginPropertyDef::getDefValue).findAny().orElse(null);
     }
 
     /**
@@ -449,30 +450,28 @@ public class ECFInInterceptor implements SoapInterceptorInterface {
      * Method validates metadata "SplosnaVloga":
      * - executes the schema validation
      *
-     * @param conversationId
-     * @param messageId
-     * @param senderId
+     * @param mInMail
      * @param contextProperties
      */
-    public void validateMetadata(MSHInPart metadataPart, List<MSHInPart> contentPayloads, String conversationId, String messageId, String senderId, Properties contextProperties) {
+    public void validateMetadata(MSHInPart metadataPart, List<MSHInPart> contentPayloads, MSHInMail mInMail, Properties contextProperties) {
         File fVloga = StorageUtils.getFile(metadataPart.getFilepath());
         LOG.log("Validate XML : " + fVloga.getAbsolutePath());
         try {
             schemaValidator.validateXMLBySplosnaVloga(fVloga);
         } catch (IOException | SAXException e) {
-            throwFault(messageId, INVALID_METADATA_SCHEMA, conversationId, senderId, ExceptionUtils.getRootCauseMessage(e));
+            throwFault(mInMail.getMessageId(), INVALID_METADATA_SCHEMA, mInMail.getConversationId(), mInMail.getSenderEBox(), ExceptionUtils.getRootCauseMessage(e));
         }
         SplosnaVloga splosnaVloga = null;
         try {
             splosnaVloga = (SplosnaVloga) XMLUtils.deserialize(fVloga, SplosnaVloga.class);
         } catch (JAXBException e) {
-            throwFault(messageId, INVALID_METADATA_PARSE, conversationId, senderId, ExceptionUtils.getRootCauseMessage(e));
+            throwFault(mInMail.getMessageId(), INVALID_METADATA_PARSE, mInMail.getConversationId(), mInMail.getSenderEBox(), ExceptionUtils.getRootCauseMessage(e));
         }
         // validate sodiSif and OprSt/PravnoPodrocje
-        validateSplosnaVlogaData(splosnaVloga, conversationId, messageId, senderId, contextProperties);
+        validateSplosnaVlogaData(splosnaVloga, mInMail, contextProperties);
 
         //validate payloads hashes
-        validateSplosnaVlogaPayloadHashes(splosnaVloga, contentPayloads, conversationId, messageId, senderId, contextProperties);
+        validateSplosnaVlogaPayloadHashes(splosnaVloga, contentPayloads, mInMail.getConversationId(), mInMail.getMessageId(), mInMail.getSenderEBox(), contextProperties);
     }
 
     /**
@@ -546,33 +545,38 @@ public class ECFInInterceptor implements SoapInterceptorInterface {
                         String.join(",", vlogaContentHashes), String.join(",", contentPayloadsHashes));
             }
         }
-
     }
 
-    public void validateSplosnaVlogaData(SplosnaVloga splosnaVloga, String conversationId, String messageId, String senderId, Properties contextProperties) {
+    public void validateSplosnaVlogaData(SplosnaVloga splosnaVloga, MSHInMail mInMail, Properties contextProperties) {
+
+        String conversationId = mInMail.getConversationId();
+        String messageId = mInMail.getMessageId();
+        String senderId = mInMail.getSenderEBox();
+
         String oprstRegExp = getPropertyValue(KEY_METADAT_OPRST_REGEXP, contextProperties);
 
         // validate sodisif
         Optional<CourtType> courtType = lookups.getCourtByCode(splosnaVloga.getVloga().getSodiSif());
         if (!courtType.isPresent()) {
-            throwFault(messageId, INVALID_METADATA_COURT_TYPE, conversationId, senderId, splosnaVloga.getVloga().getSodiSif());
+            throwFault(mInMail.getMessageId(), INVALID_METADATA_COURT_TYPE, mInMail.getConversationId(), mInMail.getSenderEBox(), splosnaVloga.getVloga().getSodiSif());
         }
         // validate oprst/pravno podrocje
         Optional<RegisterType> registerType;
         String opravilnaSt = splosnaVloga.getVloga().getOprSt();
         String pravnoPodrocjeSif = splosnaVloga.getVloga().getPravnoPodrocjeSif();
+        CaseNumber caseNumber = null;
         if (StringUtils.isNotBlank(opravilnaSt)) {
 
             // parse vpisnik from oprSt and chek if is "valid"
-            String vpisnik = getVpisnikFromOprst(opravilnaSt, oprstRegExp);
+            caseNumber = parseCaseNumber(opravilnaSt, oprstRegExp);
 
-            if (StringUtils.isBlank(vpisnik)) {
+            if (caseNumber == null || StringUtils.isBlank(caseNumber.getRegisterCode())) {
                 throwFault(messageId, INVALID_METADATA_OPRST, conversationId, senderId, "OprSt [" + opravilnaSt + "] does not match [" + oprstRegExp + "]!");
             }
 
-            registerType = lookups.getRegisterByCode(vpisnik);
+            registerType = lookups.getRegisterByCode(caseNumber.getRegisterCode());
             if (!registerType.isPresent()) {
-                throwFault(messageId, INVALID_METADATA_OPRST, conversationId, senderId, "Register part [" + vpisnik + "] from 'oprSt' [" + opravilnaSt + "] is invalid!");
+                throwFault(messageId, INVALID_METADATA_OPRST, conversationId, senderId, "Register part [" + caseNumber.getRegisterCode() + "] from 'oprSt' [" + opravilnaSt + "] is invalid!");
             }
         } else {
             Optional<FieldOfLawType> flt = lookups.getFieldOfLawByCode(pravnoPodrocjeSif);
@@ -590,32 +594,65 @@ public class ECFInInterceptor implements SoapInterceptorInterface {
         if (!registerCourts.isEmpty() && !registerCourts.contains(courtType.get().getCode())) {
             throwFault(messageId, INVALID_METADATA_OPRST, conversationId, senderId, "Wrong court code [" + courtType.get().getCode() + "] for 'oprSt' [" + opravilnaSt + "] or pravnoPodrocjeSif [" + pravnoPodrocjeSif + "]!");
         }
+        // set data to
+        MSHInProperties mshInProperties = mInMail.getMSHInProperties() == null ? new MSHInProperties() : mInMail.getMSHInProperties();
+        mInMail.setMSHInProperties(mshInProperties);
+
+        mshInProperties.getMSHInProperties().add(createMailProperty(ECF_PROP_SODI_SIF, courtType.get().getCode()));
+        mshInProperties.getMSHInProperties().add(createMailProperty(ECF_PROP_APLIK_SIF, registerType.get().getApplikCode()));
+        mshInProperties.getMSHInProperties().add(createMailProperty(ECF_PROP_VPISNIK, registerType.get().getId()));
+        mshInProperties.getMSHInProperties().add(createMailProperty(ECF_PROP_VPISNIK_KRATICA, registerType.get().getCode()));
+        if (StringUtils.isNotBlank(opravilnaSt)) {
+            mshInProperties.getMSHInProperties().add(createMailProperty(ECF_PROP_OPR_ST, opravilnaSt));
+        }
+        if (caseNumber != null && StringUtils.isNotBlank(caseNumber.getNumber())) {
+            mshInProperties.getMSHInProperties().add(createMailProperty(ECF_PROP_OPR_ST_STEVILKA, StringUtils.trimToEmpty(caseNumber.getNumber())));
+        }
+        if (caseNumber != null && StringUtils.isNotBlank(caseNumber.getYear())) {
+            mshInProperties.getMSHInProperties().add(createMailProperty(ECF_PROP_OPR_ST_LETO, StringUtils.trimToEmpty(caseNumber.getYear())));
+        }
+
     }
 
-    public String getVpisnikFromOprst(String opravilnaSt, String oprstRegExp) {
+    public MSHInProperty createMailProperty(String name, String type) {
+        MSHInProperty mp = new MSHInProperty();
+        mp.setName(name);
+        mp.setType(getDefinition().getType());
+        mp.setValue(type);
+        return mp;
+    }
+
+    public CaseNumber parseCaseNumber(String opravilnaSt, String oprstRegExp) {
         if (StringUtils.isBlank(oprstRegExp)) {
             LOG.logWarn("Regular expression is not defined. Return [" + opravilnaSt + "]!", null);
-            return opravilnaSt;
+            return new CaseNumber(opravilnaSt);
         }
         if (StringUtils.isBlank(opravilnaSt)) {
             LOG.logWarn("Null OprSt!", null);
-            return opravilnaSt;
+            return new CaseNumber(opravilnaSt);
         }
 
         Pattern pattern = Pattern.compile(oprstRegExp);
         Matcher matcher = pattern.matcher(opravilnaSt);
 
-        return matcher.matches() ? matcher.group(OPRST_REGEXP_VPISNIK) : null;
+
+        return matcher.matches() ? new CaseNumber(getGroupOrNull(matcher, OPRST_REGEXP_VPISNIK),
+                getGroupOrNull(matcher, OPRST_REGEXP_STEVILKA),
+                getGroupOrNull(matcher, OPRST_REGEXP_LETO)) : null;
     }
 
+    public String getGroupOrNull(Matcher matcher, String groupName) {
+        try {
+            return matcher.group(groupName);
+        } catch (IllegalArgumentException exception) {
+            LOG.log(exception.getMessage(), null);
+            return null;
+        }
 
-    /**
-     * @param t
-     */
+    }
+    
     @Override
     public void handleFault(SoapMessage t, Properties cp) {
         // ignore
     }
-
-
 }
