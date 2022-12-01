@@ -56,7 +56,7 @@ public class TimeStampServiceImpl {
     }
 
     public byte[] timeStampXmlDocument(Document document, String serverUrl, Integer timeout, String conversationId, String messageId, String senderId) {
-        LOG.log("TimeStampServiceImpl.timeStampXml");
+        LOG.log("TimeStampServiceImpl.timeStampXml", serverUrl, timeout, conversationId, messageId);
 
         SetcceConfig conf = new SetcceConfig();
         conf.setTimeout(timeout);
@@ -65,8 +65,6 @@ public class TimeStampServiceImpl {
             conf.setType(type);
             SetcceSignServer sign = new SetcceSignServerServiceLocator().getsetcceSignServerPort(conf.getServerUrl());
             SignatureContainer docContainer = detachSignature(document, conversationId, messageId, senderId);
-            LOG.log("XML Without signature " + new String(docContainer.getDocWithoutSignature()));
-            LOG.log("Only signature " + new String(docContainer.getSignature()));
             AddXAdESTResult xadesT = sign.addXAdEST(docContainer.getDocWithoutSignature(), docContainer.getSignature(), SPLOSNA_VLOGA_ID);
             if (xadesT.getResultCode() != 0) {
                 String message = "Timestamp service returned error: code: [" + xadesT.getResultCode() + "]; message:[" + xadesT.getErrMsg() + "]";
