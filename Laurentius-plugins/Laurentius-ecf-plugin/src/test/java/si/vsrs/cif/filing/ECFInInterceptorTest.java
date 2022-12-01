@@ -3,7 +3,6 @@ package si.vsrs.cif.filing;
 import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.MatcherAssert;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import si.laurentius.commons.enums.MimeValue;
@@ -63,10 +62,6 @@ public class ECFInInterceptorTest {
         assertEquals(ECFInInterceptor.class.getSimpleName(), result.getType());
 
         assertEquals(12, result.getMailInterceptorPropertyDeves().size());
-
-        result.getMailInterceptorPropertyDeves().forEach(prop->{
-            System.out.println(" - *" + prop.getKey() + "*: " + prop.getDescription() );
-        });
     }
 
     @Test
@@ -111,64 +106,59 @@ public class ECFInInterceptorTest {
     @Test
     public void testDefaultRegExpVpisnikFromOprst() {
         String[][] testData = new String[][]{
-                {"I PR 22/2022", ECFInInterceptor.DEFAULT_OPRST_REGEXP, "PR"},
-                {"PR 22/2022", ECFInInterceptor.DEFAULT_OPRST_REGEXP, "PR"},
-                {"PR 22/22", ECFInInterceptor.DEFAULT_OPRST_REGEXP, "PR"},
-                {"  PR 22/22", ECFInInterceptor.DEFAULT_OPRST_REGEXP, "PR"}
+                {"I PR 22/2022", ECFInInterceptor.DEFAULT_OPRST_REGEXP,  "PR", "22","2022"},
+                {"PR 02/2022", ECFInInterceptor.DEFAULT_OPRST_REGEXP, "PR", "02","2022"},
+                {"PR 22/22", ECFInInterceptor.DEFAULT_OPRST_REGEXP, "PR", "22","2022"},
+                {"  PR 22/20", ECFInInterceptor.DEFAULT_OPRST_REGEXP, "PR", "22","2020"}
         };
 
         for (String[] test : testData) {
-            String result = testInstance.getVpisnikFromOprst(test[0], test[1]);
-            assertEquals(test[2], result);
+            CaseNumber result = testInstance.parseCaseNumber(test[0], test[1]);
+            assertEquals(test[2], result.getRegisterCode());
+            assertEquals(test[3], result.getNumber());
+            assertEquals(test[4], result.getYear());
         }
 
     }
 
     @Test
     public void validateSplosnaVlogaDataOKByOprSt() {
-        String messageId = "messageId";
-        String conversationId = "conversationId";
-        String senderId = "senderId";
+
+        MSHInMail mshInMail = createMSHInMail();
         // vpisnik St and SodiSif must be in ECFLookup!
         Properties properties = getDefaultProperties();
         SplosnaVloga splosnaVloga = createSplosnaVloga("S03", "I St 2/2022", null);
-        testInstance.validateSplosnaVlogaData(splosnaVloga, conversationId, messageId, senderId, properties);
+        testInstance.validateSplosnaVlogaData(splosnaVloga, mshInMail, properties);
     }
 
     @Test
     public void validateSplosnaVlogaDataOKByPravnoPodrocje() {
-        String messageId = "messageId";
-        String conversationId = "conversationId";
-        String senderId = "senderId";
+        MSHInMail mshInMail = createMSHInMail();
         // vpisnik St and SodiSif must be in ECFLookup!
         Properties properties = getDefaultProperties();
         SplosnaVloga splosnaVloga = createSplosnaVloga("S03", null, "St");
-        testInstance.validateSplosnaVlogaData(splosnaVloga, conversationId, messageId, senderId, properties);
+        testInstance.validateSplosnaVlogaData(splosnaVloga, mshInMail, properties);
     }
 
 
     @Test
     public void validateSplosnaVlogaDataWrongSodiSif() {
-        String messageId = "messageId";
-        String conversationId = "conversationId";
-        String senderId = "senderId";
+        MSHInMail mshInMail = createMSHInMail();
         // vpisnik St and SodiSif must be in ECFLookup!
         Properties properties = getDefaultProperties();
         SplosnaVloga splosnaVloga = createSplosnaVloga("S01", "I St 2/2022", null);
-        ECFFault result = assertThrows(ECFFault.class, () -> testInstance.validateSplosnaVlogaData(splosnaVloga, conversationId, messageId, senderId, properties));
+        ECFFault result = assertThrows(ECFFault.class, () -> testInstance.validateSplosnaVlogaData(splosnaVloga, mshInMail, properties));
 
         MatcherAssert.assertThat(result.getSubMessage(), CoreMatchers.containsString("Wrong court code"));
     }
 
     @Test
     public void validateSplosnaVlogaDataWrongOprSt() {
-        String messageId = "messageId";
-        String conversationId = "conversationId";
-        String senderId = "senderId";
+        MSHInMail mshInMail = createMSHInMail();
         // vpisnik St and SodiSif must be in ECFLookup!
         Properties properties = getDefaultProperties();
         SplosnaVloga splosnaVloga = createSplosnaVloga("S01", "I NotExists 2/2022", null);
-        ECFFault result = assertThrows(ECFFault.class, () -> testInstance.validateSplosnaVlogaData(splosnaVloga, conversationId, messageId, senderId, properties));
+        ECFFault result = assertThrows(ECFFault.class, () -> testInstance.validateSplosnaVlogaData(splosnaVloga, mshInMail, properties));
 
         MatcherAssert.assertThat(result.getSubMessage(), CoreMatchers.containsString("is invalid"));
     }
@@ -257,5 +247,17 @@ public class ECFInInterceptorTest {
         testInstance.getDefinition().getMailInterceptorPropertyDeves().stream().filter(propDef ->
                 StringUtils.isNotBlank(propDef.getDefValue())).forEach(propDef -> properties.setProperty(propDef.getKey(), propDef.getDefValue()));
         return properties;
+    }
+
+    public MSHInMail createMSHInMail(){
+        return createMSHInMail("messageId","conversationId","senderEBox");
+    }
+
+    public MSHInMail createMSHInMail(String messageId, String conversationId, String senderEBox){
+        MSHInMail mshInMail= new MSHInMail();
+        mshInMail.setMessageId(messageId);
+        mshInMail.setConversationId(conversationId);
+        mshInMail.setSenderEBox(senderEBox);
+        return mshInMail;
     }
 }
