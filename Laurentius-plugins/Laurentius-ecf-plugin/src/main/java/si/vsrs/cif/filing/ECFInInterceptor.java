@@ -76,6 +76,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import static org.apache.commons.lang3.StringUtils.*;
 import static si.vsrs.cif.filing.enums.EFCError.*;
 import static si.vsrs.cif.filing.utils.ExceptionUtils.throwFault;
 
@@ -306,20 +307,30 @@ public class ECFInInterceptor implements SoapInterceptorInterface {
             }
         }
 
-        if (StringUtils.isNotBlank(timestampURL) && !timeStampService.hasTimestampNode(document)) {
+        LOG.log("Timestamp url: ["+timestampURL+"]");
+        if (isNotEmpty(timestampURL) && !timeStampService.hasTimestampNode(document)) {
+            LOG.log("Execute timestamp on url: ["+timestampURL+"]");
             timeStampService.timeStampXmlDocument(document, timestampURL, timestampTimeout, conversationId, messageId, senderId);
             documentChanged = true;
         }
         if (documentChanged) {
             try {
                 createNewSplosnaVlogaPart(document, metadataPart, inMail);
-                //createNewSplosnaVlogaPart2(document, metadataPart, fileXML);
             } catch (FileNotFoundException | StorageException exception) {
                 throwFault(messageId, SERVER_ERROR, conversationId, senderId, ExceptionUtils.getRootCauseMessage(exception));
             }
         }
     }
 
+    /**
+     * Method creates new mail part with signed/timestamped SplosnaVloga
+     *
+     * @param document
+     * @param metadataPart
+     * @param inMail
+     * @throws StorageException
+     * @throws FileNotFoundException
+     */
     public void createNewSplosnaVlogaPart(Document document, MSHInPart metadataPart, MSHInMail inMail) throws StorageException, FileNotFoundException {
 
         File newFileName = StorageUtils.getNewStorageFile("xml", "ecf-vloga");
@@ -414,7 +425,7 @@ public class ECFInInterceptor implements SoapInterceptorInterface {
     }
 
     public String getPropertyValue(String key, Properties contextProperties) {
-        return contextProperties.getProperty(key, getDefaultPropertyValue(key));
+        return trim(contextProperties.getProperty(key, getDefaultPropertyValue(key)));
     }
 
     public String getDefaultPropertyValue(String key) {
@@ -650,7 +661,7 @@ public class ECFInInterceptor implements SoapInterceptorInterface {
         }
 
     }
-    
+
     @Override
     public void handleFault(SoapMessage t, Properties cp) {
         // ignore

@@ -79,13 +79,13 @@ public class PDFValidationService {
         if (result.getData().getValidationResult() != PdfAModel.ValidationResultEnum.VALID) {
             throwFault(messageId, EFCError.INVALID_PDF, conversationId, senderId, name, includeReport ? result.getData().getValidationReport() : "Invalid PDF");
         }
-        LOG.log("Document: ["+name+"] is VALID!");
+        LOG.log("Document: [" + name + "] is VALID!");
     }
 
 
     public HttpResponse executePDFValidation(File pdfFilePath, String validationUrl, String applicationId, boolean includeReport) throws IOException {
         HttpClient httpclient = new DefaultHttpClient();
-        String urlPath = StringUtils.appendIfMissing( validationUrl,"/") + "api/v1/pdfa/validator?applicationId=" + applicationId + "&includeReport=" + Boolean.toString(includeReport);
+        String urlPath = StringUtils.appendIfMissing(validationUrl, "/") + "api/v1/pdfa/validator?applicationId=" + applicationId + "&includeReport=" + Boolean.toString(includeReport);
         System.out.println(urlPath);
         HttpPost httpPost = new HttpPost(validationUrl + "/api/v1/pdfa/validator?applicationId=" + applicationId + "&includeReport=" + Boolean.toString(includeReport));
 
@@ -94,7 +94,6 @@ public class PDFValidationService {
         reqEntity.addPart("file", uploadFilePart);
         httpPost.setEntity(reqEntity);
         return httpclient.execute(httpPost);
-
     }
 
     public void logResponse(ByteArrayOutputStream bos, File pdfFilePath) {
@@ -110,7 +109,7 @@ public class PDFValidationService {
         DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
 
         @Override
-        public OffsetDateTime deserialize(JsonParser parser, DeserializationContext context) throws IOException, JsonProcessingException {
+        public OffsetDateTime deserialize(JsonParser parser, DeserializationContext context) throws IOException {
             OffsetDateTime dateTime;
             try {
                 dateTime = LocalDateTime.parse(parser.getText(), this.formatter).atZone(ZoneId.systemDefault()).toOffsetDateTime();
