@@ -80,8 +80,11 @@ echo "* LAU_OPTS     =  $LAU_OPTS"
 echo "*********************************************************************************************************************************"
 
 
-$WILDFLY_HOME/bin/standalone.sh $LAU_OPTS -b $LISTEN_MASK
+#$WILDFLY_HOME/bin/laurentius-init.sh --init -d test-laurentius.si
 
+DOMAIN=test-laurentius.si
+DIALECT=org.hibernate.dialect.H2Dialect
 
+$WILDFLY_HOME/bin/standalone.sh -c standalone-laurentius.xml -Dlaurentius.home=/opt/jboss/wildfly/standalone/data/laurentius-home/ -Dlaurentius.hibernate.hbm2ddl.auto=create -Dlaurentius.hibernate.dialect=$DIALECT -Dlaurentius.init=true -Dlaurentius.domain=$DOMAIN -b $LISTEN_MASK -bmanagement $LISTEN_MASK
 
 

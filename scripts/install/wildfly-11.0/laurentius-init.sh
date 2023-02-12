@@ -125,7 +125,7 @@ echo "* LAU_OPTS     =  $LAU_OPTS"
 echo "*********************************************************************************************************************************"
 
 #org.hibernate.dialect.H2Dialect
-$WILDFLY_HOME/bin/standalone.sh $LAU_OPTS -b $LISTEN_MASK
+$WILDFLY_HOME/bin/standalone.sh $LAU_OPTS -b $LISTEN_MASK -bmanagement $LISTEN_MASK
 
 
 
