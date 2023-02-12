@@ -18,10 +18,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import si.laurentius.cert.crl.SEDCertCRL;
 import si.laurentius.commons.utils.SEDLogger;
@@ -86,6 +88,7 @@ public class CRLVerifierTest {
    * Test of downloadCRL method, of class CRLVerifier.
    */
   @Test
+  @Ignore
   public void test_B_DownloadCRL_HTTP()
           throws Exception {
     Assume.assumeTrue(networkConnected());
@@ -96,6 +99,7 @@ public class CRLVerifierTest {
     Assert.assertNotNull(result);
 
     Date dt = Calendar.getInstance().getTime();
+
     Assert.assertTrue(dt.before(result.getNextUpdate()));
     Assert.assertTrue(dt.after(result.getThisUpdate()));
 

@@ -81,3 +81,4 @@
 /scripts/releases/
 /scripts/test-deploy/
 /target/
+.idea/
