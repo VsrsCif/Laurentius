@@ -53,9 +53,9 @@ COPY --from=build /app/scripts/install/$SERVER_VERSION/laurentius-init.sh  $WILD
 
 
 user root
-RUN  cd $WILDFLY_HOME/modules/si/laurentius/main/ \
-    && sed -i -- "s/VERSION/$VERSION/g" "module.xml"   \
-    && chown -R jboss:jboss $WILDFLY_HOME/standalone/data
+RUN  cd $WILDFLY_HOME/modules/si/laurentius/main/ && \
+     sed -i -- "s/VERSION/$VERSION/g" "module.xml"  && \
+     chown -R jboss:jboss $WILDFLY_HOME
 user jboss
 
 # Set the default command to run on boot
