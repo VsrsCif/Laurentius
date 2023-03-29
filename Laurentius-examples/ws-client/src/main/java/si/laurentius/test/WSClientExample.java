@@ -78,7 +78,7 @@ public class WSClientExample {
   public static final String MAILBOX_ADDRESS
           = "http://localhost:8080/laurentius-ws/mailbox?wsdl";
 
-  public static final String DOMAIN = "mb-laurentius.si"; // CHANGE BOX DOMAIN!!!
+  public static final String DOMAIN = "mb-laurentius.si"; // CHANGE BOX DOMAIN!!! (test-laurentius.si)
   public static final String SENDER_BOX = "a.department@" + DOMAIN;
   public static final String RECEIVER_BOX = "b.department@" + DOMAIN;
   public static final String SERVICE = "DeliveryWithReceipt";

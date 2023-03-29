@@ -25,11 +25,14 @@ import java.net.PasswordAuthentication;
 import java.net.URL;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.ws.BindingProvider;
+
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 import si.laurentius.GetInMailRequest;
@@ -84,7 +87,7 @@ public class WSZPPClientExample {
   public static final String MAILBOX_ADDRESS
           = "http://localhost:8080/laurentius-ws/mailbox?wsdl";
 
-  public static final String DOMAIN = "mb-laurentius.si"; // CHANGE BOX DOMAIN!!!
+  public static final String DOMAIN = "mb-laurentius.si"; // CHANGE BOX DOMAIN!!! (test-laurentius.si)
   public static final String SENDER_BOX = "a.department@" + DOMAIN;
   public static final String RECEIVER_BOX = "b.department@" + DOMAIN;
 
@@ -108,10 +111,17 @@ public class WSZPPClientExample {
                     toCharArray());
           }
         });
-        Mailbox msb = new Mailbox(new URL(MAILBOX_ADDRESS));
+
+        // TODO: research why commented out approach was used
+        // Mailbox msb = new Mailbox(new URL(MAILBOX_ADDRESS));
+        Mailbox msb = new Mailbox(Mailbox.class.
+                getResource("/wsdl/mailbox.wsdl")); // wsdl is in laurentius-wsdl.jar
         mTestInstance = msb.getSEDMailBoxWSPort();
-      } catch (MalformedURLException ex) {
-        LOG.error("Bad url", ex);
+        Map<String, Object> req_ctx = ((BindingProvider) mTestInstance).
+                getRequestContext();
+        req_ctx.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, MAILBOX_ADDRESS);
+      // } catch (MalformedURLException ex) {
+        // LOG.error("Bad url", ex);
       } catch (Exception pe) {
         LOG.error("Bad password or application account: " + pe.getMessage());
       }
