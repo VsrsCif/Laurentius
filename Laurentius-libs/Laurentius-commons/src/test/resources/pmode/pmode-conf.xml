@@ -10,8 +10,8 @@
 					<tns:Property name="originalSender" required="true"/>
 					<tns:Property name="finalRecipient" required="true"/>
 				</tns:Properties>
-				<tns:PayloadProfiles maxSize="10000">
-					<tns:PayloadProfile name="test" maxSize="10000" maxOccurs="1"/>
+				<tns:PayloadProfiles maxSize="15000">
+					<tns:PayloadProfile name="test" maxSize="15000" maxOccurs="1"/>
 				</tns:PayloadProfiles>
 			</tns:Action>
 		</tns:Service>
@@ -19,23 +19,23 @@
 			<tns:Initiator role="Sender"/>
 			<tns:Executor role="Receiver"/>
 			<tns:Action sendingRole="Sender" name="DeliveryNotification">
-				<tns:PayloadProfiles maxSize="10000">
+				<tns:PayloadProfiles maxSize="15000">
 					<tns:PayloadProfile name="DeliveryNotification" minOccurs="1" maxOccurs="1" MIME="application/pdf"/>
-					<tns:PayloadProfile name="EncryptedPayload" maxSize="10000" minOccurs="1" maxOccurs="999"/>
+					<tns:PayloadProfile name="EncryptedPayload" maxSize="15000" minOccurs="1" maxOccurs="999"/>
 				</tns:PayloadProfiles>
 			</tns:Action>
 			<tns:Action sendingRole="Receiver" name="AdviceOfDelivery">
-				<tns:PayloadProfiles maxSize="10000">
+				<tns:PayloadProfiles maxSize="15000">
 					<tns:PayloadProfile name="AdviceOfDelivery" minOccurs="1" maxOccurs="1" MIME="application/pdf"/>
 				</tns:PayloadProfiles>
 			</tns:Action>
 			<tns:Action sendingRole="Sender" name="EncryptedKey" after="DeliveryNotification, AdviceOfDelivery">
-				<tns:PayloadProfiles maxSize="10000">
+				<tns:PayloadProfiles maxSize="15000">
 					<tns:PayloadProfile name="EncryptedKey" minOccurs="1" maxOccurs="1" MIME="application/xml"/>
 				</tns:PayloadProfiles>
 			</tns:Action>
 			<tns:Action sendingRole="Sender" name="FictionNotification" after="DeliveryNotification">
-				<tns:PayloadProfiles maxSize="10000">
+				<tns:PayloadProfiles maxSize="15000">
 					<tns:PayloadProfile name="FictionNotification" maxOccurs="1" MIME="application/pdf"/>
 					<tns:PayloadProfile name="EncryptedKey" minOccurs="1" maxOccurs="1" MIME="application/xml"/>
 				</tns:PayloadProfiles>
@@ -45,17 +45,17 @@
 			<tns:Initiator role="Sender"/>
 			<tns:Executor role="Executor"/>
 			<tns:Action sendingRole="Sender" name="AddMail">
-				<tns:PayloadProfiles maxSize="10000">
-					<tns:PayloadProfile name="PrintDocument" maxSize="10000" minOccurs="1" maxOccurs="999" MIME="application/pdf"/>
+				<tns:PayloadProfiles maxSize="15000">
+					<tns:PayloadProfile name="PrintDocument" maxSize="15000" minOccurs="1" maxOccurs="999" MIME="application/pdf"/>
 				</tns:PayloadProfiles>
 			</tns:Action>
 			<tns:Action sendingRole="Sender" name="RemoveMail" after="AddMail">
-				<tns:PayloadProfiles maxSize="10000">
-					<tns:PayloadProfile name="RemoveMailRequest" maxSize="10000" minOccurs="1" maxOccurs="999" MIME="application/xml"/>
+				<tns:PayloadProfiles maxSize="15000">
+					<tns:PayloadProfile name="RemoveMailRequest" maxSize="15000" minOccurs="1" maxOccurs="999" MIME="application/xml"/>
 				</tns:PayloadProfiles>
 			</tns:Action>
 			<tns:Action sendingRole="Executor" name="MailProcessed" after="AddMail">
-				<tns:PayloadProfiles maxSize="10000">
+				<tns:PayloadProfiles maxSize="15000">
 					<tns:PayloadProfile name="MailReport" minOccurs="1" maxOccurs="1" MIME="application/xml"/>
 				</tns:PayloadProfiles>
 			</tns:Action>

@@ -68,7 +68,7 @@ public class PModeActionPayloadView extends AbstractPModeJSFView<PayloadProfile>
     np.setMIME(MimeValue.MIME_BIN.getMimeType());
     np.setMaxOccurs(1);
     np.setMinOccurs(1);
-    np.setMaxSize(BigInteger.valueOf(10 * 1024 * 1024));
+    np.setMaxSize(BigInteger.valueOf(15 * 1024 * 1024));
     setNew(np);
 
   }
