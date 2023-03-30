@@ -27,7 +27,7 @@
         <extension module="org.wildfly.extension.core-management"/>
         <extension module="org.wildfly.extension.elytron"/>
         <extension module="org.wildfly.extension.io"/>
-		 <extension module="org.wildfly.extension.messaging-activemq"/>															  
+		 <extension module="org.wildfly.extension.messaging-activemq"/>
         <extension module="org.wildfly.extension.request-controller"/>
         <extension module="org.wildfly.extension.security.manager"/>
         <extension module="org.wildfly.extension.undertow"/>
@@ -519,8 +519,8 @@
         <subsystem xmlns="urn:jboss:domain:undertow:4.0">
             <buffer-cache name="default"/>
             <server name="default-server">
-                <http-listener name="default" socket-binding="http" redirect-socket="https" enable-http2="true" />
-                <https-listener name="https" socket-binding="https" security-realm="ApplicationRealm" enable-http2="true"/>
+                <http-listener name="default" socket-binding="http" redirect-socket="https" enable-http2="true" max-post-size="21000000" />
+                <https-listener name="https" socket-binding="https" security-realm="ApplicationRealm" enable-http2="true" max-post-size="21000000" />
                 <host name="default-host" alias="localhost">
                     <location name="/" handler="welcome-content"/>
 					<single-sign-on path="/laurentius-web" />
@@ -529,15 +529,15 @@
                     <http-invoker security-realm="ApplicationRealm"/>
                 </host>
             </server>
-			 <server name="laurentius-msh-server" default-host="laurentius-msh-host">         
-                <http-listener name="laurentius-msh-http" socket-binding="laurentius-msh-http" max-post-size="150000000" max-parameters="10000"/>       
-                <https-listener name="laurentius-msh-https" socket-binding="laurentius-msh-https" security-realm="LaurentiusTLSRealm" max-post-size="150000000" max-parameters="10000"/>
+            <server name="laurentius-msh-server" default-host="laurentius-msh-host">
+                <http-listener name="laurentius-msh-http" socket-binding="laurentius-msh-http" max-post-size="21000000" max-parameters="10000"/>
+                <https-listener name="laurentius-msh-https" socket-binding="laurentius-msh-https" security-realm="LaurentiusTLSRealm" max-post-size="21000000" max-parameters="10000"/>
                 <host name="laurentius-msh-host" alias="localhost"  default-web-module="Laurentius-msh.ear">
                     <location name="/" handler="welcome-content"/>
                     <access-log pattern="%h %l %u [%t] &quot;%r&quot; %s %b &quot;%{i,Referer}&quot; &quot;%{i,User-Agent}&quot;"/>
                     <filter-ref name="server-header"/>
                     <filter-ref name="x-powered-by-header"/>
-																	 
+
                 </host>
             </server>
             <servlet-container name="default">
@@ -545,7 +545,7 @@
                 <websockets/>
             </servlet-container>
             <handlers>
-                <file name="welcome-content" path="${jboss.home.dir}/welcome-content"/>				
+                <file name="welcome-content" path="${jboss.home.dir}/welcome-content"/>
             </handlers>
             <filters>
                 <response-header name="server-header" header-name="Server" header-value="WildFly/11"/>
@@ -579,7 +579,7 @@
         <socket-binding name="http" port="${jboss.http.port:8080}"/>
         <socket-binding name="https" port="${jboss.https.port:8444}"/>
         <socket-binding name="laurentius-msh-https" port="${jboss.https.port:8443}"/>
-        <socket-binding name="laurentius-msh-http" port="${jboss.msh.http.port:8081}"/>										 																					  
+        <socket-binding name="laurentius-msh-http" port="${jboss.msh.http.port:8081}"/>
         <socket-binding name="txn-recovery-environment" port="4712"/>
         <socket-binding name="txn-status-manager" port="4713"/>
         <outbound-socket-binding name="mail-smtp">

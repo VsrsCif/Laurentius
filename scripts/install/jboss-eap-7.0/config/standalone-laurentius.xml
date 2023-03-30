@@ -417,7 +417,7 @@
 		<subsystem >
 			<buffer-cache name="default"/>
 			<server name="default-server">
-				<http-listener name="default" socket-binding="http" redirect-socket="https"/>
+				<http-listener name="default" socket-binding="http" redirect-socket="https" max-post-size="21000000"/>
 				<host name="default-host" alias="localhost">
 					<location name="/" handler="welcome-content"/>
 					<single-sign-on path="/laurentius-web" /> <!--  added by JRC for single session over plugins -->				  
@@ -427,8 +427,8 @@
 			</server>
 			<!-- server laurentius-msh-server added by JRC 31.8.2017 -->
  			<server name="laurentius-msh-server" default-host="laurentius-msh-host">         
-                <http-listener name="laurentius-msh-http" socket-binding="laurentius-msh-http" max-post-size="150000000" max-parameters="10000"/>       
-                <https-listener name="laurentius-msh-https" socket-binding="laurentius-msh-https" security-realm="LaurentiusTLSRealm" max-post-size="150000000" max-parameters="10000"/>
+                <http-listener name="laurentius-msh-http" socket-binding="laurentius-msh-http" max-post-size="21000000" max-parameters="10000"/>
+                <https-listener name="laurentius-msh-https" socket-binding="laurentius-msh-https" security-realm="LaurentiusTLSRealm" max-post-size="21000000" max-parameters="10000"/>
                 <host name="laurentius-msh-host" alias="localhost">
                     <location name="/" handler="welcome-content"/>
                     <access-log pattern="%h %l %u [%t] &quot;%r&quot; %s %b &quot;%{i,Referer}&quot; &quot;%{i,User-Agent}&quot;"/>
