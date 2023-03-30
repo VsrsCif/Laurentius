@@ -83,8 +83,8 @@
             <Executor role="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/responder"/>
             <Action name="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/test" invokeRole="initiator" messageType="userMessage">
                 <Properties/>
-                <PayloadProfiles maxSize="10485760">
-                    <PayloadProfile name="payload" MIME="application/octet-stream" maxSize="10485760" maxOccurs="100" minOccurs="1"/>
+                <PayloadProfiles maxSize="10000">
+                    <PayloadProfile name="payload" MIME="application/octet-stream" maxSize="10000" maxOccurs="100" minOccurs="1"/>
                 </PayloadProfiles>
             </Action>
         </Service>     
