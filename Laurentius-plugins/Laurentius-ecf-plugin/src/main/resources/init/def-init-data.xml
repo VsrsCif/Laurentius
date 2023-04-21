@@ -17,8 +17,8 @@
                     <pmd:Property name="OpravilnaSt" type="" required="false"/>
                     <pmd:Property name="Vsebina" type="" required="false"/>
                 </pmd:Properties>
-                <pmd:PayloadProfiles maxSize="10485760">
-                    <pmd:PayloadProfile name="payload" MIME="application/pdf" maxSize="10485760" maxOccurs="100" minOccurs="1"/>
+                <pmd:PayloadProfiles maxSize="15000">
+                    <pmd:PayloadProfile name="payload" MIME="application/pdf" maxSize="15000" maxOccurs="100" minOccurs="1"/>
                 </pmd:PayloadProfiles>
             </pmd:Action>
         </pmd:Service>      

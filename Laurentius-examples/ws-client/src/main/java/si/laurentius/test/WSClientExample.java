@@ -1,27 +1,31 @@
 /*
-* Copyright 2016, Supreme Court Republic of Slovenia 
+* Copyright 2016, Supreme Court Republic of Slovenia
 *
-* Licensed under the EUPL, Version 1.1 or – as soon they will be approved by 
+* Licensed under the EUPL, Version 1.1 or – as soon they will be approved by
 * the European Commission - subsequent versions of the EUPL (the "Licence");
 * You may not use this work except in compliance with the Licence.
 * You may obtain a copy of the Licence at:
 *
 * https://joinup.ec.europa.eu/software/page/eupl
 *
-* Unless required by applicable law or agreed to in writing, software 
-* distributed under the Licence is distributed on an "AS IS" basis, WITHOUT 
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the Licence is distributed on an "AS IS" basis, WITHOUT
 * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-* See the Licence for the specific language governing permissions and  
+* See the Licence for the specific language governing permissions and
 * limitations under the Licence.
  */
 package si.laurentius.test;
 
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.StringWriter;
 import java.math.BigInteger;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -78,7 +82,7 @@ public class WSClientExample {
   public static final String MAILBOX_ADDRESS
           = "http://localhost:8080/laurentius-ws/mailbox?wsdl";
 
-  public static final String DOMAIN = "mb-laurentius.si"; // CHANGE BOX DOMAIN!!!
+  public static final String DOMAIN = "test-laurentius.si"; // CHANGE BOX DOMAIN!!! (test-laurentius.si)
   public static final String SENDER_BOX = "a.department@" + DOMAIN;
   public static final String RECEIVER_BOX = "b.department@" + DOMAIN;
   public static final String SERVICE = "DeliveryWithReceipt";
@@ -109,9 +113,9 @@ public class WSClientExample {
         Mailbox msb = new Mailbox(Mailbox.class.
                 getResource("/wsdl/mailbox.wsdl")); // wsdl is in laurentius-wsdl.jar
         mTestInstance = msb.getSEDMailBoxWSPort();
-        
 
-        
+
+
         Map<String, Object> req_ctx = ((BindingProvider) mTestInstance).
                 getRequestContext();
         req_ctx.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, MAILBOX_ADDRESS);
@@ -179,8 +183,8 @@ public class WSClientExample {
           }
 
         }
-        if (++iCnt > 5) {
-          LOG.error("Message is not sent in 5 seconds! - check url connection");
+        if (++iCnt > 8) {
+          LOG.error("Message is not sent in 8 seconds! - check url connection");
           return;
         }
       }
@@ -249,7 +253,7 @@ public class WSClientExample {
 
     // submit request
     LOG.info("submit message");
-    
+
     SubmitMailResponse mr = getService().submitMail(smr);
     LOG.info(LOG_SECTION_SEPARATOR);
     LOG.info("got 'sumitMail' response:\n" + serialize(mr));
@@ -450,12 +454,36 @@ public class WSClientExample {
     OutPart op1 = new OutPart();
     op1.setFilename("helloAgain.txt");
     op1.setDescription("This is second test attachment");
-    op1.setBin("hello again".getBytes());
+//    op1.setBin("hello again".getBytes());
+    op1.setBin(generateBytes(15748));
     op1.setMimeType("plain/text");
     om.getOutPayload().getOutParts().add(op1);
 
     return om;
 
+  }
+
+  private static byte[] generateBytes(int ips) {
+    try {
+      byte[] buff = "Brown fox jumps over smart dog.".getBytes();
+      File f = File.createTempFile("largeFile", ".txt");
+      try (FileOutputStream fos = new FileOutputStream(f)) {
+        int iSize = ips * 1000;
+        int iCnt = 0;
+        while (iCnt < iSize) {
+          fos.write(buff);
+          iCnt += buff.length;
+        }
+      }
+      long bytes = f.length();
+      long kilobytes = (bytes / 1024);
+      long megabytes = (kilobytes / 1024);
+      LOG.info("Generated file of size (MB): "+ megabytes);
+      return Files.readAllBytes(f.toPath());
+    } catch (IOException ex) {
+      LOG.error(ex.getMessage(), ex);
+      throw new RuntimeException(ex);
+    }
   }
 
   private Control createControl() {

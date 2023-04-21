@@ -93,9 +93,9 @@ public class PModeServiceView extends AbstractPModeJSFView<Service> {
     pf.setMIME(MimeValue.MIME_BIN.getMimeType());
     pf.setMinOccurs(0);
     pf.setMaxOccurs(100);
-    pf.setMaxSize(BigInteger.valueOf(10 * 1024 * 1024));
+    pf.setMaxSize(BigInteger.valueOf(15 * 1024 * 1024));
     
-    act.getPayloadProfiles().setMaxSize(BigInteger.valueOf(10 * 1024 * 1024));
+    act.getPayloadProfiles().setMaxSize(BigInteger.valueOf(15 * 1024 * 1024));
     act.getPayloadProfiles().getPayloadProfiles().add(pf);
 
     srv.getActions().add(act);

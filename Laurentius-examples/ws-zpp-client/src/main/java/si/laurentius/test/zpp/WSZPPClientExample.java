@@ -17,19 +17,25 @@
 package si.laurentius.test.zpp;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.StringWriter;
 import java.math.BigInteger;
 import java.net.Authenticator;
 import java.net.MalformedURLException;
 import java.net.PasswordAuthentication;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.ws.BindingProvider;
+
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 import si.laurentius.GetInMailRequest;
@@ -84,7 +90,7 @@ public class WSZPPClientExample {
   public static final String MAILBOX_ADDRESS
           = "http://localhost:8080/laurentius-ws/mailbox?wsdl";
 
-  public static final String DOMAIN = "mb-laurentius.si"; // CHANGE BOX DOMAIN!!!
+  public static final String DOMAIN = "test-laurentius.si"; // CHANGE BOX DOMAIN!!! (test-laurentius.si)
   public static final String SENDER_BOX = "a.department@" + DOMAIN;
   public static final String RECEIVER_BOX = "b.department@" + DOMAIN;
 
@@ -108,10 +114,17 @@ public class WSZPPClientExample {
                     toCharArray());
           }
         });
-        Mailbox msb = new Mailbox(new URL(MAILBOX_ADDRESS));
+
+        // TODO: research why commented out approach was used
+        // Mailbox msb = new Mailbox(new URL(MAILBOX_ADDRESS));
+        Mailbox msb = new Mailbox(Mailbox.class.
+                getResource("/wsdl/mailbox.wsdl")); // wsdl is in laurentius-wsdl.jar
         mTestInstance = msb.getSEDMailBoxWSPort();
-      } catch (MalformedURLException ex) {
-        LOG.error("Bad url", ex);
+        Map<String, Object> req_ctx = ((BindingProvider) mTestInstance).
+                getRequestContext();
+        req_ctx.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, MAILBOX_ADDRESS);
+      // } catch (MalformedURLException ex) {
+        // LOG.error("Bad url", ex);
       } catch (Exception pe) {
         LOG.error("Bad password or application account: " + pe.getMessage());
       }
@@ -187,8 +200,8 @@ public class WSZPPClientExample {
         }
 
       }
-      if (++iCnt > 5) {
-        LOG.error("Message is not sent in 5 seconds! - check url connection");
+      if (++iCnt > 8) {
+        LOG.error("Message is not sent in 8 seconds! - check url connection");
         return;
       }
     }
@@ -452,6 +465,8 @@ public class WSZPPClientExample {
     op.setFilename("hello.txt");
     op.setDescription("This is test attachment");
     op.setBin("hello".getBytes());
+//    op.setBin(generateBytes(15748));
+//    op.setBin(generateBytes(5000));
     op.setMimeType("plain/text");
     om.getOutPayload().getOutParts().add(op);
 
@@ -459,11 +474,35 @@ public class WSZPPClientExample {
     op1.setFilename("helloAgain.txt");
     op1.setDescription("This is second test attachment");
     op1.setBin("hello again".getBytes());
+//    op1.setBin(generateBytes(5000));
     op1.setMimeType("plain/text");
     om.getOutPayload().getOutParts().add(op1);
 
     return om;
 
+  }
+
+  private static byte[] generateBytes(int ips) {
+    try {
+      byte[] buff = "Brown fox jumps over smart dog.".getBytes();
+      File f = File.createTempFile("largeFile", ".txt");
+      try (FileOutputStream fos = new FileOutputStream(f)) {
+        int iSize = ips * 1000;
+        int iCnt = 0;
+        while (iCnt < iSize) {
+          fos.write(buff);
+          iCnt += buff.length;
+        }
+      }
+      long bytes = f.length();
+      long kilobytes = (bytes / 1024);
+      long megabytes = (kilobytes / 1024);
+      LOG.info("Generated file of size (MB): "+ megabytes);
+      return Files.readAllBytes(f.toPath());
+    } catch (IOException ex) {
+      LOG.error(ex.getMessage(), ex);
+      throw new RuntimeException(ex);
+    }
   }
 
   private Control createControl() {

@@ -8,7 +8,7 @@ COPY . .
 # build
 RUN mvn install
 
-FROM jboss/wildfly:11.0.0.Final as package
+FROM jboss/wildfly as package
 
 ENV VERSION 2.0
 ENV SERVER_VERSION wildfly-11.0
@@ -49,13 +49,12 @@ COPY --from=build /app/Laurentius-examples/example-web-plugin/target/example-web
 COPY --from=build /app/scripts/install/laurentius-home/  $WILDFLY_HOME/standalone/data/laurentius-home/
 
 COPY --from=build /app/scripts/install/$SERVER_VERSION/laurentius-demo.sh  $WILDFLY_HOME/bin/
-COPY --from=build /app/scripts/install/$SERVER_VERSION/laurentius-init.sh  $WILDFLY_HOME/bin/
 
 
 user root
-RUN  cd $WILDFLY_HOME/modules/si/laurentius/main/ && \
-     sed -i -- "s/VERSION/$VERSION/g" "module.xml"  && \
-     chown -R jboss:jboss $WILDFLY_HOME
+RUN  cd $WILDFLY_HOME/modules/si/laurentius/main/ \
+    && sed -i -- "s/VERSION/$VERSION/g" "module.xml"   \
+    && chown -R jboss:jboss $WILDFLY_HOME/standalone/data
 user jboss
 
 # Set the default command to run on boot

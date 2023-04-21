@@ -81,3 +81,10 @@
 /scripts/releases/
 /scripts/test-deploy/
 /target/
+.idea/
+.DS_Store
+.project
+.settings
+.classpath
+target/
+.run/

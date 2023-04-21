@@ -17,26 +17,26 @@
                     <pmd:Property name="OpravilnaSt" type="" required="false"/>
                     <pmd:Property name="Vsebina" type="" required="false"/>
                 </pmd:Properties>
-                <pmd:PayloadProfiles maxSize="10000">
+                <pmd:PayloadProfiles maxSize="15000">
                     <pmd:PayloadProfile name="DeliveryNotification" MIME="application/pdf" maxOccurs="1" minOccurs="1"/>
-                    <pmd:PayloadProfile name="EncryptedPayload" MIME="application/encrypted" maxSize="10000" maxOccurs="999" minOccurs="1"/>
+                    <pmd:PayloadProfile name="EncryptedPayload" MIME="application/encrypted" maxSize="15000" maxOccurs="999" minOccurs="1"/>
                 </pmd:PayloadProfiles>
             </pmd:Action>
             <pmd:Action name="AdviceOfDelivery" invokeRole="executor" messageType="userMessage">
                 <pmd:Properties/>
-                <pmd:PayloadProfiles maxSize="10000">
+                <pmd:PayloadProfiles maxSize="15000">
                     <pmd:PayloadProfile name="AdviceOfDelivery" MIME="application/pdf" maxOccurs="1" minOccurs="1"/>
                 </pmd:PayloadProfiles>
             </pmd:Action>
             <pmd:Action name="EncryptedKey" after="DeliveryNotification, AdviceOfDelivery" invokeRole="initiator" messageType="signalMessage">
                 <pmd:Properties/>
-                <pmd:PayloadProfiles maxSize="10000">
+                <pmd:PayloadProfiles maxSize="15000">
                     <pmd:PayloadProfile name="EncryptedKey" MIME="application/xml" maxOccurs="1" minOccurs="1"/>
                 </pmd:PayloadProfiles>
             </pmd:Action>
             <pmd:Action name="FictionNotification" after="DeliveryNotification" invokeRole="initiator" messageType="userMessage">
                 <pmd:Properties/>
-                <pmd:PayloadProfiles maxSize="10000">
+                <pmd:PayloadProfiles maxSize="15000">
                     <pmd:PayloadProfile name="FictionNotification" MIME="application/pdf" maxOccurs="1" minOccurs="1"/>
                     <pmd:PayloadProfile name="EncryptedKey" MIME="application/xml" maxOccurs="1" minOccurs="1"/>
                 </pmd:PayloadProfiles>
@@ -54,20 +54,20 @@
                     <pmd:Property name="OpravilnaSt" type="" required="false"/>
                     <pmd:Property name="Vsebina" type="" required="false"/>
                 </pmd:Properties>
-                <pmd:PayloadProfiles maxSize="10000">
+                <pmd:PayloadProfiles maxSize="15000">
                     <pmd:PayloadProfile name="DeliveryNotification" MIME="application/pdf" maxOccurs="1" minOccurs="1"/>
-                    <pmd:PayloadProfile name="EncryptedPayload" MIME="application/encrypted" maxSize="10000" maxOccurs="999" minOccurs="1"/>
+                    <pmd:PayloadProfile name="EncryptedPayload" MIME="application/encrypted" maxSize="15000" maxOccurs="999" minOccurs="1"/>
                 </pmd:PayloadProfiles>
             </pmd:Action>
             <pmd:Action name="AdviceOfDelivery" invokeRole="executor" messageType="userMessage">
                 <pmd:Properties/>
-                <pmd:PayloadProfiles maxSize="10000">
+                <pmd:PayloadProfiles maxSize="15000">
                     <pmd:PayloadProfile name="AdviceOfDelivery" MIME="application/pdf" maxOccurs="1" minOccurs="1"/>
                 </pmd:PayloadProfiles>
             </pmd:Action>
             <pmd:Action name="EncryptedKey" after="DeliveryNotification, AdviceOfDelivery" invokeRole="initiator" messageType="signalMessage">
                 <pmd:Properties/>
-                <pmd:PayloadProfiles maxSize="10000">
+                <pmd:PayloadProfiles maxSize="15000">
                     <pmd:PayloadProfile name="EncryptedKey" MIME="application/xml" maxOccurs="1" minOccurs="1"/>
                 </pmd:PayloadProfiles>
             </pmd:Action>           
@@ -86,8 +86,8 @@
                     <pmd:Property name="OpravilnaSt" type="" required="false"/>
                     <pmd:Property name="Vsebina" type="" required="false"/>
                 </pmd:Properties>
-                <pmd:PayloadProfiles maxSize="10485760">
-                    <pmd:PayloadProfile name="payload" MIME="application/octet-stream" maxSize="10485760" maxOccurs="100" minOccurs="0"/>
+                <pmd:PayloadProfiles maxSize="15000">
+                    <pmd:PayloadProfile name="payload" MIME="application/octet-stream" maxSize="15000" maxOccurs="100" minOccurs="0"/>
                 </pmd:PayloadProfiles>
             </pmd:Action>
             <pmd:Action name="AdviceOfDelivery" invokeRole="executor" messageType="userMessage">
@@ -95,8 +95,8 @@
                     <pmd:Property name="originalSender" type="" required="true"/>
                     <pmd:Property name="finalRecipient" type="" required="true"/>
                 </pmd:Properties>
-                <pmd:PayloadProfiles maxSize="10485760">
-                    <pmd:PayloadProfile name="adviceOfDelivery" MIME="application/pdf" maxSize="10485760" maxOccurs="1" minOccurs="1"/>
+                <pmd:PayloadProfiles maxSize="15000">
+                    <pmd:PayloadProfile name="adviceOfDelivery" MIME="application/pdf" maxSize="15000" maxOccurs="1" minOccurs="1"/>
                 </pmd:PayloadProfiles>
             </pmd:Action>
             <pmd:Action name="FictionNotification" invokeRole="executor" messageType="userMessage">
@@ -104,8 +104,8 @@
                     <pmd:Property name="originalSender" type="" required="true"/>
                     <pmd:Property name="finalRecipient" type="" required="true"/>
                 </pmd:Properties>
-                <pmd:PayloadProfiles maxSize="10485760">
-                    <pmd:PayloadProfile name="fictionNotification" MIME="application/pdf" maxSize="10485760" maxOccurs="1" minOccurs="1"/>
+                <pmd:PayloadProfiles maxSize="15000">
+                    <pmd:PayloadProfile name="fictionNotification" MIME="application/pdf" maxSize="15000" maxOccurs="1" minOccurs="1"/>
                 </pmd:PayloadProfiles>
             </pmd:Action>
             <pmd:Action name="RecieptAddressNotExists" invokeRole="executor" messageType="userMessage">
@@ -113,8 +113,8 @@
                     <pmd:Property name="originalSender" type="" required="true"/>
                     <pmd:Property name="finalRecipient" type="" required="true"/>
                 </pmd:Properties>
-                <pmd:PayloadProfiles maxSize="10485760">
-                    <pmd:PayloadProfile name="recieptAddressNotExists" MIME="application/pdf" maxSize="10485760" maxOccurs="1" minOccurs="1"/>
+                <pmd:PayloadProfiles maxSize="15000">
+                    <pmd:PayloadProfile name="recieptAddressNotExists" MIME="application/pdf" maxSize="15000" maxOccurs="1" minOccurs="1"/>
                 </pmd:PayloadProfiles>
             </pmd:Action>
         </pmd:Service>
@@ -132,8 +132,8 @@
                     <pmd:Property name="OpravilnaSt" type="" required="false"/>
                     <pmd:Property name="Vsebina" type="" required="false"/>
                 </pmd:Properties>
-                <pmd:PayloadProfiles maxSize="10485760">
-                    <pmd:PayloadProfile name="payload" MIME="application/octet-stream" maxSize="10485760" maxOccurs="42" minOccurs="1"/>
+                <pmd:PayloadProfiles maxSize="15000">
+                    <pmd:PayloadProfile name="payload" MIME="application/octet-stream" maxSize="15000" maxOccurs="42" minOccurs="1"/>
                 </pmd:PayloadProfiles>
             </pmd:Action>
             <pmd:Action name="AdviceOfDelivery" invokeRole="executor" messageType="userMessage">
@@ -141,8 +141,8 @@
                     <pmd:Property name="finalRecipient" type="" required="true"/>
                     <pmd:Property name="originalSender" type="" required="true"/>
                 </pmd:Properties>
-                <pmd:PayloadProfiles maxSize="10485760">
-                    <pmd:PayloadProfile name="adviceOfDelivery" MIME="application/pdf" maxSize="10485760" maxOccurs="1" minOccurs="1"/>
+                <pmd:PayloadProfiles maxSize="15000">
+                    <pmd:PayloadProfile name="adviceOfDelivery" MIME="application/pdf" maxSize="15000" maxOccurs="1" minOccurs="1"/>
                 </pmd:PayloadProfiles>
             </pmd:Action>
             <pmd:Action name="RecieptAddressNotExists" invokeRole="executor" messageType="userMessage">
@@ -150,8 +150,8 @@
                     <pmd:Property name="originalSender" type="" required="true"/>
                     <pmd:Property name="finalRecipient" type="" required="true"/>
                 </pmd:Properties>
-                <pmd:PayloadProfiles maxSize="10485760">
-                    <pmd:PayloadProfile name="recieptAddressNotExists" MIME="application/pdf" maxSize="10485760" maxOccurs="1" minOccurs="1"/>
+                <pmd:PayloadProfiles maxSize="15000">
+                    <pmd:PayloadProfile name="recieptAddressNotExists" MIME="application/pdf" maxSize="15000" maxOccurs="1" minOccurs="1"/>
                 </pmd:PayloadProfiles>
             </pmd:Action>
         </pmd:Service>
