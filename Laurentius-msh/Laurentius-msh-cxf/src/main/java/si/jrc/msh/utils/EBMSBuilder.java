@@ -26,6 +26,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import javax.xml.bind.DatatypeConverter;
 import javax.xml.bind.JAXBException;
 import javax.xml.namespace.QName;
@@ -297,14 +298,19 @@ public class EBMSBuilder {
                 pisSender.getUseFourCornerModel() != null && pisSender.getUseFourCornerModel()){
             
             Property pRec = new Property();
-            pRec.setName(EBMSConstants.EBMS_PROP_4CM_ORIGINAL_SENDER);
-            pRec.setValue(mo.getSenderEBox());
+            pRec.setName(EBMSConstants.EBMS_PROP_4CM_FINAL_RECIPIENT);
+            pRec.setValue(mo.getReceiverEBox());
             lstProperties.add(pRec);
             
             Property pSnd = new Property();
-            pSnd.setName(EBMSConstants.EBMS_PROP_4CM_FINAL_RECIPIENT);
-            pSnd.setValue(mo.getReceiverEBox());
+            pSnd.setName(EBMSConstants.EBMS_PROP_4CM_ORIGINAL_SENDER);
+            pSnd.setValue(mo.getSenderEBox());
             lstProperties.add(pSnd);
+
+            Property pRecName = new Property();
+            pRecName.setName(EBMSConstants.EBMS_PROP_4CM_FINAL_RECIPIENT_NAME);
+            pRecName.setValue(mo.getReceiverName());
+            lstProperties.add(pRecName);
         }
         
         if (ctx.getService().getUseSEDProperties() == null || ctx.getService().

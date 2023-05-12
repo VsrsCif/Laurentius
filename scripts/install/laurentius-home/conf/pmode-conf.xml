@@ -21,6 +21,7 @@
                     <Property name="VpisnikKratica" type="" required="false"/>
                     <Property name="OpravilnaSt" type="" required="false"/>
                     <Property name="Vsebina" type="" required="false"/>
+                    <Property name="finalRecipientName" type="" required="false"/>
                 </Properties>
                 <PayloadProfiles maxSize="15000">
                     <PayloadProfile name="DeliveryNotification" MIME="application/pdf" maxOccurs="1" minOccurs="1"/>
@@ -59,6 +60,7 @@
                     <Property name="VpisnikKratica" type="" required="false"/>
                     <Property name="OpravilnaSt" type="" required="false"/>
                     <Property name="Vsebina" type="" required="false"/>
+                    <Property name="finalRecipientName" type="" required="false"/>
                 </Properties>
                 <PayloadProfiles maxSize="15000">
                     <PayloadProfile name="DeliveryNotification" MIME="application/pdf" maxOccurs="1" minOccurs="1"/>

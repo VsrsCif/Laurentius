@@ -393,7 +393,7 @@ public class ZPPInInterceptor implements SoapInterceptorInterface {
       if (lvc.size() != 2 && !(lvc.get(1).isSignerCertEquals(xcertSed) 
               || lvc.get(0).isSignerCertEquals(xcertSed))) {
         String strMsg = 
-                "AdviceOfDelivery must have two signatures: recipient's and "
+                "AdviceOfDelivery must hae two signatures: recipient's and "
                 + " signature of recipient delivery system";
         
         LOG.logError(l, strMsg, null);
