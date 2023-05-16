@@ -1,0 +1,199 @@
+.ui-datatable-scrollable-body, 
+.ui-accordion-content {
+    background: #cdcfcf;
+    background: -webkit-linear-gradient(bottom right,  #cdcfcf, #bdbfcf);
+    background:    -moz-linear-gradient(left top,#cdcfcf, #bdbfcf);
+    background:     -ms-linear-gradient(left topt,#cdcfcf, #bdbfcf);
+    background:      -o-linear-gradient(left top,#cdcfcf, #bdbfcf);
+    background:         linear-gradient(left top,#cdcfcf, #bdbfcf);
+
+}
+
+.ui-widget .ui-layout-unit, 
+.ui-widget .ui-layout-unit-content,
+.ui-tabs .ui-tabs-panel
+{
+    padding: 0em 0em !important;
+    margin:  0em 0em !important;
+    border: 0px none !important;
+    overflow: hidden !important;
+}
+
+.ui-widget {
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+}
+
+.ui-picklist-list-wrapper {
+    width: 45%
+}
+
+.ui-accordion-content {
+    height: 500px;
+    padding: 10px 10px !important;
+    margin:  0em 0em !important;
+}
+
+.ui-accordion-button {
+    width:  100%;
+    padding: 0px 0px !important;
+    background-color: darkgray  !important;
+    border: 1px solid gray;
+    color: black!important;
+}
+
+.ui-accordion-button {
+    width:  100%;
+    padding: 0px 0px !important;
+    background-color: darkgray  !important;
+    border: 1px solid gray;
+    color: black!important;
+}
+
+.ui-tabs-panels {
+    height: 100%;
+}
+
+
+/************************************************************************/
+/*Toolbar                                                               */
+/************************************************************************/
+.ui-toolbar, ui-accordion-header {
+    padding: 0em 0em !important; 
+    border: 0px none !important;
+    margin:  0em 0em !important;
+    overflow: hidden !important;       
+    vertical-align: middle;
+}
+
+.ui-tabs .ui-tabs-nav li a {
+    float: left;
+    padding: 0.1em 0.5em;
+    text-decoration: none;
+}
+
+
+
+
+/************************************************************************/
+/* Data table                                                                */
+/************************************************************************/
+
+.ui-datatable .ui-datatable-header,
+.ui-datatable .ui-datatable-footer, 
+.ui-datatable tbody td {
+    text-align:left;
+    padding: 1px 2px;    
+    margin: 0;
+    font-size: 100% !important;
+}
+
+
+
+
+.ui-datatable-odd {
+    background: #ffffff;    
+    padding:1px 1px;  
+}
+
+.ui-datatable-even {
+    background: #D2D5F9;
+    padding:1px 1px;  
+}
+
+
+
+.ui-datatable-cell-red {
+    background-color: red;
+}
+
+.panelGridNoBorder .ui-panelgrid-even, .panelGridNoBorder .ui-panelgrid-odd, .panelGridNoBorder .ui-panelgrid-cell {
+    border-style: none;
+}
+
+.LoginTitle {
+
+    background:  url("../images/first-page.svg")  no-repeat right top ;
+    background-position: 0 0;
+    font-family: Arial;
+    color:black;
+    font-size: 35px;
+    line-height: 50px;
+    text-align:left;        
+    height:  350px;
+
+
+}
+.LoginPage {
+
+    padding: 20px 20px;
+    color: black;
+    text-shadow: 0 2px 2px rgba(0, 0, 0, .1);
+
+    font-size: 30px;
+    line-height: 36px;
+    letter-spacing: 3px;
+
+    background: #cdcfff;
+    background: -webkit-linear-gradient(bottom right,  #FaFaFF, #cdcfff);
+    background:    -moz-linear-gradient(left top,#FaFaFF, #cdcfff);
+    background:     -ms-linear-gradient(left topt,#FaFaFF, #cdcfff);
+    background:      -o-linear-gradient(left top,#FaFaFF, #cdcfff);
+    background:         linear-gradient(left top,#FaFaFF, #cdcfff);
+}
+
+.toolbar-Button {
+    height: 28px;
+}
+
+.image-Button {
+    height: 28px;
+}
+
+.ui-button-icon-only .ui-icon, .ui-button-text-icon-left .ui-icon, .ui-button-text-icon-right .ui-icon {
+
+    top:0;
+    margin:  2px;
+    padding: 2px 2px 2px 4px;
+    left: 0;
+}
+
+.ui-button-text-icon-left .ui-button-text {
+    padding: 2px 4px 2px 28px;
+}
+
+
+.ui-diagram-element {
+    border:0.1em dotted #E5E4E2; 
+    background-color: #EFEEEC;
+    width:100px; 
+    height:40px;
+    text-align: center;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.8);
+}
+.ui-diagram-seq-line {
+    border: none; 
+    border-top: 0 none white; 
+    background-color: lightgrey;
+    width:20px; 
+    height:50px;
+    text-align: center;
+    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.8);
+}    
+
+
+.ui-diagram-element:hover {
+    background-color: #C7C6C4;
+}
+
+
+.searchDate input {
+    width: 120px;
+
+}
+
+
+
+
+
+

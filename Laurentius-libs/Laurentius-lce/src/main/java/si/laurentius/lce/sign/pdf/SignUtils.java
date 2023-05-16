@@ -147,7 +147,7 @@ public class SignUtils implements SignatureInterface {
   
    
 
-  public void createDefaultVisualization(File pdfFile, X509Certificate xc, Date dt) {
+  public void createDefaultVisualization(File pdfFile, X509Certificate xc, Date dt, String location, String reason) {
     try (InputStream imageStream = SignUtils.class.getResourceAsStream(S_TEMPLATE_IMAGE);
         InputStream isFile = new FileInputStream(pdfFile)) {
 
@@ -184,7 +184,7 @@ public class SignUtils implements SignatureInterface {
       visibleSignDesigner = new PDVisibleSignDesigner(isFile, bimage, page);
       visibleSignDesigner.xAxis(10).yAxis(10).zoom(-60);
 
-      setVisibleSignatureProperties(name, "Slovenia", "ZPP Delivery", 0, page, true);
+      setVisibleSignatureProperties(name, location, reason, 0, page, true);
     } catch (IOException ex) {
       Logger.getLogger(SignUtils.class.getName()).log(Level.SEVERE, null, ex);
     }
@@ -221,14 +221,14 @@ public class SignUtils implements SignatureInterface {
    * @param createDefVis
    * @throws IOException
    */
-  public void signPDF(File inputFile,  File signedFile, boolean createDefVis)
+  public void signPDF(File inputFile,  File signedFile, boolean createDefVis, String location, String reason)
       throws IOException {
 
     // set sign date
     Calendar signDate = Calendar.getInstance();
     
     if (createDefVis){
-      createDefaultVisualization(inputFile, certificate, signDate.getTime());
+      createDefaultVisualization(inputFile, certificate, signDate.getTime(), location, reason);
     }
     // creating output document and prepare the IO streams.
     // load document

@@ -19,6 +19,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
+import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
@@ -82,6 +83,7 @@ public class MSHScheduler implements SEDSchedulerInterface {
   private void initCronJobs() {
     List<SEDCronJob> lst = mdbLookups.getSEDCronJobs();
     for (SEDCronJob cj : lst) {
+      LOG.formatedlog("Creating cron job:::: %s", cj.getName());
       if (cj.getActive() != null && cj.getActive()) {
         activateCronJob(cj);
       }
@@ -90,7 +92,7 @@ public class MSHScheduler implements SEDSchedulerInterface {
 
   @Override
   public boolean activateCronJob(SEDCronJob cb) {
-    LOG.formatedDebug("Register timer to TimerService %d name %s", cb.getId(),
+    LOG.formatedlog("Register timer to TimerService %d name %s", cb.getId(),
             cb.getName());
     ScheduleExpression se
             = new ScheduleExpression().second(cb.getSecond()).
@@ -99,7 +101,13 @@ public class MSHScheduler implements SEDSchedulerInterface {
                     getDayOfMonth()).month(cb.getMonth())
                     .dayOfWeek(cb.getDayOfWeek());
     TimerConfig checkTest = new TimerConfig(cb.getName(), false);
+
+    if(getServices().getAllTimers().stream().map(t -> t.getInfo()).collect(Collectors.toList()).contains(cb.getName())){
+      LOG.formatedWarning("Timer %s already exists", cb.getName());
+      return true;
+    }
     getServices().createCalendarTimer(se, checkTest);
+
     return true;
   }
 
@@ -138,7 +146,6 @@ public class MSHScheduler implements SEDSchedulerInterface {
     String name = (String) (timer.getInfo());
     // get cron job
     SEDCronJob mj = mdbLookups.getSEDCronJobByName(name);
-
     if (mj == null) {
       String logMsg = String.format(
               "Timeout for cron job %s , but cronjob not exists!!", name);
@@ -217,7 +224,6 @@ public class MSHScheduler implements SEDSchedulerInterface {
 
     CronTaskDef ct = mpmPluginManager.
             getCronTaskDef(tsk.getPlugin(), tsk.getType());
-
     if (ct == null) {
       result = String.format(
               "Not task processor for plugin %s and  task %s!", tsk.
