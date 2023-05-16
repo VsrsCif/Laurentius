@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 (http://www.altova.com) by CIF VSRS (CIF VSRS) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msg="http://www.sodisce.si/2010/mail/Message" targetNamespace="http://www.sodisce.si/2010/mail/Message" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
+    <xs:complexType name="AddressType">
+        <xs:sequence>
+            <xs:element name="PoBoxId" type="xs:string"/>
+            <xs:element name="TaxNo" type="xs:string" minOccurs="0"/>
+            <xs:element name="URI" type="xs:anyURI" minOccurs="0"/>
+            <xs:element name="PhysicalAddress" type="msg:PhysicalAddressType" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="AddressesType">
+        <xs:sequence minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="Address" type="msg:AddressType"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="Message">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="To" type="msg:AddressesType">
+                    <xs:annotation>
+                        <xs:documentation>Mail  receiver data</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="From" type="msg:AddressType">
+                    <xs:annotation>
+                        <xs:documentation>Mail  sender data</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="Subject" type="xs:string"/>
+                <xs:element ref="msg:MessageId"/>
+                <xs:element name="SenderDocumentId" type="xs:string" minOccurs="0"/>
+                <xs:element name="DocumentType">
+                    <xs:simpleType>
+                        <xs:restriction base="xs:token">
+                            <xs:enumeration value="Message"/>
+                            <xs:enumeration value="DeliveryResponse"/>
+                            <xs:enumeration value="ReceiptAdvice"/>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:element>
+                <xs:element name="Body" type="xs:string" minOccurs="0"/>
+                <xs:element ref="msg:DeliveryType"/>
+                <xs:element name="RelatesTo" type="xs:anyURI" minOccurs="0"/>
+                <xs:element name="Content" type="msg:ContentType" minOccurs="0"/>
+                <xs:element name="DocumentInfo" type="msg:DocumentInfoType" minOccurs="0"/>
+            </xs:sequence>
+            <xs:attribute name="schemaVersion" type="xs:decimal" use="required"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="DeliveryType">
+        <xs:simpleType>
+            <xs:restriction base="xs:string">
+                <xs:enumeration value="Normal"/>
+                <xs:enumeration value="Legal-ZKP"/>
+                <xs:enumeration value="DeliveryAdvice"/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:element>
+    <xs:complexType name="ContentType">
+        <xs:sequence minOccurs="0">
+            <xs:any namespace="##any" processContents="lax"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="DeliveryResponse" type="msg:DeliveryResponseType"/>
+    <xs:element name="ReceiptAdvice" type="msg:ReceiptAdviceType"/>
+    <xs:element name="MessageId">
+        <xs:simpleType>
+            <xs:restriction base="xs:anyURI">
+                <xs:maxLength value="200"/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:element>
+    <xs:complexType name="DeliveryResponseType">
+        <xs:sequence>
+            <xs:element ref="msg:DeliveryType"/>
+            <xs:element name="Status">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="DeliveredOk"/>
+                        <xs:enumeration value="RejectedByRecipient"/>
+                        <xs:enumeration value="DeliverdByFiction"/>
+                        <xs:enumeration value="ReceiverUnknown"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="EventTime" type="xs:dateTime"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="ReceiptAdviceType">
+        <xs:sequence>
+            <xs:element ref="msg:DeliveryType"/>
+            <xs:element name="Status">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="ReceiptOk"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="EventTime" type="xs:dateTime"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="DeliveryNotification"/>
+    <xs:element name="FormDocument"/>
+    <xs:complexType name="PhysicalAddressType">
+        <xs:sequence>
+            <xs:element name="Name" type="xs:string"/>
+            <xs:element name="Street" type="xs:string"/>
+            <xs:element name="PostalCode" type="xs:string"/>
+            <xs:element name="City" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="DocumentInfoType">
+        <xs:sequence>
+            <xs:element name="DocumentDate" type="xs:dateTime"/>
+            <xs:element name="DocumentId" type="xs:string"/>
+            <xs:element name="SubjectId" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

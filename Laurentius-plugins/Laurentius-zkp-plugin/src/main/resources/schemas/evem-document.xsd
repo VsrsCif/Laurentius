@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSPY v2004 rel. 2 U (http://www.xmlspy.com) by Company User (CREA d.o.o.) -->
+<xs:schema targetNamespace="http://www.crea.si/Schemas/2004/Document" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://www.crea.si/Schemas/2004/Document" elementFormDefault="qualified" attributeFormDefault="unqualified">
+    <xs:element name="Document" type="ns1:DocumentType">
+        <xs:annotation>
+            <xs:documentation>Comment describing your root element</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:complexType name="DataTypeBase">
+        <xs:sequence>
+            <xs:element name="DataFormat" type="ns1:DataObjectFormatType"/>
+            <xs:element name="Description" type="xs:string"/>
+            <xs:element name="Content" type="ns1:ContentType"/>
+            <xs:element name="FileName" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="DataObjectFormatType">
+        <xs:sequence>
+            <xs:element name="Identifier" type="xs:string"/>
+            <xs:element name="MimeType" type="xs:string"/>
+            <xs:element name="Encoding" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="ContentType">
+        <xs:choice>
+            <xs:element name="EmbeddedData" type="ns1:EmbeddedDataType"/>
+            <xs:element name="ReferencedData" type="ns1:ReferencedDataType"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="DocumentType">
+        <xs:sequence>
+            <xs:element name="Data" type="ns1:DataType" minOccurs="0"/>
+            <xs:element name="Visualisations" type="ns1:VisualisationsType" minOccurs="0"/>
+            <xs:element name="Attachments" type="ns1:AttachmentsType" minOccurs="0"/>
+            <xs:element name="Signatures" type="ns1:SignaturesType" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="VisualisationsType">
+        <xs:sequence minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="Visualisation" type="ns1:VisualisationType"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="AttachmentsType">
+        <xs:sequence minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="Attachment" type="ns1:AttachmentType"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="SignaturesType">
+        <xs:sequence minOccurs="0" maxOccurs="unbounded">
+            <xs:any namespace="http://www.w3.org/2000/09/xmldsig#" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="AttachmentType">
+        <xs:complexContent>
+            <xs:extension base="ns1:DataTypeBase">
+                <xs:attribute name="Id" type="xs:ID" use="optional"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="VisualisationType">
+        <xs:complexContent>
+            <xs:extension base="ns1:DataTypeBase">
+                <xs:attribute name="Id" type="xs:ID" use="optional"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="DataType">
+        <xs:complexContent>
+            <xs:extension base="ns1:DataTypeBase">
+                <xs:attribute name="Id" type="xs:ID" use="optional"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="TimeStampsType"/>
+    <xs:complexType name="ReferencedDataType">
+        <xs:sequence>
+            <xs:element name="DigestMethod" type="xs:string"/>
+            <xs:element name="DigestValue" type="xs:base64Binary"/>
+            <xs:element name="URI" type="xs:anyURI"/>
+            <xs:element name="Size" type="xs:integer"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="EmbeddedDataType" mixed="true">
+        <xs:sequence minOccurs="0" maxOccurs="unbounded">
+            <xs:any namespace="##any"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

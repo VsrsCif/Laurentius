@@ -1,0 +1,35 @@
+<jxb:bindings 
+    version="2.0"
+    xmlns:jxb="http://java.sun.com/xml/ns/jaxb"
+    xmlns:xjc= "http://java.sun.com/xml/ns/jaxb/xjc"
+    jxb:extensionBindingPrefixes="xjc"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+>
+    <jxb:bindings>
+        <jxb:globalBindings xmlns:jxb="http://java.sun.com/xml/ns/jaxb"
+                            xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                            enableFailFastCheck="true"
+        >
+                           
+                                
+             
+            <jxb:javaType name="java.util.Date" xmlType="xs:date"
+                          parseMethod="com.jrc.xml.DateAdapter.parseDate"
+                          printMethod="com.jrc.xml.DateAdapter.printDate"/>
+            
+            <jxb:javaType name="java.util.Date" xmlType="xs:dateTime"
+                          parseMethod="com.jrc.xml.DateAdapter.parseDateTime"
+                          printMethod="com.jrc.xml.DateAdapter.printDateTime"/>
+            
+            
+            <jxb:javaType name="java.lang.Integer" xmlType="xs:int" />
+
+            <xjc:simple/> <!-- add root element to generated object -->
+            <!-- xjc:serializable / --> <!-- EJB 3.0. serializable -->
+        </jxb:globalBindings>
+    </jxb:bindings>
+</jxb:bindings>
+
+
+
+

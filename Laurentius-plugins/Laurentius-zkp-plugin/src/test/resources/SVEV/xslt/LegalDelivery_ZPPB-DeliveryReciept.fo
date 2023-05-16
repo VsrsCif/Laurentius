@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- edited with XMLSpy v2008 (http://www.altova.com) by XMLSpy 2007 Professional Ed., Installed for 5 users (with SMP from 2007-02-06 to 2008-02-07) (CIF VSRS) -->
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:fo="http://www.w3.org/1999/XSL/Format" 
+                xmlns:msh="http://msh.laurentius.si/inbox/mail"  
+                xmlns:mpl="http://msh.laurentius.si/inbox/payload"
+                xmlns:prp="http://msh.laurentius.si/inbox/property"
+                xmlns:java="http://xml.apache.org/xslt/java" exclude-result-prefixes="java"   >
+    <xsl:output method="xml" indent="yes"/>
+    <xsl:template match="/">
+        <fo:root font-family="Arial" font-size="12pt">
+            <fo:layout-master-set>
+                <fo:simple-page-master master-name="A4-portrait" page-height="29.7cm" page-width="21.0cm" margin="2cm">
+                    <fo:region-body/>
+                </fo:simple-page-master>
+            </fo:layout-master-set>
+            <fo:page-sequence master-reference="A4-portrait">
+
+             <xsl:variable name="varFormatedReceivedDate">
+                    <xsl:call-template name="formatDate">
+                        <xsl:with-param name="date">
+                            <xsl:value-of select="/msh:MSHInMail/@receivedDate"/>
+                        </xsl:with-param>
+                    </xsl:call-template>				
+                </xsl:variable>
+
+
+                <fo:flow flow-name="xsl-region-body">
+					<fo:block  margin-top="1.5cm" font-size="12pt" linefeed-treatment="preserve">
+                      VROČILNICA (141.b člen ZPP)
+                    </fo:block>
+     
+                    <fo:block margin-top="1.5cm" font-size="12pt" font-weight="bold" linefeed-treatment="preserve">					
+                        Pošiljatelj</fo:block>
+                    <fo:block font-size="12pt">
+                        <xsl:value-of select="/msh:MSHInMail/@senderName"/>
+                    </fo:block>
+                    <fo:block font-size="12pt">
+                        <xsl:value-of select="/msh:MSHInMail/@senderEBox"/>
+                    </fo:block>
+                    <fo:block font-size="12pt" font-weight="bold" linefeed-treatment="preserve">					
+                        Naslovnik</fo:block>
+                    <fo:block font-size="12pt">
+                        <xsl:value-of select="/msh:MSHInMail/@receiverName"/>
+                    </fo:block>
+                    <fo:block font-size="12pt">
+                        <xsl:value-of select="/msh:MSHInMail/@receiverEBox"/>
+                    </fo:block>
+                    <fo:block font-size="12pt" font-weight="bold" linefeed-treatment="preserve">
+                       Zadeva: Potrdilo o opravljeni vročitvi ZPP navadno
+                    </fo:block>
+
+
+<fo:block font-size="12pt" margin-top="12pt" >Potrjujemo,</fo:block>
+                    <fo:list-block font-size="12pt">
+                        <!-- list item -->
+                        <fo:list-item>
+                            <fo:list-item-label end-indent="label-end()">
+                                <fo:block><fo:inline>•</fo:inline></fo:block>
+                            </fo:list-item-label>
+                            <fo:list-item-body start-indent="body-start()">
+                                <fo:block>da je bila pošiljka z oznako <fo:inline font-weight="bold"><xsl:value-of select="/msh:MSHInMail/@subject"/> (<xsl:value-of select="/msh:MSHInMail/@messageId"/>)</fo:inline> vročena naslovniku dne <fo:inline font-weight="bold"><xsl:value-of select="$varFormatedReceivedDate"/></fo:inline>.</fo:block>
+                            </fo:list-item-body>
+                        </fo:list-item>
+                        
+                    </fo:list-block>
+				    <fo:block font-size="12pt" linefeed-treatment="preserve">
+                        To sporočilo je potrdilo o vročitvi pošiljke in opravljeni storitvi.
+                    </fo:block>
+
+  					<fo:block font-size="12pt"  margin-top="1.0cm">
+                       Storitev: Elektronska vročitev pošiljke po ZPP navadno,
+                    </fo:block>                    
+                    <fo:block font-size="12pt" >
+                        enolična oznaka storitve: <xsl:value-of select="/msh:MSHInMail/@conversationId"/>.
+                    </fo:block>
+
+                    <fo:block font-size="12pt"   margin-top="1.0cm">	
+                        Laurentius (<xsl:call-template name="systemDomain"/>), <xsl:call-template name="currentDateTime"/>.
+                    </fo:block>
+                </fo:flow>
+            </fo:page-sequence>
+        </fo:root>
+    </xsl:template>
+
+    <xsl:template name="currentDate">
+        <xsl:value-of select="java:utils.zpp.si.digics.msh.plugin.XSLTExtensions.currentDate()"/>
+    </xsl:template>
+    <xsl:template name="currentDateTime">
+        <xsl:value-of select="java:utils.zpp.si.digics.msh.plugin.XSLTExtensions.currentDateTime()"/>
+    </xsl:template>
+ <xsl:template name="formatDate">
+        <xsl:param name="date"/>
+        <xsl:value-of select="java:utils.zpp.si.digics.msh.plugin.XSLTExtensions.formatDate($date)"/>
+    </xsl:template>
+<xsl:template name="systemDomain">
+        <xsl:value-of select="java:utils.zpp.si.digics.msh.plugin.XSLTExtensions.systemDomain()"/>
+    </xsl:template>
+</xsl:stylesheet>
