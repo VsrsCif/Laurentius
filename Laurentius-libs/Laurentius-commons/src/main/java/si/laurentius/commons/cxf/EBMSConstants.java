@@ -47,6 +47,8 @@ public class EBMSConstants {
             = "finalRecipient";
     public static final String EBMS_PROP_4CM_ORIGINAL_SENDER
             = "originalSender";
+  public static final String EBMS_PROP_4CM_FINAL_RECIPIENT_NAME
+          = "finalRecipientName";
 
     
   /**

@@ -81,11 +81,18 @@ public class ZPPConstants {
   
 
   /**
+   * LegalDelivery_ZPP -> osebno -> preveri
+   * LegalDelivery_ZPPB -> navadno -> preveri
      *
      */
   public static final String S_ZPP_SERVICE = "LegalDelivery_ZPP";
   public static final String S_ZPPB_SERVICE = "LegalDelivery_ZPPB";
-  
+
+  /**
+   * B variant ZZPja
+   *
+   */
+
   public static final String S_ZPP_B_SERVICE = "LegalDelivery_ZPP_B";
   public static final String S_ZPPB_B_SERVICE = "LegalDelivery_ZPPB_B";
 

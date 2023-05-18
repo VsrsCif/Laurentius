@@ -19,6 +19,7 @@ import com.google.common.base.Objects;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.xml.bind.DatatypeConverter;
 import javax.xml.namespace.QName;
 import org.apache.cxf.binding.soap.SoapFault;
@@ -101,23 +102,28 @@ public class EBMSParser {
                             mshmail.setSubject(p.getValue());
                             break;
                         case EBMSConstants.EBMS_PROP_4CM_FINAL_RECIPIENT:{
-                            mshmail.setReceiverEBox(p.getValue());
-                            mshmail.setReceiverName(p.getValue());
-                            MSHInProperty mp = new MSHInProperty();
-                            mp.setName(p.getName());
-                            mp.setType(p.getType());
-                            mp.setValue(p.getValue());
-                            lstProp.add(mp);
-                        }break;
+                                mshmail.setReceiverEBox(p.getValue());
+                                mshmail.setReceiverName(p.getValue());
+                                MSHInProperty mp = new MSHInProperty();
+                                mp.setName(p.getName());
+                                mp.setType(p.getType());
+                                mp.setValue(p.getValue());
+                                lstProp.add(mp);
+                            }
+                            break;
                         case EBMSConstants.EBMS_PROP_4CM_ORIGINAL_SENDER:{
-                            mshmail.setSenderEBox(p.getValue());
-                            mshmail.setSenderName(p.getValue());
-                            MSHInProperty mp = new MSHInProperty();
-                            mp.setName(p.getName());
-                            mp.setType(p.getType());
-                            mp.setValue(p.getValue());
-                            lstProp.add(mp);
-                        }break;
+                                mshmail.setSenderEBox(p.getValue());
+                                mshmail.setSenderName(p.getValue());
+                                MSHInProperty mp = new MSHInProperty();
+                                mp.setName(p.getName());
+                                mp.setType(p.getType());
+                                mp.setValue(p.getValue());
+                                lstProp.add(mp);
+                            }
+                            break;
+                        case EBMSConstants.EBMS_PROP_4CM_FINAL_RECIPIENT_NAME:
+                            mshmail.setReceiverName(p.getValue());
+                            break;
                         case EBMSConstants.EBMS_PROPERTY_SUBMIT_DATE:
                             Date dt = DatatypeConverter.parseDateTime(p.getValue()).getTime();
                             mshmail.setSubmittedDate(dt);
