@@ -95,6 +95,8 @@ public class EBMSParser {
         if (um.getMessageProperties() != null && !um.getMessageProperties().
                 getProperties().isEmpty()) {
             List<MSHInProperty> lstProp = new ArrayList<>();
+            // We need finalRecipientName to have higher priority than finalRecipient
+            Property finalRecipientNameProperty = null;
             for (Property p : um.getMessageProperties().getProperties()) {
                 if (!Utils.isEmptyString(p.getName())) {
                     switch (p.getName()) {
@@ -122,7 +124,7 @@ public class EBMSParser {
                             }
                             break;
                         case EBMSConstants.EBMS_PROP_4CM_FINAL_RECIPIENT_NAME:
-                            mshmail.setReceiverName(p.getValue());
+                            finalRecipientNameProperty = p;
                             break;
                         case EBMSConstants.EBMS_PROPERTY_SUBMIT_DATE:
                             Date dt = DatatypeConverter.parseDateTime(p.getValue()).getTime();
@@ -139,6 +141,11 @@ public class EBMSParser {
                             lstProp.add(mp);
                     }
                 }
+            }
+
+            if(finalRecipientNameProperty != null) {
+                // finalRecipientName overwrites finalRecipient if present
+                mshmail.setReceiverName(finalRecipientNameProperty.getValue());
             }
 
             if (!lstProp.isEmpty()) {

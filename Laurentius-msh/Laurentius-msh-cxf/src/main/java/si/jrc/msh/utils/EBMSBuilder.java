@@ -307,10 +307,13 @@ public class EBMSBuilder {
             pSnd.setValue(mo.getSenderEBox());
             lstProperties.add(pSnd);
 
-            Property pRecName = new Property();
-            pRecName.setName(EBMSConstants.EBMS_PROP_4CM_FINAL_RECIPIENT_NAME);
-            pRecName.setValue(mo.getReceiverName());
-            lstProperties.add(pRecName);
+            List<Property> finalRecipientNames = lstProperties.stream().filter(p -> EBMSConstants.EBMS_PROP_4CM_FINAL_RECIPIENT_NAME.equals(p.getName())).collect(Collectors.toList());
+            if(finalRecipientNames.isEmpty()) {
+                Property pRecName = new Property();
+                pRecName.setName(EBMSConstants.EBMS_PROP_4CM_FINAL_RECIPIENT_NAME);
+                pRecName.setValue(mo.getReceiverName());
+                lstProperties.add(pRecName);
+            }
         }
         
         if (ctx.getService().getUseSEDProperties() == null || ctx.getService().
