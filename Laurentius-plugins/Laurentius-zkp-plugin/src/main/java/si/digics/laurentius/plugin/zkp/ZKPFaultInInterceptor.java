@@ -108,8 +108,8 @@ public class ZKPFaultInInterceptor implements SoapInterceptorInterface {
     System.out.println("SIGN ANIES: " + sigErrors);
 
     if (moutMail != null) {
-      if ((ZKPConstants.S_ZKP_SERVICE.equalsIgnoreCase(moutMail.getService())
-              || ZKPConstants.S_ZKPB_SERVICE.equalsIgnoreCase(moutMail.
+      if ((ZKPConstants.ZKP_A_SERVICE.equalsIgnoreCase(moutMail.getService())
+              || ZKPConstants.ZKP_A_SERVICE.equalsIgnoreCase(moutMail.
                       getService()))
               && ZKPConstants.S_ZKP_ACTION_DELIVERY_NOTIFICATION.
                       equalsIgnoreCase(
@@ -174,7 +174,7 @@ public class ZKPFaultInInterceptor implements SoapInterceptorInterface {
             signAlias);
 
     try {
-      mDB.serializeInMail(min, ZKPConstants.S_ZKP_PLUGIN_TYPE);
+      mDB.serializeInMail(min, ZKPConstants.ZKP_PLUGIN_TYPE);
     } catch (StorageException ex) {
       String strMessage = String.format(
               "Error occured while serialize MailNotExists message Error for out mail %d ",
@@ -195,7 +195,7 @@ public class ZKPFaultInInterceptor implements SoapInterceptorInterface {
 
     MSHInMail min = new MSHInMail();
     min.setMessageId(Utils.getUUIDWithLocalDomain());
-    min.setService(ZKPConstants.S_ZKPB_SERVICE);
+    min.setService(ZKPConstants.ZKP_A_SERVICE);
     min.setAction(ZKPConstants.S_ZKP_ACTION_ADDRESS_NOT_EXISTS);
     min.setConversationId(outMail.getConversationId());
     min.setSenderEBox(outMail.getReceiverEBox());

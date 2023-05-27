@@ -4,11 +4,11 @@
  */
 package si.digics.laurentius.plugin.zkp;
 
+import si.digics.laurentius.plugin.zkp.enums.FopTransformation;
+import si.digics.laurentius.plugin.zkp.enums.ZKPPartType;
+import si.digics.laurentius.plugin.zkp.exception.ZKPException;
+import si.digics.laurentius.plugin.zkp.utils.ZKPUtils;
 import si.jrc.msh.plugin.zpp.entities.LastDeliveredMail;
-import si.jrc.msh.plugin.zpp.enums.FopTransformation;
-import si.jrc.msh.plugin.zpp.enums.ZPPPartType;
-import si.jrc.msh.plugin.zpp.exception.ZPPException;
-import si.jrc.msh.plugin.zpp.utils.ZPPUtils;
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.enums.SEDInboxMailStatus;
@@ -65,8 +65,8 @@ public class ZKPTaskFictionByLastDelivery implements TaskExecutionInterface {
 
   private static final SEDLogger LOG = new SEDLogger(
           ZKPTaskFictionByLastDelivery.class);
-  private static final String SIGN_ALIAS = "zpp.sign.key.alias";
-  private static final String MINUTES_DELAY = "zpp.fiction.p6.delayInMinutes";
+  private static final String SIGN_ALIAS = "zkp.sign.key.alias";
+  private static final String MINUTES_DELAY = "zkp.fiction.p6.delayInMinutes";
 
   @EJB(mappedName = SEDJNDI.JNDI_SEDDAO)
   SEDDaoInterface mDB;
@@ -82,7 +82,7 @@ public class ZKPTaskFictionByLastDelivery implements TaskExecutionInterface {
 
   SEDCrypto mSedCrypto = new SEDCrypto();
   KeystoreUtils mkeyUtils = new KeystoreUtils();
-  ZPPUtils mzppZPPUtils = new ZPPUtils();
+  ZKPUtils mzkpZKPUtils = new ZKPUtils();
 
   /**
    *
@@ -97,7 +97,7 @@ public class ZKPTaskFictionByLastDelivery implements TaskExecutionInterface {
     long l = LOG.logStart();
 
     StringWriter sw = new StringWriter();
-    sw.append("Start zpp plugin task: \n");
+    sw.append("Start zkp plugin task: \n");
 
     String signKeyAlias = "";
     int iDelayMin = -10;
@@ -123,13 +123,13 @@ public class ZKPTaskFictionByLastDelivery implements TaskExecutionInterface {
 
     List<LastDeliveredMail> lstLastDM = getLastDeliveredMail();
     LOG.formatedWarning(
-            "Execute ZPPTaskFictionByLastDelivery delivered mail %d ",
+            "Execute ZKPTaskFictionByLastDelivery delivered mail %d ",
             lstLastDM.size());
     for (LastDeliveredMail ldm : lstLastDM) {
       fictionalDeliveryMail(ldm, signKeyAlias, iDelayMin);
     }
 
-    sw.append("End zpp fiction plugin task");
+    sw.append("End zkp fiction plugin task");
     return sw.toString();
   }
 
@@ -138,7 +138,7 @@ public class ZKPTaskFictionByLastDelivery implements TaskExecutionInterface {
     Calendar c = Calendar.getInstance();
     c.add(Calendar.DAY_OF_MONTH, -15);
     String hql
-            = "select new si.jrc.msh.plugin.zpp.entities.LastDeliveredMail(om.ReceiverEBox, max(om.DeliveredDate) AS DeliveredDate) "
+            = "select new si.jrc.msh.plugin.zkp.entities.LastDeliveredMail(om.ReceiverEBox, max(om.DeliveredDate) AS DeliveredDate) "
             + "	from MSHOutMail om,  MSHInMail im "
             + "	where om.ConversationId = im.ConversationId "
             + "	 and om.Service =im.Service "
@@ -150,9 +150,9 @@ public class ZKPTaskFictionByLastDelivery implements TaskExecutionInterface {
             + "	  group by om.ReceiverEBox";
 
     Map<String, Object> prms = new HashMap<>();
-    prms.put("service", ZPPConstants.S_ZPP_SERVICE);
-    prms.put("outAction", ZPPConstants.S_ZPP_ACTION_DELIVERY_NOTIFICATION);
-    prms.put("inAction", ZPPConstants.S_ZPP_ACTION_ADVICE_OF_DELIVERY);
+    prms.put("service", ZKPConstants.ZKP_A_SERVICE);
+    prms.put("outAction", ZKPConstants.S_ZKP_ACTION_DELIVERY_NOTIFICATION);
+    prms.put("inAction", ZKPConstants.S_ZKP_ACTION_ADVICE_OF_DELIVERY);
     prms.put("receivedDate", c.getTime());
 
     return mDB.getDataList(LastDeliveredMail.class, hql, prms);
@@ -185,8 +185,8 @@ public class ZKPTaskFictionByLastDelivery implements TaskExecutionInterface {
             getReceiverEBox());
 
     Map<String, Object> prms = new HashMap<>();
-    prms.put("service", ZPPConstants.S_ZPP_SERVICE);
-    prms.put("outAction", ZPPConstants.S_ZPP_ACTION_DELIVERY_NOTIFICATION);
+    prms.put("service", ZKPConstants.ZKP_A_SERVICE);
+    prms.put("outAction", ZKPConstants.S_ZKP_ACTION_DELIVERY_NOTIFICATION);
     prms.put("status", SEDOutboxMailStatus.SENT.getValue());
     prms.put("receivedDate", cStart.getTime());
     prms.put("lastDeliveredDate", cld.getTime());
@@ -199,8 +199,8 @@ public class ZKPTaskFictionByLastDelivery implements TaskExecutionInterface {
     for (MSHOutMail m : lst) {
       try {
         m.setDeliveredDate(lastDate);
-        processZPPFictionDelivery(m, signKeyAlias);
-      } catch (SEDSecurityException | StorageException | FOPException | HashException | ZPPException ex) {
+        processZKPFictionDelivery(m, signKeyAlias);
+      } catch (SEDSecurityException | StorageException | FOPException | HashException | ZKPException ex) {
         String msg = String.format(
                 "Error occurred processing mail: '%s'. Err: %s.", m.getId(),
                 ex.getMessage());
@@ -218,8 +218,8 @@ public class ZKPTaskFictionByLastDelivery implements TaskExecutionInterface {
   @Override
   public CronTaskDef getDefinition() {
     CronTaskDef tt = new CronTaskDef();
-    tt.setType("zpp-fiction-by-last-delivery");
-    tt.setName("ZPP fiction by Last delivery");
+    tt.setType("zkp-fiction-by-last-delivery");
+    tt.setName("ZKP fiction by Last delivery");
     tt.setDescription(
             "Create FictionAdviceOfDelivery for outgoing mail and send ficiton notification to "
             + "receiver");
@@ -254,23 +254,23 @@ public class ZKPTaskFictionByLastDelivery implements TaskExecutionInterface {
    * @param keystore
    * @throws FOPException
    * @throws HashException
-   * @throws si.jrc.msh.plugin.zpp.exception.ZPPException
+   * @throws ZKPException
    */
-  private void processZPPFictionDelivery(MSHOutMail mOutMail, String sigAlias)
+  private void processZKPFictionDelivery(MSHOutMail mOutMail, String sigAlias)
           throws FOPException,
           HashException,
-          ZPPException,
+          ZKPException,
           StorageException,
           SEDSecurityException {
     long l = LOG.logStart();
 
-    MSHOutMail fn = createZPPFictionNotification(mOutMail, sigAlias);
-    MSHInMail fi = createZPPAdviceOfDeliveryFiction(mOutMail, sigAlias);
+    MSHOutMail fn = createZKPFictionNotification(mOutMail, sigAlias);
+    MSHInMail fi = createZKPAdviceOfDeliveryFiction(mOutMail, sigAlias);
 
     
-    mDB.serializeInOutMail(fi, fn, ZPPConstants.S_ZPP_PLUGIN_TYPE, null);
+    mDB.serializeInOutMail(fi, fn, ZKPConstants.ZKP_PLUGIN_TYPE, null);
     mDB.setStatusToOutMail(mOutMail, SEDOutboxMailStatus.DELIVERED, "Fiction ",
-            "ZPP plugin", "");
+            "ZKP plugin", "");
     LOG.logEnd(l);
   }
 
@@ -280,12 +280,12 @@ public class ZKPTaskFictionByLastDelivery implements TaskExecutionInterface {
    * @param mOutMail
    * @param sigAlias
    * @return
-   * @throws ZPPException
+   * @throws ZKPException
    * @throws SEDSecurityException
    */
-  private MSHOutMail createZPPFictionNotification(MSHOutMail mOutMail,
+  private MSHOutMail createZKPFictionNotification(MSHOutMail mOutMail,
           String sigAlias)
-          throws ZPPException, SEDSecurityException {
+          throws ZKPException, SEDSecurityException {
 
     long l = LOG.logStart();
 
@@ -295,14 +295,14 @@ public class ZKPTaskFictionByLastDelivery implements TaskExecutionInterface {
     try {
       pis = mpModeManager.getPartyIdentitySetForSEDAddress(sedBox);
     } catch (PModeException ex) {
-      throw new ZPPException(ex.getMessage(), ex);
+      throw new ZKPException(ex.getMessage(), ex);
     }
     if (pis == null) {
-      throw new ZPPException(
+      throw new ZKPException(
               "Receiver sedbox: '" + sedBox + "' is not defined in PMode settings!");
     }
     if (pis.getExchangePartySecurity() == null) {
-      throw new ZPPException("Receiver sedbox: '" + sedBox
+      throw new ZKPException("Receiver sedbox: '" + sedBox
               + "' does not have defined party serurity!");
     }
 
@@ -311,15 +311,15 @@ public class ZKPTaskFictionByLastDelivery implements TaskExecutionInterface {
 
       moFNotification = new MSHOutMail();
       moFNotification.setMessageId(Utils.getInstance().getGuidString());
-      moFNotification.setService(ZPPConstants.S_ZPP_SERVICE);
-      moFNotification.setAction(ZPPConstants.S_ZPP_ACTION_FICTION_NOTIFICATION);
+      moFNotification.setService(ZKPConstants.ZKP_A_SERVICE);
+      moFNotification.setAction(ZKPConstants.S_ZKP_ACTION_FICTION_NOTIFICATION);
       moFNotification.setConversationId(mOutMail.getConversationId());
       moFNotification.setSenderEBox(mOutMail.getSenderEBox());
       moFNotification.setSenderName(mOutMail.getSenderName());
       moFNotification.setRefToMessageId(mOutMail.getMessageId());
       moFNotification.setReceiverEBox(mOutMail.getReceiverEBox());
       moFNotification.setReceiverName(mOutMail.getReceiverName());
-      moFNotification.setSubject(ZPPConstants.S_ZPP_ACTION_FICTION_NOTIFICATION);
+      moFNotification.setSubject(ZKPConstants.S_ZKP_ACTION_FICTION_NOTIFICATION);
       // prepare mail to persist
       Date dt = Calendar.getInstance().getTime();
       // set current status
@@ -332,8 +332,8 @@ public class ZKPTaskFictionByLastDelivery implements TaskExecutionInterface {
       // create AdviceOfDeliveryFictionNotification for receiver
       PrivateKey pk = mCertBean.getPrivateKeyForAlias(sigAlias);
       X509Certificate xcert = mCertBean.getX509CertForAlias(sigAlias);
-      MSHOutPart mp = mzppZPPUtils.createMSHOutPart(
-              mOutMail, ZPPPartType.AdviceOfDeliveryFiction,
+      MSHOutPart mp = mzkpZKPUtils.createMSHOutPart(
+              mOutMail, ZKPPartType.AdviceOfDeliveryFiction,
               FopTransformation.AdviceOfDeliveryFictionNotification_6Odst,
               pk, xcert);
 
@@ -345,12 +345,12 @@ public class ZKPTaskFictionByLastDelivery implements TaskExecutionInterface {
       // get key
       Key key;
       try {
-        key = mzppZPPUtils.getEncKeyFromOut(mOutMail);
+        key = mzkpZKPUtils.getEncKeyFromOut(mOutMail);
       } catch (StorageException ex) {
         LOG.logError(ex.getMessage(), ex);
-        throw new ZPPException(ex);
+        throw new ZKPException(ex);
       }
-      MSHOutPart mpEncKey = mzppZPPUtils.createEncryptedKey(key, recXc, sedBox,
+      MSHOutPart mpEncKey = mzkpZKPUtils.createEncryptedKey(key, recXc, sedBox,
               mOutMail.getConversationId());
 
       moFNotification.getMSHOutPayload().getMSHOutParts().add(mp);
@@ -359,7 +359,7 @@ public class ZKPTaskFictionByLastDelivery implements TaskExecutionInterface {
     } catch (IOException | StorageException ex) {
       String msg = "Error creating visiualization";
       LOG.logError(l, msg, ex);
-      throw new ZPPException(msg);
+      throw new ZKPException(msg);
     }
 
     LOG.logEnd(l);
@@ -375,13 +375,13 @@ public class ZKPTaskFictionByLastDelivery implements TaskExecutionInterface {
    * @param mOutMail
    * @param signAlias
    * @return
-   * @throws ZPPException
+   * @throws ZKPException
    * @throws FOPException
    * @throws SEDSecurityException
    */
-  private MSHInMail createZPPAdviceOfDeliveryFiction(MSHOutMail mOutMail,
+  private MSHInMail createZKPAdviceOfDeliveryFiction(MSHOutMail mOutMail,
           String signAlias)
-          throws ZPPException, FOPException, SEDSecurityException {
+          throws ZKPException, FOPException, SEDSecurityException {
     long l = LOG.logStart();
     MSHInMail moADF = null;
 
@@ -389,15 +389,15 @@ public class ZKPTaskFictionByLastDelivery implements TaskExecutionInterface {
 
     moADF = new MSHInMail();
     moADF.setMessageId(Utils.getInstance().getGuidString() + "@" + domain);
-    moADF.setService(ZPPConstants.S_ZPP_SERVICE);
-    moADF.setAction(ZPPConstants.S_ZPP_ACTION_ADVICE_OF_DELIVERY_FICTION);
+    moADF.setService(ZKPConstants.ZKP_A_SERVICE);
+    moADF.setAction(ZKPConstants.S_ZKP_ACTION_ADVICE_OF_DELIVERY_FICTION);
     moADF.setConversationId(mOutMail.getConversationId());
-    moADF.setSenderEBox("fikcija.zpp@" + domain);
-    moADF.setSenderName("Laurentius ZPP fikcija");
+    moADF.setSenderEBox("fikcija.zkp@" + domain);
+    moADF.setSenderName("Laurentius ZKP fikcija");
     moADF.setRefToMessageId(mOutMail.getMessageId());
     moADF.setReceiverEBox(mOutMail.getSenderEBox());
     moADF.setReceiverName(mOutMail.getSenderName());
-    moADF.setSubject(ZPPConstants.S_ZPP_ACTION_ADVICE_OF_DELIVERY_FICTION);
+    moADF.setSubject(ZKPConstants.S_ZKP_ACTION_ADVICE_OF_DELIVERY_FICTION);
     // prepare mail to persist
     Date dt = new Date();
     // set current status
@@ -414,8 +414,8 @@ public class ZKPTaskFictionByLastDelivery implements TaskExecutionInterface {
       PrivateKey pk = mCertBean.getPrivateKeyForAlias(signAlias);
       X509Certificate xcert = mCertBean.getX509CertForAlias(signAlias);
 
-      MSHInPart mp = mzppZPPUtils
-              .createMSHInPart(mOutMail, ZPPPartType.AdviceOfDeliveryFiction,
+      MSHInPart mp = mzkpZKPUtils
+              .createMSHInPart(mOutMail, ZKPPartType.AdviceOfDeliveryFiction,
                       FopTransformation.AdviceOfDeliveryFiction_6Odst,
                       pk, xcert);
 
@@ -423,7 +423,7 @@ public class ZKPTaskFictionByLastDelivery implements TaskExecutionInterface {
 
     } catch (StorageException | HashException ex) {
       String msg = "Error occured while creating delivery advice file!";
-      throw new ZPPException(msg, ex);
+      throw new ZKPException(msg, ex);
     }
 
     LOG.logEnd(l);

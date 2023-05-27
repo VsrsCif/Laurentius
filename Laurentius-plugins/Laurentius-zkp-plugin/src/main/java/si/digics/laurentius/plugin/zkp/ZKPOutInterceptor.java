@@ -179,9 +179,9 @@ public class ZKPOutInterceptor implements SoapInterceptorInterface {
         MSHOutMail outMail = SoapUtils.getMSHOutMail(msg);
         MSHInMail mInMail = SoapUtils.getMSHInMail(msg);
 
-        if (outMail != null && (ZKPConstants.S_ZKP_SERVICE.equals(ectx.getService().
+        if (outMail != null && (ZKPConstants.ZKP_A_SERVICE.equals(ectx.getService().
                 getServiceName())
-                || ZKPConstants.S_ZKPB_SERVICE.equals(ectx.getService().
+                || ZKPConstants.ZKP_A_SERVICE.equals(ectx.getService().
                         getServiceName()))) {
 
             if (ZKPConstants.S_ZKP_ACTION_DELIVERY_NOTIFICATION.equals(ectx.
@@ -194,7 +194,7 @@ public class ZKPOutInterceptor implements SoapInterceptorInterface {
                     throw new SoapFault(ex.getMessage(), sv);
                 }
             } else if (Objects.
-                    equals(ZKPConstants.S_ZKP_SERVICE, outMail.getService())
+                    equals(ZKPConstants.ZKP_A_SERVICE, outMail.getService())
                     && Objects.equals(ZKPConstants.S_ZKP_ACTION_ADVICE_OF_DELIVERY,
                             outMail.getAction())) {
                 processOutZKPAdviceOfDelivery(outMail, ectx, msg);
@@ -203,7 +203,7 @@ public class ZKPOutInterceptor implements SoapInterceptorInterface {
         }
 
         if (mInMail != null) {
-            if (Objects.equals(ZKPConstants.S_ZKP_SERVICE, mInMail.getService())
+            if (Objects.equals(ZKPConstants.ZKP_A_SERVICE, mInMail.getService())
                     && Objects.equals(ZKPConstants.S_ZKP_ACTION_ADVICE_OF_DELIVERY,
                             mInMail.getAction())) {
                 try {
@@ -213,7 +213,7 @@ public class ZKPOutInterceptor implements SoapInterceptorInterface {
                 }
             }
 
-            if (Objects.equals(ZKPConstants.S_ZKPB_SERVICE, mInMail.getService())
+            if (Objects.equals(ZKPConstants.ZKP_A_SERVICE, mInMail.getService())
                     && Objects.equals(ZKPConstants.S_ZKP_ACTION_ADVICE_OF_DELIVERY,
                             mInMail.getAction())) {
                 try {
@@ -353,7 +353,7 @@ public class ZKPOutInterceptor implements SoapInterceptorInterface {
                 mzkpZKPUtils.updateMSHOutPartVisualization(outMail,
                         mDeliveryNotification,
                         ZKPPartType.DeliveryNotification,
-                        ZKPConstants.S_ZKPB_SERVICE.equals(outMail.getService())
+                        ZKPConstants.ZKP_A_SERVICE.equals(outMail.getService())
                         ? FopTransformation.DeliveryNotificationB
                         : FopTransformation.DeliveryNotification,
                         pk,
@@ -363,7 +363,7 @@ public class ZKPOutInterceptor implements SoapInterceptorInterface {
                 mDeliveryNotification = mzkpZKPUtils.createMSHOutPart(
                         outMail,
                         ZKPPartType.DeliveryNotification,
-                        ZKPConstants.S_ZKPB_SERVICE.equals(outMail.getService())
+                        ZKPConstants.ZKP_A_SERVICE.equals(outMail.getService())
                         ? FopTransformation.DeliveryNotificationB
                         : FopTransformation.DeliveryNotification,
                         pk, xcert);
@@ -410,11 +410,11 @@ public class ZKPOutInterceptor implements SoapInterceptorInterface {
             mDB.updateOutMailPayload(outMail, lstAddMailParts, lstUpdateMailParts,
                     lstRemoveParts, SEDOutboxMailStatus.PROCESS,
                     "Mail ready to deliver by ZKP delivery protocol", null,
-                    ZKPConstants.S_ZKP_PLUGIN_TYPE);
+                    ZKPConstants.ZKP_A_SERVICE);
         } else {
             mDB.setStatusToOutMail(outMail, SEDOutboxMailStatus.PROCESS,
                     "Deliver mail by ZKP delivery protocol", null,
-                    ZKPConstants.S_ZKP_PLUGIN_TYPE);
+                    ZKPConstants.ZKP_A_SERVICE);
         }
 
         // submit only delivery notification and encrypted parts
@@ -488,7 +488,7 @@ public class ZKPOutInterceptor implements SoapInterceptorInterface {
 
             MSHOutMail mom = null;
             for (MSHOutMail mdn : momLst) {
-                if (Objects.equals(ZKPConstants.S_ZKP_SERVICE, mdn.getService())
+                if (Objects.equals(ZKPConstants.ZKP_A_SERVICE, mdn.getService())
                         && Objects.equals(
                                 ZKPConstants.S_ZKP_ACTION_DELIVERY_NOTIFICATION, mdn.
                                         getAction())
@@ -593,7 +593,7 @@ public class ZKPOutInterceptor implements SoapInterceptorInterface {
             MSHOutMail mom = null;
             for (MSHOutMail mdn : momLst) {
 
-                if (Objects.equals(ZKPConstants.S_ZKPB_SERVICE, mdn.getService())
+                if (Objects.equals(ZKPConstants.ZKP_A_SERVICE, mdn.getService())
                         && Objects.equals(
                                 ZKPConstants.S_ZKP_ACTION_DELIVERY_NOTIFICATION, mdn.
                                         getAction())

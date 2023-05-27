@@ -110,7 +110,7 @@ public class ZKPUtils {
     // create part      
     MSHOutPart ptNew = new MSHOutPart();
 
-    ptNew.setSource(ZKPConstants.S_ZKP_PLUGIN_TYPE);
+    ptNew.setSource(ZKPConstants.ZKP_PLUGIN_TYPE);
     ptNew.setIsSent(Boolean.TRUE);
     ptNew.setIsReceived(Boolean.FALSE);
     ptNew.setGeneratedFromPartId(ptSource.getId());
@@ -216,7 +216,7 @@ public class ZKPUtils {
     MSHOutPart ptNew = new MSHOutPart();
     ptNew.setIsSent(Boolean.FALSE);
     ptNew.setIsReceived(Boolean.FALSE);
-    ptNew.setSource(ZKPConstants.S_ZKP_PLUGIN_TYPE);
+    ptNew.setSource(ZKPConstants.ZKP_PLUGIN_TYPE);
     ptNew.setEncoding(SEDValues.ENCODING_UTF8);
     ptNew.setMimeType(ZKPPartType.LocalEncryptionKey.getMimeType());
     ptNew.setName(ZKPPartType.LocalEncryptionKey.getPartName());
@@ -434,7 +434,7 @@ public class ZKPUtils {
 
     // generate mshout part
     MSHOutPart ptNew = new MSHOutPart();
-    ptNew.setSource(ZKPConstants.S_ZKP_PLUGIN_TYPE);
+    ptNew.setSource(ZKPConstants.ZKP_PLUGIN_TYPE);
     ptNew.setEncoding(SEDValues.ENCODING_UTF8);
     ptNew.setMimeType(partType.getMimeType());
     ptNew.setName(partType.getPartName());
@@ -503,7 +503,7 @@ public class ZKPUtils {
     signPDFDocument(pk, xcert, fDNViz, true);
 
     MSHOutPart ptNew = new MSHOutPart();
-    ptNew.setSource(ZKPConstants.S_ZKP_PLUGIN_TYPE);
+    ptNew.setSource(ZKPConstants.ZKP_PLUGIN_TYPE);
     ptNew.setEncoding(SEDValues.ENCODING_BASE64);
     ptNew.setIsSent(Boolean.TRUE);
     ptNew.setIsReceived(Boolean.FALSE);
@@ -545,7 +545,7 @@ public class ZKPUtils {
 
     MSHInPart ptNew = new MSHInPart();
     ptNew.setEbmsId(Utils.getUUIDWithLocalDomain());
-    ptNew.setSource(ZKPConstants.S_ZKP_PLUGIN_TYPE);
+    ptNew.setSource(ZKPConstants.ZKP_PLUGIN_TYPE);
     ptNew.setEncoding(SEDValues.ENCODING_BASE64);
     ptNew.setIsSent(Boolean.FALSE);
     ptNew.setIsReceived(Boolean.FALSE);

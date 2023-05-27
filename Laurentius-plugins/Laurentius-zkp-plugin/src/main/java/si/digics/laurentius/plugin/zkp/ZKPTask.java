@@ -122,7 +122,7 @@ public class ZKPTask implements TaskExecutionInterface {
 
     MSHInMail mi = new MSHInMail();
     mi.setStatus(SEDInboxMailStatus.PLOCKED.getValue());
-    mi.setService(ZKPConstants.S_ZKP_SERVICE);
+    mi.setService(ZKPConstants.ZKP_A_SERVICE);
     mi.setAction(ZKPConstants.S_ZKP_ACTION_DELIVERY_NOTIFICATION);
     mi.setReceiverEBox(sedBox + "@" + SEDSystemProperties.getLocalDomain());
 
@@ -214,7 +214,7 @@ public class ZKPTask implements TaskExecutionInterface {
 
     MSHOutMail mout = new MSHOutMail();
     mout.setMessageId(Utils.getUUIDWithLocalDomain());
-    mout.setService(ZKPConstants.S_ZKP_SERVICE);
+    mout.setService(ZKPConstants.ZKP_A_SERVICE);
     mout.setAction(ZKPConstants.S_ZKP_ACTION_ADVICE_OF_DELIVERY);
     mout.setConversationId(inMail.getConversationId());
     mout.setSenderEBox(inMail.getReceiverEBox());
@@ -243,7 +243,7 @@ public class ZKPTask implements TaskExecutionInterface {
 
       PMode pmd = mpModeManager.getPModeMSHOutMail(mout);
 
-      mDB.serializeOutMail(mout, "", ZKPConstants.S_ZKP_PLUGIN_TYPE, pmd);
+      mDB.serializeOutMail(mout, "", ZKPConstants.ZKP_PLUGIN_TYPE, pmd);
       mDB.setStatusToInMail(inMail, SEDInboxMailStatus.PREADY,
               "AdviceOfDelivery created and submitted to out queue");
     } catch (SEDSecurityException | StorageException | PModeException ex) {

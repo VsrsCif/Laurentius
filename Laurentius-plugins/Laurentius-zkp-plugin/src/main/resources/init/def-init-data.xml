@@ -4,7 +4,6 @@
                      xmlns:ns1="http://laurentius.si/plugin/def"
                      xmlns:pmd="http://msh.laurentius.si/pmode" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <ns1:PModeData>
-       
         <pmd:Service id="LegalDelivery_ZPP" serviceName="LegalDelivery_ZPP" serviceType="SVEV" useSEDProperties="true">
             <pmd:Initiator role="Sender"/>
             <pmd:Executor role="Receiver"/>

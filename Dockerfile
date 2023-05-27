@@ -51,6 +51,7 @@ COPY --from=build /app/scripts/install/laurentius-home/  $WILDFLY_HOME/standalon
 COPY --from=build /app/scripts/install/$SERVER_VERSION/laurentius-demo.sh  $WILDFLY_HOME/bin/
 COPY --from=build /app/scripts/install/$SERVER_VERSION/laurentius-init.sh  $WILDFLY_HOME/bin/
 
+RUN echo "test=544e00c06e8229f4face117c31564c8b" >> $WILDFLY_HOME/standalone/configuration/mgmt-users.properties
 
 user root
 RUN  cd $WILDFLY_HOME/modules/si/laurentius/main/ && \

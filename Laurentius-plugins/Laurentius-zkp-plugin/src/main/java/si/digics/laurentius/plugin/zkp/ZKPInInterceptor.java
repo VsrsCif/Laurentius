@@ -149,12 +149,12 @@ public class ZKPInInterceptor implements SoapInterceptorInterface {
        
     if (mInMail != null) {
       switch (mInMail.getService()) {
-        case ZKPConstants.S_ZKP_SERVICE:
+        case ZKPConstants.ZKP_A_SERVICE:
           processInZKPMessage(mInMail, eInctx, msg);
           break;
-        case ZKPConstants.S_ZKPB_SERVICE:
-          processInZKPBMessage(mInMail, eInctx, msg);
-          break;
+//        case ZKPConstants.ZKP_A_SERVICE:
+//          processInZKPBMessage(mInMail, eInctx, msg);
+//          break;
       }
     }
     
@@ -251,7 +251,7 @@ public class ZKPInInterceptor implements SoapInterceptorInterface {
             try {
               mDB.setStatusToOutMail(moutMail, SEDOutboxMailStatus.ERROR,
                       errmsg, null,
-                      ZKPConstants.S_ZKP_PLUGIN_TYPE);
+                      ZKPConstants.ZKP_PLUGIN_TYPE);
             } catch (StorageException ex1) {
               LOG.logError(l,
                       "Error setting status ERROR to MSHInMail :'" + moutMail.
@@ -325,7 +325,7 @@ public class ZKPInInterceptor implements SoapInterceptorInterface {
 
     MSHOutMail mom = null;
     for (MSHOutMail mdn : momLst) {
-      if (Objects.equals(ZKPConstants.S_ZKP_SERVICE, mdn.getService())
+      if (Objects.equals(ZKPConstants.ZKP_PLUGIN_TYPE, mdn.getService())
               && Objects.equals(
                       ZKPConstants.S_ZKP_ACTION_DELIVERY_NOTIFICATION, mdn.
                               getAction())
@@ -434,7 +434,7 @@ public class ZKPInInterceptor implements SoapInterceptorInterface {
 
     MSHOutMail mom = null;
     for (MSHOutMail mdn : momLst) {
-      if (Objects.equals(ZKPConstants.S_ZKPB_SERVICE, mdn.getService())
+      if (Objects.equals(ZKPConstants.ZKP_PLUGIN_TYPE, mdn.getService())
               && Objects.equals(
                       ZKPConstants.S_ZKP_ACTION_DELIVERY_NOTIFICATION, mdn.
                               getAction())
@@ -514,7 +514,7 @@ public class ZKPInInterceptor implements SoapInterceptorInterface {
     mInMail.setStatus(SEDInboxMailStatus.PLOCKED.getValue());
     mInMail.setStatusDate(Calendar.getInstance().getTime());
     try { 
-      mDB.serializeInMail(mInMail, ZKPConstants.S_ZKP_PLUGIN_TYPE);
+      mDB.serializeInMail(mInMail, ZKPConstants.ZKP_PLUGIN_TYPE);
     } catch (StorageException ex) {
       String msg = String.format(
               "Server error occured while receiving mail: %s, Error: %s." + mInMail.
@@ -541,7 +541,7 @@ public class ZKPInInterceptor implements SoapInterceptorInterface {
       MSHOutMail mout = createZKPBDeliveryReciept(inMail, signAlias);
     
       
-      mDB.serializeInOutMail(inMail, mout,ZKPConstants.S_ZKP_PLUGIN_TYPE, eInCtx.getPMode());
+      mDB.serializeInOutMail(inMail, mout,ZKPConstants.ZKP_PLUGIN_TYPE, eInCtx.getPMode());
       
     } catch (StorageException ex) {
       LOG.logError(l, "Error setting status ERROR to MSHInMail :'" + inMail.
@@ -557,7 +557,7 @@ public class ZKPInInterceptor implements SoapInterceptorInterface {
 
     MSHOutMail mout = new MSHOutMail();
     mout.setMessageId(Utils.getUUIDWithLocalDomain());
-    mout.setService(ZKPConstants.S_ZKPB_SERVICE);
+    mout.setService(ZKPConstants.ZKP_A_SERVICE);
     mout.setAction(ZKPConstants.S_ZKP_ACTION_ADVICE_OF_DELIVERY);
     mout.setConversationId(inMail.getConversationId());
     mout.setSenderEBox(inMail.getReceiverEBox());
@@ -779,7 +779,7 @@ public class ZKPInInterceptor implements SoapInterceptorInterface {
               miDec.setIsReceived(Boolean.FALSE);
               miDec.setGeneratedFromPartId(mip.getId());
 
-              miDec.setSource(ZKPConstants.S_ZKP_PLUGIN_TYPE);
+              miDec.setSource(ZKPConstants.ZKP_PLUGIN_TYPE);
               miDec.setDescription(desc);
               miDec.setEbmsId(mip.getEbmsId() + "-dec");
               miDec.setEncoding(mip.getEncoding());
@@ -805,7 +805,7 @@ public class ZKPInInterceptor implements SoapInterceptorInterface {
         try {
           mDB.addInMailPayload(mi, lstDec, SEDInboxMailStatus.RECEIVED,
                   "Received secred key and decrypt payloads",
-                  null, ZKPConstants.S_ZKP_PLUGIN_TYPE);
+                  null, ZKPConstants.ZKP_PLUGIN_TYPE);
 
         } catch (StorageException ex) {
           LOG.logError(l, "Error updating mail :'" + mi.getId() + "'!", ex);

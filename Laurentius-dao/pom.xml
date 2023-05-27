@@ -10,6 +10,7 @@
     </parent>
 
     <artifactId>Laurentius-dao</artifactId>
+    <packaging>ejb</packaging>
 
     <name>Laurentius-dao</name>
     <description>Project contains "JPA tranformation" from jaxb - entities (Laurentius-commons) to DB entities (hibernate hbm-s)    </description>

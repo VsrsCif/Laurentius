@@ -125,7 +125,7 @@ public class ZKPTaskFiction implements TaskExecutionInterface {
     ZKPMailFilter mi = new ZKPMailFilter();
     mi.setStatus(SEDOutboxMailStatus.SENT.getValue());
     mi.setAction(ZKPConstants.S_ZKP_ACTION_DELIVERY_NOTIFICATION);
-    mi.setService(ZKPConstants.S_ZKP_SERVICE);
+    mi.setService(ZKPConstants.ZKP_A_SERVICE);
     mi.setSentDateTo(cDatFict.getTime());
     List<MSHOutMail> lst = mDB.getDataList(MSHOutMail.class, -1, maxMailProc,
             "Id", "ASC", mi);
@@ -203,7 +203,7 @@ public class ZKPTaskFiction implements TaskExecutionInterface {
     MSHInMail fi = createZKPAdviceOfDeliveryFiction(mOutMail, sigAlias);
 
     // do it in transaction!
-    mDB.serializeInOutMail(fi, fn,ZKPConstants.S_ZKP_PLUGIN_TYPE,null);
+    mDB.serializeInOutMail(fi, fn,ZKPConstants.ZKP_PLUGIN_TYPE,null);
     mOutMail.setDeliveredDate(Calendar.getInstance().getTime());
     mDB.setStatusToOutMail(mOutMail, SEDOutboxMailStatus.DELIVERED, "Fiction ",
             "ZKP plugin", "");
@@ -248,7 +248,7 @@ public class ZKPTaskFiction implements TaskExecutionInterface {
 
       moFNotification = new MSHOutMail();
       moFNotification.setMessageId(Utils.getInstance().getGuidString());
-      moFNotification.setService(ZKPConstants.S_ZKP_SERVICE);
+      moFNotification.setService(ZKPConstants.ZKP_A_SERVICE);
       moFNotification.setAction(ZKPConstants.S_ZKP_ACTION_FICTION_NOTIFICATION);
       moFNotification.setConversationId(mOutMail.getConversationId());
       moFNotification.setSenderEBox(mOutMail.getSenderEBox());
@@ -324,7 +324,7 @@ public class ZKPTaskFiction implements TaskExecutionInterface {
 
     moADF = new MSHInMail();
     moADF.setMessageId(Utils.getInstance().getGuidString() + "@" + domain);
-    moADF.setService(ZKPConstants.S_ZKP_SERVICE);
+    moADF.setService(ZKPConstants.ZKP_A_SERVICE);
     moADF.setAction(ZKPConstants.S_ZKP_ACTION_ADVICE_OF_DELIVERY_FICTION);
     moADF.setConversationId(mOutMail.getConversationId());
     moADF.setSenderEBox("fikcija.zkp@" + domain);
