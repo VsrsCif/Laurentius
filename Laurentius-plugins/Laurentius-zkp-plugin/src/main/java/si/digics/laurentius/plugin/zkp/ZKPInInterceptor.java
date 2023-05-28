@@ -19,7 +19,6 @@ import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.xml.security.encryption.EncryptedKey;
 import org.apache.xml.security.keys.keyresolver.KeyResolverException;
 import org.w3c.dom.Element;
-import si.digics.laurentius.plugin.zkp.doc.DocumentSodBuilder;
 import si.digics.laurentius.plugin.zkp.enums.ZKPPartType;
 import si.digics.laurentius.plugin.zkp.exception.ZKPErrorCode;
 import si.digics.laurentius.plugin.zkp.exception.ZKPException;
@@ -43,11 +42,9 @@ import si.laurentius.commons.interfaces.SEDLookupsInterface;
 import si.laurentius.commons.pmode.EBMSMessageContext;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StorageUtils;
-import si.laurentius.commons.utils.StringFormater;
 import si.laurentius.commons.utils.Utils;
 import si.laurentius.ebox.SEDBox;
 import si.laurentius.lce.DigestUtils;
-import si.laurentius.lce.KeystoreUtils;
 import si.laurentius.lce.enc.SEDCrypto;
 import si.laurentius.lce.sign.pdf.SignatureInfo;
 import si.laurentius.lce.sign.pdf.ValidateSignatureUtils;
@@ -138,7 +135,7 @@ public class ZKPInInterceptor implements SoapInterceptorInterface {
   public boolean handleMessage(SoapMessage msg, Properties contextProperties) {
     long l = LOG.logStart();
 
-   // boolean isRequestor = MessageUtils.isRequestor(msg);
+   // boolean isRequestor = MessageUtils.isRequestor(msg);y
     
     SEDBox sb = SoapUtils.getMSHInMailReceiverBox(msg);
 
@@ -182,10 +179,10 @@ public class ZKPInInterceptor implements SoapInterceptorInterface {
    public void processInZKPBMessage(MSHInMail inMail,
           EBMSMessageContext eInctx, SoapMessage msg) {
     switch (inMail.getAction()) {
-      case ZKPConstants.S_ZKP_ACTION_DELIVERY_NOTIFICATION:
+      case ZKPConstants.ZKP_ACTION_DELIVERY_NOTIFICATION:
         processInZKPBDelivery(inMail, eInctx);
         break;
-      case ZKPConstants.S_ZKP_ACTION_ADVICE_OF_DELIVERY:
+      case ZKPConstants.ZKP_ACTION_ADVICE_OF_DELIVERY:
         validateInZKPBDeliveryReciept(inMail, eInctx, msg);
         break;
     }
@@ -203,20 +200,16 @@ public class ZKPInInterceptor implements SoapInterceptorInterface {
           EBMSMessageContext eInctx, SoapMessage msg) {
 
     switch (inMail.getAction()) {
-      case ZKPConstants.S_ZKP_ACTION_DELIVERY_NOTIFICATION:
+      case ZKPConstants.ZKP_ACTION_DELIVERY_NOTIFICATION:
         processInZKPDelivery(inMail);
         break;
-      case ZKPConstants.S_ZKP_ACTION_FICTION_NOTIFICATION:
+      case ZKPConstants.ZKP_ACTION_FICTION_NOTIFICATION:
         processInZKPFictionNotification(inMail);
         break;
-      case ZKPConstants.S_ZKP_ACTION_ADVICE_OF_DELIVERY:
+      case ZKPConstants.ZKP_ACTION_ADVICE_OF_DELIVERY:
         validateInZKPAdviceOfDelivery(inMail, eInctx, msg);
         break;
     }
-
-   
-
-
   }
 
   public void processSignalMessages(List<Element> signalElements,
@@ -327,7 +320,7 @@ public class ZKPInInterceptor implements SoapInterceptorInterface {
     for (MSHOutMail mdn : momLst) {
       if (Objects.equals(ZKPConstants.ZKP_PLUGIN_TYPE, mdn.getService())
               && Objects.equals(
-                      ZKPConstants.S_ZKP_ACTION_DELIVERY_NOTIFICATION, mdn.
+                      ZKPConstants.ZKP_ACTION_DELIVERY_NOTIFICATION, mdn.
                               getAction())
               && Objects.equals(mInMail.getConversationId(), mdn.
                       getConversationId())) {
@@ -436,7 +429,7 @@ public class ZKPInInterceptor implements SoapInterceptorInterface {
     for (MSHOutMail mdn : momLst) {
       if (Objects.equals(ZKPConstants.ZKP_PLUGIN_TYPE, mdn.getService())
               && Objects.equals(
-                      ZKPConstants.S_ZKP_ACTION_DELIVERY_NOTIFICATION, mdn.
+                      ZKPConstants.ZKP_ACTION_DELIVERY_NOTIFICATION, mdn.
                               getAction())
               && Objects.equals(mInMail.getConversationId(), mdn.
                       getConversationId())) {
@@ -558,14 +551,14 @@ public class ZKPInInterceptor implements SoapInterceptorInterface {
     MSHOutMail mout = new MSHOutMail();
     mout.setMessageId(Utils.getUUIDWithLocalDomain());
     mout.setService(ZKPConstants.ZKP_A_SERVICE);
-    mout.setAction(ZKPConstants.S_ZKP_ACTION_ADVICE_OF_DELIVERY);
+    mout.setAction(ZKPConstants.ZKP_ACTION_ADVICE_OF_DELIVERY);
     mout.setConversationId(inMail.getConversationId());
     mout.setSenderEBox(inMail.getReceiverEBox());
     mout.setSenderName(inMail.getReceiverName());
     mout.setRefToMessageId(inMail.getMessageId());
     mout.setReceiverEBox(inMail.getSenderEBox());
     mout.setReceiverName(inMail.getSenderName());
-    mout.setSubject(ZKPConstants.S_ZKP_ACTION_ADVICE_OF_DELIVERY);
+    mout.setSubject(ZKPConstants.ZKP_ACTION_ADVICE_OF_DELIVERY);
     // prepare mail to persist
     Date dt = new Date();
     // set current status
@@ -722,11 +715,11 @@ public class ZKPInInterceptor implements SoapInterceptorInterface {
 
       List<MSHInMail> lst
               = mDB.getInMailConvIdAndAction(
-                      ZKPConstants.S_ZKP_ACTION_DELIVERY_NOTIFICATION, convID);
+                      ZKPConstants.ZKP_ACTION_DELIVERY_NOTIFICATION, convID);
       if (lst.isEmpty()) {
         String errMsg
                 = "Mail with convid: " + convID + " and action: "
-                + ZKPConstants.S_ZKP_ACTION_DELIVERY_NOTIFICATION + " not found!"
+                + ZKPConstants.ZKP_ACTION_DELIVERY_NOTIFICATION + " not found!"
                 + "Nothing to decrypt!";
         LOG.logError(l, errMsg, null);
       }
@@ -744,11 +737,11 @@ public class ZKPInInterceptor implements SoapInterceptorInterface {
 
             String newFileName
                     = oldFileName.substring(0, oldFileName.lastIndexOf(
-                            ZKPConstants.S_ZKP_ENC_SUFFIX));
+                            ZKPConstants.ZKP_ENC_SUFFIX));
             String mime = null;
             for (IMPartProperty mp : mip.getIMPartProperties()) {
               if (Objects.equals(mp.getName(),
-                      ZKPConstants.S_PART_PROPERTY_ORIGIN_MIMETYPE)) {
+                      ZKPConstants.PART_PROPERTY_ORIGIN_MIMETYPE)) {
                 mime = mp.getValue();
                 break;
               }

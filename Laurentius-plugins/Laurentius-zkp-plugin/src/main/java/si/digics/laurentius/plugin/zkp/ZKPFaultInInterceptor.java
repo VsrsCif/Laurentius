@@ -111,7 +111,7 @@ public class ZKPFaultInInterceptor implements SoapInterceptorInterface {
       if ((ZKPConstants.ZKP_A_SERVICE.equalsIgnoreCase(moutMail.getService())
               || ZKPConstants.ZKP_A_SERVICE.equalsIgnoreCase(moutMail.
                       getService()))
-              && ZKPConstants.S_ZKP_ACTION_DELIVERY_NOTIFICATION.
+              && ZKPConstants.ZKP_ACTION_DELIVERY_NOTIFICATION.
                       equalsIgnoreCase(
                               moutMail.getAction())
              ) {
@@ -196,14 +196,14 @@ public class ZKPFaultInInterceptor implements SoapInterceptorInterface {
     MSHInMail min = new MSHInMail();
     min.setMessageId(Utils.getUUIDWithLocalDomain());
     min.setService(ZKPConstants.ZKP_A_SERVICE);
-    min.setAction(ZKPConstants.S_ZKP_ACTION_ADDRESS_NOT_EXISTS);
+    min.setAction(ZKPConstants.ZKP_ACTION_ADDRESS_NOT_EXISTS);
     min.setConversationId(outMail.getConversationId());
     min.setSenderEBox(outMail.getReceiverEBox());
     min.setSenderName(outMail.getReceiverName());
     min.setRefToMessageId(outMail.getMessageId());
     min.setReceiverEBox(outMail.getSenderEBox());
     min.setReceiverName(outMail.getSenderName());
-    min.setSubject(ZKPConstants.S_ZKP_ACTION_ADDRESS_NOT_EXISTS);
+    min.setSubject(ZKPConstants.ZKP_ACTION_ADDRESS_NOT_EXISTS);
     // prepare mail to persist
     Date dt = new Date();
     // set current status

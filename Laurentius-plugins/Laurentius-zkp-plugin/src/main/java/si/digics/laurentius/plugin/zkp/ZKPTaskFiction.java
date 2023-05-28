@@ -124,7 +124,7 @@ public class ZKPTaskFiction implements TaskExecutionInterface {
     // get all not delivered mail
     ZKPMailFilter mi = new ZKPMailFilter();
     mi.setStatus(SEDOutboxMailStatus.SENT.getValue());
-    mi.setAction(ZKPConstants.S_ZKP_ACTION_DELIVERY_NOTIFICATION);
+    mi.setAction(ZKPConstants.ZKP_ACTION_DELIVERY_NOTIFICATION);
     mi.setService(ZKPConstants.ZKP_A_SERVICE);
     mi.setSentDateTo(cDatFict.getTime());
     List<MSHOutMail> lst = mDB.getDataList(MSHOutMail.class, -1, maxMailProc,
@@ -249,14 +249,14 @@ public class ZKPTaskFiction implements TaskExecutionInterface {
       moFNotification = new MSHOutMail();
       moFNotification.setMessageId(Utils.getInstance().getGuidString());
       moFNotification.setService(ZKPConstants.ZKP_A_SERVICE);
-      moFNotification.setAction(ZKPConstants.S_ZKP_ACTION_FICTION_NOTIFICATION);
+      moFNotification.setAction(ZKPConstants.ZKP_ACTION_FICTION_NOTIFICATION);
       moFNotification.setConversationId(mOutMail.getConversationId());
       moFNotification.setSenderEBox(mOutMail.getSenderEBox());
       moFNotification.setSenderName(mOutMail.getSenderName());
       moFNotification.setRefToMessageId(mOutMail.getMessageId());
       moFNotification.setReceiverEBox(mOutMail.getReceiverEBox());
       moFNotification.setReceiverName(mOutMail.getReceiverName());
-      moFNotification.setSubject(ZKPConstants.S_ZKP_ACTION_FICTION_NOTIFICATION);
+      moFNotification.setSubject(ZKPConstants.ZKP_ACTION_FICTION_NOTIFICATION);
       // prepare mail to persist
       Date dt = Calendar.getInstance().getTime();
       // set current status
@@ -325,14 +325,14 @@ public class ZKPTaskFiction implements TaskExecutionInterface {
     moADF = new MSHInMail();
     moADF.setMessageId(Utils.getInstance().getGuidString() + "@" + domain);
     moADF.setService(ZKPConstants.ZKP_A_SERVICE);
-    moADF.setAction(ZKPConstants.S_ZKP_ACTION_ADVICE_OF_DELIVERY_FICTION);
+    moADF.setAction(ZKPConstants.ZKP_ACTION_ADVICE_OF_DELIVERY_FICTION);
     moADF.setConversationId(mOutMail.getConversationId());
     moADF.setSenderEBox("fikcija.zkp@" + domain);
     moADF.setSenderName("Laurentius ZKP fikcija");
     moADF.setRefToMessageId(mOutMail.getMessageId());
     moADF.setReceiverEBox(mOutMail.getSenderEBox());
     moADF.setReceiverName(mOutMail.getSenderName());
-    moADF.setSubject(ZKPConstants.S_ZKP_ACTION_ADVICE_OF_DELIVERY_FICTION);
+    moADF.setSubject(ZKPConstants.ZKP_ACTION_ADVICE_OF_DELIVERY_FICTION);
     // prepare mail to persist
     Date dt = new Date();
     // set current status

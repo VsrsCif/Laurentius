@@ -155,7 +155,7 @@ public class ZKPOutInterceptor implements SoapInterceptorInterface {
     }
 
     /**
-     *
+     * No fault handling?
      * @param t
      */
     @Override
@@ -164,7 +164,7 @@ public class ZKPOutInterceptor implements SoapInterceptorInterface {
     }
 
     /**
-     *
+     * Interceptor for ZKP out mail
      * @param msg
      */
     @Override
@@ -180,32 +180,28 @@ public class ZKPOutInterceptor implements SoapInterceptorInterface {
         MSHInMail mInMail = SoapUtils.getMSHInMail(msg);
 
         if (outMail != null && (ZKPConstants.ZKP_A_SERVICE.equals(ectx.getService().
-                getServiceName())
-                || ZKPConstants.ZKP_A_SERVICE.equals(ectx.getService().
-                        getServiceName()))) {
-
-            if (ZKPConstants.S_ZKP_ACTION_DELIVERY_NOTIFICATION.equals(ectx.
+                getServiceName()))) {
+            if (ZKPConstants.ZKP_ACTION_DELIVERY_NOTIFICATION.equals(ectx.
                     getAction().getName())) {
                 try {
                     prepareToZKPDelivery(outMail, ectx, sv);
                 } catch (JAXBException | FileNotFoundException | HashException | SEDSecurityException | StorageException | FOPException
-                        | ZKPException ex) {
+                         | ZKPException ex) {
                     LOG.logError(l, ex.getMessage(), ex);
                     throw new SoapFault(ex.getMessage(), sv);
                 }
             } else if (Objects.
                     equals(ZKPConstants.ZKP_A_SERVICE, outMail.getService())
-                    && Objects.equals(ZKPConstants.S_ZKP_ACTION_ADVICE_OF_DELIVERY,
-                            outMail.getAction())) {
+                    && Objects.equals(ZKPConstants.ZKP_ACTION_ADVICE_OF_DELIVERY,
+                    outMail.getAction())) {
                 processOutZKPAdviceOfDelivery(outMail, ectx, msg);
             }
-
         }
 
-        if (mInMail != null) {
+        if(mInMail != null) {
             if (Objects.equals(ZKPConstants.ZKP_A_SERVICE, mInMail.getService())
-                    && Objects.equals(ZKPConstants.S_ZKP_ACTION_ADVICE_OF_DELIVERY,
-                            mInMail.getAction())) {
+                    && Objects.equals(ZKPConstants.ZKP_ACTION_ADVICE_OF_DELIVERY,
+                    mInMail.getAction())) {
                 try {
                     processInZKPAdviceOfDelivery(mInMail, eInctx, msg);
                 } catch (ZKPException ex) {
@@ -214,8 +210,8 @@ public class ZKPOutInterceptor implements SoapInterceptorInterface {
             }
 
             if (Objects.equals(ZKPConstants.ZKP_A_SERVICE, mInMail.getService())
-                    && Objects.equals(ZKPConstants.S_ZKP_ACTION_ADVICE_OF_DELIVERY,
-                            mInMail.getAction())) {
+                    && Objects.equals(ZKPConstants.ZKP_ACTION_ADVICE_OF_DELIVERY,
+                    mInMail.getAction())) {
                 try {
                     processInZKPBDeliveryReciept(mInMail, eInctx, msg);
                 } catch (ZKPException ex) {
@@ -223,6 +219,7 @@ public class ZKPOutInterceptor implements SoapInterceptorInterface {
                 }
             }
         }
+
         LOG.logEnd(l);
         return true;
     }
@@ -490,7 +487,7 @@ public class ZKPOutInterceptor implements SoapInterceptorInterface {
             for (MSHOutMail mdn : momLst) {
                 if (Objects.equals(ZKPConstants.ZKP_A_SERVICE, mdn.getService())
                         && Objects.equals(
-                                ZKPConstants.S_ZKP_ACTION_DELIVERY_NOTIFICATION, mdn.
+                                ZKPConstants.ZKP_ACTION_DELIVERY_NOTIFICATION, mdn.
                                         getAction())
                         && Objects.equals(mInMail.getConversationId(), mdn.
                                 getConversationId())) {
@@ -595,7 +592,7 @@ public class ZKPOutInterceptor implements SoapInterceptorInterface {
 
                 if (Objects.equals(ZKPConstants.ZKP_A_SERVICE, mdn.getService())
                         && Objects.equals(
-                                ZKPConstants.S_ZKP_ACTION_DELIVERY_NOTIFICATION, mdn.
+                                ZKPConstants.ZKP_ACTION_DELIVERY_NOTIFICATION, mdn.
                                         getAction())
                         && Objects.equals(mInMail.getConversationId(), mdn.
                                 getConversationId())) {

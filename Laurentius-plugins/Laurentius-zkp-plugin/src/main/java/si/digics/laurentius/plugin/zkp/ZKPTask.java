@@ -123,7 +123,7 @@ public class ZKPTask implements TaskExecutionInterface {
     MSHInMail mi = new MSHInMail();
     mi.setStatus(SEDInboxMailStatus.PLOCKED.getValue());
     mi.setService(ZKPConstants.ZKP_A_SERVICE);
-    mi.setAction(ZKPConstants.S_ZKP_ACTION_DELIVERY_NOTIFICATION);
+    mi.setAction(ZKPConstants.ZKP_ACTION_DELIVERY_NOTIFICATION);
     mi.setReceiverEBox(sedBox + "@" + SEDSystemProperties.getLocalDomain());
 
     List<MSHInMail> lst = mDB.
@@ -134,7 +134,7 @@ public class ZKPTask implements TaskExecutionInterface {
     lst.stream().forEach((m) -> {
       try {
         mDB.setStatusToInMail(m, SEDInboxMailStatus.PROCESS,
-                "Add message to zpp deliver proccess");
+                "Add message to zkp deliver proccess");
       } catch (StorageException ex) {
         String msg = String.format(
                 "Error occurred processing mail: '%s'. Err: %s.", m.getId(),
@@ -215,14 +215,14 @@ public class ZKPTask implements TaskExecutionInterface {
     MSHOutMail mout = new MSHOutMail();
     mout.setMessageId(Utils.getUUIDWithLocalDomain());
     mout.setService(ZKPConstants.ZKP_A_SERVICE);
-    mout.setAction(ZKPConstants.S_ZKP_ACTION_ADVICE_OF_DELIVERY);
+    mout.setAction(ZKPConstants.ZKP_ACTION_ADVICE_OF_DELIVERY);
     mout.setConversationId(inMail.getConversationId());
     mout.setSenderEBox(inMail.getReceiverEBox());
     mout.setSenderName(inMail.getReceiverName());
     mout.setRefToMessageId(inMail.getMessageId());
     mout.setReceiverEBox(inMail.getSenderEBox());
     mout.setReceiverName(inMail.getSenderName());
-    mout.setSubject(ZKPConstants.S_ZKP_ACTION_ADVICE_OF_DELIVERY);
+    mout.setSubject(ZKPConstants.ZKP_ACTION_ADVICE_OF_DELIVERY);
     // prepare mail to persist
     Date dt = new Date();
     // set current status

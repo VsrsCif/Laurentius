@@ -132,7 +132,7 @@ public class ZKPUtils {
     /**
      * Backward compatibility for 1.0
      */
-    addOrUpdatePartProperty(ptNew, ZKPConstants.S_PART_PROPERTY_ORIGIN_MIMETYPE,
+    addOrUpdatePartProperty(ptNew, ZKPConstants.PART_PROPERTY_ORIGIN_MIMETYPE,
             ptSource.getMimeType());
     /**
      * Properties
