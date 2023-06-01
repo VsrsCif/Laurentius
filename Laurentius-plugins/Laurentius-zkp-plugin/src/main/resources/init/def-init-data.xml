@@ -4,7 +4,7 @@
                      xmlns:ns1="http://laurentius.si/plugin/def"
                      xmlns:pmd="http://msh.laurentius.si/pmode" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <ns1:PModeData>
-        <pmd:Service id="LegalDelivery_ZPP" serviceName="LegalDelivery_ZPP" serviceType="SVEV" useSEDProperties="true">
+        <pmd:Service id="ZKP_A" serviceName="ZKP_A" serviceType="SVEV" useSEDProperties="true">
             <pmd:Initiator role="Sender"/>
             <pmd:Executor role="Receiver"/>
             <pmd:Action name="DeliveryNotification" invokeRole="initiator" messageType="userMessage">
@@ -42,38 +42,7 @@
                 </pmd:PayloadProfiles>
             </pmd:Action>
         </pmd:Service>
-        <pmd:Service id="LegalDelivery_ZPPB" serviceName="LegalDelivery_ZPPB" serviceType="SVEV" useSEDProperties="true">
-            <pmd:Initiator role="Sender"/>
-            <pmd:Executor role="Receiver"/>
-            <pmd:Action name="DeliveryNotification" invokeRole="initiator" messageType="userMessage">
-                <pmd:Properties>
-                    <pmd:Property name="SodiSif" type="" required="true"/>
-                    <pmd:Property name="AplikSif" type="" required="false"/>
-                    <pmd:Property name="Vpisnik" type="" required="false"/>
-                    <pmd:Property name="VpisnikKratica" type="" required="false"/>
-                    <pmd:Property name="OpravilnaSt" type="" required="false"/>
-                    <pmd:Property name="Vsebina" type="" required="false"/>
-                    <pmd:Property name="finalRecipientName" type="" required="false"/>
-                </pmd:Properties>
-                <pmd:PayloadProfiles maxSize="15000">
-                    <pmd:PayloadProfile name="DeliveryNotification" MIME="application/pdf" maxOccurs="1" minOccurs="1"/>
-                    <pmd:PayloadProfile name="EncryptedPayload" MIME="application/encrypted" maxSize="15000" maxOccurs="999" minOccurs="1"/>
-                </pmd:PayloadProfiles>
-            </pmd:Action>
-            <pmd:Action name="AdviceOfDelivery" invokeRole="executor" messageType="userMessage">
-                <pmd:Properties/>
-                <pmd:PayloadProfiles maxSize="15000">
-                    <pmd:PayloadProfile name="AdviceOfDelivery" MIME="application/pdf" maxOccurs="1" minOccurs="1"/>
-                </pmd:PayloadProfiles>
-            </pmd:Action>
-            <pmd:Action name="EncryptedKey" after="DeliveryNotification, AdviceOfDelivery" invokeRole="initiator" messageType="signalMessage">
-                <pmd:Properties/>
-                <pmd:PayloadProfiles maxSize="15000">
-                    <pmd:PayloadProfile name="EncryptedKey" MIME="application/xml" maxOccurs="1" minOccurs="1"/>
-                </pmd:PayloadProfiles>
-            </pmd:Action>           
-        </pmd:Service>
-        <pmd:Service id="LegalDelivery_ZPP_B" serviceName="LegalDelivery_ZPP_B" serviceType="SVEV" useSEDProperties="false">
+        <pmd:Service id="ZKP_B" serviceName="ZKP_B" serviceType="SVEV" useSEDProperties="false">
             <pmd:Initiator role="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/initiator"/>
             <pmd:Executor role="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/responder"/>
             <pmd:Action name="DeliveryNotification" invokeRole="initiator" messageType="userMessage">
@@ -108,44 +77,6 @@
                 </pmd:Properties>
                 <pmd:PayloadProfiles maxSize="15000">
                     <pmd:PayloadProfile name="fictionNotification" MIME="application/pdf" maxSize="15000" maxOccurs="1" minOccurs="1"/>
-                </pmd:PayloadProfiles>
-            </pmd:Action>
-            <pmd:Action name="RecieptAddressNotExists" invokeRole="executor" messageType="userMessage">
-                <pmd:Properties>
-                    <pmd:Property name="originalSender" type="" required="true"/>
-                    <pmd:Property name="finalRecipient" type="" required="true"/>
-                </pmd:Properties>
-                <pmd:PayloadProfiles maxSize="15000">
-                    <pmd:PayloadProfile name="recieptAddressNotExists" MIME="application/pdf" maxSize="15000" maxOccurs="1" minOccurs="1"/>
-                </pmd:PayloadProfiles>
-            </pmd:Action>
-        </pmd:Service>
-        <pmd:Service id="LegalDelivery_ZPPB_B" serviceName="LegalDelivery_ZPPB_B" serviceType="SVEV" useSEDProperties="false">
-            <pmd:Initiator role="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/initiator"/>
-            <pmd:Executor role="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/responder"/>
-            <pmd:Action name="DeliveryNotification" invokeRole="initiator" messageType="userMessage">
-                <pmd:Properties>
-                    <pmd:Property name="originalSender" type="" required="false"/>
-                    <pmd:Property name="finalRecipient" type="" required="false"/>
-                    <pmd:Property name="SodiSif" type="" required="false"/>
-                    <pmd:Property name="AplikSif" type="" required="false"/>
-                    <pmd:Property name="Vpisnik" type="" required="false"/>
-                    <pmd:Property name="VpisnikKratica" type="" required="false"/>
-                    <pmd:Property name="OpravilnaSt" type="" required="false"/>
-                    <pmd:Property name="Vsebina" type="" required="false"/>
-                    <pmd:Property name="finalRecipientName" type="" required="false"/>
-                </pmd:Properties>
-                <pmd:PayloadProfiles maxSize="15000">
-                    <pmd:PayloadProfile name="payload" MIME="application/octet-stream" maxSize="15000" maxOccurs="42" minOccurs="1"/>
-                </pmd:PayloadProfiles>
-            </pmd:Action>
-            <pmd:Action name="AdviceOfDelivery" invokeRole="executor" messageType="userMessage">
-                <pmd:Properties>
-                    <pmd:Property name="finalRecipient" type="" required="true"/>
-                    <pmd:Property name="originalSender" type="" required="true"/>
-                </pmd:Properties>
-                <pmd:PayloadProfiles maxSize="15000">
-                    <pmd:PayloadProfile name="adviceOfDelivery" MIME="application/pdf" maxSize="15000" maxOccurs="1" minOccurs="1"/>
                 </pmd:PayloadProfiles>
             </pmd:Action>
             <pmd:Action name="RecieptAddressNotExists" invokeRole="executor" messageType="userMessage">
@@ -239,8 +170,8 @@
             <pmd:DuplicateDetection windowPeriode="P1Y" eliminate="true"/>
         </pmd:ReceptionAwareness>
         
-        <pmd:PMode id="ZPP-legal">
-            <pmd:ServiceIdRef>LegalDelivery_ZPP</pmd:ServiceIdRef>
+        <pmd:PMode id="ZKP_A">
+            <pmd:ServiceIdRef>ZKP_A</pmd:ServiceIdRef>
             <pmd:LocalPartyInfo partyIdentitySetIdRef="test-laurentius" partyDefTransportIdRef="defalut">
                 <pmd:Role>Sender</pmd:Role>
                 <pmd:Role>Receiver</pmd:Role>
@@ -297,54 +228,8 @@
                 </pmd:Leg>
             </pmd:MEP>
         </pmd:PMode>
-        <pmd:PMode id="ZPPB-legal">
-            <pmd:ServiceIdRef>LegalDelivery_ZPPB</pmd:ServiceIdRef>
-            <pmd:LocalPartyInfo partyIdentitySetIdRef="test-laurentius" partyDefTransportIdRef="defalut">
-                <pmd:Role>Sender</pmd:Role>
-                <pmd:Role>Receiver</pmd:Role>
-            </pmd:LocalPartyInfo>
-            <pmd:ExchangeParties>
-                <pmd:PartyInfo partyIdentitySetIdRef="test-laurentius" partyDefTransportIdRef="defalut">
-                    <pmd:Role>Sender</pmd:Role>
-                    <pmd:Role>Receiver</pmd:Role>
-                </pmd:PartyInfo>
-                <pmd:PartyInfo partyIdentitySetIdRef="court-laurentius" partyDefTransportIdRef="court-https">
-                    <pmd:Role>Sender</pmd:Role>
-                    <pmd:Role>Receiver</pmd:Role>
-                </pmd:PartyInfo>
-            </pmd:ExchangeParties>
-            <pmd:MEP>
-                <pmd:MEPType>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/oneWay</pmd:MEPType>
-                <pmd:MEPChannelBinding>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/push</pmd:MEPChannelBinding>
-                <pmd:MEPInitiatorRole>Sender</pmd:MEPInitiatorRole>
-                <pmd:Leg>
-                    <pmd:MPC>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/defaultMPC</pmd:MPC>
-                    <pmd:Transport>
-                        <pmd:ForeChannel action="DeliveryNotification" securityIdRef="sign_sha256">
-                            <pmd:ReceptionAwareness raPatternIdRef="AS4ReceiptResponse"/>
-                        </pmd:ForeChannel>
-                        <pmd:BackChannel securityIdRef="sign_sha256"/>
-                    </pmd:Transport>
-                </pmd:Leg>
-            </pmd:MEP>
-            <pmd:MEP>
-                <pmd:MEPType>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/twoWay</pmd:MEPType>
-                <pmd:MEPChannelBinding>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/sync</pmd:MEPChannelBinding>
-                <pmd:MEPInitiatorRole>Receiver</pmd:MEPInitiatorRole>
-                <pmd:Leg>
-                    <pmd:MPC>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/defaultMPC</pmd:MPC>
-                    <pmd:Transport>
-                        <pmd:ForeChannel action="AdviceOfDelivery" securityIdRef="sign_sha256">
-                            <pmd:ReceptionAwareness raPatternIdRef="AS4ReceiptResponse"/>
-                        </pmd:ForeChannel>
-                        <pmd:BackChannel action="EncryptedKey" securityIdRef="sign_sha256"/>
-                    </pmd:Transport>
-                </pmd:Leg>
-            </pmd:MEP>        
-        </pmd:PMode>    
-    
-        <pmd:PMode id="ZPP-legal-version-B" isTest="false">
-            <pmd:ServiceIdRef>LegalDelivery_ZPP_B</pmd:ServiceIdRef>
+        <pmd:PMode id="ZKP_B" isTest="false">
+            <pmd:ServiceIdRef>LegalDelivery_ZKP_B</pmd:ServiceIdRef>
             <pmd:LocalPartyInfo partyIdentitySetIdRef="test-laurentius" partyDefTransportIdRef="defalut">
                 <pmd:Role>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/initiator</pmd:Role>
                 <pmd:Role>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/responder</pmd:Role>
@@ -416,100 +301,39 @@
                 </pmd:Leg>
             </pmd:MEP>
         </pmd:PMode>
-        <pmd:PMode id="ZPPB-legal-version-B" isTest="false">
-            <pmd:ServiceIdRef>LegalDelivery_ZPPB_B</pmd:ServiceIdRef>
-            <pmd:LocalPartyInfo partyIdentitySetIdRef="test-laurentius" partyDefTransportIdRef="defalut">
-                <pmd:Role>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/initiator</pmd:Role>
-                <pmd:Role>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/responder</pmd:Role>
-            </pmd:LocalPartyInfo>
-            <pmd:ExchangeParties>
-
-            </pmd:ExchangeParties>
-            <pmd:MEP>
-                <pmd:MEPType>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/oneWay</pmd:MEPType>
-                <pmd:MEPChannelBinding>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/push</pmd:MEPChannelBinding>
-                <pmd:MEPInitiatorRole>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/initiator</pmd:MEPInitiatorRole>
-                <pmd:Leg>
-                    <pmd:MPC>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/defaultMPC</pmd:MPC>
-                    <pmd:Transport>
-                        <pmd:ForeChannel action="DeliveryNotification" securityIdRef="edeliveryAS4">
-                            <pmd:ReceptionAwareness raPatternIdRef="AS4ReceiptResponse"/>
-                        </pmd:ForeChannel>
-                        <pmd:BackChannel securityIdRef="sign_sha256">
-                            <pmd:ReceptionAwareness/>
-                        </pmd:BackChannel>
-                    </pmd:Transport>
-                </pmd:Leg>
-            </pmd:MEP>
-            <pmd:MEP>
-                <pmd:MEPType>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/oneWay</pmd:MEPType>
-                <pmd:MEPChannelBinding>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/push</pmd:MEPChannelBinding>
-                <pmd:MEPInitiatorRole>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/initiator</pmd:MEPInitiatorRole>
-                <pmd:Leg>
-                    <pmd:MPC>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/defaultMPC</pmd:MPC>
-                    <pmd:Transport>
-                        <pmd:ForeChannel action="AdviceOfDelivery" securityIdRef="edeliveryAS4">
-                            <pmd:ReceptionAwareness raPatternIdRef="AS4ReceiptResponse"/>
-                        </pmd:ForeChannel>
-                        <pmd:BackChannel securityIdRef="sign_sha256">
-                            <pmd:ReceptionAwareness/>
-                        </pmd:BackChannel>
-                    </pmd:Transport>
-                </pmd:Leg>
-            </pmd:MEP>
-            <pmd:MEP>
-                <pmd:MEPType>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/oneWay</pmd:MEPType>
-                <pmd:MEPChannelBinding>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/push</pmd:MEPChannelBinding>
-                <pmd:MEPInitiatorRole>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/initiator</pmd:MEPInitiatorRole>
-                <pmd:Leg>
-                    <pmd:MPC>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/defaultMPC</pmd:MPC>
-                    <pmd:Transport>
-                        <pmd:ForeChannel action="RecieptAddressNotExists" securityIdRef="edeliveryAS4">
-                            <pmd:ReceptionAwareness raPatternIdRef="AS4ReceiptResponse"/>
-                        </pmd:ForeChannel>
-                        <pmd:BackChannel securityIdRef="sign_sha256">
-                            <pmd:ReceptionAwareness/>
-                        </pmd:BackChannel>
-                    </pmd:Transport>
-                </pmd:Leg>
-            </pmd:MEP>
-        </pmd:PMode>
-    
-        
     </ns1:PModeData>
     <ns1:PluginData>
-        <ns3:SEDInterceptor name="ZPP_InMessages" active="true" interceptEvent="InMessage" interceptRole="All">
-            <ns3:SEDInterceptorRule id="1" property="Service" predicate="InList" value="LegalDelivery_ZPP;LegalDelivery_ZPPB"/>
-            <ns3:SEDInterceptorInstance plugin="LegalZPP" type="ZPPInInterceptor" pluginVersion="1.0.0"/>
+        <ns3:SEDInterceptor name="ZKP_InMessages" active="true" interceptEvent="InMessage" interceptRole="All">
+            <ns3:SEDInterceptorRule id="1" property="Service" predicate="InList" value="LegalDelivery_ZKP;LegalDelivery_ZKPB"/>
+            <ns3:SEDInterceptorInstance plugin="LegalZKP" type="ZKPInInterceptor" pluginVersion="1.0.0"/>
         </ns3:SEDInterceptor>
-        <ns3:SEDInterceptor name="ZPP_OutMessages" active="true" interceptEvent="OutMessage" interceptRole="All">
-            <ns3:SEDInterceptorRule id="2" property="Service" predicate="InList" value="LegalDelivery_ZPP;LegalDelivery_ZPPB"/>
-            <ns3:SEDInterceptorInstance plugin="LegalZPP" type="ZPPOutInterceptor" pluginVersion="1.0.0"/>
+        <ns3:SEDInterceptor name="ZKP_OutMessages" active="true" interceptEvent="OutMessage" interceptRole="All">
+            <ns3:SEDInterceptorRule id="2" property="Service" predicate="InList" value="LegalDelivery_ZKP;LegalDelivery_ZKPB"/>
+            <ns3:SEDInterceptorInstance plugin="LegalZKP" type="ZKPOutInterceptor" pluginVersion="1.0.0"/>
         </ns3:SEDInterceptor>
-        <ns3:SEDInterceptor name="LegalZPPFault" active="true" interceptEvent="InFaultMessage" interceptRole="Requestor">
-            <ns3:SEDInterceptorInstance plugin="LegalZPP" type="ZPPFaultInInterceptor" pluginVersion="1.0.0"/>
+        <ns3:SEDInterceptor name="LegalZKPFault" active="true" interceptEvent="InFaultMessage" interceptRole="Requestor">
+            <ns3:SEDInterceptorInstance plugin="LegalZKP" type="ZKPFaultInInterceptor" pluginVersion="1.0.0"/>
         </ns3:SEDInterceptor>
-        <ns2:SEDCronJob  name="ZPPSign" active="true" second="0" minute="*/5" hour="8-16" dayOfMonth="*" month="*" dayOfWeek="1-5">
-            <ns2:SEDTask plugin="LegalZPP" type="zpp-plugin" pluginVersion="1.0.0"  name="ZPPSign-B-Department" active="true">
-                <ns2:SEDTaskProperty  key="zpp.sedbox">b.department</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty  key="zpp.sign.key.alias">test-zpp-sign</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty  key="zpp.max.mail.count">100</ns2:SEDTaskProperty>
+        <ns2:SEDCronJob  name="ZKPSign" active="true" second="0" minute="*/5" hour="8-16" dayOfMonth="*" month="*" dayOfWeek="1-5">
+            <ns2:SEDTask plugin="LegalZKP" type="zkp-plugin" pluginVersion="1.0.0"  name="ZKPSign-B-Department" active="true">
+                <ns2:SEDTaskProperty  key="zkp.sedbox">b.department</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty  key="zkp.sign.key.alias">test-zkp-sign</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty  key="zkp.max.mail.count">100</ns2:SEDTaskProperty>
             </ns2:SEDTask>
-            <ns2:SEDTask plugin="LegalZPP" type="zpp-plugin" pluginVersion="1.0.0"  name="ZPPSign-A-Department" active="true">
-                <ns2:SEDTaskProperty  key="zpp.sedbox">a.department</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty  key="zpp.sign.key.alias">test-zpp-sign</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty  key="zpp.max.mail.count">100</ns2:SEDTaskProperty>
+            <ns2:SEDTask plugin="LegalZKP" type="zkp-plugin" pluginVersion="1.0.0"  name="ZKPSign-A-Department" active="true">
+                <ns2:SEDTaskProperty  key="zkp.sedbox">a.department</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty  key="zkp.sign.key.alias">test-zkp-sign</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty  key="zkp.max.mail.count">100</ns2:SEDTaskProperty>
             </ns2:SEDTask>
         </ns2:SEDCronJob>
-        <ns2:SEDCronJob  name="ZPPFiction" active="true" second="0" minute="0" hour="1" dayOfMonth="*" month="*" dayOfWeek="*">
-            <ns2:SEDTask plugin="LegalZPP" type="zpp-fiction-plugin" pluginVersion="1.0.0"  name="ZPPCreateFiction" active="false">
-                <ns2:SEDTaskProperty  key="zpp.sign.key.alias">test-laurentius</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty  key="zpp.max.mail.count">100</ns2:SEDTaskProperty>
+        <ns2:SEDCronJob  name="ZKPFiction" active="true" second="0" minute="0" hour="1" dayOfMonth="*" month="*" dayOfWeek="*">
+            <ns2:SEDTask plugin="LegalZKP" type="zkp-fiction-plugin" pluginVersion="1.0.0"  name="ZKPCreateFiction" active="false">
+                <ns2:SEDTaskProperty  key="zkp.sign.key.alias">test-laurentius</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty  key="zkp.max.mail.count">100</ns2:SEDTaskProperty>
             </ns2:SEDTask>
-            <ns2:SEDTask plugin="LegalZPP" type="zpp-fiction-by-last-delivery" pluginVersion="1.0.0" name="ZPPFictionByLastDelivery" active="false">
-                <ns2:SEDTaskProperty  key="zpp.sign.key.alias">test-laurentius</ns2:SEDTaskProperty>
+            <ns2:SEDTask plugin="LegalZKP" type="zkp-fiction-by-last-delivery" pluginVersion="1.0.0" name="ZKPFictionByLastDelivery" active="false">
+                <ns2:SEDTaskProperty  key="zkp.sign.key.alias">test-laurentius</ns2:SEDTaskProperty>
             </ns2:SEDTask>
         </ns2:SEDCronJob>
-        
     </ns1:PluginData>
 </ns1:DefaultInitData>
