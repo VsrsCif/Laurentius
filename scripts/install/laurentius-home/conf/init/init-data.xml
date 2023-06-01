@@ -145,6 +145,17 @@
         <ns3:SEDInterceptor id="3" name="LegalZPPFault" active="true" interceptEvent="InFaultMessage" interceptRole="Requestor">
             <ns3:SEDInterceptorInstance plugin="LegalZPP" type="ZPPFaultInInterceptor" pluginVersion="1.0.0"/>
         </ns3:SEDInterceptor>
+        <ns3:SEDInterceptor name="ZKP_InMessages" active="true" interceptEvent="InMessage" interceptRole="All">
+            <ns3:SEDInterceptorRule id="1" property="Service" predicate="InList" value="ZKP_A;ZKP_B"/>
+            <ns3:SEDInterceptorInstance plugin="LegalZKP" type="ZKPInInterceptor" pluginVersion="1.0.0"/>
+        </ns3:SEDInterceptor>
+        <ns3:SEDInterceptor name="ZKP_OutMessages" active="true" interceptEvent="OutMessage" interceptRole="All">
+            <ns3:SEDInterceptorRule id="2" property="Service" predicate="InList" value="ZKP_A;ZKP_B"/>
+            <ns3:SEDInterceptorInstance plugin="LegalZKP" type="ZKPOutInterceptor" pluginVersion="1.0.0"/>
+        </ns3:SEDInterceptor>
+        <ns3:SEDInterceptor name="LegalZKPFault" active="true" interceptEvent="InFaultMessage" interceptRole="Requestor">
+            <ns3:SEDInterceptorInstance plugin="LegalZKP" type="ZKPFaultInInterceptor" pluginVersion="1.0.0"/>
+        </ns3:SEDInterceptor>
     </SEDInterceptors>
     <SEDProcessors>
         <ns4:SEDProcessor id="1" name="drw_001" active="false" deliveredOnSuccess="true">
@@ -162,6 +173,20 @@
         </ns4:SEDProcessor>
         <ns4:SEDProcessor id="2" name="zpp_001" active="false" deliveredOnSuccess="true">
             <ns4:SEDProcessorRule id="2" property="Service" predicate="=" value="LegalDelivery_ZPP"/>
+            <ns4:SEDProcessorRule id="3" property="Action" predicate="=" value="DeliveryNotification"/>
+            <ns4:SEDProcessorInstance id="3" type="xslt" plugin="BasicTaskPlugin" pluginVersion="1.0.0">
+                <ns4:SEDProcessorProperty id="7" key="imp.xslt.instance">vsrs2zbs_001</ns4:SEDProcessorProperty>
+            </ns4:SEDProcessorInstance>
+            <ns4:SEDProcessorInstance id="4" type="export" plugin="BasicTaskPlugin" pluginVersion="1.0.0">
+                <ns4:SEDProcessorProperty id="8" key="imp.export.metadata">true</ns4:SEDProcessorProperty>
+                <ns4:SEDProcessorProperty id="9" key="imp.export.overwrite">true</ns4:SEDProcessorProperty>
+                <ns4:SEDProcessorProperty id="10" key="imp.export.metadata.filename">metadata_${Id}.xml</ns4:SEDProcessorProperty>
+                <ns4:SEDProcessorProperty id="11" key="imp.export.filemask">${Id}_${PART-Id}_${PART-Filename}</ns4:SEDProcessorProperty>
+                <ns4:SEDProcessorProperty id="12" key="imp.export.folder">${laurentius.home}/test-export/${SenderEBox}_${Service}_${Id}</ns4:SEDProcessorProperty>
+            </ns4:SEDProcessorInstance>
+        </ns4:SEDProcessor>
+        <ns4:SEDProcessor id="3" name="zkp" active="false" deliveredOnSuccess="true">
+            <ns4:SEDProcessorRule id="2" property="Service" predicate="=" value="ZKP_A"/>
             <ns4:SEDProcessorRule id="3" property="Action" predicate="=" value="DeliveryNotification"/>
             <ns4:SEDProcessorInstance id="3" type="xslt" plugin="BasicTaskPlugin" pluginVersion="1.0.0">
                 <ns4:SEDProcessorProperty id="7" key="imp.xslt.instance">vsrs2zbs_001</ns4:SEDProcessorProperty>

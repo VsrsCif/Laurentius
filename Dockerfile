@@ -61,4 +61,4 @@ RUN  cd $WILDFLY_HOME/modules/si/laurentius/main/ && \
 user jboss
 
 # Set the default command to run on boot
-CMD ["/opt/jboss/wildfly/bin/laurentius-demo.sh", "--init", "-d", "test-laurentius.si"]
+CMD ["/opt/jboss/wildfly/bin/laurentius-demo.sh"]
