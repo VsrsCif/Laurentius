@@ -49,7 +49,7 @@
     </scm>
 
     <properties>
-        <war.final.name>plugin-zpp</war.final.name>
+        <war.final.name>plugin-zkp</war.final.name>
     </properties>
 
     <dependencies>

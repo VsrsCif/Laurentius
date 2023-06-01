@@ -42,6 +42,7 @@ COPY --from=build /app/Laurentius-app/Laurentius-ws/target/laurentius-ws.war $WI
 COPY --from=build /app/Laurentius-app/Laurentius-web/target/laurentius-web.war $WILDFLY_HOME/standalone/deployments/
 # application plugins
 COPY --from=build /app/Laurentius-plugins/Laurentius-zpp-plugin/target/plugin-zpp.war $WILDFLY_HOME/standalone/deployments/
+COPY --from=build /app/Laurentius-plugins/Laurentius-zkp-plugin/target/plugin-zkp.war $WILDFLY_HOME/standalone/deployments/
 COPY --from=build /app/Laurentius-plugins/Laurentius-basic-plugin/target/plugin-basic.war $WILDFLY_HOME/standalone/deployments/
 COPY --from=build /app/Laurentius-plugins/Laurentius-test-case-plugin/target/plugin-testcase.war $WILDFLY_HOME/standalone/deployments/
 COPY --from=build /app/Laurentius-examples/example-web-plugin/target/example-web-plugin.war $WILDFLY_HOME/standalone/deployments/
