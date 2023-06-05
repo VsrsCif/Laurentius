@@ -46,10 +46,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
-/**
- *
- * @author Jože Rihtaršič
- */
 @Stateless
 @Local(TaskExecutionInterface.class)
 @TransactionManagement(TransactionManagementType.BEAN)

@@ -13,7 +13,7 @@ import si.laurentius.msh.outbox.mail.MSHOutMail;
    */
   public enum FopTransformation {
 
-    AdviceOfDelivery("LegalDelivery_ZPP-AdviceOfDelivery.fo", MSHInMail.class),
+    AdviceOfDelivery("LegalDelivery_ZKP-AdviceOfDelivery.fo", MSHInMail.class),
     AdviceOfDeliveryFiction("LegalDelivery_ZPP-AdviceOfDeliveryFiction.fo", MSHOutMail.class ),
     AdviceOfDeliveryFiction_6Odst("LegalDelivery_ZPP-AdviceOfDeliveryFiction_6Odst.fo", MSHOutMail.class),
     AdviceOfDeliveryFictionNotification("LegalDelivery_ZPP-AdviceOfDeliveryFictionNotification.fo", MSHOutMail.class),

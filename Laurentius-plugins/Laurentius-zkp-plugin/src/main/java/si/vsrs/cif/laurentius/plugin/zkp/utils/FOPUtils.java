@@ -25,10 +25,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-/**
- *
- * @author Joze Rihtarsic <joze.rihtarsic@sodisce.si>
- */
 public class FOPUtils {
 
     private static SEDLogger LOG = new SEDLogger(FOPUtils.class);
