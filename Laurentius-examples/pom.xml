@@ -44,6 +44,7 @@
     <modules>
         <module>ws-client</module>
         <module>ws-zpp-client</module>
+        <module>ws-zkp-client</module>
         <module>example-web-plugin</module>
     </modules>
 </project>
