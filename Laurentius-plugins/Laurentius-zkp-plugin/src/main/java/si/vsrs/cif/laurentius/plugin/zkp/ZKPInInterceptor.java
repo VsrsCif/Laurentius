@@ -143,7 +143,6 @@ public class ZKPInInterceptor implements SoapInterceptorInterface {
     MSHOutMail moutMail = SoapUtils.getMSHOutMail(msg);
     MSHInMail mInMail = SoapUtils.getMSHInMail(msg);
 
-       
     if (mInMail != null) {
       switch (mInMail.getService()) {
         case ZKPConstants.ZKP_A_SERVICE:
@@ -159,8 +158,6 @@ public class ZKPInInterceptor implements SoapInterceptorInterface {
     if (sigAnies != null) {
       LOG.log("Proccess in signal elments");
       try {
-        
-        
         processSignalMessages((List<Element>) sigAnies, moutMail, sb);
       } catch (ZKPException ex) {
         String strMsg = String.format(
@@ -203,12 +200,9 @@ public class ZKPInInterceptor implements SoapInterceptorInterface {
       case ZKPConstants.ZKP_ACTION_DELIVERY_NOTIFICATION:
         processInZKPDelivery(inMail);
         break;
-      case ZKPConstants.ZKP_ACTION_FICTION_NOTIFICATION:
-        processInZKPFictionNotification(inMail);
-        break;
-      case ZKPConstants.ZKP_ACTION_ADVICE_OF_DELIVERY:
-        validateInZKPAdviceOfDelivery(inMail, eInctx, msg);
-        break;
+//      case ZKPConstants.ZKP_ACTION_ADVICE_OF_DELIVERY:
+//        validateInZKPAdviceOfDelivery(inMail, eInctx, msg);
+//        break;
     }
   }
 
@@ -363,14 +357,13 @@ public class ZKPInInterceptor implements SoapInterceptorInterface {
         /*List<X509Certificate> lvc = vsu.getSignatureCerts(advOfDelivery.
         getAbsolutePath());*/
       } catch (SignatureException ex) {
-          String strMsg = String.format(
-              "Error occured while validating AdviceOfDelivery signatures: %s  for ref message: %s! Ex: %s!",
-              mInMail.getMessageId(), mInMail.getRefToMessageId(), ex.getMessage());
+        String strMsg = String.format(
+            "Error occured while validating AdviceOfDelivery signatures: %s  for ref message: %s! Ex: %s!",
+            mInMail.getMessageId(), mInMail.getRefToMessageId(), ex.getMessage());
       
-      LOG.logError(l, strMsg, ex);
-      throw new EBMSError(ZKPErrorCode.InvalidDeliveryAdvice, mInMail.
-              getMessageId(),
-              strMsg, SoapFault.FAULT_CODE_CLIENT);
+        LOG.logError(l, strMsg, ex);
+        throw new EBMSError(ZKPErrorCode.InvalidDeliveryAdvice, mInMail.getMessageId(),
+                strMsg, SoapFault.FAULT_CODE_CLIENT);
       }
 
       // AdviceOfDelivery must have two signatures: recipient and 

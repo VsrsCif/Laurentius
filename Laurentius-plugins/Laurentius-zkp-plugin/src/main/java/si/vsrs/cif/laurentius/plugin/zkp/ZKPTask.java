@@ -56,9 +56,9 @@ import java.util.Properties;
 public class ZKPTask implements TaskExecutionInterface {
 
   private static final SEDLogger LOG = new SEDLogger(ZKPTask.class);
-  private static final String SIGN_ALIAS = "zpp.sign.key.alias";
-  private static final String REC_SEDBOX = "zpp.sedbox";
-  private static final String PROCESS_MAIL_COUNT = "zpp.max.mail.count";
+  private static final String SIGN_ALIAS = "zkp.sign.key.alias";
+  private static final String REC_SEDBOX = "zkp.sedbox";
+  private static final String PROCESS_MAIL_COUNT = "zkp.max.mail.count";
 
   @EJB(mappedName = SEDJNDI.JNDI_SEDDAO)
   SEDDaoInterface mDB;
@@ -73,7 +73,7 @@ public class ZKPTask implements TaskExecutionInterface {
   PModeInterface mpModeManager;
 
   KeystoreUtils mkeyUtils = new KeystoreUtils();
-  ZKPUtils   mzppZKPUtils = new ZKPUtils();
+  ZKPUtils   mzkpZKPUtils = new ZKPUtils();
 
   /**
    *
@@ -87,7 +87,7 @@ public class ZKPTask implements TaskExecutionInterface {
 
     long l = LOG.logStart();
     StringWriter sw = new StringWriter();
-    sw.append("Start zpp plugin task: \n");
+    sw.append("Start zkp plugin task: \n");
 
     String signKeyAlias = "";
     if (!p.containsKey(SIGN_ALIAS)) {
@@ -157,7 +157,7 @@ public class ZKPTask implements TaskExecutionInterface {
       }
     }
 
-    sw.append("End zpp plugin task");
+    sw.append("End zkp plugin task");
     return sw.toString();
   }
 
@@ -169,7 +169,7 @@ public class ZKPTask implements TaskExecutionInterface {
   public CronTaskDef getDefinition() {
 
     CronTaskDef tt = new CronTaskDef();
-    tt.setType("zpp-plugin");
+    tt.setType("zkp-plugin");
     tt.setName("ZKP Sign AdviceOfDelivery");
     tt.setDescription("Create and Sign adviceOfDelivery for incomming mail");
     tt.getCronTaskPropertyDeves().add(createTTProperty(REC_SEDBOX,
@@ -236,7 +236,7 @@ public class ZKPTask implements TaskExecutionInterface {
       PrivateKey pk = mCertBean.getPrivateKeyForAlias(signAlias);
       X509Certificate xcert = mCertBean.getX509CertForAlias(signAlias);
 
-      MSHOutPart mp = mzppZKPUtils.createSignedAdviceOfDelivery(inMail, pk,
+      MSHOutPart mp = mzkpZKPUtils.createSignedAdviceOfDelivery(inMail, pk,
               xcert);
       mout.setMSHOutPayload(new MSHOutPayload());
       mout.getMSHOutPayload().getMSHOutParts().add(mp);

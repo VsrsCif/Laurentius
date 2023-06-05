@@ -163,6 +163,43 @@ public class ZKPOutInterceptor implements SoapInterceptorInterface {
         // ignore
     }
 
+    public void handleZKPOutMessage(EBMSMessageContext ctx, MSHOutMail mail, SoapMessage msg, QName sv) {
+        long l = LOG.logStart(msg, ctx, msg);
+        switch (ctx.getService().getServiceName()) {
+            case ZKPConstants.ZKP_A_SERVICE:
+                switch (ctx.getAction().getName()) {
+                    case ZKPConstants.ZKP_ACTION_DELIVERY_NOTIFICATION:
+                        try {
+                            prepareToZKPDelivery(mail, ctx, sv);
+                        } catch (JAXBException | FileNotFoundException | HashException | SEDSecurityException | StorageException | FOPException
+                                 | ZKPException ex) {
+                            LOG.logError(l, ex.getMessage(), ex);
+                            throw new SoapFault(ex.getMessage(), sv);
+                        }
+                        break;
+//                    case ZKPConstants.ZKP_ACTION_ADVICE_OF_DELIVERY:
+//                        processOutZKPAdviceOfDelivery(mail, ctx, msg);
+//                        break;
+                    default:
+                }
+// TODO: is this really required?
+//
+//                if (ZKPConstants.ZKP_ACTION_DELIVERY_NOTIFICATION.equals(ctx.
+//                        getAction().getName())) {
+//
+//                } else if (Objects.
+//                        equals(ZKPConstants.ZKP_A_SERVICE, mail.getService())
+//                        && Objects.equals(ZKPConstants.ZKP_ACTION_ADVICE_OF_DELIVERY,
+//                        mail.getAction())) {
+//
+//                }
+                break;
+            default:
+        }
+        LOG.logEnd(l);
+    }
+
+
     /**
      * Interceptor for ZKP out mail
      * @param msg
@@ -174,51 +211,37 @@ public class ZKPOutInterceptor implements SoapInterceptorInterface {
         boolean isRequest = MessageUtils.isRequestor(msg);
         QName sv = (isRequest ? SoapFault.FAULT_CODE_CLIENT : SoapFault.FAULT_CODE_SERVER);
 
-        EBMSMessageContext ectx = SoapUtils.getEBMSMessageOutContext(msg);
-        EBMSMessageContext eInctx = SoapUtils.getEBMSMessageInContext(msg);
+        // Handling outbound request messages
         MSHOutMail outMail = SoapUtils.getMSHOutMail(msg);
-        MSHInMail mInMail = SoapUtils.getMSHInMail(msg);
-
-        if (outMail != null && (ZKPConstants.ZKP_A_SERVICE.equals(ectx.getService().
-                getServiceName()))) {
-            if (ZKPConstants.ZKP_ACTION_DELIVERY_NOTIFICATION.equals(ectx.
-                    getAction().getName())) {
-                try {
-                    prepareToZKPDelivery(outMail, ectx, sv);
-                } catch (JAXBException | FileNotFoundException | HashException | SEDSecurityException | StorageException | FOPException
-                         | ZKPException ex) {
-                    LOG.logError(l, ex.getMessage(), ex);
-                    throw new SoapFault(ex.getMessage(), sv);
-                }
-            } else if (Objects.
-                    equals(ZKPConstants.ZKP_A_SERVICE, outMail.getService())
-                    && Objects.equals(ZKPConstants.ZKP_ACTION_ADVICE_OF_DELIVERY,
-                    outMail.getAction())) {
-                processOutZKPAdviceOfDelivery(outMail, ectx, msg);
-            }
+        if (outMail != null) {
+            EBMSMessageContext ctx = SoapUtils.getEBMSMessageOutContext(msg);
+            handleZKPOutMessage(ctx, outMail, msg, sv);
         }
 
-        if(mInMail != null) {
-            if (Objects.equals(ZKPConstants.ZKP_A_SERVICE, mInMail.getService())
-                    && Objects.equals(ZKPConstants.ZKP_ACTION_ADVICE_OF_DELIVERY,
-                    mInMail.getAction())) {
-                try {
-                    processInZKPAdviceOfDelivery(mInMail, eInctx, msg);
-                } catch (ZKPException ex) {
-                    throw new SoapFault(ex.getMessage(), sv);
-                }
-            }
-
-            if (Objects.equals(ZKPConstants.ZKP_A_SERVICE, mInMail.getService())
-                    && Objects.equals(ZKPConstants.ZKP_ACTION_ADVICE_OF_DELIVERY,
-                    mInMail.getAction())) {
-                try {
-                    processInZKPBDeliveryReciept(mInMail, eInctx, msg);
-                } catch (ZKPException ex) {
-                    throw new SoapFault(ex.getMessage(), sv);
-                }
-            }
-        }
+//        // Handling responses to messages
+//        EBMSMessageContext eInctx = SoapUtils.getEBMSMessageInContext(msg);
+//        MSHInMail mInMail = SoapUtils.getMSHInMail(msg);
+//        if(mInMail != null) {
+//            if (Objects.equals(ZKPConstants.ZKP_A_SERVICE, mInMail.getService())
+//                    && Objects.equals(ZKPConstants.ZKP_ACTION_ADVICE_OF_DELIVERY,
+//                    mInMail.getAction())) {
+//                try {
+//                    processInZKPAdviceOfDelivery(mInMail, eInctx, msg);
+//                } catch (ZKPException ex) {
+//                    throw new SoapFault(ex.getMessage(), sv);
+//                }
+//            }
+//
+//            if (Objects.equals(ZKPConstants.ZKP_A_SERVICE, mInMail.getService())
+//                    && Objects.equals(ZKPConstants.ZKP_ACTION_ADVICE_OF_DELIVERY,
+//                    mInMail.getAction())) {
+//                try {
+//                    processInZKPBDeliveryReciept(mInMail, eInctx, msg);
+//                } catch (ZKPException ex) {
+//                    throw new SoapFault(ex.getMessage(), sv);
+//                }
+//            }
+//        }
 
         LOG.logEnd(l);
         return true;
@@ -350,9 +373,7 @@ public class ZKPOutInterceptor implements SoapInterceptorInterface {
                 mzkpZKPUtils.updateMSHOutPartVisualization(outMail,
                         mDeliveryNotification,
                         ZKPPartType.DeliveryNotification,
-                        ZKPConstants.ZKP_A_SERVICE.equals(outMail.getService())
-                        ? FopTransformation.DeliveryNotificationB
-                        : FopTransformation.DeliveryNotification,
+                        FopTransformation.DeliveryNotification,
                         pk,
                         xcert);
                 lstUpdateMailParts.add(mDeliveryNotification);
@@ -360,9 +381,7 @@ public class ZKPOutInterceptor implements SoapInterceptorInterface {
                 mDeliveryNotification = mzkpZKPUtils.createMSHOutPart(
                         outMail,
                         ZKPPartType.DeliveryNotification,
-                        ZKPConstants.ZKP_A_SERVICE.equals(outMail.getService())
-                        ? FopTransformation.DeliveryNotificationB
-                        : FopTransformation.DeliveryNotification,
+                        FopTransformation.DeliveryNotification,
                         pk, xcert);
                 lstAddMailParts.add(mDeliveryNotification);
 
