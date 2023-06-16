@@ -4,8 +4,6 @@
  */
 package si.vsrs.cif.laurentius.plugin.zkp;
 
-import si.vsrs.cif.laurentius.plugin.zkp.exception.ZKPException;
-import si.vsrs.cif.laurentius.plugin.zkp.utils.ZKPUtils;
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.enums.SEDInboxMailStatus;
@@ -36,6 +34,8 @@ import si.laurentius.plugin.interfaces.PropertyListType;
 import si.laurentius.plugin.interfaces.PropertyType;
 import si.laurentius.plugin.interfaces.TaskExecutionInterface;
 import si.laurentius.plugin.interfaces.exception.TaskException;
+import si.vsrs.cif.laurentius.plugin.zkp.exception.ZKPException;
+import si.vsrs.cif.laurentius.plugin.zkp.utils.ZKPUtils;
 
 import javax.ejb.EJB;
 import javax.ejb.Local;
@@ -184,12 +184,13 @@ public class ZKPTaskFiction implements TaskExecutionInterface {
 
   /**
    *
-   * @param mInMail
-   * @param signAlias
-   * @param keystore
+   * @param mOutMail
+   * @param sigAlias
    * @throws FOPException
    * @throws HashException
    * @throws ZKPException
+   * @throws StorageException
+   * @throws SEDSecurityException
    */
   private void processZKPFictionDelivery(MSHOutMail mOutMail, String sigAlias)
           throws FOPException,
@@ -200,10 +201,9 @@ public class ZKPTaskFiction implements TaskExecutionInterface {
     long l = LOG.logStart();
 
     MSHOutMail fn = createZKPFictionNotification(mOutMail, sigAlias);
-    MSHInMail fi = createZKPAdviceOfDeliveryFiction(mOutMail, sigAlias);
 
     // do it in transaction!
-    mDB.serializeInOutMail(fi, fn,ZKPConstants.ZKP_PLUGIN_TYPE,null);
+    mDB.serializeOutMail(fn, , ZKPConstants.ZKP_PLUGIN_TYPE,null);
     mOutMail.setDeliveredDate(Calendar.getInstance().getTime());
     mDB.setStatusToOutMail(mOutMail, SEDOutboxMailStatus.DELIVERED, "Fiction ",
             "ZKP plugin", "");
@@ -248,15 +248,15 @@ public class ZKPTaskFiction implements TaskExecutionInterface {
 
       moFNotification = new MSHOutMail();
       moFNotification.setMessageId(Utils.getInstance().getGuidString());
-      moFNotification.setService(ZKPConstants.ZKP_A_SERVICE);
-      moFNotification.setAction(ZKPConstants.ZKP_ACTION_FICTION_NOTIFICATION);
+      moFNotification.setService(ZKPConstants.ZKP_B_SERVICE);
+      moFNotification.setAction(ZKPConstants.ZKP_ACTION_NOT_DELIVERED);
       moFNotification.setConversationId(mOutMail.getConversationId());
       moFNotification.setSenderEBox(mOutMail.getSenderEBox());
       moFNotification.setSenderName(mOutMail.getSenderName());
       moFNotification.setRefToMessageId(mOutMail.getMessageId());
       moFNotification.setReceiverEBox(mOutMail.getReceiverEBox());
       moFNotification.setReceiverName(mOutMail.getReceiverName());
-      moFNotification.setSubject(ZKPConstants.ZKP_ACTION_FICTION_NOTIFICATION);
+      moFNotification.setSubject(ZKPConstants.SUBJECT_NOTDELIVERED_MESSAGE);
       // prepare mail to persist
       Date dt = Calendar.getInstance().getTime();
       // set current status
@@ -302,20 +302,14 @@ public class ZKPTaskFiction implements TaskExecutionInterface {
 
   }
 
+
   /**
    * Method generates in mail (AdviceOfDelivery) for sender of original mail.
    * Mail contains document AdviceOfDeliveryFiction, and proof of submitting
    * mail to receivers secure mail box system.
-   *
-   * @param mOutMail
-   * @param signAlias
-   * @return
-   * @throws ZKPException
-   * @throws FOPException
-   * @throws SEDSecurityException
    */
-  private MSHInMail createZKPAdviceOfDeliveryFiction(MSHOutMail mOutMail,
-          String signAlias)
+  private MSHInMail createZPPAdviceOfDeliveryFiction(MSHOutMail mOutMail,
+                                                     String signAlias)
           throws ZKPException, FOPException, SEDSecurityException {
     long l = LOG.logStart();
     MSHInMail moADF = null;
@@ -324,15 +318,15 @@ public class ZKPTaskFiction implements TaskExecutionInterface {
 
     moADF = new MSHInMail();
     moADF.setMessageId(Utils.getInstance().getGuidString() + "@" + domain);
-    moADF.setService(ZKPConstants.ZKP_A_SERVICE);
-    moADF.setAction(ZKPConstants.ZKP_ACTION_ADVICE_OF_DELIVERY_FICTION);
+    moADF.setService(ZKPConstants.ZKP_B_SERVICE);
+    moADF.setAction(ZKPConstants.);
     moADF.setConversationId(mOutMail.getConversationId());
-    moADF.setSenderEBox("fikcija.zkp@" + domain);
-    moADF.setSenderName("Laurentius ZKP fikcija");
+    moADF.setSenderEBox("fikcija.zpp@" + domain);
+    moADF.setSenderName("Laurentius ZPP fikcija");
     moADF.setRefToMessageId(mOutMail.getMessageId());
     moADF.setReceiverEBox(mOutMail.getSenderEBox());
     moADF.setReceiverName(mOutMail.getSenderName());
-    moADF.setSubject(ZKPConstants.ZKP_ACTION_ADVICE_OF_DELIVERY_FICTION);
+    moADF.setSubject(ZKPConstants.SUBJECT_NOTDELIVERED_MESSAGE);
     // prepare mail to persist
     Date dt = new Date();
     // set current status

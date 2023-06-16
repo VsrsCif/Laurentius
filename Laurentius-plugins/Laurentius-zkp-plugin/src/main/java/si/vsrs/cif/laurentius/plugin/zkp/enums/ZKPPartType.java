@@ -26,14 +26,12 @@ public enum ZKPPartType {
   DeliveryNotification("http://www.sodisce.si/ZKP/DeliveryNotification", "ObvestiloOPosiljki", "Obvestilo o prispeli pošiljki", "application/pdf", "pdf"),
   DeliveryReciept("http://www.sodisce.si/ZKP/DeliveryReciept", "Potrdilo o vročitvi", "Potrdilo o vročitvi v varni ePredal", "application/pdf", "pdf"),
   AdviceOfDelivery("http://www.sodisce.si/ZKP/AdviceOfDelivery", "Vrocilnica", "Vročilnica", "application/pdf", "pdf"),
-  FictionNotification("http://www.sodisce.si/ZKP/FictionNotification", "ObvestiloOFikciji", "Obvestilo naslovniku o fiktivni vročitvi", "application/pdf", "pdf"),
-  AdviceOfDeliveryFiction("http://www.sodisce.si/ZKP/AdviceOfDeliveryFiction", "FiktivnaVrocitev", "Obvestilo pošiljatelju o fiktivni vročitvi", "application/pdf", "pdf"),  
   EncryptedPart("http://www.sodisce.si/ZKP/EncryptedPart", "SifriranaPosiljka", "Sifriran dok.: %s", "application/octet-stream", "zkp.enc"),
   LocalEncryptionKey("http://www.sodisce.si/ZKP/LocalEncryptionKey", "LocalEncryptionKey", "Kljuc za sifriranje priponk", "application/xml", "xml"),
   EncryptedKey("http://www.sodisce.si/ZKP/EncryptedKey", "EncryptedKey", "Kljuc za desifriranje priponk", "application/xml", "xml"),
   RecieptAddressNotExists("http://www.sodisce.si/ZKP/RecieptAddressNotExists", "RecieptAddressNotExists", "Naslovnik ne obstaja", "application/pdf", "pdf"),
-  
-    ;
+  NotDeliveredNotification("http://www.sodisce.si/ZKP/NotDeliveredNotification", "NotDeliveredNotification", "Neopravljena vročitev", "application/pdf", "pdf")
+  ;
  
   
 

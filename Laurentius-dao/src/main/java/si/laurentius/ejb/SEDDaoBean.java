@@ -508,7 +508,6 @@ public class SEDDaoBean implements SEDDaoInterface {
                                     searchValue, fieldName);
                         }
                     }
-
                 }
             }
             if (!lstPredicate.isEmpty()) {

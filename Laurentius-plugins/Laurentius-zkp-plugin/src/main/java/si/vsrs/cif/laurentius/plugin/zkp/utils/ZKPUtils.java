@@ -351,43 +351,11 @@ public class ZKPUtils {
             FopTransformation.DeliveryRecieptB, pk, xcert);
   }
 
-  /**
-   * Method generates Fiction of AdviceOfDelivery for out message. Document is
-   * send to sender of mail for which Fiction is created.
-   *
-   * @param mail - MSHOutMail - original mail
-   * @param pk
-   * @param xcert
-   * @return
-   *
-   */
-  public MSHOutPart createSignedAdviceOfFictionNotification(MSHOutMail mail,
-          PrivateKey pk, X509Certificate xcert) {
+  public MSHInPart createSignedNotDeliveredNotification(MSHOutMail mail,
+                                                        PrivateKey pk, X509Certificate xcert) throws FOPException, SEDSecurityException, HashException, StorageException {
 
-    return createMSHOutPart(mail, ZKPPartType.FictionNotification,
-            FopTransformation.AdviceOfDeliveryFictionNotification, pk, xcert);
-  }
-
-  /**
-   * *
-   * Method generates Notification for receiver of original message for Fiction
-   * of AdviceOfDelivery. .
-   *
-   * @param mail
-   * @param pk
-   * @param xcert
-   * @return
-   * @throws SEDSecurityException
-   * @throws StorageException
-   * @throws HashException
-   * @throws FOPException
-   */
-  public MSHInPart createSignedAdviceOfDeliveryFiction(MSHOutMail mail,
-          PrivateKey pk, X509Certificate xcert)
-          throws SEDSecurityException, StorageException, HashException, FOPException {
-
-    return createMSHInPart(mail, ZKPPartType.AdviceOfDeliveryFiction,
-            FopTransformation.AdviceOfDeliveryFiction, pk, xcert);
+    return createMSHInPart(mail, ZKPPartType.NotDeliveredNotification,
+            FopTransformation.NotDeliveredNotification, pk, xcert);
   }
 
   /**

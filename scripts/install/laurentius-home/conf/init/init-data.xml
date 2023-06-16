@@ -1,18 +1,6 @@
 
 <SedLookups xmlns:ns2="http://laurentius.si/cron" xmlns:ns3="http://laurentius.si/interceptor" xmlns:ns4="http://laurentius.si/process" xmlns:ns5="http://laurentius.si/ebox" xmlns:ns6="http://laurentius.si/property" xmlns:ns7="http://laurentius.si/user" xmlns:ns8="http://laurentius.si/application" xmlns:ns9="http://laurentius.si/cert" xmlns:ns10="http://laurentius.si/cert/crl" exportDate="2018-03-06T17:34:45.630+01:00">
     <SEDCronJobs>
-        <ns2:SEDCronJob id="1" name="ZKPSign" active="true" second="0" minute="*" hour="*" dayOfMonth="*" month="*" dayOfWeek="*">
-            <ns2:SEDTask plugin="LegalZKP" type="zkp-plugin" pluginVersion="1.0.0" id="1" name="ZKPSign-B-Department" active="true">
-                <ns2:SEDTaskProperty id="1" key="zkp.sedbox">b.department</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty id="2" key="zkp.sign.key.alias">test-zpp-sign</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty id="3" key="zkp.max.mail.count">100</ns2:SEDTaskProperty>
-            </ns2:SEDTask>
-            <ns2:SEDTask plugin="LegalZKP" type="zkp-plugin" pluginVersion="1.0.0" id="2" name="ZKPSign-A-Department" active="true">
-                <ns2:SEDTaskProperty id="4" key="zkp.sedbox">a.department</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty id="5" key="zkp.sign.key.alias">test-zpp-sign</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty id="6" key="zkp.max.mail.count">100</ns2:SEDTaskProperty>
-            </ns2:SEDTask>
-        </ns2:SEDCronJob>
         <ns2:SEDCronJob id="1" name="ZPPSign" active="true" second="0" minute="*/5" hour="8-16" dayOfMonth="*" month="*" dayOfWeek="1-5">
             <ns2:SEDTask plugin="LegalZPP" type="zpp-plugin" pluginVersion="1.0.0" id="1" name="ZPPSign-B-Department" active="true">
                 <ns2:SEDTaskProperty id="1" key="zpp.sedbox">b.department</ns2:SEDTaskProperty>
@@ -142,6 +130,25 @@
                 <ns2:SEDTaskProperty id="81" key="report.status.time.startFromLastEI">false</ns2:SEDTaskProperty>
                 <ns2:SEDTaskProperty id="82" key="report.status.time.end.interval">5</ns2:SEDTaskProperty>
                 <ns2:SEDTaskProperty id="83" key="report.status.show.mail.datamask">${Id} ${Service} ${Action} ${Status} ${SenderEBox} ${ReceiverEBox}</ns2:SEDTaskProperty>
+            </ns2:SEDTask>
+        </ns2:SEDCronJob>
+        <ns2:SEDCronJob id="10" name="ZKPSign" active="true" second="0" minute="*" hour="*" dayOfMonth="*" month="*" dayOfWeek="*">
+            <ns2:SEDTask plugin="LegalZKP" type="zkp-plugin" pluginVersion="1.0.0" id="1" name="ZKPSign-B-Department" active="true">
+                <ns2:SEDTaskProperty id="93" key="zkp.sedbox">b.department</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="94" key="zkp.sign.key.alias">test-zpp-sign</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="95" key="zkp.max.mail.count">100</ns2:SEDTaskProperty>
+            </ns2:SEDTask>
+            <ns2:SEDTask plugin="LegalZKP" type="zkp-plugin" pluginVersion="1.0.0" id="2" name="ZKPSign-A-Department" active="true">
+                <ns2:SEDTaskProperty id="96" key="zkp.sedbox">a.department</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="97" key="zkp.sign.key.alias">test-zpp-sign</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="98" key="zkp.max.mail.count">100</ns2:SEDTaskProperty>
+            </ns2:SEDTask>
+        </ns2:SEDCronJob>
+        <ns2:SEDCronJob id="11" name="ZKPDeletUndelivered" active="true" second="0" minute="*" hour="*" dayOfMonth="*" month="*" dayOfWeek="*">
+            <ns2:SEDTask plugin="LegalZKP" type="zkp-plugin" pluginVersion="1.0.0" id="1" name="ZKP_Delete_Undelivered" active="true">
+                <ns2:SEDTaskProperty id="99" key="zkp.sign.key.alias">100</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="100" key="zkp.max.mail.count">test-zpp-sign</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="101" key="zkp.wait.time">15</ns2:SEDTaskProperty>
             </ns2:SEDTask>
         </ns2:SEDCronJob>
     </SEDCronJobs>

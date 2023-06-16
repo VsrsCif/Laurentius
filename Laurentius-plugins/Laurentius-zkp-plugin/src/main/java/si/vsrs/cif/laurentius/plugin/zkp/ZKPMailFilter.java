@@ -15,6 +15,7 @@ public class ZKPMailFilter {
   
     String  status;
     String  senderEBox;
+    String  receiverEBox;
     String  action;
     String  service;
     Date sentDateTo;
@@ -58,7 +59,12 @@ public class ZKPMailFilter {
   public void setSentDateTo(Date sentDate) {
     this.sentDateTo = sentDate;
   }
-    
 
-  
+  public String getReceiverEBox() {
+    return receiverEBox;
+  }
+
+  public void setReceiverEBox(String receiverEBox) {
+    this.receiverEBox = receiverEBox;
+  }
 }

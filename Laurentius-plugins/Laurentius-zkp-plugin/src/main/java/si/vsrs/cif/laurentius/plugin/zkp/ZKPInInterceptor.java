@@ -200,9 +200,9 @@ public class ZKPInInterceptor implements SoapInterceptorInterface {
       case ZKPConstants.ZKP_ACTION_DELIVERY_NOTIFICATION:
         processInZKPDelivery(inMail);
         break;
-//      case ZKPConstants.ZKP_ACTION_ADVICE_OF_DELIVERY:
-//        validateInZKPAdviceOfDelivery(inMail, eInctx, msg);
-//        break;
+      case ZKPConstants.ZKP_ACTION_ADVICE_OF_DELIVERY:
+        validateInZKPAdviceOfDelivery(inMail, eInctx, msg);
+        break;
     }
   }
 
@@ -312,7 +312,10 @@ public class ZKPInInterceptor implements SoapInterceptorInterface {
 
     MSHOutMail mom = null;
     for (MSHOutMail mdn : momLst) {
-      if (Objects.equals(ZKPConstants.ZKP_PLUGIN_TYPE, mdn.getService())
+
+      LOG.logWarn(l, String.format("Got message for Service %s, action %s, mdn conversationID %s, mInMailConversationID %s",
+              mdn.getService(), mdn.getAction(), mdn.getConversationId(), mInMail.getConversationId()), null);
+      if (Objects.equals(ZKPConstants.ZKP_A_SERVICE, mdn.getService())
               && Objects.equals(
                       ZKPConstants.ZKP_ACTION_DELIVERY_NOTIFICATION, mdn.
                               getAction())
