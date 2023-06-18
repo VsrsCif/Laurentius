@@ -132,23 +132,31 @@
                 <ns2:SEDTaskProperty id="83" key="report.status.show.mail.datamask">${Id} ${Service} ${Action} ${Status} ${SenderEBox} ${ReceiverEBox}</ns2:SEDTaskProperty>
             </ns2:SEDTask>
         </ns2:SEDCronJob>
-        <ns2:SEDCronJob id="10" name="ZKPSign" active="true" second="0" minute="*" hour="*" dayOfMonth="*" month="*" dayOfWeek="*">
-            <ns2:SEDTask plugin="LegalZKP" type="zkp-plugin" pluginVersion="1.0.0" id="1" name="ZKPSign-B-Department" active="true">
+        <ns2:SEDCronJob id="10" name="ZKPSign" active="true" second="0" minute="*/5" hour="8-16" dayOfMonth="*" month="*" dayOfWeek="1-5">
+            <ns2:SEDTask plugin="LegalZKP" type="zkp-test-delivery" pluginVersion="1.0.0"  name="ZKPSign-B-Department" active="true">
                 <ns2:SEDTaskProperty id="93" key="zkp.sedbox">b.department</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty id="94" key="zkp.sign.key.alias">test-zpp-sign</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="94" key="zkp.sign.key.alias">test-zkp-sign</ns2:SEDTaskProperty>
                 <ns2:SEDTaskProperty id="95" key="zkp.max.mail.count">100</ns2:SEDTaskProperty>
             </ns2:SEDTask>
-            <ns2:SEDTask plugin="LegalZKP" type="zkp-plugin" pluginVersion="1.0.0" id="2" name="ZKPSign-A-Department" active="true">
+            <ns2:SEDTask id="11" plugin="LegalZKP" type="zkp-test-delivery" pluginVersion="1.0.0"  name="ZKPSign-A-Department" active="true">
                 <ns2:SEDTaskProperty id="96" key="zkp.sedbox">a.department</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty id="97" key="zkp.sign.key.alias">test-zpp-sign</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="97" key="zkp.sign.key.alias">test-zkp-sign</ns2:SEDTaskProperty>
                 <ns2:SEDTaskProperty id="98" key="zkp.max.mail.count">100</ns2:SEDTaskProperty>
             </ns2:SEDTask>
         </ns2:SEDCronJob>
-        <ns2:SEDCronJob id="11" name="ZKPDeletUndelivered" active="true" second="0" minute="*" hour="*" dayOfMonth="*" month="*" dayOfWeek="*">
-            <ns2:SEDTask plugin="LegalZKP" type="zkp-plugin" pluginVersion="1.0.0" id="1" name="ZKP_Delete_Undelivered" active="true">
-                <ns2:SEDTaskProperty id="99" key="zkp.sign.key.alias">100</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty id="100" key="zkp.max.mail.count">test-zpp-sign</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty id="101" key="zkp.wait.time">15</ns2:SEDTaskProperty>
+        <ns2:SEDCronJob  name="ZKPDeleteNotDelivered" active="true" second="0" minute="0" hour="1" dayOfMonth="*" month="*" dayOfWeek="*">
+            <ns2:SEDTask plugin="LegalZKP" type="zkp-delete-parcel-test-plugin" pluginVersion="1.0.0"  name="ZKPTaskDeleteParcelForTest" active="true">
+                <ns2:SEDTaskProperty id="99" key="zkp.sign.key.alias">test-laurentius</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="100" key="zkp.max.mail.count">100</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="101" key="zkp.wait.days">15</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="102" key="zkp.wait.minutes">0</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="103" key="zkp.sedbox">a.department</ns2:SEDTaskProperty>
+            </ns2:SEDTask>
+            <ns2:SEDTask plugin="LegalZKP" type="LegalZKP" pluginVersion="1.0.0" name="ZKPTaskDeleteUndelivered" active="true">
+                <ns2:SEDTaskProperty id="104" key="zkp.sign.key.alias">test-laurentius</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="105" key="zkp.max.mail.count">100</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="106" key="zkp.wait.days">15</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="107" key="zkp.wait.minutes">0</ns2:SEDTaskProperty>
             </ns2:SEDTask>
         </ns2:SEDCronJob>
     </SEDCronJobs>
@@ -164,15 +172,15 @@
         <ns3:SEDInterceptor id="3" name="LegalZPPFault" active="true" interceptEvent="InFaultMessage" interceptRole="Requestor">
             <ns3:SEDInterceptorInstance plugin="LegalZPP" type="ZPPFaultInInterceptor" pluginVersion="1.0.0"/>
         </ns3:SEDInterceptor>
-        <ns3:SEDInterceptor name="ZKP_InMessages" active="true" interceptEvent="InMessage" interceptRole="All">
-            <ns3:SEDInterceptorRule id="1" property="Service" predicate="InList" value="ZKP_A;ZKP_B"/>
+        <ns3:SEDInterceptor id="4" name="ZKP_InMessages" active="true" interceptEvent="InMessage" interceptRole="All">
+            <ns3:SEDInterceptorRule id="3" property="Service" predicate="InList" value="ZKP_A;ZKP_B"/>
             <ns3:SEDInterceptorInstance plugin="LegalZKP" type="ZKPInInterceptor" pluginVersion="1.0.0"/>
         </ns3:SEDInterceptor>
-        <ns3:SEDInterceptor name="ZKP_OutMessages" active="true" interceptEvent="OutMessage" interceptRole="All">
-            <ns3:SEDInterceptorRule id="2" property="Service" predicate="InList" value="ZKP_A;ZKP_B"/>
+        <ns3:SEDInterceptor id="5" name="ZKP_OutMessages" active="true" interceptEvent="OutMessage" interceptRole="All">
+            <ns3:SEDInterceptorRule id="4" property="Service" predicate="InList" value="ZKP_A;ZKP_B"/>
             <ns3:SEDInterceptorInstance plugin="LegalZKP" type="ZKPOutInterceptor" pluginVersion="1.0.0"/>
         </ns3:SEDInterceptor>
-        <ns3:SEDInterceptor name="LegalZKPFault" active="true" interceptEvent="InFaultMessage" interceptRole="Requestor">
+        <ns3:SEDInterceptor id="6" name="LegalZKPFault" active="true" interceptEvent="InFaultMessage" interceptRole="Requestor">
             <ns3:SEDInterceptorInstance plugin="LegalZKP" type="ZKPFaultInInterceptor" pluginVersion="1.0.0"/>
         </ns3:SEDInterceptor>
     </SEDInterceptors>
@@ -205,17 +213,17 @@
             </ns4:SEDProcessorInstance>
         </ns4:SEDProcessor>
         <ns4:SEDProcessor id="3" name="zkp" active="false" deliveredOnSuccess="true">
-            <ns4:SEDProcessorRule id="2" property="Service" predicate="=" value="ZKP_A"/>
-            <ns4:SEDProcessorRule id="3" property="Action" predicate="=" value="DeliveryNotification"/>
-            <ns4:SEDProcessorInstance id="3" type="xslt" plugin="BasicTaskPlugin" pluginVersion="1.0.0">
-                <ns4:SEDProcessorProperty id="7" key="imp.xslt.instance">vsrs2zbs_001</ns4:SEDProcessorProperty>
+            <ns4:SEDProcessorRule id="4" property="Service" predicate="=" value="ZKP_A"/>
+            <ns4:SEDProcessorRule id="5" property="Action" predicate="=" value="DeliveryNotification"/>
+            <ns4:SEDProcessorInstance id="5" type="xslt" plugin="BasicTaskPlugin" pluginVersion="1.0.0">
+                <ns4:SEDProcessorProperty id="13" key="imp.xslt.instance">vsrs2zbs_001</ns4:SEDProcessorProperty>
             </ns4:SEDProcessorInstance>
-            <ns4:SEDProcessorInstance id="4" type="export" plugin="BasicTaskPlugin" pluginVersion="1.0.0">
-                <ns4:SEDProcessorProperty id="8" key="imp.export.metadata">true</ns4:SEDProcessorProperty>
-                <ns4:SEDProcessorProperty id="9" key="imp.export.overwrite">true</ns4:SEDProcessorProperty>
-                <ns4:SEDProcessorProperty id="10" key="imp.export.metadata.filename">metadata_${Id}.xml</ns4:SEDProcessorProperty>
-                <ns4:SEDProcessorProperty id="11" key="imp.export.filemask">${Id}_${PART-Id}_${PART-Filename}</ns4:SEDProcessorProperty>
-                <ns4:SEDProcessorProperty id="12" key="imp.export.folder">${laurentius.home}/test-export/${SenderEBox}_${Service}_${Id}</ns4:SEDProcessorProperty>
+            <ns4:SEDProcessorInstance id="6" type="export" plugin="BasicTaskPlugin" pluginVersion="1.0.0">
+                <ns4:SEDProcessorProperty id="14" key="imp.export.metadata">true</ns4:SEDProcessorProperty>
+                <ns4:SEDProcessorProperty id="15" key="imp.export.overwrite">true</ns4:SEDProcessorProperty>
+                <ns4:SEDProcessorProperty id="16" key="imp.export.metadata.filename">metadata_${Id}.xml</ns4:SEDProcessorProperty>
+                <ns4:SEDProcessorProperty id="17" key="imp.export.filemask">${Id}_${PART-Id}_${PART-Filename}</ns4:SEDProcessorProperty>
+                <ns4:SEDProcessorProperty id="18" key="imp.export.folder">${laurentius.home}/test-export/${SenderEBox}_${Service}_${Id}</ns4:SEDProcessorProperty>
             </ns4:SEDProcessorInstance>
         </ns4:SEDProcessor>
     </SEDProcessors>

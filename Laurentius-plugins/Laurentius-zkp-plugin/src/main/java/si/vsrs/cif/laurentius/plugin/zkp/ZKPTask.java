@@ -165,7 +165,7 @@ public class ZKPTask implements TaskExecutionInterface {
   public CronTaskDef getDefinition() {
 
     CronTaskDef tt = new CronTaskDef();
-    tt.setType("zkp-plugin");
+    tt.setType("zkp-test-delivery");
     tt.setName("ZKP Sign AdviceOfDelivery");
     tt.setDescription("Create and Sign adviceOfDelivery for incomming mail");
     tt.getCronTaskPropertyDeves().add(createTTProperty(REC_SEDBOX,

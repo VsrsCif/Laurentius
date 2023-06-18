@@ -34,11 +34,22 @@
                     <pmd:PayloadProfile name="EncryptedKey" MIME="application/xml" maxOccurs="1" minOccurs="1"/>
                 </pmd:PayloadProfiles>
             </pmd:Action>
-            <pmd:Action name="FictionNotification" after="DeliveryNotification" invokeRole="initiator" messageType="userMessage">
-                <pmd:Properties/>
+            <pmd:Action name="NotDelivered" invokeRole="executor" messageType="userMessage">
+                <pmd:Properties>
+                    <pmd:Property name="originalSender" type="" required="true"/>
+                    <pmd:Property name="finalRecipient" type="" required="true"/>
+                </pmd:Properties>
                 <pmd:PayloadProfiles maxSize="15000">
-                    <pmd:PayloadProfile name="FictionNotification" MIME="application/pdf" maxOccurs="1" minOccurs="1"/>
-                    <pmd:PayloadProfile name="EncryptedKey" MIME="application/xml" maxOccurs="1" minOccurs="1"/>
+                    <pmd:PayloadProfile name="notDeliveredNotification" MIME="application/pdf" maxSize="15000" maxOccurs="1" minOccurs="1"/>
+                </pmd:PayloadProfiles>
+            </pmd:Action>
+            <pmd:Action name="RecieptAddressNotExists" invokeRole="executor" messageType="userMessage">
+                <pmd:Properties>
+                    <pmd:Property name="originalSender" type="" required="true"/>
+                    <pmd:Property name="finalRecipient" type="" required="true"/>
+                </pmd:Properties>
+                <pmd:PayloadProfiles maxSize="15000">
+                    <pmd:PayloadProfile name="recieptAddressNotExists" MIME="application/pdf" maxSize="15000" maxOccurs="1" minOccurs="1"/>
                 </pmd:PayloadProfiles>
             </pmd:Action>
         </pmd:Service>
@@ -70,13 +81,13 @@
                     <pmd:PayloadProfile name="adviceOfDelivery" MIME="application/pdf" maxSize="15000" maxOccurs="1" minOccurs="1"/>
                 </pmd:PayloadProfiles>
             </pmd:Action>
-            <pmd:Action name="FictionNotification" invokeRole="executor" messageType="userMessage">
+            <pmd:Action name="NotDelivered" invokeRole="executor" messageType="userMessage">
                 <pmd:Properties>
                     <pmd:Property name="originalSender" type="" required="true"/>
                     <pmd:Property name="finalRecipient" type="" required="true"/>
                 </pmd:Properties>
                 <pmd:PayloadProfiles maxSize="15000">
-                    <pmd:PayloadProfile name="fictionNotification" MIME="application/pdf" maxSize="15000" maxOccurs="1" minOccurs="1"/>
+                    <pmd:PayloadProfile name="notDeliveredNotification" MIME="application/pdf" maxSize="15000" maxOccurs="1" minOccurs="1"/>
                 </pmd:PayloadProfiles>
             </pmd:Action>
             <pmd:Action name="RecieptAddressNotExists" invokeRole="executor" messageType="userMessage">
@@ -314,26 +325,32 @@
         <ns3:SEDInterceptor name="LegalZKPFault" active="true" interceptEvent="InFaultMessage" interceptRole="Requestor">
             <ns3:SEDInterceptorInstance plugin="LegalZKP" type="ZKPFaultInInterceptor" pluginVersion="1.0.0"/>
         </ns3:SEDInterceptor>
-<!--        <ns2:SEDCronJob  name="ZKPSign" active="true" second="0" minute="*/5" hour="8-16" dayOfMonth="*" month="*" dayOfWeek="1-5">-->
-<!--            <ns2:SEDTask plugin="LegalZKP" type="zkp-plugin" pluginVersion="1.0.0"  name="ZKPSign-B-Department" active="true">-->
-<!--                <ns2:SEDTaskProperty  key="zkp.sedbox">b.department</ns2:SEDTaskProperty>-->
-<!--                <ns2:SEDTaskProperty  key="zkp.sign.key.alias">test-zkp-sign</ns2:SEDTaskProperty>-->
-<!--                <ns2:SEDTaskProperty  key="zkp.max.mail.count">100</ns2:SEDTaskProperty>-->
-<!--            </ns2:SEDTask>-->
-<!--            <ns2:SEDTask plugin="LegalZKP" type="zkp-plugin" pluginVersion="1.0.0"  name="ZKPSign-A-Department" active="true">-->
-<!--                <ns2:SEDTaskProperty  key="zkp.sedbox">a.department</ns2:SEDTaskProperty>-->
-<!--                <ns2:SEDTaskProperty  key="zkp.sign.key.alias">test-zkp-sign</ns2:SEDTaskProperty>-->
-<!--                <ns2:SEDTaskProperty  key="zkp.max.mail.count">100</ns2:SEDTaskProperty>-->
-<!--            </ns2:SEDTask>-->
-<!--        </ns2:SEDCronJob>-->
-<!--        <ns2:SEDCronJob  name="ZKPFiction" active="true" second="0" minute="0" hour="1" dayOfMonth="*" month="*" dayOfWeek="*">-->
-<!--            <ns2:SEDTask plugin="LegalZKP" type="zkp-fiction-plugin" pluginVersion="1.0.0"  name="ZKPCreateFiction" active="false">-->
-<!--                <ns2:SEDTaskProperty  key="zkp.sign.key.alias">test-laurentius</ns2:SEDTaskProperty>-->
-<!--                <ns2:SEDTaskProperty  key="zkp.max.mail.count">100</ns2:SEDTaskProperty>-->
-<!--            </ns2:SEDTask>-->
-<!--            <ns2:SEDTask plugin="LegalZKP" type="zkp-fiction-by-last-delivery" pluginVersion="1.0.0" name="ZKPFictionByLastDelivery" active="false">-->
-<!--                <ns2:SEDTaskProperty  key="zkp.sign.key.alias">test-laurentius</ns2:SEDTaskProperty>-->
-<!--            </ns2:SEDTask>-->
-<!--        </ns2:SEDCronJob>-->
+        <ns2:SEDCronJob  name="ZKPSign" active="true" second="0" minute="*/5" hour="8-16" dayOfMonth="*" month="*" dayOfWeek="1-5">
+            <ns2:SEDTask plugin="LegalZKP" type="zkp-test-delivery" pluginVersion="1.0.0"  name="ZKPSign-B-Department" active="true">
+                <ns2:SEDTaskProperty  key="zkp.sedbox">b.department</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty  key="zkp.sign.key.alias">test-zkp-sign</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty  key="zkp.max.mail.count">100</ns2:SEDTaskProperty>
+            </ns2:SEDTask>
+            <ns2:SEDTask plugin="LegalZKP" type="zkp-test-delivery" pluginVersion="1.0.0"  name="ZKPSign-A-Department" active="true">
+                <ns2:SEDTaskProperty  key="zkp.sedbox">a.department</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty  key="zkp.sign.key.alias">test-zkp-sign</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty  key="zkp.max.mail.count">100</ns2:SEDTaskProperty>
+            </ns2:SEDTask>
+        </ns2:SEDCronJob>
+        <ns2:SEDCronJob  name="ZKPDeleteNotDelivered" active="true" second="0" minute="0" hour="1" dayOfMonth="*" month="*" dayOfWeek="*">
+            <ns2:SEDTask plugin="LegalZKP" type="zkp-delete-parcel-test-plugin" pluginVersion="1.0.0"  name="ZKPTaskDeleteParcelForTest" active="true">
+                <ns2:SEDTaskProperty  key="zkp.sign.key.alias">test-laurentius</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty  key="zkp.max.mail.count">100</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty  key="zkp.wait.days">15</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty  key="zkp.wait.minutes">0</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty  key="zkp.sedbox">a.department</ns2:SEDTaskProperty>
+            </ns2:SEDTask>
+            <ns2:SEDTask plugin="LegalZKP" type="LegalZKP" pluginVersion="1.0.0" name="ZKPTaskDeleteUndelivered" active="true">
+                <ns2:SEDTaskProperty  key="zkp.sign.key.alias">test-laurentius</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty  key="zkp.max.mail.count">100</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty  key="zkp.wait.days">15</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty  key="zkp.wait.minutes">0</ns2:SEDTaskProperty>
+            </ns2:SEDTask>
+        </ns2:SEDCronJob>
     </ns1:PluginData>
 </ns1:DefaultInitData>

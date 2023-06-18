@@ -63,17 +63,17 @@ public abstract class AbstractPluginDescription implements
   }
 
 
-  public void registerPluginComponentInterface(Class plg)
+  public void registerPluginComponentInterface(Class pluginComponent)
           throws PluginException {
-    if (plg == null) {
+    if (pluginComponent == null) {
       throw new PluginException(
               PluginException.PluginExceptionCode.NullPluginType,
               String.format("Plugin is null! Invalid argument"));
     }
 
     ComponentBase cb = null;
-    if (TaskExecutionInterface.class.isAssignableFrom(plg)) {
-      cb = getComponentDescription(plg, TaskExecutionInterface.class);
+    if (TaskExecutionInterface.class.isAssignableFrom(pluginComponent)) {
+      cb = getComponentDescription(pluginComponent, TaskExecutionInterface.class);
       if (cb instanceof CronTaskDef) {
         getPluginDescription().getCronTaskDeves().add((CronTaskDef) cb);
       } else {
@@ -81,11 +81,11 @@ public abstract class AbstractPluginDescription implements
                 PluginException.PluginExceptionCode.InitPluginException,
                 String.format(
                         "Plugin '%s' component '%s'! TaskExecutionInterface Component description must be  CronTaskDef but is '%s'!",
-                        getApplicationName(), plg.getName(), cb.getClass().
+                        getApplicationName(), pluginComponent.getName(), cb.getClass().
                         getName()));
       }
-    } else if (InMailProcessorInterface.class.isAssignableFrom(plg)) {
-      cb = getComponentDescription(plg, InMailProcessorInterface.class);
+    } else if (InMailProcessorInterface.class.isAssignableFrom(pluginComponent)) {
+      cb = getComponentDescription(pluginComponent, InMailProcessorInterface.class);
       if (cb instanceof InMailProcessorDef) {
         getPluginDescription().getInMailProcessorDeves().add(
                 (InMailProcessorDef) cb);
@@ -94,11 +94,11 @@ public abstract class AbstractPluginDescription implements
                 PluginException.PluginExceptionCode.InitPluginException,
                 String.format(
                         "Plugin '%s' component '%s'! InMailProcessorInterface Component description must be  InMailProcessorDef but is '%s'!",
-                        getApplicationName(), plg.getName(), cb.getClass().
+                        getApplicationName(), pluginComponent.getName(), cb.getClass().
                         getName()));
       }
-    } else if (OutMailEventInterface.class.isAssignableFrom(plg)) {
-      cb = getComponentDescription(plg, OutMailEventInterface.class);
+    } else if (OutMailEventInterface.class.isAssignableFrom(pluginComponent)) {
+      cb = getComponentDescription(pluginComponent, OutMailEventInterface.class);
       if (cb instanceof OutMailEventListenerDef) {
         getPluginDescription().getOutMailEventListenerDeves().add(
                 (OutMailEventListenerDef) cb);
@@ -107,12 +107,12 @@ public abstract class AbstractPluginDescription implements
                 PluginException.PluginExceptionCode.InitPluginException,
                 String.format(
                         "Plugin '%s' component '%s'! OutMailEventInterface Component description must be  OutMailEventListenerDef but is '%s'!",
-                        getApplicationName(), plg.getName(), cb.getClass().
+                        getApplicationName(), pluginComponent.getName(), cb.getClass().
                         getName()));
       }
 
-    } else if (SoapInterceptorInterface.class.isAssignableFrom(plg)) {
-      cb = getComponentDescription(plg, SoapInterceptorInterface.class);
+    } else if (SoapInterceptorInterface.class.isAssignableFrom(pluginComponent)) {
+      cb = getComponentDescription(pluginComponent, SoapInterceptorInterface.class);
       if (cb instanceof MailInterceptorDef) {
         getPluginDescription().getMailInterceptorDeves().add(
                 (MailInterceptorDef) cb);
@@ -121,7 +121,7 @@ public abstract class AbstractPluginDescription implements
                 PluginException.PluginExceptionCode.InitPluginException,
                 String.format(
                         "Plugin '%s' component '%s'! SoapInterceptorInterface Component description must be MailInterceptorDef but is '%s'!",
-                        getApplicationName(), plg.getName(), cb.getClass().
+                        getApplicationName(), pluginComponent.getName(), cb.getClass().
                         getName()));
       }
 
@@ -130,15 +130,15 @@ public abstract class AbstractPluginDescription implements
               PluginException.PluginExceptionCode.UnknownPluginType,
               String.format(
                       "Class %s can not be casted to known plugin interface!",
-                      plg.getName()));
+                      pluginComponent.getName()));
     }
 
   }
 
-  private ComponentBase getComponentDescription(Class plg, Class intrfc)
+  private ComponentBase getComponentDescription(Class pluginComponent, Class intrfc)
           throws PluginException {
     String JNDI
-            = String.format(JNDI_INTERFACE_TEMPLATE, getApplicationName(), plg.
+            = String.format(JNDI_INTERFACE_TEMPLATE, getApplicationName(), pluginComponent.
                     getSimpleName(),
                     intrfc.getName());
 
@@ -152,7 +152,7 @@ public abstract class AbstractPluginDescription implements
                 PluginException.PluginExceptionCode.InitPluginException,
                 String.format(
                         "Could not instantiate EJB for class '%s' and JNDI '%s'! Missing ComponentBase!",
-                        plg.getName(), JNDI));
+                        pluginComponent.getName(), JNDI));
       }
       cb.setJndi(JNDI);
     } catch (NamingException ex) {
@@ -160,7 +160,7 @@ public abstract class AbstractPluginDescription implements
               PluginException.PluginExceptionCode.InitPluginException,
               String.format(
                       "Could not instantiate EJB for class '%s' and JNDI '%s'!",
-                      plg.getName(),
+                      pluginComponent.getName(),
                       JNDI), ex);
     }
 

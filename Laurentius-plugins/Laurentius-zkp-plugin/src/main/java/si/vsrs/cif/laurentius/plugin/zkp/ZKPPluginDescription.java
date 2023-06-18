@@ -71,6 +71,7 @@ public class ZKPPluginDescription extends AbstractPluginDescription {
       registerPluginComponentInterface(ZKPFaultInInterceptor.class);
 
       registerPluginComponentInterface(ZKPTask.class);
+      registerPluginComponentInterface(ZKPTaskDeleteParcelForTest.class);
       registerPluginComponentInterface(ZKPTaskDeleteUndelivered.class);
 
       // register plugin

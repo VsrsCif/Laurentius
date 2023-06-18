@@ -185,6 +185,7 @@ public class MSHScheduler implements SEDSchedulerInterface {
     te.setStartTimestamp(Calendar.getInstance().getTime());
 
     try {
+      LOG.logWarn(l, String.format("Executing task %s :: %s for cron %s ", tsk.getName(), tsk.getPlugin(), mj.getName()), null);
       mdbDao.addExecutionTask(te);
     } catch (StorageException ex) {
       result = String.format(ERR_MSG_DB_UPADTE_FAILED,
@@ -217,7 +218,7 @@ public class MSHScheduler implements SEDSchedulerInterface {
 
     CronTaskDef ct = mpmPluginManager.
             getCronTaskDef(tsk.getPlugin(), tsk.getType());
-
+    LOG.formatedWarning("CronTaskDef %s: for plugin %s and task %s", ct.getType(), tsk.getPlugin(), tsk.getType());
     if (ct == null) {
       result = String.format(
               "Not task processor for plugin %s and  task %s!", tsk.

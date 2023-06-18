@@ -90,7 +90,7 @@ public class ZKPTaskDeleteUndelivered implements TaskExecutionInterface {
         //DELETE AND RESPOND WITH ZKP MESSAGE NOT DELIVERED
         processDeleteUnresponsiveMessage(sw, signKeyAlias, maxMailProc, days, minutes);
 
-        sw.append("End zkp fiction plugin task");
+        sw.append("End zkp delete not delivered plugin task");
 
         LOG.logEnd(l);
         return sw.toString();
@@ -182,11 +182,9 @@ public class ZKPTaskDeleteUndelivered implements TaskExecutionInterface {
     @Override
     public CronTaskDef getDefinition() {
         CronTaskDef tt = new CronTaskDef();
-        tt.setType("zkp-fiction-plugin");
-        tt.setName("ZKP fiction delivery");
-        tt.setDescription(
-                "Create FictionAdviceOfDelivery for outgoing mail and send ficiton notification to "
-                        + "receiver");
+        tt.setType("zkp-not-delivered-deletion");
+        tt.setName("ZKP delete not delivered mail encryption key");
+        tt.setDescription("Deletes encryption key of not delivered mail and sends notification to sender.");
         tt.getCronTaskPropertyDeves().add(createTTProperty(SIGN_ALIAS,
                 "Signature key alias defined in keystore.", true, PropertyType.List.
                         getType(), null, PropertyListType.KeystoreCertKeys.getType()));

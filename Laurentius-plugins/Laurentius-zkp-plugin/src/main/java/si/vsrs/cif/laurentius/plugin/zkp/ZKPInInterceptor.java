@@ -148,9 +148,6 @@ public class ZKPInInterceptor implements SoapInterceptorInterface {
         case ZKPConstants.ZKP_A_SERVICE:
           processInZKPMessage(mInMail, eInctx, msg);
           break;
-//        case ZKPConstants.ZKP_A_SERVICE:
-//          processInZKPBMessage(mInMail, eInctx, msg);
-//          break;
       }
     }
     
@@ -172,19 +169,6 @@ public class ZKPInInterceptor implements SoapInterceptorInterface {
     LOG.logEnd(l);
     return true;
   }
-  
-   public void processInZKPBMessage(MSHInMail inMail,
-          EBMSMessageContext eInctx, SoapMessage msg) {
-    switch (inMail.getAction()) {
-      case ZKPConstants.ZKP_ACTION_DELIVERY_NOTIFICATION:
-        processInZKPBDelivery(inMail, eInctx);
-        break;
-      case ZKPConstants.ZKP_ACTION_ADVICE_OF_DELIVERY:
-        validateInZKPBDeliveryReciept(inMail, eInctx, msg);
-        break;
-    }
-     
-   }
 
   /**
    *  Process in delivery notification (lock message), Fiction notification width decryption key 
@@ -384,101 +368,6 @@ public class ZKPInInterceptor implements SoapInterceptorInterface {
 
       }
     } catch (NoSuchAlgorithmException | IOException | CertificateException | SEDSecurityException ex) {
-      String strMsg = String.format(
-              "Error occured while validating AdviceOfDelivery: %s  for ref message: %s! Ex: %s!",
-              mInMail.getMessageId(), mInMail.getRefToMessageId(), ex.getMessage());
-      
-      LOG.logError(l, strMsg, ex);
-      throw new EBMSError(ZKPErrorCode.InvalidDeliveryAdvice, mInMail.
-              getMessageId(),
-             strMsg, SoapFault.FAULT_CODE_CLIENT);
-           
-    }
-    LOG.logEnd(l);
-  }
-  
-  /**
-   * 
-   * @param mInMail
-   * @param eInCtx
-   * @param msg 
-   */
-  public void validateInZKPBDeliveryReciept(MSHInMail mInMail,
-          EBMSMessageContext eInCtx, SoapMessage msg) {
-
-    long l = LOG.logStart();
-
-    List<MSHOutMail> momLst = mDB.getMailByMessageId(MSHOutMail.class,
-            mInMail.getRefToMessageId());
-
-    if (momLst.isEmpty()) {
-      String strMsg = String.format(
-              "No out mail (refId %s) for deliveryAdvice %s ", mInMail.
-                      getRefToMessageId(), mInMail.getMessageId());
-      LOG.logError(l, strMsg, null);
-      throw new EBMSError(ZKPErrorCode.InvalidDeliveryAdvice, mInMail.
-              getMessageId(),
-              strMsg, SoapFault.FAULT_CODE_CLIENT);
-    }
-
-    MSHOutMail mom = null;
-    for (MSHOutMail mdn : momLst) {
-      if (Objects.equals(ZKPConstants.ZKP_PLUGIN_TYPE, mdn.getService())
-              && Objects.equals(
-                      ZKPConstants.ZKP_ACTION_DELIVERY_NOTIFICATION, mdn.
-                              getAction())
-              && Objects.equals(mInMail.getConversationId(), mdn.
-                      getConversationId())) {
-        mom = mdn;
-        break;
-      }
-
-    }
-
-    if (mom == null) {
-      String strMsg = String.format(
-              "Found out mail (refId %s) but with wrong conversation id, service or action!",
-              mInMail.getMessageId(), mInMail.getRefToMessageId());
-      LOG.logError(l, strMsg, null);
-      throw new EBMSError(ZKPErrorCode.InvalidDeliveryAdvice, mInMail.
-              getMessageId(),
-              strMsg, SoapFault.FAULT_CODE_CLIENT);
-    }
-
-    try {
-
-      mom.setDeliveredDate(mInMail.getSentDate());
-
-      String alias = eInCtx.getSenderPartyIdentitySet().
-              getExchangePartySecurity().
-              getSignatureCertAlias();
-      LOG.formatedlog("Get sender cert alias '%s' to validate signature", alias);
-      X509Certificate xcertSed = mCertBean.getX509CertForAlias(alias);
-
-      // AdviceOfDelivery
-      File advOfDelivery
-              = StorageUtils.getFile(mInMail.getMSHInPayload().getMSHInParts().
-                      get(0).getFilepath());
-
-      ValidateSignatureUtils vsu = new ValidateSignatureUtils();
-      List<X509Certificate> lvc = vsu.getSignatureCerts(advOfDelivery.
-              getAbsolutePath());
-
-      // AdviceOfDelivery must have one signatures: 
-      // delivery system
-      if (lvc.size() != 1 || !(lvc.get(0).equals(xcertSed))) {
-        String strMsg = 
-                "AdviceOfDelivery must have on signature which must match sender AP!";
-        
-        String certStr = String.format(" Expected subject: %s, got %s", xcertSed.getSubjectX500Principal().getName(), lvc.get(0).getSubjectX500Principal().getName());
-        
-        LOG.logError(l, strMsg + certStr, null);
-      throw new EBMSError(ZKPErrorCode.InvalidDeliveryAdvice, mInMail.
-              getMessageId(),
-              strMsg, SoapFault.FAULT_CODE_CLIENT);
-
-      }
-    } catch (IOException | CertificateException | NoSuchAlgorithmException | InvalidKeyException | NoSuchProviderException | SignatureException | SEDSecurityException ex) {
       String strMsg = String.format(
               "Error occured while validating AdviceOfDelivery: %s  for ref message: %s! Ex: %s!",
               mInMail.getMessageId(), mInMail.getRefToMessageId(), ex.getMessage());
