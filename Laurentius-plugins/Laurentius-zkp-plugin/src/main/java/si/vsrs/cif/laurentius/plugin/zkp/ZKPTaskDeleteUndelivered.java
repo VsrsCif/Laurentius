@@ -38,6 +38,7 @@ import java.io.StringWriter;
 import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
@@ -98,13 +99,13 @@ public class ZKPTaskDeleteUndelivered implements TaskExecutionInterface {
 
     private void processDeleteUnresponsiveMessage(StringWriter sw, String signKeyAlias, int maxMailProc, int days, int minutes) {
         long l = LOG.logStart();
-        LOG.logWarn(l, "PROCESSING DELETE WAITING MESSAGE SENDER END", null);
         Calendar cDatFict = Calendar.getInstance();
         cDatFict.add(Calendar.DAY_OF_MONTH, -days);
-        cDatFict.set(Calendar.HOUR_OF_DAY, 0);
-        cDatFict.set(Calendar.MINUTE, -minutes);
-        cDatFict.set(Calendar.SECOND, 0);
-        cDatFict.set(Calendar.MILLISECOND, 0);
+        cDatFict.add(Calendar.MINUTE, -minutes);
+//        cDatFict.set(Calendar.HOUR_OF_DAY, 0);
+//        cDatFict.set(Calendar.SECOND, 0);
+//        cDatFict.set(Calendar.MILLISECOND, 0);
+
         // get all not delivered mail
         ZKPMailFilter mi = new ZKPMailFilter();
         mi.setStatus(SEDOutboxMailStatus.SENT.getValue());
@@ -120,12 +121,12 @@ public class ZKPTaskDeleteUndelivered implements TaskExecutionInterface {
 
                 // delete the encryption key of message m so that it cannot be retrieved
                 List<MSHOutPart> deleteParts = m.getMSHOutPayload().getMSHOutParts().stream().filter(p -> ZKPPartType.LocalEncryptionKey.equals(p.getType())).collect(Collectors.toList());
-                mDB.updateOutMailPayload(m, null, null, deleteParts, SEDOutboxMailStatus.NOTDELIVERED, "Message not delivered", null, ZKPConstants.ZKP_PLUGIN_TYPE);
+                mDB.updateOutMailPayload(m, Collections.emptyList(), Collections.emptyList(), deleteParts, SEDOutboxMailStatus.NOTDELIVERED, "Message not delivered", null, ZKPConstants.ZKP_PLUGIN_TYPE);
 
                 MSHInMail moND = new MSHInMail();
                 moND.setMessageId(Utils.getInstance().getGuidString() + "@" + domain);
                 moND.setService(m.getService());
-                moND.setAction(m.getAction());
+                moND.setAction(ZKPConstants.ZKP_ACTION_NOT_DELIVERED);
                 moND.setConversationId(m.getConversationId());
                 moND.setSenderEBox("neprevzeto.zkp@" + domain);
                 moND.setSenderName("Laurentius ZKP neprevzeto");
@@ -191,6 +192,13 @@ public class ZKPTaskDeleteUndelivered implements TaskExecutionInterface {
         tt.getCronTaskPropertyDeves().add(createTTProperty(PROCESS_MAIL_COUNT,
                 "Max mail count proccesed.", true, PropertyType.Integer.getType(),
                 null, null));
+        tt.getCronTaskPropertyDeves().add(createTTProperty(DAYS_TO_WAIT,
+                "Days to wait until deletion.", true, PropertyType.Integer.getType(),
+                null, null));
+        tt.getCronTaskPropertyDeves().add(createTTProperty(MINUTES_TO_WAIT,
+                "Months to wait until deletion.", true, PropertyType.Integer.getType(),
+                null, null));
+
         return tt;
     }
 

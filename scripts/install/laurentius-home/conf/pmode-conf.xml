@@ -110,33 +110,15 @@
                     <PayloadProfile name="EncryptedKey" MIME="application/xml" maxOccurs="1" minOccurs="1"/>
                 </PayloadProfiles>
             </Action>
-            <Action name="NotDelivered" invokeRole="executor" messageType="userMessage">
-                <Properties>
-                    <Property name="originalSender" type="" required="true"/>
-                    <Property name="finalRecipient" type="" required="true"/>
-                </Properties>
-                <PayloadProfiles maxSize="15000">
-                    <PayloadProfile name="notDeliveredNotification" MIME="application/pdf" maxSize="15000" maxOccurs="1" minOccurs="1"/>
-                </PayloadProfiles>
-            </Action>
-            <Action name="RecieptAddressNotExists" invokeRole="executor" messageType="userMessage">
-                <Properties>
-                    <Property name="originalSender" type="" required="true"/>
-                    <Property name="finalRecipient" type="" required="true"/>
-                </Properties>
-                <PayloadProfiles maxSize="15000">
-                    <PayloadProfile name="recieptAddressNotExists" MIME="application/pdf" maxSize="15000" maxOccurs="1" minOccurs="1"/>
-                </PayloadProfiles>
-            </Action>
         </Service>
-        <Service id="ZKP_B" serviceName="ZKP_B" serviceType="SVEV" useSEDProperties="false">
-            <Initiator role="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/initiator"/>
-            <Executor role="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/responder"/>
+        <Service id="ZKP_B" serviceName="ZKP_B" serviceType="SVEV" useSEDProperties="true">
+            <Initiator role="Sender"/>
+            <Executor role="Receiver"/>
             <Action name="DeliveryNotification" invokeRole="initiator" messageType="userMessage">
                 <Properties>
+                    <Property name="SodiSif" type="" required="false"/>
                     <Property name="originalSender" type="" required="false"/>
                     <Property name="finalRecipient" type="" required="false"/>
-                    <Property name="SodiSif" type="" required="false"/>
                     <Property name="AplikSif" type="" required="false"/>
                     <Property name="Vpisnik" type="" required="false"/>
                     <Property name="VpisnikKratica" type="" required="false"/>
@@ -164,15 +146,6 @@
                 </Properties>
                 <PayloadProfiles maxSize="15000">
                     <PayloadProfile name="notDeliveredNotification" MIME="application/pdf" maxSize="15000" maxOccurs="1" minOccurs="1"/>
-                </PayloadProfiles>
-            </Action>
-            <Action name="RecieptAddressNotExists" invokeRole="executor" messageType="userMessage">
-                <Properties>
-                    <Property name="originalSender" type="" required="true"/>
-                    <Property name="finalRecipient" type="" required="true"/>
-                </Properties>
-                <PayloadProfiles maxSize="15000">
-                    <PayloadProfile name="recieptAddressNotExists" MIME="application/pdf" maxSize="15000" maxOccurs="1" minOccurs="1"/>
                 </PayloadProfiles>
             </Action>
         </Service>
@@ -477,7 +450,7 @@
                     <ForeChannel action="AdviceOfDelivery" securityIdRef="sign_sha256">
                         <ReceptionAwareness raPatternIdRef="AS4ReceiptResponse"/>
                     </ForeChannel>
-                    <BackChannel action="EncryptedKey" securityIdRef="sign_sha256"/>
+                    <BackChannel securityIdRef="sign_sha256"/>
                 </Transport>
             </Leg>
         </MEP>
@@ -488,7 +461,7 @@
             <Leg>
                 <MPC>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/defaultMPC</MPC>
                 <Transport>
-                    <ForeChannel action="FictionNotification" securityIdRef="sign_sha256">
+                    <ForeChannel action="NotDelivered" securityIdRef="sign_sha256">
                         <ReceptionAwareness raPatternIdRef="AS4ReceiptResponse"/>
                     </ForeChannel>
                 </Transport>

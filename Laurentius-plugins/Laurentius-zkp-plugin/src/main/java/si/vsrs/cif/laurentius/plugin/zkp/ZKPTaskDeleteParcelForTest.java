@@ -80,10 +80,11 @@ public class ZKPTaskDeleteParcelForTest implements TaskExecutionInterface {
         LOG.logWarn(l, "PROCESSING DELETE WAITING MESSAGE RECEIVER END", null);
         Calendar cDatFict = Calendar.getInstance();
         cDatFict.add(Calendar.DAY_OF_MONTH, -days);
-        cDatFict.set(Calendar.HOUR_OF_DAY, 0);
         cDatFict.set(Calendar.MINUTE, -minutes);
-        cDatFict.set(Calendar.SECOND, 0);
-        cDatFict.set(Calendar.MILLISECOND, 0);
+//        cDatFict.set(Calendar.HOUR_OF_DAY, 0);
+//        cDatFict.set(Calendar.SECOND, 0);
+//        cDatFict.set(Calendar.MILLISECOND, 0);
+
         // get all not delivered mail
         ZKPMailFilter mi = new ZKPMailFilter();
         mi.setStatus(SEDInboxMailStatus.PLOCKED.getValue());
@@ -116,7 +117,7 @@ public class ZKPTaskDeleteParcelForTest implements TaskExecutionInterface {
     @Override
     public CronTaskDef getDefinition() {
         CronTaskDef tt = new CronTaskDef();
-        tt.setType("zkp-delete-parcel-test-plugin");
+        tt.setType("zkp-delete-parcel-test");
         tt.setName("ZKP delivery - test delete");
         tt.setDescription("Task deleting the parcel from the receiving end");
         tt.getCronTaskPropertyDeves().add(createTTProperty(SIGN_ALIAS,
@@ -125,6 +126,16 @@ public class ZKPTaskDeleteParcelForTest implements TaskExecutionInterface {
         tt.getCronTaskPropertyDeves().add(createTTProperty(PROCESS_MAIL_COUNT,
                 "Max mail count proccesed.", true, PropertyType.Integer.getType(),
                 null, null));
+        tt.getCronTaskPropertyDeves().add(createTTProperty(DAYS_TO_WAIT,
+                "Days to wait until deletion.", true, PropertyType.Integer.getType(),
+                null, null));
+        tt.getCronTaskPropertyDeves().add(createTTProperty(MINUTES_TO_WAIT,
+                "Months to wait until deletion.", true, PropertyType.Integer.getType(),
+                null, null));
+        tt.getCronTaskPropertyDeves().add(createTTProperty(REC_SEDBOX,
+                "Receiver sedbox (without domain).", true, PropertyType.List.
+                        getType(), null, PropertyListType.LocalBoxes.getType()));
+
         return tt;
     }
 

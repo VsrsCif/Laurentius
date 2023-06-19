@@ -33,8 +33,6 @@ COPY --from=build /app/scripts/install/$SERVER_VERSION/config/laurentius-users.p
 COPY --from=build /app/scripts/install/$SERVER_VERSION/config/standalone-laurentius.xml $WILDFLY_HOME/standalone/configuration/
 COPY --from=build /app/scripts/install/$SERVER_VERSION/config/test-tls-keystore.jks $WILDFLY_HOME/standalone/configuration/
 
-
-
 # application modules
 COPY --from=build /app/Laurentius-dao/target/Laurentius-dao.jar $WILDFLY_HOME/standalone/deployments/
 COPY --from=build /app/Laurentius-msh/Laurentius-msh-ear/target/Laurentius-msh.ear $WILDFLY_HOME/standalone/deployments/

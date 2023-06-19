@@ -516,6 +516,7 @@ public class SEDDaoBean implements SEDDaoInterface {
                 cq.where(cb.and(tblPredicate));
             }
         }
+
         return cq;
     }
 
@@ -575,6 +576,7 @@ public class SEDDaoBean implements SEDDaoInterface {
                     false, sortField,
                     sortOrder);
             TypedQuery<T> q = memEManager.createQuery(cq);
+
             if (maxResultCnt > 0) {
                 q.setMaxResults(maxResultCnt);
             }

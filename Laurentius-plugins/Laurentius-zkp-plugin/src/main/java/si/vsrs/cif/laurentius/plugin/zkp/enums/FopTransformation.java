@@ -13,14 +13,11 @@ import si.laurentius.msh.outbox.mail.MSHOutMail;
  */
 public enum FopTransformation {
 
-    AdviceOfDelivery("LegalDelivery_ZKP-AdviceOfDelivery.fo", MSHInMail.class),
-    DeliveryNotification("LegalDelivery_ZKP-DeliveryNotification.fo", MSHOutMail.class),
-    DeliveryReciept("LegalDelivery_ZPP-DeliveryReciept.fo", MSHInMail.class),
-    DeliveryRecieptB("LegalDelivery_ZPPB-DeliveryReciept.fo", MSHInMail.class),
-    ReceiverAddressNotExists("ReceiverAddressNotExists.fo", MSHOutMail.class),
-    NotDeliveredNotification("NotDeliveredNotification.fo", MSHInMail.class),
+    AdviceOfDelivery("ZKP-AdviceOfDelivery.fo", MSHInMail.class),
+    DeliveryNotification("ZKP-DeliveryNotification.fo", MSHOutMail.class),
+    ReceiverAddressNotExists("ZKP-ReceiverAddressNotExists.fo", MSHOutMail.class),
+    NotDeliveredNotification("ZKP-NotDeliveredNotification.fo", MSHInMail.class),
     ;
-
 
     private final String mstrfileName;
     private Class mcJaxbClass;

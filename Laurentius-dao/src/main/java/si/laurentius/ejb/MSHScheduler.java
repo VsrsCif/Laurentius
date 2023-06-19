@@ -218,7 +218,6 @@ public class MSHScheduler implements SEDSchedulerInterface {
 
     CronTaskDef ct = mpmPluginManager.
             getCronTaskDef(tsk.getPlugin(), tsk.getType());
-    LOG.formatedWarning("CronTaskDef %s: for plugin %s and task %s", ct.getType(), tsk.getPlugin(), tsk.getType());
     if (ct == null) {
       result = String.format(
               "Not task processor for plugin %s and  task %s!", tsk.
@@ -235,6 +234,7 @@ public class MSHScheduler implements SEDSchedulerInterface {
       }
       return result;
     }
+    LOG.formatedWarning("CronTaskDef %s: for plugin %s and task %s", ct.getType(), tsk.getPlugin(), tsk.getType());
 
     // plugin  and task type
     TaskExecutionInterface tproc = null;

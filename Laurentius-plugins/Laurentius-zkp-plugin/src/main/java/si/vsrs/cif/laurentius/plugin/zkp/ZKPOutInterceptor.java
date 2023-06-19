@@ -103,9 +103,6 @@ public class ZKPOutInterceptor implements SoapInterceptorInterface {
     @EJB(mappedName = SEDJNDI.JNDI_SEDDAO)
     SEDDaoInterface mDB;
 
-    @EJB(mappedName = SEDJNDI.JNDI_SEDLOOKUPS)
-    SEDLookupsInterface mdbLookup;
-
     @EJB(mappedName = SEDJNDI.JNDI_DBCERTSTORE)
     SEDCertStoreInterface mCertBean;
 
@@ -113,7 +110,6 @@ public class ZKPOutInterceptor implements SoapInterceptorInterface {
      *
      */
     protected final SEDLogger LOG = new SEDLogger(ZKPOutInterceptor.class);
-    DocumentSodBuilder dsbSodBuilder = new DocumentSodBuilder();
 
     /**
      *
@@ -123,28 +119,7 @@ public class ZKPOutInterceptor implements SoapInterceptorInterface {
     FOPUtils mfpFop = null;
     
     SEDCrypto mscCrypto = new SEDCrypto();
-    KeystoreUtils mksu = new KeystoreUtils();
     ZKPUtils mzkpZKPUtils = new ZKPUtils();
-    KeystoreUtils mKeystoreUtils = new KeystoreUtils();
-
-    /**
-     *
-     * @return
-     */
-    public FOPUtils getFOP() {
-        if (mfpFop == null) {
-            File fconf
-                    = new File(SEDSystemProperties.getPluginsFolder(),
-                            ZKPConstants.SVEV_FOLDER + File.separator + ZKPConstants.FOP_CONFIG_FILENAME);
-
-            mfpFop
-                    = new FOPUtils(fconf, SEDSystemProperties.getPluginsFolder().
-                            getAbsolutePath()
-                            + File.separator + ZKPConstants.SVEV_FOLDER + File.separator
-                            + ZKPConstants.XSLT_FOLDER);
-        }
-        return mfpFop;
-    }
 
     @Override
     public MailInterceptorDef getDefinition() {
@@ -239,23 +214,6 @@ public class ZKPOutInterceptor implements SoapInterceptorInterface {
             } catch (ZKPException ex) {
                 throw new SoapFault(ex.getMessage(), sv);
             }
-        }
-    }
-
-    private void updateMailProperty(MSHOutMail mom, String key, String value) {
-        MSHOutProperties mop = mom.getMSHOutProperties();
-        if (mop == null) {
-            mop = new MSHOutProperties();
-            mom.setMSHOutProperties(mop);
-        }
-
-        Optional<MSHOutProperty> oPrp = mop.getMSHOutProperties().stream()
-                .filter(p -> p.getName().equalsIgnoreCase(key)).findFirst();
-        if (!oPrp.isPresent()) {
-            MSHOutProperty p = new MSHOutProperty();
-            p.setName(key);
-            p.setValue(value);
-            mop.getMSHOutProperties().add(p);
         }
     }
 
@@ -695,5 +653,4 @@ public class ZKPOutInterceptor implements SoapInterceptorInterface {
         }
         return ftmp;
     }
-
 }

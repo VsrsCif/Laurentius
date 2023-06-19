@@ -53,9 +53,9 @@
                 </pmd:PayloadProfiles>
             </pmd:Action>
         </pmd:Service>
-        <pmd:Service id="ZKP_B" serviceName="ZKP_B" serviceType="SVEV" useSEDProperties="false">
-            <pmd:Initiator role="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/initiator"/>
-            <pmd:Executor role="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/responder"/>
+        <pmd:Service id="ZKP_B" serviceName="ZKP_B" serviceType="SVEV" useSEDProperties="true">
+            <pmd:Initiator role="Sender"/>
+            <pmd:Executor role="Receiver"/>
             <pmd:Action name="DeliveryNotification" invokeRole="initiator" messageType="userMessage">
                 <pmd:Properties>
                     <pmd:Property name="originalSender" type="" required="false"/>
@@ -225,39 +225,48 @@
                     </pmd:Transport>
                 </pmd:Leg>
             </pmd:MEP>
-            <pmd:MEP>
-                <pmd:MEPType>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/twoWay</pmd:MEPType>
-                <pmd:MEPChannelBinding>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/sync</pmd:MEPChannelBinding>
-                <pmd:MEPInitiatorRole>Sender</pmd:MEPInitiatorRole>
-                <pmd:Leg>
-                    <pmd:MPC>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/defaultMPC</pmd:MPC>
-                    <pmd:Transport>
-                        <pmd:ForeChannel action="FictionNotification" securityIdRef="sign_sha256">
-                            <pmd:ReceptionAwareness raPatternIdRef="AS4ReceiptResponse"/>
-                        </pmd:ForeChannel>
-                    </pmd:Transport>
-                </pmd:Leg>
-            </pmd:MEP>
         </pmd:PMode>
         <pmd:PMode id="ZKP_B" isTest="false">
-            <pmd:ServiceIdRef>LegalDelivery_ZKP_B</pmd:ServiceIdRef>
+            <pmd:ServiceIdRef>ZKP_B</pmd:ServiceIdRef>
             <pmd:LocalPartyInfo partyIdentitySetIdRef="test-laurentius" partyDefTransportIdRef="defalut">
-                <pmd:Role>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/initiator</pmd:Role>
-                <pmd:Role>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/responder</pmd:Role>
+                <pmd:Role>Sender</pmd:Role>
+                <pmd:Role>Receiver</pmd:Role>
             </pmd:LocalPartyInfo>
             <pmd:ExchangeParties>
+                <pmd:PartyInfo partyIdentitySetIdRef="test-laurentius" partyDefTransportIdRef="defalut">
+                    <pmd:Role>Sender</pmd:Role>
+                    <pmd:Role>Receiver</pmd:Role>
+                </pmd:PartyInfo>
+                <pmd:PartyInfo partyIdentitySetIdRef="court-laurentius" partyDefTransportIdRef="court-https">
+                    <pmd:Role>Sender</pmd:Role>
+                    <pmd:Role>Receiver</pmd:Role>
+                </pmd:PartyInfo>
             </pmd:ExchangeParties>
             <pmd:MEP>
                 <pmd:MEPType>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/oneWay</pmd:MEPType>
                 <pmd:MEPChannelBinding>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/push</pmd:MEPChannelBinding>
-                <pmd:MEPInitiatorRole>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/initiator</pmd:MEPInitiatorRole>
+                <pmd:MEPInitiatorRole>Sender</pmd:MEPInitiatorRole>
                 <pmd:Leg>
                     <pmd:MPC>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/defaultMPC</pmd:MPC>
                     <pmd:Transport>
-                        <pmd:ForeChannel action="DeliveryNotification" securityIdRef="edeliveryAS4">
+                        <pmd:ForeChannel action="DeliveryNotification" securityIdRef="sign_sha256">
                             <pmd:ReceptionAwareness raPatternIdRef="AS4ReceiptResponse"/>
                         </pmd:ForeChannel>
-                        <pmd:BackChannel securityIdRef="edeliveryAS4NoEnc">
+                        <pmd:BackChannel securityIdRef="sign_sha256"/>
+                    </pmd:Transport>
+                </pmd:Leg>
+            </pmd:MEP>
+            <pmd:MEP>
+                <pmd:MEPType>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/twoWay</pmd:MEPType>
+                <pmd:MEPChannelBinding>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/sync</pmd:MEPChannelBinding>
+                <pmd:MEPInitiatorRole>Receiver</pmd:MEPInitiatorRole>
+                <pmd:Leg>
+                    <pmd:MPC>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/defaultMPC</pmd:MPC>
+                    <pmd:Transport>
+                        <pmd:ForeChannel action="AdviceOfDelivery" securityIdRef="sign_sha256">
+                            <pmd:ReceptionAwareness raPatternIdRef="AS4ReceiptResponse"/>
+                        </pmd:ForeChannel>
+                        <pmd:BackChannel securityIdRef="sign_sha256">
                             <pmd:ReceptionAwareness/>
                         </pmd:BackChannel>
                     </pmd:Transport>
@@ -270,39 +279,7 @@
                 <pmd:Leg>
                     <pmd:MPC>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/defaultMPC</pmd:MPC>
                     <pmd:Transport>
-                        <pmd:ForeChannel action="AdviceOfDelivery" securityIdRef="edeliveryAS4">
-                            <pmd:ReceptionAwareness raPatternIdRef="AS4ReceiptResponse"/>
-                        </pmd:ForeChannel>
-                        <pmd:BackChannel securityIdRef="edeliveryAS4NoEnc">
-                            <pmd:ReceptionAwareness/>
-                        </pmd:BackChannel>
-                    </pmd:Transport>
-                </pmd:Leg>
-            </pmd:MEP>
-            <pmd:MEP>
-                <pmd:MEPType>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/oneWay</pmd:MEPType>
-                <pmd:MEPChannelBinding>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/push</pmd:MEPChannelBinding>
-                <pmd:MEPInitiatorRole>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/responder</pmd:MEPInitiatorRole>
-                <pmd:Leg>
-                    <pmd:MPC>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/defaultMPC</pmd:MPC>
-                    <pmd:Transport>
-                        <pmd:ForeChannel action="FictionNotification" securityIdRef="edeliveryAS4">
-                            <pmd:ReceptionAwareness raPatternIdRef="AS4ReceiptResponse"/>
-                        </pmd:ForeChannel>
-                        <pmd:BackChannel securityIdRef="edeliveryAS4NoEnc">
-                            <pmd:ReceptionAwareness/>
-                        </pmd:BackChannel>
-                    </pmd:Transport>
-                </pmd:Leg>
-            </pmd:MEP>
-            <pmd:MEP>
-                <pmd:MEPType>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/oneWay</pmd:MEPType>
-                <pmd:MEPChannelBinding>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/push</pmd:MEPChannelBinding>
-                <pmd:MEPInitiatorRole>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/initiator</pmd:MEPInitiatorRole>
-                <pmd:Leg>
-                    <pmd:MPC>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/defaultMPC</pmd:MPC>
-                    <pmd:Transport>
-                        <pmd:ForeChannel action="RecieptAddressNotExists" securityIdRef="edeliveryAS4">
+                        <pmd:ForeChannel action="NotDelivered" securityIdRef="edeliveryAS4">
                             <pmd:ReceptionAwareness raPatternIdRef="AS4ReceiptResponse"/>
                         </pmd:ForeChannel>
                         <pmd:BackChannel securityIdRef="edeliveryAS4NoEnc">
@@ -328,28 +305,29 @@
         <ns2:SEDCronJob  name="ZKPSign" active="true" second="0" minute="*/5" hour="8-16" dayOfMonth="*" month="*" dayOfWeek="1-5">
             <ns2:SEDTask plugin="LegalZKP" type="zkp-test-delivery" pluginVersion="1.0.0"  name="ZKPSign-B-Department" active="true">
                 <ns2:SEDTaskProperty  key="zkp.sedbox">b.department</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty  key="zkp.sign.key.alias">test-zkp-sign</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty  key="zkp.sign.key.alias">test-zpp-sign</ns2:SEDTaskProperty>
                 <ns2:SEDTaskProperty  key="zkp.max.mail.count">100</ns2:SEDTaskProperty>
             </ns2:SEDTask>
             <ns2:SEDTask plugin="LegalZKP" type="zkp-test-delivery" pluginVersion="1.0.0"  name="ZKPSign-A-Department" active="true">
                 <ns2:SEDTaskProperty  key="zkp.sedbox">a.department</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty  key="zkp.sign.key.alias">test-zkp-sign</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty  key="zkp.sign.key.alias">test-zpp-sign</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty  key="zkp.max.mail.count">100</ns2:SEDTaskProperty>
                 <ns2:SEDTaskProperty  key="zkp.max.mail.count">100</ns2:SEDTaskProperty>
             </ns2:SEDTask>
         </ns2:SEDCronJob>
-        <ns2:SEDCronJob  name="ZKPDeleteNotDelivered" active="true" second="0" minute="0" hour="1" dayOfMonth="*" month="*" dayOfWeek="*">
-            <ns2:SEDTask plugin="LegalZKP" type="zkp-delete-parcel-test-plugin" pluginVersion="1.0.0"  name="ZKPTaskDeleteParcelForTest" active="true">
+        <ns2:SEDCronJob  name="ZKPDeleteNotDelivered" active="true" second="0" minute="*" hour="*" dayOfMonth="*" month="*" dayOfWeek="*">
+            <ns2:SEDTask plugin="LegalZKP" type="zkp-delete-parcel-test" pluginVersion="1.0.0"  name="ZKPTaskDeleteParcelForTest" active="true">
                 <ns2:SEDTaskProperty  key="zkp.sign.key.alias">test-laurentius</ns2:SEDTaskProperty>
                 <ns2:SEDTaskProperty  key="zkp.max.mail.count">100</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty  key="zkp.wait.days">15</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty  key="zkp.wait.minutes">0</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty  key="zkp.sedbox">a.department</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty  key="zkp.wait.days">0</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty  key="zkp.wait.minutes">5</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty  key="zkp.sedbox">b.department</ns2:SEDTaskProperty>
             </ns2:SEDTask>
-            <ns2:SEDTask plugin="LegalZKP" type="LegalZKP" pluginVersion="1.0.0" name="ZKPTaskDeleteUndelivered" active="true">
+            <ns2:SEDTask plugin="LegalZKP" type="zkp-not-delivered-deletion" pluginVersion="1.0.0" name="ZKPTaskDeleteUndelivered" active="true">
                 <ns2:SEDTaskProperty  key="zkp.sign.key.alias">test-laurentius</ns2:SEDTaskProperty>
                 <ns2:SEDTaskProperty  key="zkp.max.mail.count">100</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty  key="zkp.wait.days">15</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty  key="zkp.wait.minutes">0</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty  key="zkp.wait.days">0</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty  key="zkp.wait.minutes">5</ns2:SEDTaskProperty>
             </ns2:SEDTask>
         </ns2:SEDCronJob>
     </ns1:PluginData>

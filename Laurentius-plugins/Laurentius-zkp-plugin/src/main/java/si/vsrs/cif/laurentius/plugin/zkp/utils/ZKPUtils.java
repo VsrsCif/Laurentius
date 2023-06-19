@@ -37,11 +37,15 @@ import si.laurentius.msh.outbox.payload.OMPartProperty;
 import si.laurentius.enckey.SEDEncryptionKey;
 
 import javax.crypto.spec.SecretKeySpec;
+import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.PropertyException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
@@ -344,13 +348,6 @@ public class ZKPUtils {
             FopTransformation.AdviceOfDelivery, pk, xcert);
   }
 
-  public MSHOutPart createSignedZKPBDeliveryReciept(MSHInMail mail,
-          PrivateKey pk, X509Certificate xcert) {
-
-    return createMSHOutPart(mail, ZKPPartType.DeliveryReciept,
-            FopTransformation.DeliveryRecieptB, pk, xcert);
-  }
-
   public MSHInPart createSignedNotDeliveredNotification(MSHOutMail mail,
                                                         PrivateKey pk, X509Certificate xcert) throws FOPException, SEDSecurityException, HashException, StorageException {
 
@@ -505,6 +502,8 @@ public class ZKPUtils {
     File fDNViz
             = StorageUtils.getNewStorageFile(partType.getFileSuffix(),
                     partType.name() + "-");
+
+    LOG.logJAXBObject("MSH IN PART GENERATION FROM OBJECT: ", outMail);
 
     getFOP().generateVisualization(outMail, fDNViz,
             ft,
