@@ -86,10 +86,11 @@ public class ZKPTaskDeleteUndelivered implements TaskExecutionInterface {
         int maxMailProc = Integer.parseInt(p.getProperty(PROCESS_MAIL_COUNT, "100"));
         int days = Integer.parseInt(p.getProperty(DAYS_TO_WAIT, "15"));
         int minutes = Integer.parseInt(p.getProperty(MINUTES_TO_WAIT, "0"));
+        boolean dev = Boolean.parseBoolean(p.getProperty("dev.mode", "false"));
 
         // Gather outbound waiting messages waiting for 15 days, delete them and send undelivered message to sender inbox
         //DELETE AND RESPOND WITH ZKP MESSAGE NOT DELIVERED
-        processDeleteUnresponsiveMessage(sw, signKeyAlias, maxMailProc, days, minutes);
+        processDeleteUnresponsiveMessage(sw, signKeyAlias, maxMailProc, days, minutes, dev);
 
         sw.append("End zkp delete not delivered plugin task");
 
@@ -97,14 +98,16 @@ public class ZKPTaskDeleteUndelivered implements TaskExecutionInterface {
         return sw.toString();
     }
 
-    private void processDeleteUnresponsiveMessage(StringWriter sw, String signKeyAlias, int maxMailProc, int days, int minutes) {
+    private void processDeleteUnresponsiveMessage(StringWriter sw, String signKeyAlias, int maxMailProc, int days, int minutes, boolean dev) {
         long l = LOG.logStart();
         Calendar cDatFict = Calendar.getInstance();
         cDatFict.add(Calendar.DAY_OF_MONTH, -days);
         cDatFict.add(Calendar.MINUTE, -minutes);
-//        cDatFict.set(Calendar.HOUR_OF_DAY, 0);
-//        cDatFict.set(Calendar.SECOND, 0);
-//        cDatFict.set(Calendar.MILLISECOND, 0);
+        if (!dev) {
+            cDatFict.set(Calendar.HOUR_OF_DAY, 0);
+            cDatFict.set(Calendar.SECOND, 0);
+            cDatFict.set(Calendar.MILLISECOND, 0);
+        }
 
         // get all not delivered mail
         ZKPMailFilter mi = new ZKPMailFilter();

@@ -229,8 +229,8 @@ public class ZKPFaultInInterceptor implements SoapInterceptorInterface {
     MSHInPart mp;
     try {
       mp = mzkpZKPUtils.createMSHInPart(outMail,
-              ZKPPartType.RecieptAddressNotExists,
-              FopTransformation.ReceiverAddressNotExists, pk, xcert);
+              ZKPPartType.RecipientAddressNotExists,
+              FopTransformation.RecipientAddressNotExists, pk, xcert);
     } catch (SEDSecurityException | StorageException | HashException | FOPException ex) {
       String msg = String.format(
               "Server error occured while preparing sign cert %s for S_ZKP_ACTION_ADDRESS_NOT_EXISTS for mail: %d, Error: %s.",

@@ -29,7 +29,7 @@ public enum ZKPPartType {
   EncryptedPart("http://www.sodisce.si/ZKP/EncryptedPart", "SifriranaPosiljka", "Sifriran dok.: %s", "application/octet-stream", "zkp.enc"),
   LocalEncryptionKey("http://www.sodisce.si/ZKP/LocalEncryptionKey", "LocalEncryptionKey", "Kljuc za sifriranje priponk", "application/xml", "xml"),
   EncryptedKey("http://www.sodisce.si/ZKP/EncryptedKey", "EncryptedKey", "Kljuc za desifriranje priponk", "application/xml", "xml"),
-  RecieptAddressNotExists("http://www.sodisce.si/ZKP/RecieptAddressNotExists", "RecieptAddressNotExists", "Naslovnik ne obstaja", "application/pdf", "pdf"),
+  RecipientAddressNotExists("http://www.sodisce.si/ZKP/RecipientAddressNotExists", "RecipientAddressNotExists", "Naslovnik ne obstaja", "application/pdf", "pdf"),
   NotDeliveredNotification("http://www.sodisce.si/ZKP/NotDeliveredNotification", "NotDeliveredNotification", "Neopravljena vročitev", "application/pdf", "pdf")
   ;
  

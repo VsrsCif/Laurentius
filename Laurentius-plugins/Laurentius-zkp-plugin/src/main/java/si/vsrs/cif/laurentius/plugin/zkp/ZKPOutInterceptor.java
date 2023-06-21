@@ -642,7 +642,7 @@ public class ZKPOutInterceptor implements SoapInterceptorInterface {
             ftmp = StorageUtils.getNewStorageFile("pdf", "zkp-signed");
 
             SignUtils su = new SignUtils(pk, xcert);
-            su.signPDF(f, ftmp, true);
+            su.signPDF(f, ftmp, true, "Slovenia", "ZKP Delivery");
             if (replace) {
                 Files.move(ftmp.toPath(), f.toPath(),
                         StandardCopyOption.REPLACE_EXISTING);

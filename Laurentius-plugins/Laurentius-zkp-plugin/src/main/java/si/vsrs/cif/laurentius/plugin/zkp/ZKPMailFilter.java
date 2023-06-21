@@ -19,6 +19,16 @@ public class ZKPMailFilter {
     String  action;
     String  service;
     Date sentDateTo;
+    Date receivedDateTo;
+
+
+  public Date getReceivedDateTo() {
+    return receivedDateTo;
+  }
+
+  public void setReceivedDateTo(Date receivedDateTo) {
+    this.receivedDateTo = receivedDateTo;
+  }
 
   public String getStatus() {
     return status;

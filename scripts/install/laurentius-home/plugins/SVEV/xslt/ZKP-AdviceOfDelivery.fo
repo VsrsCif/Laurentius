@@ -20,7 +20,7 @@
                 </xsl:variable>
                 <fo:flow flow-name="xsl-region-body">
 					<fo:block  margin-top="1.5cm" font-size="12pt" linefeed-treatment="preserve">
-                       VROČILNICA (141.a člen ZPP)
+                        VROČILNICA (117.a člen ZKP)
                     </fo:block>
      
                     <fo:block margin-top="1.5cm" font-size="12pt" font-weight="bold" linefeed-treatment="preserve">					
@@ -43,18 +43,15 @@
                        Zadeva: Vročilnica
                     </fo:block>
                     <fo:block font-size="12pt" linefeed-treatment="preserve">
-                        Naslovnik potrjujem, da sem dne <fo:inline font-weight="bold"><xsl:call-template name="currentDate"/></fo:inline> sprejel pošiljko z oznako 
-						<fo:inline font-weight="bold"><xsl:value-of select="/msh:MSHInMail/@subject"/> (<xsl:value-of select="/msh:MSHInMail/@messageId"/>)</fo:inline>. 	
-				 
+                        Naslovnik potrjujem, da sem dne <fo:inline font-weight="bold"><xsl:call-template name="currentDate"/></fo:inline> sprejel pošiljko z oznako
+						<fo:inline font-weight="bold"><xsl:value-of select="/msh:MSHInMail/@subject"/> (<xsl:value-of select="/msh:MSHInMail/@messageId"/>)</fo:inline>.
+
                         To sporočilo je potrdilo o vročitvi pošiljke in opravljeni storitvi.
                     </fo:block>
 
   					<fo:block font-size="12pt"  margin-top="1.0cm">
-                       Storitev: Elektronska vročitev pošiljke po ZPP osebno,
+                        Storitev: Elektronska vročitev pošiljke po ZKP.
                     </fo:block>                    
-                    <fo:block font-size="12pt" >
-                        enolična oznaka storitve: <xsl:value-of select="/msh:MSHInMail/@conversationId"/>.
-                    </fo:block>
 
                     <fo:block font-size="12pt"   margin-top="1.0cm">	
                         Laurentius (<xsl:call-template name="systemDomain"/>), <xsl:call-template name="currentDateTime"/>.

@@ -120,10 +120,10 @@
                 <level name="WARN"/>
             </logger>
             <logger category="org.hibernate.SQL">
-                <level name="DEBUG"/>
+                <level name="INFO"/>
             </logger>
             <logger category="org.hibernate.type.descriptor.sql">
-                <level name="TRACE"/>
+                <level name="INFO"/>
             </logger>
             <root-logger>
                 <level name="INFO"/>

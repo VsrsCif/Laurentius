@@ -351,6 +351,7 @@ public class ZKPUtils {
   public MSHInPart createSignedNotDeliveredNotification(MSHOutMail mail,
                                                         PrivateKey pk, X509Certificate xcert) throws FOPException, SEDSecurityException, HashException, StorageException {
 
+    LOG.logJAXBObject("MSH IN PART GENERATION FROM OBJECT: ", mail);
     return createMSHInPart(mail, ZKPPartType.NotDeliveredNotification,
             FopTransformation.NotDeliveredNotification, pk, xcert);
   }
@@ -503,8 +504,6 @@ public class ZKPUtils {
             = StorageUtils.getNewStorageFile(partType.getFileSuffix(),
                     partType.name() + "-");
 
-    LOG.logJAXBObject("MSH IN PART GENERATION FROM OBJECT: ", outMail);
-
     getFOP().generateVisualization(outMail, fDNViz,
             ft,
             partType.getMimeType());
@@ -588,7 +587,7 @@ public class ZKPUtils {
       ftmp = StorageUtils.getNewStorageFile("pdf", "zkp-signed");
 
       SignUtils su = new SignUtils(pk, xcert);
-      su.signPDF(f, ftmp, true);
+      su.signPDF(f, ftmp, true, "Slovenia", "ZKP Delivery");
       if (replace) {
         Files.move(ftmp.toPath(), f.toPath(),
                 StandardCopyOption.REPLACE_EXISTING);

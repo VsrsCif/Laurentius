@@ -66,6 +66,8 @@ public class FOPUtils {
             StreamSource ssXslt = new StreamSource(fxslt);
             JAXBSource source = new JAXBSource(JAXBContext.newInstance(outMail.getClass()), outMail);
 
+            LOG.logJAXBObject("HOW DOES THE OBJECT LOOK LIKE BEFORE THE CREATEION OF THE DOC? ", outMail);
+
             generateVisualization(source, fos, ssXslt, mime);
 
         } catch (IOException | JAXBException ex) {

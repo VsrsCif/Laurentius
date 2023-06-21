@@ -82,7 +82,7 @@ public class SignUtilsTest {
           -50, imageStream, page);
       signPdf.setVisibleSignatureProperties("name", "location", "Security", 0, page, true);
 
-      signPdf.signPDF(documentFile, signedDocumentFile, false);
+      signPdf.signPDF(documentFile, signedDocumentFile, false, "Slovenia", "ZPP Delivery");
 
     }
   }
@@ -107,7 +107,7 @@ public class SignUtilsTest {
     // "server" signature
     SignUtils signPdfServer = new SignUtils(privateKeyA, certA);
     File dblSignedDocumentFile = new File(PDF_SIGN_HOME + PDF_SIGN_SERVER);
-    signPdfServer.signPDF(signedDocumentFile, dblSignedDocumentFile, false);
+    signPdfServer.signPDF(signedDocumentFile, dblSignedDocumentFile, false, "Slovenia", "ZPP Delivery");
 
     
   }
@@ -157,7 +157,7 @@ public class SignUtilsTest {
       assertNotNull("Resource '" + S_TEMPLATE_IMAGE + "' not found!", imageStream);
 
       signedDocumentFile = new File(PDF_SIGN_HOME + PDF_SIGN_VISUALIZATION_DEF);
-      signPdf.signPDF(documentFile, signedDocumentFile, true);
+      signPdf.signPDF(documentFile, signedDocumentFile, true, "Slovenia", "ZPP Delivery");
 
     }
   }

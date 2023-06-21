@@ -2,9 +2,9 @@
 <!-- edited with XMLSpy v2008 (http://www.altova.com) by XMLSpy 2007 Professional Ed., Installed for 5 users (with SMP from 2007-02-06 to 2008-02-07) (CIF VSRS) -->
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:fo="http://www.w3.org/1999/XSL/Format" 
-                xmlns:msh="http://msh.laurentius.si/inbox/mail"  
-                xmlns:mpl="http://msh.laurentius.si/inbox/payload"
-                xmlns:prp="http://msh.laurentius.si/inbox/property"
+                xmlns:msh="http://msh.laurentius.si/outbox/mail"
+                xmlns:mpl="http://msh.laurentius.si/outbox/payload"
+                xmlns:prp="http://msh.laurentius.si/outbox/property"
                 xmlns:java="http://xml.apache.org/xslt/java" exclude-result-prefixes="java"   >
     <xsl:output method="xml" indent="yes"/>
     <xsl:template match="/">
@@ -26,18 +26,18 @@
                     <fo:block margin-top="1.5cm" font-size="12pt" font-weight="bold" linefeed-treatment="preserve">					
                         Pošiljatelj</fo:block>
                     <fo:block font-size="12pt">
-                        <xsl:value-of select="/msh:MSHInMail/@senderName"/>
+                        <xsl:value-of select="/msh:MSHOutMail/@senderName"/>
                     </fo:block>
                     <fo:block font-size="12pt">
-                        <xsl:value-of select="/msh:MSHInMail/@senderEBox"/>
+                        <xsl:value-of select="/msh:MSHOutMail/@senderEBox"/>
                     </fo:block>
                     <fo:block font-size="12pt" font-weight="bold" linefeed-treatment="preserve">					
                         Naslovnik</fo:block>
                     <fo:block font-size="12pt">
-                        <xsl:value-of select="/msh:MSHInMail/@receiverName"/>
+                        <xsl:value-of select="/msh:MSHOutMail/@receiverName"/>
                     </fo:block>
                     <fo:block font-size="12pt">
-                        <xsl:value-of select="/msh:MSHInMail/@receiverEBox"/>
+                        <xsl:value-of select="/msh:MSHOutMail/@receiverEBox"/>
                     </fo:block>
                     <fo:block font-size="12pt" font-weight="bold" linefeed-treatment="preserve">
                         Zadeva : Neopravljena elektronska vročitev

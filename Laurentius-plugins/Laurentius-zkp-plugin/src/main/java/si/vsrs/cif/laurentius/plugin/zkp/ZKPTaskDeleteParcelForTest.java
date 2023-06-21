@@ -58,6 +58,7 @@ public class ZKPTaskDeleteParcelForTest implements TaskExecutionInterface {
         int maxMailProc = Integer.parseInt(p.getProperty(PROCESS_MAIL_COUNT, "100"));
         int days = Integer.parseInt(p.getProperty(DAYS_TO_WAIT, "15"));
         int minutes = Integer.parseInt(p.getProperty(MINUTES_TO_WAIT, "0"));
+        boolean dev = Boolean.parseBoolean(p.getProperty("dev.mode", "false"));
 
         if (!p.containsKey(REC_SEDBOX)) {
             throw new TaskException(TaskException.TaskExceptionCode.InitException,
@@ -68,33 +69,37 @@ public class ZKPTaskDeleteParcelForTest implements TaskExecutionInterface {
         // Gather inbound waiting messages waiting for 15 days and delete them
 
         // DELETE A NON-DELIVERED PACKAGE THAT TIMED OUT
-        processDeleteWaitingMessage(sedBox, sw, maxMailProc, days, minutes);
+        processDeleteWaitingMessage(sedBox, sw, maxMailProc, days, minutes, dev);
 
         sw.append("End zkp plugin delete task");
         LOG.logEnd(l);
+
         return sw.toString();
     }
 
-    private void processDeleteWaitingMessage(String sedBox, StringWriter sw, int maxMailProc, int days, int minutes) {
+    private void processDeleteWaitingMessage(String sedBox, StringWriter sw, int maxMailProc, int days, int minutes, boolean dev) {
         long l = LOG.logStart();
         LOG.logWarn(l, "PROCESSING DELETE WAITING MESSAGE RECEIVER END", null);
         Calendar cDatFict = Calendar.getInstance();
         cDatFict.add(Calendar.DAY_OF_MONTH, -days);
-        cDatFict.set(Calendar.MINUTE, -minutes);
-//        cDatFict.set(Calendar.HOUR_OF_DAY, 0);
-//        cDatFict.set(Calendar.SECOND, 0);
-//        cDatFict.set(Calendar.MILLISECOND, 0);
+        cDatFict.add(Calendar.MINUTE, -minutes);
+        if(!dev) {
+            cDatFict.set(Calendar.HOUR_OF_DAY, 0);
+            cDatFict.set(Calendar.SECOND, 0);
+            cDatFict.set(Calendar.MILLISECOND, 0);
+        }
 
         // get all not delivered mail
         ZKPMailFilter mi = new ZKPMailFilter();
         mi.setStatus(SEDInboxMailStatus.PLOCKED.getValue());
         mi.setAction(ZKPConstants.ZKP_ACTION_DELIVERY_NOTIFICATION);
-        mi.setSentDateTo(cDatFict.getTime());
+        mi.setService(ZKPConstants.ZKP_A_SERVICE);
+        mi.setReceivedDateTo(cDatFict.getTime());
         mi.setReceiverEBox(sedBox + "@" + SEDSystemProperties.getLocalDomain());
         List<MSHInMail> lst = mDB.getDataList(MSHInMail.class, -1, maxMailProc,
                 "Id", "ASC", mi);
         sw.append("got " + lst.size() + " mail!");
-
+        LOG.formatedWarning("got %d mail!", lst.size());
         for (MSHInMail m : lst) {
             try {
                 mDB.setStatusToInMail(m, SEDInboxMailStatus.DELETED, "Deleted message - delivery timeout");

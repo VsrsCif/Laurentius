@@ -26,7 +26,7 @@
                 
                 <fo:flow flow-name="xsl-region-body">
 					<fo:block  margin-top="1.5cm" font-size="12pt" linefeed-treatment="preserve">
-                       OBVESTILO POŠILJATELJU O NEOBSTOJEČEM VARNEM ELEKTRONSKEM PREDALU
+                        OBVESTILO POŠILJATELJU O NEOBSTOJEČEM VARNEM ELEKTRONSKEM PREDALU
                     </fo:block>
                     
                     <fo:block margin-top="1.5cm" font-size="12pt" font-weight="bold" linefeed-treatment="preserve">					
@@ -56,7 +56,6 @@
 Varen elektronski predal naslovnika (<fo:inline font-weight="bold"><xsl:value-of select="/msh:MSHOutMail/@receiverEBox"/></fo:inline>) v sistemu  <xsl:value-of select="$varDomainForAddress"/> ne obstaja, zato na tem naslovu elektronske vročitve pošiljke <fo:inline font-weight="bold"><xsl:value-of select="/msh:MSHOutMail/@subject"/> (<xsl:value-of select="/msh:MSHOutMail/@messageId"/>)</fo:inline> ni mogoče opraviti.
 					</fo:block>
 
-                    
                     <fo:block font-size="12pt" margin-top="1.0cm" >
                         Enolična oznaka storitve: <xsl:value-of select="/msh:MSHOutMail/@conversationId"/>.
                     </fo:block>

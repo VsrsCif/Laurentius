@@ -15,8 +15,8 @@ public enum FopTransformation {
 
     AdviceOfDelivery("ZKP-AdviceOfDelivery.fo", MSHInMail.class),
     DeliveryNotification("ZKP-DeliveryNotification.fo", MSHOutMail.class),
-    ReceiverAddressNotExists("ZKP-ReceiverAddressNotExists.fo", MSHOutMail.class),
-    NotDeliveredNotification("ZKP-NotDeliveredNotification.fo", MSHInMail.class),
+    RecipientAddressNotExists("ZKP-RecipientAddressNotExists.fo", MSHOutMail.class),
+    NotDeliveredNotification("ZKP-NotDeliveredNotification.fo", MSHOutMail.class),
     ;
 
     private final String mstrfileName;

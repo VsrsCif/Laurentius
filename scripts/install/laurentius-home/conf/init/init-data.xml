@@ -133,30 +133,33 @@
             </ns2:SEDTask>
         </ns2:SEDCronJob>
         <ns2:SEDCronJob id="10" name="ZKPSign" active="true" second="0" minute="*/5" hour="8-16" dayOfMonth="*" month="*" dayOfWeek="1-5">
-            <ns2:SEDTask plugin="LegalZKP" type="zkp-test-delivery" pluginVersion="1.0.0"  name="ZKPSign-B-Department" active="true">
+            <ns2:SEDTask plugin="LegalZKP" type="zkp-test-delivery" pluginVersion="1.0.0" id="15" name="ZKPSign-B-Department" active="true">
                 <ns2:SEDTaskProperty id="93" key="zkp.sedbox">b.department</ns2:SEDTaskProperty>
                 <ns2:SEDTaskProperty id="94" key="zkp.sign.key.alias">test-zpp-sign</ns2:SEDTaskProperty>
                 <ns2:SEDTaskProperty id="95" key="zkp.max.mail.count">100</ns2:SEDTaskProperty>
             </ns2:SEDTask>
-            <ns2:SEDTask id="11" plugin="LegalZKP" type="zkp-test-delivery" pluginVersion="1.0.0"  name="ZKPSign-A-Department" active="true">
+            <ns2:SEDTask plugin="LegalZKP" type="zkp-test-delivery" pluginVersion="1.0.0" id="16" name="ZKPSign-A-Department" active="true">
                 <ns2:SEDTaskProperty id="96" key="zkp.sedbox">a.department</ns2:SEDTaskProperty>
                 <ns2:SEDTaskProperty id="97" key="zkp.sign.key.alias">test-zpp-sign</ns2:SEDTaskProperty>
                 <ns2:SEDTaskProperty id="98" key="zkp.max.mail.count">100</ns2:SEDTaskProperty>
             </ns2:SEDTask>
         </ns2:SEDCronJob>
-        <ns2:SEDCronJob  name="ZKPDeleteNotDelivered" active="true" second="0" minute="*" hour="*" dayOfMonth="*" month="*" dayOfWeek="*">
-            <ns2:SEDTask plugin="LegalZKP" type="zkp-delete-parcel-test" pluginVersion="1.0.0"  name="ZKPTaskDeleteParcelForTest" active="true">
+        <ns2:SEDCronJob id="11" name="ZKPDeleteNotDelivered" active="true" second="0" minute="*" hour="*" dayOfMonth="*" month="*" dayOfWeek="*">
+            <ns2:SEDTask plugin="LegalZKP" type="zkp-delete-parcel-test" pluginVersion="1.0.0" id="17" name="ZKPTaskDeleteParcelForTest" active="true">
                 <ns2:SEDTaskProperty id="99" key="zkp.sign.key.alias">test-laurentius</ns2:SEDTaskProperty>
                 <ns2:SEDTaskProperty id="100" key="zkp.max.mail.count">100</ns2:SEDTaskProperty>
                 <ns2:SEDTaskProperty id="101" key="zkp.wait.days">0</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty id="102" key="zkp.wait.minutes">5</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="102" key="zkp.wait.minutes">2</ns2:SEDTaskProperty>
                 <ns2:SEDTaskProperty id="103" key="zkp.sedbox">b.department</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="104" key="dev.mode">true</ns2:SEDTaskProperty>
+
             </ns2:SEDTask>
-            <ns2:SEDTask plugin="LegalZKP" type="zkp-not-delivered-deletion" pluginVersion="1.0.0" name="ZKPTaskDeleteUndelivered" active="true">
-                <ns2:SEDTaskProperty id="104" key="zkp.sign.key.alias">test-laurentius</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty id="105" key="zkp.max.mail.count">100</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty id="106" key="zkp.wait.days">0</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty id="107" key="zkp.wait.minutes">5</ns2:SEDTaskProperty>
+            <ns2:SEDTask plugin="LegalZKP" type="zkp-not-delivered-deletion" pluginVersion="1.0.0" id="18" name="ZKPTaskDeleteUndelivered" active="true">
+                <ns2:SEDTaskProperty id="105" key="zkp.sign.key.alias">test-laurentius</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="106" key="zkp.max.mail.count">100</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="107" key="zkp.wait.days">0</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="108" key="zkp.wait.minutes">2</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="109" key="dev.mode">true</ns2:SEDTaskProperty>
             </ns2:SEDTask>
         </ns2:SEDCronJob>
     </SEDCronJobs>
