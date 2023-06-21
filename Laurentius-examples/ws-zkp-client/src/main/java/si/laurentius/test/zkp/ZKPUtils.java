@@ -103,7 +103,6 @@ public class ZKPUtils {
             mp.setMimeType(MimeConstants.MIME_PDF);
             mout.getOutPayload().getOutParts().add(mp);
 
-            ;
             mp.setBin(Files.readAllBytes(fDNViz.toPath()));
             mp.setFilename(fDNViz.getName());
 

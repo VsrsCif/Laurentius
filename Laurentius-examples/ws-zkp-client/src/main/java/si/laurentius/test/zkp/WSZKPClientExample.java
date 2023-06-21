@@ -152,22 +152,40 @@ public class WSZKPClientExample {
          * AdviceOfDelivery 4. retrieve payloads for submitted mail
          *
          */
+        // ZKP_A
         try {
             // 1. test: AdviceOfDelivery is signed with key registred in laurentius
-            testAdviceOfDelivery(S_KEY_ALIAS);
+            testAdviceOfDelivery(ZKPDeliveryConstants.S_ZKP_A_SERVICE, S_KEY_ALIAS, "Test message ZKP_A");
         } catch (SEDException_Exception | JAXBException | FOPException | ZKPException ex) {
             LOG.error("Signature failed: " + ex.getMessage(), ex);
         }
 
         try {
             // 2. test: AdviceOfDelivery is signed with a key NOT registred in laurentius
-            testAdviceOfDelivery(S_KEY_NOT_REGISTRED_ALIAS);
+            testAdviceOfDelivery(ZKPDeliveryConstants.S_ZKP_A_SERVICE, S_KEY_NOT_REGISTRED_ALIAS, "Test message ZKP_A");
         } catch (SEDException_Exception | JAXBException | FOPException | ZKPException ex) {
             LOG.error("Signature failed: " + ex.getMessage(), ex);
         }
+        // ZKP_B
+        try {
+            // 1. test: AdviceOfDelivery is signed with key registred in laurentius
+            testAdviceOfDelivery(ZKPDeliveryConstants.S_ZKP_B_SERVICE, S_KEY_ALIAS, "Test message ZKP_B");
+        } catch (SEDException_Exception | JAXBException | FOPException | ZKPException ex) {
+            LOG.error("Signature failed: " + ex.getMessage(), ex);
+        }
+
+        try {
+            // 1. test: AdviceOfDelivery is signed with key registred in laurentius
+            testAdviceOfDelivery(ZKPDeliveryConstants.S_ZKP_B_SERVICE, S_KEY_NOT_REGISTRED_ALIAS, "Test message ZKP_B");
+        } catch (SEDException_Exception | JAXBException | FOPException | ZKPException ex) {
+            LOG.error("Signature failed: " + ex.getMessage(), ex);
+        }
+
+        // non-delivery for ZKP A and B
+
     }
 
-    private static void testAdviceOfDelivery(String singatureKey)
+    private static void testAdviceOfDelivery(String zkpService, String singatureKey, String testMessage)
             throws SEDException_Exception, JAXBException, InterruptedException, FOPException,
             ZKPException {
         BasicConfigurator.configure();
@@ -177,9 +195,9 @@ public class WSZKPClientExample {
         // example submit mail
         BigInteger bi = wc.submitMail(createOutMail(RECEIVER_BOX, "Mr. Receiver",
                 SENDER_BOX, "Mr. Sender",
-                ZKPDeliveryConstants.S_ZKP_A_SERVICE,
+                zkpService,
                 ZKPDeliveryConstants.S_ZKP_ACTION_DELIVERY_NOTIFICATION,
-                "Test message",
+                testMessage,
                 "VL 1/2016"));
 
         // example list all out mail
@@ -242,8 +260,7 @@ public class WSZKPClientExample {
         }
 
         ZKPUtils zkp = new ZKPUtils();
-        OutMail omDA = zkp.createZkpAdviceOfDelivery(im, S_KEYSTORE,
-                S_KEYSTORE_PASSWD, singatureKey, S_KEY_PASSWD, ZKPDeliveryConstants.S_ZKP_A_SERVICE);
+        OutMail omDA = zkp.createZkpAdviceOfDelivery(im, S_KEYSTORE, S_KEYSTORE_PASSWD, singatureKey, S_KEY_PASSWD, zkpService);
 
         wc.serialize(omDA);
         wc.submitMail(omDA);
@@ -254,7 +271,6 @@ public class WSZKPClientExample {
 
         for (InPart ip : imWithDecPayload.getInPayload().getInParts()) {
             LOG.info(ip.getDescription());
-
         }
 
     }
