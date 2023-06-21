@@ -11,6 +11,7 @@
 /Laurentius-app/target/
 /Laurentius-dao/derby.log
 /Laurentius-dao/target/
+/Laurentius-dao/laurentius-home/conf/security/
 /Laurentius-examples/example-web-plugin/nbproject/
 /Laurentius-examples/example-web-plugin/target/
 /Laurentius-examples/Laurentius-test-case-plugin/nbproject/

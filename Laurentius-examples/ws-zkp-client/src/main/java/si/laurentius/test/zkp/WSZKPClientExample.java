@@ -160,26 +160,27 @@ public class WSZKPClientExample {
             LOG.error("Signature failed: " + ex.getMessage(), ex);
         }
 
-        try {
-            // 2. test: AdviceOfDelivery is signed with a key NOT registred in laurentius
-            testAdviceOfDelivery(ZKPDeliveryConstants.S_ZKP_A_SERVICE, S_KEY_NOT_REGISTRED_ALIAS, "Test message ZKP_A");
-        } catch (SEDException_Exception | JAXBException | FOPException | ZKPException ex) {
-            LOG.error("Signature failed: " + ex.getMessage(), ex);
-        }
-        // ZKP_B
-        try {
-            // 1. test: AdviceOfDelivery is signed with key registred in laurentius
-            testAdviceOfDelivery(ZKPDeliveryConstants.S_ZKP_B_SERVICE, S_KEY_ALIAS, "Test message ZKP_B");
-        } catch (SEDException_Exception | JAXBException | FOPException | ZKPException ex) {
-            LOG.error("Signature failed: " + ex.getMessage(), ex);
-        }
+//        try {
+//            // 2. test: AdviceOfDelivery is signed with a key NOT registred in laurentius
+//            testAdviceOfDelivery(ZKPDeliveryConstants.S_ZKP_A_SERVICE, S_KEY_NOT_REGISTRED_ALIAS, "Test message ZKP_A");
+//        } catch (SEDException_Exception | JAXBException | FOPException | ZKPException ex) {
+//            LOG.error("Signature failed: " + ex.getMessage(), ex);
+//        }
 
-        try {
-            // 1. test: AdviceOfDelivery is signed with key registred in laurentius
-            testAdviceOfDelivery(ZKPDeliveryConstants.S_ZKP_B_SERVICE, S_KEY_NOT_REGISTRED_ALIAS, "Test message ZKP_B");
-        } catch (SEDException_Exception | JAXBException | FOPException | ZKPException ex) {
-            LOG.error("Signature failed: " + ex.getMessage(), ex);
-        }
+        // ZKP_B
+//        try {
+//            // 1. test: AdviceOfDelivery is signed with key registred in laurentius
+//            testAdviceOfDelivery(ZKPDeliveryConstants.S_ZKP_B_SERVICE, S_KEY_ALIAS, "Test message ZKP_B");
+//        } catch (SEDException_Exception | JAXBException | FOPException | ZKPException ex) {
+//            LOG.error("Signature failed: " + ex.getMessage(), ex);
+//        }
+
+//        try {
+//            // 1. test: AdviceOfDelivery is signed with key registred in laurentius
+//            testAdviceOfDelivery(ZKPDeliveryConstants.S_ZKP_B_SERVICE, S_KEY_NOT_REGISTRED_ALIAS, "Test message ZKP_B");
+//        } catch (SEDException_Exception | JAXBException | FOPException | ZKPException ex) {
+//            LOG.error("Signature failed: " + ex.getMessage(), ex);
+//        }
 
         // non-delivery for ZKP A and B
 
@@ -242,7 +243,7 @@ public class WSZKPClientExample {
         // because "in process" in demo laurentius sets inmail status to DELIVERED - search is done by this status
         // else default is RECEIVED
         Thread.sleep(2000);
-        List<InMail> lstIM = wc.getInMailList(RECEIVER_BOX, "PLOCKED");
+        List<InMail> lstIM = wc.getInMailList(RECEIVER_BOX, (zkpService.equals(ZKPDeliveryConstants.S_ZKP_A_SERVICE) ? "PLOCKED" : "RECEIVED"));
         // search for corresponding in mail
         InMail im = null;
         for (InMail m : lstIM) {
@@ -255,7 +256,7 @@ public class WSZKPClientExample {
         }
 
         if (im == null) {
-            LOG.error("Message submitted but no mail in status PLOCKED found for " + RECEIVER_BOX);
+            LOG.error("Message submitted but no mail in status RECEIVED found for " + RECEIVER_BOX);
             return;
         }
 
@@ -484,7 +485,13 @@ public class WSZKPClientExample {
         OutProperty opr = new OutProperty();
         opr.setName("oprst");
         opr.setValue(oprst);
-        om.getOutProperties().getOutProperties().add(opr);
+        final List<OutProperty> outProperties = om.getOutProperties().getOutProperties();
+        outProperties.add(opr);
+
+        OutProperty sodisif = new OutProperty();
+        sodisif.setName("SodiSif");
+        sodisif.setValue("1234");
+        outProperties.add(sodisif);
 
         om.setOutPayload(new OutPayload());
 

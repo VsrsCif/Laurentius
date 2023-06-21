@@ -14,55 +14,6 @@
  */
 package si.vsrs.cif.laurentius.plugin.zkp;
 
-import org.apache.cxf.binding.soap.SoapFault;
-import org.apache.cxf.binding.soap.SoapMessage;
-import org.apache.cxf.message.MessageUtils;
-import org.oasis_open.docs.ebxml_msg.ebms.v3_0.ns.core._200704.SignalMessage;
-import org.w3c.dom.Element;
-import si.vsrs.cif.laurentius.plugin.zkp.doc.DocumentSodBuilder;
-import si.vsrs.cif.laurentius.plugin.zkp.enums.FopTransformation;
-import si.vsrs.cif.laurentius.plugin.zkp.enums.ZKPPartPropertyType;
-import si.vsrs.cif.laurentius.plugin.zkp.enums.ZKPPartType;
-import si.vsrs.cif.laurentius.plugin.zkp.exception.ZKPException;
-import si.vsrs.cif.laurentius.plugin.zkp.utils.FOPUtils;
-import si.vsrs.cif.laurentius.plugin.zkp.utils.ZKPUtils;
-import si.laurentius.commons.SEDJNDI;
-import si.laurentius.commons.SEDSystemProperties;
-import si.laurentius.commons.cxf.SoapUtils;
-import si.laurentius.commons.enums.MimeValue;
-import si.laurentius.commons.enums.SEDMailPartSource;
-import si.laurentius.commons.enums.SEDOutboxMailStatus;
-import si.laurentius.commons.exception.FOPException;
-import si.laurentius.commons.exception.HashException;
-import si.laurentius.commons.exception.SEDSecurityException;
-import si.laurentius.commons.exception.StorageException;
-import si.laurentius.commons.interfaces.SEDCertStoreInterface;
-import si.laurentius.commons.interfaces.SEDDaoInterface;
-import si.laurentius.commons.interfaces.SEDLookupsInterface;
-import si.laurentius.commons.pmode.EBMSMessageContext;
-import si.laurentius.commons.utils.SEDLogger;
-import si.laurentius.commons.utils.StorageUtils;
-import si.laurentius.commons.utils.Utils;
-import si.laurentius.lce.KeystoreUtils;
-import si.laurentius.lce.enc.SEDCrypto;
-import si.laurentius.lce.sign.pdf.SignUtils;
-import si.laurentius.lce.sign.pdf.SignatureInfo;
-import si.laurentius.lce.sign.pdf.ValidateSignatureUtils;
-import si.laurentius.msh.inbox.mail.MSHInMail;
-import si.laurentius.msh.outbox.mail.MSHOutMail;
-import si.laurentius.msh.outbox.payload.MSHOutPart;
-import si.laurentius.msh.outbox.property.MSHOutProperties;
-import si.laurentius.msh.outbox.property.MSHOutProperty;
-import si.laurentius.plugin.interceptor.MailInterceptorDef;
-import si.laurentius.plugin.interfaces.SoapInterceptorInterface;
-
-import javax.ejb.EJB;
-import javax.ejb.Local;
-import javax.ejb.Stateless;
-import javax.ejb.TransactionManagement;
-import javax.ejb.TransactionManagementType;
-import javax.xml.bind.JAXBException;
-import javax.xml.namespace.QName;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -86,10 +37,54 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.ejb.EJB;
+import javax.ejb.Local;
+import javax.ejb.Stateless;
+import javax.ejb.TransactionManagement;
+import javax.ejb.TransactionManagementType;
+import javax.xml.bind.JAXBException;
+import javax.xml.namespace.QName;
+
+import org.apache.cxf.binding.soap.SoapFault;
+import org.apache.cxf.binding.soap.SoapMessage;
+import org.apache.cxf.message.MessageUtils;
+import org.oasis_open.docs.ebxml_msg.ebms.v3_0.ns.core._200704.SignalMessage;
+import org.w3c.dom.Element;
+
+import si.laurentius.commons.SEDJNDI;
+import si.laurentius.commons.cxf.SoapUtils;
+import si.laurentius.commons.enums.MimeValue;
+import si.laurentius.commons.enums.SEDMailPartSource;
+import si.laurentius.commons.enums.SEDOutboxMailStatus;
+import si.laurentius.commons.exception.FOPException;
+import si.laurentius.commons.exception.HashException;
+import si.laurentius.commons.exception.SEDSecurityException;
+import si.laurentius.commons.exception.StorageException;
+import si.laurentius.commons.interfaces.SEDCertStoreInterface;
+import si.laurentius.commons.interfaces.SEDDaoInterface;
+import si.laurentius.commons.pmode.EBMSMessageContext;
+import si.laurentius.commons.utils.SEDLogger;
+import si.laurentius.commons.utils.StorageUtils;
+import si.laurentius.commons.utils.Utils;
+import si.laurentius.lce.enc.SEDCrypto;
+import si.laurentius.lce.sign.pdf.SignUtils;
+import si.laurentius.lce.sign.pdf.SignatureInfo;
+import si.laurentius.lce.sign.pdf.ValidateSignatureUtils;
+import si.laurentius.msh.inbox.mail.MSHInMail;
+import si.laurentius.msh.outbox.mail.MSHOutMail;
+import si.laurentius.msh.outbox.payload.MSHOutPart;
+import si.laurentius.plugin.interceptor.MailInterceptorDef;
+import si.laurentius.plugin.interfaces.SoapInterceptorInterface;
+import si.vsrs.cif.laurentius.plugin.zkp.enums.FopTransformation;
+import si.vsrs.cif.laurentius.plugin.zkp.enums.ZKPPartPropertyType;
+import si.vsrs.cif.laurentius.plugin.zkp.enums.ZKPPartType;
+import si.vsrs.cif.laurentius.plugin.zkp.exception.ZKPException;
+import si.vsrs.cif.laurentius.plugin.zkp.utils.FOPUtils;
+import si.vsrs.cif.laurentius.plugin.zkp.utils.ZKPUtils;
 
 /**
  *
@@ -143,8 +138,7 @@ public class ZKPOutInterceptor implements SoapInterceptorInterface {
         long l = LOG.logStart(msg, ctx, msg);
 
         if (Arrays.asList(
-                ZKPConstants.ZKP_A_SERVICE,
-                ZKPConstants.ZKP_B_SERVICE
+                ZKPConstants.ZKP_A_SERVICE
         ).contains(ctx.getService().getServiceName())) {
             if (ZKPConstants.ZKP_ACTION_DELIVERY_NOTIFICATION.equals(ctx.
                     getAction().getName())) {
