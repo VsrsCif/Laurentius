@@ -157,6 +157,7 @@ public class FOPUtils {
     AdviceOfDelivery("LegalDelivery_ZKP-AdviceOfDelivery.fo"),
     AdviceOfDeliveryFictionNotification("LegalDelivery_ZKP-AdviceOfDeliveryFictionNotification.fo"),
     AdviceOfDeliveryFiction("LegalDelivery_ZKP-AdviceOfDeliveryFiction.fo"),
+    NotDeliveredNotification("LegalDelivery_ZKP_B-NotDeliveredNotification.fo"),
     DeliveryReciept("LegalDelivery_ZKP-DeliveryReciept.fo");
 
     private final String mstrfileName;
