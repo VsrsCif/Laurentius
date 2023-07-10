@@ -16,49 +16,9 @@
  */
 package si.laurentius.test.zkp;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.math.BigInteger;
-import java.net.Authenticator;
-import java.net.PasswordAuthentication;
-import java.nio.file.Files;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.ws.BindingProvider;
-
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
-
-import si.laurentius.GetInMailRequest;
-import si.laurentius.GetInMailResponse;
-import si.laurentius.InMailEventListRequest;
-import si.laurentius.InMailEventListResponse;
-import si.laurentius.InMailListRequest;
-import si.laurentius.InMailListResponse;
-import si.laurentius.Mailbox;
-import si.laurentius.ModifOutActionCode;
-import si.laurentius.ModifyActionCode;
-import si.laurentius.ModifyInMailRequest;
-import si.laurentius.ModifyInMailResponse;
-import si.laurentius.ModifyOutMailRequest;
-import si.laurentius.ModifyOutMailResponse;
-import si.laurentius.OutMailEventListRequest;
-import si.laurentius.OutMailEventListResponse;
-import si.laurentius.OutMailListRequest;
-import si.laurentius.OutMailListResponse;
-import si.laurentius.SEDException_Exception;
-import si.laurentius.SEDMailBoxWS;
-import si.laurentius.SubmitMailRequest;
-import si.laurentius.SubmitMailResponse;
+import si.laurentius.*;
 import si.laurentius.control.Control;
 import si.laurentius.inbox.mail.InMail;
 import si.laurentius.inbox.payload.InPart;
@@ -69,6 +29,20 @@ import si.laurentius.outbox.payload.OutPayload;
 import si.laurentius.outbox.property.OutProperties;
 import si.laurentius.outbox.property.OutProperty;
 import si.laurentius.test.zkp.fop.FOPException;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.ws.BindingProvider;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.math.BigInteger;
+import java.net.Authenticator;
+import java.net.PasswordAuthentication;
+import java.nio.file.Files;
+import java.util.*;
 
 /**
  * @author Jože Rihtaršič
@@ -153,15 +127,15 @@ public class WSZKPClientExample {
          *
          */
         // ZKP_A
-        try {
-            // 1. test: AdviceOfDelivery is signed with key registred in laurentius
-            testAdviceOfDelivery(ZKPDeliveryConstants.S_ZKP_A_SERVICE, S_KEY_ALIAS, "Test message ZKP_A");
-        } catch (SEDException_Exception | JAXBException | FOPException | ZKPException ex) {
-            LOG.error("Signature failed: " + ex.getMessage(), ex);
-        }
+//        try {
+//            // 1. test: AdviceOfDelivery is signed with key registered in laurentius
+//            testAdviceOfDelivery(ZKPDeliveryConstants.S_ZKP_A_SERVICE, S_KEY_ALIAS, "Test message ZKP_A");
+//        } catch (SEDException_Exception | JAXBException | FOPException | ZKPException ex) {
+//            LOG.error("Signature failed: " + ex.getMessage(), ex);
+//        }
 
 //        try {
-//            // 2. test: AdviceOfDelivery is signed with a key NOT registred in laurentius
+//            // 2. test: AdviceOfDelivery is signed with a key NOT registered in laurentius
 //            testAdviceOfDelivery(ZKPDeliveryConstants.S_ZKP_A_SERVICE, S_KEY_NOT_REGISTRED_ALIAS, "Test message ZKP_A");
 //        } catch (SEDException_Exception | JAXBException | FOPException | ZKPException ex) {
 //            LOG.error("Signature failed: " + ex.getMessage(), ex);
@@ -169,14 +143,14 @@ public class WSZKPClientExample {
 
         // ZKP_B
 //        try {
-//            // 1. test: AdviceOfDelivery is signed with key registred in laurentius
+//            // 1. test: AdviceOfDelivery is signed with key registered in laurentius
 //            testAdviceOfDelivery(ZKPDeliveryConstants.S_ZKP_B_SERVICE, S_KEY_ALIAS, "Test message ZKP_B");
 //        } catch (SEDException_Exception | JAXBException | FOPException | ZKPException ex) {
 //            LOG.error("Signature failed: " + ex.getMessage(), ex);
 //        }
 
 //        try {
-//            // 1. test: AdviceOfDelivery is signed with key registred in laurentius
+//            // 1. test: AdviceOfDelivery is signed with key registered in laurentius
 //            testAdviceOfDelivery(ZKPDeliveryConstants.S_ZKP_B_SERVICE, S_KEY_NOT_REGISTRED_ALIAS, "Test message ZKP_B");
 //        } catch (SEDException_Exception | JAXBException | FOPException | ZKPException ex) {
 //            LOG.error("Signature failed: " + ex.getMessage(), ex);
@@ -184,6 +158,17 @@ public class WSZKPClientExample {
 
         // non-delivery for ZKP A and B
 
+        try {
+            testNonDelivery(ZKPDeliveryConstants.S_ZKP_A_SERVICE, "Test non-delivery Message ZKP-A");
+        } catch (SEDException_Exception | JAXBException e) {
+            LOG.error("Non delivery test failed with exception", e);
+        }
+
+        try {
+            testNonDelivery(ZKPDeliveryConstants.S_ZKP_B_SERVICE, "Test non-delivery Message ZKP-B");
+        } catch (SEDException_Exception | JAXBException e) {
+            LOG.error("Non delivery test failed with exception", e);
+        }
     }
 
     private static void testAdviceOfDelivery(String zkpService, String singatureKey, String testMessage)
@@ -191,49 +176,19 @@ public class WSZKPClientExample {
             ZKPException {
         BasicConfigurator.configure();
 
-        WSZKPClientExample wc = new WSZKPClientExample();
+        WSZKPClientExample client = new WSZKPClientExample();
+        BigInteger submitMailId = submitMail(zkpService, testMessage, client);
+        OutMail outMail = getOutMail(client, submitMailId);
 
-        // example submit mail
-        BigInteger bi = wc.submitMail(createOutMail(RECEIVER_BOX, "Mr. Receiver",
-                SENDER_BOX, "Mr. Sender",
-                zkpService,
-                ZKPDeliveryConstants.S_ZKP_ACTION_DELIVERY_NOTIFICATION,
-                testMessage,
-                "VL 1/2016"));
-
-        // example list all out mail
-        List<OutMail> lstOm = wc.getOutMailList(SENDER_BOX);
-        OutMail om = null;
-        // get out mail data
-        for (OutMail m : lstOm) {
-            if (Objects.equals(m.getId(), bi)) {
-                om = m;
-                break;
-            }
-        }
-
-        if (om == null) {
+        if (outMail == null) {
             LOG.error("Message sent but no out message found for senderbox " + SENDER_BOX);
             return;
         }
 
-        boolean msgSent = false;
-        int iCnt = 0;
-        while (!msgSent) {
-            Thread.sleep(1000);
-            // example list events for  out mail
-            List<OutEvent> lstOE = wc.getOutMailEventList(bi, SENDER_BOX);
-            for (OutEvent e : lstOE) {
-                if (Objects.equals(e.getStatus(), "SENT")) {
-                    msgSent = true;
-                    break;
-                }
-
-            }
-            if (++iCnt > 8) {
-                LOG.error("Message is not sent in 8 seconds! - check url connection");
-                return;
-            }
+        boolean isMessageSent = checkMessageSent(client, submitMailId);
+        if (!isMessageSent) {
+            // TODO return with non 0 exit status, or assert.fail ?
+            return;
         }
 
         //-----------------------------------------------------------------------
@@ -243,13 +198,13 @@ public class WSZKPClientExample {
         // because "in process" in demo laurentius sets inmail status to DELIVERED - search is done by this status
         // else default is RECEIVED
         Thread.sleep(2000);
-        List<InMail> lstIM = wc.getInMailList(RECEIVER_BOX, (zkpService.equals(ZKPDeliveryConstants.S_ZKP_A_SERVICE) ? "PLOCKED" : "RECEIVED"));
+        List<InMail> lstIM = client.getInMailList(RECEIVER_BOX, (zkpService.equals(ZKPDeliveryConstants.S_ZKP_A_SERVICE) ? "PLOCKED" : "RECEIVED"));
         // search for corresponding in mail
         InMail im = null;
         for (InMail m : lstIM) {
-            LOG.info(m.getSenderMessageId() + " - " + om.
+            LOG.info(m.getSenderMessageId() + " - " + outMail.
                     getSenderMessageId());
-            if (Objects.equals(m.getSenderMessageId(), om.getSenderMessageId())) {
+            if (Objects.equals(m.getSenderMessageId(), outMail.getSenderMessageId())) {
                 im = m;
                 break;
             }
@@ -263,17 +218,131 @@ public class WSZKPClientExample {
         ZKPUtils zkp = new ZKPUtils();
         OutMail omDA = zkp.createZkpAdviceOfDelivery(im, S_KEYSTORE, S_KEYSTORE_PASSWD, singatureKey, S_KEY_PASSWD, zkpService);
 
-        wc.serialize(omDA);
-        wc.submitMail(omDA);
+        client.serialize(omDA);
+        client.submitMail(omDA);
 
         Thread.sleep(1000);
 
-        InMail imWithDecPayload = wc.getInMail(im.getId(), RECEIVER_BOX);
+        InMail imWithDecPayload = client.getInMail(im.getId(), RECEIVER_BOX);
 
         for (InPart ip : imWithDecPayload.getInPayload().getInParts()) {
             LOG.info(ip.getDescription());
         }
 
+    }
+
+    private static void testNonDelivery(String zkpService, String testMessage) throws SEDException_Exception, JAXBException, InterruptedException {
+        BasicConfigurator.configure();
+
+        WSZKPClientExample client = new WSZKPClientExample();
+        BigInteger submitMailId = submitMail(zkpService, testMessage, client);
+        OutMail om = getOutMail(client, submitMailId);
+
+        if (om == null) {
+            throw new AssertionError("No OUT message found for senderbox " + SENDER_BOX);
+        }
+
+        boolean isMessageSent = checkMessageSent(client, submitMailId);
+        if (!isMessageSent) {
+            throw new AssertionError("Message did not reach SENT status");
+        }
+
+        String origOutMailId = om.getMessageId();
+        LOG.info("Original out mail ID = " + origOutMailId);
+
+        int attempts = 0;
+        OutMail nonDeliveryOutMail = null;
+        while (nonDeliveryOutMail == null) {
+            OutMail outMail = getOutMail(client, submitMailId);
+            if (outMail != null) {
+                if (outMail.getStatus().equals("NOTDELIVERED")) {
+                    LOG.info("Out Mail entered status: " + outMail.getStatus());
+                    nonDeliveryOutMail = outMail;
+                }
+            }
+            Thread.sleep(10000);
+            attempts++;
+            if (attempts > 20) {
+                break;
+            }
+        }
+        if (nonDeliveryOutMail == null) {
+            throw new AssertionError("Message did not reach NOTDELIVERED status after " + attempts * 10 + " seconds");
+        }
+
+        final String nonDeliveredMailId = nonDeliveryOutMail.getMessageId();
+
+        Thread.sleep(2000);
+        int inMailCheckN = 0;
+        Optional<InMail> inMailNonDeliveryNotification = Optional.empty();
+        while (inMailCheckN < 10) {
+            LOG.info(LOG_SECTION_SEPARATOR);
+            LOG.info("Checking SENDER_BOX for InMailList. Origin messageId: " + nonDeliveredMailId);
+
+            List<InMail> inMailReceived = client.getInMailList(SENDER_BOX, "RECEIVED");
+
+            inMailNonDeliveryNotification = inMailReceived.stream().filter(inMail -> nonDeliveredMailId.equals(inMail.getRefToMessageId())).findFirst();
+            if (inMailNonDeliveryNotification.isPresent()) {
+                InMail nonDeliveryNotification = inMailNonDeliveryNotification.get();
+
+                // Assert action
+                if (!nonDeliveryNotification.getAction().equals("NotDelivered")) {
+                    throw new AssertionError("Reference message to NOTDELIVERED is not of action \"NotDelivered\"");
+                }
+                break;
+            }
+
+            inMailCheckN++;
+            Thread.sleep(1000);
+        }
+
+        if (!inMailNonDeliveryNotification.isPresent()) {
+            throw new AssertionError("No Non delivery notification in InMail of SENDER_BOX");
+        }
+    }
+
+    private static OutMail getOutMail(WSZKPClientExample client, BigInteger submitMailId) throws SEDException_Exception, JAXBException {
+        List<OutMail> outMailList = client.getOutMailList(SENDER_BOX);
+        OutMail outMail = null;
+        // get out mail data
+        for (OutMail m : outMailList) {
+            if (Objects.equals(m.getId(), submitMailId)) {
+                outMail = m;
+                break;
+            }
+        }
+        return outMail;
+    }
+
+    private static BigInteger submitMail(String zkpService, String testMessage, WSZKPClientExample wc) throws SEDException_Exception, JAXBException {
+        BigInteger bi = wc.submitMail(createOutMail(RECEIVER_BOX, "Mr. Receiver",
+                SENDER_BOX, "Mr. Sender",
+                zkpService,
+                ZKPDeliveryConstants.S_ZKP_ACTION_DELIVERY_NOTIFICATION,
+                testMessage,
+                "VL 1/2016"));
+        return bi;
+    }
+
+    private static boolean checkMessageSent(WSZKPClientExample client, BigInteger submitMailId) throws InterruptedException, SEDException_Exception, JAXBException {
+        boolean msgSent = false;
+        int iCnt = 0;
+        while (!msgSent) {
+            Thread.sleep(1000);
+            // example list events for  out mail
+            List<OutEvent> lstOE = client.getOutMailEventList(submitMailId, SENDER_BOX);
+            for (OutEvent e : lstOE) {
+                if (Objects.equals(e.getStatus(), "SENT")) {
+                    msgSent = true;
+                    break;
+                }
+
+            }
+            if (++iCnt > 8) {
+                LOG.error("Message is not sent in 8 seconds! - check url connection");
+            }
+        }
+        return msgSent;
     }
 
     public long getDeltaTime(long l) {
@@ -465,10 +534,10 @@ public class WSZKPClientExample {
     }
 
     private static OutMail createOutMail(String rcBox, String rcName,
-            String sndBox,
-            String sndName,
-            String service, String action, String contentDesc,
-            String oprst) {
+                                         String sndBox,
+                                         String sndName,
+                                         String service, String action, String contentDesc,
+                                         String oprst) {
 
         OutMail om = new OutMail();
 
