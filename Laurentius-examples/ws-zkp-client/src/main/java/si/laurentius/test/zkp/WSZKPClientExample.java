@@ -106,19 +106,6 @@ public class WSZKPClientExample {
     }
 
     public static void main(String... args) throws InterruptedException {
-
-        // TODO multiple scenarios:
-        /*
-            A
-                adviceOfDelivery
-                neprevzeto
-                ebox ne obstaja
-            B
-                adviceOfDelivery
-                neprevzeto
-                ebox ne obstaja
-        */
-
         /**
          * To start test first disable task: ZPPSign-B-Department from web-gui Test
          * procedure: 1. submit mail from a.department to b.department 2. retrieve
@@ -155,18 +142,18 @@ public class WSZKPClientExample {
 //        } catch (SEDException_Exception | JAXBException | FOPException | ZKPException ex) {
 //            LOG.error("Signature failed: " + ex.getMessage(), ex);
 //        }
-
-        // non-delivery for ZKP A and B
+//
+//        // non-delivery for ZKP A and B
+//
+//        try {
+//            testNonDeliveryZKP_A("Test non-delivery Message ZKP-A");
+//        } catch (SEDException_Exception | JAXBException e) {
+//            LOG.error("Non delivery test failed with exception", e);
+//        }
 
         try {
-            testNonDelivery(ZKPDeliveryConstants.S_ZKP_A_SERVICE, "Test non-delivery Message ZKP-A");
-        } catch (SEDException_Exception | JAXBException e) {
-            LOG.error("Non delivery test failed with exception", e);
-        }
-
-        try {
-            testNonDelivery(ZKPDeliveryConstants.S_ZKP_B_SERVICE, "Test non-delivery Message ZKP-B");
-        } catch (SEDException_Exception | JAXBException e) {
+            testNonDeliveryZKP_B("Test non-delivery Message ZKP-B");
+        } catch (SEDException_Exception | JAXBException | FOPException | ZKPException e) {
             LOG.error("Non delivery test failed with exception", e);
         }
     }
@@ -231,12 +218,13 @@ public class WSZKPClientExample {
 
     }
 
-    private static void testNonDelivery(String zkpService, String testMessage) throws SEDException_Exception, JAXBException, InterruptedException {
+    private static void testNonDeliveryZKP_A(String testMessage) throws SEDException_Exception, JAXBException, InterruptedException {
         BasicConfigurator.configure();
+        final String zkpService = ZKPDeliveryConstants.S_ZKP_A_SERVICE;
 
-        WSZKPClientExample client = new WSZKPClientExample();
-        BigInteger submitMailId = submitMail(zkpService, testMessage, client);
-        OutMail om = getOutMail(client, submitMailId);
+        final WSZKPClientExample client = new WSZKPClientExample();
+        final BigInteger submitMailId = submitMail(zkpService, testMessage, client);
+        final OutMail om = getOutMail(client, submitMailId);
 
         if (om == null) {
             throw new AssertionError("No OUT message found for senderbox " + SENDER_BOX);
@@ -300,6 +288,48 @@ public class WSZKPClientExample {
             throw new AssertionError("No Non delivery notification in InMail of SENDER_BOX");
         }
     }
+
+    private static void testNonDeliveryZKP_B(String testMessage) throws SEDException_Exception, JAXBException, InterruptedException, FOPException, ZKPException {
+        BasicConfigurator.configure();
+        final String zkpService = ZKPDeliveryConstants.S_ZKP_B_SERVICE;
+
+        final WSZKPClientExample client = new WSZKPClientExample();
+        final BigInteger submitMailId = submitMail(zkpService, testMessage, client);
+        final OutMail om = getOutMail(client, submitMailId);
+
+        if (om == null) {
+            throw new AssertionError("No OUT message found for senderbox " + SENDER_BOX);
+        }
+
+        boolean isMessageSent = checkMessageSent(client, submitMailId);
+        if (!isMessageSent) {
+            throw new AssertionError("Message did not reach SENT status");
+        }
+
+        String origOutMailId = om.getMessageId();
+        LOG.info("Original out mail ID = " + origOutMailId);
+
+        // NOW the receiving party should notify the sender that there was no delivery
+
+        // TODO make it work with multiple tests (search inmail by reference, select correct one)
+        Thread.sleep(5000);
+        List<InMail> inMailReceived = client.getInMailList(RECEIVER_BOX, "RECEIVED");
+        Optional<InMail> firstInMailOptional = inMailReceived.stream().findFirst();
+        while (!firstInMailOptional.isPresent()) {
+            inMailReceived = client.getInMailList(RECEIVER_BOX, "RECEIVED");
+            firstInMailOptional = inMailReceived.stream().findFirst();
+            Thread.sleep(5000);
+        }
+
+        ZKPUtils zkp = new ZKPUtils();
+        OutMail nonDeliveryNotificationOM = zkp.createZkpBNonDeliveryNotification(firstInMailOptional.get(), S_KEYSTORE, S_KEYSTORE_PASSWD, S_KEY_ALIAS, S_KEY_PASSWD);
+
+        client.serialize(nonDeliveryNotificationOM);
+        client.submitMail(nonDeliveryNotificationOM);
+
+        Thread.sleep(1000);
+    }
+
 
     private static OutMail getOutMail(WSZKPClientExample client, BigInteger submitMailId) throws SEDException_Exception, JAXBException {
         List<OutMail> outMailList = client.getOutMailList(SENDER_BOX);

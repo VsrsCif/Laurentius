@@ -5,23 +5,8 @@
  */
 package si.laurentius.test.zkp;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.UnrecoverableEntryException;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
-import java.util.Calendar;
-import java.util.UUID;
-
 import org.apache.log4j.Logger;
 import org.apache.xmlgraphics.util.MimeConstants;
-
 import si.laurentius.inbox.mail.InMail;
 import si.laurentius.outbox.mail.OutMail;
 import si.laurentius.outbox.payload.OutPart;
@@ -29,6 +14,15 @@ import si.laurentius.outbox.payload.OutPayload;
 import si.laurentius.test.zkp.fop.FOPException;
 import si.laurentius.test.zkp.fop.FOPUtils;
 import si.laurentius.test.zkp.sec.SignUtils;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.security.*;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+import java.util.UUID;
 
 /**
  * @author sluzba
@@ -40,25 +34,13 @@ public class ZKPUtils {
     FOPUtils mfpFop = null;
     public static final Logger LOG = Logger.getLogger(ZKPUtils.class);
 
-    public OutMail createZkpAdviceOfDelivery(InMail mInMail, String keystore, String keystorepassword, String signAlias,
-            String keypassword,
-            final String sZkpAService)
-            throws FOPException,
-            ZKPException {
-        long l = Calendar.getInstance().getTimeInMillis();
-        // create delivery advice
-
+    public OutMail createZkpAdviceOfDelivery(InMail mInMail, String keystore, String keystorepassword, String signAlias, String keypassword, final String sZkpAService) throws FOPException, ZKPException {
         OutMail mout = new OutMail();
         mout.setSenderMessageId(UUID.randomUUID().toString()); // client  message id );
         mout.setService(sZkpAService);
         mout.setAction(ZKPDeliveryConstants.S_ZKP_ACTION_ADVICE_OF_DELIVERY);
-        mout.setConversationId(mInMail.getConversationId());
-        mout.setSenderEBox(mInMail.getReceiverEBox());
-        mout.setSenderName(mInMail.getReceiverName());
-        mout.setRefToMessageId(mInMail.getMessageId());
-        mout.setReceiverEBox(mInMail.getSenderEBox());
-        mout.setReceiverName(mInMail.getSenderName());
         mout.setSubject(ZKPDeliveryConstants.S_ZKP_ACTION_ADVICE_OF_DELIVERY);
+        setDataFromReferenceInMail(mout, mInMail);
 
         File fDNViz = null;
         try {
@@ -114,6 +96,63 @@ public class ZKPUtils {
         }
 
         return mout;
+    }
+
+    public OutMail createZkpBNonDeliveryNotification(InMail referenceInMail, String keystore, String keystorepassword, String signAlias, String keypassword) throws FOPException, ZKPException {
+        OutMail nonDeliveryNotification = new OutMail();
+        nonDeliveryNotification.setSenderMessageId(UUID.randomUUID().toString()); // client  message id );
+        nonDeliveryNotification.setService(ZKPDeliveryConstants.S_ZKP_B_SERVICE);
+        nonDeliveryNotification.setAction(ZKPDeliveryConstants.S_ZKP_ACTION_NOT_DELIVERED_NOTIFICATION);
+        nonDeliveryNotification.setSubject(ZKPDeliveryConstants.S_ZKP_ACTION_NOT_DELIVERED_NOTIFICATION);
+
+        setDataFromReferenceInMail(nonDeliveryNotification, referenceInMail);
+
+        try {
+            File attachmentFile = File.createTempFile("NotDeliveredNotification", ".pdf");
+
+            getFOP().generateVisualization(referenceInMail, attachmentFile,
+                    FOPUtils.FopTransformations.NotDeliveredNotification,
+                    MimeConstants.MIME_PDF);
+
+            try {
+                KeyStore keyStore = KeyStore.getInstance("JKS");
+                keyStore.load(SignUtils.class.getResourceAsStream(keystore), keystorepassword.toCharArray());
+                X509Certificate xcert = (X509Certificate) keyStore.getCertificate(signAlias);
+                PrivateKey pk = (PrivateKey) keyStore.getKey(signAlias, keypassword.toCharArray());
+                signPDFDocument(pk, xcert, attachmentFile);
+            } catch (KeyStoreException | CertificateException | NoSuchAlgorithmException |
+                     UnrecoverableKeyException ex) {
+                throw new ZKPException(ex);
+            }
+
+            // sign with systemCertificate
+
+            nonDeliveryNotification.setOutPayload(new OutPayload());
+            OutPart mp = new OutPart();
+            mp.setDescription(ZKPDeliveryConstants.S_ZKP_ACTION_NOT_DELIVERED_NOTIFICATION);
+            mp.setMimeType(MimeConstants.MIME_PDF);
+            nonDeliveryNotification.getOutPayload().getOutParts().add(mp);
+
+            mp.setBin(Files.readAllBytes(attachmentFile.toPath()));
+            mp.setFilename(attachmentFile.getName());
+
+            mp.setName(mp.getFilename().
+                    substring(0, mp.getFilename().lastIndexOf(".")));
+
+        } catch (IOException ex) {
+            throw new ZKPException(ex);
+        }
+
+        return nonDeliveryNotification;
+    }
+
+    private void setDataFromReferenceInMail(OutMail outMail, InMail inMail) {
+        outMail.setConversationId(inMail.getConversationId());
+        outMail.setSenderEBox(inMail.getReceiverEBox());
+        outMail.setSenderName(inMail.getReceiverName());
+        outMail.setRefToMessageId(inMail.getMessageId());
+        outMail.setReceiverEBox(inMail.getSenderEBox());
+        outMail.setReceiverName(inMail.getSenderName());
     }
 
     private void signPDFDocument(PrivateKey pk, X509Certificate xcert, File f) {
