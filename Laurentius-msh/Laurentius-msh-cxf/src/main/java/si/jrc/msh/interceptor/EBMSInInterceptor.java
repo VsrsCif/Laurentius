@@ -203,7 +203,7 @@ public class EBMSInInterceptor extends AbstractEBMSInterceptor {
         if (isBackChannel) {
             EBMSMessageContext outmctx = SoapUtils.getEBMSMessageOutContext(msg);
             if (outmctx == null) {
-                String msgERr = "Out message context is not setted!";
+                String msgERr = "Out message context is not set!";
                 LOG.logError(l, msgERr, null);
                 throw new EBMSError(EBMSErrorCode.ApplicationError, messageId,
                         msgERr, SoapFault.FAULT_CODE_CLIENT);

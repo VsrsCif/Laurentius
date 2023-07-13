@@ -49,6 +49,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 import static java.nio.file.Files.move;
@@ -237,7 +238,7 @@ public class SEDInitData implements SEDInitDataInterface {
                                         });
                                     }
                             );
-                            LOG.log("Persist: " + cronJob);
+                            LOG.log("Persist: " + cronJob.getName() + " :: " + cronJob.getSEDTasks().stream().map(t -> t.getName() + " - " + t.getType()).collect(Collectors.joining(",")));
                             memEManager.persist(cronJob);
                         });
             }

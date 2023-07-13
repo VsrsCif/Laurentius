@@ -20,6 +20,10 @@ import static java.util.Calendar.getInstance;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+
 /**
  * Common method logger.
  *
@@ -285,6 +289,19 @@ public class SEDLogger {
   public void logWarn(String strMessage, Exception ex) {
     mlgLogger.warn(getCurrentMethodName() + MSG + strMessage + MSG_FC
             + getFirstCauseMessage(ex) + "'.", ex);
+  }
+
+  public void logJAXBObject(String prefix, Object obj) {
+    try {
+      JAXBContext jc = JAXBContext.newInstance(obj.getClass());
+      Marshaller marshaller = jc.createMarshaller();
+      marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+      StringWriter sw = new StringWriter();
+      marshaller.marshal(obj, sw);
+      mlgLogger.warn(prefix + sw, null);
+    } catch (JAXBException ex) {
+      mlgLogger.error("Error marshalling object", ex);
+    }
   }
 
   public Logger getLogger() {

@@ -24,7 +24,7 @@
             <property name="jboss.entity.manager.jndi.name" value="java:/ebMS_MSH_PU"/> 
             <property name="hibernate.dialect" value="${laurentius.hibernate.dialect}" />
             <property name="hibernate.hbm2ddl.auto" value="${laurentius.hibernate.hbm2ddl.auto}" />
-            <!-- property name = "hibernate.show_sql" value = "true" / -->
+<!--            <property name = "hibernate.show_sql" value = "true" />-->
             <!-- property name="javax.persistence.schema-generation.scripts.action" value="drop-and-create"/>
             <property name="javax.persistence.schema-generation.scripts.create-target" value="/sluzba/create.sql"/>
             <property name="javax.persistence.schema-generation.scripts.drop-target" value="/sluzba/drop.sql"/ -->

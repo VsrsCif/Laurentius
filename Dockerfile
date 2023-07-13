@@ -33,8 +33,6 @@ COPY --from=build /app/scripts/install/$SERVER_VERSION/config/laurentius-users.p
 COPY --from=build /app/scripts/install/$SERVER_VERSION/config/standalone-laurentius.xml $WILDFLY_HOME/standalone/configuration/
 COPY --from=build /app/scripts/install/$SERVER_VERSION/config/test-tls-keystore.jks $WILDFLY_HOME/standalone/configuration/
 
-
-
 # application modules
 COPY --from=build /app/Laurentius-dao/target/Laurentius-dao.jar $WILDFLY_HOME/standalone/deployments/
 COPY --from=build /app/Laurentius-msh/Laurentius-msh-ear/target/Laurentius-msh.ear $WILDFLY_HOME/standalone/deployments/
@@ -42,6 +40,7 @@ COPY --from=build /app/Laurentius-app/Laurentius-ws/target/laurentius-ws.war $WI
 COPY --from=build /app/Laurentius-app/Laurentius-web/target/laurentius-web.war $WILDFLY_HOME/standalone/deployments/
 # application plugins
 COPY --from=build /app/Laurentius-plugins/Laurentius-zpp-plugin/target/plugin-zpp.war $WILDFLY_HOME/standalone/deployments/
+COPY --from=build /app/Laurentius-plugins/Laurentius-zkp-plugin/target/plugin-zkp.war $WILDFLY_HOME/standalone/deployments/
 COPY --from=build /app/Laurentius-plugins/Laurentius-basic-plugin/target/plugin-basic.war $WILDFLY_HOME/standalone/deployments/
 COPY --from=build /app/Laurentius-plugins/Laurentius-test-case-plugin/target/plugin-testcase.war $WILDFLY_HOME/standalone/deployments/
 COPY --from=build /app/Laurentius-examples/example-web-plugin/target/example-web-plugin.war $WILDFLY_HOME/standalone/deployments/
@@ -51,6 +50,7 @@ COPY --from=build /app/scripts/install/laurentius-home/  $WILDFLY_HOME/standalon
 COPY --from=build /app/scripts/install/$SERVER_VERSION/laurentius-demo.sh  $WILDFLY_HOME/bin/
 COPY --from=build /app/scripts/install/$SERVER_VERSION/laurentius-init.sh  $WILDFLY_HOME/bin/
 
+RUN echo "test=544e00c06e8229f4face117c31564c8b" >> $WILDFLY_HOME/standalone/configuration/mgmt-users.properties
 
 user root
 RUN  cd $WILDFLY_HOME/modules/si/laurentius/main/ && \
@@ -59,4 +59,4 @@ RUN  cd $WILDFLY_HOME/modules/si/laurentius/main/ && \
 user jboss
 
 # Set the default command to run on boot
-CMD ["/opt/jboss/wildfly/bin/laurentius-demo.sh", "--init", "-d", "test-laurentius.si"]
+CMD ["/opt/jboss/wildfly/bin/laurentius-demo.sh"]
