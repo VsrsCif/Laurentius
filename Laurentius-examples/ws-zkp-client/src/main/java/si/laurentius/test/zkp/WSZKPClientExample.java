@@ -114,42 +114,41 @@ public class WSZKPClientExample {
          *
          */
         // ZKP_A
-//        try {
-//            // 1. test: AdviceOfDelivery is signed with key registered in laurentius
-//            testAdviceOfDelivery(ZKPDeliveryConstants.S_ZKP_A_SERVICE, S_KEY_ALIAS, "Test message ZKP_A");
-//        } catch (SEDException_Exception | JAXBException | FOPException | ZKPException ex) {
-//            LOG.error("Signature failed: " + ex.getMessage(), ex);
-//        }
+        try {
+            // 1. test: AdviceOfDelivery is signed with key registered in laurentius
+            testAdviceOfDelivery(ZKPDeliveryConstants.S_ZKP_A_SERVICE, S_KEY_ALIAS, "Test message ZKP_A");
+        } catch (SEDException_Exception | JAXBException | FOPException | ZKPException ex) {
+            LOG.error("Signature failed: " + ex.getMessage(), ex);
+        }
 
-//        try {
-//            // 2. test: AdviceOfDelivery is signed with a key NOT registered in laurentius
-//            testAdviceOfDelivery(ZKPDeliveryConstants.S_ZKP_A_SERVICE, S_KEY_NOT_REGISTRED_ALIAS, "Test message ZKP_A");
-//        } catch (SEDException_Exception | JAXBException | FOPException | ZKPException ex) {
-//            LOG.error("Signature failed: " + ex.getMessage(), ex);
-//        }
+        try {
+            // 2. test: AdviceOfDelivery is signed with a key NOT registered in laurentius
+            testAdviceOfDelivery(ZKPDeliveryConstants.S_ZKP_A_SERVICE, S_KEY_NOT_REGISTRED_ALIAS, "Test message ZKP_A");
+        } catch (SEDException_Exception | JAXBException | FOPException | ZKPException ex) {
+            LOG.error("Signature failed: " + ex.getMessage(), ex);
+        }
 
         // ZKP_B
-//        try {
-//            // 1. test: AdviceOfDelivery is signed with key registered in laurentius
-//            testAdviceOfDelivery(ZKPDeliveryConstants.S_ZKP_B_SERVICE, S_KEY_ALIAS, "Test message ZKP_B");
-//        } catch (SEDException_Exception | JAXBException | FOPException | ZKPException ex) {
-//            LOG.error("Signature failed: " + ex.getMessage(), ex);
-//        }
+        try {
+            // 1. test: AdviceOfDelivery is signed with key registered in laurentius
+            testAdviceOfDelivery(ZKPDeliveryConstants.S_ZKP_B_SERVICE, S_KEY_ALIAS, "Test message ZKP_B");
+        } catch (SEDException_Exception | JAXBException | FOPException | ZKPException ex) {
+            LOG.error("Signature failed: " + ex.getMessage(), ex);
+        }
 
-//        try {
-//            // 1. test: AdviceOfDelivery is signed with key registered in laurentius
-//            testAdviceOfDelivery(ZKPDeliveryConstants.S_ZKP_B_SERVICE, S_KEY_NOT_REGISTRED_ALIAS, "Test message ZKP_B");
-//        } catch (SEDException_Exception | JAXBException | FOPException | ZKPException ex) {
-//            LOG.error("Signature failed: " + ex.getMessage(), ex);
-//        }
-//
-//        // non-delivery for ZKP A and B
-//
-//        try {
-//            testNonDeliveryZKP_A("Test non-delivery Message ZKP-A");
-//        } catch (SEDException_Exception | JAXBException e) {
-//            LOG.error("Non delivery test failed with exception", e);
-//        }
+        try {
+            // 1. test: AdviceOfDelivery is signed with key registered in laurentius
+            testAdviceOfDelivery(ZKPDeliveryConstants.S_ZKP_B_SERVICE, S_KEY_NOT_REGISTRED_ALIAS, "Test message ZKP_B");
+        } catch (SEDException_Exception | JAXBException | FOPException | ZKPException ex) {
+            LOG.error("Signature failed: " + ex.getMessage(), ex);
+        }
+
+        // non-delivery for ZKP A and B
+        try {
+            testNonDeliveryZKP_A("Test non-delivery Message ZKP-A");
+        } catch (SEDException_Exception | JAXBException e) {
+            LOG.error("Non delivery test failed with exception", e);
+        }
 
         try {
             testNonDeliveryZKP_B("Test non-delivery Message ZKP-B");
@@ -169,13 +168,12 @@ public class WSZKPClientExample {
 
         if (outMail == null) {
             LOG.error("Message sent but no out message found for senderbox " + SENDER_BOX);
-            return;
+            throw new AssertionError("Message sent but no out message found for senderbox " + SENDER_BOX);
         }
 
         boolean isMessageSent = checkMessageSent(client, submitMailId);
         if (!isMessageSent) {
-            // TODO return with non 0 exit status, or assert.fail ?
-            return;
+            throw new AssertionError("Message not sent");
         }
 
         //-----------------------------------------------------------------------
@@ -199,7 +197,7 @@ public class WSZKPClientExample {
 
         if (im == null) {
             LOG.error("Message submitted but no mail in status RECEIVED found for " + RECEIVER_BOX);
-            return;
+            throw new AssertionError("Message submitted but no mail in status RECEIVED found for " + RECEIVER_BOX);
         }
 
         ZKPUtils zkp = new ZKPUtils();
@@ -307,6 +305,7 @@ public class WSZKPClientExample {
         }
 
         String origOutMailId = om.getMessageId();
+        String origOutConvId = om.getConversationId();
         LOG.info("Original out mail ID = " + origOutMailId);
 
         // NOW the receiving party should notify the sender that there was no delivery
@@ -314,7 +313,7 @@ public class WSZKPClientExample {
         // TODO make it work with multiple tests (search inmail by reference, select correct one)
         Thread.sleep(5000);
         List<InMail> inMailReceived = client.getInMailList(RECEIVER_BOX, "RECEIVED");
-        Optional<InMail> firstInMailOptional = inMailReceived.stream().findFirst();
+        Optional<InMail> firstInMailOptional = inMailReceived.stream().filter(mail -> mail.getConversationId().equals(origOutConvId)).findFirst();
         while (!firstInMailOptional.isPresent()) {
             inMailReceived = client.getInMailList(RECEIVER_BOX, "RECEIVED");
             firstInMailOptional = inMailReceived.stream().findFirst();
@@ -322,10 +321,13 @@ public class WSZKPClientExample {
         }
 
         ZKPUtils zkp = new ZKPUtils();
-        OutMail nonDeliveryNotificationOM = zkp.createZkpBNonDeliveryNotification(firstInMailOptional.get(), S_KEYSTORE, S_KEYSTORE_PASSWD, S_KEY_ALIAS, S_KEY_PASSWD);
+        InMail firstInMail = firstInMailOptional.get();
+        OutMail nonDeliveryNotificationOM = zkp.createZkpBNonDeliveryNotification(firstInMail, S_KEYSTORE, S_KEYSTORE_PASSWD, S_KEY_ALIAS, S_KEY_PASSWD);
 
         client.serialize(nonDeliveryNotificationOM);
         client.submitMail(nonDeliveryNotificationOM);
+
+        client.modifyInMail(firstInMail.getId(), RECEIVER_BOX);
 
         Thread.sleep(1000);
     }
