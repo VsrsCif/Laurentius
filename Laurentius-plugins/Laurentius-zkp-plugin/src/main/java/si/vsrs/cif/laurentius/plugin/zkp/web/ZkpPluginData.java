@@ -35,10 +35,6 @@ import java.util.Set;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
-/**
- *
- * @author Jože Rihtaršič
- */
 @ApplicationScoped
 @Named( "ZppPluginData")
 public class ZkpPluginData {

@@ -3,10 +3,7 @@
  */
 package si.vsrs.cif.laurentius.plugin.zkp.doc;
 
-/**
- *
- * @author logos
- */
+
 public class DocumentBuilderFactory {
 
   /**

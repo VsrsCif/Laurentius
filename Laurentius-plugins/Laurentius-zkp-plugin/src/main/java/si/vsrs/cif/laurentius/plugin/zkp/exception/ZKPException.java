@@ -14,10 +14,6 @@
  */
 package si.vsrs.cif.laurentius.plugin.zkp.exception;
 
-/**
- *
- * @author Joze Rihtarsic <joze.rihtarsic@sodisce.si>
- */
 public class ZKPException extends Exception {
 
   /**

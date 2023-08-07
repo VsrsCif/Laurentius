@@ -16,10 +16,6 @@ package si.vsrs.cif.laurentius.plugin.zkp.exception;
 
 import si.laurentius.commons.ebms.EBMSErrorCodeInterface;
 
-/**
- *
- * @author Jože Rihtaršič
- */
 public enum ZKPErrorCode implements EBMSErrorCodeInterface {
 
    

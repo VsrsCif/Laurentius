@@ -7,10 +7,7 @@ package si.vsrs.cif.laurentius.plugin.zkp;
 
 import java.util.Date;
 
-/**
- *
- * @author sluzba
- */
+
 public class ZKPMailFilter {
   
     String  status;

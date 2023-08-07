@@ -145,7 +145,7 @@
             </ns2:SEDTask>
         </ns2:SEDCronJob>
         <ns2:SEDCronJob id="11" name="ZKPDeleteNotDelivered" active="true" second="0" minute="*" hour="*" dayOfMonth="*" month="*" dayOfWeek="*">
-            <ns2:SEDTask plugin="LegalZKP" type="zkp-delete-parcel-test" pluginVersion="1.0.0" id="17" name="ZKPTaskDeleteParcelForTest" active="true">
+            <ns2:SEDTask plugin="LegalZKP" type="zkp-delete-parcel-test" pluginVersion="1.0.0" id="17" name="ZKPTaskDeleteParcelForTest" active="false">
                 <ns2:SEDTaskProperty id="99" key="zkp.sign.key.alias">test-laurentius</ns2:SEDTaskProperty>
                 <ns2:SEDTaskProperty id="100" key="zkp.max.mail.count">100</ns2:SEDTaskProperty>
                 <ns2:SEDTaskProperty id="101" key="zkp.wait.days">0</ns2:SEDTaskProperty>

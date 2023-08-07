@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ns1:DefaultInitData xmlns:ns3="http://laurentius.si/interceptor" 
+<ns1:DefaultInitData xmlns:proc="http://laurentius.si/process"
+                     xmlns:ns3="http://laurentius.si/interceptor"
                      xmlns:ns2="http://laurentius.si/cron"
                      xmlns:ns1="http://laurentius.si/plugin/def"
                      xmlns:pmd="http://msh.laurentius.si/pmode" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -181,7 +182,7 @@
             <pmd:DuplicateDetection windowPeriode="P1Y" eliminate="true"/>
         </pmd:ReceptionAwareness>
         
-        <pmd:PMode id="ZKP_A">
+        <pmd:PMode id="ZKP_A" isTest="false" priority="5">
             <pmd:ServiceIdRef>ZKP_A</pmd:ServiceIdRef>
             <pmd:LocalPartyInfo partyIdentitySetIdRef="test-laurentius" partyDefTransportIdRef="defalut">
                 <pmd:Role>Sender</pmd:Role>
@@ -226,7 +227,7 @@
                 </pmd:Leg>
             </pmd:MEP>
         </pmd:PMode>
-        <pmd:PMode id="ZKP_B" isTest="false">
+        <pmd:PMode id="ZKP_B" isTest="false" priority="5">
             <pmd:ServiceIdRef>ZKP_B</pmd:ServiceIdRef>
             <pmd:LocalPartyInfo partyIdentitySetIdRef="test-laurentius" partyDefTransportIdRef="defalut">
                 <pmd:Role>Sender</pmd:Role>
@@ -292,43 +293,58 @@
     </ns1:PModeData>
     <ns1:PluginData>
         <ns3:SEDInterceptor name="ZKP_InMessages" active="true" interceptEvent="InMessage" interceptRole="All">
-            <ns3:SEDInterceptorRule id="1" property="Service" predicate="InList" value="LegalDelivery_ZKP;LegalDelivery_ZKPB"/>
+            <ns3:SEDInterceptorRule id="1" property="Service" predicate="InList" value="ZKP_A;ZKP_B"/>
             <ns3:SEDInterceptorInstance plugin="LegalZKP" type="ZKPInInterceptor" pluginVersion="1.0.0"/>
         </ns3:SEDInterceptor>
         <ns3:SEDInterceptor name="ZKP_OutMessages" active="true" interceptEvent="OutMessage" interceptRole="All">
-            <ns3:SEDInterceptorRule id="2" property="Service" predicate="InList" value="LegalDelivery_ZKP;LegalDelivery_ZKPB"/>
+            <ns3:SEDInterceptorRule id="2" property="Service" predicate="InList" value="ZKP_A;ZKP_B"/>
             <ns3:SEDInterceptorInstance plugin="LegalZKP" type="ZKPOutInterceptor" pluginVersion="1.0.0"/>
         </ns3:SEDInterceptor>
         <ns3:SEDInterceptor name="LegalZKPFault" active="true" interceptEvent="InFaultMessage" interceptRole="Requestor">
             <ns3:SEDInterceptorInstance plugin="LegalZKP" type="ZKPFaultInInterceptor" pluginVersion="1.0.0"/>
         </ns3:SEDInterceptor>
-<!--        <ns2:SEDCronJob  name="ZKPSign" active="true" second="0" minute="*/5" hour="8-16" dayOfMonth="*" month="*" dayOfWeek="1-5">-->
-<!--            <ns2:SEDTask plugin="LegalZKP" type="zkp-test-delivery" pluginVersion="1.0.0"  name="ZKPSign-B-Department" active="true">-->
-<!--                <ns2:SEDTaskProperty  key="zkp.sedbox">b.department</ns2:SEDTaskProperty>-->
-<!--                <ns2:SEDTaskProperty  key="zkp.sign.key.alias">test-zpp-sign</ns2:SEDTaskProperty>-->
-<!--                <ns2:SEDTaskProperty  key="zkp.max.mail.count">100</ns2:SEDTaskProperty>-->
-<!--            </ns2:SEDTask>-->
-<!--            <ns2:SEDTask plugin="LegalZKP" type="zkp-test-delivery" pluginVersion="1.0.0"  name="ZKPSign-A-Department" active="true">-->
-<!--                <ns2:SEDTaskProperty  key="zkp.sedbox">a.department</ns2:SEDTaskProperty>-->
-<!--                <ns2:SEDTaskProperty  key="zkp.sign.key.alias">test-zpp-sign</ns2:SEDTaskProperty>-->
-<!--                <ns2:SEDTaskProperty  key="zkp.max.mail.count">100</ns2:SEDTaskProperty>-->
-<!--                <ns2:SEDTaskProperty  key="zkp.max.mail.count">100</ns2:SEDTaskProperty>-->
-<!--            </ns2:SEDTask>-->
-<!--        </ns2:SEDCronJob>-->
-<!--        <ns2:SEDCronJob  name="ZKPDeleteNotDelivered" active="true" second="0" minute="*" hour="*" dayOfMonth="*" month="*" dayOfWeek="*">-->
-<!--            <ns2:SEDTask plugin="LegalZKP" type="zkp-delete-parcel-test" pluginVersion="1.0.0"  name="ZKPTaskDeleteParcelForTest" active="true">-->
-<!--                <ns2:SEDTaskProperty  key="zkp.sign.key.alias">test-laurentius</ns2:SEDTaskProperty>-->
-<!--                <ns2:SEDTaskProperty  key="zkp.max.mail.count">100</ns2:SEDTaskProperty>-->
-<!--                <ns2:SEDTaskProperty  key="zkp.wait.days">0</ns2:SEDTaskProperty>-->
-<!--                <ns2:SEDTaskProperty  key="zkp.wait.minutes">5</ns2:SEDTaskProperty>-->
-<!--                <ns2:SEDTaskProperty  key="zkp.sedbox">b.department</ns2:SEDTaskProperty>-->
-<!--            </ns2:SEDTask>-->
-<!--            <ns2:SEDTask plugin="LegalZKP" type="zkp-not-delivered-deletion" pluginVersion="1.0.0" name="ZKPTaskDeleteUndelivered" active="true">-->
-<!--                <ns2:SEDTaskProperty  key="zkp.sign.key.alias">test-laurentius</ns2:SEDTaskProperty>-->
-<!--                <ns2:SEDTaskProperty  key="zkp.max.mail.count">100</ns2:SEDTaskProperty>-->
-<!--                <ns2:SEDTaskProperty  key="zkp.wait.days">0</ns2:SEDTaskProperty>-->
-<!--                <ns2:SEDTaskProperty  key="zkp.wait.minutes">5</ns2:SEDTaskProperty>-->
-<!--            </ns2:SEDTask>-->
-<!--        </ns2:SEDCronJob>-->
+        <ns2:SEDCronJob  name="ZKPSign" active="true" second="0" minute="*/5" hour="8-16" dayOfMonth="*" month="*" dayOfWeek="1-5">
+            <ns2:SEDTask plugin="LegalZKP" type="zkp-test-delivery" pluginVersion="1.0.0"  name="ZKPSign-B-Department" active="true">
+                <ns2:SEDTaskProperty  key="zkp.sedbox">b.department</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty  key="zkp.sign.key.alias">test-zpp-sign</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty  key="zkp.max.mail.count">100</ns2:SEDTaskProperty>
+            </ns2:SEDTask>
+            <ns2:SEDTask plugin="LegalZKP" type="zkp-test-delivery" pluginVersion="1.0.0"  name="ZKPSign-A-Department" active="true">
+                <ns2:SEDTaskProperty  key="zkp.sedbox">a.department</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty  key="zkp.sign.key.alias">test-zpp-sign</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty  key="zkp.max.mail.count">100</ns2:SEDTaskProperty>
+            </ns2:SEDTask>
+        </ns2:SEDCronJob>
+        <ns2:SEDCronJob  name="ZKPDeleteNotDelivered" active="true" second="0" minute="*" hour="*" dayOfMonth="*" month="*" dayOfWeek="*">
+            <ns2:SEDTask plugin="LegalZKP" type="zkp-delete-parcel-test" pluginVersion="1.0.0"  name="ZKPTaskDeleteParcelForTest" active="false">
+                <ns2:SEDTaskProperty  key="zkp.sign.key.alias">test-laurentius</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty  key="zkp.max.mail.count">100</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty  key="zkp.wait.days">15</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty  key="zkp.wait.minutes">0</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty  key="zkp.sedbox">b.department</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty  key="dev.mode">true</ns2:SEDTaskProperty>
+            </ns2:SEDTask>
+            <ns2:SEDTask plugin="LegalZKP" type="zkp-not-delivered-deletion" pluginVersion="1.0.0" name="ZKPTaskDeleteUndelivered" active="true">
+                <ns2:SEDTaskProperty  key="zkp.sign.key.alias">test-laurentius</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty  key="zkp.max.mail.count">100</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty  key="zkp.wait.days">15</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty  key="zkp.wait.minutes">0</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty  key="dev.mode">false</ns2:SEDTaskProperty>
+            </ns2:SEDTask>
+        </ns2:SEDCronJob>
+        <proc:SEDProcessor id="3" active="true" name="zkp" deliveredOnSuccess="true">
+            <proc:SEDProcessorRule property="Service" predicate="=" value="ZKP_A"/>
+            <proc:SEDProcessorRule property="Action" predicate="=" value="DeliveryNotification"/>
+            <proc:SEDProcessorInstance id="5" type="xslt" plugin="BasicTaskPlugin" pluginVersion="1.0.0">
+                <proc:SEDProcessorProperty key="imp.xslt.instance">vsrs2zbs_001</proc:SEDProcessorProperty>
+            </proc:SEDProcessorInstance>
+            <proc:SEDProcessorInstance id="6" type="export" plugin="BasicTaskPlugin" pluginVersion="1.0.0">
+                <proc:SEDProcessorProperty key="imp.export.metadata">true</proc:SEDProcessorProperty>
+                <proc:SEDProcessorProperty key="imp.export.overwrite">true</proc:SEDProcessorProperty>
+                <proc:SEDProcessorProperty key="imp.export.metadata.filename">metadata_${Id}.xml</proc:SEDProcessorProperty>
+                <proc:SEDProcessorProperty key="imp.export.filemask">${Id}_${PART-Id}_${PART-Filename}</proc:SEDProcessorProperty>
+                <proc:SEDProcessorProperty key="imp.export.folder">${laurentius.home}/test-export/${SenderEBox}_${Service}_${Id}</proc:SEDProcessorProperty>
+            </proc:SEDProcessorInstance>
+        </proc:SEDProcessor>
     </ns1:PluginData>
 </ns1:DefaultInitData>

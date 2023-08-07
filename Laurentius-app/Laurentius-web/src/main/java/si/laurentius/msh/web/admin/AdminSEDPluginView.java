@@ -47,6 +47,7 @@ import si.laurentius.plugin.def.Plugin;
 import si.laurentius.plugin.eventlistener.OutMailEventListenerDef;
 import si.laurentius.plugin.interceptor.MailInterceptorDef;
 import si.laurentius.plugin.processor.InMailProcessorDef;
+import si.laurentius.process.SEDProcessor;
 
 /**
  *
@@ -282,9 +283,11 @@ public class AdminSEDPluginView extends AbstractAdminJSFView<Plugin> {
 
       if (item.getPluginItem() instanceof SEDCronJob) {
         installSEDCronJob((SEDCronJob) item.getPluginItem());
-
       }
 
+      if (item.getPluginItem() instanceof SEDProcessor) {
+        installSEDProcessor((SEDProcessor) item.getPluginItem());
+      }
 
     }
     // submit message to dialog  to close 
@@ -323,6 +326,30 @@ public class AdminSEDPluginView extends AbstractAdminJSFView<Plugin> {
     boolean bAdd = false;
     if (mPModeManager.getPartyIdentitySetById(ps.getId()) == null) {
       mPModeManager.addPartyIdentitySet(ps);
+      bAdd = true;
+    }
+    return bAdd;
+  }
+
+  private boolean installSEDProcessor(SEDProcessor sp) {
+    boolean bAdd = false;
+
+    if (mdbLookups.getSEDProcessorByName(sp.getName()) == null) {
+      sp.setId(null);
+      sp.getSEDProcessorRules().
+              forEach((sr) -> {
+                sr.setId(null);
+              });
+      sp.getSEDProcessorInstances().
+              forEach((sr) -> {
+                sr.setId(null);
+                sr.getSEDProcessorProperties().
+                        forEach((srp) -> {
+                          srp.setId(null);
+                        });
+              });
+
+      mdbLookups.addSEDProcessor(sp);
       bAdd = true;
     }
     return bAdd;

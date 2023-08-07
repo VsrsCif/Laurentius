@@ -27,8 +27,7 @@ import static java.util.Calendar.DAY_OF_MONTH;
 import static java.util.Calendar.getInstance;
 
 /**
- * XSLT extension for FOP transformations. 
- * @author Joze Rihtarsic <joze.rihtarsic@sodisce.si>
+ * XSLT extension for FOP transformations.
  */
 public class XSLTExtensions {
 
