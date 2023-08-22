@@ -14,10 +14,6 @@
  */
 package si.vsrs.cif.laurentius.plugin.zkp.enums;
 
-/**
- *
- * @author Joze Rihtarsic <joze.rihtarsic@sodisce.si>
- */
 public enum ZKPPartPropertyType {
 
   /**

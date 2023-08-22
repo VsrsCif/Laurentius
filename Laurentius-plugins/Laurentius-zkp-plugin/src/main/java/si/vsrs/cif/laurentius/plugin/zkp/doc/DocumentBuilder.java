@@ -28,10 +28,6 @@ import java.security.KeyStore;
 import java.util.Calendar;
 import java.util.List;
 
-/**
- *
- * @author Jože Rihtaršič
- */
 public abstract class DocumentBuilder {
 
   public static final String SIGNATURE_REASON = "Laurentius: Legal delivery advice";

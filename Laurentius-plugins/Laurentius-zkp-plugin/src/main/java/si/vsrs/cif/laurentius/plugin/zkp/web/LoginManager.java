@@ -34,10 +34,6 @@ import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 
-/**
- *
- * @author Jože Rihtaršič
- */
 @ViewScoped
 @Named("loginManager")
 public class LoginManager implements Serializable {

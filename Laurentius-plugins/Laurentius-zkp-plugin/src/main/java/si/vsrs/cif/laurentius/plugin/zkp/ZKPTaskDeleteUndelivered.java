@@ -44,9 +44,6 @@ import java.util.List;
 import java.util.Properties;
 import java.util.stream.Collectors;
 
-/**
- * @author Jože Rihtaršič
- */
 @Stateless
 @Local(TaskExecutionInterface.class)
 public class ZKPTaskDeleteUndelivered implements TaskExecutionInterface {

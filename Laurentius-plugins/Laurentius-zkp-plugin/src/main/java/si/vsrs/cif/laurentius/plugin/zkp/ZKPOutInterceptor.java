@@ -86,10 +86,6 @@ import si.vsrs.cif.laurentius.plugin.zkp.exception.ZKPException;
 import si.vsrs.cif.laurentius.plugin.zkp.utils.FOPUtils;
 import si.vsrs.cif.laurentius.plugin.zkp.utils.ZKPUtils;
 
-/**
- *
- * @author Joze Rihtarsic <joze.rihtarsic@sodisce.si>
- */
 @Stateless
 @Local(SoapInterceptorInterface.class)
 @TransactionManagement(TransactionManagementType.BEAN)

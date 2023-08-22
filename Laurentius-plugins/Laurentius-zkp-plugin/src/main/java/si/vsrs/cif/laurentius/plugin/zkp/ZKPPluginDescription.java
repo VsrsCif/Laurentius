@@ -21,10 +21,6 @@ import javax.xml.bind.JAXBException;
 import java.util.Collections;
 import java.util.List;
 
-/**
- *
- * @author Jože Rihtaršič
- */
 @Singleton
 @Startup
 @Local(PluginDescriptionInterface.class)

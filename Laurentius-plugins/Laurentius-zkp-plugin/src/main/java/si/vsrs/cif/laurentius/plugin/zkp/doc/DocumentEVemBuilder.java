@@ -33,10 +33,6 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Properties;
 
-/**
- *
- * @author logos
- */
 public class DocumentEVemBuilder extends DocumentBuilder {
 
   private static final String NM_DATA = "http://www.crea.si/Schemas/2004/Document/ObjectType/Data";

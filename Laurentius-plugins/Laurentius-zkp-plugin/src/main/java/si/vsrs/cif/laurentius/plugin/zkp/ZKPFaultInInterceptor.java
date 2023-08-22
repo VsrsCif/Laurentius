@@ -53,10 +53,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
-/**
- *
- * @author Joze Rihtarsic <joze.rihtarsic@sodisce.si>
- */
 @Stateless
 @Local(SoapInterceptorInterface.class)
 @TransactionManagement(TransactionManagementType.BEAN)

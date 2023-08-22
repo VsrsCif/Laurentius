@@ -26,9 +26,6 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Properties;
 
-/**
- * @author Jože Rihtaršič
- */
 @Stateless
 @Local(TaskExecutionInterface.class)
 public class ZKPTaskDeleteParcelForTest implements TaskExecutionInterface {

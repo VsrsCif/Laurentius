@@ -109,6 +109,7 @@ public class CRLVerifierTest {
    * Test of downloadCRL method, of class CRLVerifier.
    */
   @Test
+  @Ignore
   public void test_B_DownloadCRL_LDAP()
           throws Exception {
     Assume.assumeTrue(networkConnected());

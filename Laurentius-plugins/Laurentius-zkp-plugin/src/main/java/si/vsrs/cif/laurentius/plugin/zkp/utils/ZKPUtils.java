@@ -57,10 +57,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 import java.util.Objects;
 
-/**
- *
- * @author sluzba
- */
 public class ZKPUtils {
 
   protected final static SEDLogger LOG = new SEDLogger(ZKPUtils.class);

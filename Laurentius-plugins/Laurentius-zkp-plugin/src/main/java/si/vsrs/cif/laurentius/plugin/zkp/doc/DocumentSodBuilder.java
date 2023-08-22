@@ -29,10 +29,6 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
-/**
- *
- * @author logos
- */
 public class DocumentSodBuilder extends DocumentBuilder {
 
   private static final BigDecimal SCHEMA_VERSION = BigDecimal.valueOf(1.0);

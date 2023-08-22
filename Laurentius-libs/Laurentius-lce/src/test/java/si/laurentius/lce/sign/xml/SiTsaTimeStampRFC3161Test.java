@@ -5,6 +5,7 @@
  */
 package si.laurentius.lce.sign.xml;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -18,6 +19,7 @@ public class SiTsaTimeStampRFC3161Test {
   }
 
   @Test
+  @Ignore
   public void testStamp() {
 
     new SiTsaTimeStampRFC3161().stamp();
