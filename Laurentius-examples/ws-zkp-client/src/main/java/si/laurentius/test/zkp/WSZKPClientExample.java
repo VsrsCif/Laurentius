@@ -107,7 +107,7 @@ public class WSZKPClientExample {
 
     public static void main(String... args) throws InterruptedException {
         /**
-         * To start test first disable task: ZPPSign-B-Department from web-gui Test
+         * To start test first disable task: ZKPSign from web-gui Test
          * procedure: 1. submit mail from a.department to b.department 2. retrieve
          * inmail for b.deparmtnt in PLOCKED status 3. create, sign and submit
          * AdviceOfDelivery 4. retrieve payloads for submitted mail
