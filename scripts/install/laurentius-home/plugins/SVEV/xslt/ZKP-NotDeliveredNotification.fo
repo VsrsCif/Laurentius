@@ -45,7 +45,8 @@
                     <fo:block font-size="12pt" linefeed-treatment="preserve">
                         Obveščamo vas,
 
-                        - da je naslovnik pošiljke z oznako <fo:inline font-weight="bold"><xsl:value-of select="/msh:MSHOutMail/@messageId"/></fo:inline> dne <fo:inline font-weight="bold"><xsl:value-of select="/msh:MSHOutMail/@receivedDate"/></fo:inline> prejel obvestilo o tej pošiljki,
+                        - da je naslovnik pošiljke z oznako <fo:inline font-weight="bold"><xsl:value-of select="/msh:MSHOutMail/@messageId"/></fo:inline> dne <fo:inline font-weight="bold"><xsl:call-template
+                            name="receivedDate"/></fo:inline> prejel obvestilo o tej pošiljki,
                         - da naslovnik v 15 dneh od dneva prejema obvestila o prispeli elektronski pošiljki pošiljke ni prevzel,
                         - da je bilo pisanje izbrisano iz informacijskega sistema za varno elektronsko vročanje.
 
@@ -66,5 +67,8 @@
     </xsl:template>
     <xsl:template name="systemDomain">
         <xsl:value-of select="java:si.vsrs.cif.laurentius.plugin.zkp.utils.XSLTExtensions.systemDomain()"/>
+    </xsl:template>
+    <xsl:template name="receivedDate">
+        <xsl:value-of select="java:format(java:java.text.SimpleDateFormat.new('dd. MM. yyyy'), /msh:MSHOutMail/@receivedDate)"/>
     </xsl:template>
 </xsl:stylesheet>
