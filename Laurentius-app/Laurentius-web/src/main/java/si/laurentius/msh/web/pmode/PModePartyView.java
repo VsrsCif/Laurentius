@@ -134,7 +134,7 @@ public class PModePartyView extends AbstractPModeJSFView<PartyIdentitySet> {
                 new FacesMessage(FacesMessage.SEVERITY_WARN, "Id alredy exists!",
                         "Id must be unique!"));
         return false;
-      } else if (!sv.getIsLocalIdentity() && Utils.isEmptyString(sv.getDomain())) {
+      } else if (!sv.isIsLocalIdentity() && Utils.isEmptyString(sv.getDomain())) {
         facesContext().addMessage(null,
                 new FacesMessage(FacesMessage.SEVERITY_WARN, "Domain is empty!",
                         "For exchange party domain must not be empty!"));
@@ -204,7 +204,7 @@ public class PModePartyView extends AbstractPModeJSFView<PartyIdentitySet> {
 
      List<PartyIdentitySet>  lst = mPModeInteface.getPartyIdentitySets();
     for (PartyIdentitySet lp: lst){
-        if (lp.getIsLocalIdentity()){
+        if (lp.isIsLocalIdentity()){
           lstLP.add(lp);
         }
     }
@@ -221,8 +221,8 @@ public class PModePartyView extends AbstractPModeJSFView<PartyIdentitySet> {
     }
 
     public boolean getUseFourCornerModel() {
-        return getEditable() != null && getEditable().getUseFourCornerModel() != null ? getEditable().
-                getUseFourCornerModel()
+        return getEditable() != null && getEditable().isUseFourCornerModel() != null ? getEditable().
+                isUseFourCornerModel()
                 : false;
     }
 
@@ -233,8 +233,8 @@ public class PModePartyView extends AbstractPModeJSFView<PartyIdentitySet> {
   }
 
   public boolean getEditableIdentityActive() {
-    return getEditable() != null && getEditable().getActive() != null ? getEditable().
-            getActive()
+    return getEditable() != null && getEditable().isActive() != null ? getEditable().
+            isActive()
             : true;
   }
 
@@ -245,7 +245,7 @@ public class PModePartyView extends AbstractPModeJSFView<PartyIdentitySet> {
   }
 
   public boolean getEditableLocalIdentity() {
-    return getEditable() != null ? getEditable().getIsLocalIdentity() : false;
+    return getEditable() != null ? getEditable().isIsLocalIdentity() : false;
   }
 
   public String getListAsString(List<String> lst) {

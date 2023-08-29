@@ -137,7 +137,7 @@ public class WSZKPClientExample {
         }
 
         try {
-            // 1. test: AdviceOfDelivery is signed with key registered in laurentius
+            // 1. test: AdviceOfDelivery is signed with a key NOT registered in laurentius
             testAdviceOfDelivery(ZKPDeliveryConstants.S_ZKP_B_SERVICE, S_KEY_NOT_REGISTRED_ALIAS, "Test message ZKP_B");
         } catch (SEDException_Exception | JAXBException | FOPException | ZKPException ex) {
             LOG.error("Signature failed: " + ex.getMessage(), ex);
@@ -211,12 +211,13 @@ public class WSZKPClientExample {
         InMail imWithDecPayload = client.getInMail(im.getId(), RECEIVER_BOX);
 
         for (InPart ip : imWithDecPayload.getInPayload().getInParts()) {
-            LOG.info(ip.getDescription());
+            LOG.debug(ip.getDescription());
         }
 
     }
 
     private static void testNonDeliveryZKP_A(String testMessage) throws SEDException_Exception, JAXBException, InterruptedException {
+        LOG.info("Test non delivery ZKP_A");
         BasicConfigurator.configure();
         final String zkpService = ZKPDeliveryConstants.S_ZKP_A_SERVICE;
 
@@ -234,13 +235,15 @@ public class WSZKPClientExample {
         }
 
         String origOutMailId = om.getMessageId();
-        LOG.info("Original out mail ID = " + origOutMailId);
-
+        String conversationId = om.getConversationId();
+        LOG.info(String.format("Original out mail: submitMailId = %d, MessageId = %s, conversationId = %s", submitMailId, origOutMailId, conversationId));
+        LOG.info("Starting to check out mail periodically");
         int attempts = 0;
         OutMail nonDeliveryOutMail = null;
         while (nonDeliveryOutMail == null) {
             OutMail outMail = getOutMail(client, submitMailId);
             if (outMail != null) {
+                LOG.info(String.format("Got out mail, status is of mail is: %s (attempt = %d), MessageId = %s, conversationId = %s", outMail.getStatus(), attempts, outMail.getMessageId(), outMail.getConversationId()));
                 if (outMail.getStatus().equals("NOTDELIVERED")) {
                     LOG.info("Out Mail entered status: " + outMail.getStatus());
                     nonDeliveryOutMail = outMail;
@@ -257,12 +260,12 @@ public class WSZKPClientExample {
         }
 
         final String nonDeliveredMailId = nonDeliveryOutMail.getMessageId();
+        LOG.info(String.format("Got nondelivered mail. MailId = %s, conversationId = %s", nonDeliveredMailId, nonDeliveryOutMail.getConversationId()));
 
         Thread.sleep(2000);
         int inMailCheckN = 0;
         Optional<InMail> inMailNonDeliveryNotification = Optional.empty();
         while (inMailCheckN < 10) {
-            LOG.info(LOG_SECTION_SEPARATOR);
             LOG.info("Checking SENDER_BOX for InMailList. Origin messageId: " + nonDeliveredMailId);
 
             List<InMail> inMailReceived = client.getInMailList(SENDER_BOX, "RECEIVED");
@@ -347,13 +350,12 @@ public class WSZKPClientExample {
     }
 
     private static BigInteger submitMail(String zkpService, String testMessage, WSZKPClientExample wc) throws SEDException_Exception, JAXBException {
-        BigInteger bi = wc.submitMail(createOutMail(RECEIVER_BOX, "Mr. Receiver",
+        return wc.submitMail(createOutMail(RECEIVER_BOX, "Mr. Receiver",
                 SENDER_BOX, "Mr. Sender",
                 zkpService,
                 ZKPDeliveryConstants.S_ZKP_ACTION_DELIVERY_NOTIFICATION,
                 testMessage,
                 "VL 1/2016"));
-        return bi;
     }
 
     private static boolean checkMessageSent(WSZKPClientExample client, BigInteger submitMailId) throws InterruptedException, SEDException_Exception, JAXBException {
@@ -398,11 +400,11 @@ public class WSZKPClientExample {
         smr.getData().setOutMail(om);
 
         // submit request
-        LOG.info("submit message");
+//        LOG.debug("submit message");
         SubmitMailResponse mr = getService().submitMail(smr);
-        LOG.info(LOG_SECTION_SEPARATOR);
-        LOG.info("got 'submitMail' response:\n" + serialize(mr));
-        LOG.info(LOG_SECTION_SEPARATOR);
+//        LOG.debug(LOG_SECTION_SEPARATOR);
+//        LOG.debug("got 'submitMail' response:\n" + serialize(mr));
+//        LOG.debug(LOG_SECTION_SEPARATOR);
 
         return mr.getRData() != null ? mr.getRData().getMailId() : null;
     }
@@ -417,9 +419,9 @@ public class WSZKPClientExample {
         omlr.getData().setSenderEBox(senderBox);
 
         OutMailListResponse mlr = getService().getOutMailList(omlr);
-        LOG.info(LOG_SECTION_SEPARATOR);
-        LOG.info("Got 'getOutMailList' response:\n" + serialize(mlr));
-        LOG.info(LOG_SECTION_SEPARATOR);
+//        LOG.debug(LOG_SECTION_SEPARATOR);
+//        LOG.debug("Got 'getOutMailList' response:\n" + serialize(mlr));
+//        LOG.debug(LOG_SECTION_SEPARATOR);
         return mlr.getRData().getOutMails();
 
     }
@@ -433,13 +435,13 @@ public class WSZKPClientExample {
         omelr.setData(new OutMailEventListRequest.Data());
         omelr.getData().setSenderEBox(senderBox);
         omelr.getData().setMailId(bi);
-        LOG.info(LOG_SECTION_SEPARATOR);
-        LOG.info("'getOutMailEventList' request:\n" + serialize(omelr));
-        LOG.info(LOG_SECTION_SEPARATOR);
+//        LOG.debug(LOG_SECTION_SEPARATOR);
+//        LOG.debug("'getOutMailEventList' request:\n" + serialize(omelr));
+//        LOG.debug(LOG_SECTION_SEPARATOR);
         OutMailEventListResponse mler = getService().getOutMailEventList(omelr);
-        LOG.info(LOG_SECTION_SEPARATOR);
-        LOG.info("Got 'getOutMailEventList' response:\n" + serialize(mler));
-        LOG.info(LOG_SECTION_SEPARATOR);
+//        LOG.debug(LOG_SECTION_SEPARATOR);
+//        LOG.debug("Got 'getOutMailEventList' response:\n" + serialize(mler));
+//        LOG.debug(LOG_SECTION_SEPARATOR);
         return mler.getRData().getOutEvents();
 
     }
@@ -457,18 +459,18 @@ public class WSZKPClientExample {
 
         ModifyOutMailResponse res;
         try {
-            LOG.info(LOG_SECTION_SEPARATOR);
-            LOG.info("'getInMailList' request:\n" + serialize(req));
-            LOG.info(LOG_SECTION_SEPARATOR);
+//            LOG.debug(LOG_SECTION_SEPARATOR);
+//            LOG.debug("'getInMailList' request:\n" + serialize(req));
+//            LOG.debug(LOG_SECTION_SEPARATOR);
             res = getService().modifyOutMail(req);
-            LOG.info(LOG_SECTION_SEPARATOR);
-            LOG.info("Got 'modifyOutMail' response:\n" + serialize(res));
-            LOG.info(LOG_SECTION_SEPARATOR);
+//            LOG.debug(LOG_SECTION_SEPARATOR);
+//            LOG.debug("Got 'modifyOutMail' response:\n" + serialize(res));
+//            LOG.debug(LOG_SECTION_SEPARATOR);
         } catch (SEDException_Exception ex) {
-            LOG.info(LOG_SECTION_SEPARATOR);
-            LOG.info("Got 'modifyOutMail' SEDException_Exception:\n" + serialize(ex.
+            LOG.error(LOG_SECTION_SEPARATOR);
+            LOG.error("Got 'modifyOutMail' SEDException_Exception:\n" + serialize(ex.
                     getFaultInfo()));
-            LOG.info(LOG_SECTION_SEPARATOR);
+            LOG.error(LOG_SECTION_SEPARATOR);
         }
     }
 
@@ -482,14 +484,14 @@ public class WSZKPClientExample {
         req.getData().setReceiverEBox(receiverBox);
         req.getData().setStatus(status);
 
-        LOG.info(LOG_SECTION_SEPARATOR);
-        LOG.info("'getInMailList' request:\n" + serialize(req));
-        LOG.info(LOG_SECTION_SEPARATOR);
+//        LOG.debug(LOG_SECTION_SEPARATOR);
+//        LOG.debug("'getInMailList' request:\n" + serialize(req));
+//        LOG.debug(LOG_SECTION_SEPARATOR);
 
         InMailListResponse mlr = getService().getInMailList(req);
-        LOG.info(LOG_SECTION_SEPARATOR);
-        LOG.info("Got 'getInMailList' response:\n" + serialize(mlr));
-        LOG.info(LOG_SECTION_SEPARATOR);
+//        LOG.debug(LOG_SECTION_SEPARATOR);
+//        LOG.debug("Got 'getInMailList' response:\n" + serialize(mlr));
+//        LOG.debug(LOG_SECTION_SEPARATOR);
         // return first mail id
         return mlr.getRData().getInMails();
 
@@ -506,9 +508,9 @@ public class WSZKPClientExample {
         omelr.getData().setMailId(bi);
 
         InMailEventListResponse mler = getService().getInMailEventList(omelr);
-        LOG.info(LOG_SECTION_SEPARATOR);
-        LOG.info("Got 'getInMailEventList' response:\n" + serialize(mler));
-        LOG.info(LOG_SECTION_SEPARATOR);
+//        LOG.debug(LOG_SECTION_SEPARATOR);
+//        LOG.debug("Got 'getInMailEventList' response:\n" + serialize(mler));
+//        LOG.debug(LOG_SECTION_SEPARATOR);
 
     }
 
@@ -523,9 +525,9 @@ public class WSZKPClientExample {
         reg.getData().setMailId(bi);
 
         GetInMailResponse mler = getService().getInMail(reg);
-        LOG.info(LOG_SECTION_SEPARATOR);
-        LOG.info("Got 'getInMail' response:\n" + serialize(mler));
-        LOG.info(LOG_SECTION_SEPARATOR);
+//        LOG.debug(LOG_SECTION_SEPARATOR);
+//        LOG.debug("Got 'getInMail' response:\n" + serialize(mler));
+//        LOG.debug(LOG_SECTION_SEPARATOR);
         return mler.getRData().getInMail();
 
     }
@@ -544,11 +546,11 @@ public class WSZKPClientExample {
         ModifyInMailResponse res;
         try {
             res = getService().modifyInMail(req);
-            LOG.info(LOG_SECTION_SEPARATOR);
-            LOG.info("Got response:\n" + serialize(res));
-            LOG.info(LOG_SECTION_SEPARATOR);
+//            LOG.debug(LOG_SECTION_SEPARATOR);
+//            LOG.debug("Got response:\n" + serialize(res));
+//            LOG.debug(LOG_SECTION_SEPARATOR);
         } catch (SEDException_Exception ex) {
-            LOG.info("Got SEDException_Exception: " + serialize(ex.getFaultInfo()));
+            LOG.error("Got SEDException_Exception: " + serialize(ex.getFaultInfo()));
         }
     }
 
@@ -632,7 +634,7 @@ public class WSZKPClientExample {
             long bytes = f.length();
             long kilobytes = (bytes / 1024);
             long megabytes = (kilobytes / 1024);
-            LOG.info("Generated file of size (MB): " + megabytes);
+//            LOG.debug("Generated file of size (MB): " + megabytes);
             return Files.readAllBytes(f.toPath());
         } catch (IOException ex) {
             LOG.error(ex.getMessage(), ex);

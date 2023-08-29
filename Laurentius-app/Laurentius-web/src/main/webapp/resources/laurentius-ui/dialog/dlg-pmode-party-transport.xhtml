@@ -36,10 +36,10 @@
                 <h:inputText value="#{pModePartyTransportView.editable.id}"  style="width:100%;"/>
 
                 <h:outputText value="#{msg['base64Encoded']}:" />
-                <p:selectBooleanCheckbox value="#{pModePartyTransportView.editable.base64Encoded}" />
+                <p:selectBooleanCheckbox value="#{pModePartyTransportView.editablebase64Encoded()}" />
 
                 <h:outputText value="#{msg['GzipCompression']}: "  />
-                <p:selectBooleanCheckbox value="#{pModePartyTransportView.editable.gzipCompress}" />                              
+                <p:selectBooleanCheckbox value="#{pModePartyTransportView.editablegzipCompress()}" />
 
             </p:panelGrid>
             <hr />

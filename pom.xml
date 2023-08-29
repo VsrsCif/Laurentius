@@ -4,7 +4,7 @@
 
     <groupId>si.vsrs.cif.sed</groupId>
     <artifactId>Laurentius</artifactId>
-    <version>2.0</version>
+    <version>2.1</version>
     <packaging>pom</packaging>
 
     <organization>
@@ -21,11 +21,10 @@
     </licenses>
     <repositories>
         <repository>
-  <id>cefdigital</id>
-  <name>cefdigital</name>
-  <url>https://ec.europa.eu/cefdigital/artifact/content/repositories/esignaturedss/</url>
-</repository>
-        
+          <id>cefdigital</id>
+          <name>cefdigital</name>
+          <url>https://ec.europa.eu/cefdigital/artifact/content/repositories/esignaturedss/</url>
+        </repository>
     </repositories>
 
     <developers>
@@ -45,11 +44,11 @@
     <modules>
         <module>Laurentius-libs</module>
         <module>Laurentius-dao</module>
-        <module>Laurentius-app</module>                
+        <module>Laurentius-app</module>
         <module>Laurentius-msh</module>
         <module>Laurentius-plugins</module>
         <module>Laurentius-examples</module>
-        
+
     </modules>
 
     <properties>
@@ -59,89 +58,90 @@
         <!-- PLUGINS -->
         <codehaus.buildnumber.plugin.version>1.4</codehaus.buildnumber.plugin.version>
         <codehaus.cobertura.plugin.version>2.6</codehaus.cobertura.plugin.version>
-        <codehaus.jaxb2.plugin.version>1.3.1</codehaus.jaxb2.plugin.version>        
+        <codehaus.jaxb2.plugin.version>1.6</codehaus.jaxb2.plugin.version>
         <codehaus.jaxws.plugin.version>2.4.1</codehaus.jaxws.plugin.version>
         <codehaus.jdepend.plugin.version>2.0</codehaus.jdepend.plugin.version>
-        <codehaus.findbugs.plugin.version>3.0.3</codehaus.findbugs.plugin.version>        
-        <maven.checkstyle.plugin.version>2.17</maven.checkstyle.plugin.version>        
-        <maven.clean.plugin.version>2.6.1</maven.clean.plugin.version>                       
-        <maven.compiler.plugin.version>3.5.1</maven.compiler.plugin.version>        
+        <codehaus.findbugs.plugin.version>3.0.3</codehaus.findbugs.plugin.version>
+        <maven.checkstyle.plugin.version>2.17</maven.checkstyle.plugin.version>
+        <maven.clean.plugin.version>2.6.1</maven.clean.plugin.version>
+        <maven.compiler.plugin.version>3.5.1</maven.compiler.plugin.version>
         <maven.dependency.plugin.version>2.10</maven.dependency.plugin.version>
         <maven.ear.plugin.version>2.10.1</maven.ear.plugin.version>
         <maven.ejb.plugin.version>2.5.1</maven.ejb.plugin.version>
-        <maven.war.plugin.version>2.6</maven.war.plugin.version>     
+        <maven.war.plugin.version>2.6</maven.war.plugin.version>
         <maven.jar.plugin.version>2.6</maven.jar.plugin.version>
-        <maven.jxr.plugin>2.5</maven.jxr.plugin><!-- code inspection report -->     
+        <maven.jxr.plugin>2.5</maven.jxr.plugin><!-- code inspection report -->
         <maven.pmd.plugin.version>3.6</maven.pmd.plugin.version>
         <maven.project-info.plugin.version>2.9</maven.project-info.plugin.version>
         <maven.surefire.plugin.version>2.16</maven.surefire.plugin.version>
         <sonar.maven.version>3.2</sonar.maven.version>
         <!-- DEPENDENCIES -->
-        <!-- 
+        <!--
         Saxon9-HE no longer offers XPath 1.0 compatibility mode, so it won't run a stylesheet labelled with version="1.0".
              The last open source Saxon release to offer this feature is Saxon 9.7, which of course is still available
              Latest: 9.7.0-14 9.8.0-5
-        -->     
+        -->
         <net.sf.saxon.version>9.8.0-5</net.sf.saxon.version>
         <javax.javaee-api.version>8.0</javax.javaee-api.version>
         <javax.annotation.version>1.3.1</javax.annotation.version>
         <log4j.version>1.2.17</log4j.version>
         <org.apache.xmlgraphics.fop.version>2.2</org.apache.xmlgraphics.fop.version>
-        <org.apache.pdfbox.version>2.0.8</org.apache.pdfbox.version>
-        
-        
-        
+        <org.apache.pdfbox.version>2.0.29</org.apache.pdfbox.version>
+
+
+
         <!-- wildfly 10.1 dependecies / latest  21.10.2017
-            - org.bouncycastle: 1.52/ latest 1.58     
+            - org.bouncycastle: 1.52/ latest 1.58
             - org.apache.santuario.xmlsec: 2.0.6 / latest 2.1.0
             - org.apache.cxf.*: 3.1.6 / latest 3.2.0
             - org.apache.activemq: 1.1.0  / latest 2.3.0
-            
-            
+
+
             wildfly 11.0 dependecies / latest  28.10.2017
-            - org.bouncycastle: 1.56/ latest 1.58     
+            - org.bouncycastle: 1.56/ latest 1.58
             - org.apache.santuario.xmlsec: 2.0.8 / latest 2.1.0
             - org.apache.cxf.*: 3.1.12 / latest 3.2.0
             - org.apache.activemq.artemis.jms.client: 1.5.5  / latest 2.3.0
         -->
-        <org.apache.santuario.xmlsec.version>2.0.6</org.apache.santuario.xmlsec.version>        
+        <org.apache.santuario.xmlsec.version>2.0.6</org.apache.santuario.xmlsec.version>
         <org.bouncycastle.version>1.56</org.bouncycastle.version>
         <cxf-rt.version>3.1.6</cxf-rt.version>
         <org.apache.activemq.artemis-jms-client.version>1.5.5</org.apache.activemq.artemis-jms-client.version>
-         
-        
+
+
         <!-- GUI latest primeface 6.1 -> dialog problem  -->
         <org.primefaces.version>6.1</org.primefaces.version>
-        <org.primefaces.extensions.version>6.1.1</org.primefaces.extensions.version>        
+        <org.primefaces.extensions.version>6.1.1</org.primefaces.extensions.version>
         <!-- unit testing
-        -->      
+        -->
         <org.apache.derby.version>10.14.1.0</org.apache.derby.version>
         <!--org.hibernate.version>4.2.6.Final</org.hibernate.version -->
         <org.hibernate.version>5.1.1.Final</org.hibernate.version>
         <junit.version>4.12</junit.version>
-        <org.apache.activemq.junit.version>5.15.2</org.apache.activemq.junit.version>      
-        <org.apache.activemq.core.version>5.7.0</org.apache.activemq.core.version> 
-        
+        <org.apache.activemq.junit.version>5.15.2</org.apache.activemq.junit.version>
+        <org.apache.activemq.core.version>5.7.0</org.apache.activemq.core.version>
+        <jackson-version>2.11.4</jackson-version>
+        <apache.maven.deploy>3.1.1</apache.maven.deploy>
     </properties>
 
     <dependencyManagement>
         <dependencies>
-            
+
             <dependency>
                 <groupId>javax</groupId>
                 <artifactId>javaee-api</artifactId>
                 <version>${javax.javaee-api.version}</version>
                 <scope>provided</scope>
-            </dependency>       
+            </dependency>
             <dependency>
                 <groupId>javax.annotation</groupId>
                 <artifactId>javax.annotation-api</artifactId>
-                <version>${javax.annotation.version}</version>                
-            </dependency>     
+                <version>${javax.annotation.version}</version>
+            </dependency>
             <dependency>
                 <groupId>log4j</groupId>
                 <artifactId>log4j</artifactId>
-                <version>${log4j.version}</version>                
+                <version>${log4j.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.cxf</groupId>
@@ -166,54 +166,58 @@
             <dependency>
                 <groupId>org.apache.santuario</groupId>
                 <artifactId>xmlsec</artifactId>
-                <version>${org.apache.santuario.xmlsec.version}</version>            
+                <version>${org.apache.santuario.xmlsec.version}</version>
             </dependency>
-            
+
             <dependency>
                 <groupId>org.apache.pdfbox</groupId>
                 <artifactId>pdfbox</artifactId>
-                <version>${org.apache.pdfbox.version}</version>                            
+                <version>${org.apache.pdfbox.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.pdfbox</groupId>
                 <artifactId>preflight</artifactId>
-                <version>${org.apache.pdfbox.version}</version>        
+                <version>${org.apache.pdfbox.version}</version>
             </dependency>
-        
+            <dependency>
+                <groupId>org.apache.pdfbox</groupId>
+                <artifactId>pdfbox-examples</artifactId>
+                <version>${org.apache.pdfbox.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.bouncycastle</groupId>
                 <artifactId>bcprov-jdk15on</artifactId>
-                <version>${org.bouncycastle.version}</version>        
+                <version>${org.bouncycastle.version}</version>
             </dependency>
- 
+
             <dependency>
                 <groupId>org.bouncycastle</groupId>
                 <artifactId>bcpkix-jdk15on</artifactId>
-                <version>${org.bouncycastle.version}</version>        
+                <version>${org.bouncycastle.version}</version>
             </dependency>
-        
+
             <dependency>
                 <groupId>net.sf.saxon</groupId>
                 <artifactId>Saxon-HE</artifactId>
-                <version>${net.sf.saxon.version}</version> 
+                <version>${net.sf.saxon.version}</version>
             </dependency>
             <!--  GUI -->
             <dependency>
                 <groupId>org.primefaces</groupId>
                 <artifactId>primefaces</artifactId>
-                <version>${org.primefaces.version}</version>            		
-            </dependency>	
+                <version>${org.primefaces.version}</version>
+            </dependency>
             <!-- dependency>
                 <groupId>org.primefaces.extensions</groupId>
                 <artifactId>primefaces-extensions</artifactId>
-                <version>${org.primefaces.extensions.version}</version>           
+                <version>${org.primefaces.extensions.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.primefaces.extensions</groupId>
                 <artifactId>resources-codemirror</artifactId>
                 <version>${org.primefaces.extensions.version}</version>
             </dependency -->
-            
+
             <!--  UNIT TESTING -->
             <dependency>
                 <groupId>junit</groupId>
@@ -228,54 +232,76 @@
             <dependency>
                 <groupId>org.apache.xmlgraphics</groupId>
                 <artifactId>fop</artifactId>
-                <version>${org.apache.xmlgraphics.fop.version}</version>            
+                <version>${org.apache.xmlgraphics.fop.version}</version>
             </dependency>
-            
+
             <dependency>
                 <groupId>org.apache.activemq</groupId>
                 <artifactId>activemq-core</artifactId>
-                <version>${org.apache.activemq.core.version}</version> 
+                <version>${org.apache.activemq.core.version}</version>
             </dependency>
-        
+
             <dependency>
                 <groupId>org.apache.activemq.tooling</groupId>
                 <artifactId>activemq-junit</artifactId>
-                <version>${org.apache.activemq.junit.version}</version> 
-                
-            </dependency> 
- 
+                <version>${org.apache.activemq.junit.version}</version>
+
+            </dependency>
+
             <dependency>
                 <groupId>org.apache.activemq</groupId>
                 <artifactId>activemq-broker</artifactId>
-                <version>${org.apache.activemq.junit.version}</version> 
-            
+                <version>${org.apache.activemq.junit.version}</version>
+
             </dependency>
-            
+
             <dependency>
                 <groupId>org.apache.activemq</groupId>
                 <artifactId>artemis-jms-client</artifactId>
                 <version>${org.apache.activemq.artemis-jms-client.version}</version>
             </dependency>
-            
+
             <!-- database -->
             <dependency>
                 <groupId>org.apache.derby</groupId>
                 <artifactId>derby</artifactId>
-                <version>${org.apache.derby.version}</version>                
+                <version>${org.apache.derby.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.derby</groupId>
                 <artifactId>derbyclient</artifactId>
                 <version>${org.apache.derby.version}</version>
-            </dependency>          
-              
+            </dependency>
             <dependency>
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-entitymanager</artifactId>
-                <version> ${org.hibernate.version}</version>            
+                <version> ${org.hibernate.version}</version>
             </dependency>
-           
-            
+            <dependency>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-validator</artifactId>
+                <version> ${org.hibernate.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>${jackson-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-annotations</artifactId>
+                <version>${jackson-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${jackson-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.datatype</groupId>
+                <artifactId>jackson-datatype-jsr310</artifactId>
+                <version>${jackson-version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -283,9 +309,35 @@
         <pluginManagement>
             <plugins>
                 <plugin>
+                    <!-- Needed to run the plugin xjc en Java 8 or superior -->
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>properties-maven-plugin</artifactId>
+                    <version>1.2.0</version>
+                    <executions>
+                        <execution>
+                            <id>set-additional-system-properties</id>
+                            <goals>
+                                <goal>set-system-properties</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <properties>
+                            <property>
+                                <name>javax.xml.accessExternalSchema</name>
+                                <value>all</value>
+                            </property>
+                            <property>
+                                <name>javax.xml.accessExternalDTD</name>
+                                <value>all</value>
+                            </property>
+                        </properties>
+                    </configuration>
+                </plugin>
+                <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>${maven.compiler.plugin.version}</version>                    
+                    <version>${maven.compiler.plugin.version}</version>
                     <configuration>
                         <source>${maven.compiler.source}</source>
                         <target>${maven.compiler.target}</target>
@@ -296,7 +348,7 @@
                 <!-- web service and xsd generators -->
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>jaxb2-maven-plugin</artifactId>                    
+                    <artifactId>jaxb2-maven-plugin</artifactId>
                     <version>${codehaus.jaxb2.plugin.version}</version>
                     <executions>
                         <execution>
@@ -305,9 +357,9 @@
                                 <goal>xjc</goal>
                             </goals>
                         </execution>
-                    </executions>                    
-                    <configuration>                    
-                        <extension>true</extension>                    
+                    </executions>
+                    <configuration>
+                        <extension>true</extension>
                         <schemaDirectory>${project.basedir}/src/main/resources/schemas</schemaDirectory>
                         <bindingDirectory>${project.basedir}/src/main/resources/schemas</bindingDirectory>
                         <bindingFiles>binding.xml</bindingFiles>
@@ -319,7 +371,7 @@
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>jaxws-maven-plugin</artifactId>
-                    <version>${codehaus.jaxws.plugin.version}</version>                    
+                    <version>${codehaus.jaxws.plugin.version}</version>
                     <executions>
                         <execution>
                             <goals>
@@ -329,7 +381,7 @@
                     </executions>
                     <configuration>
                         <bindingDirectory>${basedir}/src/main/resources/bindings</bindingDirectory>
-                        <wsdlDirectory>${basedir}/src/main/resources/wsdl</wsdlDirectory>                       
+                        <wsdlDirectory>${basedir}/src/main/resources/wsdl</wsdlDirectory>
                     </configuration>
                 </plugin>
                 <!-- packaging -->
@@ -341,11 +393,11 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-dependency-plugin</artifactId>
-                    <version>${maven.dependency.plugin.version}</version>                    
+                    <version>${maven.dependency.plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-ejb-plugin</artifactId>                                        
+                    <artifactId>maven-ejb-plugin</artifactId>
                     <version>${maven.ejb.plugin.version}</version>
                     <configuration>
                         <ejbVersion>3.0</ejbVersion>
@@ -354,23 +406,23 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-war-plugin</artifactId>
-                    <version>${maven.war.plugin.version}</version>                    
-                </plugin>                              
+                    <version>${maven.war.plugin.version}</version>
+                </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-jar-plugin</artifactId>  
+                    <artifactId>maven-jar-plugin</artifactId>
                     <version>${maven.jar.plugin.version}</version>
-                </plugin>   
-                <plugin> 
+                </plugin>
+                <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-ear-plugin</artifactId>
-                    <version>${maven.ear.plugin.version}</version>                    
+                    <version>${maven.ear.plugin.version}</version>
                 </plugin>
                 <!-- CODE QUALITY CONTROL -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-checkstyle-plugin</artifactId>
-                    <version>${maven.checkstyle.plugin.version}</version>              
+                    <version>${maven.checkstyle.plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -385,17 +437,17 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-project-info-reports-plugin</artifactId>
-                    <version>${maven.project-info.plugin.version}</version>              
+                    <version>${maven.project-info.plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>${maven.surefire.plugin.version}</version>                    
+                    <version>${maven.surefire.plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>buildnumber-maven-plugin</artifactId>
-                    <version>${codehaus.buildnumber.plugin.version}</version>                    
+                    <version>${codehaus.buildnumber.plugin.version}</version>
                     <executions>
                         <execution>
                             <phase>validate</phase>
@@ -404,19 +456,19 @@
                             </goals>
                         </execution>
                     </executions>
-                    <configuration>                    
+                    <configuration>
                         <format> {0}.{1} - {2,date, dd.MM.yyyy HH:mm}</format>
                         <items>
                             <item>${project.version}</item>
                             <item>scmVersion</item>
-                            <item>timestamp</item>                        
+                            <item>timestamp</item>
                         </items>
                         <doCheck>false</doCheck>
                         <doUpdate>false</doUpdate>
-                        <revisiononscmfailure>     
+                        <revisiononscmfailure>
                             <!--
                              Generate sequence build number based on:
-                             build number and timestamp     
+                             build number and timestamp
                             -->
                             <format> {0}.{1} - {2,date, dd.MM.yyyy HH:mm}</format>
                             <items>
@@ -425,23 +477,28 @@
                                 <item>timestamp</item>
                             </items>
                         </revisiononscmfailure>
-                         
+
                     </configuration>
-                </plugin>        
+                </plugin>
                 <plugin>
                     <groupId>org.sonarsource.scanner.maven</groupId>
                     <artifactId>sonar-maven-plugin</artifactId>
-                    <version>${sonar.maven.version}</version>                    
+                    <version>${sonar.maven.version}</version>
                 </plugin>
                 <plugin><!-- for testing purposes generates certicate-->
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>keytool-maven-plugin</artifactId>
                     <version>1.5</version>
                 </plugin>
+                <plugin>
+                    <groupId>com.google.code.maven-replacer-plugin</groupId>
+                    <artifactId>replacer</artifactId>
+                    <version>1.5.3</version>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
-            
+
             <!-- plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
@@ -466,7 +523,7 @@
                 <plugins>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>            
+                        <artifactId>maven-surefire-plugin</artifactId>
                         <configuration>
                             <skipTests>false</skipTests>
                         </configuration>
@@ -478,12 +535,12 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-project-info-reports-plugin</artifactId>
-                        <version>${maven.project-info.plugin.version}</version>              
+                        <version>${maven.project-info.plugin.version}</version>
                         <configuration>
                             <dependencyLocationsEnabled>false</dependencyLocationsEnabled>
                         </configuration>
                     </plugin>
-           
+
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-pmd-plugin</artifactId>
@@ -497,7 +554,7 @@
                             </excludes>
                             <aggregate>false</aggregate>
                             <!-- format>html</format -->
-                        </configuration>      
+                        </configuration>
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
@@ -506,32 +563,37 @@
                         <configuration>
                             <sourceDirectory>${project.build.sourceDirectory}</sourceDirectory>
                             <excludes>**/generated/**/*, **/generated-sources/**/*, **/si.laurentius.**/*, **/org/w3/_2001/**/*</excludes>
-                            <logViolationsToConsole>false</logViolationsToConsole>     
-                            
-                            <!-- configLocation>google_checks.xml </configLocation -->               
-                        </configuration>                        
+                            <logViolationsToConsole>false</logViolationsToConsole>
+
+                            <!-- configLocation>google_checks.xml </configLocation -->
+                        </configuration>
                     </plugin>
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>findbugs-maven-plugin</artifactId>
-                        <version>${codehaus.findbugs.plugin.version}</version>               
+                        <version>${codehaus.findbugs.plugin.version}</version>
                         <configuration>
                             <findbugsXmlOutputDirectory>
                                 ${project.build.directory}/site
                             </findbugsXmlOutputDirectory>
                             <failOnError>false</failOnError>
-                            <onlyAnalyze>si.laurentius.*,si.jrc.*</onlyAnalyze>                            
+                            <onlyAnalyze>si.laurentius.*,si.jrc.*</onlyAnalyze>
                         </configuration>
-                    </plugin>                    
+                    </plugin>
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>jdepend-maven-plugin</artifactId>
-                        <version>${codehaus.jdepend.plugin.version}</version>                         
-                    </plugin>                                                                 
+                        <version>${codehaus.jdepend.plugin.version}</version>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-deploy-plugin</artifactId>
+                        <version>${apache.maven.deploy}</version>
+                    </plugin>
                 </plugins>
-            </reporting>            
+            </reporting>
         </profile>
-        
+
         <profile>
             <id>CI-FormatCode</id>
             <build>
@@ -539,7 +601,7 @@
                 <plugins>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>            
+                        <artifactId>maven-surefire-plugin</artifactId>
                         <configuration>
                             <skipTests>false</skipTests>
                         </configuration>
@@ -578,11 +640,11 @@
                             </execution>
                         </executions>
                     </plugin>
-                    
+
                 </plugins>
             </build>
-            
-            
+
+
         </profile>
     </profiles>
 </project>

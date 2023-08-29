@@ -28,7 +28,7 @@ public class SEDInitApplication {
         // activate cronTasks
         LOG.log("Initialize application.");
         mdbLookups.getSEDCronJobs().forEach(cronJob -> {
-            if (cronJob.getActive() != null && cronJob.getActive()) {
+            if (cronJob.isActive() != null && cronJob.isActive()) {
                 mshScheduler.activateCronJob(cronJob);
             }
         });

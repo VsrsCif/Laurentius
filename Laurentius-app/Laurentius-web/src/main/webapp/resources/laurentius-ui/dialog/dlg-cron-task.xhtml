@@ -29,7 +29,7 @@
 
                 <h:outputText value="#{msg['Name']}:" />
                 <p:inputText id="cname" value="#{adminSEDCronTaskView.editable.name}" 
-                             disabled="#{!adminSEDCronTaskView.isEditableNew()}"
+                             disabled="#{!adminSEDCronTaskView.editableNew}"
                              style="width: 120px"  
                              />
 
@@ -40,7 +40,7 @@
 
                 <h:outputText value="#{msg['Plugin']}:" />
                 <p:selectOneMenu id="pluginType" value="#{adminSEDCronTaskView.editablePluginType}" 
-                                 disabled="#{!adminSEDCronTaskView.isEditableNew()}"
+                                 disabled="#{!adminSEDCronTaskView.editableNew}"
                                  style="width:150px" 
                                  >
                     <p:ajax update=":dlgcrontask:cronTaskDialog:cronTaskDialogForm:tasktype 
@@ -57,7 +57,7 @@
                 <h:outputText value="#{msg['Type']}:" />
 
                 <p:selectOneMenu id="tasktype" value="#{adminSEDCronTaskView.editableTaskType}" 
-                                 disabled="#{!adminSEDCronTaskView.isEditableNew()}"
+                                 disabled="#{!adminSEDCronTaskView.editableNew}"
                                  style="width:150px" 
                                  >
                     <p:ajax   update=":dlgcrontask:cronTaskDialog:cronTaskDialogForm:PropertyPanel:PropertyPanelTable" />    

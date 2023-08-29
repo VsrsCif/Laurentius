@@ -5,7 +5,7 @@
     <parent>
         <groupId>si.vsrs.cif.sed</groupId>
         <artifactId>Laurentius</artifactId>
-        <version>2.0</version>
+        <version>2.1</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -102,7 +102,7 @@ certificate validation tools.</description>
         <plugins>        
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-            </plugin>            
+            </plugin>
         </plugins>
     </build>
 </project>
