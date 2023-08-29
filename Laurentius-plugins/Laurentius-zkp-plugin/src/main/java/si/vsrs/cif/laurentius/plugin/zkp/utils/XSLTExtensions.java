@@ -107,5 +107,13 @@ public class XSLTExtensions {
 
   }
   
-
+  /*
+   * Format date to string
+   */
+  public static String formatDate(Date dt) {
+    if (dt == null) {
+      return null;
+    }
+    return S_DATE_FORMAT.get().format(dt);
+  }
 }
