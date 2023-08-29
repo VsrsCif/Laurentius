@@ -322,7 +322,7 @@
                 <ns2:SEDTaskProperty  key="zkp.wait.days">15</ns2:SEDTaskProperty>
                 <ns2:SEDTaskProperty  key="zkp.wait.minutes">0</ns2:SEDTaskProperty>
                 <ns2:SEDTaskProperty  key="zkp.sedbox">b.department</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty  key="dev.mode">fapse</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty  key="dev.mode">false</ns2:SEDTaskProperty>
             </ns2:SEDTask>
             <ns2:SEDTask plugin="LegalZKP" type="zkp-not-delivered-deletion" pluginVersion="1.0.0" name="ZKPTaskDeleteUndelivered" active="true">
                 <ns2:SEDTaskProperty  key="zkp.sign.key.alias">test-laurentius</ns2:SEDTaskProperty>
