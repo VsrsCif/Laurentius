@@ -151,15 +151,15 @@
                 <ns2:SEDTaskProperty id="101" key="zkp.wait.days">0</ns2:SEDTaskProperty>
                 <ns2:SEDTaskProperty id="102" key="zkp.wait.minutes">2</ns2:SEDTaskProperty>
                 <ns2:SEDTaskProperty id="103" key="zkp.sedbox">b.department</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty id="104" key="dev.mode">true</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="104" key="dev.mode">false</ns2:SEDTaskProperty>
 
             </ns2:SEDTask>
             <ns2:SEDTask plugin="LegalZKP" type="zkp-not-delivered-deletion" pluginVersion="1.0.0" id="18" name="ZKPTaskDeleteUndelivered" active="true">
                 <ns2:SEDTaskProperty id="105" key="zkp.sign.key.alias">test-laurentius</ns2:SEDTaskProperty>
                 <ns2:SEDTaskProperty id="106" key="zkp.max.mail.count">100</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty id="107" key="zkp.wait.days">0</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty id="108" key="zkp.wait.minutes">2</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty id="109" key="dev.mode">true</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="107" key="zkp.wait.days">15</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="108" key="zkp.wait.minutes">0</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty id="109" key="dev.mode">false</ns2:SEDTaskProperty>
             </ns2:SEDTask>
         </ns2:SEDCronJob>
     </SEDCronJobs>
