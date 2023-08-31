@@ -36,6 +36,7 @@ public class ZKPTaskDeleteParcelForTest implements TaskExecutionInterface {
     private static final String DAYS_TO_WAIT = "zkp.wait.days";
     private static final String MINUTES_TO_WAIT = "zkp.wait.minutes";
     private static final String REC_SEDBOX = "zkp.sedbox";
+    private static final String DEV_MODE = "dev.mode";
 
     @EJB(mappedName = SEDJNDI.JNDI_SEDDAO)
     SEDDaoInterface mDB;
@@ -55,7 +56,7 @@ public class ZKPTaskDeleteParcelForTest implements TaskExecutionInterface {
         int maxMailProc = Integer.parseInt(p.getProperty(PROCESS_MAIL_COUNT, "100"));
         int days = Integer.parseInt(p.getProperty(DAYS_TO_WAIT, "15"));
         int minutes = Integer.parseInt(p.getProperty(MINUTES_TO_WAIT, "0"));
-        boolean dev = Boolean.parseBoolean(p.getProperty("dev.mode", "false"));
+        boolean dev = Boolean.parseBoolean(p.getProperty(DEV_MODE, "false"));
 
         if (!p.containsKey(REC_SEDBOX)) {
             throw new TaskException(TaskException.TaskExceptionCode.InitException,
@@ -136,6 +137,9 @@ public class ZKPTaskDeleteParcelForTest implements TaskExecutionInterface {
         tt.getCronTaskPropertyDeves().add(createTTProperty(REC_SEDBOX,
                 "Receiver sedbox (without domain).", true, PropertyType.List.
                         getType(), null, PropertyListType.LocalBoxes.getType()));
+        tt.getCronTaskPropertyDeves().add(createTTProperty(DEV_MODE,
+                "Development mode", false, PropertyType.Boolean.
+                        getType(), null, PropertyType.Boolean.getType()));
 
         return tt;
     }

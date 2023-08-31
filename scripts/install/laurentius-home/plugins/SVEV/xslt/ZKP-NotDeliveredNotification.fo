@@ -69,6 +69,6 @@
         <xsl:value-of select="java:si.vsrs.cif.laurentius.plugin.zkp.utils.XSLTExtensions.systemDomain()"/>
     </xsl:template>
     <xsl:template name="receivedDate">
-        <xsl:value-of select="java:format(java:java.text.SimpleDateFormat.new('dd. MM. yyyy'), /msh:MSHOutMail/@receivedDate)"/>
+        <xsl:value-of select="java:si.vsrs.cif.laurentius.plugin.zkp.utils.XSLTExtensions.formatDate(/msh:MSHOutMail/@receivedDate)"/>
     </xsl:template>
 </xsl:stylesheet>

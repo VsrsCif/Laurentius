@@ -53,6 +53,7 @@ public class ZKPTaskDeleteUndelivered implements TaskExecutionInterface {
     private static final String PROCESS_MAIL_COUNT = "zkp.max.mail.count";
     private static final String DAYS_TO_WAIT = "zkp.wait.days";
     private static final String MINUTES_TO_WAIT = "zkp.wait.minutes";
+    public static final String DEV_MODE = "dev.mode";
 
     @EJB(mappedName = SEDJNDI.JNDI_SEDDAO)
     SEDDaoInterface mDB;
@@ -83,7 +84,7 @@ public class ZKPTaskDeleteUndelivered implements TaskExecutionInterface {
         int maxMailProc = Integer.parseInt(p.getProperty(PROCESS_MAIL_COUNT, "100"));
         int days = Integer.parseInt(p.getProperty(DAYS_TO_WAIT, "15"));
         int minutes = Integer.parseInt(p.getProperty(MINUTES_TO_WAIT, "0"));
-        boolean dev = Boolean.parseBoolean(p.getProperty("dev.mode", "false"));
+        boolean dev = Boolean.parseBoolean(p.getProperty(DEV_MODE, "false"));
 
         // Gather outbound waiting messages waiting for 15 days, delete them and send undelivered message to sender inbox
         //DELETE AND RESPOND WITH ZKP MESSAGE NOT DELIVERED
@@ -198,6 +199,9 @@ public class ZKPTaskDeleteUndelivered implements TaskExecutionInterface {
         tt.getCronTaskPropertyDeves().add(createTTProperty(MINUTES_TO_WAIT,
                 "Months to wait until deletion.", true, PropertyType.Integer.getType(),
                 null, null));
+        tt.getCronTaskPropertyDeves().add(createTTProperty(DEV_MODE,
+                "Development mode", false, PropertyType.Boolean.
+                        getType(), null, PropertyType.Boolean.getType()));
 
         return tt;
     }
