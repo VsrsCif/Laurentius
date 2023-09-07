@@ -34,7 +34,6 @@ public class EOdloziscePluginDescription extends AbstractPluginDescription {
   @Override
   public DefaultInitData getDefaultInitData() {
     try {
-      // TODO create def-init-data.xml
       DefaultInitData did = (DefaultInitData) XMLUtils.deserialize(
               EOdloziscePluginDescription.class.
                       getResourceAsStream("/init/def-init-data.xml"),
@@ -60,17 +59,9 @@ public class EOdloziscePluginDescription extends AbstractPluginDescription {
   @PostConstruct
   private void postConstruct() {
     try {
-      // TODO add interceptors, tasks for eOdlozisce
-      // and log further application specific info
       registerPluginComponentInterface(EOdlozisceInInterceptor.class);
-//      registerPluginComponentInterface(ZKPInInterceptor.class);
-//      registerPluginComponentInterface(ZKPFaultInInterceptor.class);
-//
-//      registerPluginComponentInterface(ZKPTask.class);
-//      registerPluginComponentInterface(ZKPTaskDeleteParcelForTest.class);
-//      registerPluginComponentInterface(ZKPTaskDeleteUndelivered.class);
+      registerPluginComponentInterface(EOdlozisceOutInterceptor.class);
 
-      // register plugin
       registerPlugin();
     } catch (PluginException ex) {
       LOG.logError("Error occured while registering plugin: " + ex.

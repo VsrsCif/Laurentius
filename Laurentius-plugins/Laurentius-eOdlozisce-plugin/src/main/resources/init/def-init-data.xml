@@ -126,5 +126,9 @@
             <ns3:SEDInterceptorRule property="Service" predicate="InList" value="eVrocanje"/>
             <ns3:SEDInterceptorInstance plugin="EOdlozisce" type="EOdlozisceInInterceptor" pluginVersion="1.0.0"/>
         </ns3:SEDInterceptor>
+        <ns3:SEDInterceptor name="eVrocanje_OutMessages" active="true" interceptEvent="OutMessage" interceptRole="All">
+            <ns3:SEDInterceptorRule property="Service" predicate="InList" value="eVrocanje"/>
+            <ns3:SEDInterceptorInstance plugin="EOdlozisce" type="EOdlozisceOutInterceptor" pluginVersion="1.0.0"/>
+        </ns3:SEDInterceptor>
     </ns1:PluginData>
 </ns1:DefaultInitData>
