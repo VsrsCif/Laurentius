@@ -44,6 +44,7 @@ COPY --from=build /app/Laurentius-plugins/Laurentius-zkp-plugin/target/plugin-zk
 COPY --from=build /app/Laurentius-plugins/Laurentius-basic-plugin/target/plugin-basic.war $WILDFLY_HOME/standalone/deployments/
 COPY --from=build /app/Laurentius-plugins/Laurentius-test-case-plugin/target/plugin-testcase.war $WILDFLY_HOME/standalone/deployments/
 COPY --from=build /app/Laurentius-examples/example-web-plugin/target/example-web-plugin.war $WILDFLY_HOME/standalone/deployments/
+COPY --from=build /app/Laurentius-plugins/Laurentius-eOdlozisce-plugin/target/plugin-eodlozisce.war $WILDFLY_HOME/standalone/deployments/
 # copy laurentius home
 COPY --from=build /app/scripts/install/laurentius-home/  $WILDFLY_HOME/standalone/data/laurentius-home/
 

@@ -329,7 +329,7 @@
                 <ns2:SEDTaskProperty  key="zkp.max.mail.count">100</ns2:SEDTaskProperty>
                 <ns2:SEDTaskProperty  key="zkp.wait.days">15</ns2:SEDTaskProperty>
                 <ns2:SEDTaskProperty  key="zkp.wait.minutes">0</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty  key="dev.mode">false</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty  key="dev.mode">true</ns2:SEDTaskProperty>
             </ns2:SEDTask>
         </ns2:SEDCronJob>
         <proc:SEDProcessor id="3" active="true" name="zkp" deliveredOnSuccess="true">

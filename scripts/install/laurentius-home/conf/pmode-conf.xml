@@ -149,6 +149,26 @@
                 </PayloadProfiles>
             </Action>
         </Service>
+        <Service id="eVrocanje" serviceName="eVrocanje" serviceType="SVEV" useSEDProperties="true">
+            <Initiator role="Sender"/>
+            <Executor role="Receiver"/>
+            <Action name="eVloga" invokeRole="initiator" messageType="userMessage">
+                <Properties>
+                    <Property name="SodiSif" type="" required="false"/>
+                    <Property name="originalSender" type="" required="false"/>
+                    <Property name="finalRecipient" type="" required="false"/>
+                    <Property name="AplikSif" type="" required="false"/>
+                    <Property name="Vpisnik" type="" required="false"/>
+                    <Property name="VpisnikKratica" type="" required="false"/>
+                    <Property name="OpravilnaSt" type="" required="false"/>
+                    <Property name="Vsebina" type="" required="false"/>
+                    <Property name="finalRecipientName" type="" required="false"/>
+                </Properties>
+                <PayloadProfiles maxSize="15000">
+                    <PayloadProfile name="payload" MIME="application/octet-stream" maxSize="15000" maxOccurs="100" minOccurs="0"/>
+                </PayloadProfiles>
+            </Action>
+        </Service>
     </Services>
     <Parties>
         <PartyIdentitySet id="test-laurentius" isLocalIdentity="true">
@@ -464,6 +484,37 @@
                     <ForeChannel action="NotDelivered" securityIdRef="sign_sha256">
                         <ReceptionAwareness raPatternIdRef="AS4ReceiptResponse"/>
                     </ForeChannel>
+                </Transport>
+            </Leg>
+        </MEP>
+    </PMode>
+    <PMode id="eVrocanje" isTest="false" priority="5">
+        <ServiceIdRef>eVrocanje</ServiceIdRef>
+        <LocalPartyInfo partyIdentitySetIdRef="test-laurentius" partyDefTransportIdRef="defalut">
+            <Role>Sender</Role>
+            <Role>Receiver</Role>
+        </LocalPartyInfo>
+        <ExchangeParties>
+            <PartyInfo partyIdentitySetIdRef="test-laurentius" partyDefTransportIdRef="defalut">
+                <Role>Sender</Role>
+                <Role>Receiver</Role>
+            </PartyInfo>
+            <PartyInfo partyIdentitySetIdRef="court-laurentius" partyDefTransportIdRef="court-https">
+                <Role>Sender</Role>
+                <Role>Receiver</Role>
+            </PartyInfo>
+        </ExchangeParties>
+        <MEP>
+            <MEPType>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/oneWay</MEPType>
+            <MEPChannelBinding>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/push</MEPChannelBinding>
+            <MEPInitiatorRole>Sender</MEPInitiatorRole>
+            <Leg>
+                <MPC>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/defaultMPC</MPC>
+                <Transport>
+                    <ForeChannel action="eVloga" securityIdRef="sign_sha256">
+                        <ReceptionAwareness raPatternIdRef="AS4ReceiptResponse"/>
+                    </ForeChannel>
+                    <BackChannel securityIdRef="sign_sha256"/>
                 </Transport>
             </Leg>
         </MEP>

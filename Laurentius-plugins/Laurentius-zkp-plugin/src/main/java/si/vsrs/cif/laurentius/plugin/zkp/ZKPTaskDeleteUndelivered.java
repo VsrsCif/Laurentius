@@ -143,7 +143,6 @@ public class ZKPTaskDeleteUndelivered implements TaskExecutionInterface {
                 moND.setStatusDate(dt);
                 moND.setSentDate(dt);
                 moND.setReceivedDate(dt);
-
                 moND.setMSHInPayload(new MSHInPayload());
 
                 try {
