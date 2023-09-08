@@ -1,5 +1,6 @@
 package si.vsrs.cif.laurentius.plugin.eodlozisce;
 
+import org.apache.cxf.binding.soap.SoapFault;
 import org.apache.cxf.binding.soap.SoapMessage;
 import si.laurentius.commons.cxf.SoapUtils;
 import si.laurentius.commons.utils.SEDLogger;
@@ -9,11 +10,9 @@ import si.laurentius.msh.outbox.mail.MSHOutMail;
 import si.laurentius.plugin.component.ComponentBase;
 import si.laurentius.plugin.interceptor.MailInterceptorDef;
 import si.laurentius.plugin.interfaces.SoapInterceptorInterface;
+import si.vsrs.cif.laurentius.plugin.eodlozisce.exception.EOdlozisceException;
 
-import javax.ejb.Local;
-import javax.ejb.Stateless;
-import javax.ejb.TransactionManagement;
-import javax.ejb.TransactionManagementType;
+import javax.ejb.*;
 import java.util.Date;
 import java.util.Properties;
 
@@ -21,6 +20,9 @@ import java.util.Properties;
 @Local(SoapInterceptorInterface.class)
 @TransactionManagement(TransactionManagementType.BEAN)
 public class EOdlozisceInInterceptor implements SoapInterceptorInterface {
+    @EJB
+    EOdlozisceInProcessor inProcessor;
+
     protected final SEDLogger LOG = new SEDLogger(EOdlozisceInInterceptor.class);
 
     @Override
@@ -42,6 +44,18 @@ public class EOdlozisceInInterceptor implements SoapInterceptorInterface {
         MSHOutMail outMail = SoapUtils.getMSHOutMail(msg);
 
         LOG.log(String.format("EODL IN\nreceiverBox = %s\ninMail = %s\noutMail = %s", receiverBox, inMail, outMail));
+
+        if (inMail != null) {
+            // process
+
+            //EOdlozisceInProcessor
+            try {
+                inProcessor.processMessage(msg, inMail, contextProperties);
+            } catch (EOdlozisceException e) {
+                // TODO only client? or is there a FAULT_CODE_SERVER case?
+                throw new SoapFault(e.getMessage(), SoapFault.FAULT_CODE_CLIENT);
+            }
+        }
 
         // TODO validate message
         // valid XML metadata
