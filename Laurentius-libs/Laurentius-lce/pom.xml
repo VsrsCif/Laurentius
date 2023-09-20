@@ -102,7 +102,7 @@ certificate validation tools.</description>
         <plugins>        
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-            </plugin>            
+            </plugin>
         </plugins>
     </build>
 </project>

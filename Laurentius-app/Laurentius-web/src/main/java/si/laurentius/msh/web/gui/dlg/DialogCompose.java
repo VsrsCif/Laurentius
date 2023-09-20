@@ -259,7 +259,7 @@ public class DialogCompose implements Serializable {
           mop.setType(p.getType());
           mop.setValue(mprp.get(p.getName()));
           mopNewLst.add(mop);
-        } else if (p.getRequired() != null && p.getRequired()) {
+        } else if (p.isRequired() != null && p.isRequired()) {
           suc = false;
           addError("Missing property: " + p.getName());
         }
@@ -453,8 +453,8 @@ public class DialogCompose implements Serializable {
   public boolean showLaurentiusProperties() {
 
     Service srv = mPMode.getServiceById(newOutMail.getService());
-    return srv == null || srv.getUseSEDProperties() == null || srv.
-            getUseSEDProperties();
+    return srv == null || srv.isUseSEDProperties() == null || srv.
+            isUseSEDProperties();
   }
 
 }

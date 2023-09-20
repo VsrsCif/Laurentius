@@ -201,7 +201,7 @@ public class AdminSEDCronJobView extends AbstractAdminJSFView<SEDCronJob> {
       bsuc = mdbLookups.updateSEDCronJob(ecj);
       if (bsuc) {
         mshScheduler.stopCronJob(ecj);
-        if (ecj.getActive() != null && ecj.getActive()) {
+        if (ecj.isActive() != null && ecj.isActive()) {
           mshScheduler.activateCronJob(ecj);
         }
       }

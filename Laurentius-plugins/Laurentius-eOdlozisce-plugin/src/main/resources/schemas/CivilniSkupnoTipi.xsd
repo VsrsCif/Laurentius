@@ -1,0 +1,19 @@
+<xs:schema xmlns:xs       ="http://www.w3.org/2001/XMLSchema"
+           xmlns:skupSkup ="http://sodisce.si/sheme/skupno/skupno/v1"
+           targetNamespace="http://sodisce.si/sheme/civilni/skupno/v1"
+           elementFormDefault="qualified"
+           version="1.0">
+
+	<xs:import namespace="http://sodisce.si/sheme/skupno/skupno/v1" schemaLocation="SkupnoSkupnoTipi.xsd" />
+
+	<xs:complexType name="OdlocitevCivilnaTip">
+		<xs:annotation>
+			<xs:documentation>Podatki o odlocitvi... npr. podatki sklepa o dedovanju.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="skupSkup:OdlocitevTip">
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+</xs:schema>

@@ -2,7 +2,12 @@ package si.vsrs.cif.laurentius.plugin.eodlozisce;
 
 import org.apache.cxf.binding.soap.SoapFault;
 import org.apache.cxf.binding.soap.SoapMessage;
+import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.cxf.SoapUtils;
+import si.laurentius.commons.ebms.EBMSError;
+import si.laurentius.commons.enums.SEDInboxMailStatus;
+import si.laurentius.commons.exception.StorageException;
+import si.laurentius.commons.interfaces.SEDDaoInterface;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.ebox.SEDBox;
 import si.laurentius.msh.inbox.mail.MSHInMail;
@@ -10,18 +15,20 @@ import si.laurentius.msh.outbox.mail.MSHOutMail;
 import si.laurentius.plugin.component.ComponentBase;
 import si.laurentius.plugin.interceptor.MailInterceptorDef;
 import si.laurentius.plugin.interfaces.SoapInterceptorInterface;
+import si.vsrs.cif.laurentius.plugin.eodlozisce.exception.EOdlozisceErrorCode;
 import si.vsrs.cif.laurentius.plugin.eodlozisce.exception.EOdlozisceException;
 
 import javax.ejb.*;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.Properties;
 
 @Stateless
 @Local(SoapInterceptorInterface.class)
 @TransactionManagement(TransactionManagementType.BEAN)
 public class EOdlozisceInInterceptor implements SoapInterceptorInterface {
-    @EJB
-    EOdlozisceInProcessor inProcessor;
+
+    @EJB(mappedName = SEDJNDI.JNDI_SEDDAO)
+    SEDDaoInterface mDB;
 
     protected final SEDLogger LOG = new SEDLogger(EOdlozisceInInterceptor.class);
 
@@ -46,14 +53,19 @@ public class EOdlozisceInInterceptor implements SoapInterceptorInterface {
         LOG.log(String.format("EODL IN\nreceiverBox = %s\ninMail = %s\noutMail = %s", receiverBox, inMail, outMail));
 
         if (inMail != null) {
-            // process
-
-            //EOdlozisceInProcessor
+            // Accepting and storing the message. The task will pick it up later while looking for PLOCKED messages.
             try {
-                inProcessor.processMessage(msg, inMail, contextProperties);
-            } catch (EOdlozisceException e) {
-                // TODO only client? or is there a FAULT_CODE_SERVER case?
-                throw new SoapFault(e.getMessage(), SoapFault.FAULT_CODE_CLIENT);
+                inMail.setStatus(SEDInboxMailStatus.PLOCKED.getValue());
+                inMail.setStatusDate(Calendar.getInstance().getTime());
+                mDB.serializeInMail(inMail, EOdlozisceConstants.EODLOZISCE_PLUGIN_TYPE);
+            } catch (StorageException ex) {
+                String errorMsg = String.format(
+                        "Server error occured while receiving mail: %s, Error: %s." + inMail.
+                                getId(), ex.getMessage());
+                LOG.logError(l, errorMsg, ex);
+                throw new EBMSError(EOdlozisceErrorCode.ServerError,
+                        inMail != null ? inMail.getMessageId() : (outMail != null ? outMail.getMessageId() : ""),
+                        errorMsg, SoapFault.FAULT_CODE_SERVER);
             }
         }
 

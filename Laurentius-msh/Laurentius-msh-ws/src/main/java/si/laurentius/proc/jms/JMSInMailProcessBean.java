@@ -116,10 +116,10 @@ public class JMSInMailProcessBean implements MessageListener {
       if (lstPrc.size() > 0) {
         boolean setDelivered = false;
         for (SEDProcessor prc : lstPrc) {
-          if (!prc.getActive()) {
+          if (!prc.isActive()) {
             continue;
           }
-          setDelivered |= prc.getDeliveredOnSuccess();
+          setDelivered |= prc.isDeliveredOnSuccess();
           Map<String, Object> mp = new HashMap<>();
 
           for (SEDProcessorInstance spi : prc.getSEDProcessorInstances()) {
@@ -184,7 +184,7 @@ public class JMSInMailProcessBean implements MessageListener {
 
     boolean process = true;
     for (SEDProcessor prc : lstPrcAll) {
-      if (prc.getActive() == null || !prc.getActive()) {
+      if (prc.isActive() == null || !prc.isActive()) {
         continue;
       }
       process = true;

@@ -227,8 +227,8 @@ public class MshClient {
                 getReceiveTimeout() != null
                         ? protocol.getAddress().getReceiveTimeout() : 120000);
         httpClientPolicy.setAllowChunking(
-                protocol.getAddress().getChunked() != null
-                ? protocol.getAddress().getChunked() : false);
+                protocol.getAddress().isChunked() != null
+                ? protocol.getAddress().isChunked() : false);
 
         // set http Policy
         http.setClient(httpClientPolicy);
@@ -470,8 +470,8 @@ public class MshClient {
           getTrustManagerForAlias(serverTrustAlias, true)};
 
         tlsCP.setTrustManagers(trustStoreManagers);
-        tlsCP.setDisableCNCheck(tls.getDisableCNAndHostnameCheck() != null
-                && tls.getDisableCNAndHostnameCheck());
+        tlsCP.setDisableCNCheck(tls.isDisableCNAndHostnameCheck() != null
+                && tls.isDisableCNAndHostnameCheck());
 
       } catch (SEDSecurityException ex) {
         String msg = String.format(

@@ -1,0 +1,65 @@
+<xs:schema xmlns:xs       ="http://www.w3.org/2001/XMLSchema"
+           xmlns:tns      ="http://sodisce.si/sheme/kazenski/skupno/v1"
+           xmlns:skupSkup ="http://sodisce.si/sheme/skupno/skupno/v1"
+           targetNamespace="http://sodisce.si/sheme/kazenski/skupno/v1"
+           elementFormDefault="qualified"
+           version="1.0">
+
+	<xs:import namespace="http://sodisce.si/sheme/skupno/skupno/v1"   schemaLocation="SkupnoSkupnoTipi.xsd" />
+
+	<xs:complexType name="KaznivoDejanjeTip">
+				<xs:attribute name="idZakonika" type="xs:string" />
+				<xs:attribute name="nazivZakonika" type="xs:string" />
+				<xs:attribute name="sifraClena" type="xs:string" />
+				<xs:attribute name="nazivKaznivegaDejanja" type="xs:string" />
+				<xs:attribute name="datumCasStoritve" type="xs:dateTime" />
+	</xs:complexType>
+
+	<xs:complexType name="SankcijaTip">
+				<xs:sequence>
+					<xs:element minOccurs="0" name="valuta" type="skupSkup:SifrantTip">
+						<xs:annotation>
+							<xs:documentation>Iz šifranta SKUPNI.IMENIK_VALUT.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element minOccurs="0" name="vrstaSankcije" type="skupSkup:SifrantTip">
+						<xs:annotation>
+							<xs:documentation>Iz šifranta ePoslovanjeIK/04_Implementacija/07 doc/Šifranti/Sifranti_FZ.ods/Sankcija.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element minOccurs="0" name="tipVrsteSankcije" type="skupSkup:SifrantTip">
+						<xs:annotation>
+							<xs:documentation>Iz šifranta ePoslovanjeIK/04 Implementacija/03 Tamino/sifranti/SifTipiSankcija.xml.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element minOccurs="0" name="povezaneSankcije" type="tns:PovezanaSankcijaSeznamTip" />
+				</xs:sequence>
+				<xs:attribute name="vrednost" type="xs:decimal" />
+				<xs:attribute name="trajanje" type="xs:duration" />
+				<xs:attribute name="trajanjeVarstvenegaNadzorstva" type="xs:duration" />
+				<xs:attribute name="datumZacetkaPreizkusneDobe" type="xs:date" />
+				<xs:attribute name="trajanjePreizkusneDobe" type="xs:duration" />
+				<xs:attribute name="rokPlacilaDni" type="xs:integer" />
+				<xs:attribute name="obrokVrednost" type="xs:decimal" />
+				<xs:attribute name="dnevniZnesek" type="xs:decimal" />
+				<xs:attribute name="navodilo" type="xs:string" />
+				<xs:attribute name="posebniPogoj" type="xs:string" />
+				<xs:attribute name="rokPosebniPogojDni" type="xs:integer" />
+				<xs:attribute name="steviloDnevnihZneskov" type="xs:integer" />
+	</xs:complexType>
+
+	<xs:complexType name="PovezanaSankcijaTip">
+				<xs:sequence>
+					<xs:element minOccurs="0" name="sankcija" type="tns:SankcijaTip" />
+					<xs:element minOccurs="0" name="vrstaPovezave" type="xs:string" />
+					<xs:element minOccurs="0" name="zadeva" type="skupSkup:ZadevaTip" />
+				</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="PovezanaSankcijaSeznamTip">
+				<xs:sequence>
+					<xs:element minOccurs="0" maxOccurs="unbounded" name="povezanaSankcija" type="tns:PovezanaSankcijaTip" />
+				</xs:sequence>
+	</xs:complexType>
+
+</xs:schema>

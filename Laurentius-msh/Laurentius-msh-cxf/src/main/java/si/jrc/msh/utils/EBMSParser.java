@@ -155,8 +155,8 @@ public class EBMSParser {
             }
         }
 
-        if (ectx.getSenderPartyIdentitySet().getUseFourCornerModel()!=null 
-                && ectx.getSenderPartyIdentitySet().getUseFourCornerModel()) {
+        if (ectx.getSenderPartyIdentitySet().isUseFourCornerModel()!=null
+                && ectx.getSenderPartyIdentitySet().isUseFourCornerModel()) {
             // check if property is alredy filled while parsing properties
             if (Utils.isEmptyString(mshmail.getSenderEBox())) {
                 String errmsg
@@ -222,8 +222,8 @@ public class EBMSParser {
                 }
             }
         }
-        if (ectx.getReceiverPartyIdentitySet().getUseFourCornerModel() != null
-             &&   ectx.getReceiverPartyIdentitySet().getUseFourCornerModel()) {
+        if (ectx.getReceiverPartyIdentitySet().isUseFourCornerModel() != null
+             &&   ectx.getReceiverPartyIdentitySet().isUseFourCornerModel()) {
             // check if property is alredy filled while parsing properties
             if (Utils.isEmptyString(mshmail.getReceiverEBox())) {
                 String errmsg

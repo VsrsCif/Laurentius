@@ -1,0 +1,15 @@
+<xs:schema xmlns:xs       ="http://www.w3.org/2001/XMLSchema"
+		   xmlns:civilSkup="http://sodisce.si/sheme/civilni/skupno/v1"
+		   targetNamespace="http://sodisce.si/sheme/civilni/v1"
+		   elementFormDefault="qualified"
+		   version="1.0">
+
+	<xs:import namespace="http://sodisce.si/sheme/civilni/skupno/v1" schemaLocation="CivilniSkupnoTipi.xsd" />
+
+	<xs:element name="odlocitevCivilna" type="civilSkup:OdlocitevCivilnaTip">
+		<xs:annotation>
+			<xs:documentation>Element Sklepa o dedovanju (npr. za pošiljanje na FURS).</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+
+</xs:schema>

@@ -121,8 +121,8 @@ public class EBMSEndpoint implements Provider<SOAPMessage> {
                 inmail.getMessageId(),
                 errmsg,
                 SoapFault.FAULT_CODE_SERVER);
-      } else if ((mc.getPMode().getIsTest() == null || !mc.getPMode().
-              getIsTest()) && Utils.isEmptyString(inmail.getStatus())) {
+      } else if ((mc.getPMode().isIsTest() == null || !mc.getPMode().
+              isIsTest()) && Utils.isEmptyString(inmail.getStatus())) {
         serializeMail(inmail, msg.getAttachments(), sb);
       }
 
