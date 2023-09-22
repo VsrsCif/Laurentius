@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:tns="http://sodisce.si/sheme/skupno/splosno/v1"
+           elementFormDefault="qualified"
+           targetNamespace="http://sodisce.si/sheme/skupno/splosno/v1"
+           version="1.0">
+
+    <xs:complexType name="LastnostSeznamTip">
+        <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="unbounded" name="lastnost" type="tns:LastnostTip" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="LastnostTip">
+        <xs:annotation>
+            <xs:documentation>Dodatna lastnost oz. polje tipa v obliki parov ključ-vrednost, ki se lahko vključi v tipe, pri katerih se pričakuje potreba po dinamični razširitvi nabora lastnosti oz. polj.</xs:documentation>
+        </xs:annotation>
+        <xs:attribute name="ime" type="xs:string">
+            <xs:annotation>
+                <xs:documentation>Naziv lastnosti oz. polja (ključ).</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="vrednost" type="xs:string">
+            <xs:annotation>
+                <xs:documentation>Vrednost lastnosti oz. vsebina polja.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="SplosniTip">
+        <xs:annotation>
+            <xs:documentation>Splošni tip, namenjen kot osnova za dedovanje (xs:extension), kjer bi sicer lahko stal xs:anyType, ampak želimo kljub vsemu omejiti nabor možnih podtipov (in so morda celo potrebne "lastnosti").</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element minOccurs="0" name="lastnosti" type="tns:LastnostSeznamTip" />
+        </xs:sequence>
+    </xs:complexType>
+
+</xs:schema>

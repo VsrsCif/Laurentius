@@ -1,0 +1,11 @@
+<xs:schema xmlns:xs       ="http://www.w3.org/2001/XMLSchema"
+           xmlns:skupIzmen="http://sodisce.si/sheme/skupno/izmenjave/v1"
+           targetNamespace="http://sodisce.si/sheme/skupno/v1"
+           elementFormDefault="qualified"
+           version="1.0">
+
+	<xs:import namespace="http://sodisce.si/sheme/skupno/izmenjave/v1" schemaLocation="SkupnoIzmenjaveTipi.xsd" />
+
+	<xs:element name="elektronskaOvojnica" type="skupIzmen:ElektronskaOvojnicaTip" />
+
+</xs:schema>

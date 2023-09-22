@@ -155,11 +155,11 @@ public class EBMSOutInterceptor extends AbstractEBMSInterceptor {
                     // set attachment for wss signature!
                     LOG.formatedlog("Set attachmetns for message: %s, gzip compress: %s, base64Encode %s",
                             msgId,
-                            Utils.toStringBooleanValue(ectx.getTransportProtocol().getGzipCompress()),
-                            Utils.toStringBooleanValue(ectx.getTransportProtocol().getBase64Encoded()));
+                            Utils.toStringBooleanValue(ectx.getTransportProtocol().isGzipCompress()),
+                            Utils.toStringBooleanValue(ectx.getTransportProtocol().isBase64Encoded()));
 
-                    setAttachments(msg, outMail, ectx.getTransportProtocol().getGzipCompress() != null && ectx.getTransportProtocol().getGzipCompress(),
-                            ectx.getTransportProtocol().getBase64Encoded() != null && ectx.getTransportProtocol().getBase64Encoded());
+                    setAttachments(msg, outMail, ectx.getTransportProtocol().isGzipCompress() != null && ectx.getTransportProtocol().isGzipCompress(),
+                            ectx.getTransportProtocol().isBase64Encoded() != null && ectx.getTransportProtocol().isBase64Encoded());
                 } catch (StorageException ex) {
                     String msgError = "Error adding attachments to soap" + ex.getMessage();
                     LOG.logError(l, msgError, ex);

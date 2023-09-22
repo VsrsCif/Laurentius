@@ -357,10 +357,10 @@ public class EBMSInInterceptor extends AbstractEBMSInterceptor {
 
             if (!dupInclusionllst.isEmpty()) {
                 LOG.logWarn(warn, null);
-                if (dd.getEliminate()) {
+                if (dd.isEliminate()) {
                     MSHInMail mi = dupInclusionllst.get(0);
                     Optional<MSHInPart> optPart = mi.getMSHInPayload().getMSHInParts().stream()
-                            .filter(part -> part.getIsSent() && SEDMailPartSource.EBMS.getValue().equals(part.getSource())) // we dont like mkyong
+                            .filter(part -> part.isIsSent() && SEDMailPartSource.EBMS.getValue().equals(part.getSource())) // we dont like mkyong
                             .findFirst();
 
                     if (optPart.isPresent()) {
@@ -716,7 +716,7 @@ public class EBMSInInterceptor extends AbstractEBMSInterceptor {
                     // if not compressed
 
                     fout = msuStorageUtils.storeInFile(
-                            p.getIsEncrypted() ? MimeValue.MIME_ENC.getMimeType() : p.
+                            p.isIsEncrypted() ? MimeValue.MIME_ENC.getMimeType() : p.
                             getMimeType(), dh.getInputStream());
                 } catch (IOException ex) {
                     throw new StorageException(String.format(

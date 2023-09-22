@@ -1,0 +1,15 @@
+<xs:schema xmlns:xs       ="http://www.w3.org/2001/XMLSchema"
+           xmlns:kazenSkup="http://sodisce.si/sheme/kazenski/skupno/v1"
+           targetNamespace="http://sodisce.si/sheme/kazenski/v1"
+           elementFormDefault="qualified"
+           version="1.0">
+
+	<xs:import namespace="http://sodisce.si/sheme/kazenski/skupno/v1" schemaLocation="KazenskiSkupnoTipi.xsd" />
+
+	<xs:element name="kaznivoDejanje" type="kazenSkup:KaznivoDejanjeTip">
+		<xs:annotation>
+			<xs:documentation>TODO: Docs</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+
+</xs:schema>

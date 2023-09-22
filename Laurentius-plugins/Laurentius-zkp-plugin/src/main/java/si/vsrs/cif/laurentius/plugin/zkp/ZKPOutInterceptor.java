@@ -333,7 +333,7 @@ public class ZKPOutInterceptor implements SoapInterceptorInterface {
 
         // encrypt payloads
         for (MSHOutPart op : lstMailParts) {
-            if (op.getIsSent()) {
+            if (op.isIsSent()) {
                 // non enc. part is not sent to receiver 
                 // update message
                 op.setIsSent(Boolean.FALSE);

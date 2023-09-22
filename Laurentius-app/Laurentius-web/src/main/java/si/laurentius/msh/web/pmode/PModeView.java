@@ -63,7 +63,7 @@ public class PModeView extends AbstractPModeJSFView<PMode> {
     if (pme != null) {
       List<PartyIdentitySet> lstPs = mPModeInteface.getPartyIdentitySets();
       for (PartyIdentitySet pis : lstPs) {
-        if (pis.getIsLocalIdentity() && Objects.equals(pis.getId(), elp)) {
+        if (pis.isIsLocalIdentity() && Objects.equals(pis.getId(), elp)) {
           editableLocalParty = pis;
           pme.getLocalPartyInfo().setPartyIdentitySetIdRef(elp);
           if (!pis.getTransportProtocols().isEmpty()) {
@@ -172,7 +172,7 @@ public class PModeView extends AbstractPModeJSFView<PMode> {
       this.editableLocalParty = null;
       for (PartyIdentitySet prt : lstPrt) {
 
-        if (prt.getIsLocalIdentity() && Objects.equals(prt.getId(),
+        if (prt.isIsLocalIdentity() && Objects.equals(prt.getId(),
                 pme.getLocalPartyInfo().getPartyIdentitySetIdRef())) {
           this.editableLocalParty = prt;
           break;
@@ -218,7 +218,7 @@ public class PModeView extends AbstractPModeJSFView<PMode> {
 
     List<PartyIdentitySet> lstPs = mPModeInteface.getPartyIdentitySets();
     for (PartyIdentitySet pi : lstPs) {
-      if (pi.getIsLocalIdentity()) {
+      if (pi.isIsLocalIdentity()) {
         editableLocalParty = pi;
         LOG.formatedWarning("Add local party: ", pi.getId());
         pm.getLocalPartyInfo().setPartyIdentitySetIdRef(pi.getId());
@@ -391,7 +391,7 @@ public class PModeView extends AbstractPModeJSFView<PMode> {
   public List<PartyIdentitySet> getLocalParties() {
     List<PartyIdentitySet> lstLP = new ArrayList<>();
     for (PartyIdentitySet ps : mPModeInteface.getPartyIdentitySets()) {
-      if (ps.getIsLocalIdentity()) {
+      if (ps.isIsLocalIdentity()) {
         lstLP.add(ps);
       }
     }

@@ -1,0 +1,710 @@
+<xs:schema xmlns:xs       ="http://www.w3.org/2001/XMLSchema"
+           xmlns:tns      ="http://sodisce.si/sheme/skupno/skupno/v1"
+           xmlns:skupSplos="http://sodisce.si/sheme/skupno/splosno/v1"
+           targetNamespace="http://sodisce.si/sheme/skupno/skupno/v1"
+           elementFormDefault="qualified"
+           version="1.0">
+
+	<xs:import namespace="http://sodisce.si/sheme/skupno/splosno/v1" schemaLocation="SkupnoSplosnoTipi.xsd" />
+
+	<xs:complexType name="OsebaTip">
+		<xs:annotation>
+			<xs:documentation>Tip za podatke o kakršnikoli osebi v pravnem smislu. Vsebuje podatke, neodvisne od sodnih postopkov.</xs:documentation>
+		</xs:annotation>
+				<xs:sequence>
+					<xs:element minOccurs="0" name="bancniRacuni" type="tns:BancniRacunSeznamTip" />
+					<xs:element minOccurs="0" name="organizacijskaOblika" type="tns:SifrantTip">
+						<xs:annotation>
+							<xs:documentation>Iz šifranta SKUPNI.PRORG_OBLIKE.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element minOccurs="0" name="drzavljanstvo" type="tns:DrzavaTip" />
+					<xs:element minOccurs="0" name="naslovi" type="tns:NaslovSeznamTip" />
+					<xs:element minOccurs="0" name="oce" type="tns:OsebaTip" />
+					<xs:element minOccurs="0" name="mati" type="tns:OsebaTip" />
+				</xs:sequence>
+				<xs:attribute name="ime" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Če tip=FIZICNA.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="priimek" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Če tip=FIZICNA.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="prejsnjiPriimek" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Načeloma dekliški priimek, lahko pa tudi priimek pred zadnji spremembo.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="dolgiNaziv" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Načeloma za tip=PRAVNA|SP, lahko pa se uporabi tudi za tip=FIZICNA (npr. za naziv+' '+ime+' '+priimek+', '+akademskiNaziv).</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="kratkiNaziv" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Načeloma za tip=PRAVNA|SP, lahko pa se uporabi tudi za tip=FIZICNA (npr. za ime+' '+priimek).</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="davcnaStevilka" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Uporabi za vse tipe.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="maticnaStevilka" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Če tip=FIZICNA, je to EMŠO. Če tip=PRAVNA|SP, je to matična številka.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="datumRojstva" type="xs:date">
+					<xs:annotation>
+						<xs:documentation>Načeloma za tip=FIZICNA, lahko pa se uporabi tudi za tip=PRAVNA v smislu datuma ustanovitve.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="tip" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>FIZCNA ali PRAVNA ali SP ali DRUGO.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="spol" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>MOSKI ali ZENSKI.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="poklic" type="xs:string" />
+				<xs:attribute name="vzdevek" type="xs:string" />
+				<xs:attribute name="id" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Enolični identifikator osebe iz sistema oz. podsistema, ki ga enolično določa idSistema.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="idSistema" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Enolični identifikator sistema oz. podsistema, kjer je id osebe enoličen. Tipično bo to vnos iz šifranta aplikacij SKUPNI.APLIKACIJE (npr. KVPN).</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="elektronskiNaslov" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>E-poštni (email) naslov.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+	</xs:complexType>
+
+	<xs:complexType name="OsebaSeznamTip">
+				<xs:sequence>
+					<xs:element minOccurs="0" maxOccurs="unbounded" name="oseba" type="tns:OsebaTip" />
+				</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="VlogaOsebeTip">
+				<xs:sequence>
+					<xs:element minOccurs="0" name="vloga" type="tns:SifrantTip">
+						<xs:annotation>
+							<xs:documentation>Iz šifrantov posameznih vpisnikov (npr. obdolženec, zagovornik, predlagatelj, vlagatelj …).</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element minOccurs="0" name="vrstaVloge" type="tns:SifrantTip">
+						<xs:annotation>
+							<xs:documentation>Iz šifrantov posameznih vpisnikov (npr. za vlogo "predlagatelj" so lahko državni tožilec, zasebni tožilec, subsidiarni tožilec ipd.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element minOccurs="0" name="opomba" type="xs:string">
+						<xs:annotation>
+							<xs:documentation>Opomba za morebitne posebnosti.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element minOccurs="0" name="stran" type="tns:SifrantTip">
+						<xs:annotation>
+							<xs:documentation>Iz šifrantov posameznih vpisnikov (npr. tožena/tožeča stranka, dolžniška/upniška stran …).</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+				<xs:attribute name="refIdOseba" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>ID Osebe, na katero se vloga nanaša (npr. ID obdolženca).</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="refIdOsebaPovezana" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>ID Osebe, ki je pasivni 'objekt' v odnosu do @refIdOsebe (če vloga "obdolženec", je v @refIdOseba ID obdolženca, v @refIdOsebaPovezana pa nič</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+	</xs:complexType>
+
+	<xs:complexType name="VlogaOsebeSeznamTip">
+				<xs:sequence>
+					<xs:element minOccurs="0" maxOccurs="unbounded" name="vlogaOsebe" type="tns:VlogaOsebeTip" />
+				</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="UdelezenecTip">
+		<xs:annotation>
+			<xs:documentation>Tip za od sodnih postopkov odvisne podatke o osebah.</xs:documentation>
+		</xs:annotation>
+				<xs:sequence>
+					<xs:element minOccurs="0" name="osebe" type="tns:OsebaSeznamTip">
+						<xs:annotation>
+							<xs:documentation>Vse osebe, ki kakorkoli nastopajo v postopku kot neka celota oseb (npr. obdolženci s svojimi pooblaščenci, zastopniki in zagovorniki).</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element minOccurs="0" name="vlogeOseb" type="tns:VlogaOsebeSeznamTip" />
+				</xs:sequence>
+				<xs:attribute name="zastopaDrzavnoPravobranilstvo" type="xs:boolean" />
+				<xs:attribute name="stevilkaGeneralnegaPooblastila" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Številka generalnega pooblastila (npr. SU 99999/2023).</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="datumPooblastila" type="xs:date">
+					<xs:annotation>
+						<xs:documentation>Datum pooblastila (npr. v SU vpisniku je lahko dodatni ali alternativni podatek @stevilkaGeneralnegaPooblastila).</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="jeUpravnik" type="xs:boolean" />
+				<xs:attribute name="polozaj" type="xs:string" />
+				<xs:attribute name="id" type="xs:string" />
+	</xs:complexType>
+
+	<xs:complexType name="UdelezenecSeznamTip">
+				<xs:sequence>
+					<xs:element minOccurs="0" maxOccurs="unbounded" name="udelezenec" type="tns:UdelezenecTip" />
+				</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="PodpisnikTip">
+		<xs:complexContent>
+			<xs:extension base="tns:OsebaTip">
+				<xs:attribute name="akademskiNaziv" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Npr. "dr."</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="nazivIzobrazbe" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Npr. "univ. dipl. prav."</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="NaslovTip">
+				<xs:sequence>
+					<xs:element minOccurs="0" name="drzava" type="tns:DrzavaTip" />
+				</xs:sequence>
+				<xs:attribute name="ulica" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Zgolj naziv ulice (npr. "Mariborska cesta").</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="hisnaStevilka" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Zgolj osnovna hišna številka brez dodatka (npr. "12" v "12A").</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="hisnaStevilkaDodatek" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Zgolj dodatek k hišni številki (npr. "A" v "12A").</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="hisnaStevilkaInDodatek" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Hišna številka z dodatkom (npr. "12A").</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="ulicaInHisnaStevilkaInDodatek" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Vsi podatki iz zgornjih polj (npr. "Mariborska cesta 12A").</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="naselje" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Naselje (oz. kraj), kot ga razume oz. vodi GURS.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="postnaStevilka" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Poštna številka, kot jo vodi Pošta Slovenije.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="nazivPoste" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Naziv pošte, kot jo vodi Pošta Slovenije.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="tip" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Tip naslova, npr. STALNI (stalno prebivališče fizične osebe), ZACASNI, VROCANJE (za vročanje), ROJSTVO (za npr. kraj in/ali državo rojstva fizične osebe, SEDEZ (sedež podjetja), PODRUZNICA, POSLOVALNICA, USTANOVITEV (za pravne osebe) … TODO: Isti naslov je lahko uporabljen za več namenov, zato lahko pride do redundance, ki ni nujno zaželena (glej rešitev pri osebah in vlogah).</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+	</xs:complexType>
+
+	<xs:complexType name="NaslovSeznamTip">
+				<xs:sequence>
+					<xs:element minOccurs="0" maxOccurs="unbounded" name="naslov" type="tns:NaslovTip" />
+				</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="DrzavaTip">
+				<xs:attribute name="kodaIsoAlpha2" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Dvočrkovna koda države po ISO 3166 (npr. "SI").</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="kodaIsoAlpha3" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Tričrkovna koda države po ISO 3166 (npr. "SVN").</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="kodaIsoNumeric" type="xs:integer">
+					<xs:annotation>
+						<xs:documentation>Številčna koda države po ISO 3166 (npr. "705").</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="nazivIso" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Naziv po ISO standardu (npr. Slovenia, Germany).</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="naziv" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Naziv v slovenskem jeziku (npr. Slovenija, Nemčija).</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="nazivLokalni" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Naziv v lokalnem jeziku države, npr. Slovenija, Deutschland.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+	</xs:complexType>
+
+	<xs:complexType name="ZadevaTip">
+				<xs:sequence>
+					<xs:element minOccurs="0" name="sodisce" type="tns:SifrantTip">
+						<xs:annotation>
+							<xs:documentation>Šifra sodišča iz SKUPNO.SODISCA.SIF.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element minOccurs="0" name="pravnoPodrocje" type="tns:SifrantTip">
+						<xs:annotation>
+							<xs:documentation>Iz šifranta SKUPNI.PRAVNA_PODROCJA. TODO: Šifrant šele v izdelavi. Preveriti ime.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element minOccurs="0" name="pravnoPodpodrocje" type="tns:SifrantTip">
+						<xs:annotation>
+							<xs:documentation>Iz šifranta SKUPNI.PRAVNA_PODPODROCJA. Pri eOpravilih je to "vrstaPostopka". TODO: Šifrant šele v izdelavi. Preveriti ime.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+				<xs:attribute name="stevilka" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Osnovni del opravilne številke (npr. "388" v "K 388/2019").</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="opravilnaStevilka" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Celotna opravilna številka (npr. K 388/2019).</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="vpisnik" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Oznaka vpisnika oz. v primeru i-K faza (npr. 609).</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="leto" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Leto zadeve (npr. "2019" v "K 388/2019").</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="knjiga" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Knjiga zadeve (npr. "III" v "III K 388/2019"). Praviloma uporablja le področje "kazenski" (za označitev t.i. "faze").</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+	</xs:complexType>
+
+	<xs:complexType name="ZnesekTip">
+				<xs:sequence>
+					<xs:element minOccurs="0" name="valuta" type="tns:SifrantTip">
+						<xs:annotation>
+							<xs:documentation>Iz šifranta SKUPNI.IMENIK_VALUT.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+				<xs:attribute name="znesek" type="xs:decimal" />
+	</xs:complexType>
+
+	<xs:complexType name="BancniRacunTip">
+				<xs:attribute name="iban" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>IBAN - številka bančnega računa po ISO 13616 (t.j. brez presledkov in posebnih znakov).</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="imetnik" type="xs:string" />
+				<xs:attribute name="nazivBanke" type="xs:string" />
+	</xs:complexType>
+
+	<xs:complexType name="BancnoNakaziloTip">
+				<xs:sequence>
+					<xs:element minOccurs="0" name="bancniRacun" type="tns:BancniRacunTip" />
+					<xs:element minOccurs="0" name="znesek" type="tns:ZnesekTip" />
+				</xs:sequence>
+				<xs:attribute name="referenca" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Vsebuje celotno referenco, t.j. model in sklic brez presledka (npr. "SI9912345").</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="model" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Model UPN (npr. "SI99" v "SI9912345").</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="sklic" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Sklic UPN (npr. "12345" v "SI9912345").</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+	</xs:complexType>
+
+	<xs:complexType name="BancniRacunSeznamTip">
+				<xs:sequence>
+					<xs:element minOccurs="0" maxOccurs="unbounded" name="bancniRacun" type="tns:BancniRacunTip" />
+				</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="NarokTip">
+				<xs:sequence>
+					<xs:element minOccurs="0" name="naslovLokacije" type="tns:NaslovTip">
+						<xs:annotation>
+							<xs:documentation>Markolokacija naroka.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+				<xs:attribute name="vsebina" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Vsebina naroka oz. njen opis.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="datumCasOd" type="xs:dateTime" />
+				<xs:attribute name="soba" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Mikrolokacija naroka.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+	</xs:complexType>
+
+	<xs:complexType name="KoledarTip">
+				<xs:sequence>
+					<xs:element minOccurs="0" name="vrsta" type="tns:SifrantTip" />
+				</xs:sequence>
+				<xs:attribute name="vsebina" type="xs:string" />
+				<xs:attribute name="datumCas" type="xs:dateTime" />
+				<xs:attribute name="datumCasIzvedbe" type="xs:dateTime" />
+	</xs:complexType>
+
+	<xs:complexType name="PisanjeTip">
+		<xs:annotation>
+			<xs:documentation>Splošni tip za vsakovrstne dokumente, ki nastanejo na sodišču (odločbe, sklepi, zapisniki, zaprosila, obvestila, dopisi, zaznamki itd.).</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="skupSplos:SplosniTip">
+				<xs:sequence>
+					<xs:element minOccurs="0" name="zadeva" type="tns:ZadevaTip" />
+					<xs:element minOccurs="0" name="udelezenci" type="tns:UdelezenecSeznamTip">
+						<xs:annotation>
+							<xs:documentation>Udeleženci (z vlogami), ki se tičejo pisanja (lahko prejemnik, njegovi zastopniki ipd.).</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element minOccurs="0" name="tip" type="tns:SifrantTip">
+						<xs:annotation>
+							<xs:documentation>Iz šifranta EV1.SIFRANT_DOKUMENT_TIP.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+				<xs:attribute name="stevilka" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Številka pisanja, unikatna znotraj zadeve.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="rednaStevilka" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Redna številka dokumenta (pisanja) v popisu spisa.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="listovnaStevilka" type="xs:string" />
+				<xs:attribute name="refIdProcesnoDejanje" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Referenca na procesno dejanje, v katerem je odločba nastala.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="datum" type="xs:date">
+					<xs:annotation>
+						<xs:documentation>Datum izdaje dokumenta odločitve oz. sprejema odločitve (npr. datum izreka).</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="OdlocitevTip">
+		<xs:annotation>
+			<xs:documentation>Splošni tip za vsakovrstne (ne)končne sodne odločitve.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="tns:PisanjeTip">
+				<xs:attribute name="vrsta" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Npr. "SODBA", "ODLOCBA", "SKLEP", lahko tudi "KAZENSKA_SODBA", "RAZVELJAVITVENA_ODLOCBA", "SKLEP_O_DEDOVANJU" ipd.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="kratkaVsebina" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Povzetek izreka/obrazložitve/pouka o pravnem sredstvu.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="datumPravnomocnosti" type="xs:date" />
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="PrilogaTip">
+		<xs:complexContent>
+			<xs:extension base="skupSplos:SplosniTip">
+				<xs:sequence>
+					<xs:element minOccurs="0" name="zadeva" type="tns:ZadevaTip">
+						<xs:annotation>
+							<xs:documentation>Zadeva, kjer se nahaja referencirano Pisanje.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element minOccurs="0" name="udelezenci" type="tns:UdelezenecSeznamTip">
+						<xs:annotation>
+							<xs:documentation>Udeleženci (z vlogami), ki se tičejo priloge (lahko predlagatelj, njegovi zastopniki ipd.).</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+				<xs:attribute name="refStevilkaPisanja" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Referenca na Pisanje, ki mu Priloga pripada.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="oznacba" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Označba priloge v spisu po sodnem redu (npr. A13, B47, C9 ipd.).</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="vrstaOznacbe" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Vrsta označbe priloge v spisu po sodnem redu (A, B ali C itd.).</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="SodisceTip">
+		<xs:annotation>
+			<xs:documentation>Iz šifranta SKUPNI.SODISCA.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="tns:SifrantTip">
+				<xs:sequence>
+					<xs:element minOccurs="0" name="pristojnost" type="tns:PristojnostTip" />
+					<xs:element minOccurs="0" name="naslov" type="tns:NaslovTip" />
+					<xs:element minOccurs="0" name="policijskaUprava" type="tns:SifrantTip">
+						<xs:annotation>
+							<xs:documentation>TODO: Iz šifranta SKUPNI.???????. Trenutno je menda v dokumentu/preglednici.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element minOccurs="0" name="bancniRacunTakseFizicneOsebe" type="tns:BancniRacunTip">
+						<xs:annotation>
+							<xs:documentation>Bančni račun, kamor fizične osebe plačujejo takse.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element minOccurs="0" name="bancniRacunTaksePravneOsebe" type="tns:BancniRacunTip">
+						<xs:annotation>
+							<xs:documentation>Bančni račun, kamor pravne osebe plačujejo takse.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+				<xs:attribute name="maticnaStevilka" type="xs:string" />
+				<xs:attribute name="jeMaticno" type="xs:boolean" />
+				<xs:attribute name="nazivDvojezicno" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Naziv dvojezičnega sodišča v drugem jeziku (npr. italijansko, madžarsko).</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="PristojnostTip">
+		<xs:annotation>
+			<xs:documentation>Iz šifranta SKUPNI.PRISTOJNOSTI_SODISC.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="tns:SifrantTip">
+				<xs:sequence>
+					<xs:element minOccurs="0" name="skupina" type="tns:SifrantTip">
+						<xs:annotation>
+							<xs:documentation>Iz šifranta SKUPNI.PRISTOJNOSTI_SODISC_SKUPINE.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="OddelekTip">
+		<xs:annotation>
+			<xs:documentation>Iz šifranta SKUPNI.ODDELKI.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="tns:SifrantTip">
+				<xs:sequence>
+					<xs:element minOccurs="0" name="vrstaOddelka" type="tns:SifrantTip">
+						<xs:annotation>
+							<xs:documentation>Iz šifranta SKUPNI.VRSTE_ODDELKOV.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element minOccurs="0" name="sodisce" type="tns:SodisceTip" />
+					<xs:element minOccurs="0" name="naslov" type="tns:NaslovTip" />
+				</xs:sequence>
+				<xs:attribute name="elektronskiNaslov" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>E-poštni (email) naslov.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="varniElektronskiPredal" type="xs:string" />
+				<xs:attribute name="postnaStevilkaSprejemnePoste" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Poštna številka, kot jo vodi Pošta Slovenije.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="nazivPosteSprejemnePoste" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Naziv pošte, kot jo vodi Pošta Slovenije.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="VpisnikTip">
+		<xs:annotation>
+			<xs:documentation>Iz šifranta SKUPNI.VPISNIKI.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="tns:SifrantTip">
+				<xs:sequence>
+					<xs:element minOccurs="0" name="oddelek" type="tns:OddelekTip" />
+					<xs:element minOccurs="0" name="pristojnost" type="tns:PristojnostTip" />
+					<xs:element minOccurs="0" name="bancnoNakazilo" type="tns:BancnoNakaziloTip">
+						<xs:annotation>
+							<xs:documentation>Iz šifranta SKUPNI.RACUNI_VPISNIKOV.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element minOccurs="0" name="povezanoSodisce" type="tns:PovezanoSodisceSeznamTip" />
+				</xs:sequence>
+				<xs:attribute name="elektronskiNaslov" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>E-poštni (email) naslov.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="varniElektronskiPredal" type="xs:string" />
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="PovezanoSodisceTip">
+				<xs:sequence>
+					<xs:element minOccurs="0" name="sodisce" type="tns:SodisceTip" />
+					<xs:element minOccurs="0" name="tipPovezave" type="tns:SifrantTip">
+						<xs:annotation>
+							<xs:documentation>Iz šifranta SKUPNI.TIPI_POVEZ_SODISC.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="PovezanoSodisceSeznamTip">
+				<xs:sequence>
+					<xs:element minOccurs="0" maxOccurs="unbounded" name="povezanoSodisce" type="tns:PovezanoSodisceTip" />
+				</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="ProcesnoDejanjeTip">
+				<xs:sequence>
+					<xs:element minOccurs="0" name="tip" type="tns:SifrantTip">
+						<xs:annotation>
+							<xs:documentation>Klasifikacija na najnižjem nivoju. Iz šifrantov posameznih vpisnikov.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element minOccurs="0" name="vrsta" type="tns:SifrantTip">
+						<xs:annotation>
+							<xs:documentation>Klasifikacija na najvišjem nivoju. Iz šifrantov posameznih vpisnikov.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element minOccurs="0" name="podvrsta" type="tns:SifrantTip">
+						<xs:annotation>
+							<xs:documentation>Klasifikacija na srednjem nivoju. Iz šifrantov posameznih vpisnikov.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element minOccurs="0" name="udelezenci" type="tns:UdelezenecSeznamTip">
+						<xs:annotation>
+							<xs:documentation>Vloge vseh relevantnih oseb (npr. udeleženci, obdolženci, vlagatelji ipd.)</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element minOccurs="0" name="narok" type="tns:NarokTip" />
+					<xs:element minOccurs="0" name="koledar" type="tns:KoledarTip" />
+					<xs:element minOccurs="0" name="zadeva" type="tns:ZadevaTip" />
+				</xs:sequence>
+				<xs:attribute name="datumPravnomocnosti" type="xs:date" />
+				<xs:attribute name="elektronskoOpraviloRef" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Referenca na ElektronskoOpravilo/@id.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+	</xs:complexType>
+
+	<xs:complexType name="SifrantTip">
+				<xs:attribute name="id" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Enolični identifikator vnosa v šifrant (npr. "S24").</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="sifra" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Enolična uporabniška koda vnosa v šifrant (npr. "OJMB").</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="kratkiNaziv" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Kratki naziv (npr. "OJ v Mariboru").</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="dolgiNaziv" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Polni naziv (npr. "Okrajno sodišče v Mariboru").</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="kratkiOpis" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>(Kratki) opis vnosa v šifrant (lahko tudi kakšen od drugih krajših nazivov, npr. "OJ Maribor").</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="dolgiOpis" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>(Daljši) opis vnosa v šifrant.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+	</xs:complexType>
+
+	<xs:complexType name="SifrantSeznamTip">
+				<xs:sequence>
+					<xs:element minOccurs="0" maxOccurs="unbounded" name="sifrant" type="tns:SifrantTip" />
+				</xs:sequence>
+	</xs:complexType>
+
+</xs:schema>

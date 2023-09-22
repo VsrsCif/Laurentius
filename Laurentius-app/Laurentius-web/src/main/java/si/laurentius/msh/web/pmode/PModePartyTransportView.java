@@ -130,9 +130,9 @@ public class PModePartyTransportView extends AbstractPModeJSFView<PartyIdentityS
     PartyIdentitySetType.TransportProtocol ecj = getEditable();
     if (ecj != null && pModePartyView.getEditable() != null) {
       getSelected().setAddress(ecj.getAddress());
-      getSelected().setBase64Encoded(ecj.getBase64Encoded());
-      getSelected().setGzipCompress(ecj.getGzipCompress());
-      getSelected().setIsTwoWayProtocol(ecj.getIsTwoWayProtocol());
+      getSelected().setBase64Encoded(ecj.isBase64Encoded());
+      getSelected().setGzipCompress(ecj.isGzipCompress());
+      getSelected().setIsTwoWayProtocol(ecj.isIsTwoWayProtocol());
       getSelected().setSOAPVersion(ecj.getSOAPVersion());
       getSelected().setTLS(ecj.getTLS());
       getSelected().setSMTP(ecj.getSMTP());

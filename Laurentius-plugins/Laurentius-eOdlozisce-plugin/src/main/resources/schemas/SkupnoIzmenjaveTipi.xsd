@@ -1,0 +1,156 @@
+<xs:schema xmlns:xs       ="http://www.w3.org/2001/XMLSchema"
+           xmlns:tns      ="http://sodisce.si/sheme/skupno/izmenjave/v1"
+           xmlns:skupSkup ="http://sodisce.si/sheme/skupno/skupno/v1"
+           xmlns:skupSplos="http://sodisce.si/sheme/skupno/splosno/v1"
+           xmlns:dsig     ="http://www.w3.org/2000/09/xmldsig#"
+           targetNamespace="http://sodisce.si/sheme/skupno/izmenjave/v1"
+           elementFormDefault="qualified"
+           version="1.0">
+
+	<xs:import namespace="http://sodisce.si/sheme/skupno/skupno/v1"  schemaLocation="SkupnoSkupnoTipi.xsd" />
+	<xs:import namespace="http://sodisce.si/sheme/skupno/splosno/v1" schemaLocation="SkupnoSplosnoTipi.xsd" />
+	<xs:import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="xmldsig-core-schema.xsd" />
+
+	<xs:complexType name="ElektronskaOvojnicaTip">
+				<xs:sequence>
+					<xs:element minOccurs="0" name="posiljka" type="tns:ElektronskaPosiljkaTip" />
+					<xs:element minOccurs="0" maxOccurs="unbounded" ref="dsig:Signature" >
+						<xs:annotation>
+							<xs:documentation>Digitalni podpis (XML Digital Signature), ki  ga je mogoče večkrat vključiti v isto shemo (https://www.w3.org/Signature/Drafts/xmldsig-scenarios-990818.html#MultipleSigners).\nNpr. 1x za podpis vloge (npr. s strani pošiljatelja oz. vlagatelja) in 1x za časovni žig vloge po standardu XAdES, npr. po profilu XAdES-T (npr. s strani prejemnika, https://www.w3.org/TR/XAdES/#Syntax_for_XAdES_T_form).\nElement "posiljka" tipično podpiše pošiljatelj. Element "posiljka" in/ali element podpisa vlagatelja časovno žigosa tipično prejemnik.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+				<xs:attribute name="id" type="xs:ID">
+					<xs:annotation>
+						<xs:documentation>Neobvezen identifikator elementa ovojnice. Uporabno za digitalni podpis in časovno žigosanje.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+	</xs:complexType>
+
+	<xs:complexType name="ElektronskaPosiljkaTip">
+		<xs:complexContent>
+			<xs:extension base="skupSplos:SplosniTip">
+				<xs:sequence>
+					<xs:element minOccurs="0" name="posiljatelj" type="skupSkup:UdelezenecTip" />
+					<xs:element minOccurs="0" name="prejemnik" type="skupSkup:UdelezenecTip" />
+					<xs:element minOccurs="0" name="opravilo" type="tns:ElektronskoOpraviloTip">
+						<xs:annotation>
+							<xs:documentation>V primeru, da je pošiljka nastala v okviru eOpravila.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element minOccurs="0" name="zadeva" type="skupSkup:ZadevaTip">
+						<xs:annotation>
+							<xs:documentation>Če nova zadeva, se lahko izpolni le "sodisce", kateremu se pošilja pošiljko, ter "pravnoPodpodrocje".</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element minOccurs="0" name="dokumenti" type="tns:ElektronskiDokumentSeznamTip" />
+				</xs:sequence>
+				<xs:attribute name="id" type="xs:ID">
+					<xs:annotation>
+						<xs:documentation>Neobvezen identifikator elementa pošiljke. Uporabno za digitalni podpis in časovno žigosanje.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="ElektronskiDokumentTip">
+		<xs:complexContent>
+			<xs:extension base="skupSplos:SplosniTip">
+				<xs:sequence>
+					<xs:element minOccurs="0" name="vrsta" type="skupSkup:SifrantTip">
+						<xs:annotation>
+							<xs:documentation>Iz šifranta vrst dokumentov pri eOpravilih. TODO: Kje je ta šifrant?</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element minOccurs="0" name="tip" type="skupSkup:SifrantTip">
+						<xs:annotation>
+							<xs:documentation>Iz šifranta EV1.SIFRANT_DOKUMENT_TIP.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element minOccurs="0" name="vsebina" type="xs:base64Binary" />
+					<xs:element minOccurs="0" name="pisanje" type="skupSkup:PisanjeTip">
+						<xs:annotation>
+							<xs:documentation>Tukaj se lahko navede podatke dokumenta (npr. ko je pošiljatelj sodišče), ki so sicer vsebovani v binarni obliki dokumenta (npr. na katere udeležence se dokument nanaša in kakšne so njihove vloge v smislu pošiljke ali sodnega postopka ipd.).</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+				<xs:attribute name="hash" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Hash oz. zgoščena vrednost dokumenta, zapisan v heksadecimalni obliki.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="hashAlgoritem" type="xs:anyURI">
+					<xs:annotation>
+						<xs:documentation>Izbran algoritem za izračun hash-a dokumenta.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="jeVodilni" type="xs:boolean">
+					<xs:annotation>
+						<xs:documentation>Indikator ali je dokument vodilni (torej ni priloga). V seznamu je lahko (ne pa nujno) tudi več vodilnih dokumentov.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="id" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Enolični identifikator dokumenta.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="ime" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Ime dokumenta.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="opomba" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Komentar dokumenta.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="ElektronskiDokumentSeznamTip">
+				<xs:sequence>
+					<xs:element minOccurs="0" maxOccurs="unbounded" name="dokument" type="tns:ElektronskiDokumentTip" />
+				</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="ElektronskoOpraviloTip">
+		<xs:annotation>
+			<xs:documentation>T.i. "eOpravilo".</xs:documentation>
+		</xs:annotation>
+				<xs:sequence>
+					<xs:element minOccurs="0" name="skupina" type="skupSkup:SifrantTip">
+						<xs:annotation>
+							<xs:documentation>Najvišji nivo klasifikacije. Iz šifranta eOpravil, npr. iz:\n1. "PREGLEDNICA E-IZVRŠBA-OPRAVILA - ELEKTRONSKI PREDLOGI, VLOGE IN DRUGA PISANJA", stolpec "e-Izvršba-opravila".\n2. Primer2_sifranti.ods, zavihek "VP_SKUPINA_EOPRAVIL".\n3. Primer2_sifranti.ods, zavihek "S_VRSTE_DOKUMENTOV".\n4. Primer2_sifranti.ods, zavihek "INS POSTOPKI".\n5. primer2_stari_portal_INS-nabor_opravil_spustni_seznam, sifrantKoda=S_VP_SKUPINA_EOPRAVIL.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element minOccurs="0" name="podskupina" type="skupSkup:SifrantTip">
+						<xs:annotation>
+							<xs:documentation>Srednji nivo klasifikacije. Iz šifranta eOpravil, npr. iz "PREGLEDNICA E-IZVRŠBA-OPRAVILA - ELEKTRONSKI PREDLOGI, VLOGE IN DRUGA PISANJA", stolpec "Podskupina e-Izvršbaopravila".</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element minOccurs="0" name="tip" type="skupSkup:SifrantTip">
+						<xs:annotation>
+							<xs:documentation>Najnižji nivo klasifikacije. Iz šifranta eOpravil, npr. iz:\n1. "PREGLEDNICA E-IZVRŠBA-OPRAVILA - ELEKTRONSKI PREDLOGI, VLOGE IN DRUGA PISANJA", stolpec "Vrsta e-Izvršba-opravila z oznako – št. atributa".\n2. Primer2_sifranti.ods, zavihek "VP_TIPI_POSTOPKOV".\n3. primer2_stari_portal_INS-nabor_opravil_spustni_seznam, sifrantKoda=S_VP_TIPI_POSTOPKOV.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element minOccurs="0" name="avtor" type="skupSkup:UdelezenecTip">
+						<xs:annotation>
+							<xs:documentation>Avtor izvedbe eOpravila oz. tisti, ki je povzročil, da je to eOpravilo  nastalo.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+				<xs:attribute name="id" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>Unikatni identifikator instance eOpravila.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="datumCas" type="xs:dateTime">
+					<xs:annotation>
+						<xs:documentation>Datum/čas izvedbe eOpravila.</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+	</xs:complexType>
+
+</xs:schema>

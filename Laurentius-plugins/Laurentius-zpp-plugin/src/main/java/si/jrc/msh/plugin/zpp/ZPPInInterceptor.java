@@ -748,7 +748,7 @@ public class ZPPInInterceptor implements SoapInterceptorInterface {
 
         for (MSHInPart mip : mi.getMSHInPayload().getMSHInParts()) {
           String oldFileName = mip.getFilename();
-          if (mip.getIsEncrypted()) {
+          if (mip.isIsEncrypted()) {
 
             String newFileName
                     = oldFileName.substring(0, oldFileName.lastIndexOf(

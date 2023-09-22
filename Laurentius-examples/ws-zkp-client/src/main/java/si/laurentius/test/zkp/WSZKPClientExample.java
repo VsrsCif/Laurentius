@@ -137,7 +137,7 @@ public class WSZKPClientExample {
         }
 
         try {
-            // 1. test: AdviceOfDelivery is signed with key registered in laurentius
+            // 1. test: AdviceOfDelivery is signed with a key NOT registered in laurentius
             testAdviceOfDelivery(ZKPDeliveryConstants.S_ZKP_B_SERVICE, S_KEY_NOT_REGISTRED_ALIAS, "Test message ZKP_B");
         } catch (SEDException_Exception | JAXBException | FOPException | ZKPException ex) {
             LOG.error("Signature failed: " + ex.getMessage(), ex);
