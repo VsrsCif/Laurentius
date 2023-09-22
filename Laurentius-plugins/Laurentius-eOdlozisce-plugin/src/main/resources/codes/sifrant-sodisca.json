@@ -1,0 +1,235 @@
+[ {
+  "sodiSif" : "S01",
+  "naziv" : "Vrhovno sodišče RS"
+}, {
+  "sodiSif" : "S02",
+  "naziv" : "Višje sodišče v Ljubljani"
+}, {
+  "sodiSif" : "S03",
+  "naziv" : "Okrožno sodišče v Ljubljani"
+}, {
+  "sodiSif" : "S04",
+  "naziv" : "Okrožno sodišče v Mariboru"
+}, {
+  "sodiSif" : "S05",
+  "naziv" : "Okrožno sodišče v Murski Soboti"
+}, {
+  "sodiSif" : "S06",
+  "naziv" : "Okrožno sodišče v Novi Gorici"
+}, {
+  "sodiSif" : "S07",
+  "naziv" : "Okrožno sodišče v Novem mestu"
+}, {
+  "sodiSif" : "S08",
+  "naziv" : "Okrožno sodišče v Celju"
+}, {
+  "sodiSif" : "S09",
+  "naziv" : "Okrožno sodišče v Kopru"
+}, {
+  "sodiSif" : "S10",
+  "naziv" : "Okrožno sodišče v Kranju"
+}, {
+  "sodiSif" : "S11",
+  "naziv" : "Okrožno sodišče v Krškem"
+}, {
+  "sodiSif" : "S12",
+  "naziv" : "Okrožno sodišče na Ptuju"
+}, {
+  "sodiSif" : "S13",
+  "naziv" : "Okrožno sodišče v Slovenj Gradcu"
+}, {
+  "sodiSif" : "S20",
+  "naziv" : "Okrajno sod. v Ljubljani - centralni oddelek za verodostojno listino"
+}, {
+  "sodiSif" : "S23",
+  "naziv" : "Okrajno sodišče v Ljubljani"
+}, {
+  "sodiSif" : "S24",
+  "naziv" : "Okrajno sodišče v Mariboru"
+}, {
+  "sodiSif" : "S25",
+  "naziv" : "Okrajno sodišče v Murski Soboti"
+}, {
+  "sodiSif" : "S26",
+  "naziv" : "Okrajno sodišče v Novi Gorici"
+}, {
+  "sodiSif" : "S27",
+  "naziv" : "Okrajno sodišče v Novem mestu"
+}, {
+  "sodiSif" : "S28",
+  "naziv" : "Okrajno sodišče v Celju"
+}, {
+  "sodiSif" : "S29",
+  "naziv" : "Okrajno sodišče v Kopru"
+}, {
+  "sodiSif" : "S30",
+  "naziv" : "Okrajno sodišče v Kranju"
+}, {
+  "sodiSif" : "S31",
+  "naziv" : "Okrajno sodišče v Krškem"
+}, {
+  "sodiSif" : "S32",
+  "naziv" : "Okrajno sodišče na Ptuju"
+}, {
+  "sodiSif" : "S33",
+  "naziv" : "Okrajno sodišče v Slovenj Gradcu"
+}, {
+  "sodiSif" : "S41",
+  "naziv" : "Okrajno sodišče v Ajdovščini"
+}, {
+  "sodiSif" : "S42",
+  "naziv" : "Okrajno sodišče v Brežicah"
+}, {
+  "sodiSif" : "S43",
+  "naziv" : "Okrajno sodišče v Cerknici"
+}, {
+  "sodiSif" : "S44",
+  "naziv" : "Okrajno sodišče v Črnomlju"
+}, {
+  "sodiSif" : "S45",
+  "naziv" : "Okrajno sodišče v Domžalah"
+}, {
+  "sodiSif" : "S46",
+  "naziv" : "Okrajno sodišče v Gornji Radgoni"
+}, {
+  "sodiSif" : "S47",
+  "naziv" : "Okrajno sodišče v Grosupljem"
+}, {
+  "sodiSif" : "S48",
+  "naziv" : "Okrajno sodišče v Ilirski Bistrici"
+}, {
+  "sodiSif" : "S49",
+  "naziv" : "Okrajno sodišče v Idriji"
+}, {
+  "sodiSif" : "S50",
+  "naziv" : "Okrajno sodišče na Jesenicah"
+}, {
+  "sodiSif" : "S51",
+  "naziv" : "Okrajno sodišče v Kamniku"
+}, {
+  "sodiSif" : "S52",
+  "naziv" : "Okrajno sodišče v Kočevju"
+}, {
+  "sodiSif" : "S53",
+  "naziv" : "Okrajno sodišče v Lenartu"
+}, {
+  "sodiSif" : "S54",
+  "naziv" : "Okrajno sodišče v Lendavi"
+}, {
+  "sodiSif" : "S55",
+  "naziv" : "Okrajno sodišče v Litiji"
+}, {
+  "sodiSif" : "S56",
+  "naziv" : "Okrajno sodišče v Ljutomeru"
+}, {
+  "sodiSif" : "S57",
+  "naziv" : "Okrajno sodišče v Ormožu"
+}, {
+  "sodiSif" : "S58",
+  "naziv" : "Okrajno sodišče v Piranu"
+}, {
+  "sodiSif" : "S59",
+  "naziv" : "Okrajno sodišče v Postojni"
+}, {
+  "sodiSif" : "S60",
+  "naziv" : "Okrajno sodišče v Radovljici"
+}, {
+  "sodiSif" : "S61",
+  "naziv" : "Okrajno sodišče v Sevnici"
+}, {
+  "sodiSif" : "S62",
+  "naziv" : "Okrajno sodišče v Sežani"
+}, {
+  "sodiSif" : "S63",
+  "naziv" : "Okrajno sodišče v Slovenski Bistrici"
+}, {
+  "sodiSif" : "S64",
+  "naziv" : "Okrajno sodišče v Slovenskih Konjicah"
+}, {
+  "sodiSif" : "S65",
+  "naziv" : "Okrajno sodišče v Šentjurju"
+}, {
+  "sodiSif" : "S66",
+  "naziv" : "Okrajno sodišče v Škofji Loki"
+}, {
+  "sodiSif" : "S67",
+  "naziv" : "Okrajno sodišče v Šmarju pri Jelšah"
+}, {
+  "sodiSif" : "S68",
+  "naziv" : "Okrajno sodišče v Tolminu"
+}, {
+  "sodiSif" : "S69",
+  "naziv" : "Okrajno sodišče v Trbovljah"
+}, {
+  "sodiSif" : "S70",
+  "naziv" : "Okrajno sodišče v Trebnjem"
+}, {
+  "sodiSif" : "S71",
+  "naziv" : "Okrajno sodišče v Velenju"
+}, {
+  "sodiSif" : "S72",
+  "naziv" : "Okrajno sodišče na Vrhniki"
+}, {
+  "sodiSif" : "S73",
+  "naziv" : "Okrajno sodišče v Žalcu"
+}, {
+  "sodiSif" : "S74",
+  "naziv" : "Upravno sodišče Republike Slovenije"
+}, {
+  "sodiSif" : "S75",
+  "naziv" : "Upravno sodišče Republike Slovenije - Zunanji oddelek v Mariboru"
+}, {
+  "sodiSif" : "S76",
+  "naziv" : "Upravno sodišče Republike Slovenije - Zunanji oddelek v Novi Gorici"
+}, {
+  "sodiSif" : "S77",
+  "naziv" : "Upravno sodišče Republike Slovenije - Zunanji oddelek v Celju"
+}, {
+  "sodiSif" : "S81",
+  "naziv" : "Delovno sodišče v Celju"
+}, {
+  "sodiSif" : "S82",
+  "naziv" : "Delovno sodišče v Kopru"
+}, {
+  "sodiSif" : "S83",
+  "naziv" : "Delovno in socialno sodišče v Ljubljani"
+}, {
+  "sodiSif" : "S84",
+  "naziv" : "Delovno sodišče v Mariboru"
+}, {
+  "sodiSif" : "S85",
+  "naziv" : "Delovno sodišče v Kopru - Zunanji oddelek v Novi Gorici"
+}, {
+  "sodiSif" : "S87",
+  "naziv" : "Delovno in socialno sodišče v Ljubljani - Zunanji oddelek v Brežicah"
+}, {
+  "sodiSif" : "S88",
+  "naziv" : "Delovno in socialno sodišče v Ljubljani - Zunanji oddelek v Kranju"
+}, {
+  "sodiSif" : "S89",
+  "naziv" : "Delovno in socialno sodišče v Ljubljani - Zunanji odd. v Novem mestu"
+}, {
+  "sodiSif" : "S90",
+  "naziv" : "Delovno sodišče v Mariboru - Zunanji oddelek v Murski Soboti"
+}, {
+  "sodiSif" : "S91",
+  "naziv" : "Delovno sodišče v Mariboru - Zunanji oddelek v Slovenj Gradcu"
+}, {
+  "sodiSif" : "S92",
+  "naziv" : "Delovno sodišče v Mariboru - Zunanji oddelek na Ptuju"
+}, {
+  "sodiSif" : "S93",
+  "naziv" : "Višje delovno in socialno sodišče"
+}, {
+  "sodiSif" : "S94",
+  "naziv" : "Višje sodišče v Mariboru"
+}, {
+  "sodiSif" : "S95",
+  "naziv" : "Višje sodišče v Celju"
+}, {
+  "sodiSif" : "S96",
+  "naziv" : "Višje sodišče v Kopru"
+}, {
+  "sodiSif" : "S97",
+  "naziv" : "Delovno in socialno sodišče v Ljubljani - Socialni oddelek"
+} ]

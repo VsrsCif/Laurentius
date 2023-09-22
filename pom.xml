@@ -120,8 +120,8 @@
         <org.hibernate.version>5.1.1.Final</org.hibernate.version>
         <junit.version>4.12</junit.version>
         <org.apache.activemq.junit.version>5.15.2</org.apache.activemq.junit.version>      
-        <org.apache.activemq.core.version>5.7.0</org.apache.activemq.core.version> 
-        
+        <org.apache.activemq.core.version>5.7.0</org.apache.activemq.core.version>
+        <jackson-version>2.11.4</jackson-version>
     </properties>
 
     <dependencyManagement>
@@ -201,8 +201,8 @@
             <dependency>
                 <groupId>org.primefaces</groupId>
                 <artifactId>primefaces</artifactId>
-                <version>${org.primefaces.version}</version>            		
-            </dependency>	
+                <version>${org.primefaces.version}</version>
+            </dependency>
             <!-- dependency>
                 <groupId>org.primefaces.extensions</groupId>
                 <artifactId>primefaces-extensions</artifactId>
@@ -277,6 +277,26 @@
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-validator</artifactId>
                 <version> ${org.hibernate.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>${jackson-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-annotations</artifactId>
+                <version>${jackson-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${jackson-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.datatype</groupId>
+                <artifactId>jackson-datatype-jsr310</artifactId>
+                <version>${jackson-version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
