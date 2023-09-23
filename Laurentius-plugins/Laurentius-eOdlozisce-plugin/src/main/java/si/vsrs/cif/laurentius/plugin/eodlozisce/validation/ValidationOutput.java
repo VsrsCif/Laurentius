@@ -4,30 +4,12 @@ public class ValidationOutput {
     public enum ValidateionSeverity {
         ERROR, WARNING
     }
-    private String message;
-    private String location;
     private ValidateionSeverity severity;
+    private ValidationErrorCode code;
 
-    public ValidationOutput(ValidateionSeverity severity, String message, String location) {
-        this.message = message;
-        this.location = location;
+    public ValidationOutput(ValidateionSeverity severity, ValidationErrorCode code) {
         this.severity = severity;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
+        this.code = code;
     }
 
     public ValidateionSeverity getSeverity() {
@@ -36,5 +18,13 @@ public class ValidationOutput {
 
     public void setSeverity(ValidateionSeverity severity) {
         this.severity = severity;
+    }
+
+    public ValidationErrorCode getCode() {
+        return code;
+    }
+
+    public void setCode(ValidationErrorCode code) {
+        this.code = code;
     }
 }

@@ -1,9 +1,9 @@
 package si.vsrs.cif.laurentius.plugin.eodlozisce.codes;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class RegisterType {
     @JsonProperty("vpisnik")
@@ -16,8 +16,6 @@ public class RegisterType {
     String applikCode;
     @JsonProperty("pristojnaSodisca")
     List<String> courts;
-
-
 
     public RegisterType() {
     }

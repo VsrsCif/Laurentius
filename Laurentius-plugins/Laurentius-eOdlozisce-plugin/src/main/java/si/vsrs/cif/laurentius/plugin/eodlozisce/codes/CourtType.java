@@ -1,7 +1,7 @@
 package si.vsrs.cif.laurentius.plugin.eodlozisce.codes;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Objects;
 
 /**

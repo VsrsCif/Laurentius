@@ -6,32 +6,20 @@ package si.vsrs.cif.laurentius.plugin.eodlozisce;
 
 import org.xml.sax.SAXException;
 import si.laurentius.commons.SEDJNDI;
-import si.laurentius.commons.SEDSystemProperties;
 import si.laurentius.commons.enums.SEDInboxMailStatus;
-import si.laurentius.commons.enums.SEDOutboxMailStatus;
-import si.laurentius.commons.exception.FOPException;
-import si.laurentius.commons.exception.HashException;
-import si.laurentius.commons.exception.PModeException;
-import si.laurentius.commons.exception.SEDSecurityException;
 import si.laurentius.commons.exception.StorageException;
 import si.laurentius.commons.interfaces.PModeInterface;
 import si.laurentius.commons.interfaces.SEDCertStoreInterface;
 import si.laurentius.commons.interfaces.SEDDaoInterface;
 import si.laurentius.commons.utils.SEDLogger;
-import si.laurentius.commons.utils.Utils;
 import si.laurentius.msh.inbox.mail.MSHInMail;
-import si.laurentius.msh.outbox.mail.MSHOutMail;
-import si.laurentius.msh.outbox.payload.MSHOutPart;
-import si.laurentius.msh.outbox.payload.MSHOutPayload;
-import si.laurentius.msh.pmode.PMode;
 import si.laurentius.plugin.crontask.CronTaskDef;
 import si.laurentius.plugin.crontask.CronTaskPropertyDef;
 import si.laurentius.plugin.interfaces.PropertyListType;
 import si.laurentius.plugin.interfaces.PropertyType;
 import si.laurentius.plugin.interfaces.TaskExecutionInterface;
 import si.laurentius.plugin.interfaces.exception.TaskException;
-import si.vsrs.cif.laurentius.plugin.eodlozisce.exception.EOdlozisceException;
-import si.vsrs.cif.laurentius.plugin.eodlozisce.validation.SchemaValidator;
+import si.vsrs.cif.laurentius.plugin.eodlozisce.validation.SchemaValidationStage;
 import si.vsrs.cif.laurentius.plugin.eodlozisce.validation.ValidationOutput;
 import si.vsrs.cif.laurentius.plugin.eodlozisce.validation.ValidationResult;
 
@@ -41,13 +29,11 @@ import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
-import java.io.FileInputStream;
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
 import java.io.StringWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.security.PrivateKey;
-import java.security.cert.X509Certificate;
-import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
@@ -61,6 +47,19 @@ public class EOdlozisceTask implements TaskExecutionInterface {
   private static final String REC_SEDBOX = "zkp.sedbox";
   private static final String PROCESS_MAIL_COUNT = "zkp.max.mail.count";
 
+  public static Source[] schemas = new Source[]{
+          new StreamSource(EOdlozisceTask.class.getClassLoader().getResource("schemas/CivilniElementi.xsd").toExternalForm()),
+          new StreamSource(EOdlozisceTask.class.getClassLoader().getResource("schemas/CivilniSkupnoTipi.xsd").toExternalForm()),
+          new StreamSource(EOdlozisceTask.class.getClassLoader().getResource("schemas/KazenskiElementi.xsd").toExternalForm()),
+          new StreamSource(EOdlozisceTask.class.getClassLoader().getResource("schemas/KazenskiSkupnoTipi.xsd").toExternalForm()),
+          new StreamSource(EOdlozisceTask.class.getClassLoader().getResource("schemas/SkupnoElementi.xsd").toExternalForm()),
+          new StreamSource(EOdlozisceTask.class.getClassLoader().getResource("schemas/SkupnoIzmenjaveTipi.xsd").toExternalForm()),
+          new StreamSource(EOdlozisceTask.class.getClassLoader().getResource("schemas/SkupnoSkupnoTipi.xsd").toExternalForm()),
+          new StreamSource(EOdlozisceTask.class.getClassLoader().getResource("schemas/SkupnoSplosnoTipi.xsd").toExternalForm()),
+          new StreamSource(EOdlozisceTask.class.getClassLoader().getResource("schemas/XAdES-1.1.1.xsd").toExternalForm()),
+          new StreamSource(EOdlozisceTask.class.getClassLoader().getResource("schemas/xmldsig-core-schema.xsd").toExternalForm())
+  };
+
   @EJB(mappedName = SEDJNDI.JNDI_SEDDAO)
   SEDDaoInterface mDB;
 
@@ -70,12 +69,12 @@ public class EOdlozisceTask implements TaskExecutionInterface {
   @EJB(mappedName = SEDJNDI.JNDI_PMODE)
   PModeInterface mpModeManager;
 
-  SchemaValidator xmlValidator;
+  SchemaValidationStage xmlValidator;
 
   @PostConstruct
   public void init() {
     try {
-      this.xmlValidator = new SchemaValidator(EOdlozisceTask.class.getResourceAsStream("/schemas/SkupnoElementi.xsd"));
+      this.xmlValidator = new SchemaValidationStage(EOdlozisceTask.class.getResourceAsStream("schemas/SkupnoElementi.xsd"));
     } catch (SAXException e) {
       throw new RuntimeException(e);
     }
