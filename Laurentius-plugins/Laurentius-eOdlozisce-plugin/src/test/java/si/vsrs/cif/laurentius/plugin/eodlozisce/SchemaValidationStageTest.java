@@ -29,7 +29,7 @@ public class SchemaValidationStageTest {
     public void simpleXMLIsValid() throws SAXException {
         SchemaValidationStage schemaValidationStage = new SchemaValidationStage(EOdlozisceTask.schemas);
         ValidationResult validated = schemaValidationStage.validate(
-                getClass().getClassLoader().getResourceAsStream("test1.xml"));
+                getClass().getClassLoader().getResourceAsStream("schema_validation/test1.xml"));
         Assert.assertTrue(validated.getValidationOutputs().isEmpty());
     }
 
@@ -37,7 +37,7 @@ public class SchemaValidationStageTest {
     public void xmlIsInvalid() throws SAXException {
         SchemaValidationStage schemaValidationStage = new SchemaValidationStage(EOdlozisceTask.schemas);
         ValidationResult validated = schemaValidationStage.validate(
-                getClass().getClassLoader().getResourceAsStream("test2.xml"));
+                getClass().getClassLoader().getResourceAsStream("schema_validation/test2.xml"));
         Assert.assertFalse(validated.getValidationOutputs().isEmpty());
         Assert.assertTrue(validated.getValidationOutputs().size() == 1);
     }

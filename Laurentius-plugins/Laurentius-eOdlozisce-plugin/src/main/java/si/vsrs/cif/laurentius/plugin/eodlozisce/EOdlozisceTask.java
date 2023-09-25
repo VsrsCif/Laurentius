@@ -4,6 +4,10 @@
  */
 package si.vsrs.cif.laurentius.plugin.eodlozisce;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.xml.sax.SAXException;
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.enums.SEDInboxMailStatus;
@@ -19,6 +23,10 @@ import si.laurentius.plugin.interfaces.PropertyListType;
 import si.laurentius.plugin.interfaces.PropertyType;
 import si.laurentius.plugin.interfaces.TaskExecutionInterface;
 import si.laurentius.plugin.interfaces.exception.TaskException;
+import si.vsrs.cif.laurentius.plugin.eodlozisce.codes.CourtType;
+import si.vsrs.cif.laurentius.plugin.eodlozisce.codes.FieldOfLawType;
+import si.vsrs.cif.laurentius.plugin.eodlozisce.codes.RegisterType;
+import si.vsrs.cif.laurentius.plugin.eodlozisce.validation.ApplicationValidationStage;
 import si.vsrs.cif.laurentius.plugin.eodlozisce.validation.SchemaValidationStage;
 import si.vsrs.cif.laurentius.plugin.eodlozisce.validation.ValidationOutput;
 import si.vsrs.cif.laurentius.plugin.eodlozisce.validation.ValidationResult;
@@ -31,7 +39,9 @@ import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
+import java.io.IOException;
 import java.io.StringWriter;
+import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
@@ -59,6 +69,9 @@ public class EOdlozisceTask implements TaskExecutionInterface {
           new StreamSource(EOdlozisceTask.class.getClassLoader().getResource("schemas/XAdES-1.1.1.xsd").toExternalForm()),
           new StreamSource(EOdlozisceTask.class.getClassLoader().getResource("schemas/xmldsig-core-schema.xsd").toExternalForm())
   };
+  public List<CourtType> courtTypes;
+  public List<RegisterType> registerTypes;
+  public List<FieldOfLawType> fieldOfLawTypes;
 
   @EJB(mappedName = SEDJNDI.JNDI_SEDDAO)
   SEDDaoInterface mDB;
@@ -70,11 +83,14 @@ public class EOdlozisceTask implements TaskExecutionInterface {
   PModeInterface mpModeManager;
 
   SchemaValidationStage xmlValidator;
+  ApplicationValidationStage applicationValidator;
 
   @PostConstruct
   public void init() {
     try {
+
       this.xmlValidator = new SchemaValidationStage(EOdlozisceTask.class.getResourceAsStream("schemas/SkupnoElementi.xsd"));
+      this.applicationValidator = new ApplicationValidationStage();
     } catch (SAXException e) {
       throw new RuntimeException(e);
     }
@@ -108,6 +124,7 @@ public class EOdlozisceTask implements TaskExecutionInterface {
             if(validationResult.getValidationOutputs().stream().anyMatch((o) -> o.getSeverity().equals(ValidationOutput.ValidateionSeverity.ERROR))) {
               mDB.setStatusToInMail(m, SEDInboxMailStatus.ERROR, "Add message to zkp deliver proccess");
             }
+
           } catch (Exception ex) {
             LOG.logError(l, "Error decoding payload", ex);
           }

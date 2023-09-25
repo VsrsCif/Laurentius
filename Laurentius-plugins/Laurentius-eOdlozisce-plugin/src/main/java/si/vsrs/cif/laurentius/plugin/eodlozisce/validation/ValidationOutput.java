@@ -27,4 +27,14 @@ public class ValidationOutput {
     public void setCode(ValidationErrorCode code) {
         this.code = code;
     }
+
+    @Override
+    public int hashCode() {
+        return this.code.hashCode() + this.severity.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return this.code.equals(((ValidationOutput)obj).code) && this.severity.equals(((ValidationOutput)obj).severity);
+    }
 }
