@@ -14,7 +14,6 @@ import si.vsrs.cif.laurentius.plugin.eodlozisce.validation.ValidationResult;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
