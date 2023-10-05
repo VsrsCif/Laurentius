@@ -8,7 +8,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import si.sodisce.sheme.skupno.izmenjave.v1.ElektronskaOvojnica;
 import si.sodisce.sheme.skupno.skupno.v1.SifrantTip;
-import si.vsrs.cif.laurentius.plugin.eodlozisce.validation.ApplicationValidationStage;
+import si.vsrs.cif.laurentius.plugin.eodlozisce.validation.FilingValidationStage;
 import si.vsrs.cif.laurentius.plugin.eodlozisce.validation.ValidationOutput;
 import si.vsrs.cif.laurentius.plugin.eodlozisce.validation.ValidationResult;
 
@@ -20,7 +20,7 @@ import java.util.Collection;
 import java.util.List;
 
 @RunWith(Parameterized.class)
-public class ApplicationValidationStageTest {
+public class FilingValidationStageTest {
 
     private ElektronskaOvojnica elektronskaOvojnica = new ElektronskaOvojnica();
 
@@ -47,7 +47,7 @@ public class ApplicationValidationStageTest {
         return Arrays.asList(new Object[][] {
                 { "S01", new ArrayList<ValidationOutput>()},
                 { "S02", new ArrayList<ValidationOutput>()},
-                { "S99", Arrays.asList(new ValidationOutput[]{new ValidationOutput(ValidationOutput.ValidateionSeverity.ERROR, ApplicationValidationStage.ErrorCodes.INVALID_COURT_CODE)})}
+                { "S99", Arrays.asList(new ValidationOutput[]{new ValidationOutput(ValidationOutput.ValidateionSeverity.ERROR, FilingValidationStage.ErrorCodes.INVALID_COURT_CODE)})}
         });
     }
 
@@ -60,7 +60,7 @@ public class ApplicationValidationStageTest {
     // This test will run 4 times since we have 5 parameters defined
     @Test
     public void testPrimeNumberChecker() {
-        ApplicationValidationStage applicationValidationStage = new ApplicationValidationStage();
+        FilingValidationStage applicationValidationStage = new FilingValidationStage();
         ValidationResult validated = applicationValidationStage.validate(this.elektronskaOvojnica);
         Assert.assertEquals(this.fExpected, validated.getValidationOutputs());
     }

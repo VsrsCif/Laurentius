@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ApplicationValidationStage implements ValidationStage<ElektronskaOvojnica> {
+public class FilingValidationStage implements ValidationStage<ElektronskaOvojnica> {
 
     public enum ErrorCodes implements ValidationErrorCode {
         MISSING_COURT_CODE("Missing court code"),
@@ -51,7 +51,7 @@ public class ApplicationValidationStage implements ValidationStage<ElektronskaOv
     private List<FieldOfLawType> fieldOfLawTypes;
     private List<String> fieldOfLawCodes;
 
-    public ApplicationValidationStage() {
+    public FilingValidationStage() {
         try {
             ObjectMapper mapper = new ObjectMapper();
             this.courtTypes = mapper.readValue(getClass().getClassLoader().getResourceAsStream("codes/sifrant-sodisca.json"), new TypeReference<List<CourtType>>() {});
