@@ -9,6 +9,10 @@ public class ValidationResult {
     public void add(ValidationOutput validationOutput) {
         this.validationOutputs.add(validationOutput);
     }
+
+    public void addAll(List<ValidationOutput> validationOutputs) {
+        this.validationOutputs.addAll(validationOutputs);
+    }
     public void addError(ValidationErrorCode code) {
         this.validationOutputs.add(new ValidationOutput(ValidationOutput.ValidateionSeverity.ERROR, code));
     }

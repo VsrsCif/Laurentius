@@ -7,9 +7,23 @@ import org.w3c.dom.NodeList;
 import si.laurentius.commons.exception.SEDSecurityException;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.Utils;
+import si.vsrs.cif.laurentius.plugin.eodlozisce.validation.ValidationOutput;
+import si.vsrs.cif.laurentius.plugin.eodlozisce.validation.XmlSignatureValidationStage;
 
-import javax.xml.crypto.*;
-import javax.xml.crypto.dsig.*;
+import javax.xml.crypto.AlgorithmMethod;
+import javax.xml.crypto.KeySelector;
+import javax.xml.crypto.KeySelectorException;
+import javax.xml.crypto.KeySelectorResult;
+import javax.xml.crypto.MarshalException;
+import javax.xml.crypto.XMLCryptoContext;
+import javax.xml.crypto.XMLStructure;
+import javax.xml.crypto.dsig.Reference;
+import javax.xml.crypto.dsig.SignatureMethod;
+import javax.xml.crypto.dsig.SignedInfo;
+import javax.xml.crypto.dsig.XMLObject;
+import javax.xml.crypto.dsig.XMLSignature;
+import javax.xml.crypto.dsig.XMLSignatureException;
+import javax.xml.crypto.dsig.XMLSignatureFactory;
 import javax.xml.crypto.dsig.dom.DOMSignContext;
 import javax.xml.crypto.dsig.dom.DOMValidateContext;
 import javax.xml.crypto.dsig.keyinfo.KeyInfo;
@@ -21,9 +35,19 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.io.*;
-import java.security.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.security.Key;
+import java.security.KeyException;
+import java.security.KeyStore;
+import java.security.Provider;
+import java.security.PublicKey;
 import java.security.cert.X509Certificate;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -194,51 +218,34 @@ public class XMLSignatureUtils {
         }
     }
 
-    // TODO exception handling
-    public void validateXAdESEnvelopedSignature(Document doc) throws Exception {
-//        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-//        dbf.setNamespaceAware(true);
-//        Document doc =
-//                dbf.newDocumentBuilder().parse(Files.newInputStream(Paths.get(data)));
-
+    public List<ValidationOutput> validateXAdESEnvelopedSignature(Document doc) throws Exception {
+        List<ValidationOutput> validationOutputs = new ArrayList<>();
         NodeList nl =
                 doc.getElementsByTagNameNS(XMLSignature.XMLNS, "Signature");
         if (nl.getLength() == 0) {
-            throw new Exception("Cannot find Signature element");
+            validationOutputs.add(new ValidationOutput(ValidationOutput.ValidateionSeverity.ERROR, XmlSignatureValidationStage.ErrorCodes.SIGNATURE_NOT_FOUND));
+            return validationOutputs;
         }
-
-
-        // Create a DOM XMLSignatureFactory that will be used to unmarshal the
-        // document containing the XMLSignature
         XMLSignatureFactory fac = XMLSignatureFactory.getInstance("DOM");
-
-        // Create a DOMValidateContext and specify a KeyValue KeySelector
-        // and document context
         DOMValidateContext valContext = new DOMValidateContext
                 (new KeyValueKeySelector(), nl.item(0));
-
-        // unmarshal the XMLSignature
         XMLSignature signature = fac.unmarshalXMLSignature(valContext);
 
-        // Validate the XMLSignature (generated above)
         boolean coreValidity = signature.validate(valContext);
 
-        // Check core validation status
-        if (coreValidity == false) {
-            System.err.println("Signature failed core validation");
+        if (!coreValidity) {
+            XmlSignatureValidationStage.ErrorCodes invalidSignatureError = XmlSignatureValidationStage.ErrorCodes.INVALID_SIGNATURE;
             boolean sv = signature.getSignatureValue().validate(valContext);
-            System.out.println("signature validation status: " + sv);
-            // check the validation status of each Reference
+            invalidSignatureError.setCustomMessage(invalidSignatureError.getCustomMessage() + " Signature validation status: " + sv);
             Iterator i = signature.getSignedInfo().getReferences().iterator();
             for (int j = 0; i.hasNext(); j++) {
                 boolean refValid =
                         ((Reference) i.next()).validate(valContext);
-                System.out.println("ref[" + j + "] validity status: " + refValid);
+                invalidSignatureError.setCustomMessage(invalidSignatureError.getCustomMessage() + "ref[" + j + "] validity status: " + refValid);
             }
-        } else {
-            System.out.println("Signature passed core validation");
+            validationOutputs.add(new ValidationOutput(ValidationOutput.ValidateionSeverity.ERROR, invalidSignatureError));
         }
-
+        return validationOutputs;
     }
 
 
