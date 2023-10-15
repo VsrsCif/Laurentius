@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?><ns5:elektronskaOvojnica xmlns:ns5="http://sodisce.si/sheme/skupno/v1" xmlns="http://www.w3.org/2000/09/xmldsig#" xmlns:ns2="http://sodisce.si/sheme/skupno/splosno/v1" xmlns:ns3="http://sodisce.si/sheme/skupno/skupno/v1" xmlns:ns4="http://sodisce.si/sheme/skupno/izmenjave/v1">
+<?xml version="1.0" encoding="UTF-8"?><ns5:elektronskaOvojnica xmlns="http://www.w3.org/2000/09/xmldsig#" xmlns:ns2="http://sodisce.si/sheme/skupno/splosno/v1" xmlns:ns3="http://sodisce.si/sheme/skupno/skupno/v1" xmlns:ns4="http://sodisce.si/sheme/skupno/izmenjave/v1" xmlns:ns5="http://sodisce.si/sheme/skupno/v1">
     <ns4:posiljka>
         <ns4:posiljatelj>
             <ns3:osebe>
-                <ns3:oseba davcnaStevilka="66807107" dolgiNaziv="Okrajno sodišče v Ljubljani" id="S23" idSistema="SKUPNI" maticnaStevilka="2399121000" tip="PRAVNA">
+                <ns3:oseba davcnaStevilka="66807199" dolgiNaziv="Okrajno sodišče v Ljubljani" id="S23" idSistema="SKUPNI" maticnaStevilka="2399121000" tip="PRAVNA">
                     <ns3:naslovi>
                         <ns3:naslov hisnaStevilka="10" hisnaStevilkaInDodatek="10" naselje="Ljubljana" nazivPoste="Ljubljana" postnaStevilka="1000" tip="SEDEZ" ulica="Miklošičeva cesta">
                             <ns3:drzava kodaIsoAlpha2="SI" kodaIsoAlpha3="SVN" kodaIsoNumeric="705" naziv="Slovenija" nazivIso="Slovenia" nazivLokalni="Slovenija"/>
@@ -22,7 +22,7 @@
                 </ns3:oseba>
             </ns3:osebe>
         </ns4:prejemnik>
-        <ns4:zadeva knjiga="I" leto="2023" opravilnaStevilka="D 1/2023" stevilka="1" vpisnik="201">
+        <ns4:zadeva knjiga="I" leto="2022" opravilnaStevilka="D 1/2022" stevilka="1" vpisnik="201">
             <ns3:sodisce dolgiNaziv="Okrajno sodišče v Ljubljani" dolgiOpis="Okrajno sodišče v Ljubljani" id="1" kratkiNaziv="OJ v Ljubljani" kratkiOpis="OJ v Ljubljani" sifra="S23"/>
         </ns4:zadeva>
         <ns4:dokumenti>
@@ -72,13 +72,60 @@
             </ns4:dokument>
         </ns4:dokumenti>
     </ns4:posiljka>
-<Signature Id="sig-6ae28e3b-870b-40a8-9746-049bc7639922"><SignedInfo Id="sig-inf-dabd7e45-f6d8-4564-abec-5d1bb4a87169"><CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/><SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/><Reference URI="#sig-prop-80c4d11a-71dc-4a9b-9658-a160f67797c8"><DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/><DigestValue>vzfqig5pD/bh1cqPBo7vBQ0Z3DoqwrDirQqQ9VC9EmA=</DigestValue></Reference></SignedInfo><SignatureValue Id="sig-val-1d7fd062-e00a-47b3-a9ee-0859ca55f89f">hKXSKos2nB+Og45QMwsRoAANKoj3qmOOb+wWIjoovEcTVtRrhV1GpgzcXn7Ufqc4VPXoIdE3HYSa&#13;
-eWrHgsDfhRtllYVZ3Nw/xbLKImapW/OzgnqxsvDoQNRIu0iBRTQhxZw0uYfbxGbBpEZ9nCi/KuLz&#13;
-ATCbgPTQdRzU0xDZHNE=</SignatureValue><KeyInfo><X509Data><X509Certificate>MIIBlDCB/qADAgECAgQKMkRyMA0GCSqGSIb3DQEBCwUAMA8xDTALBgNVBAMTBFJPT1QwHhcNMjMx&#13;
-MDEzMTQwNzQxWhcNMjQxMDEyMTQwNzQxWjAPMQ0wCwYDVQQDEwRST09UMIGfMA0GCSqGSIb3DQEB&#13;
-AQUAA4GNADCBiQKBgQCOtXn4dRndharbYJhnMdheyhkx8jutO89krTwXMH5nM3IIGMnRBZbenhmT&#13;
-jRknfyKMv9714rFLUrjMeltQFVS8gEpU4NcyLPZaTnuPrhT6JXP8RBNwYep3myqndw1JRl7m7pYp&#13;
-SZidQ9tPeXk7lmQj7aN3pWDnGkCPVBLgpsGVCwIDAQABMA0GCSqGSIb3DQEBCwUAA4GBAFWOKiCz&#13;
-DB1n5WBXI1UU2BlJsCDA94Ce4C+2JwoUT14WVcZa7X0spcm02JjVLPXntFs35VBicQkoSju3hZEy&#13;
-PHyMUXiiv9o7H4rRbhudXOspJg82Ydn3WD9n4+WWGt9khz+odeghtHkPoTbG9OJIouSiGhXNZwDD&#13;
-XlZewBd7YfiN</X509Certificate><X509IssuerSerial><X509IssuerName>CN=ROOT</X509IssuerName><X509SerialNumber>171066482</X509SerialNumber></X509IssuerSerial></X509Data></KeyInfo><Object><QualifyingProperties xmlns="http://uri.etsi.org/01903/v1.1.1#" xmlns:ns2="http://www.w3.org/2000/09/xmldsig#" Target="#sig-6ae28e3b-870b-40a8-9746-049bc7639922"><SignedProperties Id="sig-prop-80c4d11a-71dc-4a9b-9658-a160f67797c8"><SignedSignatureProperties><SigningTime>2023-10-13T16:07:41.127+02:00</SigningTime><SigningCertificate><Cert><CertDigest><DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/><DigestValue>7nhs8eNhzCiSgnWvM1R+vkMdXPrH+XD2dN5/G9QSs/k=</DigestValue></CertDigest><IssuerSerial><ns2:X509IssuerName>CN=ROOT</ns2:X509IssuerName><ns2:X509SerialNumber>171066482</ns2:X509SerialNumber></IssuerSerial></Cert></SigningCertificate><SignaturePolicyIdentifier><SignaturePolicyImplied xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">Prispela vloga</SignaturePolicyImplied></SignaturePolicyIdentifier></SignedSignatureProperties></SignedProperties><UnsignedProperties><UnsignedSignatureProperties/></UnsignedProperties></QualifyingProperties></Object></Signature></ns5:elektronskaOvojnica>
+    <Signature Id="sig-2eec442d-6a43-46c9-80fe-3ac775acb9a8">
+        <SignedInfo Id="sig-inf-3f5041e3-ba26-434e-b8ea-852735dc713a">
+            <CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+            <SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/>
+            <Reference URI="#sig-prop-e335323a-0a3c-452b-8969-6ac6ae978649">
+                <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+                <DigestValue>URDkW2d6ldQg8PH6lxMt7tm3QHNrwGZil3jb1/PkFzA=</DigestValue>
+            </Reference>
+        </SignedInfo>
+        <SignatureValue Id="sig-val-7e63c946-008a-4caf-92f9-67055ee38d83">PnK8jMgX0nYPCkNmSyfeHOI2c6Uwfphnr61Wa2HvkZZb/+buj2iRvkV8LdvRn/fzixPxwgFOo9SL&#13;
+            g9zaTE7cdzWYe24TzZc6s6e70DfckBzspZstQlsCkchhyWXb8RtqdlpTqlCwbCFQaqj4yfBEvUrZ&#13;
+            KtU/GlOZD4EZRUfUVIU=</SignatureValue>
+        <KeyInfo>
+            <X509Data>
+                <X509Certificate>MIIBlDCB/qADAgECAgRNCxeXMA0GCSqGSIb3DQEBCwUAMA8xDTALBgNVBAMTBFJPT1QwHhcNMjMx&#13;
+                    MDEzMTIxNTAyWhcNMjQxMDEyMTIxNTAyWjAPMQ0wCwYDVQQDEwRST09UMIGfMA0GCSqGSIb3DQEB&#13;
+                    AQUAA4GNADCBiQKBgQClZ0lczHQueKKldIYCYTz7wh6uIMCC7pJTtgs9mAL4XqdUXnBfc1LBQGIb&#13;
+                    AFfeOBbaUKSl0OKlnb5vXU4DkT0hTloJSlMDtTWcQxEOVNIH+cChLWvuwAuSiWgrKA1mr/CcKS67&#13;
+                    wY+/pMAVjVWilCmzDaYDnAPdVBrW9itFhz15oQIDAQABMA0GCSqGSIb3DQEBCwUAA4GBAGIiDB9g&#13;
+                    UAHQYqWYAZOiArNKelP9tw2R7iT4ah/vWPhEU9YbA3AaWJ1E6YI//yB0yet5y0g1h8jv+tf2Xi2t&#13;
+                    cirnm2gQj5Lynv0SXoaMpfTIg3xITnq90CE0SEdRGflmEmMRM6Ug+Rtqg0r/Q2AfbanQ6In9Pooq&#13;
+                    7Ml6lVvQ4u8k</X509Certificate>
+                <X509IssuerSerial>
+                    <X509IssuerName>CN=ROOT</X509IssuerName>
+                    <X509SerialNumber>1292572567</X509SerialNumber>
+                </X509IssuerSerial>
+            </X509Data>
+        </KeyInfo>
+        <Object>
+            <QualifyingProperties xmlns="http://uri.etsi.org/01903/v1.1.1#" xmlns:ns2="http://www.w3.org/2000/09/xmldsig#" Target="#sig-2eec442d-6a43-46c9-80fe-3ac775acb9a8">
+                <SignedProperties Id="sig-prop-e335323a-0a3c-452b-8969-6ac6ae978649">
+                    <SignedSignatureProperties>
+                        <SigningTime>2023-10-13T14:15:02.954+02:00</SigningTime>
+                        <SigningCertificate>
+                            <Cert>
+                                <CertDigest>
+                                    <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+                                    <DigestValue>o6gLiIXkBT+T6l2mf7i6LcQ3/C7YdxLwARds3vpZ13w=</DigestValue>
+                                </CertDigest>
+                                <IssuerSerial>
+                                    <ns2:X509IssuerName>CN=ROOT</ns2:X509IssuerName>
+                                    <ns2:X509SerialNumber>1292572567</ns2:X509SerialNumber>
+                                </IssuerSerial>
+                            </Cert>
+                        </SigningCertificate>
+                        <SignaturePolicyIdentifier>
+                            <SignaturePolicyImplied xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="xs:string">Prispela vloga</SignaturePolicyImplied>
+                        </SignaturePolicyIdentifier>
+                    </SignedSignatureProperties>
+                </SignedProperties>
+                <UnsignedProperties>
+                    <UnsignedSignatureProperties/>
+                </UnsignedProperties>
+            </QualifyingProperties>
+        </Object>
+    </Signature>
+</ns5:elektronskaOvojnica>

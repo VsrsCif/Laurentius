@@ -9,9 +9,11 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
-public class XmlSignatureValidationStage implements ValidationStage<InputStream> {
+public class XmlSignatureValidationStage implements ValidationStage<Path> {
     private final XMLSignatureUtils signatureUtils;
 
     public XmlSignatureValidationStage() {
@@ -20,10 +22,10 @@ public class XmlSignatureValidationStage implements ValidationStage<InputStream>
     }
 
     @Override
-    public ValidationResult validate(InputStream data) {
+    public ValidationResult validate(Path partPath) {
         ValidationResult result = new ValidationResult();
         try {
-            Document document = parseInputStreamToDocument(data);
+            Document document = signatureUtils.parseDocument(partPath);
             List<ValidationOutput> validationOutputs = signatureUtils.validateXAdESEnvelopedSignature(document);
             result.addAll(validationOutputs);
         } catch (Exception e) {
@@ -34,6 +36,7 @@ public class XmlSignatureValidationStage implements ValidationStage<InputStream>
 
     private Document parseInputStreamToDocument(InputStream data) throws ParserConfigurationException, IOException, SAXException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        factory.setNamespaceAware(true);
         DocumentBuilder documentBuilder = factory.newDocumentBuilder();
 
         return documentBuilder.parse(data);
