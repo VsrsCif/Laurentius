@@ -47,7 +47,7 @@ public class FilingValidationStageTest {
         return Arrays.asList(new Object[][] {
                 { "S01", new ArrayList<ValidationOutput>()},
                 { "S02", new ArrayList<ValidationOutput>()},
-                { "S99", Arrays.asList(new ValidationOutput[]{new ValidationOutput(ValidationOutput.ValidateionSeverity.ERROR, FilingValidationStage.ErrorCodes.INVALID_COURT_CODE)})}
+                { "S99", Arrays.asList(new ValidationOutput[]{new ValidationOutput(ValidationOutput.Severity.ERROR, FilingValidationStage.ErrorCodes.INVALID_COURT_CODE)})}
         });
     }
 

@@ -73,15 +73,8 @@ public class XMLSignatureUtilsTest {
     }
 
     private void writeXml(Document doc, OutputStream out) throws TransformerException {
-//        TransformerFactory transformerFactory = TransformerFactory.newInstance();
-//        Transformer transformer = transformerFactory.newTransformer();
         TransformerFactory tf = TransformerFactory.newInstance();
         Transformer transformer = tf.newTransformer();
-//        transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
-//        transformer.setOutputProperty(OutputKeys.METHOD, "xml");
-//        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-//        transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-//        transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
         DOMSource source = new DOMSource(doc);
         StreamResult result = new StreamResult(out);
 

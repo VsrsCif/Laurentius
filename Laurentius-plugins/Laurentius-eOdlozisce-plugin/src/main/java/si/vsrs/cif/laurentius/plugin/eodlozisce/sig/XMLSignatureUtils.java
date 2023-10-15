@@ -32,7 +32,6 @@ import javax.xml.crypto.dsig.keyinfo.KeyValue;
 import javax.xml.crypto.dsig.keyinfo.X509Data;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
@@ -80,6 +79,8 @@ public class XMLSignatureUtils {
 
 
     private static final String SHA256_WITH_RSA_URI = "http://www.w3.org/2001/04/xmldsig-more#rsa-sha256";
+    private static final DigestMethodCode DIGEST_METHOD_CODE = DigestMethodCode.SHA256;
+    private static final String SIGNATURE_REASON = "Prispela vloga";
     /**
      * Logger
      */
@@ -205,7 +206,6 @@ public class XMLSignatureUtils {
                 fac.newXMLSignature(si, ki, singletonList(xoQualifyingProperties), strSigId, strSigValId);
         // Create the DOMSignContext
         DOMSignContext dsc = new DOMSignContext(certPrivateKey.getPrivateKey(), sigParentElement);
-//        DOMSignContext dsc = new DOMSignContext(certPrivateKey.getPrivateKey(), sigParentElement.getElementsByTagNameNS("http://sodisce.si/sheme/skupno/izmenjave/v1","posiljka").item(0));
 
         // Marshal, generate (and sign) the enveloped signature
         mXAdESBuilder.setIdnessToElemetns(doc.getDocumentElement());
@@ -220,12 +220,21 @@ public class XMLSignatureUtils {
         }
     }
 
+
+//    Document signedDocument = utils.createXAdESEnvelopedSignature(privateKeyEntry, doc.getDocumentElement(), sigIds, DIGEST_METHOD_CODE, SIGNATURE_ALGORITHM, SIGNATURE_REASON);
+    public Document signXmlDocument(KeyStore.PrivateKeyEntry certPrivateKey,
+                                    Document xmlDocument) throws SEDSecurityException {
+        List<String> sigIds = new ArrayList<>();
+        return createXAdESEnvelopedSignature(certPrivateKey, xmlDocument.getDocumentElement(), sigIds, DIGEST_METHOD_CODE, SHA256_WITH_RSA_URI, SIGNATURE_REASON);
+    }
+
+
     public List<ValidationOutput> validateXAdESEnvelopedSignature(Document doc) throws Exception {
         List<ValidationOutput> validationOutputs = new ArrayList<>();
         NodeList nl =
                 doc.getElementsByTagNameNS(XMLSignature.XMLNS, "Signature");
         if (nl.getLength() == 0) {
-            validationOutputs.add(new ValidationOutput(ValidationOutput.ValidateionSeverity.ERROR, XmlSignatureValidationStage.ErrorCodes.SIGNATURE_NOT_FOUND));
+            validationOutputs.add(new ValidationOutput(ValidationOutput.Severity.WARNING, XmlSignatureValidationStage.ErrorCodes.SIGNATURE_NOT_FOUND));
             return validationOutputs;
         }
         XMLSignatureFactory fac = XMLSignatureFactory.getInstance("DOM");
@@ -250,7 +259,7 @@ public class XMLSignatureUtils {
                         ((Reference) i.next()).validate(valContext);
                 invalidSignatureError.setCustomMessage(invalidSignatureError.getCustomMessage() + "ref[" + j + "] validity status: " + refValid);
             }
-            validationOutputs.add(new ValidationOutput(ValidationOutput.ValidateionSeverity.ERROR, invalidSignatureError));
+            validationOutputs.add(new ValidationOutput(ValidationOutput.Severity.ERROR, invalidSignatureError));
         }
         return validationOutputs;
     }

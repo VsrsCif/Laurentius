@@ -17,7 +17,8 @@ public class SchemaValidationStage implements ValidationStage<InputStream> {
 
     private final Schema schema;
 
-    private enum ErrorCodes implements ValidationErrorCode {
+    public enum ErrorCodes implements ValidationErrorCode {
+        MISSING_PART("Missing part"),
         INVALID_XML("Invalid XML");
 
         private String message;
@@ -61,26 +62,26 @@ public class SchemaValidationStage implements ValidationStage<InputStream> {
             @Override
             public void warning(SAXParseException exception) throws SAXException {
                 validationResult.add(new ValidationOutput(
-                        ValidationOutput.ValidateionSeverity.WARNING, ErrorCodes.INVALID_XML));
+                        ValidationOutput.Severity.WARNING, ErrorCodes.INVALID_XML));
             }
 
             @Override
             public void error(SAXParseException exception) throws SAXException {
                 validationResult.add(new ValidationOutput(
-                        ValidationOutput.ValidateionSeverity.ERROR, ErrorCodes.INVALID_XML));
+                        ValidationOutput.Severity.ERROR, ErrorCodes.INVALID_XML));
             }
 
             @Override
             public void fatalError(SAXParseException exception) throws SAXException {
                 validationResult.add(new ValidationOutput(
-                        ValidationOutput.ValidateionSeverity.ERROR, ErrorCodes.INVALID_XML));
+                        ValidationOutput.Severity.ERROR, ErrorCodes.INVALID_XML));
             }
         });
         try {
             validator.validate(new StreamSource(data));
         } catch (SAXException | IOException e) {
             validationResult.add(new ValidationOutput(
-                    ValidationOutput.ValidateionSeverity.ERROR, ErrorCodes.INVALID_XML));
+                    ValidationOutput.Severity.ERROR, ErrorCodes.INVALID_XML));
         }
 
         return validationResult;

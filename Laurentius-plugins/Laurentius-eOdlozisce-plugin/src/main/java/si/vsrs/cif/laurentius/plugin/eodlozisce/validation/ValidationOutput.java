@@ -1,22 +1,22 @@
 package si.vsrs.cif.laurentius.plugin.eodlozisce.validation;
 
 public class ValidationOutput {
-    public enum ValidateionSeverity {
+    public enum Severity {
         ERROR, WARNING
     }
-    private ValidateionSeverity severity;
+    private Severity severity;
     private ValidationErrorCode code;
 
-    public ValidationOutput(ValidateionSeverity severity, ValidationErrorCode code) {
+    public ValidationOutput(Severity severity, ValidationErrorCode code) {
         this.severity = severity;
         this.code = code;
     }
 
-    public ValidateionSeverity getSeverity() {
+    public Severity getSeverity() {
         return severity;
     }
 
-    public void setSeverity(ValidateionSeverity severity) {
+    public void setSeverity(Severity severity) {
         this.severity = severity;
     }
 

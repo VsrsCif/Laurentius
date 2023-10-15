@@ -14,10 +14,10 @@ public class ValidationResult {
         this.validationOutputs.addAll(validationOutputs);
     }
     public void addError(ValidationErrorCode code) {
-        this.validationOutputs.add(new ValidationOutput(ValidationOutput.ValidateionSeverity.ERROR, code));
+        this.validationOutputs.add(new ValidationOutput(ValidationOutput.Severity.ERROR, code));
     }
     public void addWarning(ValidationErrorCode code) {
-        this.validationOutputs.add(new ValidationOutput(ValidationOutput.ValidateionSeverity.WARNING, code));
+        this.validationOutputs.add(new ValidationOutput(ValidationOutput.Severity.WARNING, code));
     }
     public List<ValidationOutput> getValidationOutputs() {
         return this.validationOutputs;
