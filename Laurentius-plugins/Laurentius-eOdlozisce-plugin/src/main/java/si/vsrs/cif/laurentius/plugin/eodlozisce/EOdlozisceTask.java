@@ -167,9 +167,9 @@ public class EOdlozisceTask implements TaskExecutionInterface {
         );
 
         // TODO: generate report of validation errors
-        if(validationResult.getValidationOutputs().stream().anyMatch((o) -> o.getSeverity().equals(ValidationOutput.ValidateionSeverity.ERROR))) {
-          mDB.setStatusToInMail(m, SEDInboxMailStatus.ERROR, "Add message to zkp deliver proccess");
-        }
+//        if(validationResult.getValidationOutputs().stream().anyMatch((o) -> o.getSeverity().equals(ValidationOutput.ValidateionSeverity.ERROR))) {
+//          mDB.setStatusToInMail(m, SEDInboxMailStatus.ERROR, "Add message to zkp deliver proccess");
+//        }
 
 
         mDB.setStatusToInMail(m, SEDInboxMailStatus.PROCESS,
@@ -180,8 +180,8 @@ public class EOdlozisceTask implements TaskExecutionInterface {
                 ex.getMessage());
         LOG.logError(l, msg, ex);
         sw.append(msg);
-      } catch (IOException e) {
-        throw new RuntimeException(e);
+//      } catch (IOException e) {
+//        throw new RuntimeException(e);
       }
     });
 
