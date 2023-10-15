@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ns5:elektronskaOvojnica xmlns="http://www.w3.org/2000/09/xmldsig#" xmlns:ns2="http://sodisce.si/sheme/skupno/splosno/v1" xmlns:ns3="http://sodisce.si/sheme/skupno/skupno/v1" xmlns:ns4="http://sodisce.si/sheme/skupno/izmenjave/v1" xmlns:ns5="http://sodisce.si/sheme/skupno/v1">
+    <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+        <SignedInfo>
+            <CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
+            <SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256" />
+            <Reference URI="">
+                <Transforms>
+                    <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+                </Transforms>
+                <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
+                <DigestValue>DsP5NLca+plhp9tZvGwykfb2whQYt3CQ5sbsVd9Q9aE=</DigestValue>
+            </Reference>
+        </SignedInfo>
+        <SignatureValue>
+            LrfE0po3YPvVxB/m77iBWWiR07Ghiuhuj7tO2C2LKqZK2cLrAiidt+3tjbJ3m16quCFxfh7bmjRtJsGi7a3HKtK
+            qY4auqrjNB62AtYrxvm+7Qd/cRacom4e3M9uF9JD1zTfoGun9w4WDfDrDaoZ+ZwUgNtf6sTYO5Ctcj5sYcD0=
+        </SignatureValue>
+        <KeyInfo>
+            <KeyName>7D665C81ABBE1A7D0E525BFC171F04D276F07BF2</KeyName>
+        </KeyInfo>
+    </Signature>
+    <ns4:posiljka>
+        <ns4:posiljatelj>
+            <ns3:osebe>
+                <ns3:oseba dolgiNaziv="Okrajno sodišče v Ljubljani" davcnaStevilka="66807107" maticnaStevilka="2399121000" tip="PRAVNA" id="S23" idSistema="SKUPNI">
+                    <ns3:naslovi>
+                        <ns3:naslov ulica="Miklošičeva cesta" hisnaStevilka="10" hisnaStevilkaInDodatek="10" naselje="Ljubljana" postnaStevilka="1000" nazivPoste="Ljubljana" tip="SEDEZ">
+                            <ns3:drzava kodaIsoAlpha2="SI" kodaIsoAlpha3="SVN" kodaIsoNumeric="705" nazivIso="Slovenia" naziv="Slovenija" nazivLokalni="Slovenija"/>
+                        </ns3:naslov>
+                    </ns3:naslovi>
+                </ns3:oseba>
+            </ns3:osebe>
+        </ns4:posiljatelj>
+        <ns4:prejemnik>
+            <ns3:osebe>
+                <ns3:oseba dolgiNaziv="MINISTRSTVO ZA FINANCE FINANČNA UPRAVA REPUBLIKE SLOVENIJE" kratkiNaziv="FURS" davcnaStevilka="77695771" maticnaStevilka="2482711000" tip="PRAVNA" id="123" idSistema="PUND" elektronskiNaslov="furs@vep.si">
+                    <ns3:naslovi>
+                        <ns3:naslov ulica="Šmartinska cesta" hisnaStevilka="55" naselje="Ljubljana" postnaStevilka="1000" nazivPoste="Ljubljana" tip="SEDEZ">
+                            <ns3:drzava kodaIsoAlpha2="SI" kodaIsoAlpha3="SVN" kodaIsoNumeric="705" nazivIso="Slovenia" naziv="Slovenija" nazivLokalni="Slovenija"/>
+                        </ns3:naslov>
+                    </ns3:naslovi>
+                </ns3:oseba>
+            </ns3:osebe>
+        </ns4:prejemnik>
+        <ns4:zadeva stevilka="1" opravilnaStevilka="D 1/2023" vpisnik="201" leto="2023" knjiga="I">
+            <ns3:sodisce id="1" sifra="S23" kratkiNaziv="OJ v Ljubljani" dolgiNaziv="Okrajno sodišče v Ljubljani" kratkiOpis="OJ v Ljubljani" dolgiOpis="Okrajno sodišče v Ljubljani"/>
+        </ns4:zadeva>
+        <ns4:dokumenti>
+            <ns4:dokument jeVodilni="true" ime="Sklep o dedovanju">
+                <ns4:tip sifra="0604" kratkiNaziv="Sklep o dedovanju" dolgiNaziv="Sklep o dedovanju z dne" kratkiOpis="Sklep o dedovanju z dne" dolgiOpis="Sklep o dedovanju z dne"/>
+                <ns4:pisanje xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ns7="http://sodisce.si/sheme/civilni/skupno/v1" xsi:type="ns7:OdlocitevCivilnaTip" datumPravnomocnosti="2023-06-24+02:00" rednaStevilka="4" listovnaStevilka="10-13" refIdProcesnoDejanje="123" datum="2023-06-10+02:00">
+                    <ns3:zadeva stevilka="1" opravilnaStevilka="D 1/2023" vpisnik="201" leto="2023" knjiga="I">
+                        <ns3:sodisce id="1" sifra="S23" kratkiNaziv="OJ v Ljubljani" dolgiNaziv="Okrajno sodišče v Ljubljani" kratkiOpis="OJ v Ljubljani" dolgiOpis="Okrajno sodišče v Ljubljani"/>
+                    </ns3:zadeva>
+                    <ns3:udelezenci>
+                        <ns3:udelezenec>
+                            <ns3:osebe>
+                                <ns3:oseba ime="Ljubomir" priimek="Corel" maticnaStevilka="2709961500105" datumRojstva="1961-09-27+01:00" spol="MOSKI" id="1" idSistema="PUND">
+                                    <ns3:naslovi>
+                                        <ns3:naslov ulicaInHisnaStevilkaInDodatek="Šaranovičeva ulica 5" naselje="Celje" postnaStevilka="3000" nazivPoste="Celje" tip="STALNI">
+                                            <ns3:drzava kodaIsoAlpha2="SI" kodaIsoAlpha3="SVN" kodaIsoNumeric="705" nazivIso="Slovenia" naziv="Slovenija" nazivLokalni="Slovenija"/>
+                                        </ns3:naslov>
+                                    </ns3:naslovi>
+                                </ns3:oseba>
+                            </ns3:osebe>
+                            <ns3:vlogeOseb>
+                                <ns3:vlogaOsebe refIdOseba="1">
+                                    <ns3:vloga sifra="37" kratkiNaziv="zapustnik"/>
+                                    <ns3:stran sifra="1" kratkiNaziv="tožeča"/>
+                                </ns3:vlogaOsebe>
+                            </ns3:vlogeOseb>
+                        </ns3:udelezenec>
+                        <ns3:udelezenec>
+                            <ns3:osebe>
+                                <ns3:oseba ime="Laura" priimek="Vida" maticnaStevilka="2709961500105" datumRojstva="1961-09-27+01:00" spol="MOSKI" id="1" idSistema="PUND">
+                                    <ns3:naslovi>
+                                        <ns3:naslov ulicaInHisnaStevilkaInDodatek="Marinovševa cesta 3" naselje="Ljubljana" postnaStevilka="1000" nazivPoste="Ljubljana" tip="STALNI">
+                                            <ns3:drzava kodaIsoAlpha2="SI" kodaIsoAlpha3="SVN" kodaIsoNumeric="705" nazivIso="Slovenia" naziv="Slovenija" nazivLokalni="Slovenija"/>
+                                        </ns3:naslov>
+                                    </ns3:naslovi>
+                                </ns3:oseba>
+                            </ns3:osebe>
+                            <ns3:vlogeOseb>
+                                <ns3:vlogaOsebe refIdOseba="1">
+                                    <ns3:vloga sifra="38" kratkiNaziv="dedič"/>
+                                    <ns3:stran sifra="1" kratkiNaziv="tožena"/>
+                                </ns3:vlogaOsebe>
+                            </ns3:vlogeOseb>
+                        </ns3:udelezenec>
+                    </ns3:udelezenci>
+                </ns4:pisanje>
+            </ns4:dokument>
+        </ns4:dokumenti>
+    </ns4:posiljka>
+</ns5:elektronskaOvojnica>

@@ -30,6 +30,7 @@ import si.vsrs.cif.laurentius.plugin.eodlozisce.validation.ApplicationValidation
 import si.vsrs.cif.laurentius.plugin.eodlozisce.validation.SchemaValidationStage;
 import si.vsrs.cif.laurentius.plugin.eodlozisce.validation.ValidationOutput;
 import si.vsrs.cif.laurentius.plugin.eodlozisce.validation.ValidationResult;
+import si.vsrs.cif.laurentius.plugin.eodlozisce.validation.XmlSignatureValidationStage;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
@@ -40,9 +41,11 @@ import javax.ejb.TransactionManagementType;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringWriter;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Properties;
@@ -83,6 +86,7 @@ public class EOdlozisceTask implements TaskExecutionInterface {
   PModeInterface mpModeManager;
 
   SchemaValidationStage xmlValidator;
+  XmlSignatureValidationStage xmlSignatureValidator;
   ApplicationValidationStage applicationValidator;
 
   @PostConstruct
@@ -90,6 +94,7 @@ public class EOdlozisceTask implements TaskExecutionInterface {
     try {
 
       this.xmlValidator = new SchemaValidationStage(EOdlozisceTask.class.getResourceAsStream("schemas/SkupnoElementi.xsd"));
+      this.xmlSignatureValidator = new XmlSignatureValidationStage();
       this.applicationValidator = new ApplicationValidationStage();
     } catch (SAXException e) {
       throw new RuntimeException(e);
@@ -119,11 +124,14 @@ public class EOdlozisceTask implements TaskExecutionInterface {
         m.getMSHInPayload().getMSHInParts().stream().forEach((part) -> {
           try {
 
-            ValidationResult validationResult = this.xmlValidator.validate(Files.newInputStream(Paths.get(part.getFilepath())));
+            Path partPath = Paths.get(part.getFilepath());
+            InputStream data = Files.newInputStream(partPath);
+            ValidationResult validationResult = this.xmlValidator.validate(data);
             // TODO: generate report of validation errors
             if(validationResult.getValidationOutputs().stream().anyMatch((o) -> o.getSeverity().equals(ValidationOutput.ValidateionSeverity.ERROR))) {
               mDB.setStatusToInMail(m, SEDInboxMailStatus.ERROR, "Add message to zkp deliver proccess");
             }
+            validationResult.chain(this.xmlSignatureValidator.validate(partPath));
 
           } catch (Exception ex) {
             LOG.logError(l, "Error decoding payload", ex);
