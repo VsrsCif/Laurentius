@@ -78,7 +78,7 @@ public class XMLSignatureUtils {
             "org.apache.jcp.xml.dsig.internal.dom.XMLDSigRI";
 
 
-    private static final String SHA256_WITH_RSA_URI = "http://www.w3.org/2001/04/xmldsig-more#rsa-sha256";
+    public static final String SHA256_WITH_RSA_URI = "http://www.w3.org/2001/04/xmldsig-more#rsa-sha256";
     private static final DigestMethodCode DIGEST_METHOD_CODE = DigestMethodCode.SHA256;
     private static final String SIGNATURE_REASON = "Prispela vloga";
     /**

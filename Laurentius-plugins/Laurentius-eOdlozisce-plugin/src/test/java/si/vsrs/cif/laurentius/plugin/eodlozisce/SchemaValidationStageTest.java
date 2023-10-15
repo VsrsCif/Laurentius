@@ -1,6 +1,5 @@
 package si.vsrs.cif.laurentius.plugin.eodlozisce;
 
-import org.apache.cxf.helpers.IOUtils;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -9,14 +8,8 @@ import org.xml.sax.SAXException;
 import si.vsrs.cif.laurentius.plugin.eodlozisce.validation.SchemaValidationStage;
 import si.vsrs.cif.laurentius.plugin.eodlozisce.validation.ValidationResult;
 
-import javax.xml.XMLConstants;
-import javax.xml.transform.Source;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.SchemaFactory;
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-
 public class SchemaValidationStageTest {
+
     @Before
     public void setUp() throws Exception {
     }
@@ -27,7 +20,7 @@ public class SchemaValidationStageTest {
 
     @Test
     public void simpleXMLIsValid() throws SAXException {
-        SchemaValidationStage schemaValidationStage = new SchemaValidationStage(EOdlozisceTask.schemas);
+        SchemaValidationStage schemaValidationStage = new SchemaValidationStage();
         ValidationResult validated = schemaValidationStage.validate(
                 getClass().getClassLoader().getResourceAsStream("schema_validation/test1.xml"));
         Assert.assertTrue(validated.getValidationOutputs().isEmpty());
@@ -35,7 +28,7 @@ public class SchemaValidationStageTest {
 
     @Test
     public void xmlIsInvalid() throws SAXException {
-        SchemaValidationStage schemaValidationStage = new SchemaValidationStage(EOdlozisceTask.schemas);
+        SchemaValidationStage schemaValidationStage = new SchemaValidationStage();
         ValidationResult validated = schemaValidationStage.validate(
                 getClass().getClassLoader().getResourceAsStream("schema_validation/test2.xml"));
         Assert.assertFalse(validated.getValidationOutputs().isEmpty());

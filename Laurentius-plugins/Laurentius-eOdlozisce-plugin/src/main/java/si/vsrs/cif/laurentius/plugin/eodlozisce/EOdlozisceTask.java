@@ -27,9 +27,6 @@ import si.laurentius.plugin.interfaces.exception.TaskException;
 import si.sodisce.sheme.skupno.izmenjave.v1.ElektronskaOvojnica;
 import si.sodisce.sheme.skupno.izmenjave.v1.ElektronskaPosiljkaTip;
 import si.sodisce.sheme.skupno.skupno.v1.UdelezenecTip;
-import si.vsrs.cif.laurentius.plugin.eodlozisce.codes.CourtType;
-import si.vsrs.cif.laurentius.plugin.eodlozisce.codes.FieldOfLawType;
-import si.vsrs.cif.laurentius.plugin.eodlozisce.codes.RegisterType;
 import si.vsrs.cif.laurentius.plugin.eodlozisce.sig.XMLSignatureUtils;
 import si.vsrs.cif.laurentius.plugin.eodlozisce.validation.FilingValidationStage;
 import si.vsrs.cif.laurentius.plugin.eodlozisce.validation.SchemaValidationStage;
@@ -46,21 +43,21 @@ import javax.ejb.TransactionManagementType;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.util.JAXBSource;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringWriter;
 import java.nio.file.Files;
@@ -73,7 +70,7 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.UUID;
 
-import static si.vsrs.cif.laurentius.plugin.eodlozisce.validation.SchemaValidationStage.ErrorCodes.MISSING_PART;
+import static si.vsrs.cif.laurentius.plugin.eodlozisce.validation.SchemaValidationStage.ErrorCodes.MISSING_METADATA_XML;
 
 @Stateless
 @Local(TaskExecutionInterface.class)
@@ -84,22 +81,6 @@ public class EOdlozisceTask implements TaskExecutionInterface {
     public static final String KEY_PAYLOAD_METADATA_NAME = "ecf.payload.metadata.name";
     private static final String SIGN_ALIAS = "zkp.sign.key.alias";
     public static final String KEY_SIGNATURE_KEY_ALIAS = "ecf.sign.key.alias";
-
-    public static Source[] schemas = new Source[]{
-            new StreamSource(EOdlozisceTask.class.getClassLoader().getResource("schemas/CivilniElementi.xsd").toExternalForm()),
-            new StreamSource(EOdlozisceTask.class.getClassLoader().getResource("schemas/CivilniSkupnoTipi.xsd").toExternalForm()),
-            new StreamSource(EOdlozisceTask.class.getClassLoader().getResource("schemas/KazenskiElementi.xsd").toExternalForm()),
-            new StreamSource(EOdlozisceTask.class.getClassLoader().getResource("schemas/KazenskiSkupnoTipi.xsd").toExternalForm()),
-            new StreamSource(EOdlozisceTask.class.getClassLoader().getResource("schemas/SkupnoElementi.xsd").toExternalForm()),
-            new StreamSource(EOdlozisceTask.class.getClassLoader().getResource("schemas/SkupnoIzmenjaveTipi.xsd").toExternalForm()),
-            new StreamSource(EOdlozisceTask.class.getClassLoader().getResource("schemas/SkupnoSkupnoTipi.xsd").toExternalForm()),
-            new StreamSource(EOdlozisceTask.class.getClassLoader().getResource("schemas/SkupnoSplosnoTipi.xsd").toExternalForm()),
-            new StreamSource(EOdlozisceTask.class.getClassLoader().getResource("schemas/XAdES-1.1.1.xsd").toExternalForm()),
-            new StreamSource(EOdlozisceTask.class.getClassLoader().getResource("schemas/xmldsig-core-schema.xsd").toExternalForm())
-    };
-    public List<CourtType> courtTypes;
-    public List<RegisterType> registerTypes;
-    public List<FieldOfLawType> fieldOfLawTypes;
 
     @EJB(mappedName = SEDJNDI.JNDI_SEDDAO)
     SEDDaoInterface mDB;
@@ -119,7 +100,7 @@ public class EOdlozisceTask implements TaskExecutionInterface {
     public void init() {
         try {
             this.signatureUtils = new XMLSignatureUtils();
-            this.schemaValidator = new SchemaValidationStage(EOdlozisceTask.class.getResourceAsStream("schemas/SkupnoElementi.xsd"));
+            this.schemaValidator = new SchemaValidationStage();
             this.filingValidationStage = new FilingValidationStage();
         } catch (SAXException e) {
             throw new RuntimeException(e);
@@ -127,11 +108,11 @@ public class EOdlozisceTask implements TaskExecutionInterface {
     }
 
     @Override
-    public String executeTask(Properties p) throws TaskException {
+    public String executeTask(Properties properties) throws TaskException {
 
         long l = LOG.logStart();
         StringWriter sw = new StringWriter();
-        sw.append("Start zkp plugin task: \n");
+        sw.append("Start eOdlozisce plugin task: \n");
 
         MSHInMail mi = new MSHInMail();
         mi.setStatus(SEDInboxMailStatus.PLOCKED.getValue());
@@ -141,56 +122,59 @@ public class EOdlozisceTask implements TaskExecutionInterface {
 
         List<MSHInMail> inMailList = mDB.getDataList(MSHInMail.class, -1, 100, "Id", "ASC", mi);
 
-        String metadataAttachmentName = p.getProperty(KEY_PAYLOAD_METADATA_NAME);
+        String metadataAttachmentName = properties.getProperty(KEY_PAYLOAD_METADATA_NAME);
         // set status to proccess
         inMailList.forEach((inMail) -> {
             try {
                 List<MSHInPart> mshInParts = inMail.getMSHInPayload().getMSHInParts();
-                ValidationResult validationResult = mshInParts.stream().filter((part) -> metadataAttachmentName.equals(part.getName())).findFirst().map((part) ->
-                        {
-                            try {
-                                return this.schemaValidator.validate(Files.newInputStream(Paths.get(part.getFilepath())));
-                            } catch (IOException e) {
-                                throw new RuntimeException(e);
-                            }
-                        }
-                ).orElseGet(() -> {
-                    ValidationResult missingPart = new ValidationResult();
-                    missingPart.add(new ValidationOutput(ValidationOutput.Severity.ERROR, MISSING_PART));
-                    return missingPart;
-                });
-
+                ValidationResult validationResult = validateSchemas(metadataAttachmentName, mshInParts);
 
                 if (validationResult.getValidationOutputs().stream().anyMatch((o) -> o.getSeverity().equals(ValidationOutput.Severity.ERROR))) {
                     Document signedDocument = this.signatureUtils.signXmlDocument(
-                            getPrivateKeyEntry(p),
+                            getPrivateKeyEntry(properties),
                             getDocumentFromObject(
                                     createDefaultEPosiljkaAndAttachXml(metadataAttachmentName, inMail),
                                     ElektronskaOvojnica.class));
-
-                    MimeValue soapPartMime = MimeValue.MIME_XML;
-                    File f = StorageUtils.getNewStorageFile(soapPartMime.getSuffix(), EBMSConstants.SOAP_PART_REQUEST_PREFIX);
-                    writeXml(signedDocument, new FileOutputStream(f));
-                    mshInParts.removeIf(inPart -> metadataAttachmentName.equals(inPart.getName()));
-                    MSHInPart part = getMshInPart(metadataAttachmentName, inMail.getMessageId(), soapPartMime, f);
-
-                    mshInParts.add(part);
+                    replaceWithSignedDocument(metadataAttachmentName, inMail, mshInParts, signedDocument);
                 } else {
-                    Optional<ValidationResult> signatureValidationResultOption = mshInParts.stream()
-                            .filter((part) -> metadataAttachmentName.equals(part.getName())).findFirst()
+
+                    Optional<MSHInPart> mshInPart = mshInParts.stream()
+                            .filter((part) -> metadataAttachmentName.equals(part.getName())).findFirst();
+                    ValidationResult signatureValidationResultOptional = mshInPart
                             .map((part) -> this.xmlSignatureValidator.validate(Paths.get(part.getFilepath()))
-                            );
+                            ).orElse(new ValidationResult());
+                    if (signatureValidationResultOptional.getValidationOutputs().stream().anyMatch(ValidationOutput::isError)) {
+                        // TODO consolidate these two if / elseif blocks.
+                        // On error -> signature validation failed, delete signature and sign again
+                        ElektronskaOvojnica elektronskaOvojnica = getElektronskaOvojnica(Files.newInputStream(Paths.get(mshInPart.get().getFilepath())));
+                        elektronskaOvojnica.getSignatures().removeIf((signature -> signature.getSignedInfo().getSignatureMethod().getAlgorithm().equalsIgnoreCase(XMLSignatureUtils.SHA256_WITH_RSA_URI)));
+                        Document signedDocument = this.signatureUtils.signXmlDocument(
+                                getPrivateKeyEntry(properties), getDocumentFromObject(elektronskaOvojnica, ElektronskaOvojnica.class));
+                        replaceWithSignedDocument(metadataAttachmentName, inMail, mshInParts, signedDocument);
+                    } else if (signatureValidationResultOptional.getValidationOutputs().stream().anyMatch(ValidationOutput::isWarning)) {
+                        // On warning -> signature not present, sign again
+                        if (mshInPart.isPresent()) {
+                            ElektronskaOvojnica elektronskaOvojnica = getElektronskaOvojnica(Files.newInputStream(Paths.get(mshInPart.get().getFilepath())));
+                            Document signedDocument = this.signatureUtils.signXmlDocument(
+                                    getPrivateKeyEntry(properties), getDocumentFromObject(elektronskaOvojnica, ElektronskaOvojnica.class));
+                            replaceWithSignedDocument(metadataAttachmentName, inMail, mshInParts, signedDocument);
+                        } else {
+                            throw new RuntimeException("No part to sign.");
+                        }
+                    }
+
+                    // Schema validation passed without errors
+                    ValidationResult filingValidationResults = validateFilings(metadataAttachmentName, mshInParts);
+                    if (filingValidationResults.getValidationOutputs().stream().anyMatch((ValidationOutput::isError))) {
+                        // filing errors
+                        mDB.setStatusToInMail(inMail, SEDInboxMailStatus.ERROR, "Add message to zkp deliver proccess");
+                    }
+                    validationResult.chain(filingValidationResults);
+
                 }
 
-                // TODO: validate data inside XML
-                // TODO: generate report JSON file and attach
-
-
-                // TODO: generate report of validation errors
-//        if(validationResult.getValidationOutputs().stream().anyMatch((o) -> o.getSeverity().equals(ValidationOutput.ValidateionSeverity.ERROR))) {
-//          mDB.setStatusToInMail(m, SEDInboxMailStatus.ERROR, "Add message to zkp deliver proccess");
-//        }
-
+                // TODO: generate JSON report of validation errors file and attach
+                // TODO: TSA
 
                 mDB.setStatusToInMail(inMail, SEDInboxMailStatus.PROCESS,
                         "Add message to zkp deliver proccess");
@@ -200,18 +184,13 @@ public class EOdlozisceTask implements TaskExecutionInterface {
                         ex.getMessage());
                 LOG.logError(l, msg, ex);
                 sw.append(msg);
-            } catch (JAXBException e) {
-                throw new RuntimeException(e);
-            } catch (ParserConfigurationException e) {
+            } catch (JAXBException | ParserConfigurationException | SEDSecurityException | FileNotFoundException |
+                     TransformerException e) {
                 throw new RuntimeException(e);
             } catch (TaskException e) {
                 // no sign key alias
                 throw new RuntimeException(e);
-            } catch (SEDSecurityException e) {
-                throw new RuntimeException(e);
-            } catch (FileNotFoundException e) {
-                throw new RuntimeException(e);
-            } catch (TransformerException e) {
+            } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         });
@@ -220,8 +199,35 @@ public class EOdlozisceTask implements TaskExecutionInterface {
         return sw.toString();
     }
 
-    // TODO move out of TASK file
+    private ValidationResult validateFilings(String metadataAttachmentName, List<MSHInPart> mshInParts) {
+        return mshInParts.stream().filter((part) -> metadataAttachmentName.equals(part.getName())).findFirst().map((part) -> {
+                    try {
+                        return this.filingValidationStage.validate(getElektronskaOvojnica(Files.newInputStream(Paths.get(part.getFilepath()))));
+                    } catch (IOException | JAXBException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+        ).orElse(new ValidationResult());
+    }
 
+    private ValidationResult validateSchemas(String metadataAttachmentName, List<MSHInPart> mshInParts) {
+        return mshInParts.stream().filter((part) -> metadataAttachmentName.equals(part.getName())).findFirst().map((part) ->
+                {
+                    try {
+                        return this.schemaValidator.validate(Files.newInputStream(Paths.get(part.getFilepath())));
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+        ).orElseGet(() -> {
+            ValidationResult missingPart = new ValidationResult();
+            missingPart.add(new ValidationOutput(ValidationOutput.Severity.ERROR, MISSING_METADATA_XML));
+            return missingPart;
+        });
+    }
+
+
+    // TODO move out of TASK file
     private <T> Document getDocumentFromObject(Object elektronskaOvojnica, Class<T> c) throws ParserConfigurationException, JAXBException {
         JAXBContext jc = JAXBContext.newInstance(c);
 
@@ -238,7 +244,7 @@ public class EOdlozisceTask implements TaskExecutionInterface {
     private ElektronskaOvojnica createDefaultEPosiljkaAndAttachXml(String metadataAttachmentName, MSHInMail inMail) throws StorageException {
         mDB.setStatusToInMail(inMail, SEDInboxMailStatus.ERROR, "Error validating metadata file");
 
-        ElektronskaOvojnica elektronskaOvojnica = getElektronskaOvojnica();
+        ElektronskaOvojnica elektronskaOvojnica = createElektronskaOvojnica();
 
         MimeValue soapPartMime = MimeValue.MIME_XML;
         File f = StorageUtils.getNewStorageFile(soapPartMime.getSuffix(), EBMSConstants.SOAP_PART_REQUEST_PREFIX);
@@ -260,7 +266,7 @@ public class EOdlozisceTask implements TaskExecutionInterface {
         }
     }
 
-    private static MSHInPart getMshInPart(String metadataAttachmentName, String messageId, MimeValue soapPartMime, File f) throws StorageException {
+    private MSHInPart getMshInPart(String metadataAttachmentName, String messageId, MimeValue soapPartMime, File f) throws StorageException {
         MSHInPart part = new MSHInPart();
         part.setName(metadataAttachmentName);
         part.setIsSent(Boolean.FALSE);
@@ -274,7 +280,7 @@ public class EOdlozisceTask implements TaskExecutionInterface {
         return part;
     }
 
-    private static ElektronskaOvojnica getElektronskaOvojnica() {
+    private ElektronskaOvojnica createElektronskaOvojnica() {
         ElektronskaPosiljkaTip elektronskaPosiljkaTip = new ElektronskaPosiljkaTip();
         UdelezenecTip udelezenecTip = new UdelezenecTip();
         udelezenecTip.setId("GeneratedByValidation");
@@ -282,6 +288,12 @@ public class EOdlozisceTask implements TaskExecutionInterface {
         ElektronskaOvojnica elektronskaOvojnica = new ElektronskaOvojnica();
         elektronskaOvojnica.setPosiljka(elektronskaPosiljkaTip);
         return elektronskaOvojnica;
+    }
+
+    private ElektronskaOvojnica getElektronskaOvojnica(InputStream elektronskaOvojnicaInputStream) throws JAXBException {
+        JAXBContext jc = JAXBContext.newInstance(ElektronskaOvojnica.class);
+        Unmarshaller unmarshaller = jc.createUnmarshaller();
+        return (ElektronskaOvojnica) unmarshaller.unmarshal(elektronskaOvojnicaInputStream);
     }
 
     @Override
@@ -334,5 +346,14 @@ public class EOdlozisceTask implements TaskExecutionInterface {
         StreamResult result = new StreamResult(out);
 
         transformer.transform(source, result);
+    }
+
+    private void replaceWithSignedDocument(String metadataAttachmentName, MSHInMail inMail, List<MSHInPart> mshInParts, Document signedDocument) throws StorageException, TransformerException, FileNotFoundException {
+        MimeValue soapPartMime = MimeValue.MIME_XML;
+        File f = StorageUtils.getNewStorageFile(soapPartMime.getSuffix(), EBMSConstants.SOAP_PART_REQUEST_PREFIX);
+        writeXml(signedDocument, new FileOutputStream(f));
+        mshInParts.removeIf(inPart -> metadataAttachmentName.equals(inPart.getName()));
+        MSHInPart part = getMshInPart(metadataAttachmentName, inMail.getMessageId(), soapPartMime, f);
+        mshInParts.add(part);
     }
 }

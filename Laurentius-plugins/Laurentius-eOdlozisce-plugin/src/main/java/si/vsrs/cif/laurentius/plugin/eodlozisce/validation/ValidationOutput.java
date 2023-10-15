@@ -37,4 +37,12 @@ public class ValidationOutput {
     public boolean equals(Object obj) {
         return this.code.equals(((ValidationOutput)obj).code) && this.severity.equals(((ValidationOutput)obj).severity);
     }
+
+    public boolean isError() {
+        return this.severity.equals(Severity.ERROR);
+    }
+
+    public boolean isWarning() {
+        return this.severity.equals(Severity.WARNING);
+    }
 }

@@ -3,6 +3,7 @@ package si.vsrs.cif.laurentius.plugin.eodlozisce.validation;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
+import si.vsrs.cif.laurentius.plugin.eodlozisce.EOdlozisceTask;
 
 import javax.xml.XMLConstants;
 import javax.xml.transform.Source;
@@ -15,10 +16,22 @@ import java.io.InputStream;
 
 public class SchemaValidationStage implements ValidationStage<InputStream> {
 
+    private static final Source[] schemas = new Source[]{
+            new StreamSource(EOdlozisceTask.class.getClassLoader().getResource("schemas/CivilniElementi.xsd").toExternalForm()),
+            new StreamSource(EOdlozisceTask.class.getClassLoader().getResource("schemas/CivilniSkupnoTipi.xsd").toExternalForm()),
+            new StreamSource(EOdlozisceTask.class.getClassLoader().getResource("schemas/KazenskiElementi.xsd").toExternalForm()),
+            new StreamSource(EOdlozisceTask.class.getClassLoader().getResource("schemas/KazenskiSkupnoTipi.xsd").toExternalForm()),
+            new StreamSource(EOdlozisceTask.class.getClassLoader().getResource("schemas/SkupnoElementi.xsd").toExternalForm()),
+            new StreamSource(EOdlozisceTask.class.getClassLoader().getResource("schemas/SkupnoIzmenjaveTipi.xsd").toExternalForm()),
+            new StreamSource(EOdlozisceTask.class.getClassLoader().getResource("schemas/SkupnoSkupnoTipi.xsd").toExternalForm()),
+            new StreamSource(EOdlozisceTask.class.getClassLoader().getResource("schemas/SkupnoSplosnoTipi.xsd").toExternalForm()),
+            new StreamSource(EOdlozisceTask.class.getClassLoader().getResource("schemas/XAdES-1.1.1.xsd").toExternalForm()),
+            new StreamSource(EOdlozisceTask.class.getClassLoader().getResource("schemas/xmldsig-core-schema.xsd").toExternalForm())
+    };
     private final Schema schema;
 
     public enum ErrorCodes implements ValidationErrorCode {
-        MISSING_PART("Missing part"),
+        MISSING_METADATA_XML("Missing metadata XML"),
         INVALID_XML("Invalid XML");
 
         private String message;
@@ -43,12 +56,7 @@ public class SchemaValidationStage implements ValidationStage<InputStream> {
         }
     }
 
-    public SchemaValidationStage(InputStream schemaStream) throws SAXException {
-        SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        this.schema = sf.newSchema(new StreamSource(schemaStream));
-    }
-
-    public SchemaValidationStage(Source[] schemas) throws SAXException {
+    public SchemaValidationStage() throws SAXException {
         SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         this.schema = sf.newSchema(schemas);
     }
