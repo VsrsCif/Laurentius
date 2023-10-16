@@ -31,6 +31,7 @@ public class PDFValidationStageTest {
 
         ValidationResult validated = pdfValidationStage.validate(new File(resource.getPath()));
 
-        Assert.assertTrue(validated.getValidationOutputs().isEmpty());
+        Assert.assertEquals(1, validated.getValidationOutputs().size());
+        Assert.assertEquals(PDFValidationStage.ErrorCodes.UNSUPPORTED_PDF_SIGNATURE, validated.getValidationOutputs().get(0).getCode());
     }
 }
