@@ -23,9 +23,12 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.RandomAccessFile;
 import java.util.Calendar;
+
 import org.apache.pdfbox.io.IOUtils;
 
+import org.apache.pdfbox.io.RandomAccessRead;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.interactive.digitalsignature.PDSignature;
 import org.apache.pdfbox.pdmodel.interactive.digitalsignature.SignatureOptions;
@@ -149,9 +152,8 @@ public class SignUtils implements SignatureInterface {
 
   public void createDefaultVisualization(File pdfFile, X509Certificate xc, Date dt, String location, String reason) {
     try (InputStream imageStream = SignUtils.class.getResourceAsStream(S_TEMPLATE_IMAGE);
-        InputStream isFile = new FileInputStream(pdfFile)) {
+      InputStream isFile = new FileInputStream(pdfFile)) {
 
-      
       int page = 1;
       String name = xc.getSubjectDN().toString();
       String issuer = xc.getIssuerDN().toString();
@@ -232,8 +234,8 @@ public class SignUtils implements SignatureInterface {
     }
     // creating output document and prepare the IO streams.
     // load document
-    try ( PDDocument doc = PDDocument.load(inputFile);
-        FileOutputStream fos = new FileOutputStream(signedFile)) {
+    try (PDDocument doc = PDDocument.load(inputFile);
+         FileOutputStream fos = new FileOutputStream(signedFile)) {
       PDSignature signature;
       // create signature dictionary
       signature = new PDSignature();

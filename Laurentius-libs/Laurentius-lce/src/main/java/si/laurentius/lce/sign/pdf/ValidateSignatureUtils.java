@@ -25,6 +25,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.SignatureException;
+import java.security.cert.CertStore;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
@@ -32,6 +33,7 @@ import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.pdfbox.cos.COSDictionary;
@@ -47,10 +49,12 @@ import org.bouncycastle.cms.CMSProcessableByteArray;
 import org.bouncycastle.cms.CMSSignedData;
 import org.bouncycastle.cms.CMSVerifierCertificateNotValidException;
 import org.bouncycastle.cms.SignerInformation;
+import org.bouncycastle.cms.SignerInformationStore;
 import org.bouncycastle.cms.jcajce.JcaSimpleSignerInfoVerifierBuilder;
 import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.util.Store;
 import org.bouncycastle.util.StoreException;
+import si.laurentius.lce.exception.UnsupportedSignatureException;
 
 /**
  * This is an PDF signature utils inspired by Ben Litchfield
@@ -71,6 +75,33 @@ public final class ValidateSignatureUtils {
   public static final String CERT_OBJ = "Cert";
 
   public static final String MD_SHA1 = "SHA1";
+
+  private enum SubFilterType {
+    ADBE_PKCS7_DETACHED("adbe.pkcs7.detached"),
+    ADBE_PKCS7_SHA1("adbe.pkcs7.sha1"),
+    ADBE_X509_RSA_SHA1("adbe.x509.rsa_sha1"),
+    ETSI_CADES_DETACHED("ETSI.CAdES.detached"),
+    ETST_RFC3161("ETSI.RFC3161");
+
+    private String subfiltername;
+
+    SubFilterType(String subfiltername) {
+      this.subfiltername = subfiltername;
+    }
+
+    public String getSubfiltername() {
+      return subfiltername;
+    }
+
+    public static SubFilterType fromString(String subfiltername) throws UnsupportedSignatureException {
+      for (SubFilterType sft : SubFilterType.values()) {
+        if (sft.getSubfiltername().equals(subfiltername)) {
+          return sft;
+        }
+      }
+      throw new UnsupportedSignatureException(subfiltername);
+    }
+  }
 
   public ValidateSignatureUtils() {
 
@@ -95,12 +126,13 @@ public final class ValidateSignatureUtils {
           buf = sig.getSignedContent(fis);
         }
 
-        String subFilter = sig.getSubFilter();
+        SubFilterType subFilter = SubFilterType.fromString(sig.getSubFilter());
 
-        if (subFilter != null) {
-          if (subFilter.equals(SIG_SUB_FILTER_DETACHED)) {
+        switch (subFilter) {
+          case ADBE_PKCS7_DETACHED:
             sigInfo = getSignatureInfo(buf, contents, sig);
-          } else if (subFilter.equals(SIG_SUB_FILTER_SHA1)) {
+            break;
+          case ADBE_PKCS7_SHA1:
             // example: PDFBOX-1452.pdf
             COSString certString = (COSString) sigDict.getDictionaryObject(
                     COSName.CONTENTS);
@@ -110,24 +142,28 @@ public final class ValidateSignatureUtils {
             Collection<? extends Certificate> certs = factory.
                     generateCertificates(certStream);
             byte[] hash = MessageDigest.getInstance(MD_SHA1).digest(buf);
-             sigInfo = getSignatureInfo(hash, contents, sig);
-
-
-          } else {
-            throw new SignatureException(
-                    "Unknown signature subfilter type: " + subFilter);
-          }
-        } else {
-          throw new IOException("Missing subfilter for cert dictionary");
+            sigInfo = getSignatureInfo(hash, contents, sig);
+            break;
+          case ADBE_X509_RSA_SHA1:
+            sigInfo = getSignatureInfo(buf, contents, sig);
+            break;
+          case ETSI_CADES_DETACHED:
+            //sigInfo = null; //getSignatureInfo(buf, contents, sig);
+            break;
+          case ETST_RFC3161:
+            //sigInfo = null; //getSignatureInfo(buf, contents, sig);
+            break;
         }
+
         lstSig.add(sigInfo);
       }
     } catch (CMSException | OperatorCreationException ex) {
       throw new IOException(ex);
+    } catch (UnsupportedSignatureException e) {
+      throw new RuntimeException(e);
     }
 
     return lstSig;
-
   }
 
   public List<X509Certificate> getSignatureCerts(String infile) throws IOException, CertificateException,
@@ -227,19 +263,14 @@ public final class ValidateSignatureUtils {
     // http://stackoverflow.com/a/26702631/535646
     // http://stackoverflow.com/a/9261365/535646
     CMSProcessable signedContent = new CMSProcessableByteArray(byteArray);
-    CMSSignedData signedData = new CMSSignedData(signedContent, contents.
-            getBytes());
+    CMSSignedData signedData = new CMSSignedData(signedContent, contents.getBytes());
     Store certificatesStore = signedData.getCertificates();
-    Collection<SignerInformation> signers = signedData.getSignerInfos().
-            getSigners();
+    Collection<SignerInformation> signers = signedData.getSignerInfos().getSigners();
     SignerInformation signerInformation = signers.iterator().next();
-    Collection matches = certificatesStore.
-            getMatches(signerInformation.getSID());
-    X509CertificateHolder certificateHolder = (X509CertificateHolder) matches.
-            iterator().next();
-    X509Certificate certFromSignedData = new JcaX509CertificateConverter().
-            getCertificate(
-                    certificateHolder);
+    Collection matches = certificatesStore.getMatches(signerInformation.getSID());
+    X509CertificateHolder certificateHolder = (X509CertificateHolder) matches.iterator().next();
+    X509Certificate certFromSignedData = new JcaX509CertificateConverter().getCertificate(certificateHolder);
+
     return certFromSignedData;
   }
 
@@ -253,19 +284,13 @@ public final class ValidateSignatureUtils {
     info.setDate(sig.getSignDate());
 
     CMSProcessable signedContent = new CMSProcessableByteArray(byteArray);
-    CMSSignedData signedData = new CMSSignedData(signedContent, contents.
-            getBytes());
+    CMSSignedData signedData = new CMSSignedData(signedContent, contents.getBytes());
     Store certificatesStore = signedData.getCertificates();
-    Collection<SignerInformation> signers = signedData.getSignerInfos().
-            getSigners();
+    Collection<SignerInformation> signers = signedData.getSignerInfos().getSigners();
     SignerInformation signerInformation = signers.iterator().next();
-    Collection matches = certificatesStore.
-            getMatches(signerInformation.getSID());
-    X509CertificateHolder certificateHolder = (X509CertificateHolder) matches.
-            iterator().next();
-    X509Certificate certFromSignedData = new JcaX509CertificateConverter().
-            getCertificate(
-                    certificateHolder);
+    Collection matches = certificatesStore.getMatches(signerInformation.getSID());
+    X509CertificateHolder certificateHolder = (X509CertificateHolder) matches.iterator().next();
+    X509Certificate certFromSignedData = new JcaX509CertificateConverter().getCertificate(certificateHolder);
 
     info.setSignerCert(certFromSignedData);
 
@@ -278,6 +303,27 @@ public final class ValidateSignatureUtils {
       info.getErrorMessages().add(
               "Certificate was no valid at signing time!" + ex);
     }
+
+    return info;
+  }
+
+  private SignatureInfo getSignatureInfoForEtsiSignature(byte[] signedContentBytes, COSString contents, PDSignature signatureDictionary)
+          throws CMSException, CertificateException, StoreException, OperatorCreationException {
+    SignatureInfo info = new SignatureInfo();
+
+    CMSProcessable signedContent = new CMSProcessableByteArray(signedContentBytes);
+    CMSSignedData signedData = new CMSSignedData(signedContent, contents.getBytes());
+    Store certificatesStore = signedData.getCertificates();
+    Collection<SignerInformation> signers = signedData.getSignerInfos().getSigners();
+    SignerInformation signerInformation = signers.iterator().next();
+    Collection matches = certificatesStore.getMatches(signerInformation.getSID());
+    X509CertificateHolder certificateHolder = (X509CertificateHolder) matches.iterator().next();
+    X509Certificate certFromSignedData = new JcaX509CertificateConverter().getCertificate(certificateHolder);
+
+    boolean verified = signerInformation.verify(new JcaSimpleSignerInfoVerifierBuilder().build(certFromSignedData));
+    info.setIsSignatureValid(verified);
+    info.setDate(signatureDictionary.getSignDate());
+    info.setSignerCert(certFromSignedData);
 
     return info;
   }

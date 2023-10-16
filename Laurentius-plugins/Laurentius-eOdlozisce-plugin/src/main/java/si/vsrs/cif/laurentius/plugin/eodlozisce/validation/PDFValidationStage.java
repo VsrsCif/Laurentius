@@ -7,6 +7,8 @@ import org.apache.pdfbox.pdmodel.interactive.digitalsignature.PDSignature;
 import org.apache.pdfbox.preflight.Format;
 import org.apache.pdfbox.preflight.PreflightDocument;
 import org.apache.pdfbox.preflight.parser.PreflightParser;
+import si.laurentius.lce.sign.pdf.SignatureInfo;
+import si.laurentius.lce.sign.pdf.ValidateSignatureUtils;
 import si.sodisce.sheme.skupno.izmenjave.v1.ElektronskaOvojnica;
 import si.sodisce.sheme.skupno.izmenjave.v1.ElektronskaPosiljkaTip;
 import si.vsrs.cif.laurentius.plugin.eodlozisce.codes.CourtType;
@@ -17,6 +19,9 @@ import javax.activation.DataSource;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.NoSuchAlgorithmException;
+import java.security.SignatureException;
+import java.security.cert.CertificateException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -65,11 +70,22 @@ public class PDFValidationStage implements ValidationStage<File> {
             org.apache.pdfbox.preflight.ValidationResult result = preflightDocument.getResult();
             result.isValid();
 
+            ValidateSignatureUtils validateSignatureUtils = new ValidateSignatureUtils();
+
             List<PDSignature> signatureDictionaries = preflightDocument.getSignatureDictionaries();
 
             boolean isPdfA = specification.getFname().startsWith("PDF/A");
+            List<SignatureInfo> signatureInfos = validateSignatureUtils.validateSignatures(data);
+
+            System.out.println("signatureInfos = " + signatureInfos);
 
         } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (CertificateException e) {
+            throw new RuntimeException(e);
+        } catch (SignatureException e) {
+            throw new RuntimeException(e);
+        } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         } finally {
             try {
