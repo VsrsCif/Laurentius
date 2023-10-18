@@ -1,11 +1,16 @@
 package si.vsrs.cif.laurentius.plugin.eodlozisce.validation;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class ValidationOutput {
     public enum Severity {
         ERROR, WARNING
     }
     private Severity severity;
     private ValidationErrorCode code;
+
+    public ValidationOutput() {
+    }
 
     public ValidationOutput(Severity severity, ValidationErrorCode code) {
         this.severity = severity;
@@ -38,10 +43,12 @@ public class ValidationOutput {
         return this.code.equals(((ValidationOutput)obj).code) && this.severity.equals(((ValidationOutput)obj).severity);
     }
 
+    @JsonIgnore
     public boolean isError() {
         return this.severity.equals(Severity.ERROR);
     }
 
+    @JsonIgnore
     public boolean isWarning() {
         return this.severity.equals(Severity.WARNING);
     }
