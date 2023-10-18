@@ -41,9 +41,12 @@ import javax.naming.NamingException;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.servlet.http.HttpServletRequest;
@@ -55,6 +58,8 @@ import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.handler.MessageContext;
+
+import si.laurentius.msh.outbox.mail.MSHOutMail;
 import si.laurentius.msh.pmode.PMode;
 import si.laurentius.msh.pmode.PartyIdentitySet;
 import si.laurentius.msh.pmode.Service;
@@ -582,14 +587,43 @@ public class SEDMailBox implements SEDMailBoxWS {
     rsp.setRControl(rc);
     rsp.setRData(new OutMailEventListResponse.RData());
 
-    TypedQuery<OutEvent> q = memEManager.createNamedQuery(
-            NamedQueries.LAU_NQ_OUTMAIL_GET_EVENTS, OutEvent.class);
+    String additionalCriteria = "";
+    if (dt.getMailId() != null) {
+        additionalCriteria += " and (ev.mail_id = :mailId)";
+    }
+    if (dt.getSenderMessageId() != null) {
+        additionalCriteria += " and (ev.sender_msg_id = :senderMessageId)";
+    }
+
+    // make a nicer copy of the following query
+    String nativeQuery =
+            " SELECT" +
+            "  ev.id," +
+            "  ev.mail_id," +
+            "  ev.sender_msg_id," +
+            "  ev.status," +
+            "  ev.event_date," +
+            "  ev.description," +
+            "  ev.user_id," +
+            "  ev.application_id" +
+            " FROM" +
+            "    lau_outbox_event ev" +
+            "    JOIN " +
+            "   lau_outbox im" +
+            "      on ev.mail_id = im.id" +
+            " WHERE im.sender_ebox = :senderEBox" +
+            additionalCriteria +
+            " ORDER BY id asc";
+
+    Query q = memEManager.createNativeQuery(nativeQuery, OutEvent.class);
     q.setParameter(NamedQueries.NQ_PARAM_SENDER_EBOX, dt.getSenderEBox());
-    q.setParameter(NamedQueries.NQ_PARAM_MAIL_ID,
-            dt.getMailId() == null ? -1 : dt.getMailId());
-    q.setParameter(NamedQueries.NQ_PARAM_SENDER_MAIL_ID,
-            Utils.isEmptyString(dt.getSenderMessageId()) ? "" : dt.
-            getSenderMessageId());
+
+    if (dt.getMailId() != null) {
+      q.setParameter(NamedQueries.NQ_PARAM_MAIL_ID, dt.getMailId());
+    }
+    if (dt.getSenderMessageId() != null) {
+      q.setParameter(NamedQueries.NQ_PARAM_SENDER_MAIL_ID, dt.getSenderMessageId());
+    }
 
     List<OutEvent> lst = q.getResultList();
     if (!lst.isEmpty()) {

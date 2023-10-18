@@ -39,7 +39,7 @@
                 and (ev.mail_id = :mailId or :mailId =-1)
                 and (ev.sender_msg_id = :senderMessageId or :senderMessageId ='')
                 order by id asc]]>
-    </sql-query>    
+    </sql-query>
     <sql-query name="si.laurentius.outbox.event.OutEvent.getMailEventList">
         <return class="si.laurentius.outbox.event.OutEvent" />	
    <![CDATA[SELECT 
