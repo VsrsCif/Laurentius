@@ -176,7 +176,6 @@ public class EOdlozisceTask implements TaskExecutionInterface {
                         mDB.setStatusToInMail(inMail, SEDInboxMailStatus.ERROR, "Add message to ecf deliver proccess");
                     }
                     validationResult.chain(filingValidationResults);
-
                 }
 
                 final String errorReportAttachmentName = properties.getProperty(KEY_PAYLOAD_ERROR_REPORT_NAME);

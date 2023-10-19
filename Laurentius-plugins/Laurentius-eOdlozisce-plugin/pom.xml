@@ -118,6 +118,26 @@
       <groupId>org.apache.pdfbox</groupId>
       <artifactId>pdfbox-examples</artifactId>
     </dependency>
+    <dependency>
+      <groupId>si.src</groupId>
+      <artifactId>src-crypto</artifactId>
+      <version>1.0.4</version>
+    </dependency>
+    <dependency>
+      <groupId>si.src</groupId>
+      <artifactId>src-esign</artifactId>
+      <version>1.0.0</version>
+    </dependency>
+    <dependency>
+      <groupId>si.src</groupId>
+      <artifactId>src-setccesign</artifactId>
+      <version>1.0.0</version>
+    </dependency>
+    <dependency>
+      <groupId>si.src</groupId>
+      <artifactId>src-utils</artifactId>
+      <version>1.5.31</version>
+    </dependency>
   </dependencies>
 
   <build>
