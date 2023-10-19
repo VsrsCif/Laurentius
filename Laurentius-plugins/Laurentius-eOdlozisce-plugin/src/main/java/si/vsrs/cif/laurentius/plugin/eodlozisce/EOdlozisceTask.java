@@ -4,6 +4,7 @@
  */
 package si.vsrs.cif.laurentius.plugin.eodlozisce;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 import si.laurentius.commons.SEDJNDI;
@@ -59,7 +60,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PrintStream;
 import java.io.StringWriter;
+import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.KeyStore;
@@ -79,6 +82,8 @@ public class EOdlozisceTask implements TaskExecutionInterface {
 
     private static final SEDLogger LOG = new SEDLogger(EOdlozisceTask.class);
     public static final String KEY_PAYLOAD_METADATA_NAME = "ecf.payload.metadata.name";
+    public static final String KEY_PAYLOAD_ERROR_REPORT_NAME = "ecf.payload.error.report.name";
+    public static final String ERROR_REPORT_FILE_NAME = "error-report";
     private static final String SIGN_ALIAS = "ecf.sign.key.alias";
 
     @EJB(mappedName = SEDJNDI.JNDI_SEDDAO)
@@ -94,6 +99,7 @@ public class EOdlozisceTask implements TaskExecutionInterface {
     XmlSignatureValidationStage xmlSignatureValidator;
     FilingValidationStage filingValidationStage;
     XMLSignatureUtils signatureUtils;
+    ObjectMapper objectMapper;
 
     @PostConstruct
     public void init() {
@@ -101,6 +107,7 @@ public class EOdlozisceTask implements TaskExecutionInterface {
             this.signatureUtils = new XMLSignatureUtils();
             this.schemaValidator = new SchemaValidationStage();
             this.filingValidationStage = new FilingValidationStage();
+            this.objectMapper = new ObjectMapper();
         } catch (SAXException e) {
             throw new RuntimeException(e);
         }
@@ -122,7 +129,7 @@ public class EOdlozisceTask implements TaskExecutionInterface {
         List<MSHInMail> inMailList = mDB.getDataList(MSHInMail.class, -1, 100, "Id", "ASC", mi);
 
         String metadataAttachmentName = properties.getProperty(KEY_PAYLOAD_METADATA_NAME);
-        // set status to proccess
+        // set status to process
         inMailList.forEach((inMail) -> {
             try {
                 List<MSHInPart> mshInParts = inMail.getMSHInPayload().getMSHInParts();
@@ -172,7 +179,11 @@ public class EOdlozisceTask implements TaskExecutionInterface {
 
                 }
 
-                // TODO: generate JSON report of validation errors file and attach
+                final String errorReportAttachmentName = properties.getProperty(KEY_PAYLOAD_ERROR_REPORT_NAME);
+                if (validationResult.hasValidationIssues()) {
+                    generateOrUpdateErrorReport(inMail, mshInParts, errorReportAttachmentName, validationResult);
+                }
+
                 // TODO: TSA
 
                 mDB.setStatusToInMail(inMail, SEDInboxMailStatus.PROCESS,
@@ -196,6 +207,50 @@ public class EOdlozisceTask implements TaskExecutionInterface {
 
         sw.append("End ecf plugin task");
         return sw.toString();
+    }
+
+    private void generateOrUpdateErrorReport(MSHInMail inMail, List<MSHInPart> mshInParts, String errorReportAttachmentName, ValidationResult validationResult) throws StorageException {
+        final Optional<MSHInPart> errorReportMshInPart = mshInParts.stream()
+                .filter((part) -> errorReportAttachmentName.equals(part.getName()))
+                .findFirst();
+        if (errorReportMshInPart.isPresent()) {
+            updateValidationReport(inMail, errorReportMshInPart.get(), errorReportAttachmentName, validationResult);
+        } else {
+            createValidationReport(inMail, errorReportAttachmentName, validationResult);
+        }
+    }
+
+    private void updateValidationReport(MSHInMail inMail, MSHInPart mshInPart, String attachmentName, ValidationResult validationResult) throws StorageException {
+        MimeValue partMime = MimeValue.MIME_JSON;
+        final File f = StorageUtils.getFile(mshInPart.getFilepath());
+        try {
+            ValidationResult existingValidationResult = objectMapper.readValue(f, ValidationResult.class);
+            existingValidationResult.chain(validationResult);
+            final String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(existingValidationResult);
+            try (PrintStream out = new PrintStream(Files.newOutputStream(f.toPath()))) {
+                out.print(json);
+            }
+            MSHInPart part = buildMshInPart(attachmentName, inMail.getMessageId(), partMime, f, "JSON error report");
+            inMail.getMSHInPayload().getMSHInParts().remove(mshInPart);
+            inMail.getMSHInPayload().getMSHInParts().add(part);
+        } catch (IOException e) {
+            LOG.logError("Exception deserializing validation result. Updated error report will not be attached", e);
+        }
+    }
+
+    private void createValidationReport(MSHInMail inMail, String attachmentName, ValidationResult validationResult) throws StorageException {
+        MimeValue partMime = MimeValue.MIME_JSON;
+        File f = StorageUtils.getNewStorageFile(partMime.getSuffix(), ERROR_REPORT_FILE_NAME);
+        try {
+            final String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(validationResult);
+            try (PrintStream out = new PrintStream(Files.newOutputStream(f.toPath()))) {
+                out.print(json);
+            }
+            MSHInPart part = buildMshInPart(attachmentName, inMail.getMessageId(), partMime, f, "JSON error report");
+            inMail.getMSHInPayload().getMSHInParts().add(part);
+        } catch (IOException e) {
+            LOG.logError("Exception serializing validation result. Error report will not be attached", e);
+        }
     }
 
     private ValidationResult validateFilings(String metadataAttachmentName, List<MSHInPart> mshInParts) {
@@ -247,8 +302,8 @@ public class EOdlozisceTask implements TaskExecutionInterface {
 
         MimeValue soapPartMime = MimeValue.MIME_XML;
         File f = StorageUtils.getNewStorageFile(soapPartMime.getSuffix(), EBMSConstants.SOAP_PART_REQUEST_PREFIX);
-        MSHInPart part = getMshInPart(
-                metadataAttachmentName + "_invalid_" + UUID.randomUUID(), inMail.getMessageId(), soapPartMime, f);
+        MSHInPart part = buildMshInPart(
+                metadataAttachmentName + "_invalid_" + UUID.randomUUID(), inMail.getMessageId(), soapPartMime, f, "XML Metadata");
         inMail.getMSHInPayload().getMSHInParts().add(part);
 
         // TODO: sign and timestamp the signature
@@ -265,17 +320,18 @@ public class EOdlozisceTask implements TaskExecutionInterface {
         }
     }
 
-    private MSHInPart getMshInPart(String metadataAttachmentName, String messageId, MimeValue soapPartMime, File f) throws StorageException {
+    private MSHInPart buildMshInPart(String metadataAttachmentName, String messageId, MimeValue soapPartMime, File f, String description) throws StorageException {
         MSHInPart part = new MSHInPart();
         part.setName(metadataAttachmentName);
         part.setIsSent(Boolean.FALSE);
         part.setIsReceived(Boolean.TRUE);
         part.setEbmsId(messageId);
         part.setMimeType(soapPartMime.getMimeType());
-        part.setDescription("XML Metadata");
+        part.setDescription(description);
         part.setSource(SEDMailPartSource.PLUGIN.getValue());
         part.setFilename(f.getName());
         part.setFilepath(StorageUtils.getRelativePath(f));
+        part.setSize(BigInteger.valueOf(f.length()));
         return part;
     }
 
@@ -352,7 +408,7 @@ public class EOdlozisceTask implements TaskExecutionInterface {
         File f = StorageUtils.getNewStorageFile(soapPartMime.getSuffix(), EBMSConstants.SOAP_PART_REQUEST_PREFIX);
         writeXml(signedDocument, new FileOutputStream(f));
         mshInParts.removeIf(inPart -> metadataAttachmentName.equals(inPart.getName()));
-        MSHInPart part = getMshInPart(metadataAttachmentName, inMail.getMessageId(), soapPartMime, f);
+        MSHInPart part = buildMshInPart(metadataAttachmentName, inMail.getMessageId(), soapPartMime, f, "XML Metadata");
         mshInParts.add(part);
     }
 }

@@ -2,6 +2,7 @@ package si.vsrs.cif.laurentius.plugin.eodlozisce.validation;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ValidationResult {
     private List<ValidationOutput> validationOutputs = new LinkedList<>();
@@ -24,7 +25,14 @@ public class ValidationResult {
     }
 
     public ValidationResult chain(ValidationResult validationResult) {
-        this.validationOutputs.addAll(validationResult.validationOutputs);
+        final List<ValidationOutput> newValidationOutputs = validationResult.validationOutputs
+                .stream().filter(validationOutput -> !this.validationOutputs.contains(validationOutput))
+                .collect(Collectors.toList());
+        this.validationOutputs.addAll(newValidationOutputs);
         return this;
+    }
+
+    public boolean hasValidationIssues() {
+        return !this.validationOutputs.isEmpty();
     }
 }
