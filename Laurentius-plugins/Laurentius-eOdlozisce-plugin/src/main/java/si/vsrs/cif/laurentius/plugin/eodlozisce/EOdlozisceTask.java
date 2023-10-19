@@ -356,7 +356,7 @@ public class EOdlozisceTask implements TaskExecutionInterface {
         CronTaskDef tt = new CronTaskDef();
         tt.setType("eodlozisce-validation");
         tt.setName("Validate eOdlozisce package");
-        tt.setDescription("Validate and forward eVlozisce package.");
+        tt.setDescription("Validate and forward eOdlozisce package.");
         return tt;
     }
 

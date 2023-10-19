@@ -6,7 +6,7 @@
                      xmlns:pmd="http://msh.laurentius.si/pmode"
                      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <ns1:PModeData>
-        <pmd:Service id="eVrocanje" serviceName="eVrocanje">
+        <pmd:Service id="eOdlozisce" serviceName="eOdlozisce">
             <pmd:Initiator role="Sender"/>
             <pmd:Executor role="Receiver"/>
             <pmd:Action name="eVloga" invokeRole="initiator">
