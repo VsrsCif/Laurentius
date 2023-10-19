@@ -89,3 +89,4 @@
 .classpath
 target/
 .run/
+Laurentius-plugins/Laurentius-eOdlozisce-plugin/src/test/resources/xml_sig_validation/test1_signed.xml
