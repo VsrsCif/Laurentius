@@ -89,8 +89,8 @@
             <pmd:DuplicateDetection windowPeriode="P1Y" eliminate="true"/>
         </pmd:ReceptionAwareness>
         
-        <pmd:PMode id="eVrocanje">
-            <pmd:ServiceIdRef>eVrocanje</pmd:ServiceIdRef>
+        <pmd:PMode id="eOdlozisce">
+            <pmd:ServiceIdRef>eOdlozisce</pmd:ServiceIdRef>
             <pmd:LocalPartyInfo partyIdentitySetIdRef="test-laurentius" partyDefTransportIdRef="default">
                 <pmd:Role>Sender</pmd:Role>
                 <pmd:Role>Receiver</pmd:Role>
@@ -122,12 +122,12 @@
         </pmd:PMode>        
     </ns1:PModeData>
     <ns1:PluginData>
-        <ns3:SEDInterceptor name="eVrocanje_InMessages" active="true" interceptEvent="InMessage" interceptRole="All">
-            <ns3:SEDInterceptorRule property="Service" predicate="InList" value="eVrocanje"/>
+        <ns3:SEDInterceptor name="eOdlozisce_InMessages" active="true" interceptEvent="InMessage" interceptRole="All">
+            <ns3:SEDInterceptorRule property="Service" predicate="InList" value="eOdlozisce"/>
             <ns3:SEDInterceptorInstance plugin="EOdlozisce" type="EOdlozisceInInterceptor" pluginVersion="1.0.0"/>
         </ns3:SEDInterceptor>
-        <ns3:SEDInterceptor name="eVrocanje_OutMessages" active="true" interceptEvent="OutMessage" interceptRole="All">
-            <ns3:SEDInterceptorRule property="Service" predicate="InList" value="eVrocanje"/>
+        <ns3:SEDInterceptor name="eOdlozisce_OutMessages" active="true" interceptEvent="OutMessage" interceptRole="All">
+            <ns3:SEDInterceptorRule property="Service" predicate="InList" value="eOdlozisce"/>
             <ns3:SEDInterceptorInstance plugin="EOdlozisce" type="EOdlozisceOutInterceptor" pluginVersion="1.0.0"/>
         </ns3:SEDInterceptor>
         <ns2:SEDCronJob  name="ECFProcessSchedule" active="true" second="0" minute="*/5" hour="8-16" dayOfMonth="*" month="*" dayOfWeek="1-5">

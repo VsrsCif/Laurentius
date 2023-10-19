@@ -197,12 +197,12 @@
         <ns3:SEDInterceptor id="6" name="LegalZKPFault" active="true" interceptEvent="InFaultMessage" interceptRole="Requestor">
             <ns3:SEDInterceptorInstance plugin="LegalZKP" type="ZKPFaultInInterceptor" pluginVersion="1.0.0"/>
         </ns3:SEDInterceptor>
-        <ns3:SEDInterceptor id="7" name="eVrocanje_InMessages" active="true" interceptEvent="InMessage" interceptRole="All">
-            <ns3:SEDInterceptorRule property="Service" predicate="InList" value="eVrocanje"/>
+        <ns3:SEDInterceptor id="7" name="eOdlozisce_InMessages" active="true" interceptEvent="InMessage" interceptRole="All">
+            <ns3:SEDInterceptorRule property="Service" predicate="InList" value="eOdlozisce"/>
             <ns3:SEDInterceptorInstance plugin="EOdlozisce" type="EOdlozisceInInterceptor" pluginVersion="1.0.0"/>
         </ns3:SEDInterceptor>
-        <ns3:SEDInterceptor id="8" name="eVrocanje_OutMessages" active="true" interceptEvent="OutMessage" interceptRole="All">
-            <ns3:SEDInterceptorRule property="Service" predicate="InList" value="eVrocanje"/>
+        <ns3:SEDInterceptor id="8" name="eOdlozisce_OutMessages" active="true" interceptEvent="OutMessage" interceptRole="All">
+            <ns3:SEDInterceptorRule property="Service" predicate="InList" value="eOdlozisce"/>
             <ns3:SEDInterceptorInstance plugin="EOdlozisce" type="EOdlozisceOutInterceptor" pluginVersion="1.0.0"/>
         </ns3:SEDInterceptor>
     </SEDInterceptors>

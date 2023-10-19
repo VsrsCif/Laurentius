@@ -149,7 +149,7 @@
                 </PayloadProfiles>
             </Action>
         </Service>
-        <Service id="eVrocanje" serviceName="eVrocanje" serviceType="SVEV" useSEDProperties="true">
+        <Service id="eOdlozisce" serviceName="eOdlozisce" serviceType="SVEV" useSEDProperties="true">
             <Initiator role="Sender"/>
             <Executor role="Receiver"/>
             <Action name="eVloga" invokeRole="initiator" messageType="userMessage">
@@ -488,8 +488,8 @@
             </Leg>
         </MEP>
     </PMode>
-    <PMode id="eVrocanje" isTest="false" priority="5">
-        <ServiceIdRef>eVrocanje</ServiceIdRef>
+    <PMode id="eOdlozisce" isTest="false" priority="5">
+        <ServiceIdRef>eOdlozisce</ServiceIdRef>
         <LocalPartyInfo partyIdentitySetIdRef="test-laurentius" partyDefTransportIdRef="defalut">
             <Role>Sender</Role>
             <Role>Receiver</Role>
