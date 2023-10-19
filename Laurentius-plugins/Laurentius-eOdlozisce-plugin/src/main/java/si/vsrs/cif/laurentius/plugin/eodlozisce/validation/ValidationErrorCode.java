@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import si.vsrs.cif.laurentius.plugin.eodlozisce.serialization.ValidationErrorCodeCustomDeserializer;
 import si.vsrs.cif.laurentius.plugin.eodlozisce.serialization.ValidationErrorCodeCustomSerializer;
 
+import java.util.ResourceBundle;
+
 @JsonSerialize(using = ValidationErrorCodeCustomSerializer.class)
 @JsonDeserialize(using = ValidationErrorCodeCustomDeserializer.class)
 public interface ValidationErrorCode {
@@ -15,4 +17,5 @@ public interface ValidationErrorCode {
     String getCustomMessage();
     String name();
     String asText();
+    void localize(ResourceBundle errorsBundle);
 }

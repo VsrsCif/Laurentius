@@ -7,6 +7,9 @@ import org.junit.Test;
 import si.vsrs.cif.laurentius.plugin.eodlozisce.validation.ValidationOutput;
 import si.vsrs.cif.laurentius.plugin.eodlozisce.validation.ValidationResult;
 
+import java.util.Locale;
+import java.util.ResourceBundle;
+
 import static org.hamcrest.CoreMatchers.is;
 import static si.vsrs.cif.laurentius.plugin.eodlozisce.validation.FilingValidationStage.ErrorCodes.MISSING_COURT_CODE;
 import static si.vsrs.cif.laurentius.plugin.eodlozisce.validation.SchemaValidationStage.ErrorCodes.INVALID_XML;
@@ -49,5 +52,15 @@ public class JsonErrorReportTest {
         anotherValidationResult.add(anotherInvalidXmlValidationOutput);
         validationResult.chain(anotherValidationResult);
         Assert.assertThat(validationResult.getValidationOutputs().size(), is(validationOutputsCount));
+    }
+
+    @Test
+    public void localizeErrorCodes() {
+        validationResult.add(invalidXmlValidationOutput);
+        ResourceBundle errorsBundle = ResourceBundle.getBundle("bundles/validation_errors", new Locale("sl", "SI"));
+        validationResult.localizeValidationOutputs(errorsBundle);
+
+        ValidationOutput validationOutput = validationResult.getValidationOutputs().get(0);
+        Assert.assertThat(validationOutput.getCode().getCustomMessage(), is("Neveljavna datoteka XML"));
     }
 }

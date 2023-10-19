@@ -10,6 +10,7 @@ import si.vsrs.cif.laurentius.plugin.eodlozisce.codes.RegisterType;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 public class FilingValidationStage implements ValidationStage<ElektronskaOvojnica> {
@@ -41,6 +42,11 @@ public class FilingValidationStage implements ValidationStage<ElektronskaOvojnic
         @Override
         public String asText() {
             return message;
+        }
+
+        @Override
+        public void localize(ResourceBundle errorsBundle) {
+            this.message = errorsBundle.getString(this.name());
         }
     }
 

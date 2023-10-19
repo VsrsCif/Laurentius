@@ -5,6 +5,7 @@ import si.vsrs.cif.laurentius.plugin.eodlozisce.sig.XMLSignatureUtils;
 
 import java.nio.file.Path;
 import java.util.List;
+import java.util.ResourceBundle;
 
 public class XmlSignatureValidationStage implements ValidationStage<Path> {
     private final XMLSignatureUtils signatureUtils;
@@ -50,6 +51,11 @@ public class XmlSignatureValidationStage implements ValidationStage<Path> {
         @Override
         public String asText() {
             return message;
+        }
+
+        @Override
+        public void localize(ResourceBundle errorsBundle) {
+            this.message = errorsBundle.getString(this.name());
         }
     }
 }
