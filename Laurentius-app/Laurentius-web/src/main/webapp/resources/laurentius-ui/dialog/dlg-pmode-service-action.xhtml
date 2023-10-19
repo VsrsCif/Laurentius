@@ -138,7 +138,7 @@
                             <p:column headerText="#{msg['Name']}"  >
                                 <h:outputText value="#{sp.name}" /></p:column>
                             <p:column headerText="#{msg['Required']}" width="60">
-                                    <h:outputText value="#{sp.required}" />
+                                    <h:outputText value="#{sp.isRequired()}" />
                             </p:column>
                             <p:column headerText="#{msg['Type']}"  width="100">
                                 <h:outputText value="#{sp.type}" /></p:column>
