@@ -130,5 +130,16 @@
             <ns3:SEDInterceptorRule property="Service" predicate="InList" value="eVrocanje"/>
             <ns3:SEDInterceptorInstance plugin="EOdlozisce" type="EOdlozisceOutInterceptor" pluginVersion="1.0.0"/>
         </ns3:SEDInterceptor>
+        <ns2:SEDCronJob  name="ECFProcessSchedule" active="true" second="0" minute="*/5" hour="8-16" dayOfMonth="*" month="*" dayOfWeek="1-5">
+            <ns2:SEDTask plugin="EOdlozisce" type="eodlozisce-validation" pluginVersion="1.0.0"  name="EOdlozisce" active="true">
+                <ns2:SEDTaskProperty  key="ecf.payload.metadata.name">metadata.xml</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty  key="ecf.sign.key.alias">local-key-alias</ns2:SEDTaskProperty>
+            </ns2:SEDTask>
+        </ns2:SEDCronJob>
+        <ns2:SEDCronJob  name="ECFEVIPSchedule" active="true" second="0" minute="*" hour="*" dayOfMonth="*" month="*" dayOfWeek="*">
+            <ns2:SEDTask plugin="EOdlozisce" type="ecf-evip-integration" pluginVersion="1.0.0"  name="ECFEVIPTask" active="false">
+                <ns2:SEDTaskProperty  key="ecf.evip.url">evip.local</ns2:SEDTaskProperty>
+            </ns2:SEDTask>
+        </ns2:SEDCronJob>
     </ns1:PluginData>
 </ns1:DefaultInitData>

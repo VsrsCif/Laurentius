@@ -79,8 +79,7 @@ public class EOdlozisceTask implements TaskExecutionInterface {
 
     private static final SEDLogger LOG = new SEDLogger(EOdlozisceTask.class);
     public static final String KEY_PAYLOAD_METADATA_NAME = "ecf.payload.metadata.name";
-    private static final String SIGN_ALIAS = "zkp.sign.key.alias";
-    public static final String KEY_SIGNATURE_KEY_ALIAS = "ecf.sign.key.alias";
+    private static final String SIGN_ALIAS = "ecf.sign.key.alias";
 
     @EJB(mappedName = SEDJNDI.JNDI_SEDDAO)
     SEDDaoInterface mDB;
@@ -167,7 +166,7 @@ public class EOdlozisceTask implements TaskExecutionInterface {
                     ValidationResult filingValidationResults = validateFilings(metadataAttachmentName, mshInParts);
                     if (filingValidationResults.getValidationOutputs().stream().anyMatch((ValidationOutput::isError))) {
                         // filing errors
-                        mDB.setStatusToInMail(inMail, SEDInboxMailStatus.ERROR, "Add message to zkp deliver proccess");
+                        mDB.setStatusToInMail(inMail, SEDInboxMailStatus.ERROR, "Add message to ecf deliver proccess");
                     }
                     validationResult.chain(filingValidationResults);
 
@@ -177,7 +176,7 @@ public class EOdlozisceTask implements TaskExecutionInterface {
                 // TODO: TSA
 
                 mDB.setStatusToInMail(inMail, SEDInboxMailStatus.PROCESS,
-                        "Add message to zkp deliver proccess");
+                        "Add message to ecf deliver proccess");
             } catch (StorageException ex) {
                 String msg = String.format(
                         "Error occurred processing mail: '%s'. Err: %s.", inMail.getId(),
@@ -195,7 +194,7 @@ public class EOdlozisceTask implements TaskExecutionInterface {
             }
         });
 
-        sw.append("End zkp plugin task");
+        sw.append("End ecf plugin task");
         return sw.toString();
     }
 
