@@ -4,7 +4,6 @@ package si.vsrs.cif.laurentius.plugin.eodlozisce.tsa;
 import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.DOMException;
@@ -42,24 +41,22 @@ public class TimeStampServiceImpl implements TimeStampService {
 
     private String type = "prod";
 
-    @Value("${service.timestamp.url}")
-    private String serverUrl;
+    private final String serverUrl;
+    private final String signatureNamespace;
+    private final Integer timeout;
+//    private final String splosnaVlogaNamespace;
+//    private final String vlogaMainElement;
 
-    @Value("${service.timestamp.signature-namespace}")
-    private String signatureNamespace;
-
-    @Value("${service.timestamp.timeout}")
-    private Integer timeout;
-
-    @Value("${service.timestamp.vloga-namespace}")
-    private String splosnaVlogaNamespace;
-
-    @Value("${service.timestamp.main-element}")
-    private String vlogaMainElement;
-
+    public TimeStampServiceImpl(final String serverUrl, final String signatureNamespace, final Integer timeout) {
+        this.serverUrl = serverUrl;
+        this.signatureNamespace = signatureNamespace;
+        this.timeout = timeout;
+//        this.splosnaVlogaNamespace = splosnaVlogaNamespace;
+//        this.vlogaMainElement = vlogaMainElement;
+    }
 
     @Override
-    public String timeStampXml(String xml) {
+    public String timeStampXml(String xml) throws TimestampException {
         logger.debug("TimeStampServiceImpl.timeStampXml");
         SetcceConfig conf = new SetcceConfig();
         conf.setTimeout(timeout);
@@ -76,23 +73,18 @@ public class TimeStampServiceImpl implements TimeStampService {
             if (xadesT.getResultCode() != 0) {
                 logger.error("Timestamp service returned error: code: {}; message: {}",
                         xadesT.getResultCode(), xadesT.getErrMsg());
-                // TODO new exception type, as below
-                throw new RuntimeException("");
-//                throw new IntegrationException(IntegrationException.ERRMSG_TIMESTAMP);
+                throw new TimestampException("Timestamp service returned error");
             }
 
-            // TODO ReflectionUtil?
-//            logger.debug("Return value " + ReflectionUtil.writeObjectProperties(xadesT));
             String retVal = new String(xadesT.getXML(), StandardCharsets.UTF_8);
             logger.debug("XML with timestamp " + retVal);
             validateIfXml(retVal);
             return retVal;
-        } catch (Exception ex) {
+        } catch (Exception | TimestampException ex) {
             String message = "TimeStampServiceImpl.timeStampXml - (MalformedURLException)exception occurred " + ex.toString();
             logger.error(message, ex);
             // TODO new exception type again
-            throw new RuntimeException("");
-//            throw new IntegrationException(IntegrationException.ERRMSG_TIMESTAMP, ex);
+            throw new TimestampException(message, ex);
         }
     }
 
@@ -115,7 +107,7 @@ public class TimeStampServiceImpl implements TimeStampService {
     }
 
 
-    private byte[] getSignature(String xmlString) throws SAXException, IOException, TransformerException {
+    private byte[] getSignature(String xmlString) throws SAXException, IOException, TransformerException, TimestampException {
         logger.debug("TimeStampServiceImpl.getSignature");
         DOMParser domParser = new DOMParser();
         StringReader sr = new StringReader(xmlString);
@@ -130,18 +122,21 @@ public class TimeStampServiceImpl implements TimeStampService {
             String message = "Signature tag was not found in xml" + xmlString;
             logger.error(message);
             // TODO new exception type, again
-            throw new RuntimeException("");
-//            throw new VpisnikException(VpisnikException.ERRCODE_TIMESTAMP, message);
+            throw new TimestampException(message);
         }
         String xmlRetString = xmlToString(signature);
         // TODO UTF8Util
-        return UTF8Util.getUTF8Bytes(xmlRetString);
+        return getUTF8Bytes(xmlRetString);
+    }
+
+    private byte[] getUTF8Bytes(final String xmlRetString) {
+        return xmlRetString.getBytes(StandardCharsets.UTF_8);
     }
 
 
     public String xmlToString(Node node) throws TransformerException {
         logger.debug("TimeStampServiceImpl.xmlToString " + node.toString());
-        Source source = null;
+        Source source;
         if (node instanceof Document) {
             Document doc1 = (Document) node;
             source = new DOMSource(doc1.getDocumentElement());
@@ -157,7 +152,7 @@ public class TimeStampServiceImpl implements TimeStampService {
     }
 
 
-    private byte[] getStringXMLWithoutSignature(String xmlString) throws SAXException, IOException, TransformerException {
+    private byte[] getStringXMLWithoutSignature(String xmlString) throws SAXException, IOException, TransformerException, TimestampException {
         logger.debug("TimeStampServiceImpl.getStringXMLWithoutSignature ");
         DOMParser domParser = new DOMParser();
         StringReader sr = new StringReader(xmlString);
@@ -171,15 +166,13 @@ public class TimeStampServiceImpl implements TimeStampService {
             String message = "Signature tag was not found in xml:" + xmlString;
             logger.error(message);
             // TODO new exception type
-            throw new RuntimeException("");
-//            throw new VpisnikException(VpisnikException.ERRCODE_TIMESTAMP, message);
+            throw new TimestampException(message);
         }
         Node parent = signature.getParentNode();
         parent.removeChild(signature);
 
         String xmlRetString = xmlToString(doc);
-        // TODO UTF8Util
-        return UTF8Util.getUTF8Bytes(xmlRetString);
+        return getUTF8Bytes(xmlRetString);
     }
 
     private void removeTimestamp(Document doc) throws DOMException {

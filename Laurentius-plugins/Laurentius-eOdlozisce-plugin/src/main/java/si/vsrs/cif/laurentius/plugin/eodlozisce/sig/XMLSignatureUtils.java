@@ -384,21 +384,13 @@ public class XMLSignatureUtils {
         }
     }
 
-    public static String getNiceLyFormattedXMLDocument(Document doc) throws TransformerException {
+    public static String documentToString(Document doc) throws TransformerException {
         TransformerFactory tf = TransformerFactory.newInstance();
         Transformer transformer = tf.newTransformer();
-//        transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
-//        transformer.setOutputProperty(OutputKeys.METHOD, "xml");
-//        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-//        transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-//        transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
-
         Writer stringWriter = new StringWriter();
         StreamResult streamResult = new StreamResult(stringWriter);
         transformer.transform(new DOMSource(doc), streamResult);
-        String result = stringWriter.toString();
-
-        return result;
+        return stringWriter.toString();
     }
 
     public Document parseDocument(Path documentPath) throws ParserConfigurationException, IOException, SAXException {

@@ -86,6 +86,8 @@ public class EOdlozisceTask implements TaskExecutionInterface {
     public static final String ERROR_REPORT_FILE_NAME = "error-report";
     private static final String SIGN_ALIAS = "ecf.sign.key.alias";
 
+    private static final String TIMESTAMP_SERVICE_URL = "ecf.tsa.url";
+
     @EJB(mappedName = SEDJNDI.JNDI_SEDDAO)
     SEDDaoInterface mDB;
 
@@ -114,7 +116,7 @@ public class EOdlozisceTask implements TaskExecutionInterface {
     }
 
     @Override
-    public String executeTask(Properties properties) throws TaskException {
+    public String executeTask(Properties properties) {
 
         long l = LOG.logStart();
         StringWriter sw = new StringWriter();

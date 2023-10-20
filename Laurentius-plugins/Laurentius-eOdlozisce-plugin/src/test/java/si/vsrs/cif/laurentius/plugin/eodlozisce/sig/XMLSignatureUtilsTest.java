@@ -60,13 +60,13 @@ public class XMLSignatureUtilsTest {
         // VALIDATE DOCUMENT IN WRITTEN FILE
         Document docFromFile = utils.parseDocument(Paths.get("src/test/resources/xml_sig_validation/test1_signed.xml"));
         List<ValidationOutput> validationOutputsFromFile = utils.validateXAdESEnvelopedSignature(docFromFile);
-        System.out.println(validationOutputsFromFile.size());
+//        System.out.println(validationOutputsFromFile.size());
 
-        System.out.println("DOCUMENT FROM MEM:\n");
-        System.out.println(XMLSignatureUtils.getNiceLyFormattedXMLDocument(signedDocument));
-
-        System.out.println("DOCUMENT FROM FILE:\n");
-        System.out.println(XMLSignatureUtils.getNiceLyFormattedXMLDocument(docFromFile));
+//        System.out.println("DOCUMENT FROM MEM:\n");
+//        System.out.println(XMLSignatureUtils.getNiceLyFormattedXMLDocument(signedDocument));
+//
+//        System.out.println("DOCUMENT FROM FILE:\n");
+//        System.out.println(XMLSignatureUtils.getNiceLyFormattedXMLDocument(docFromFile));
 
         Assert.assertTrue(validationOutputs.isEmpty());
         Assert.assertTrue(validationOutputsFromFile.isEmpty());
