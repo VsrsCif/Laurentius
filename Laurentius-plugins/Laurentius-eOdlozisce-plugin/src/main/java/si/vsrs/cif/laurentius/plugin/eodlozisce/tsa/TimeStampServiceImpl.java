@@ -15,8 +15,10 @@ import org.xml.sax.SAXException;
 import si.src.setcce.sign.wsclient.AddXAdESTResult;
 import si.src.setcce.sign.wsclient.SetcceSignServer;
 import si.src.setcce.sign.wsclient.SetcceSignServerServiceLocator;
+import si.src.setcce.sign.wsclient.VerifyResult;
 import si.src.setccesign.SetcceConfig;
 
+import javax.xml.rpc.ServiceException;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -85,6 +87,23 @@ public class TimeStampServiceImpl implements TimeStampService {
             logger.error(message, ex);
             // TODO new exception type again
             throw new TimestampException(message, ex);
+        }
+    }
+
+    public VerifyResult verifyTimestampSignature(String xml) {
+        SetcceConfig conf = new SetcceConfig();
+        conf.setTimeout(timeout);
+        try {
+            conf.setServerUrl(new URL(serverUrl));
+            conf.setType(type);
+
+            SetcceSignServer sign = new SetcceSignServerServiceLocator().getsetcceSignServerPort(conf.getServerUrl());
+            // TODO should signature be in, or not?
+            final byte[] xmlBytesNoSignature = getStringXMLWithoutSignature(xml);
+            final VerifyResult verify = sign.verify(xmlBytesNoSignature);
+            return verify;
+        } catch (ServiceException | TimestampException | IOException | TransformerException | SAXException e) {
+            throw new RuntimeException(e);
         }
     }
 
