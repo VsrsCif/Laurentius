@@ -90,6 +90,7 @@ public class TimeStampServiceImpl implements TimeStampService {
         }
     }
 
+    @Override
     public VerifyResult verifyTimestampSignature(String xml) {
         SetcceConfig conf = new SetcceConfig();
         conf.setTimeout(timeout);
