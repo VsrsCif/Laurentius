@@ -4,8 +4,6 @@ package si.vsrs.cif.laurentius.plugin.eodlozisce.tsa;
 import com.sun.org.apache.xerces.internal.parsers.DOMParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Primary;
-import org.springframework.stereotype.Service;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -32,8 +30,8 @@ import java.io.StringWriter;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
-@Service
-@Primary
+//@Service
+//@Primary
 //@ConditionalOnProperty(value="mock.timestamp", havingValue = "false", matchIfMissing = true)
 public class TimeStampServiceImpl implements TimeStampService {
 

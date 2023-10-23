@@ -1,4 +1,6 @@
 FROM maven:3.8.6-openjdk-8 as build
+RUN mkdir -p /root/.m2 && mkdir /root/.m2/repository
+COPY settings.xml /root/.m2/
 
 WORKDIR /app
 

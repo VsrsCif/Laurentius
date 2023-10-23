@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<settings xmlns="http://maven.apache.org/settings/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+
+  <interactiveMode>true</interactiveMode>
+  <offline>false</offline>
+
+<mirrors>
+	<mirror>
+		<id>digics</id>
+		<mirrorOf>digics-nexus-central</mirrorOf>
+		<url>http://hq.digics.si:55081/repository/maven-public/</url>
+		<blocked>false</blocked>
+	</mirror>
+<!--	<mirror>-->
+<!--            <id>sodisce</id>-->
+<!--            <name>Sodisce nexus public mirror</name>-->
+<!--            <url>https://zunanji-razvoj.sodisce.si/repository/maven-public/</url>-->
+<!--            <mirrorOf>external:*</mirrorOf>-->
+<!--        </mirror>-->
+</mirrors>
+
+<servers>
+	<server>
+		<id>digics-nexus-central</id>
+		<username>dev</username>
+		<password>cde6MKG6nwu*grb!vzd</password>
+	</server>
+
+	<server>
+		<id>digics</id>
+		<username>dev</username>
+		<password>cde6MKG6nwu*grb!vzd</password>
+	</server>
+</servers>
+
+<profiles>
+	<profile>
+		<id>digics</id>
+		<repositories>
+			<repository>
+				<id>digics-nexus-central</id>
+				<name>Digics nexus server central</name>
+				<url>http://hq.digics.si:55081/repository/maven-central/</url>
+				<releases><enabled>true</enabled></releases>
+				<snapshots><enabled>true</enabled></snapshots>
+			</repository>
+		</repositories>
+	</profile>
+
+<!--	<profile>-->
+<!--	    <id>sodisce</id>-->
+<!--	    &lt;!&ndash;Enable snapshots for the built in central repo to direct &ndash;&gt;-->
+<!--	    &lt;!&ndash;all requests to nexus via the mirror &ndash;&gt;-->
+<!--	    <repositories>-->
+<!--		<repository>-->
+<!--		    <id>central</id>-->
+<!--		    <url>http://central</url>-->
+<!--		    <releases><enabled>true</enabled></releases>-->
+<!--		    <snapshots><enabled>true</enabled></snapshots>-->
+<!--		</repository>-->
+<!--	    </repositories>-->
+<!--	    <pluginRepositories>-->
+<!--		<pluginRepository>-->
+<!--		    <id>central</id>-->
+<!--		    <url>http://central</url>-->
+<!--		    <releases><enabled>true</enabled></releases>-->
+<!--		    <snapshots><enabled>true</enabled></snapshots>-->
+<!--		</pluginRepository>-->
+<!--	    </pluginRepositories>-->
+<!--	</profile>-->
+</profiles>
+
+<activeProfiles>
+	<activeProfile>digics</activeProfile>
+<!--	<activeProfile>sodisce</activeProfile>-->
+</activeProfiles>
+</settings>
