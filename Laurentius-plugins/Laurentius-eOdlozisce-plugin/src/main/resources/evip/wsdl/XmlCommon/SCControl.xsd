@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema  xmlns:scc="ws.dc.cif.vsrs.si/SCControl" 
+            targetNamespace="ws.dc.cif.vsrs.si/SCControl" 
+            xmlns:xs="http://www.w3.org/2001/XMLSchema"   >    
+    <xs:complexType name="SCControl">
+      <xs:attribute name="debug" type="xs:integer" use="optional"/>
+      <xs:attribute name="nestedSfCall" type="xs:boolean" use="optional"/>
+   </xs:complexType>
+</xs:schema>

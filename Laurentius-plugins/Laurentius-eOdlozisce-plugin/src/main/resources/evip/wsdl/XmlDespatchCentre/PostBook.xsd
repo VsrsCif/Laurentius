@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:pb="ws.dc.cif.vsrs.si/PostBook" targetNamespace="ws.dc.cif.vsrs.si/PostBook">
+	<xs:element name="PostBook" type="pb:PostBook"/>
+	<xs:complexType name="PostBook">
+		<xs:annotation>
+			<xs:documentation>Poštna knjiga </xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="knjigaId" type="xs:int" use="required">
+			<xs:annotation>
+				<xs:documentation>EVIP id knjige</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="naziv" use="required">
+			<xs:annotation>
+				<xs:documentation>Naziv knjige</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="40"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="opis" >
+			<xs:annotation>
+				<xs:documentation>Opis knjige</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="4000"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="navrSif"  use="required">
+			<xs:annotation>
+				<xs:documentation>Nacin vrocanja/ posiljanja posiljk</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:length value="2"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="sodiSif" use="required">
+			<xs:annotation>
+				<xs:documentation>Sodisce kateremu knjiga pripada</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:length value="3"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="vlozId" type="xs:int" use="required">
+			<xs:annotation>
+				<xs:documentation>Vlozisce, kateremu knjiga pripada</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="aplikSif" use="required">
+			<xs:annotation>
+				<xs:documentation>Sifra aplikacije, ki uporablja to knjigo. V kolikor je rezultat '*', je dostopna vsem aplikacijam</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="70"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+</xs:schema>

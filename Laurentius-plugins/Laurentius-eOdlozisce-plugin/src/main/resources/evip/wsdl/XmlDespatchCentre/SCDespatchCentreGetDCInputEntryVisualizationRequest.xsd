@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:tns="ws.dc.cif.vsrs.si" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:scc="ws.dc.cif.vsrs.si/SCControl"  xmlns:dce="ws.dc.cif.vsrs.si/DespatchCentreInputEntry"  targetNamespace="ws.dc.cif.vsrs.si">
+	<xs:import namespace="ws.dc.cif.vsrs.si/SCControl" schemaLocation="../XmlCommon/SCControl.xsd"/>
+	<xs:import namespace="ws.dc.cif.vsrs.si/DespatchCentreInputEntry" schemaLocation="DespatchCentreInputEntry.xsd"/>
+	<xs:element name="SCDespatchCentreGetDCInputEntryVisualizationRequest">
+		<xs:annotation>
+			<xs:documentation>Servis vrača "vizualizacijo" dohodnega zaznamka. V premeru, da je podan DespatchCentreInputEntry se dohodni zaznamek generira iz tega objekta, sicer 
+				se objekt DespatchCentreInputEntry pridobi iz "baze EVIP" na podlagi podatka  dohodniZaznamekId  ter se nato zgenerira vizualizacija dohodnega zaznamka.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="SCControl" type="scc:SCControl"/>
+				<xs:element name="Data">
+					<xs:complexType>
+						<xs:sequence>
+                                                        <xs:element name="MetaData" type="dce:MetaData" minOccurs="0" maxOccurs="unbounded"/>
+							<xs:element ref="dce:DespatchCentreInputEntry" minOccurs="0" maxOccurs="1"/>
+						</xs:sequence>
+						<xs:attribute name="dohodniZaznamekId" type="xs:integer" use="required">
+							<xs:annotation>
+								<xs:documentation>Id dohodne pošiljke v EVIP-u.</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attribute name="aplikSif" use="required">
+							<xs:annotation>
+								<xs:documentation>Sifra aplikacije, ki je "lastnica" dohodne pošiljke</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="70"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+                                                <xs:attribute name="sif" use="optional">
+							<xs:annotation>
+								<xs:documentation>Sifra vizualizacije. </xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="70"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+       
+</xs:schema>

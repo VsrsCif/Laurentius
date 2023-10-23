@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 (http://www.altova.com) by XMLSpy 2007 Professional Ed., Installed for 5 users (with SMP from 2007-02-06 to 2008-02-07) (CIF VSRS) -->
+<xs:schema xmlns:tns="ws.dc.cif.vsrs.si" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:scc="ws.dc.cif.vsrs.si/SCControl" targetNamespace="ws.dc.cif.vsrs.si">
+	<xs:import namespace="ws.dc.cif.vsrs.si/SCControl" schemaLocation="../XmlCommon/SCControl.xsd"/>
+	<xs:element name="SCDespatchCentreModifyDCInputEntryRequest">
+		<xs:annotation>
+			<xs:documentation>Request za spremianje statusa dohodne pošilje in podatkov na dohodni pošti</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="SCControl" type="scc:SCControl" minOccurs="0"/>
+				<xs:element name="Data">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="ChangeData" minOccurs="0">
+								<xs:complexType>
+									<xs:attribute name="sodiSif">
+										<xs:annotation>
+											<xs:documentation>Spremeba sodisca</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:token">
+												<xs:maxLength value="3"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:attribute>
+									<xs:attribute name="oddelek">
+										<xs:annotation>
+											<xs:documentation>spremeba oddelka</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:token">
+												<xs:maxLength value="70"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:attribute>
+									<xs:attribute name="dodatnaOznakaVpisnika" use="optional">
+										<xs:annotation>
+											<xs:documentation>Dodatna oznaka vpisnika (knjiga)</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:token">
+												<xs:maxLength value="10"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:attribute>
+									<xs:attribute name="oprStLeto" type="xs:integer" use="optional">
+										<xs:annotation>
+											<xs:documentation>Opravilna številka -> leto</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+									<xs:attribute name="oprStStevilka" type="xs:integer" use="optional">
+										<xs:annotation>
+											<xs:documentation>Opravilna številka -> zaporedna stevilka</xs:documentation>
+										</xs:annotation>
+									</xs:attribute>
+									<xs:attribute name="vpisnikKratica" use="optional">
+										<xs:annotation>
+											<xs:documentation>Vpisnik kratica - sestavni del opravilne številke, ki se izpiše na kuverto</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:maxLength value="10"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:attribute>
+									<xs:attribute name="vpisnik">
+										<xs:annotation>
+											<xs:documentation>Sifra vpisnika, kjer je pošiljka nastala.</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:token">
+												<xs:maxLength value="3"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:attribute>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+						<xs:attribute name="dohodniZaznamekId" type="xs:integer" use="required">
+							<xs:annotation>
+								<xs:documentation>Id posiljke kateri vrocilnica pripada</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attribute name="aplikSif" use="required">
+							<xs:annotation>
+								<xs:documentation>Sifra aplikacije, kjer je nastala soremeba statusa</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="70"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="action" use="required">
+							<xs:annotation>
+								<xs:documentation>Akcije:                         
+									  - ACCEPT: pošiljka se označi kot uspešno uvožena v aplikacijo -> status pošiljke se spremni v 'Preneseno'
+									  - LOCK:     akcija pošiljko, ki še niso prevzete se nastavi v status  "Prevzemanje" Takšne pošiljke se ne prikazujejo več v seznamu dohodne pošte hkrat pa jih je še mogoče zavrniti, izbrisati ali prevzeti. 
+                                      - REJECT: Pošiljka je vrnjena v vložišče z namenom da jo preusmerijo na drugi oddelek/vpisnik ali da popravijo skenograme. V tem primeru je atribu rejectReason obvezen.
+                                      - DELETE: Pošiljka je izbrisana dobi status Stornirano: Spam     
+                                      - CHANGEDATA: namen je popravljati podatke pošiljke</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="70"/>
+									<xs:enumeration value="ACCEPT"/>
+									<xs:enumeration value="DELETE"/>
+									<xs:enumeration value="REJECT"/>
+									<xs:enumeration value="LOCK"/>
+									<xs:enumeration value="CHANGEDATA"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="rejectReason" type="xs:string">
+							<xs:annotation>
+								<xs:documentation>Razlog zavračanja dohodne pošte - Navodila za vložišče. V primeru akcije REJECT je ta podatek obvezen </xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attribute name="kadrSt" use="required">
+							<xs:annotation>
+								<xs:documentation>Kadrovska številka osebe, ki je klicala ta servis</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:length value="7"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

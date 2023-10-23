@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 (http://www.altova.com) by XMLSpy 2007 Professional Ed., Installed for 5 users (with SMP from 2007-02-06 to 2008-02-07) (CIF VSRS) -->
+<xs:schema xmlns:dced="ws.dc.cif.vsrs.si/DespatchCentreInputEntryDocument" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:dad="ws.dc.cif.vsrs.si/DeliveryAdviceData" targetNamespace="ws.dc.cif.vsrs.si/DespatchCentreInputEntryDocument">
+    <xs:import namespace="ws.dc.cif.vsrs.si/DeliveryAdviceData" schemaLocation="DeliveryAdviceData.xsd"/>
+    <xs:element name="DespatchCentreInputEntryDocument" type="dced:DespatchCentreInputEntryDocument"/>
+    <xs:complexType name="DespatchCentreInputEntryDocument">
+        <xs:annotation>
+            <xs:documentation>Dokument dohodne pošiljke</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="DeliveryAdviceData" type="dad:DeliveryAdviceData" minOccurs="0"/>
+            <xs:element name="Bin" type="xs:base64Binary" minOccurs="0"/>			
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:integer">
+            <xs:annotation>
+                <xs:documentation>Id dokumenta v EVIP. Pri dodajanju pošiljke mora biti ta atribut prazen.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="dohodniZaznamekId" type="xs:integer">
+            <xs:annotation>
+                <xs:documentation>Id pošiljke v EVIP. Pri dodajanju pošiljke mora biti ta atribut prazen.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="vrstniRed" type="xs:int"/>
+        <xs:attribute name="zapStPriloge" type="xs:int"/>
+        <xs:attribute name="prilogaTip" type="xs:string"/>
+        
+        <xs:attribute name="oznakaOsnDokumenta">        
+            <xs:annotation>
+                <xs:documentation>Enolična oznaka osnovnega dokumenta v obliki črtne kode(nalepke) v pošiljki. Osnovni dokument v pošiljki je glavni dokument - ostali dokumenti so priloge  </xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:maxLength value="30"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="oznaka" >        
+            <xs:annotation>
+                <xs:documentation>Enolična oznaka dokumenta v obliki črtne kode( nalepke), s katero se pred digitalizacijo označi papirne dokumente. Nalepka omogoča sledljivost papirnega dokumenta</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:maxLength value="30"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="dokumentTip" use="optional">
+            <xs:annotation>
+                <xs:documentation>Tip dokumenta kot so: predlog=1, dopolnitevPredloga=2, umikVCeloti=3, delniUmik=4, ugovor=5,  odgovorNaUgovor=6, pritozba=7, vrocilnica=8, nevrocenaPosiljka=9, sklepVisjegaSodisca=10, neznano=11,...
+                    Tip pošiljke mora biti/je enak tipu dokumenta osnovnega dokumenta</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:maxLength value="10"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="status" use="optional">
+            <xs:annotation>
+                <xs:documentation>Status dokumenta</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:maxLength value="20"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="dokumentPot">
+            <xs:annotation>
+                <xs:documentation>Pot dokumenta v aplikaciji. </xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:maxLength value="1024"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="dokumentOpis">
+            <xs:annotation>
+                <xs:documentation>Opis dokumenta</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:maxLength value="4000"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="aplikRefIdPisanje" type="xs:string">
+            <xs:annotation>
+                <xs:documentation>enolična oznaka pisanja: CMIS id</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="datoteka">
+            <xs:annotation>
+                <xs:documentation>Začasna datoteka v vloziscu</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:maxLength value="1024"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="mimeTip">
+            <xs:annotation>
+                <xs:documentation>Format zapisa datoteke (mime: application/pdf, image/png,...)</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:maxLength value="120"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="kadrStSkeniral" use="optional">
+            <xs:annotation>
+                <xs:documentation>Kadrovska številka osebe, ki je pošiljko skenirala.</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:length value="7"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+
+        <xs:attribute name="kadrStValidiral" use="optional">
+            <xs:annotation>
+                <xs:documentation>Kadrovska številka osebe, ki je pošiljko validirala.</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:length value="7"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="steviloStrani" type="xs:integer" use="optional">
+            <xs:annotation>
+                <xs:documentation>Stevilo strani. V primeru PDF datoteke. Ob oddaji pošiljke v EVIP -> EVIP prebere st strani in jih zapiše v podatkovni model. V ostalih formatih se zapiše vrednost -1</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="velikostDatoteke" type="xs:integer" use="optional">
+            <xs:annotation>
+                <xs:documentation>Velikost datoteke v byte.  Ob oddaji pošiljke v EVIP -> EVIP zapiše velikost datoteke v podatkovni model</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="MD5">
+            <xs:annotation>
+                <xs:documentation>Zgostitvena vrednost MD5 datoteke.  Ob oddaji pošiljke v EVIP -> EVIP izračuna zgostitveno vrednost (MD5) datoteke in jo shrani v podatkovni model</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:string" use="optional">
+                    <xs:maxLength value="32"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:complexType>
+</xs:schema>

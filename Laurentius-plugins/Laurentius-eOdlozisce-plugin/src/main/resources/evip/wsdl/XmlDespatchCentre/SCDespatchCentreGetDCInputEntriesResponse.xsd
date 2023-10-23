@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 (http://www.altova.com) by XMLSpy 2007 Professional Ed., Installed for 5 users (with SMP from 2007-02-06 to 2008-02-07) (CIF VSRS) -->
+<xs:schema xmlns:tns="ws.dc.cif.vsrs.si" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:dce="ws.dc.cif.vsrs.si/DespatchCentreInputEntry" xmlns:scr="ws.dc.cif.vsrs.si/SCRControl" targetNamespace="ws.dc.cif.vsrs.si">
+	<xs:import namespace="ws.dc.cif.vsrs.si/SCRControl" schemaLocation="../XmlCommon/SCRControl.xsd"/>
+	  <xs:import namespace ="ws.dc.cif.vsrs.si/DespatchCentreInputEntry" schemaLocation="DespatchCentreInputEntry.xsd"/>
+	<xs:element name="SCDespatchCentreGetDCInputEntriesResponse">
+		<xs:annotation>
+			<xs:documentation/>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="SCRControl" type="scr:SCRControl"/>
+				<xs:element name="RData">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="dce:DespatchCentreInputEntry" minOccurs="0" maxOccurs="unbounded"/>
+						</xs:sequence>
+						<xs:attribute name="dceCount" type="xs:int" use="required">
+							<xs:annotation>
+								<xs:documentation>Stevil vseh rezultatov, ki ustrezajo iskanim pogojem</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attribute name="startIndex" type="xs:int" default="-1">
+							<xs:annotation>
+								<xs:documentation>Stevilka prve vrstice v vrnjenem rezultatu. </xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attribute name="resultCount" type="xs:int" default="-1">
+							<xs:annotation>
+								<xs:documentation>Stevilo vrstic</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attribute name="sortBy" type="xs:token" default="id">
+							<xs:annotation>
+								<xs:documentation>Lastnost po kateri so vrnjeni rezultati urejeni.</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attribute name="sortOrder" type="xs:token" default="DESC">
+							<xs:annotation>
+								<xs:documentation>Kako so urejeni vrnjeni rezultati:Narajscajoce/padajoce</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

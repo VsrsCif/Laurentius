@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<definitions  name="EVlozisceUtilsService" 
+              targetNamespace="ws.dc.cif.vsrs.si" 
+              xmlns:tns="ws.dc.cif.vsrs.si"
+              xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+              xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+              xmlns="http://schemas.xmlsoap.org/wsdl/" 
+              xmlns:ns="http://schemas.xmlsoap.org/soap/encoding/" >
+    <types>
+        <xsd:schema>
+            <xsd:import namespace="ws.dc.cif.vsrs.si" schemaLocation="XmlDespatchCentreUtils/SCDcCUtilsAddDCInputEntryResponse.xsd"/>
+            <xsd:import namespace="ws.dc.cif.vsrs.si" schemaLocation="XmlDespatchCentreUtils/SCDcCUtilsAddDCInputEntryRequest.xsd"/>
+        </xsd:schema>
+    </types>
+    <message name="SCDcCUtilsAddDCInputEntryResponse">
+        <part name="SCDcCUtilsAddDCInputEntryResponse" element="tns:SCDcCUtilsAddDCInputEntryResponse"/>
+    </message>
+    <message name="SCDcCUtilsAddDCInputEntryRequest">
+        <part name="SCDcCUtilsAddDCInputEntryRequest" element="tns:SCDcCUtilsAddDCInputEntryRequest"/>
+    </message>
+ 
+
+    <portType name="EVlozisceUtilsWS">
+        <operation name="addDCInputEntry">
+            <input message="tns:SCDcCUtilsAddDCInputEntryRequest"/>
+            <output message="tns:SCDcCUtilsAddDCInputEntryResponse"/>
+        </operation>
+
+    </portType>
+    <binding name="EVlozisceUtilsWSPortBinding" type="tns:EVlozisceUtilsWS">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="addDCInputEntry">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+    </binding>
+    <service name="EVlozisceUtilsWS">
+        <port name="EVlozisceUtilsWSPort" binding="tns:EVlozisceUtilsWSPortBinding">
+            <soap:address location="http://127.0.0.1:8080/EVlozisceWS/EVlozisceUtilsWS"/>
+        </port>
+    </service>
+</definitions>

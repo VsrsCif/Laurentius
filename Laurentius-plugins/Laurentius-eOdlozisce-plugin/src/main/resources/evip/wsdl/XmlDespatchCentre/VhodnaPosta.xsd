@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 (http://www.altova.com) by XMLSpy 2007 Professional Ed., Installed for 5 users (with SMP from 2007-02-06 to 2008-02-07) (CIF VSRS) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="ws.dc.cif.vsrs.si/VhodnaPosta" targetNamespace="ws.dc.cif.vsrs.si/VhodnaPosta">
+	<xs:element name="Napaka">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="PoljeObrazca" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attribute name="oznakaNapake" type="xs:token" use="required"/>
+			<xs:attribute name="opisNapake" type="xs:string" use="required"/>
+			<xs:attribute name="kadStevilka" type="xs:string" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="PoljeObrazca">
+		<xs:annotation>
+			<xs:documentation>Pot do polja v obrazcu na katerega se nanaša preverjanje</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attribute name="path" type="xs:string" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Kontrole">
+		<xs:annotation>
+			<xs:documentation>Rezultat kontrol (Plavzibilnost)</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Napaka" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attribute name="preverjen" type="xs:boolean" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="DohodniZaznamek">
+		<xs:annotation>
+			<xs:documentation>Sodni dohodni zaznamek + idPladnja</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attribute name="dtSprejema" type="xs:dateTime" use="required"/>
+			<xs:attribute name="dtPosiljanja" type="xs:date" use="optional"/>
+			<xs:attribute name="sifSodisce" type="xs:token" use="required">
+				<xs:annotation>
+					<xs:documentation>sodišče, ki je natisnilo dohodni zaznamek</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="sifOddelek" type="xs:token" use="required"/>
+			<xs:attribute name="nacinDostave" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:token">
+						<xs:enumeration value="prejeto"/>
+						<xs:enumeration value="neposredno"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="nacinPosiljanja" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:token">
+						<xs:enumeration value="priporoceno"/>
+						<xs:enumeration value="navadno"/>
+						<xs:enumeration value="elektronsko"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="steviloIzvodov" type="xs:integer" use="required"/>
+			<xs:attribute name="steviloPrilog" type="xs:integer" use="required"/>
+			<xs:attribute name="opisPosiljatelja" type="xs:string" use="optional"/>
+			<xs:attribute name="idPladnja" type="xs:string" use="optional"/>
+			<xs:attribute name="delovodnaStevilka" type="xs:string" use="optional"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="VhodnoPisanje">
+		<xs:annotation>
+			<xs:documentation>Element vsebuje podatke o opravilni številki zadeve (če obstaja) in delovodni številki</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attribute name="oznakaVpisnika" type="xs:string" use="optional">
+				<xs:annotation>
+					<xs:documentation>Oznaka vpisnika vhodnega pisanja - VL, I, Ig, In, Z, R</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="zadevaLeto" type="xs:integer" use="optional"/>
+			<xs:attribute name="zadevaStevilka" type="xs:integer" use="optional"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Vrocilnica">
+		<xs:annotation>
+			<xs:documentation>Element opisuje vročilnice</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attribute name="rStevilka" type="xs:nonNegativeInteger" use="required">
+				<xs:annotation>
+					<xs:documentation>R številka pošiljke.</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="datumVrocitve" type="xs:date" use="required">
+				<xs:annotation>
+					<xs:documentation>Datum vročitve. Pri nevročenih pošiljkah je to datum fiktivne vročitve.</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+
+			<xs:attribute name="vrocena" type="xs:boolean" use="required">
+				<xs:annotation>
+					<xs:documentation>Ali je bila pošiljka vročena. Razlog nevročitve opiše zakaj ni bila vročena.</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="razlogNevrocitve" type="xs:token" use="optional"/>
+                        <xs:attribute name="id" type="xs:int"  />
+                        <xs:attribute name="tipVrocitve" type="xs:int"  />
+                        <xs:attribute name="datumPrvegaObvestila" type="xs:date" use="required">
+				<xs:annotation>
+					<xs:documentation>Datum prvega obvestila strani o vročilnici.</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="VhodnaPosiljka">
+		<xs:annotation>
+			<xs:documentation>Root element - tip pošiljke</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:all>
+				<xs:element ref="DohodniZaznamek"/>
+				<xs:element ref="VhodnoPisanje"/>
+				<xs:element ref="PlaciloTakse"/>
+				<xs:element ref="Vrocilnica" minOccurs="0"/>
+				<xs:element ref="DelniUmik" minOccurs="0"/>
+				<xs:element ref="Kontrole" minOccurs="0"/>
+			</xs:all>
+			<xs:attribute name="tipPosiljke" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:token"/>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="verzijaSheme" type="xs:string" use="optional" default="1.4"/>
+			<xs:attribute name="produkcija" type="xs:boolean" use="required"/>
+                        <xs:attribute name="id" type="xs:int" use="required" />
+                        <xs:attribute name="izhodnaPosiljkaId" type="xs:int" use="optional" />
+                        <xs:attribute name="posiljateljId"  type="xs:string" use="optional" />
+                        
+                        <xs:attribute name="kadrSt" type="xs:string" use="required"/>
+                        <xs:attribute name="aplikSif">
+                            <xs:annotation>
+                                <xs:documentation>EVIP Sifra aplikacije,ki je lastnica dokumenta </xs:documentation>
+                            </xs:annotation>
+                            <xs:simpleType>
+                                <xs:restriction base="xs:token">
+                                    <xs:maxLength value="70"/>
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:attribute>
+
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="PlaciloTakse">
+		<xs:annotation>
+			<xs:documentation>Element, ki opisuje plačilo takse</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attribute name="predlogZaOprostitev" type="xs:boolean" use="required">
+				<xs:annotation>
+					<xs:documentation>Ali je oproščen takse</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="placana" type="xs:boolean" use="required">
+				<xs:annotation>
+					<xs:documentation>ali je taksa plačana</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="datumPlacila" type="xs:date" use="optional"/>
+			<xs:attribute name="znesekPlacila" type="xs:decimal" use="optional"/>
+			<xs:attribute name="valuta" type="xs:token" use="optional"/>
+			<xs:attribute name="oproscenPlacilaPoZakonu" type="xs:boolean" use="required">
+				<xs:annotation>
+					<xs:documentation>Preverjanje plačila v primeru zakonskih upravičencev nastavi ta atribut na true. V vseh ostalih primerih je ta atribut false.</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="placanaSKoleki" type="xs:boolean" use="optional">
+				<xs:annotation>
+					<xs:documentation>True, če je bila taksa plačana s koleki.</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="DelniUmik">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Sredstva" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Sredstvo" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:attribute name="oznakaSredstva">
+										<xs:simpleType>
+											<xs:restriction base="xs:token">
+												<xs:enumeration value="Premicnina"/>
+												<xs:enumeration value="StalniDenarniPrejemki"/>
+												<xs:enumeration value="DenarnaSredstvaOPP"/>
+												<xs:enumeration value="DrugeDenarneTerjatve"/>
+												<xs:enumeration value="NepremicnineZK"/>
+												<xs:enumeration value="NepremicnineNiZK"/>
+												<xs:enumeration value="StavbnePravice"/>
+												<xs:enumeration value="DeleziDruzbenika"/>
+												<xs:enumeration value="VrednostniPapirji"/>
+												<xs:enumeration value="DrugePremMatPravice"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:attribute>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="DelnaPlacila" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="DelnoPlacilo" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:attribute name="dtPlacila" type="xs:date" use="required"/>
+									<xs:attribute name="znesek" type="xs:decimal" use="required"/>
+									<xs:attribute name="valuta" type="xs:token" use="required"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

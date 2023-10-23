@@ -1,0 +1,501 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="xs3p.xsl"?>
+<xs:schema xmlns:dce="ws.dc.cif.vsrs.si/DespatchCentreEntry" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:dced="ws.dc.cif.vsrs.si/DespatchCentreEntryDocument" targetNamespace="ws.dc.cif.vsrs.si/DespatchCentreEntry">
+	<xs:import namespace="ws.dc.cif.vsrs.si/DespatchCentreEntryDocument" schemaLocation="DespatchCentreEntryDocument.xsd"/>
+	<xs:element name="DespatchCentreEntry" type="dce:DespatchCentreEntry"/>
+	<xs:complexType name="DespatchCentreEntry">
+		<xs:sequence>
+			<xs:element name="MetaData" type="dce:MetaData" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="DespatchCentreEntryDocument" type="dced:DespatchCentreEntryDocument" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:int">
+			<xs:annotation>
+				<xs:documentation>Id pošiljke v EVIP. Pri dodajanju pošiljke mora biti ta atribut prazen</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="encid">
+			<xs:annotation>
+				<xs:documentation>enoličen id pošiljke namenjen tiskanju na kuverte</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="30"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="knjigaId" type="xs:int" use="required">
+			<xs:annotation>
+				<xs:documentation>Id knjige. "Knjiga" določa način pošiljanja oz. tip kuverte. Id knjig za sodišče in aplikacijo vrača ustrezen servis EVIP (Glej specifikacije).
+                </xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="knjigaNaziv">
+			<xs:annotation>
+				<xs:documentation>Naziv knjige, samo za izdelavo kuvert (se ne zapisuje v bazo).</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="40"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="aplikSif" use="required">
+			<xs:annotation>
+				<xs:documentation>Sifra aplikacije, kjer je pošiljka nastala. Sifro aplikacije določi CIF</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="70"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="paketId" type="xs:int">
+			<xs:annotation>
+				<xs:documentation>Če se pošiljka pošilja v paketu, je to ID paketa. Pri izdelavi pošiljke mora biti ta atribut prazen!</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="posiljkaTip" use="optional">
+			<xs:annotation>
+				<xs:documentation>Tip pošiljke (interni šifrant dokumentov), kot so: predlog=1, dopolnitevPredloga=2, umikVCeloti=3, delniUmik=4, ugovor=5,  odgovorNaUgovor=6, pritozba=7, vrocilnica=8, nevrocenaPosiljka=9, sklepVisjegaSodisca=10, neznano=11,...
+                    Pri "internem vročanju" se ta atribut prepiše v Tip pošiljke dohodne pošte.</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="10"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="vlozIdStroskovno" type="xs:int" use="required">
+			<xs:annotation>
+				<xs:documentation>Id vložišča kjer se vodijo stroški pošiljanja. Navadno je to vložišče kateri pripada, knjiga ID. Seznam id-jev vrača ustrezen servis EVIP.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="aplikRefIdZadeva">
+			<xs:annotation>
+				<xs:documentation>ID/sifra zadeve iz aplikacije, kjer je pošiljka nastala.</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="1024"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="aplikRefUdelezenec">
+			<xs:annotation>
+				<xs:documentation>Referečni id udeleženca v izvorni aplikaciji.</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="10"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="aplikRefPosiljke">
+			<xs:annotation>
+				<xs:documentation>Referečni id pošiljke v izvorni aplikaciji. ID mora biti enolična za aplikacijo (aplikSif).
+				V primeru, da je aplikRefPosiljke podan in je bila takšna pošiljka že uspešno oddana v EVIP, vrne rezultat ID prve uspešno oddane pošiljke.	
+			    Namen aplikRefPosiljke je preprečevanje ponovno pošiljanje pošiljk, ki so že bile odpremljene. </xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="1024"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="aplikIdPd">
+			<xs:annotation>
+				<xs:documentation>Id procesnega dejanja, ki je zgenerirala pošiljko. Podatek mora bit v povezavi z aplikSif enoznačen, sicer servis za poizvedovanje  vrnjenih pošiljk vrača napačne rezultate!</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="60"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="aplikPdSif">
+			<xs:annotation>
+				<xs:documentation>Sifra tipa/vrste procesnega dejanja, ki je zgenerirala pošiljko.</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="20"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="opravilnaSt">
+			<xs:annotation>
+				<xs:documentation>Opravilna številka zadeve za katero je bila pošiljka narejena. opravilna številka je brez vpisnika: npr: 1121/2010, 231321/2011.,</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="20"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="sodiSif" use="required">
+			<xs:annotation>
+				<xs:documentation>Sifra sodisca kjer je posiljka nastala.</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:length value="3"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="rStev" type="xs:token">
+			<xs:annotation>
+				<xs:documentation>Sprejemna stevilka pošiljke. petmestni del "r" številke. </xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="rStevPredpona" type="xs:token">
+			<xs:annotation>
+				<xs:documentation>Sprejemna stevilka pošiljke. Predpona: RO, RR, RN.... </xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="vpisnik">
+			<xs:annotation>
+				<xs:documentation>Sifra vpisnika, kjer je pošiljka nastala.</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="3"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="kadrSt" use="required">
+			<xs:annotation>
+				<xs:documentation>Kadrovska številka osebe, ki je poslala pošiljko v poštno knjigo</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:length value="7"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="kadrStPripravil" use="required">
+			<xs:annotation>
+				<xs:documentation>Kadrovska številka osebe, ki je pripravila pošiljko.</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="7"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="vsebina" use="required">
+			<xs:annotation>
+				<xs:documentation>Opis vsebine, ki se natisne na kuverto, oz. v naslov (subject) pri posiljanju v varni elektronski predal.</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="4000"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="posiljkaStatus">
+			<xs:annotation>
+				<xs:documentation>Trenutna šifra statusa pošiljke.  Podatek mora biti prazen pri izdelavi pošiljke.</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="20"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="posiljkaNapakaSif" type="xs:int">
+			<xs:annotation>
+				<xs:documentation>V kolikor se je pri pošiljanju dogodila napaka, se v ta atribut izpiše trenunta šifra napake. Če napake ni je vrednost null.  Podatek mora biti prazen pri izdelavi pošiljke.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="posiljkaNapakaOpis">
+			<xs:annotation>
+				<xs:documentation>V kolikor se je pri pošiljanju dogodila napaka, se v ta atribut izpiše opis napake. Če napake ni je vrednost null. Podatek mora biti prazen pri izdelavi pošiljke.</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="4000"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="steviloStrani" type="xs:int">
+			<xs:annotation>
+				<xs:documentation>Skupni število vseh strani v pošiljki.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="steviloDokumentov" type="xs:int">
+			<xs:annotation>
+				<xs:documentation>Število vseh dokumentov v pošiljki</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="datNastanka" type="xs:date">
+			<xs:annotation>
+				<xs:documentation>Datum "dostave" pošiljke v EVIP. Podatek mora biti prazen pri izdelavi pošiljke.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="datOdprave" type="xs:date">
+			<xs:annotation>
+				<xs:documentation>Datum "odprave" iz sodišča  na pošto, v varni el. predal. Podatek mora biti prazen pri izdelavi pošiljke.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="datVrocitve" type="xs:date">
+			<xs:annotation>
+				<xs:documentation>Datum Vrocitve" pošiljke. Podatek mora biti prazen pri izdelavi pošiljke.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="naslovnikNaziv" use="required">
+			<xs:annotation>
+				<xs:documentation>Naziv naslovnika pošiljke</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="200"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="naslovnikNaziv2">
+			<xs:annotation>
+				<xs:documentation>Naziv naslovnika pošiljke – ki se izpiše pod naziv</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="100"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="naslovnikNaslov">
+			<xs:annotation>
+				<xs:documentation>Naslov naslovnika pošiljke: ulica in hišna številka.</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="100"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="naslovnikPostStev">
+			<xs:annotation>
+				<xs:documentation>Poštna številka prejemnika</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="10"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="naslovnikKraj">
+			<xs:annotation>
+				<xs:documentation>Kraj prejemnika</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="60"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="naslovnikImDrzSif">
+			<xs:annotation>
+				<xs:documentation>Ime države prejemnika – ISO 3166 alpha-3</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:length value="3"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="posiljateljNaziv" use="required">
+			<xs:annotation>
+				<xs:documentation>Pošiljatelj naziv</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="200"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="posiljateljNaziv2" use="required">
+			<xs:annotation>
+				<xs:documentation>Pošiljatelj naziv 2</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="100"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="posiljateljNaslov" use="required">
+			<xs:annotation>
+				<xs:documentation>Naslov pošiljatelja ulica in hišna številka. </xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="100"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="posiljateljPostStev" use="required">
+			<xs:annotation>
+				<xs:documentation>Pošt štev. pošiljatelja pošiljatelja</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="10"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="posiljateljKraj" use="required">
+			<xs:annotation>
+				<xs:documentation>Pošiljatelj kraj</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="60"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="posiljateljImSrzSif" use="required">
+			<xs:annotation>
+				<xs:documentation>Koda države pošiljatelja– ISO 3166 alpha-3</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:length value="3"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="datotekavPaketu" type="xs:string">
+			<xs:annotation>
+				<xs:documentation>Ime datoteke v paketu.Podatek mora biti prazen pri izdelavi pošiljke.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="koledar" type="xs:date">
+			<xs:annotation>
+				<xs:documentation>Koledar –  datumVpisnik kratica, ki se izpiše na ovojnic</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="kontrolnaStev" type="xs:int">
+			<xs:annotation>
+				<xs:documentation>Kontrolna stevilka - Sestavni del r-stevilke. Podatek mora biti prazen pri izdelavi pošiljke.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="vpisnikKratica">
+			<xs:annotation>
+				<xs:documentation>Vpisnik kratica - sestavni del opravilne številke, ki se izpiše na kuverto</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="15"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="sprejPostaSif">
+			<xs:annotation>
+				<xs:documentation>Sifra sprejemne pošte pošiljke. (3 znake!) Podatek mora biti prazen pri izdelavi pošiljke.</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:length value="3"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="sprejPostaNaziv">
+			<xs:annotation>
+				<xs:documentation>Naziv sprejemne pošte pošiljke. Podatek mora biti prazen pri izdelavi pošiljke.</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="15"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="sprejPostaStev">
+			<xs:annotation>
+				<xs:documentation>Številka sprejemne pošte. (ZIP) Podatek mora biti prazen pri izdelavi pošiljke.</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:length value="4"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="znesekPostnine" type="xs:float">
+			<xs:annotation>
+				<xs:documentation>Znesek poštnine. Podatek mora biti prazen pri izdelavi pošiljke.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="email">
+			<xs:annotation>
+				<xs:documentation>Elektronski naslov (email oz. varni elentronski predal!). Podatek je obvezen v kolikor se pošiljka pošilja v varni elektronski predal oz. preko elektronske pošte</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="2048"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="emailCC">
+			<xs:annotation>
+				<xs:documentation>Elektronski naslov (e-mail) naslovnikom, ki se pošta pošilja v vednost. Atribut se upošteva samo pri pošiljah, ki se pošiljako preko "e-maila"</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="2048"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="fax">
+			<xs:annotation>
+				<xs:documentation>Faks številka. Podatek je obvezen v kolikor se pošiljka pošilja preko faks-a</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="20"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="dodatnaOznaka">
+			<xs:annotation>
+				<xs:documentation>Dodatna oznaka posiljke namenjena lazjemu sortitranju papirnih povratnic: Navadno je to kadrSt osebe oz. zadnje štiri številke, ki dela na zadevi ali priimek sodnika.</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="20"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="masa" type="xs:int" use="optional">
+			<xs:annotation>
+				<xs:documentation>masa celotne posiljke v gramih.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+
+	<xs:complexType name="MetaData">
+		<xs:annotation>
+			<xs:documentation>Dodatni metapodatki o pošiljki. Dodatni metapodaki so namenjeni za interni prenos pošiljke med vpisniki in za integracijo z posameznimi informacijskimi sistemi. Metapodatki ciljnemu vpisniku sporočajo dodatne "instrukcije" za avtomatsko obdelavo pošiljk.  </xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="id" type="xs:integer" use="optional">
+			<xs:annotation>
+				<xs:documentation>Id metapodatka v  EVIP-U</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="key" use="required">
+			<xs:annotation>
+				<xs:documentation>oznaka metapodatka: npr:
+					- oprSt.prevzem: nova opravilna stevilka zadeve v ciljnem vpisniku.
+					- dodatni.tip.: -dodatna klasifikacija pošiljke  </xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="64"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="value">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="512"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+</xs:schema>

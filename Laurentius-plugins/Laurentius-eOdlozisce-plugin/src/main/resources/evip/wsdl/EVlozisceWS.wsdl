@@ -1,0 +1,537 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<definitions name="EVlozisceService" targetNamespace="ws.dc.cif.vsrs.si" 
+             xmlns:tns="ws.dc.cif.vsrs.si" xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+             xmlns="http://schemas.xmlsoap.org/wsdl/" 
+             xmlns:ns="http://schemas.xmlsoap.org/soap/encoding/"   >
+    <documentation>
+        WSDL določa servise 
+        * za odpremo pošiljke v aplikaciji EVIP 
+        * za prevzemanje dohodnih pošiljke v eVPisnike
+
+        Author: Jože Rihtaršič
+
+        Version:  2.0.15
+
+        History:
+        2.0.15:  2020-08-15
+        - dodani metapodatki za izhodno posiljko: DespatchCentreEntry/MetaData,
+
+        2.0.14:  2016-02-12
+            - dodani atributi: DespatchCentreInputEntryDocument/@steviloStrani,
+                    DespatchCentreInputEntryDocument/@velikostDatoteke, 
+                     DespatchCentreInputEntryDocument/@MD5
+            - popravek atributa DespatchCentreEntryDocument/@valikostDatoteke v DespatchCentreEntryDocument/@velikostDatoteke
+
+        2.0.13:  2015-06-08
+        - iskanje dohodne pošte po šifri aplikacije izvora: SCDespatchCentreGetDCInputEntriesRequest/@aplikSifIzvor in AdditionalSearchParameter
+        2.0.12:  2015-05-20 
+        - dodana metoda getVersion
+        - dodana metoda za dodajanje povratnic addDeliveryAdvice
+        - kontrola oddaja pdf-jev je mogoča samo za postne knjige email in SVEV  in interno
+        - nastavljena default vrednost : DespatchCentreEntryDocument/mimeTip: application/pdf
+        - nova akcija LOCK: SCDespatchCentreModifyDCInputEntryRequest.xsd - Vmesni status v prevzemanju pošiljk
+        - metoda SCDespatchCentreGetDCInputEntryVisualizationRequest omogoča sprejem DespatchCentreInputEntry na podlagi katerega se 
+        - dodan id v  DespatchCentreInputEntry/MetaData/@id
+        zgenerira dohodni zaznamek.
+        - dodan atribut: DespatchCentreInputEntry@naslovnik        
+        - dodan parameter: SCDespatchCentreGetDCInputEntryVisualizationRequest/Data/@sif - Parameter določa obliko vizualizacije. DohodniZaznamek, povratnicaNavadna, NeprevzetaPosiljka.  
+            Če paramter ni podan se vrača vizualizacija DohodniZaznamek
+        2.0.11:  2015-04-29 
+        -Dodan opis zgodovine v wsdl 
+        - izbrisane metode, ki se ne uporabljajo:                     
+        - getProcActReferences                    
+        - setCurrentDCEntryStatus
+        - getCurrentDCEntry
+        2.0.10  - 2015-02-13 
+        - Dodane metode: 
+        getChangedCurrentDCEntryStatuses 
+        2.0.9  - 2015-02-13 
+        
+        2.0.8   - 2015-02-13 
+        - izbrisane metode: getPendingDCInputEntries in getDCInputEntry 
+        2.0.7   - 2015-02-13 
+        - izbrisane metode: getCompletedPDIds, addPostBook, addDespatchCentre              
+
+        
+        
+    </documentation>
+    <types>
+        <xsd:schema>
+            <xsd:import namespace="ws.dc.cif.vsrs.si/DeliveryAdvice" schemaLocation="XmlDespatchCentre/DeliveryAdvice.xsd"/>
+            <xsd:import namespace="ws.dc.cif.vsrs.si/DeliveryAdviceData" schemaLocation="XmlDespatchCentre/DeliveryAdviceData.xsd"/>
+            <xsd:import namespace="ws.dc.cif.vsrs.si/DespatchCentre" schemaLocation="XmlDespatchCentre/DespatchCentre.xsd"/>
+            <xsd:import namespace="ws.dc.cif.vsrs.si/DespatchCentreEntry" schemaLocation="XmlDespatchCentre/DespatchCentreEntry.xsd"/>
+            <xsd:import namespace="ws.dc.cif.vsrs.si/DespatchCentreEntryDocument" schemaLocation="XmlDespatchCentre/DespatchCentreEntryDocument.xsd"/>
+            <xsd:import namespace="ws.dc.cif.vsrs.si/DespatchCentreEntryStatus" schemaLocation="XmlDespatchCentre/DespatchCentreEntryStatus.xsd"/>
+            <xsd:import namespace="ws.dc.cif.vsrs.si/DespatchCentreInputEntry" schemaLocation="XmlDespatchCentre/DespatchCentreInputEntry.xsd"/>
+            <xsd:import namespace="ws.dc.cif.vsrs.si/DespatchCentreInputEntryDocument" schemaLocation="XmlDespatchCentre/DespatchCentreInputEntryDocument.xsd"/>
+            <xsd:import namespace="ws.dc.cif.vsrs.si/PostBook" schemaLocation="XmlDespatchCentre/PostBook.xsd"/>
+            <xsd:import namespace="ws.dc.cif.vsrs.si" schemaLocation="XmlCommon/SCServiceVersionRequest.xsd"/>
+            <xsd:import namespace="ws.dc.cif.vsrs.si" schemaLocation="XmlCommon/SCServiceVersionResponse.xsd"/>
+            <xsd:import namespace="ws.dc.cif.vsrs.si" schemaLocation="XmlDespatchCentre/SCDespatchCentreAddDeliveryAdviceRequest.xsd"/>
+            <xsd:import namespace="ws.dc.cif.vsrs.si" schemaLocation="XmlDespatchCentre/SCDespatchCentreAddDeliveryAdviceResponse.xsd"/>
+            <xsd:import namespace="ws.dc.cif.vsrs.si" schemaLocation="XmlDespatchCentre/SCDespatchCentreAddDCEntriesRequest.xsd"/>
+            <xsd:import namespace="ws.dc.cif.vsrs.si" schemaLocation="XmlDespatchCentre/SCDespatchCentreAddDCEntriesResponse.xsd"/>
+            
+            <xsd:import namespace="ws.dc.cif.vsrs.si" schemaLocation="XmlDespatchCentre/SCDespatchCentreAddDCEntryRequest.xsd"/>
+            <xsd:import namespace="ws.dc.cif.vsrs.si" schemaLocation="XmlDespatchCentre/SCDespatchCentreAddDCEntryResponse.xsd"/>
+            <xsd:import namespace="ws.dc.cif.vsrs.si" schemaLocation="XmlDespatchCentre/SCDespatchCentreGetAllDCEntryCountRequest.xsd"/>
+            <xsd:import namespace="ws.dc.cif.vsrs.si" schemaLocation="XmlDespatchCentre/SCDespatchCentreGetAllDCEntryCountResponse.xsd"/>
+            <xsd:import namespace="ws.dc.cif.vsrs.si" schemaLocation="XmlDespatchCentre/SCDespatchCentreGetAllDCEntryRequest.xsd"/>
+            <xsd:import namespace="ws.dc.cif.vsrs.si" schemaLocation="XmlDespatchCentre/SCDespatchCentreGetAllDCEntryResponse.xsd"/>
+            <xsd:import namespace="ws.dc.cif.vsrs.si" schemaLocation="XmlDespatchCentre/SCDespatchCentreGetAllDespatchCentreResponse.xsd"/>
+            <xsd:import namespace="ws.dc.cif.vsrs.si" schemaLocation="XmlDespatchCentre/SCDespatchCentreGetAllDespatchCentreRequest.xsd"/>
+            <xsd:import namespace="ws.dc.cif.vsrs.si" schemaLocation="XmlDespatchCentre/SCDespatchCentreGetAllPostBookResponse.xsd"/>
+            <xsd:import namespace="ws.dc.cif.vsrs.si" schemaLocation="XmlDespatchCentre/SCDespatchCentreGetAllPostBookRequest.xsd"/>
+            <xsd:import namespace="ws.dc.cif.vsrs.si" schemaLocation="XmlDespatchCentre/SCDespatchCentreGetCompletedPDIdsRequest.xsd"/>
+            <xsd:import namespace="ws.dc.cif.vsrs.si" schemaLocation="XmlDespatchCentre/SCDespatchCentreGetCompletedPDIdsResponse.xsd"/>
+            <!--xsd:import namespace="ws.dc.cif.vsrs.si" schemaLocation="XmlDespatchCentre/SCDespatchCentreGetCurrentDCEntryStatusRequest.xsd"/>
+            <xsd:import namespace="ws.dc.cif.vsrs.si" schemaLocation="XmlDespatchCentre/SCDespatchCentreGetCurrentDCEntryStatusResponse.xsd"/ -->
+            <xsd:import namespace="ws.dc.cif.vsrs.si" schemaLocation="XmlDespatchCentre/SCDespatchCentreGetChangedCurrentDCEntryStatusesRequest.xsd"/>
+            <xsd:import namespace="ws.dc.cif.vsrs.si" schemaLocation="XmlDespatchCentre/SCDespatchCentreGetChangedCurrentDCEntryStatusesResponse.xsd"/>            
+            <xsd:import namespace="ws.dc.cif.vsrs.si" schemaLocation="XmlDespatchCentre/SCDespatchCentreGetDCEntryStatusesRequest.xsd"/>
+            <xsd:import namespace="ws.dc.cif.vsrs.si" schemaLocation="XmlDespatchCentre/SCDespatchCentreGetDCEntryStatusesResponse.xsd"/>
+            <xsd:import namespace="ws.dc.cif.vsrs.si" schemaLocation="XmlDespatchCentre/SCDespatchCentreGetDocumentReferencesRequest.xsd"/>
+            <xsd:import namespace="ws.dc.cif.vsrs.si" schemaLocation="XmlDespatchCentre/SCDespatchCentreGetDocumentReferencesResponse.xsd"/>
+            <xsd:import namespace="ws.dc.cif.vsrs.si" schemaLocation="XmlDespatchCentre/SCDespatchCentreGetPendingDeliveryAdvicesRequest.xsd"/>
+            <xsd:import namespace="ws.dc.cif.vsrs.si" schemaLocation="XmlDespatchCentre/SCDespatchCentreGetPendingDeliveryAdvicesResponse.xsd"/>
+            <!-- xsd:import namespace="ws.dc.cif.vsrs.si" schemaLocation="XmlDespatchCentre/SCDespatchCentreGetProcActReferencesRequest.xsd"/>
+            <xsd:import namespace="ws.dc.cif.vsrs.si" schemaLocation="XmlDespatchCentre/SCDespatchCentreGetProcActReferencesResponse.xsd"/ -->
+            <xsd:import namespace="ws.dc.cif.vsrs.si" schemaLocation="XmlDespatchCentre/SCDespatchCentreGetDeliveryAdviceRequest.xsd"/>
+            <xsd:import namespace="ws.dc.cif.vsrs.si" schemaLocation="XmlDespatchCentre/SCDespatchCentreGetDeliveryAdviceResponse.xsd"/>
+            <xsd:import namespace="ws.dc.cif.vsrs.si" schemaLocation="XmlDespatchCentre/SCDespatchCentreRemoveDeliveryAdviceRequest.xsd"/>
+            <xsd:import namespace="ws.dc.cif.vsrs.si" schemaLocation="XmlDespatchCentre/SCDespatchCentreRemoveDeliveryAdviceResponse.xsd"/>
+            <xsd:import namespace="ws.dc.cif.vsrs.si" schemaLocation="XmlDespatchCentre/SCDespatchCentreGetLoginIdRequest.xsd"/>
+            <xsd:import namespace="ws.dc.cif.vsrs.si" schemaLocation="XmlDespatchCentre/SCDespatchCentreGetLoginIdResponse.xsd"/>
+            <!-- xsd:import namespace="ws.dc.cif.vsrs.si" schemaLocation="XmlDespatchCentre/SCDespatchCentreSetCurrentDCEntryStatusRequest.xsd"/>
+            <xsd:import namespace="ws.dc.cif.vsrs.si" schemaLocation="XmlDespatchCentre/SCDespatchCentreSetCurrentDCEntryStatusResponse.xsd"/ -->
+            <xsd:import namespace="ws.dc.cif.vsrs.si" schemaLocation="XmlDespatchCentre/SCDespatchCentreModifyDCInputEntryRequest.xsd"/>
+            <xsd:import namespace="ws.dc.cif.vsrs.si" schemaLocation="XmlDespatchCentre/SCDespatchCentreModifyDCInputEntryResponse.xsd"/>
+            <xsd:import namespace="ws.dc.cif.vsrs.si" schemaLocation="XmlDespatchCentre/SCDespatchCentreGetDCInputEntriesRequest.xsd"/>
+            <xsd:import namespace="ws.dc.cif.vsrs.si" schemaLocation="XmlDespatchCentre/SCDespatchCentreGetDCInputEntriesResponse.xsd"/>            
+            <xsd:import namespace="ws.dc.cif.vsrs.si" schemaLocation="XmlDespatchCentre/SCDespatchCentreGetDCInputEntryVisualizationRequest.xsd"/>
+            <xsd:import namespace="ws.dc.cif.vsrs.si" schemaLocation="XmlDespatchCentre/SCDespatchCentreGetDCInputEntryVisualizationResponse.xsd"/>                                  
+            <xsd:import namespace="http://www.sodisce.si/2010/mail/Document" schemaLocation="mail/document.xsd"/>
+            <xsd:import namespace="http://www.sodisce.si/2010/mail/Message" schemaLocation="mail/message.xsd"/>
+        </xsd:schema>
+    </types>
+    <message name="SCServiceVersionRequest">
+        <part name="SCServiceVersionRequest" element="tns:SCServiceVersionRequest"/>
+    </message>
+    <message name="SCServiceVersionResponse">
+        <part name="SCServiceVersionResponse" element="tns:SCServiceVersionResponse"/>
+    </message>
+    
+    <message name="SCDespatchCentreAddDeliveryAdviceRequest">
+        <part name="SCDespatchCentreAddDeliveryAdviceRequest" element="tns:SCDespatchCentreAddDeliveryAdviceRequest"/>
+    </message>
+    <message name="SCDespatchCentreAddDeliveryAdviceResponse">
+        <part name="SCDespatchCentreAddDeliveryAdviceResponse" element="tns:SCDespatchCentreAddDeliveryAdviceResponse"/>
+    </message>
+    
+    <message name="SCDespatchCentreGetDCInputEntriesRequest">
+        <part name="SCDespatchCentreGetDCInputEntriesRequest" element="tns:SCDespatchCentreGetDCInputEntriesRequest"/>
+    </message>
+    <message name="SCDespatchCentreGetDCInputEntriesResponse">
+        <part name="SCDespatchCentreGetDCInputEntriesResponse" element="tns:SCDespatchCentreGetDCInputEntriesResponse"/>
+    </message>
+    <message name="SCDespatchCentreModifyDCInputEntryRequest">
+        <part name="SCDespatchCentreModifyDCInputEntryRequest" element="tns:SCDespatchCentreModifyDCInputEntryRequest"/>
+    </message>
+    <message name="SCDespatchCentreModifyDCInputEntryResponse">
+        <part name="SCDespatchCentreModifyDCInputEntryResponse" element="tns:SCDespatchCentreModifyDCInputEntryResponse"/>
+    </message>
+    <message name="SCDespatchCentreAddDCEntryRequest">
+        <part name="SCDespatchCentreAddDCEntryRequest" element="tns:SCDespatchCentreAddDCEntryRequest"/>
+    </message>
+    <message name="SCDespatchCentreAddDCEntryResponse">
+        <part name="SCDespatchCentreAddDCEntryResponse" element="tns:SCDespatchCentreAddDCEntryResponse"/>
+    </message>
+    <message name="SCDespatchCentreGetAllDCEntryCountRequest">
+        <part name="SCDespatchCentreGetAllDCEntryCountRequest" element="tns:SCDespatchCentreGetAllDCEntryCountRequest"/>
+    </message>
+    <message name="SCDespatchCentreGetAllDCEntryCountResponse">
+        <part name="SCDespatchCentreGetAllDCEntryCountResponse" element="tns:SCDespatchCentreGetAllDCEntryCountResponse"/>
+    </message >
+    <message name="SCDespatchCentreGetAllDCEntryRequest">
+        <part name="SCDespatchCentreGetAllDCEntryRequest" element="tns:SCDespatchCentreGetAllDCEntryRequest"/>
+    </message>
+    <message name="SCDespatchCentreGetAllDCEntryResponse">
+        <part name="SCDespatchCentreGetAllDCEntryResponse" element="tns:SCDespatchCentreGetAllDCEntryResponse"/>
+    </message>
+    <message name="SCDespatchCentreGetAllDespatchCentreRequest">
+        <part name="SCDespatchCentreGetAllDespatchCentreRequest" element="tns:SCDespatchCentreGetAllDespatchCentreRequest"/>
+    </message>
+    <message name="SCDespatchCentreGetAllDespatchCentreResponse">
+        <part name="SCDespatchCentreGetAllDespatchCentreResponse" element="tns:SCDespatchCentreGetAllDespatchCentreResponse"/>
+    </message>
+    <message name="SCDespatchCentreGetAllPostBookRequest">
+        <part name="SCDespatchCentreGetAllPostBookRequest" element="tns:SCDespatchCentreGetAllPostBookRequest"/>
+    </message>
+    <message name="SCDespatchCentreGetAllPostBookResponse">
+        <part name="SCDespatchCentreGetAllPostBookResponse" element="tns:SCDespatchCentreGetAllPostBookResponse"/>
+    </message>
+    <!--message name="SCDespatchCentreGetCurrentDCEntryStatusRequest">
+        <part name="SCDespatchCentreGetCurrentDCEntryStatusRequest" element="tns:SCDespatchCentreGetCurrentDCEntryStatusRequest"/>
+    </message>
+    <message name="SCDespatchCentreGetCurrentDCEntryStatusResponse">
+        <part name="SCDespatchCentreGetCurrentDCEntryStatusResponse" element="tns:SCDespatchCentreGetCurrentDCEntryStatusResponse"/>
+    </message -->
+    
+    <message name="SCDespatchCentreGetChangedCurrentDCEntryStatusesRequest">
+        <part name="SCDespatchCentreGetChangedCurrentDCEntryStatusesRequest" element="tns:SCDespatchCentreGetChangedCurrentDCEntryStatusesRequest"/>
+    </message>
+    <message name="SCDespatchCentreGetChangedCurrentDCEntryStatusesResponse">
+        <part name="SCDespatchCentreGetChangedCurrentDCEntryStatusesResponse" element="tns:SCDespatchCentreGetChangedCurrentDCEntryStatusesResponse"/>
+    </message>
+    
+    <message name="SCDespatchCentreGetDCEntryStatusesRequest">
+        <part name="SCDespatchCentreGetDCEntryStatusesRequest" element="tns:SCDespatchCentreGetDCEntryStatusesRequest"/>
+    </message>
+    <message name="SCDespatchCentreGetDCEntryStatusesResponse">
+        <part name="SCDespatchCentreGetDCEntryStatusesResponse" element="tns:SCDespatchCentreGetDCEntryStatusesResponse"/>
+    </message>
+    <message name="SCDespatchCentreGetDocumentReferencesRequest">
+        <part name="SCDespatchCentreGetDocumentReferencesRequest" element="tns:SCDespatchCentreGetDocumentReferencesRequest"/>
+    </message>
+    <message name="SCDespatchCentreGetDocumentReferencesResponse">
+        <part name="SCDespatchCentreGetDocumentReferencesResponse" element="tns:SCDespatchCentreGetDocumentReferencesResponse"/>
+    </message>
+    <message name="SCDespatchCentreGetLoginIdRequest">
+        <part name="SCDespatchCentreGetLoginIdRequest" element="tns:SCDespatchCentreGetLoginIdRequest"/>
+    </message>
+    <message name="SCDespatchCentreGetLoginIdResponse">
+        <part name="SCDespatchCentreGetLoginIdResponse" element="tns:SCDespatchCentreGetLoginIdResponse"/>
+    </message>
+    <!-- message name="SCDespatchCentreSetCurrentDCEntryStatusRequest">
+        <part name="SCDespatchCentreSetCurrentDCEntryStatusRequest" element="tns:SCDespatchCentreSetCurrentDCEntryStatusRequest"/>
+    </message>
+    <message name="SCDespatchCentreSetCurrentDCEntryStatusResponse">
+        <part name="SCDespatchCentreSetCurrentDCEntryStatusResponse" element="tns:SCDespatchCentreSetCurrentDCEntryStatusResponse"/>
+    </message -->
+    <message name="SCDespatchCentreGetPendingDeliveryAdvicesResponse">
+        <part name="SCDespatchCentreGetPendingDeliveryAdvicesResponse" element="tns:SCDespatchCentreGetPendingDeliveryAdvicesResponse"/>
+    </message>
+    <message name="SCDespatchCentreGetPendingDeliveryAdvicesRequest">
+        <part name="SCDespatchCentreGetPendingDeliveryAdvicesRequest" element="tns:SCDespatchCentreGetPendingDeliveryAdvicesRequest"/>
+    </message>
+    <message name="SCDespatchCentreGetDeliveryAdviceResponse">
+        <part name="SCDespatchCentreGetDeliveryAdviceResponse" element="tns:SCDespatchCentreGetDeliveryAdviceResponse"/>
+    </message>
+    <message name="SCDespatchCentreGetDeliveryAdviceRequest">
+        <part name="SCDespatchCentreGetDeliveryAdviceRequest" element="tns:SCDespatchCentreGetDeliveryAdviceRequest"/>
+    </message>
+    <message name="SCDespatchCentreRemoveDeliveryAdviceResponse">
+        <part name="SCDespatchCentreRemoveDeliveryAdviceResponse" element="tns:SCDespatchCentreRemoveDeliveryAdviceResponse"/>
+    </message>
+    <message name="SCDespatchCentreRemoveDeliveryAdviceRequest">
+        <part name="SCDespatchCentreRemoveDeliveryAdviceRequest" element="tns:SCDespatchCentreRemoveDeliveryAdviceRequest"/>
+    </message>
+    <!-- message name="SCDespatchCentreGetProcActReferencesResponse">
+        <part name="SCDespatchCentreGetProcActReferencesResponse" element="tns:SCDespatchCentreGetProcActReferencesResponse"/>
+    </message>
+    <message name="SCDespatchCentreGetProcActReferencesRequest">
+        <part name="SCDespatchCentreGetProcActReferencesRequest" element="tns:SCDespatchCentreGetProcActReferencesRequest"/>
+    </message -->
+    <message name="SCDespatchCentreAddDCEntriesRequest">
+        <part name="SCDespatchCentreAddDCEntriesRequest" element="tns:SCDespatchCentreAddDCEntriesRequest"/>
+    </message>
+    <message name="SCDespatchCentreAddDCEntriesResponse">
+        <part name="SCDespatchCentreAddDCEntriesResponse" element="tns:SCDespatchCentreAddDCEntriesResponse"/>
+    </message>
+    
+    <message name="SCDespatchCentreGetDCInputEntryVisualizationRequest">
+        <part name="SCDespatchCentreGetDCInputEntryVisualizationRequest" element="tns:SCDespatchCentreGetDCInputEntryVisualizationRequest"/>
+    </message>
+    <message name="SCDespatchCentreGetDCInputEntryVisualizationResponse">
+        <part name="SCDespatchCentreGetDCInputEntryVisualizationResponse" element="tns:SCDespatchCentreGetDCInputEntryVisualizationResponse"/>
+    </message>
+    
+    <portType name="EVlozisceWS">
+        <operation name="addDeliveryAdvice">
+            <input message="tns:SCDespatchCentreAddDeliveryAdviceRequest"/>
+            <output message="tns:SCDespatchCentreAddDeliveryAdviceResponse"/>
+        </operation>
+        <operation name="getVersion">
+            <input message="tns:SCServiceVersionRequest"/>
+            <output message="tns:SCServiceVersionResponse"/>
+        </operation>
+        <operation name="addDCEntry">
+            <input message="tns:SCDespatchCentreAddDCEntryRequest"/>
+            <output message="tns:SCDespatchCentreAddDCEntryResponse"/>
+        </operation>
+        <operation name="getAllDCEntryCount">
+            <input message="tns:SCDespatchCentreGetAllDCEntryCountRequest"/>
+            <output message="tns:SCDespatchCentreGetAllDCEntryCountResponse"/>
+        </operation>
+        <operation name="getAllDCEntry">
+            <input message="tns:SCDespatchCentreGetAllDCEntryRequest"/>
+            <output message="tns:SCDespatchCentreGetAllDCEntryResponse"/>
+        </operation>
+        <operation name="getAllDespatchCentre">
+            <input message="tns:SCDespatchCentreGetAllDespatchCentreRequest"/>
+            <output message="tns:SCDespatchCentreGetAllDespatchCentreResponse"/>
+        </operation>
+        <operation name="getAllPostBook">
+            <input message="tns:SCDespatchCentreGetAllPostBookRequest"/>
+            <output message="tns:SCDespatchCentreGetAllPostBookResponse"/>
+        </operation>
+        <!-- operation name="getCurrentDCEntry">
+            <input message="tns:SCDespatchCentreGetCurrentDCEntryStatusRequest"/>
+            <output message="tns:SCDespatchCentreGetCurrentDCEntryStatusResponse"/>
+        </operation -->
+        <operation name="getDCEntryStatuses">
+            <input message="tns:SCDespatchCentreGetDCEntryStatusesRequest"/>
+            <output message="tns:SCDespatchCentreGetDCEntryStatusesResponse"/>
+        </operation>        
+        <operation name="getChangedCurrentDCEntryStatuses">
+            <input message="tns:SCDespatchCentreGetChangedCurrentDCEntryStatusesRequest"/>
+            <output message="tns:SCDespatchCentreGetChangedCurrentDCEntryStatusesResponse"/>
+        </operation>
+        <operation name="getDocumentReferences">
+            <input message="tns:SCDespatchCentreGetDocumentReferencesRequest"/>
+            <output message="tns:SCDespatchCentreGetDocumentReferencesResponse"/>
+        </operation>
+        <operation name="getLoginId">
+            <input message="tns:SCDespatchCentreGetLoginIdRequest"/>
+            <output message="tns:SCDespatchCentreGetLoginIdResponse"/>
+        </operation>
+        <!-- operation name="setCurrentDCEntryStatus">
+            <input message="tns:SCDespatchCentreSetCurrentDCEntryStatusRequest"/>
+            <output message="tns:SCDespatchCentreSetCurrentDCEntryStatusResponse"/>
+        </operation -->
+        <operation name="getDeliveryAdvice">
+            <input message="tns:SCDespatchCentreGetDeliveryAdviceRequest"/>
+            <output message="tns:SCDespatchCentreGetDeliveryAdviceResponse"/>
+        </operation>
+        <operation name="getPendingDeliveryAdvices">
+            <input message="tns:SCDespatchCentreGetPendingDeliveryAdvicesRequest"/>
+            <output message="tns:SCDespatchCentreGetPendingDeliveryAdvicesResponse"/>
+        </operation>
+        <operation name="removeDeliveryAdvice">
+            <input message="tns:SCDespatchCentreRemoveDeliveryAdviceRequest"/>
+            <output message="tns:SCDespatchCentreRemoveDeliveryAdviceResponse"/>
+        </operation>
+        <!-- operation name="getProcActReferences">
+            <input message="tns:SCDespatchCentreGetProcActReferencesRequest"/>
+            <output message="tns:SCDespatchCentreGetProcActReferencesResponse"/>
+        </operation -->
+        <operation name="addDCEntries">
+            <input message="tns:SCDespatchCentreAddDCEntriesRequest"/>
+            <output message="tns:SCDespatchCentreAddDCEntriesResponse"/>
+        </operation>
+        <operation name="modifyDCInputEntry">
+            <input message="tns:SCDespatchCentreModifyDCInputEntryRequest"/>
+            <output message="tns:SCDespatchCentreModifyDCInputEntryResponse"/>
+        </operation>
+        <operation name="getDCInputEntries">
+            <input message="tns:SCDespatchCentreGetDCInputEntriesRequest"/>
+            <output message="tns:SCDespatchCentreGetDCInputEntriesResponse"/>
+        </operation>
+        
+        <operation name="getDCInputEntryVisualization">
+            <input message="tns:SCDespatchCentreGetDCInputEntryVisualizationRequest"/>
+            <output message="tns:SCDespatchCentreGetDCInputEntryVisualizationResponse"/>
+        </operation>
+    </portType>
+    <binding name="EVlozisceWSPortBinding" type="tns:EVlozisceWS">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        
+        <operation name="getVersion">
+            <soap:operation soapAction="ws.dc.cif.vsrs.si/getVersion"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="addDeliveryAdvice">
+            <soap:operation soapAction="ws.dc.cif.vsrs.si/addDeliveryAdvice"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="addDCEntries">
+            <soap:operation soapAction="ws.dc.cif.vsrs.si/addDCEntries"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="addDCEntry">
+            <soap:operation soapAction="ws.dc.cif.vsrs.si/addDCEntry"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="getAllDCEntryCount">
+            <soap:operation soapAction="ws.dc.cif.vsrs.si/getAllDCEntryCount"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="getAllDCEntry">
+            <soap:operation soapAction="ws.dc.cif.vsrs.si/getAllDCEntry"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="getAllDespatchCentre">
+            <soap:operation soapAction="ws.dc.cif.vsrs.si/getAllDespatchCentre"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="getAllPostBook">
+            <soap:operation soapAction="ws.dc.cif.vsrs.si/getAllPostBook"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <!-- operation name="getCurrentDCEntry">
+            <soap:operation soapAction="ws.dc.cif.vsrs.si/getCurrentDCEntry"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation -->
+        <operation name="getDCEntryStatuses">
+            <soap:operation soapAction="ws.dc.cif.vsrs.si/getDCEntryStatuses"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="getChangedCurrentDCEntryStatuses">
+            <soap:operation soapAction="ws.dc.cif.vsrs.si/getChangedCurrentDCEntryStatuses"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="getDocumentReferences">
+            <soap:operation soapAction="ws.dc.cif.vsrs.si/getDocumentReferences"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="getLoginId">
+            <soap:operation soapAction="ws.dc.cif.vsrs.si/getLoginId"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <!-- operation name="setCurrentDCEntryStatus">
+            <soap:operation soapAction="ws.dc.cif.vsrs.si/setCurrentDCEntryStatus"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation -->
+        <operation name="getDeliveryAdvice">
+            <soap:operation soapAction="ws.dc.cif.vsrs.si/getDeliveryAdvice"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="getPendingDeliveryAdvices">
+            <soap:operation soapAction="ws.dc.cif.vsrs.si/getPendingDeliveryAdvices"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="removeDeliveryAdvice">
+            <soap:operation soapAction="ws.dc.cif.vsrs.si/removeDeliveryAdvice"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <!--operation name="getProcActReferences">
+            <soap:operation soapAction="ws.dc.cif.vsrs.si/getProcActReferences"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation -->
+        <operation name="modifyDCInputEntry">
+            <soap:operation soapAction="ws.dc.cif.vsrs.si/modifyDCInputEntry"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="getDCInputEntries">
+            <soap:operation soapAction="ws.dc.cif.vsrs.si/getDCInputEntries"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        
+        <operation name="getDCInputEntryVisualization">
+            <soap:operation soapAction="ws.dc.cif.vsrs.si/getDCInputEntryVisualization"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+    </binding>
+    <service name="EVlozisceWS">
+        <port name="EVlozisceWSPort" binding="tns:EVlozisceWSPortBinding">
+            <soap:address location="http://127.0.0.1:8080/EVlozisceWS/EVlozisceWS"/>
+        </port>
+    </service>
+</definitions>

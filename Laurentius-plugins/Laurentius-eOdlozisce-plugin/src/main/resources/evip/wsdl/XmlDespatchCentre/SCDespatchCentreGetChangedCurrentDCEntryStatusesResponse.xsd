@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema  xmlns:tns="ws.dc.cif.vsrs.si" 
+            targetNamespace="ws.dc.cif.vsrs.si" 
+            xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+            xmlns:scr="ws.dc.cif.vsrs.si/SCRControl"
+            xmlns:dces="ws.dc.cif.vsrs.si/DespatchCentreEntryStatus">
+    <xs:import namespace ="ws.dc.cif.vsrs.si/SCRControl" schemaLocation="../XmlCommon/SCRControl.xsd"/>
+    <xs:import  namespace ="ws.dc.cif.vsrs.si/DespatchCentreEntryStatus" schemaLocation="DespatchCentreEntryStatus.xsd"/>
+    <xs:element name="SCDespatchCentreGetChangedCurrentDCEntryStatusesResponse" >
+        <xs:annotation> 
+            <xs:documentation>Rezultat iskanja spremenjenih trenutnih statusov pošiljk</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="SCRControl" type="scr:SCRControl"/>
+                <xs:element name="RData">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="DespatchCentreEntryStatus" type="dces:DespatchCentreEntryStatus"  maxOccurs="unbounded" minOccurs="0" />
+                        </xs:sequence>
+                        <xs:attribute name="dceCount" type="xs:int" use="required">
+                            <xs:annotation>
+                                <xs:documentation>Stevil vseh rezultatov, ki ustrezajo iskanim pogojem</xs:documentation>
+                            </xs:annotation>
+                        </xs:attribute>
+                        <xs:attribute name="startIndex" type="xs:int" default="-1">
+                            <xs:annotation>
+                                <xs:documentation>Stevilka prve vrstice v celotnem seznamu prve vrstice v rezultatu.  </xs:documentation>
+                            </xs:annotation>
+                        </xs:attribute>
+                        <xs:attribute name="resultCount" type="xs:int" default="-1">
+                            <xs:annotation>
+                                <xs:documentation>Stevilo vrstic v odgovoru</xs:documentation>
+                            </xs:annotation>
+                        </xs:attribute>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

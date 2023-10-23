@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:dc="ws.dc.cif.vsrs.si/DespatchCentre" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:dcpb="ws.dc.cif.vsrs.si/PostBook" targetNamespace="ws.dc.cif.vsrs.si/DespatchCentre">
+	<xs:import namespace="ws.dc.cif.vsrs.si/PostBook" schemaLocation="PostBook.xsd"/>
+	<xs:element name="DespatchCentre" type="dc:DespatchCentre"/>
+	<xs:complexType name="DespatchCentre">
+		<xs:annotation>
+			<xs:documentation> E - Vložišče </xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="PostBook" type="dcpb:PostBook" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="vlozId" type="xs:int" use="required">
+			<xs:annotation>
+				<xs:documentation>EVIP id vlozisca</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="sodiSif"  use="required">
+			<xs:annotation>
+				<xs:documentation>Šifra sodišča kateremu vložišče pripada. </xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:length value="3"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="naziv"  use="required">
+			<xs:annotation>
+				<xs:documentation>Naziv vlozisca</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="40"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="opis" >
+			<xs:annotation>
+				<xs:documentation>Dodatni opis vlozisca</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="4000"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="naslov" >
+			<xs:annotation>
+				<xs:documentation>Naslov vlozisca</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="80"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="postStev">
+			<xs:annotation>
+				<xs:documentation>Postna stevilka vlozisca</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:length value="4"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="kraj" >
+			<xs:annotation>
+				<xs:documentation>Kraj vlozisca</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="60" />
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="sprejPostSif" >
+			<xs:annotation>
+				<xs:documentation>Sifra sprejemne poste, kjer vlozisce oddaja posto.</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:length value="3"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+</xs:schema>

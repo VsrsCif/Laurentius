@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 (http://www.altova.com) by XMLSpy 2007 Professional Ed., Installed for 5 users (with SMP from 2007-02-06 to 2008-02-07) (CIF VSRS) -->
+<xs:schema xmlns:da="ws.dc.cif.vsrs.si/DeliveryAdviceData" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="ws.dc.cif.vsrs.si/DeliveryAdviceData">
+	<xs:element name="DeliveryAdviceData" type="da:DeliveryAdviceData"/>
+	<xs:complexType name="DeliveryAdviceData">
+		<xs:annotation>
+			<xs:documentation> E - Vložišče </xs:documentation>
+		</xs:annotation>
+                <xs:sequence>
+                    <xs:element name="Bin" type="xs:base64Binary" minOccurs="0">
+                        <xs:annotation>
+				<xs:documentation>Shranjevanje povratnice v bazo. Vsebina je namenjena samo za dodajanje povratnic v bazo, in ki se nato prevzemanje preko metod getPendingDeliveryAdvices. 
+                                    V primeru, da se povratnica zapiše v CMIS repozitorij in  se nato prevzemanja preko servisev getDCInputEntries se ne vpisuje povratnice v ta element!</xs:documentation>
+			</xs:annotation>                        
+                    </xs:element>
+		</xs:sequence>
+		<xs:attribute name="datumVrocitve" type="xs:dateTime">
+			<xs:annotation>
+				<xs:documentation>Datum vročitve. Če povratnica ni bila vročena je datum null</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="datumPrvegaObvestila" type="xs:dateTime">
+			<xs:annotation>
+				<xs:documentation>Datum prvega obvestila prejemniku.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="tipVrocitve" type="xs:int" use="required">
+			<xs:annotation>
+				<xs:documentation>Tip vročilnice glede na vročitev: 1 – vročeno
+2 – vročeno po fikciji
+3 – vročitev neuspešna
+4 - neznani dokument </xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="razlogNevrocitve">
+			<xs:annotation>
+				<xs:documentation>Podatek imajo izpoljnene samo povratnice tipa 3. - Razlog neuspele vročitve, ki je prepisan                   zaznamka pošte.</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="200"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>                
+                <xs:attribute name="dohodniZaznamekId" type="xs:integer">
+            <xs:annotation>
+                <xs:documentation>Parameter je "obsolete", ker ga je nadomestil atribut v DespatchCentreInputEntryDocument/@dohodniZaznamekId. V shemi je ostal
+                    zaradi kompatibilnosti s prejšnjimi verzijami. V bodoče se bo atriut odstranil.
+                    Id dohodne pošiljke v EVIP-u. Pri dodajanju pošiljke mora biti ta atribut prazen.</xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+	</xs:complexType>
+</xs:schema>

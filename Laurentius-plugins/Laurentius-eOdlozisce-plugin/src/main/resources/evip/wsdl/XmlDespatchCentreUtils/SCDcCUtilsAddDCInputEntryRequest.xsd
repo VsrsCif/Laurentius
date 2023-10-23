@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:tns="ws.dc.cif.vsrs.si" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:scc="ws.dc.cif.vsrs.si/SCControl" targetNamespace="ws.dc.cif.vsrs.si" xmlns:dce="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+    <xs:import namespace="ws.dc.cif.vsrs.si/SCControl" schemaLocation="../XmlCommon/SCControl.xsd"/>	
+    <xs:import namespace="http://www.w3.org/1999/02/22-rdf-syntax-ns#" schemaLocation="../xmp/DohodniZaznamek.xsd"/>
+    <xs:element name="SCDcCUtilsAddDCInputEntryRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="SCControl" type="scc:SCControl" minOccurs="0"/>
+                <xs:element name="Data">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element ref="dce:Description" minOccurs="1" maxOccurs="1"/>
+                            <xs:element name="Document" minOccurs="0" maxOccurs="unbounded" >
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="Bin" type="xs:base64Binary" />
+                                    </xs:sequence>
+                                    <xs:attribute name="dokumentOpis" use="required">
+                                        <xs:annotation>
+                                            <xs:documentation>Opis dokumenta</xs:documentation>
+                                        </xs:annotation>
+                                        <xs:simpleType>
+                                            <xs:restriction base="xs:string">
+                                                <xs:maxLength value="4000"/>
+                                            </xs:restriction>
+                                        </xs:simpleType>
+                                    </xs:attribute>
+                                    <xs:attribute name="datoteka">
+                                        <xs:annotation>
+                                            <xs:documentation>Začasna datoteka v vloziscu</xs:documentation>
+                                        </xs:annotation>
+                                        <xs:simpleType>
+                                            <xs:restriction base="xs:string">
+                                                <xs:maxLength value="1024"/>
+                                            </xs:restriction>
+                                        </xs:simpleType>
+                                    </xs:attribute>
+                                    <xs:attribute name="mimeTip">
+                                        <xs:annotation>
+                                            <xs:documentation>Format zapisa datoteke (mime: application/pdf, image/png,...)</xs:documentation>
+                                        </xs:annotation>
+                                        <xs:simpleType>
+                                            <xs:restriction base="xs:string">
+                                                <xs:maxLength value="1024"/>
+                                            </xs:restriction>
+                                        </xs:simpleType>
+                                    </xs:attribute>
+
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

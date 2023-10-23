@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:tns="ws.dc.cif.vsrs.si" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:scc="ws.dc.cif.vsrs.si/SCControl" targetNamespace="ws.dc.cif.vsrs.si">
+	<xs:import namespace="ws.dc.cif.vsrs.si/SCControl" schemaLocation="../XmlCommon/SCControl.xsd"/>	
+	<xs:element name="SCDcCommonsExistsEBoxAddressRequest">
+		<xs:annotation>
+			<xs:documentation>Object is input parameter for checking active existence of e-box address.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="SCControl" type="scc:SCControl" minOccurs="0"/>
+				<xs:element name="Data">
+					<xs:complexType>
+						<xs:attribute name="ePoBoxId" type="xs:string" use="required">
+							  <xs:annotation>
+								<xs:documentation>e-post box id. E-Post box id is composed from unique id (in provider domain) for receiver, char '@' and provider domain
+							  [unique id for provider][@][provider domain] eg: milan@moja.posta.si</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

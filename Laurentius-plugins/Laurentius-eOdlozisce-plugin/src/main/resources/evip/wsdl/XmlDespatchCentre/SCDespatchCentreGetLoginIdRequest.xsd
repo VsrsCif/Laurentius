@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:tns="ws.dc.cif.vsrs.si" 
+            targetNamespace="ws.dc.cif.vsrs.si" 
+            xmlns:xs="http://www.w3.org/2001/XMLSchema"
+            xmlns:scc="ws.dc.cif.vsrs.si/SCControl" >
+    <xs:import namespace ="ws.dc.cif.vsrs.si/SCControl" schemaLocation="../XmlCommon/SCControl.xsd"/>
+    <xs:element name="SCDespatchCentreGetLoginIdRequest" >
+        <xs:annotation>
+            <xs:documentation>Service parameters and results</xs:documentation>
+        </xs:annotation>
+        <xs:complexType> 
+            <xs:sequence>
+                <xs:element name="SCControl" type="scc:SCControl" />
+                <xs:element name="Data">
+                    <xs:complexType>
+                        <xs:attribute name="sodiSif" type="xs:token" use="required"/>
+                        <xs:attribute name="vlozSif" type="xs:token" use="required"/>
+                        <xs:attribute name="aplikSif" type="xs:token" use="required"/>
+                        <xs:attribute name="katSt" type="xs:string" use="required"/>
+                        <xs:attribute name="geslo" type="xs:string" use="required"/>
+                        <xs:attribute name="pravice" type="xs:string" use="required"/>
+                        <xs:attribute name="faza" type="xs:string" use="required"/>
+                        <xs:attribute name="funkcija" type="xs:string" use="required"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

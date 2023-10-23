@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema  xmlns:scr="ws.dc.cif.vsrs.si/SCRControl" 
+            targetNamespace="ws.dc.cif.vsrs.si/SCRControl" 
+            xmlns:xs="http://www.w3.org/2001/XMLSchema"   >
+    <xs:complexType name="SCRControl">
+        <xs:attribute name="returnValue" use="required">
+            <xs:annotation>
+                <xs:documentation>status rezultata servisa: 1=OK   2=WARNING  3=FAILURE</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:int">
+                    <xs:minInclusive value="1"/>
+                    <xs:maxInclusive value="3"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="returnCode" type="xs:int" use="required">
+            <xs:annotation>
+                <xs:documentation>specifična koda napake (ko je returnValue ERROR) ali (delnega) uspeha (ko je
+                    returnValue OK ali WARNING)
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="returnText" type="xs:string" use="optional">
+            <xs:annotation>
+                <xs:documentation>tekstovni opis napake (ko je returnValue ERROR) ali (delnega) uspeha (ko je
+                    returnValue OK ali WARNING)
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="errorDump" type="xs:string" use="optional">
+            <xs:annotation>
+                <xs:documentation>dodatni podatki o napaki, npr. exception stack trace, uporabno v fazi razvoja
+                    servisev in za vzdrževanje
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+</xs:schema>

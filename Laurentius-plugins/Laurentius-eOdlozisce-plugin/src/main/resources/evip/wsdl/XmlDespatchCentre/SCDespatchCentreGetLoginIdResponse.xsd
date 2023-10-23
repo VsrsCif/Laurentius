@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema  xmlns:tns="ws.dc.cif.vsrs.si" 
+            targetNamespace="ws.dc.cif.vsrs.si" 
+            xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+            xmlns:scr="ws.dc.cif.vsrs.si/SCRControl" >
+    <xs:import namespace ="ws.dc.cif.vsrs.si/SCRControl" schemaLocation="../XmlCommon/SCRControl.xsd"/>
+    <xs:element name="SCDespatchCentreGetLoginIdResponse" >
+        <xs:annotation>
+            <xs:documentation>Service parameters and results</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="SCRControl" type="scr:SCRControl"/>
+                <xs:element name="RData">
+                    <xs:complexType>
+                        <xs:attribute name="loginId"  type="xs:string" use="required"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

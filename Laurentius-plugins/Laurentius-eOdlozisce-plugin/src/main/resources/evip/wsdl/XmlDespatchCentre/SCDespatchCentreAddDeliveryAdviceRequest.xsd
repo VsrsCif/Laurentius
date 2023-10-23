@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:tns="ws.dc.cif.vsrs.si" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:scc="ws.dc.cif.vsrs.si/SCControl" targetNamespace="ws.dc.cif.vsrs.si">
+	<xs:import namespace="ws.dc.cif.vsrs.si/SCControl" schemaLocation="../XmlCommon/SCControl.xsd"/>
+	<xs:element name="SCDespatchCentreAddDeliveryAdviceRequest">
+		<xs:annotation>
+			<xs:documentation>Dodajanje povratnic za dohodno pošto. 
+                Povratnica spremeni status "dohodnega zaznamka" na Preneseno. Dohodni zaznamek 
+                mora biti v statusu Potrjeno, Prevzemanje in Preneseno, sicer servis javi napako. Trenutno je mogoče 
+                povratnice dodajati samo za pošiljke, ki se  
+                interno vročanjo med sodišči/vpisniki. Izhodna pošiljka za izvorno aplikacijo se nastavi kot 
+                vročeno hkrati pa se za izvorno aplikacijo pošiljke izdela tudi dohodni zaznamek tipa povratnica.
+            </xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="SCControl" type="scc:SCControl" minOccurs="0"/>
+				<xs:element name="Data">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="MetaData" type="tns:MetaData" minOccurs="0" maxOccurs="unbounded"/>
+							<xs:element name="Bin" type="xs:base64Binary" minOccurs="0"/>
+						</xs:sequence>
+						<xs:attribute name="dohodniZaznamekId" type="xs:integer" use="required">
+							<xs:annotation>
+								<xs:documentation>Id dohodnega zaznamka za povratnico</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attribute name="aplikSif" use="required">
+							<xs:annotation>
+								<xs:documentation>Sifra aplikacije, ki prevzema pošiljko</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="70"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="posiljateljPosiljkaId" use="optional">
+							<xs:annotation>
+								<xs:documentation>Oznaka pošiljke pošiljatelj: Oznaka mora biti enolična glede na šifro aplikacije.V primeru, da je 						   
+                                    posiljateljPosiljkaId  za šifro aplikacije že v EVIP-u 
+                                    je dogovor WARNING z id-jem  dohodnega zaznamka prve pošiljke. Povratnica pa se ignorira.
+                                </xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:maxLength value="512"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="tipVrocitve" type="xs:int" use="required">
+							<xs:annotation>
+								<xs:documentation>Tip vročilnice glede na vročitev: 1 – vročeno
+                                    2 – vročeno po fikciji
+                                    3 – vročitev neuspešna
+                                    4 - neznani dokument </xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attribute name="razlogNevrocitve">
+							<xs:annotation>
+								<xs:documentation>Podatek mora imeti izpoljnen samo povratnica tipa 3. - Razlog neuspele vročitve. </xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="200"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="mimeTip">
+							<xs:annotation>
+								<xs:documentation>Format zapisa datoteke (mime: application/pdf, image/png,...).Če je parameter prazen se upošteva, kot da je poslan pdf</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:maxLength value="120"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="MetaData">
+		<xs:annotation>
+			<xs:documentation>Dodatni metapodatki o pošiljki. Dodatni metapodaki so namenjeni za interni prenos pošiljke med vpisniki in za integracijo z posameznimi informacijskimi sistemi. Metapodatki ciljnemu vpisniku sporočajo dodatne "instrukcije" za avtomatsko obdelavo pošiljk.  </xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="key" use="required">
+			<xs:annotation>
+				<xs:documentation>oznaka metapodatka: npr: 
+                    - oprSt.prevzem: nova opravilna stevilka zadeve v ciljnem vpisniku. 
+                    - dodatni.tip.: -dodatna klasifikacija pošiljke  </xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="64"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="value">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="512"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+</xs:schema>

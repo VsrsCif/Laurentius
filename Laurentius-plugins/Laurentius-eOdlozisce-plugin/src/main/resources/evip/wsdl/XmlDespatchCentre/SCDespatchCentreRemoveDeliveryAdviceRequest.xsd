@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 (http://www.altova.com) by XMLSpy 2007 Professional Ed., Installed for 5 users (with SMP from 2007-02-06 to 2008-02-07) (CIF VSRS) -->
+<xs:schema xmlns:tns="ws.dc.cif.vsrs.si" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:scc="ws.dc.cif.vsrs.si/SCControl" targetNamespace="ws.dc.cif.vsrs.si">
+	<xs:import namespace="ws.dc.cif.vsrs.si/SCControl" schemaLocation="../XmlCommon/SCControl.xsd"/>
+	<xs:element name="SCDespatchCentreRemoveDeliveryAdviceRequest">
+		<xs:annotation>
+			<xs:documentation>Service parameters and results</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="SCControl" type="scc:SCControl" minOccurs="0"/>
+				<xs:element name="Data">
+					<xs:complexType>
+						<xs:attribute name="posiljkaId" type="xs:int" use="required">
+							<xs:annotation>
+								<xs:documentation>Id posiljke kateri vrocilnica pripada</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+						<xs:attribute name="aplikSif" use="required">
+							<xs:annotation>
+								<xs:documentation>Sifra aplikacije, kjer je nstala soremeba statusa</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:maxLength value="70"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

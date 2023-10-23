@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 (http://www.altova.com) by XMLSpy 2007 Professional Ed., Installed for 5 users (with SMP from 2007-02-06 to 2008-02-07) (CIF VSRS) -->
+<xs:schema xmlns:tns="ws.dc.cif.vsrs.si" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:dc="ws.dc.cif.vsrs.si/DespatchCentre" xmlns:scr="ws.dc.cif.vsrs.si/SCRControl" targetNamespace="ws.dc.cif.vsrs.si">
+	<xs:import namespace="ws.dc.cif.vsrs.si/SCRControl" schemaLocation="../XmlCommon/SCRControl.xsd"/>
+	<xs:import namespace="ws.dc.cif.vsrs.si/DespatchCentre" schemaLocation="DespatchCentre.xsd"/>
+	<xs:element name="SCDespatchCentreGetAllDespatchCentreResponse">
+		<xs:annotation>
+			<xs:documentation/>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="SCRControl" type="scr:SCRControl"/>
+				<xs:element name="RData">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="DespatchCentre" type="dc:DespatchCentre" minOccurs="0" maxOccurs="unbounded"/>
+						</xs:sequence>
+						<xs:attribute name="defVlozId" type="xs:int">
+							<xs:annotation>
+								<xs:documentation>Privzeto vlozisce</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

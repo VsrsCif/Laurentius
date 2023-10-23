@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 (http://www.altova.com) by XMLSpy 2007 Professional Ed., Installed for 5 users (with SMP from 2007-02-06 to 2008-02-07) (CIF VSRS) -->
+<xs:schema xmlns:dce="ws.dc.cif.vsrs.si/DespatchCentreInputEntry" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:dced="ws.dc.cif.vsrs.si/DespatchCentreInputEntryDocument" targetNamespace="ws.dc.cif.vsrs.si/DespatchCentreInputEntry">
+	<xs:import namespace="ws.dc.cif.vsrs.si/DespatchCentreInputEntryDocument" schemaLocation="DespatchCentreInputEntryDocument.xsd"/>
+	<xs:element name="DespatchCentreInputEntry" type="dce:DespatchCentreInputEntry"/>
+	<xs:complexType name="DespatchCentreInputEntry">
+		<xs:sequence>
+			<xs:element name="MetaData" type="dce:MetaData" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="DespatchCentreInputEntryDocument" type="dced:DespatchCentreInputEntryDocument" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:integer" use="optional">
+			<xs:annotation>
+				<xs:documentation>Id dohodnega zaznamka v  EVIP-U</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="posiljkaId" type="xs:integer" use="optional">
+			<xs:annotation>
+				<xs:documentation>referenca na izhodni dokument</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="posiljkaTip" use="optional">
+			<xs:annotation>
+				<xs:documentation>Tip pošiljke, kot so: predlog=1, dopolnitevPredloga=2, umikVCeloti=3, delniUmik=4, ugovor=5,  odgovorNaUgovor=6, pritozba=7, vrocilnica=8, nevrocenaPosiljka=9, sklepVisjegaSodisca=10, neznano=11,...
+                    Tip pošiljke mora biti/je enak tipu dokumenta osnovnega dokumenta</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="10"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="placanaTaksa" type="xs:double" use="optional">
+			<xs:annotation>
+				<xs:documentation>Znesek plačane takse, ki se vnese v fazi evidentiranja.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="posiljateljPosiljkaId" use="optional">
+			<xs:annotation>
+				<xs:documentation>Oznaka pošiljke pošiljatelj
+                </xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="512"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="aplikSif" use="required">
+			<xs:annotation>
+				<xs:documentation>Sifra aplikacije, ki je "lastnica" dohodne pošiljke</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="70"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="aplikSifIzvor" use="optional">
+			<xs:annotation>
+				<xs:documentation>Sifra aplikacije/modula, kjer je pošiljka nastala)</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="70"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="datOddaje" type="xs:dateTime" use="optional">
+			<xs:annotation>
+				<xs:documentation>Datum "oddaje" pošiljke na pošto (oz. transport) pri pošiljatelju)</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="datSprejema" type="xs:dateTime" use="required">
+			<xs:annotation>
+				<xs:documentation>Datum sprejema pošiljke na sodišče</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="delovodnaSt" use="optional">
+			<xs:annotation>
+				<xs:documentation>Delovodna številka - po kateri se pošiljka lahko locirra v arhivu</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="20"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="kadrStVnesel" use="optional">
+			<xs:annotation>
+				<xs:documentation>Kadrovska številka osebe, ki je pošijko evidentirala.</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:length value="7"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="dodatnaOznakaVpisnika" use="optional">
+			<xs:annotation>
+				<xs:documentation>Dodatna oznaka vpisnika (knjiga)</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="10"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="nacinDostaveSif" use="required">
+			<xs:annotation>
+				<xs:documentation>Nacin prispetja posiljke na sodisce </xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="20"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="nacinPosiljanjaSif" use="required">
+			<xs:annotation>
+				<xs:documentation>Nacin posiljanja posiljke </xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="20"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="nazivArhivSkatle" use="optional">
+			<xs:annotation>
+				<xs:documentation>Oznaka arhivske škatle</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="20"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="nujno" type="xs:boolean" use="optional">
+			<xs:annotation>
+				<xs:documentation>Oznaka ali je pošiljka nujna</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="zaupno" type="xs:boolean" use="optional">
+			<xs:annotation>
+				<xs:documentation>Oznaka ali je pošiljka zaupna</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="osebno" type="xs:boolean" use="optional">
+			<xs:annotation>
+				<xs:documentation>Oznaka ali je pošiljka osebna</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="sodiSif" use="required">
+			<xs:annotation>
+				<xs:documentation>Sifra sodisca kjer je posiljka nastala.</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:length value="3"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="odlkTip" use="optional">
+			<xs:annotation>
+				<xs:documentation>Šifra  vrste oddelka.</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:length value="2"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="opozorila" use="optional">
+			<xs:annotation>
+				<xs:documentation>Opozorila izrečena pri prejemu pošiljke.</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="1024"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="oprStLeto" type="xs:integer" use="optional">
+			<xs:annotation>
+				<xs:documentation>Opravilna številka -> leto
+                </xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="oprStStevilka" type="xs:integer" use="optional">
+			<xs:annotation>
+				<xs:documentation>Opravilna številka -> zaporedna stevilka
+                </xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="vpisnikKratica" use="optional">
+			<xs:annotation>
+				<xs:documentation>Vpisnik kratica - sestavni del opravilne številke, ki se izpiše na kuverto</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="10"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="posiljatelj" use="optional">
+			<xs:annotation>
+				<xs:documentation>posiljatelj posiljke</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="4000"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+                <xs:attribute name="naslovnik" use="optional">
+			<xs:annotation>
+				<xs:documentation>naslovnik posiljke</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="4000"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="rStev" use="optional">
+			<xs:annotation>
+				<xs:documentation>R številka dohodne pošte (za priporočeno pošto) </xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="20"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="stIzvodov" use="optional">
+			<xs:annotation>
+				<xs:documentation>Št izvodov dohodne pošte</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:int"/>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="stPrilog" use="optional">
+			<xs:annotation>
+				<xs:documentation>Število prilog</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:int"/>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="status" use="optional">
+			<xs:annotation>
+				<xs:documentation>Status pošiljke.</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="20"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="vpisnik" use="required">
+			<xs:annotation>
+				<xs:documentation>Sifra vpisnika, kjer je pošiljka nastala.</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="3"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="vsebina" use="optional">
+			<xs:annotation>
+				<xs:documentation>Opis vsebine</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="4000"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="komentar" use="optional">
+			<xs:annotation>
+				<xs:documentation>Komentarji pošiljke npr: Razlog zavrnitve na vpisniku, ko je pošiljka poslana nazaj v evidetiranje
+                    .</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="1024"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="aplikRefIdZadeva" use="optional">
+			<xs:annotation>
+				<xs:documentation>ID/sifra zadeve iz aplikacije, kjer je pošiljka nastala. Uporablja se za interni prenos zadev med vpisniki. </xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="1024"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="MetaData">
+		<xs:annotation>
+			<xs:documentation>Dodatni metapodatki o pošiljki. Dodatni metapodaki so namenjeni za interni prenos pošiljke med vpisniki in za integracijo z posameznimi informacijskimi sistemi. Metapodatki ciljnemu vpisniku sporočajo dodatne "instrukcije" za avtomatsko obdelavo pošiljk.  </xs:documentation>
+		</xs:annotation>
+                <xs:attribute name="id" type="xs:integer" use="optional">
+			<xs:annotation>
+				<xs:documentation>Id metapodatka v  EVIP-U</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="key" use="required">
+			<xs:annotation>
+				<xs:documentation>oznaka metapodatka: npr: 
+													- oprSt.prevzem: nova opravilna stevilka zadeve v ciljnem vpisniku. 
+													- dodatni.tip.: -dodatna klasifikacija pošiljke  </xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="64"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="value">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="512"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+</xs:schema>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:dces="ws.dc.cif.vsrs.si/DespatchCentreEntryStatus" targetNamespace="ws.dc.cif.vsrs.si/DespatchCentreEntryStatus">
+	<xs:element name="DespatchCentreEntryStatus" type="dces:DespatchCentreEntryStatus"/>
+	<xs:complexType name="DespatchCentreEntryStatus">
+		<xs:annotation>
+			<xs:documentation>Status pošiljke </xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="id" type="xs:int">
+			<xs:annotation>
+				<xs:documentation>EVIP ID zapisa</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="posiljkaId" type="xs:int" use="required">
+			<xs:annotation>
+				<xs:documentation>Id posiljke na  katero se status nanasa</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="aplikRefPosiljke">
+			<xs:annotation>
+				<xs:documentation>referenca na posiljko v aplikaciji, kjer je posiljka nastala</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="1024"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="aplikRefIdZadeva" >
+			<xs:annotation>
+				<xs:documentation>Referenca na zadevo v aplikaciji, kjer je posiljka nastala</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="1024"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="datum" type="xs:date" use="required">
+			<xs:annotation>
+				<xs:documentation>Datum/cas statusa</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="status"  use="required">
+			<xs:annotation>
+				<xs:documentation>Koda statusa</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="10"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="opis">
+			<xs:annotation>
+				<xs:documentation>Opis statusa</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="4000"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="kadrSt" use="required">
+			<xs:annotation>
+				<xs:documentation>Kadrovska stevilka osebe, ki je povzrocilo novi status posiljke</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="7"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+</xs:schema>

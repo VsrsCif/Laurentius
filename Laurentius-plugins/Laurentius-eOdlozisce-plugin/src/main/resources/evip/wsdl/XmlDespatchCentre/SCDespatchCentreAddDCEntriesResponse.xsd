@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 (http://www.altova.com) by XMLSpy 2007 Professional Ed., Installed for 5 users (with SMP from 2007-02-06 to 2008-02-07) (CIF VSRS) -->
+<xs:schema xmlns:tns="ws.dc.cif.vsrs.si" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:scr="ws.dc.cif.vsrs.si/SCRControl" targetNamespace="ws.dc.cif.vsrs.si">
+    <xs:import namespace="ws.dc.cif.vsrs.si/SCRControl" schemaLocation="../XmlCommon/SCRControl.xsd"/>
+    <xs:element name="SCDespatchCentreAddDCEntriesResponse">
+        <xs:annotation>
+            <xs:documentation>Service parameters and results</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="SCRControl" type="scr:SCRControl"/>
+                <xs:element name="RData">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="DCEResult" minOccurs="0" maxOccurs="unbounded" >
+                                <xs:complexType>
+                                    <xs:attribute name="id" type="xs:int" use="required">
+                                        <xs:annotation>
+                                            <xs:documentation>EVIP id  novo dodanega dokumenta</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:attribute>
+                                    <xs:attribute name="aplikRefPosiljke">
+                                        <xs:annotation>
+                                            <xs:documentation>V kolikor aplikacija sama vodi seznam pošiljk, je to Id pošiljka v aplikaciji, kjer je posiljka nastala.</xs:documentation>
+                                        </xs:annotation>
+                                        <xs:simpleType>
+                                            <xs:restriction base="xs:token">
+                                                <xs:maxLength value="1024"/>
+                                            </xs:restriction>
+                                        </xs:simpleType>
+                                    </xs:attribute>
+                                    <xs:attribute name="returnValue" use="required">
+                                        <xs:annotation>
+                                            <xs:documentation>status rezultata servisa: 1=OK   2=WARNING  3=FAILURE</xs:documentation>
+                                        </xs:annotation>
+                                        <xs:simpleType>
+                                            <xs:restriction base="xs:int">
+                                                <xs:minInclusive value="1"/>
+                                                <xs:maxInclusive value="3"/>
+                                            </xs:restriction>
+                                        </xs:simpleType>
+                                    </xs:attribute>
+                                    <xs:attribute name="returnCode" type="xs:int" use="required">
+                                        <xs:annotation>
+                                            <xs:documentation>specifična koda napake (ko je returnValue ERROR) ali (delnega) uspeha (ko je
+                    returnValue OK ali WARNING)
+                                            </xs:documentation>
+                                        </xs:annotation>
+                                    </xs:attribute>
+                                    <xs:attribute name="returnText" type="xs:string" use="optional">
+                                        <xs:annotation>
+                                            <xs:documentation>tekstovni opis napake (ko je returnValue ERROR) ali (delnega) uspeha (ko je
+                    returnValue OK ali WARNING)
+                                            </xs:documentation>
+                                        </xs:annotation>
+                                    </xs:attribute>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

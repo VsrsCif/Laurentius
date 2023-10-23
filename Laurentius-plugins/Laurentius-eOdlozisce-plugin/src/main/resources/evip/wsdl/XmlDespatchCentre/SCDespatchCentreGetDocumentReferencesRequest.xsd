@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:tns="ws.dc.cif.vsrs.si" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:scc="ws.dc.cif.vsrs.si/SCControl" targetNamespace="ws.dc.cif.vsrs.si">
+	<xs:import namespace="ws.dc.cif.vsrs.si/SCControl" schemaLocation="../XmlCommon/SCControl.xsd"/>
+	<xs:element name="SCDespatchCentreGetDocumentReferencesRequest">
+		<xs:annotation>
+			<xs:documentation>Service parameters and results</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="SCControl" type="scc:SCControl"/>
+				<xs:element name="Data">
+					<xs:complexType>
+		<xs:attribute name="aplikRefIdZadeve">
+			<xs:annotation>
+				<xs:documentation>Referenca na zadevo v aplikaciji, kjer je posiljka nastala</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="1024"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>					
+			<xs:attribute name="aplikRefIdPisanje" use="required">
+			<xs:annotation>
+				<xs:documentation>Id pošiljke v aplikaciji.  Namen ID- ja je pridobivanje binarne vsebine dokumenta iz aplikacije. Priporociljivo je, da je id sifriran, tako da 
+			se do ostalih dokumentov ne da priti s poskusanjem</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="300"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>		
+<xs:attribute name="dokumentPot">
+			<xs:annotation>
+				<xs:documentation>Pot dokumenta. </xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="1024"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>					
+						<xs:attribute name="sodiSif" use="required">
+			<xs:annotation>
+				<xs:documentation>Sifra sodisca lastnica dokumenta, ko je nastala sprememba statusa</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:length value="3"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="aplikSif" use="required">
+			<xs:annotation>
+				<xs:documentation>Sifra aplikacije, kjer je nstala soremeba statusa</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="70"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+						
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

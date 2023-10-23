@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:tns="ws.dc.cif.vsrs.si" 
+            targetNamespace="ws.dc.cif.vsrs.si" 
+            xmlns:xs="http://www.w3.org/2001/XMLSchema"
+            xmlns:scc="ws.dc.cif.vsrs.si/SCControl" 
+            xmlns:dces="ws.dc.cif.vsrs.si/DespatchCentreEntryStatus">
+    <xs:import namespace ="ws.dc.cif.vsrs.si/SCControl" schemaLocation="../XmlCommon/SCControl.xsd"/>
+    <xs:import  namespace ="ws.dc.cif.vsrs.si/DespatchCentreEntryStatus" schemaLocation="DespatchCentreEntryStatus.xsd"/>
+    <xs:element name="SCDespatchCentreSetCurrentDCEntryStatusRequest" >
+        <xs:annotation>
+            <xs:documentation>Service parameters and results</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="SCControl" type="scc:SCControl"/>
+                <xs:element name="Data">
+                    <xs:complexType>
+                        <xs:annotation>
+                            <xs:documentation>Status pošiljke</xs:documentation>
+                        </xs:annotation>
+                        <xs:sequence>
+                            <xs:element name="Blob" minOccurs="0" />
+                        </xs:sequence>
+                        <xs:attribute name="id" type="xs:int"/>
+                        <xs:attribute name="status" type="xs:token" />
+                        <xs:attribute name="opis" type="xs:string" />
+                        <xs:attribute name="kadrSt" type="xs:token"  />
+                    </xs:complexType>
+                    <!--xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="DespatchCentreEntryStatus" type="dces:DespatchCentreEntryStatus"  minOccurs="1" maxOccurs="1"/>
+                        </xs:sequence>
+                    </xs:complexType -->
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
+
+

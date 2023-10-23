@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<definitions  name="EVlozisceInputModuleService" 
+              targetNamespace="ws.dc.cif.vsrs.si" 
+              xmlns:tns="ws.dc.cif.vsrs.si"
+              xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+              xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+              xmlns="http://schemas.xmlsoap.org/wsdl/" 
+              xmlns:ns="http://schemas.xmlsoap.org/soap/encoding/" >
+    <types>
+        <xsd:schema>
+            <xsd:import namespace="ws.dc.cif.vsrs.si" schemaLocation="XmlDespatchCentreInputModule/SCDCInputModuleAddDCInputEntryResponse.xsd"/>
+            <xsd:import namespace="ws.dc.cif.vsrs.si" schemaLocation="XmlDespatchCentreInputModule/SCDCInputModuleAddDCInputEntryRequest.xsd"/>
+        </xsd:schema>
+    </types>
+    <message name="SCDCInputModuleAddDCInputEntryResponse">
+        <part name="SCDCInputModuleAddDCInputEntryResponse" element="tns:SCDCInputModuleAddDCInputEntryResponse"/>
+    </message>
+    <message name="SCDCInputModuleAddDCInputEntryRequest">
+        <part name="SCDCInputModuleAddDCInputEntryRequest" element="tns:SCDCInputModuleAddDCInputEntryRequest"/>
+    </message>
+ 
+
+    <portType name="EVlozisceInputModuleServiceWS">
+        <operation name="addDCInputEntry">
+            <input message="tns:SCDCInputModuleAddDCInputEntryRequest"/>
+            <output message="tns:SCDCInputModuleAddDCInputEntryResponse"/>
+        </operation>
+
+    </portType>
+    <binding name="EVlozisceInputModuleServiceWSPortBinding" type="tns:EVlozisceInputModuleServiceWS">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="addDCInputEntry">
+            <soap:operation soapAction="ws.dc.cif.vsrs.si/addDCInputEntry"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+    </binding>
+    <service name="EVlozisceInputModuleServiceWS">
+        <port name="EVlozisceInputModuleServiceWSPort" binding="tns:EVlozisceInputModuleServiceWSPortBinding">
+            <soap:address location="http://127.0.0.1:8080/EVlozisceWS/EVlozisceInputModuleServiceWS"/>
+        </port>
+    </service>
+</definitions>

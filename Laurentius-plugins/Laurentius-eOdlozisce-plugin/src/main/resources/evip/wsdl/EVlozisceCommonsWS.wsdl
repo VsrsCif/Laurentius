@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<definitions  name="EVlozisceService" 
+              targetNamespace="ws.dc.cif.vsrs.si" 
+              xmlns:tns="ws.dc.cif.vsrs.si"
+              xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+              xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+              xmlns="http://schemas.xmlsoap.org/wsdl/" 
+              xmlns:ns="http://schemas.xmlsoap.org/soap/encoding/" >
+    <types>
+        <xsd:schema>
+            <xsd:import namespace="ws.dc.cif.vsrs.si" schemaLocation="XmlDespatchCentreCommons/SCDcCommonsExistsEBoxAddressResponse.xsd"/>
+            <xsd:import namespace="ws.dc.cif.vsrs.si" schemaLocation="XmlDespatchCentreCommons/SCDcCommonsExistsEBoxAddressRequest.xsd"/>
+        </xsd:schema>
+    </types>
+    <message name="SCDcCommonsExistsEBoxAddressResponse">
+        <part name="SCDcCommonsExistsEBoxAddressResponse" element="tns:SCDcCommonsExistsEBoxAddressResponse"/>
+    </message>
+    <message name="SCDcCommonsExistsEBoxAddressRequest">
+        <part name="SCDcCommonsExistsEBoxAddressRequest" element="tns:SCDcCommonsExistsEBoxAddressRequest"/>
+    </message>
+ 
+
+    <portType name="EVlozisceCommonsWS">
+        <operation name="existsEBoxAddress">
+            <input message="tns:SCDcCommonsExistsEBoxAddressRequest"/>
+            <output message="tns:SCDcCommonsExistsEBoxAddressResponse"/>
+        </operation>
+    </portType>
+    <binding name="EVlozisceCommonsWSPortBinding" type="tns:EVlozisceCommonsWS">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="existsEBoxAddress">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+         
+        <!-- operation name="getOutgoingDeliveryModuleTypes">
+            <soap:operation soapAction="lookup.dc.cif.vsrs.si/getOutgoingDeliveryModuleTypes"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+        <operation name="getIncomingDeliveryTypes">
+            <soap:operation soapAction="lookup.dc.cif.vsrs.si/getIncomingDeliveryTypes"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+      
+        <operation name="getInputMailRejectReasons">
+            <soap:operation soapAction="lookup.dc.cif.vsrs.si/getInputMailRejectReasons"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+         <operation name="getDocumentTypes">
+            <soap:operation soapAction="lookup.dc.cif.vsrs.si/getDocumentTypes"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation -->
+        
+       
+    </binding>
+    
+    
+    <service name="EVlozisceCommonsWS">
+        <port name="EVlozisceCommonsWSPort" binding="tns:EVlozisceCommonsWSPortBinding">
+            <soap:address location="http://127.0.0.1:8080/EVlozisceWS/EVlozisceCommonsWS"/>
+        </port>
+    </service>
+</definitions>

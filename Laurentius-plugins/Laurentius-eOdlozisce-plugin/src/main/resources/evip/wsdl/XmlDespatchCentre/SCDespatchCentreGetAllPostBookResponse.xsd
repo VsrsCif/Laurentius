@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema  xmlns:tns="ws.dc.cif.vsrs.si" 
+            targetNamespace="ws.dc.cif.vsrs.si" 
+            xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+            xmlns:pk="ws.dc.cif.vsrs.si/PostBook" 
+            xmlns:scr="ws.dc.cif.vsrs.si/SCRControl" >
+    <xs:import namespace ="ws.dc.cif.vsrs.si/SCRControl" schemaLocation="../XmlCommon/SCRControl.xsd"/>
+    <xs:import  namespace ="ws.dc.cif.vsrs.si/PostBook" schemaLocation="PostBook.xsd"/>
+    <xs:element name="SCDespatchCentreGetAllPostBookResponse" >
+        <xs:annotation> 
+            <xs:documentation>Service parameters and results</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="SCRControl" type="scr:SCRControl"/>
+                <xs:element name="RData">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="PostBook" type="pk:PostBook"  minOccurs="0" maxOccurs="unbounded"/>
+                        </xs:sequence>
+                        <xs:attribute name="defKnjigaId" type="xs:int"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

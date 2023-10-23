@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:tns="ws.dc.cif.vsrs.si" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:scc="ws.dc.cif.vsrs.si/SCControl" targetNamespace="ws.dc.cif.vsrs.si">
+	<xs:import namespace="ws.dc.cif.vsrs.si/SCControl" schemaLocation="../XmlCommon/SCControl.xsd"/>
+	<xs:element name="SCDespatchCentreGetAllDespatchCentreRequest">
+		<xs:annotation>
+			<xs:documentation>Service parameters and results</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="SCControl" type="scc:SCControl"/>
+				<xs:element name="Data">
+					<xs:complexType>
+						<xs:attribute name="sodiSif" >
+							<xs:annotation>
+								<xs:documentation>Parameter določa za katero sodišče poizvedba vrne vložišča.
+V kolikor je sifra “null”, se vrnejo vsa vložišča, ki ustrezajo
+ostalimi pogoji poizvedbe.
+</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:length value="3"/>
+				</xs:restriction>
+			</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="aplikSif" >
+							<xs:annotation>
+								<xs:documentation>Parameter določa aplikacijo poizvedbe za vložišča.
+V kolikor je podatek “null” poizvedba vrne vsa Vložišča, ki
+ustrezajo ostalimi pogoji poizvedbe.</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="70"/>
+				</xs:restriction>
+			</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="katSt" >
+							<xs:annotation>
+								<xs:documentation>Parameter določa kadrovsko številko za poizvedbo za vložišča.</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:maxLength value="7"/>
+				</xs:restriction>
+			</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="sifPodatkovniVirUdelezenec" type="xs:token">
+							<xs:annotation>
+								<xs:documentation>V kolikor je podan podatek se v odgovoru vrača
+„prednastavljeno“ vložišče za naslovnika.</xs:documentation>
+							</xs:annotation>
+							
+						</xs:attribute>
+						<xs:attribute name="idUdelezenec" type="xs:token">
+							<xs:annotation>
+								<xs:documentation>V kolikor je podan podatek se v odgovoru vrača
+„prednastavljeno“ vložišče za naslovnika. </xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

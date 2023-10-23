@@ -1,0 +1,28 @@
+<xs:schema xmlns="ws.dc.cif.vsrs.si" 
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:cosc="ws.dc.cif.vsrs.si/SCRControl"
+           targetNamespace="ws.dc.cif.vsrs.si" 
+           elementFormDefault="qualified" attributeFormDefault="qualified">
+    <xs:import namespace="ws.dc.cif.vsrs.si/SCRControl" schemaLocation="SCRControl.xsd"/>
+    <xs:element name="SCServiceVersionResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="SCRControl" type="cosc:SCRControl"/>
+                <xs:element name="RData">
+                    <xs:complexType>
+                        <xs:attribute name="version" type="xs:string" use="required">
+                            <xs:annotation>
+                                <xs:documentation>Verzija wsdl projekta</xs:documentation>
+                            </xs:annotation>
+                        </xs:attribute>
+                        <xs:attribute name="buildVersion" type="xs:string" use="required">
+                            <xs:annotation>
+                                <xs:documentation>Verzija izgradnje</xs:documentation>
+                            </xs:annotation>
+                        </xs:attribute>
+                    </xs:complexType>					
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

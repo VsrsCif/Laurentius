@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:tns="lookup.dc.cif.vsrs.si" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:scc="ws.dc.cif.vsrs.si/SCControl" targetNamespace="lookup.dc.cif.vsrs.si">
+    <xs:import namespace="ws.dc.cif.vsrs.si/SCControl" schemaLocation="../XmlCommon/SCControl.xsd"/>
+    <xs:element name="SCLookupDocumentTypesRequest">
+        <xs:annotation>
+            <xs:documentation>Poizvedba, ki vraca seznam tipov dokumenov, </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="SCControl" type="scc:SCControl" minOccurs="0"/>
+                <xs:element name="Data">
+                    <xs:complexType>
+                        <xs:attribute name="aplikSif" use="optional">
+                            <xs:annotation>
+                                <xs:documentation>Sifra aplikacije, ki ima registrirane dokumente. V primeru, da šifra ni podana servis vrne vse različne tipe dokumentov.</xs:documentation>
+                            </xs:annotation>
+                            <xs:simpleType>
+                                <xs:restriction base="xs:token">
+                                    <xs:maxLength value="70"/>
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:attribute>                                        
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

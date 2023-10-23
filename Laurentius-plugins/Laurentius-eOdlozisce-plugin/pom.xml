@@ -160,6 +160,29 @@
       </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
+        <artifactId>jaxws-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>wsimport</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <bindingDirectory>${basedir}/src/main/resources/bindings</bindingDirectory>
+          <wsdlDirectory>${basedir}/src/main/resources/evip/wsdl</wsdlDirectory>
+          <wsdlFiles>
+            <wsdlFile>EVlozisceWS.wsdl</wsdlFile>
+          </wsdlFiles>
+          <sourceDestDir>${basedir}/src/main/java/</sourceDestDir>
+          <vmArgs>
+            <vmArg>-Djavax.xml.accessExternalDTD=all</vmArg>
+            <vmArg>-Djavax.xml.accessExternalSchema=all</vmArg>
+          </vmArgs>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
         <artifactId>jaxb2-maven-plugin</artifactId>
         <configuration>
           <externalEntityProcessing>true</externalEntityProcessing>

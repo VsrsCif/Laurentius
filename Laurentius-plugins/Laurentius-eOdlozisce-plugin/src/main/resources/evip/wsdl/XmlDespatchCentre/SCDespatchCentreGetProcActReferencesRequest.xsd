@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:tns="ws.dc.cif.vsrs.si" 
+            targetNamespace="ws.dc.cif.vsrs.si" 
+            xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+            xmlns:scc="ws.dc.cif.vsrs.si/SCControl"
+            xmlns:dce="ws.dc.cif.vsrs.si/DespatchCentreEntry" >
+    <xs:import namespace ="ws.dc.cif.vsrs.si/SCControl" schemaLocation="../XmlCommon/SCControl.xsd"/>
+    <xs:import namespace ="ws.dc.cif.vsrs.si/DespatchCentreEntry" schemaLocation="DespatchCentreEntry.xsd"/>
+    <xs:element name="SCDespatchCentreGetProcActReferencesRequest" >
+        <xs:annotation> 
+            <xs:documentation></xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="SCControl" type="scc:SCControl" />
+                <xs:element name="Data">
+                    
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="ProcActReference" minOccurs="1" maxOccurs="unbounded" >
+                                <xs:complexType>
+                                    <xs:attribute name="aplikIdPd" type="xs:token" />
+                                </xs:complexType>
+                           </xs:element>
+                        </xs:sequence>
+                        <xs:attribute name="aplikSif" type="xs:token" />
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 (http://www.altova.com) by XMLSpy 2007 Professional Ed., Installed for 5 users (with SMP from 2007-02-06 to 2008-02-07) (CIF VSRS) -->
+<xs:schema xmlns:tns="ws.dc.cif.vsrs.si" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:scc="ws.dc.cif.vsrs.si/SCControl" targetNamespace="ws.dc.cif.vsrs.si">
+    <xs:import namespace="ws.dc.cif.vsrs.si/SCControl" schemaLocation="../XmlCommon/SCControl.xsd"/>
+    <xs:element name="SCDespatchCentreGetDCInputEntriesRequest">
+        <xs:annotation>
+            <xs:documentation/>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="SCControl" type="scc:SCControl"/>
+                <xs:element name="Data">
+                    <xs:complexType>
+                        <xs:sequence minOccurs="0">
+                            <xs:element name="AdditionalSearchParameter" minOccurs="0" maxOccurs="unbounded">
+                                <xs:annotation>
+                                    <xs:documentation>Dodatni parametri iskanja. Med parametri v elementu Data in  AdditionalSearchParameter velja relacija AND. Med posameznimi parametri iskanja "AdditionalSearchParameter " velja relacija OR
+                                        Primer 1:  Data/@status='Potrjeno'  in v AdditionalSearchParameter  so:
+                                        AdditionalSearchParameter[@parameter='Status', @contains=true, value='Vrnjeno']
+                                        AdditionalSearchParameter[@parameter='Status', @contains=true, value='Stornirano']
+                                        Takšna poizvedba ne vrne rezultatov: 
+
+                                        Primer 2:  Data/@status='Potrjeno'  in v AdditionalSearchParameter  so:
+                                        AdditionalSearchParameter[@parameter='Status', @contains=true, @value='Vrnjeno']
+                                        AdditionalSearchParameter[@parameter='Status', @contains=true, @value='Stornirano']
+                                        AdditionalSearchParameter[@parameter='Status', @contains=true, @value='Potrjeno']
+                                        Poizvedba vrne samo zapise s statusom ='Potrjeno'
+
+                                        Primer 3:  Data/@status=null  in v AdditionalSearchParameter  so:
+                                        AdditionalSearchParameter[@parameter='Status', @contains=true, @value='Vrnjeno']
+                                        AdditionalSearchParameter[@parameter='Status', @contains=true, @value='Stornirano']
+                                        AdditionalSearchParameter[@parameter='Status', @contains=true, @value='Potrjeno']
+                                        Poizvedba vrne zapise s statusom ='Potrjeno', Vrnjeno, Stornirano
+
+                                        Primer 3:  Data/@status=null  in v AdditionalSearchParameter  so:
+                                        AdditionalSearchParameter[@parameter='Status', @contains=false]@value='Vrnjeno']
+                                        Poizvedba vrne zapise z vsemi statusi razen  Vrnjeno
+                                        
+                                         Primer 4:  Data/@aplikSifIzvor}=null  in v AdditionalSearchParameter  so:
+                                        AdditionalSearchParameter[@parameter='AplikSifIzvor}', @contains=false , value='DIGPOV'
+                                        Poizvedba vrne zapise razen pošiljke, ki so nastale v aplikaciji   DIGPOV
+                                        
+                                        Trenutno so podprti parametri: [SodiSif, OdlkTip, Vpisnik, PosiljkaTip, Status, AplikSifIzvor]
+                                    </xs:documentation>
+                                </xs:annotation>
+                                <xs:complexType>
+                                    <xs:attribute name="parameter" use="required">
+                                        <xs:annotation>
+                                            <xs:documentation>parameter iskanja</xs:documentation>
+                                        </xs:annotation>
+                                        <xs:simpleType>
+                                            <xs:restriction base="xs:token">
+                                                <xs:maxLength value="20"/>
+                                                <xs:enumeration value="SodiSif"/>
+                                                <xs:enumeration value="OdlkTip"/>
+                                                <xs:enumeration value="Vpisnik"/>
+                                                <xs:enumeration value="PosiljkaTip"/>
+                                                <xs:enumeration value="Status"/>
+                                                <xs:enumeration value="AplikSifIzvor"/>
+                                            </xs:restriction>
+                                        </xs:simpleType>
+                                    </xs:attribute>
+                                    <xs:attribute name="value" use="required">
+                                        <xs:annotation>
+                                            <xs:documentation>vrednost  parametra</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:attribute>
+                                    <xs:attribute name="contains" type="xs:boolean" default="true">
+                                        <xs:annotation>
+                                            <xs:documentation>true - iskani rezultati vsebujejo to vrednost, False- iskani rezultati ne vsebujejo te vrednosti</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:attribute>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                        <xs:attribute name="aplikSif" use="required">
+                            <xs:annotation>
+                                <xs:documentation>Sifra aplikacije, ki poizveduje po pošiljkah. Sifro aplikacije določi CIF</xs:documentation>
+                            </xs:annotation>
+                            <xs:simpleType>
+                                <xs:restriction base="xs:token">
+                                    <xs:maxLength value="70"/>
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="aplikSifIzvor" use="optional">
+                            <xs:annotation>
+                                <xs:documentation>Sifra aplikacije nastanka dohodnega zaznamka (pošiljke):
+                                    - EVP  - aplikacija Evidentiranje dohodne pošte (+ DVP)
+                                    - DEVP - aplikacija Digitaliziranje in evidentiranje dohodne pošte
+                                    - DIGPOV - aplikacija za digitalizacijo povratnic
+                                    - MDEMAIL - modul, ki prevzema dohodno pošto iz elektronskega predala
+                                    - ERACUN - SU-modul, ki prevzema dohodne račune iz MFRAC
+                                    - MDEPR - Modul varni elektronski predali
+                                    - Šifre posameznih aplikacij (SUVP, INSVP, IVPN, ZKVP,...) pri internem vročanje
+                                    V primeru, da se želi prevzemati dohodno pošto iz več različnih aplikacij hkrati ali pa, 
+                                    da se kakšne z pogoje "vse aplikacije razen ene" - se poizvedba naredi z pomočjo AdditionalSearchParameter
+                                    
+                                    
+                                </xs:documentation>
+                            </xs:annotation>
+                            <xs:simpleType>
+                                <xs:restriction base="xs:token">
+                                    <xs:maxLength value="70"/>
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="sodiSif" use="optional">
+                            <xs:annotation>
+                                <xs:documentation>Sifra sodisca kateremu pošiljka pripada.</xs:documentation>
+                            </xs:annotation>
+                            <xs:simpleType>
+                                <xs:restriction base="xs:token">
+                                    <xs:length value="3"/>
+                                    <xs:enumeration value=""/>
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="odlkTip" use="optional">
+                            <xs:annotation>
+                                <xs:documentation>Šifra  vrste oddelka.</xs:documentation>
+                            </xs:annotation>
+                            <xs:simpleType>
+                                <xs:restriction base="xs:token">
+                                    <xs:length value="2"/>
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="oddelek" use="optional">
+                            <xs:annotation>
+                                <xs:documentation>deprecated: enako kot odlkTip- atribut je ostal samo za to da lahko gre EVIP prej v produkcijo kot SU vpisnik.</xs:documentation>
+                            </xs:annotation>
+                            <xs:simpleType>
+                                <xs:restriction base="xs:token">
+                                    <xs:length value="2"/>
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="vpisnik" use="optional">
+                            <xs:annotation>
+                                <xs:documentation>Sifra vpisnika, kateremu pošiljka pripada</xs:documentation>
+                            </xs:annotation>
+                            <xs:simpleType>
+                                <xs:restriction base="xs:token">
+                                    <xs:maxLength value="3"/>
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="posiljkaTip" type="xs:token">
+                            <xs:annotation>
+                                <xs:documentation>Če je atribut podam servis vrača pošiljke, ki vsebujejo ta tip , sicer vrača pošiljke vseh tipov. Tip pošiljke je enak tipu osnovnega dokumenta.</xs:documentation>
+                            </xs:annotation>
+                        </xs:attribute>
+                        <xs:attribute name="datSprejemaOd" type="xs:dateTime" use="optional">
+                            <xs:annotation>
+                                <xs:documentation>Če je podatek "vnesen", servis vrača vse pošiljke datSprejema večje od vnesenega datuma </xs:documentation>
+                            </xs:annotation>
+                        </xs:attribute>
+                        <xs:attribute name="datSprejemaDo" type="xs:dateTime" use="optional">
+                            <xs:annotation>
+                                <xs:documentation>Če je podatek "vnesen", servis vrača vse pošiljke datSprejema manjše od vnesenega datuma </xs:documentation>
+                            </xs:annotation>
+                        </xs:attribute>
+                        <xs:attribute name="status" use="optional">
+                            <xs:annotation>
+                                <xs:documentation>Status pošiljke. Če status ni podan  je prevzeti status za pošiljke za prevzem. Statusi pošiljk:
+                                    - Potrjeno: Pošiljka je pripravljena za prevzem
+                                    - Vrnjeno: Pošiljka je vrnjena v vložišče
+                                    - Stornirano: Pošiljka je izbrisana
+                                    - Preneseno: Pošiljka je uspešno prevzeta v vpisnik
+                                </xs:documentation>
+                            </xs:annotation>
+                            <xs:simpleType>
+                                <xs:restriction base="xs:token">
+                                    <xs:maxLength value="20"/>
+                                    <xs:enumeration value="Potrjeno"/>
+                                    <xs:enumeration value="Vrnjeno"/>
+                                    <xs:enumeration value="Stornirano"/>
+                                    <xs:enumeration value="Preneseno"/>
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:attribute>
+                        <xs:attribute name="id" type="xs:integer" use="optional">
+                            <xs:annotation>
+                                <xs:documentation>Id dohodnega zaznamka v  EVIP-U</xs:documentation>
+                            </xs:annotation>
+                        </xs:attribute>
+                        <xs:attribute name="startIndex" type="xs:int" default="-1">
+                            <xs:annotation>
+                                <xs:documentation>Stevilka prve vrstice v vrnjenem rezultatu. </xs:documentation>
+                            </xs:annotation>
+                        </xs:attribute>
+                        <xs:attribute name="resultCount" type="xs:int" default="-1">
+                            <xs:annotation>
+                                <xs:documentation>Stevilo vrstic</xs:documentation>
+                            </xs:annotation>
+                        </xs:attribute>
+                        <xs:attribute name="sortBy" type="xs:token" default="Id">
+                            <xs:annotation>
+                                <xs:documentation>Lastnost po kateri so vrnjeni rezultati urejeni.</xs:documentation>
+                            </xs:annotation>
+                        </xs:attribute>
+                        <xs:attribute name="sortOrder" type="xs:token" default="DESC">
+                            <xs:annotation>
+                                <xs:documentation>Kako so urejeni vrnjeni rezultati:Narajscajoce/padajoce</xs:documentation>
+                            </xs:annotation>
+                        </xs:attribute>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
