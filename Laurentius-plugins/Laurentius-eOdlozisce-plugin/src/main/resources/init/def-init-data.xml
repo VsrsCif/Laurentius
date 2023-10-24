@@ -6,7 +6,7 @@
                      xmlns:pmd="http://msh.laurentius.si/pmode"
                      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <ns1:PModeData>
-        <pmd:Service id="eOdlozisce" serviceName="eOdlozisce">
+        <pmd:Service id="eOdlozisceService" serviceName="eOdlozisceService">
             <pmd:Initiator role="Sender"/>
             <pmd:Executor role="Receiver"/>
             <pmd:Action name="eVloga" invokeRole="initiator">
@@ -123,22 +123,24 @@
     </ns1:PModeData>
     <ns1:PluginData>
         <ns3:SEDInterceptor name="eOdlozisce_InMessages" active="true" interceptEvent="InMessage" interceptRole="All">
-            <ns3:SEDInterceptorRule property="Service" predicate="InList" value="eOdlozisce"/>
-            <ns3:SEDInterceptorInstance plugin="EOdlozisce" type="EOdlozisceInInterceptor" pluginVersion="1.0.0"/>
+            <ns3:SEDInterceptorRule property="Service" predicate="InList" value="eOdlozisceService"/>
+            <ns3:SEDInterceptorInstance plugin="eOdlozisce" type="EOdlozisceInInterceptor" pluginVersion="1.0.0"/>
         </ns3:SEDInterceptor>
         <ns3:SEDInterceptor name="eOdlozisce_OutMessages" active="true" interceptEvent="OutMessage" interceptRole="All">
-            <ns3:SEDInterceptorRule property="Service" predicate="InList" value="eOdlozisce"/>
-            <ns3:SEDInterceptorInstance plugin="EOdlozisce" type="EOdlozisceOutInterceptor" pluginVersion="1.0.0"/>
+            <ns3:SEDInterceptorRule property="Service" predicate="InList" value="eOdlozisceService"/>
+            <ns3:SEDInterceptorInstance plugin="eOdlozisce" type="EOdlozisceOutInterceptor" pluginVersion="1.0.0"/>
         </ns3:SEDInterceptor>
         <ns2:SEDCronJob  name="ECFProcessSchedule" active="true" second="0" minute="*/5" hour="8-16" dayOfMonth="*" month="*" dayOfWeek="1-5">
-            <ns2:SEDTask plugin="EOdlozisce" type="eodlozisce-validation" pluginVersion="1.0.0"  name="EOdlozisce" active="true">
+            <ns2:SEDTask plugin="eOdlozisce" type="eodlozisce-validation" pluginVersion="1.0.0"  name="EOdlozisce" active="true">
                 <ns2:SEDTaskProperty  key="ecf.payload.metadata.name">metadata.xml</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty  key="ecf.sign.key.alias">local-key-alias</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty  key="ecf.tsa.url">timestamp service url</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty  key="ecf.sign.key.alias">test-zpp-sign</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty  key="ecf.tsa.url">https://url</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty  key="ecf.payload.error.report.name">error-report</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty  key="error-report">error-report%%.json</ns2:SEDTaskProperty>
             </ns2:SEDTask>
         </ns2:SEDCronJob>
         <ns2:SEDCronJob  name="ECFEVIPSchedule" active="true" second="0" minute="*" hour="*" dayOfMonth="*" month="*" dayOfWeek="*">
-            <ns2:SEDTask plugin="EOdlozisce" type="ecf-evip-integration" pluginVersion="1.0.0"  name="ECFEVIPTask" active="false">
+            <ns2:SEDTask plugin="eOdlozisce" type="ecf-evip-integration" pluginVersion="1.0.0"  name="ECFEVIPTask" active="false">
                 <ns2:SEDTaskProperty  key="ecf.evip.url">evip.local</ns2:SEDTaskProperty>
             </ns2:SEDTask>
         </ns2:SEDCronJob>

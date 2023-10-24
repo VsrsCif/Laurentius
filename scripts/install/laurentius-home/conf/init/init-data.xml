@@ -163,14 +163,16 @@
             </ns2:SEDTask>
         </ns2:SEDCronJob>
         <ns2:SEDCronJob id="12" name="ECFProcessSchedule" active="true" second="0" minute="*/5" hour="8-16" dayOfMonth="*" month="*" dayOfWeek="1-5">
-            <ns2:SEDTask id="19" plugin="EOdlozisce" type="eodlozisce-validation" pluginVersion="1.0.0"  name="EOdlozisce" active="true">
-                <ns2:SEDTaskProperty id="110" key="ecf.payload.metadata.name">metadata.xml</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty id="111" key="ecf.sign.key.alias">local-key-alias</ns2:SEDTaskProperty>
-                <ns2:SEDTaskProperty id="113" key="ecf.tsa.url">timestamp service url</ns2:SEDTaskProperty>
+            <ns2:SEDTask id="19" plugin="eOdlozisce" type="eodlozisce-validation" pluginVersion="1.0.0"  name="eOdlozisceValidation" active="true">
+                <ns2:SEDTaskProperty  key="ecf.payload.metadata.name">metadata.xml</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty  key="ecf.sign.key.alias">test-zpp-sign</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty  key="ecf.tsa.url">https://url</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty  key="ecf.payload.error.report.name">error-report</ns2:SEDTaskProperty>
+                <ns2:SEDTaskProperty  key="error-report">error-report%%.json</ns2:SEDTaskProperty>
             </ns2:SEDTask>
         </ns2:SEDCronJob>
         <ns2:SEDCronJob id="13" name="ECFEVIPSchedule" active="true" second="0" minute="*" hour="*" dayOfMonth="*" month="*" dayOfWeek="*">
-            <ns2:SEDTask id="20" plugin="EOdlozisce" type="ecf-evip-integration" pluginVersion="1.0.0"  name="ECFEVIPTask" active="false">
+            <ns2:SEDTask id="20" plugin="eOdlozisce" type="ecf-evip-integration" pluginVersion="1.0.0"  name="ECFEVIPTask" active="false">
                 <ns2:SEDTaskProperty id="112" key="ecf.evip.url">evip.local</ns2:SEDTaskProperty>
             </ns2:SEDTask>
         </ns2:SEDCronJob>
@@ -199,12 +201,12 @@
             <ns3:SEDInterceptorInstance plugin="LegalZKP" type="ZKPFaultInInterceptor" pluginVersion="1.0.0"/>
         </ns3:SEDInterceptor>
         <ns3:SEDInterceptor id="7" name="eOdlozisce_InMessages" active="true" interceptEvent="InMessage" interceptRole="All">
-            <ns3:SEDInterceptorRule property="Service" predicate="InList" value="eOdlozisce"/>
-            <ns3:SEDInterceptorInstance plugin="EOdlozisce" type="EOdlozisceInInterceptor" pluginVersion="1.0.0"/>
+            <ns3:SEDInterceptorRule property="Service" predicate="InList" value="eOdlozisceService"/>
+            <ns3:SEDInterceptorInstance plugin="eOdlozisce" type="EOdlozisceInInterceptor" pluginVersion="1.0.0"/>
         </ns3:SEDInterceptor>
         <ns3:SEDInterceptor id="8" name="eOdlozisce_OutMessages" active="true" interceptEvent="OutMessage" interceptRole="All">
-            <ns3:SEDInterceptorRule property="Service" predicate="InList" value="eOdlozisce"/>
-            <ns3:SEDInterceptorInstance plugin="EOdlozisce" type="EOdlozisceOutInterceptor" pluginVersion="1.0.0"/>
+            <ns3:SEDInterceptorRule property="Service" predicate="InList" value="eOdlozisceService"/>
+            <ns3:SEDInterceptorInstance plugin="eOdlozisce" type="EOdlozisceOutInterceptor" pluginVersion="1.0.0"/>
         </ns3:SEDInterceptor>
     </SEDInterceptors>
     <SEDProcessors>

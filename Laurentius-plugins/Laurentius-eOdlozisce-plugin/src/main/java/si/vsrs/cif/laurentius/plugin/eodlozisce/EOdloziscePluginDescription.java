@@ -62,6 +62,9 @@ public class EOdloziscePluginDescription extends AbstractPluginDescription {
       registerPluginComponentInterface(EOdlozisceInInterceptor.class);
       registerPluginComponentInterface(EOdlozisceOutInterceptor.class);
 
+      registerPluginComponentInterface(EOdlozisceTask.class);
+      registerPluginComponentInterface(ECFEVIPTask.class);
+
       registerPlugin();
     } catch (PluginException ex) {
       LOG.logError("Error occured while registering plugin: " + ex.

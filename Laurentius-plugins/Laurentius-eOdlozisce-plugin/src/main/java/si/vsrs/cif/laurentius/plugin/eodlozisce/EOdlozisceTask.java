@@ -5,6 +5,7 @@
 package si.vsrs.cif.laurentius.plugin.eodlozisce;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 import si.laurentius.commons.SEDJNDI;
@@ -23,6 +24,8 @@ import si.laurentius.msh.inbox.mail.MSHInMail;
 import si.laurentius.msh.inbox.payload.MSHInPart;
 import si.laurentius.plugin.crontask.CronTaskDef;
 import si.laurentius.plugin.crontask.CronTaskPropertyDef;
+import si.laurentius.plugin.interfaces.PropertyListType;
+import si.laurentius.plugin.interfaces.PropertyType;
 import si.laurentius.plugin.interfaces.TaskExecutionInterface;
 import si.laurentius.plugin.interfaces.exception.TaskException;
 import si.sodisce.sheme.skupno.izmenjave.v1.ElektronskaOvojnica;
@@ -85,7 +88,6 @@ public class EOdlozisceTask implements TaskExecutionInterface {
     public static final String KEY_PAYLOAD_ERROR_REPORT_NAME = "ecf.payload.error.report.name";
     public static final String ERROR_REPORT_FILE_NAME = "error-report";
     private static final String SIGN_ALIAS = "ecf.sign.key.alias";
-
     private static final String TIMESTAMP_SERVICE_URL = "ecf.tsa.url";
 
     @EJB(mappedName = SEDJNDI.JNDI_SEDDAO)
@@ -103,6 +105,8 @@ public class EOdlozisceTask implements TaskExecutionInterface {
     XMLSignatureUtils signatureUtils;
     ObjectMapper objectMapper;
 
+    final static Logger log = Logger.getLogger(EOdlozisceTask.class);
+
     @PostConstruct
     public void init() {
         try {
@@ -118,6 +122,7 @@ public class EOdlozisceTask implements TaskExecutionInterface {
     @Override
     public String executeTask(Properties properties) {
 
+        log.warn("Start eOdlozisce plugin task: \n");
         long l = LOG.logStart();
         StringWriter sw = new StringWriter();
         sw.append("Start eOdlozisce plugin task: \n");
@@ -135,9 +140,12 @@ public class EOdlozisceTask implements TaskExecutionInterface {
         inMailList.forEach((inMail) -> {
             try {
                 List<MSHInPart> mshInParts = inMail.getMSHInPayload().getMSHInParts();
+                log.warn("Getting and validating metadata attachment: " + metadataAttachmentName);
                 ValidationResult validationResult = validateSchemas(metadataAttachmentName, mshInParts);
 
+
                 if (validationResult.getValidationOutputs().stream().anyMatch((o) -> o.getSeverity().equals(ValidationOutput.Severity.ERROR))) {
+                    log.error("Validation failed for metadata attachment - generating xml attachment");
                     Document signedDocument = this.signatureUtils.signXmlDocument(
                             getPrivateKeyEntry(properties),
                             getDocumentFromObject(
@@ -269,6 +277,7 @@ public class EOdlozisceTask implements TaskExecutionInterface {
         return mshInParts.stream().filter((part) -> metadataAttachmentName.equals(part.getName())).findFirst().map((part) ->
                 {
                     try {
+                        log.warn("Validating schema to file: " + part.getFilepath());
                         return this.schemaValidator.validate(Files.newInputStream(Paths.get(part.getFilepath())));
                     } catch (IOException e) {
                         throw new RuntimeException(e);
@@ -355,10 +364,27 @@ public class EOdlozisceTask implements TaskExecutionInterface {
     @Override
     public CronTaskDef getDefinition() {
 
+        log.info("ECF-getDefinition()");
         CronTaskDef tt = new CronTaskDef();
         tt.setType("eodlozisce-validation");
         tt.setName("Validate eOdlozisce package");
         tt.setDescription("Validate and forward eOdlozisce package.");
+        tt.getCronTaskPropertyDeves().add(createTTProperty(KEY_PAYLOAD_METADATA_NAME,
+                "Metadata attachment name.", true, PropertyType.String.
+                        getType(), null, null));
+        tt.getCronTaskPropertyDeves().add(createTTProperty(KEY_PAYLOAD_ERROR_REPORT_NAME,
+                "Error report name.", true, PropertyType.String.
+                        getType(), null, null));
+        tt.getCronTaskPropertyDeves().add(createTTProperty(ERROR_REPORT_FILE_NAME,
+                "Error report file name.", true, PropertyType.String.
+                        getType(), null, null));
+        tt.getCronTaskPropertyDeves().add(createTTProperty(SIGN_ALIAS,
+                "Alias of the local signing cert.", true, PropertyType.String.
+                        getType(), null, null));
+        tt.getCronTaskPropertyDeves().add(createTTProperty(TIMESTAMP_SERVICE_URL,
+                "Timestamping service URL.", true, PropertyType.String.
+                        getType(), null, null));
+
         return tt;
     }
 

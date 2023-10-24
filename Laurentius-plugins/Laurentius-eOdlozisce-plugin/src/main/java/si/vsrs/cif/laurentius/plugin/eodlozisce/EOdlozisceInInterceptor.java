@@ -2,6 +2,7 @@ package si.vsrs.cif.laurentius.plugin.eodlozisce;
 
 import org.apache.cxf.binding.soap.SoapFault;
 import org.apache.cxf.binding.soap.SoapMessage;
+import org.apache.log4j.Logger;
 import si.laurentius.commons.SEDJNDI;
 import si.laurentius.commons.cxf.SoapUtils;
 import si.laurentius.commons.ebms.EBMSError;
@@ -32,6 +33,8 @@ public class EOdlozisceInInterceptor implements SoapInterceptorInterface {
 
     protected final SEDLogger LOG = new SEDLogger(EOdlozisceInInterceptor.class);
 
+    final static Logger log = Logger.getLogger(EOdlozisceInInterceptor.class);
+
     @Override
     public ComponentBase getDefinition() {
         MailInterceptorDef definition = new MailInterceptorDef();
@@ -45,6 +48,8 @@ public class EOdlozisceInInterceptor implements SoapInterceptorInterface {
     public boolean handleMessage(SoapMessage msg, Properties contextProperties) {
         long l = LOG.logStart();
         LOG.log(String.format("EODL IN message received on time = %d", l));
+
+        log.warn("Handling eOdlozisce message");
 
         SEDBox receiverBox = SoapUtils.getMSHInMailReceiverBox(msg);
         MSHInMail inMail = SoapUtils.getMSHInMail(msg);
@@ -68,17 +73,6 @@ public class EOdlozisceInInterceptor implements SoapInterceptorInterface {
                         errorMsg, SoapFault.FAULT_CODE_SERVER);
             }
         }
-
-        // TODO validate message
-        // valid XML metadata
-        // valid data
-        // valid XML signature
-        // valid main PDF attachment signature
-
-        // TODO process message
-        // XML signature
-        // timestamp signature (external service?)
-        //
 
         return true;
     }
