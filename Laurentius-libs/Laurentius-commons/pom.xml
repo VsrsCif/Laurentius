@@ -92,9 +92,17 @@
                     <includes>
                         <include>target/generated-sources/jaxb/si/laurentius/**/*.java</include>
                     </includes>
-                    <token>public Boolean is(.*)\(\)(\s*\{\s*.+\s*\})</token>
-                    <value>public Boolean is$1\(\)$2
-public Boolean get$1\(\)$2</value>
+                    <replacements>
+                        <replacement>
+                            <token>public Boolean get(.*)\(\)(\s*\{\s*.+\s*\})</token>
+                            <value></value>
+                        </replacement>
+                        <replacement>
+                            <token>public Boolean is(.*)\(\)(\s*\{\s*.+\s*\})</token>
+                            <value>public Boolean is$1\(\)$2
+                                public Boolean get$1\(\)$2</value>
+                        </replacement>
+                    </replacements>
                 </configuration>
             </plugin>
         </plugins>
