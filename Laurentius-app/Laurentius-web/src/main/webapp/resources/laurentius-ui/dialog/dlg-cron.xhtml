@@ -32,13 +32,13 @@
 
                             <h:outputText value="#{msg['Name']}:" />
                             <p:inputText id="cname" value="#{adminSEDCronJobView.editable.name}" 
-                                         disabled="#{!adminSEDCronJobView.isEditableNew()}"
+                                         disabled="#{!adminSEDCronJobVieweditableNew()}"
                                          style="width: 120px"  
                                          />
 
 
                             <h:outputText value="#{msg['Active']}:" />
-                            <h:selectBooleanCheckbox id="cActive" value="#{adminSEDCronJobView.editable.isActive()}"  />
+                            <h:selectBooleanCheckbox id="cActive" value="#{adminSEDCronJobView.editable.active}"  />
 
                             <h:outputText value="#{msg['Second']}:" />
                             <p:inputText id="cSecond" value="#{adminSEDCronJobView.editable.second}" style="width: 120px"  />
@@ -59,7 +59,7 @@
                             <p:inputText value="#{adminSEDCronJobView.editable.dayOfWeek}" style="width: 120px" />
                             
                             <h:outputText value="#{msg['SkipOnWorkFreeDay']}:" />
-                            <h:selectBooleanCheckbox id="onwfd" value="#{adminSEDCronJobView.editable.isIgnoreOnWorkFreeDays()}"  />
+                            <h:selectBooleanCheckbox id="onwfd" value="#{adminSEDCronJobView.editableignoreOnWorkFreeDays()}"  />
                         </p:panelGrid>
                     </p:layoutUnit>
                     
@@ -124,7 +124,7 @@
                          <p:column headerText="#{msg['Name']}"  >
                              <h:outputText value="#{sp.name}" /></p:column>
                              <p:column headerText="#{msg['Active']}"  width="40">
-                                 <h:outputText value="#{sp.isActive()}" /></p:column>
+                                 <h:outputText value="#{sp.active}" /></p:column>
                             
                         <p:column headerText="#{msg['Plugin']}"  width="120">
                             <h:outputText value="#{sp.plugin}" /></p:column>

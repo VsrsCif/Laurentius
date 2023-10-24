@@ -445,7 +445,7 @@
                                     </p:tree>
 
                                 </p:tab>
-                                <p:tab id="PANEL_SETT_CUSTOM" rendered="#{userSessionData.user.isAdminRole()}">
+                                <p:tab id="PANEL_SETT_CUSTOM" rendered="#{userSessionData.user.adminRole}">
 
                                     <f:facet name="title">
                                         <h:graphicImage value="#{resource['images:/settings.svg']}" width="22" height="22" />
@@ -465,7 +465,7 @@
 
 
                                 </p:tab>
-                                <p:tab id="PANEL_CRON_EXEC" rendered="#{userSessionData.user.isAdminRole()}">
+                                <p:tab id="PANEL_CRON_EXEC" rendered="#{userSessionData.user.adminRole}">
 
                                     <f:facet name="title">
                                         <h:graphicImage value="#{resource['images:/monitor.svg']}" width="22" height="22" />

@@ -118,26 +118,26 @@
       <groupId>org.apache.pdfbox</groupId>
       <artifactId>pdfbox-examples</artifactId>
     </dependency>
-    <dependency>
-      <groupId>si.src</groupId>
-      <artifactId>src-crypto</artifactId>
-      <version>1.0.4</version>
-    </dependency>
-    <dependency>
-      <groupId>si.src</groupId>
-      <artifactId>src-esign</artifactId>
-      <version>1.0.0</version>
-    </dependency>
-    <dependency>
-      <groupId>si.src</groupId>
-      <artifactId>src-setccesign</artifactId>
-      <version>1.0.0</version>
-    </dependency>
-    <dependency>
-      <groupId>si.src</groupId>
-      <artifactId>src-utils</artifactId>
-      <version>1.5.31</version>
-    </dependency>
+<!--    <dependency>-->
+<!--      <groupId>si.src</groupId>-->
+<!--      <artifactId>src-crypto</artifactId>-->
+<!--      <version>1.0.4</version>-->
+<!--    </dependency>-->
+<!--    <dependency>-->
+<!--      <groupId>si.src</groupId>-->
+<!--      <artifactId>src-esign</artifactId>-->
+<!--      <version>1.0.0</version>-->
+<!--    </dependency>-->
+<!--    <dependency>-->
+<!--      <groupId>si.src</groupId>-->
+<!--      <artifactId>src-setccesign</artifactId>-->
+<!--      <version>1.0.0</version>-->
+<!--    </dependency>-->
+<!--    <dependency>-->
+<!--      <groupId>si.src</groupId>-->
+<!--      <artifactId>src-utils</artifactId>-->
+<!--      <version>1.5.31</version>-->
+<!--    </dependency>-->
   </dependencies>
 
   <build>
@@ -196,6 +196,27 @@
           <target>8</target>
           <fork>true</fork>
           <compilerArgument>-XDignore.symbol.file</compilerArgument>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>com.google.code.maven-replacer-plugin</groupId>
+        <artifactId>replacer</artifactId>
+        <executions>
+          <execution>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>replace</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <basedir>${project.basedir}</basedir>
+          <includes>
+            <include>src/main/java/si/sodisce/_2010/mail/**/*.java</include>
+          </includes>
+          <token>public Boolean is(.*)\(\)(\s*\{\s*.+\s*\})</token>
+          <value>public Boolean is$1\(\)$2
+public Boolean get$1\(\)$2</value>
         </configuration>
       </plugin>
     </plugins>

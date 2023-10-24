@@ -76,7 +76,27 @@
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
             </plugin>
-            
+            <plugin>
+                <groupId>com.google.code.maven-replacer-plugin</groupId>
+                <artifactId>replacer</artifactId>
+                <executions>
+                    <execution>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>replace</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <basedir>${project.basedir}</basedir>
+                    <includes>
+                        <include>target/generated-sources/jaxb/si/laurentius/**/*.java</include>
+                    </includes>
+                    <token>public Boolean is(.*)\(\)(\s*\{\s*.+\s*\})</token>
+                    <value>public Boolean is$1\(\)$2
+public Boolean get$1\(\)$2</value>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>

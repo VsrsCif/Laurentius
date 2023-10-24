@@ -34,12 +34,12 @@
 
                         <h:outputText value="#{msg['Name']}:" />
                         <p:inputText id="cname" value="#{adminSEDInterceptorView.editable.name}" 
-                                     disabled="#{!adminSEDInterceptorView.isEditableNew()}"
+                                     disabled="#{!adminSEDInterceptorVieweditableNew()}"
                                      style="width: 120px"  
                                      />
 
                         <h:outputText value="#{msg['Active']}:" />
-                        <h:selectBooleanCheckbox id="cActive" value="#{adminSEDInterceptorView.editable.isActive()}"  />
+                        <h:selectBooleanCheckbox id="cActive" value="#{adminSEDInterceptorView.editableactive}"  />
 
                         <h:outputText value="#{msg['InterceptEvent']}:" />
                         <p:selectOneMenu value="#{adminSEDInterceptorView.editable.interceptEvent}" 
@@ -106,7 +106,7 @@
                         <h:outputText value="#{msg['Plugin']}" />
                         <p:selectOneMenu id="pluginType" value="#{adminSEDInterceptorView.editableInterceptorPluginType}" 
                                          style="width:150px" 
-                                         disabled="#{!adminSEDInterceptorView.isEditableNew()}"
+                                         disabled="#{!adminSEDInterceptorVieweditableNew()}"
                                          >
                             <p:ajax   update="intcType PropertyPanel:PropertyPanelTable" />    
 
@@ -119,7 +119,7 @@
                         <h:outputText value="#{msg['Intc']}" />
                         <p:selectOneMenu id="intcType" value="#{adminSEDInterceptorView.editableInterceptorType}" 
                                          style="width:150px"
-                                         disabled="#{!adminSEDInterceptorView.isEditableNew()}"
+                                         disabled="#{!adminSEDInterceptorVieweditableNew()}"
                                          >
                             <p:ajax update="PropertyPanel:PropertyPanelTable" />                               
                             <f:selectItems value="#{adminSEDInterceptorView.editablePluginInterceptorDeves}"
