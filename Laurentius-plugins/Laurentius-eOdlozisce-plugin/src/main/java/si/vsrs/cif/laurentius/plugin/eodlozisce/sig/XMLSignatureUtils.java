@@ -101,30 +101,31 @@ public class XMLSignatureUtils {
      */
     public XMLSignatureFactory getXMLSignatureFactory(String providerName)
             throws SEDSecurityException {
-        long l = LOG.logStart(providerName);
-
-        XMLSignatureFactory fac = null;
-        if (providerName == null || providerName.isEmpty()) {
-            LOG.logWarn(l, "Null XMLSignatureFactory provider!", null);
-            return fac;
-        }
-
-        Class c;
-        try {
-            c = forName(providerName);
-        } catch (ClassNotFoundException ex) {
-            LOG.formatedWarning("XMLSignatureFactory for '%s'. Error: '%s'", providerName, ex.getMessage());
-            return fac;
-        }
-
-        try {
-            fac = getInstance("DOM", (Provider) c.newInstance());
-        } catch (InstantiationException | IllegalAccessException ex) {
-            String msg = "Error occured while initializing XMLSignatureFactory for: '" + providerName +
-                    "'.";
-            throw new SEDSecurityException(InitializeException, ex, msg);
-        }
-        return fac;
+        return getInstance("DOM");
+//        long l = LOG.logStart(providerName);
+//
+//        XMLSignatureFactory fac = null;
+//        if (providerName == null || providerName.isEmpty()) {
+//            LOG.logWarn(l, "Null XMLSignatureFactory provider!", null);
+//            return fac;
+//        }
+//
+//        Class c;
+//        try {
+//            c = forName(providerName);
+//        } catch (ClassNotFoundException ex) {
+//            LOG.formatedWarning("XMLSignatureFactory for '%s'. Error: '%s'", providerName, ex.getMessage());
+//            return fac;
+//        }
+//
+//        try {
+//            fac = getInstance("DOM", (Provider) c.newInstance());
+//        } catch (InstantiationException | IllegalAccessException ex) {
+//            String msg = "Error occured while initializing XMLSignatureFactory for: '" + providerName +
+//                    "'.";
+//            throw new SEDSecurityException(InitializeException, ex, msg);
+//        }
+//        return fac;
     }
 
     /**
@@ -139,21 +140,27 @@ public class XMLSignatureUtils {
             throws SEDSecurityException {
         long l = LOG.logStart();
 
-        XMLSignatureFactory fac = null;
-        String providerName = getProperty(XML_SIGNATURE_PROVIDER_PROP);
-        if (providerName != null) {
-            fac = getXMLSignatureFactory(providerName);
-        }
-        // try org.jcp.xml.dsig.internal.dom.XMLDSigRI
-        if (fac == null) {
-            fac = getXMLSignatureFactory(XML_SIGNATURE_PROVIDER_VALUE_1);
-        }
-        // try org.apache.jcp.xml.dsig.internal.dom.XMLDSigRI
-        if (fac == null) {
-            fac = getXMLSignatureFactory(XML_SIGNATURE_PROVIDER_VALUE_2);
-        }
-        LOG.logEnd(l);
-        return fac;
+//        XMLSignatureFactory fac = null;
+//        String providerName = getProperty(XML_SIGNATURE_PROVIDER_PROP);
+//        LOG.log("1 XMLSignatureFactory got system property " + XML_SIGNATURE_PROVIDER_PROP + " = " + providerName);
+//
+//        if (providerName != null) {
+//            fac = getXMLSignatureFactory(providerName);
+//            LOG.log("2 XMLSignatureFactory got system property " + providerName + " = " + providerName);
+//        }
+//        // try org.jcp.xml.dsig.internal.dom.XMLDSigRI
+//        if (fac == null) {
+//            fac = getXMLSignatureFactory(XML_SIGNATURE_PROVIDER_VALUE_1);
+//            LOG.log("3 XMLSignatureFactory got system property " + XML_SIGNATURE_PROVIDER_VALUE_1 + " = " + providerName);
+//        }
+//        // try org.apache.jcp.xml.dsig.internal.dom.XMLDSigRI
+//        if (fac == null) {
+//            fac = getXMLSignatureFactory(XML_SIGNATURE_PROVIDER_VALUE_2);
+//            LOG.log("4 XMLSignatureFactory got system property " + XML_SIGNATURE_PROVIDER_VALUE_2 + " = " + providerName);
+//        }
+//        LOG.logEnd(l);
+//        return fac;
+        return XMLSignatureFactory.getInstance("DOM");
     }
 
     /**
@@ -174,6 +181,7 @@ public class XMLSignatureUtils {
                                                   String sigMethod, String signatureReason)
             throws SEDSecurityException {
         long t = LOG.logStart(strIds);
+        LOG.log("Starting xml signature...");
 
         // get XMLSignatureFactory implemenation
         XMLSignatureFactory fac = getXMLSignatureFactory();
@@ -211,12 +219,15 @@ public class XMLSignatureUtils {
         mXAdESBuilder.setIdnessToElemetns(doc.getDocumentElement());
         try {
             signature.sign(dsc);
+            LOG.log("Successfully signed the document!: " + documentToString(doc));
             LOG.logEnd(t, strIds);
             return doc;
         } catch (MarshalException | XMLSignatureException ex) {
             throw new SEDSecurityException(
                     SEDSecurityException.SEDSecurityExceptionCode.CreateSignatureException, ex,
                     "Error signing document:" + ex.getMessage());
+        } catch (TransformerException e) {
+            throw new RuntimeException(e);
         }
     }
 

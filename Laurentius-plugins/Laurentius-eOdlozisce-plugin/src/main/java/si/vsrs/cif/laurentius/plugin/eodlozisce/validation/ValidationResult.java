@@ -35,4 +35,18 @@ public class ValidationResult {
     public boolean hasValidationIssues() {
         return !this.validationOutputs.isEmpty();
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Validation errors:\n");
+        this.validationOutputs.forEach(validationOutput -> {
+            final ValidationOutput.Severity severity = validationOutput.getSeverity();
+            final ValidationErrorCode code = validationOutput.getCode();
+            final String codeName = code.name();
+            final String customMessage = code.getCustomMessage();
+            sb.append("\tSeverity=").append(severity.toString()).append(" code=").append(codeName).append(" customMessage=").append(customMessage);
+        });
+        return sb.toString();
+    }
 }
