@@ -72,8 +72,10 @@ import java.security.KeyStore;
 import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.ResourceBundle;
 import java.util.UUID;
 
 import static si.vsrs.cif.laurentius.plugin.eodlozisce.validation.SchemaValidationStage.ErrorCodes.MISSING_METADATA_XML;
@@ -86,6 +88,7 @@ public class EOdlozisceTask implements TaskExecutionInterface {
     private static final SEDLogger LOG = new SEDLogger(EOdlozisceTask.class);
     public static final String KEY_PAYLOAD_METADATA_NAME = "ecf.payload.metadata.name";
     public static final String KEY_PAYLOAD_ERROR_REPORT_NAME = "ecf.payload.error.report.name";
+    public static final String KEY_DOCUMENT_LOCALE = "ecf.document.locale";
     public static final String ERROR_REPORT_FILE_NAME = "error-report";
     private static final String SIGN_ALIAS = "ecf.sign.key.alias";
     private static final String TIMESTAMP_SERVICE_URL = "ecf.tsa.url";
@@ -123,6 +126,9 @@ public class EOdlozisceTask implements TaskExecutionInterface {
     public String executeTask(Properties properties) {
 
         log.warn("Start eOdlozisce plugin task: \n");
+        Locale locale = getLocale(properties);
+        ResourceBundle errorsBundle = ResourceBundle.getBundle("bundles/validation_errors", locale);
+
         long l = LOG.logStart();
         StringWriter sw = new StringWriter();
         sw.append("Start eOdlozisce plugin task: \n");
@@ -190,6 +196,7 @@ public class EOdlozisceTask implements TaskExecutionInterface {
 
                 final String errorReportAttachmentName = properties.getProperty(KEY_PAYLOAD_ERROR_REPORT_NAME);
                 if (validationResult.hasValidationIssues()) {
+                    validationResult.localizeValidationOutputs(errorsBundle);
                     generateOrUpdateErrorReport(inMail, mshInParts, errorReportAttachmentName, validationResult);
                 }
 
@@ -216,6 +223,11 @@ public class EOdlozisceTask implements TaskExecutionInterface {
 
         sw.append("End ecf plugin task");
         return sw.toString();
+    }
+
+    private Locale getLocale(Properties properties) {
+        Optional<String> documentLocale = Optional.ofNullable(properties.getProperty(KEY_DOCUMENT_LOCALE));
+        return documentLocale.map(Locale::forLanguageTag).orElseGet(() -> new Locale("sl", "SI"));
     }
 
     private void generateOrUpdateErrorReport(MSHInMail inMail, List<MSHInPart> mshInParts, String errorReportAttachmentName, ValidationResult validationResult) throws StorageException {

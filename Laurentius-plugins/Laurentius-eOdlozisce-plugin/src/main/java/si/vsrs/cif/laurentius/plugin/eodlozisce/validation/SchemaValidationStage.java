@@ -13,6 +13,7 @@ import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ResourceBundle;
 
 public class SchemaValidationStage implements ValidationStage<InputStream> {
 
@@ -53,6 +54,11 @@ public class SchemaValidationStage implements ValidationStage<InputStream> {
         @Override
         public String asText() {
             return message;
+        }
+
+        @Override
+        public void localize(ResourceBundle errorsBundle) {
+            this.message = errorsBundle.getString(this.name());
         }
     }
 

@@ -11,6 +11,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SignatureException;
 import java.security.cert.CertificateException;
 import java.util.Objects;
+import java.util.ResourceBundle;
 
 public class PDFValidationStage implements ValidationStage<File> {
 
@@ -39,6 +40,11 @@ public class PDFValidationStage implements ValidationStage<File> {
         @Override
         public String asText() {
             return message;
+        }
+
+        @Override
+        public void localize(ResourceBundle errorsBundle) {
+            this.message = errorsBundle.getString(this.name());
         }
     }
 

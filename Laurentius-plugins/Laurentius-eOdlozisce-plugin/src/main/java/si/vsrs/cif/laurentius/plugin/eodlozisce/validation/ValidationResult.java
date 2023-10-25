@@ -2,6 +2,7 @@ package si.vsrs.cif.laurentius.plugin.eodlozisce.validation;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 public class ValidationResult {
@@ -48,5 +49,12 @@ public class ValidationResult {
             sb.append("\tSeverity=").append(severity.toString()).append(" code=").append(codeName).append(" customMessage=").append(customMessage);
         });
         return sb.toString();
+    }
+
+    public void localizeValidationOutputs(ResourceBundle errorsBundle) {
+        validationOutputs.stream()
+                .map(ValidationOutput::getCode)
+                .filter(validationErrorCode -> errorsBundle.containsKey(validationErrorCode.name()))
+                .forEach(validationErrorCode -> validationErrorCode.localize(errorsBundle));
     }
 }

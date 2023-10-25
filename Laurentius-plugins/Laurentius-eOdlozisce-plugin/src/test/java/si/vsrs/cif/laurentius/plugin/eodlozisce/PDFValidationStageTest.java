@@ -7,7 +7,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 import si.vsrs.cif.laurentius.plugin.eodlozisce.validation.PDFValidationStage;
-import si.vsrs.cif.laurentius.plugin.eodlozisce.validation.SchemaValidationStage;
 import si.vsrs.cif.laurentius.plugin.eodlozisce.validation.ValidationResult;
 
 import java.io.File;
