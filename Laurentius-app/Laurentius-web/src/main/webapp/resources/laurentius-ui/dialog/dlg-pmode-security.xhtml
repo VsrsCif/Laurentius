@@ -37,7 +37,7 @@
 
                         <h:outputText value="#{msg['Id']}:" />
                         <p:inputText  value="#{pModeSecurityView.editable.id}" 
-                                      disabled="#{!pModeSecurityView.isEditableNew()}"
+                                      disabled="#{!pModeSecurityView.editableNew}"
                                       style="width:100%" 
                                       />
 
@@ -105,7 +105,7 @@
 
                         <h:outputText value="#{msg['SignAllAttachmetns']}:" />
                         <h:selectBooleanCheckbox id="sigAllAtt"
-                                                 value="#{pModeSecurityView.editableSignature.reference.allAttachments}" 
+                                                 value="#{pModeSecurityView.editableSignature.referenceallAttachments()}"
                                                  disabled="#{not pModeSecurityView.signatureToEditable}"/>
 
                     </p:panelGrid>
@@ -227,7 +227,7 @@
 
                         <h:outputText value="#{msg['EncryptAllAttachmetns']}:" />                    
                         <h:selectBooleanCheckbox id="encAllAtt"
-                                                 value="#{pModeSecurityView.editableEncryption.reference.allAttachments}" 
+                                                 value="#{pModeSecurityView.editableEncryption.referenceallAttachments()}"
                                                  disabled="#{not pModeSecurityView.encryptionToEditable}"/>
                     </p:panelGrid>
 

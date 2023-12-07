@@ -49,7 +49,7 @@ public class TCReliablityTests extends TestCaseAbstract implements Serializable 
   public List<SEDInterceptor> getList() {
     List<SEDInterceptor> lstInt = new ArrayList<>();
     for (SEDInterceptor si : mdbLookups.getSEDInterceptors()) {
-      if (si.getActive() && si.getSEDInterceptorInstance() != null
+      if (si.isActive() && si.getSEDInterceptorInstance() != null
               && Objects.equals(si.getSEDInterceptorInstance().getPlugin(),
                       TestCasePluginDescription.S_PLUGIN_TYPE)
               && Objects.equals(si.getSEDInterceptorInstance().getType(),

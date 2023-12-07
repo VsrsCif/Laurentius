@@ -96,7 +96,7 @@ public class SEDLookupsTest extends TestUtils {
     assertNotNull(res);
     assertNotNull(res.getId());
     assertEquals(init.getSEDTasks().size(), res.getSEDTasks().size());
-    assertEquals(init.getActive(), res.getActive());
+    assertEquals(init.isActive(), res.isActive());
     assertEquals(init.getDayOfMonth(), res.getDayOfMonth());
     assertEquals(init.getDayOfWeek(), res.getDayOfWeek());
     assertEquals(init.getHour(), res.getHour());
@@ -112,7 +112,7 @@ public class SEDLookupsTest extends TestUtils {
       assertEquals(initTask.getPluginVersion(), resTask.
               getPluginVersion());
       assertEquals(initTask.getType(), resTask.getType());
-      assertEquals(initTask.getActive(), resTask.getActive());
+      assertEquals(initTask.isActive(), resTask.isActive());
       assertEquals(initTask.getName(), resTask.getName());
 
       assertEquals(initTask.getSEDTaskProperties().size(), resTask.
@@ -149,7 +149,7 @@ public class SEDLookupsTest extends TestUtils {
     assertNotNull(res);
     assertNotNull(res.getId());
     assertNotNull(res.getSEDInterceptorInstance());
-    assertEquals(init.getActive(), res.getActive());
+    assertEquals(init.isActive(), res.isActive());
     assertEquals(init.getName(), res.getName());
     assertEquals(init.getInterceptEvent(), res.getInterceptEvent());
     assertEquals(init.getInterceptRole(), res.getInterceptRole());
@@ -212,8 +212,8 @@ public class SEDLookupsTest extends TestUtils {
     assertNotNull(res);
     assertNotNull(res.getId());
     assertEquals(init.getName(), res.getName());
-    assertEquals(init.getActive(), res.getActive());
-    assertEquals(init.getDeliveredOnSuccess(), res.getDeliveredOnSuccess());
+    assertEquals(init.isActive(), res.isActive());
+    assertEquals(init.isDeliveredOnSuccess(), res.isDeliveredOnSuccess());
     assertEquals(init.getSEDProcessorInstances().size(), res.
             getSEDProcessorInstances().size());
 
@@ -626,7 +626,7 @@ public class SEDLookupsTest extends TestUtils {
       if (ind % 2 == 0) {
         res = XMLUtils.deepCopyJAXB(res);
       }
-      boolean active = !res.getActive();
+      boolean active = !res.isActive();
       String dayOfWeek = init.getDayOfWeek() + "_test";
       String dayOfMonth = init.getDayOfMonth() + "_test";
       String minute = init.getMinute() + "_test";
@@ -637,7 +637,7 @@ public class SEDLookupsTest extends TestUtils {
       String taskPluginVersion = init.getSEDTasks().get(0).getPluginVersion() + "_test";
       String taskType = init.getSEDTasks().get(0).getType() + "_test";
       String taskName = init.getSEDTasks().get(0).getName() + "_test";
-      Boolean taskActive = !init.getSEDTasks().get(0).getActive();
+      Boolean taskActive = !init.getSEDTasks().get(0).isActive();
 
       String propertyValue = "New propertyValue";
 
@@ -682,7 +682,7 @@ public class SEDLookupsTest extends TestUtils {
       assertNotNull(res2);
       assertNotNull(res2.getId());
       assertEquals(res.getSEDTasks().size(), res2.getSEDTasks().size());
-      assertEquals(active, res2.getActive());
+      assertEquals(active, res2.isActive());
       assertEquals(dayOfMonth, res2.getDayOfMonth());
       assertEquals(dayOfWeek, res2.getDayOfWeek());
       assertEquals(hour, res2.getHour());
@@ -698,7 +698,7 @@ public class SEDLookupsTest extends TestUtils {
       assertEquals(tsk.getPluginVersion(), tsk2.getPluginVersion());
       assertEquals(tsk.getName(), tsk2.getName());
       assertEquals(tsk.getType(), tsk2.getType());
-      assertEquals(tsk.getActive(), tsk2.getActive());
+      assertEquals(tsk.isActive(), tsk2.isActive());
       
       assertEquals(tsk.getSEDTaskProperties().size(), tsk2.
               getSEDTaskProperties().size());
@@ -732,7 +732,7 @@ public class SEDLookupsTest extends TestUtils {
         res = XMLUtils.deepCopyJAXB(res);
       }
 
-      boolean active = !init.getActive();
+      boolean active = !init.isActive();
 
       String interceptEvent = init.getInterceptEvent() + "_test";
       String interceptRole = init.getInterceptRole() + "_test";
@@ -804,7 +804,7 @@ public class SEDLookupsTest extends TestUtils {
       assertNotNull(res2);
       assertNotNull(res2.getId());
       assertNotNull(res2.getSEDInterceptorInstance());
-      assertEquals(active, res2.getActive());
+      assertEquals(active, res2.isActive());
       assertEquals(interceptEvent, res2.getInterceptEvent());
       assertEquals(interceptRole, res2.getInterceptRole());
       assertEquals(iRuleSize, res2.getSEDInterceptorRules().size());
@@ -856,8 +856,8 @@ public class SEDLookupsTest extends TestUtils {
       }
 
       String name = res.getName() + "_test";
-      boolean bActive = !res.getActive();
-      boolean bDOS = !res.getDeliveredOnSuccess();
+      boolean bActive = !res.isActive();
+      boolean bDOS = !res.isDeliveredOnSuccess();
 
       String ruleProperty = "NewRule";
       String rulePredicate = "!=";
@@ -902,8 +902,8 @@ public class SEDLookupsTest extends TestUtils {
       assertNotNull(res2);
 
       assertEquals(name, res2.getName());
-      assertEquals(bActive, res2.getActive());
-      assertEquals(bDOS, res2.getDeliveredOnSuccess());
+      assertEquals(bActive, res2.isActive());
+      assertEquals(bDOS, res2.isDeliveredOnSuccess());
 
       assertEquals(iInstSize, res2.getSEDProcessorInstances().size());
 

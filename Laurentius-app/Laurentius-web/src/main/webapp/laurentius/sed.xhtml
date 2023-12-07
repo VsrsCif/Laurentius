@@ -449,13 +449,13 @@
 
                                     <f:facet name="title">
                                         <h:graphicImage value="#{resource['images:/settings.svg']}" width="22" height="22" />
-                                        <h:outputText value="#{msg['SettingsCustom']}" />                                 
+                                        <h:outputText value="#{msg['SettingsCustom']}" />
                                     </f:facet>
                                     <p:tree id="SettPanel" value="#{settingsMenuView.root}" var="mnitem" selectionMode="single"
-                                            selection="#{settingsMenuView.selectedNode}" 
+                                            selection="#{settingsMenuView.selectedNode}"
                                             dynamic="true"
                                             >
-                                        <p:ajax event="select" listener="#{settingsMenuView.onSelection()}" 
+                                        <p:ajax event="select" listener="#{settingsMenuView.onSelection()}"
                                                 update=":forms:MainPanel" />
                                         <p:treeNode icon="#{mnitem.icon}" >
                                             <h:outputText value="#{msg[mnitem.name]}"/>
@@ -469,19 +469,19 @@
 
                                     <f:facet name="title">
                                         <h:graphicImage value="#{resource['images:/monitor.svg']}" width="22" height="22" />
-                                        <h:outputText value="#{msg['Monitor']}" />                                 
+                                        <h:outputText value="#{msg['Monitor']}" />
                                     </f:facet>
                                     <p:menu class="ui-accordion-button" style="width: 100%">
 
-                                        <p:menuitem value="#{msg['CronExecutions']}" 
-                                                    icon="ui-icon-svg-cron-exec ui-icon-size-22" 
-                                                    actionListener="#{mainWindow.onToolbarButtonAction}"  
+                                        <p:menuitem value="#{msg['CronExecutions']}"
+                                                    icon="ui-icon-svg-cron-exec ui-icon-size-22"
+                                                    actionListener="#{mainWindow.onToolbarButtonAction}"
                                                     update=":forms:MainPanel">
                                             <f:attribute name="panel" value="PANEL_CRON_EXEC" />
                                         </p:menuitem>
-                                        <p:menuitem value="#{msg['MonitorJMS']}" 
-                                                    icon="ui-icon-svg-cron-exec ui-icon-size-22" 
-                                                    actionListener="#{mainWindow.onToolbarButtonAction}"  
+                                        <p:menuitem value="#{msg['MonitorJMS']}"
+                                                    icon="ui-icon-svg-cron-exec ui-icon-size-22"
+                                                    actionListener="#{mainWindow.onToolbarButtonAction}"
                                                     update=":forms:MainPanel">
                                             <f:attribute name="panel" value="PANEL_SETT_JMS" />
                                         </p:menuitem>

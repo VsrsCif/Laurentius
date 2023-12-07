@@ -401,7 +401,7 @@ public class SEDCertUtilsBean implements SEDCertUtilsInterface {
         }
       }
     }
-    if (ref.getAllAttachments() != null && ref.getAllAttachments()) {
+    if (ref.isAllAttachments() != null && ref.isAllAttachments()) {
       elmWr.write("{}cid:Attachments;");
     }
     return elmWr.toString();

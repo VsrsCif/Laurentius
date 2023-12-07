@@ -84,7 +84,7 @@ public class MSHScheduler implements SEDSchedulerInterface {
     List<SEDCronJob> lst = mdbLookups.getSEDCronJobs();
     for (SEDCronJob cj : lst) {
       LOG.formatedlog("Creating cron job:::: %s", cj.getName());
-      if (cj.getActive() != null && cj.getActive()) {
+      if (cj.isActive() != null && cj.isActive()) {
         activateCronJob(cj);
       }
     }
@@ -150,10 +150,10 @@ public class MSHScheduler implements SEDSchedulerInterface {
       String logMsg = String.format(
               "Timeout for cron job %s , but cronjob not exists!!", name);
       LOG.logError(l, logMsg, null);
-    } else if (!mj.getActive()) {
+    } else if (!mj.isActive()) {
       LOG.formatedDebug("Cron job %s  not active!", name);
-    } else if (mj.getIgnoreOnWorkFreeDays() != null
-            && mj.getIgnoreOnWorkFreeDays()
+    } else if (mj.isIgnoreOnWorkFreeDays() != null
+            && mj.isIgnoreOnWorkFreeDays()
             && SEDSystemProperties.isWorkFreeDay()) {
       LOG.formatedDebug("Cron job %s  not active!", name);
     } else {
@@ -168,7 +168,7 @@ public class MSHScheduler implements SEDSchedulerInterface {
 
     StringWriter sw = new StringWriter();
     for (SEDTask tsk : mj.getSEDTasks()) {
-      if (tsk.getActive()) {
+      if (tsk.isActive()) {
         sw.append(executeTask(mj, tsk));
       }
 

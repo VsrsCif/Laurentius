@@ -33,7 +33,7 @@
 
                 <h:outputText value="#{msg['Id']}:" />
                 <p:inputText  value="#{pModeReceptionAwarenessView.editable.id}" 
-                              disabled="#{!pModeReceptionAwarenessView.isEditableNew()}"
+                              disabled="#{!pModeReceptionAwarenessView.editableNew}"
                               style="width:100%" 
                               />
 
@@ -78,7 +78,7 @@
                 <p:inputText  value="#{pModeReceptionAwarenessView.editableDuplicateDetectionDuration}"  style="width: 100%"/>
 
                 <h:outputText value="#{msg['Eliminate']}:" />
-                <h:selectBooleanCheckbox  value="#{pModeReceptionAwarenessView.editableDuplicateDetection.eliminate}" 
+                <h:selectBooleanCheckbox  value="#{pModeReceptionAwarenessView.editableDuplicateDetectioneliminate()}"
                            />
 
             </p:panelGrid>

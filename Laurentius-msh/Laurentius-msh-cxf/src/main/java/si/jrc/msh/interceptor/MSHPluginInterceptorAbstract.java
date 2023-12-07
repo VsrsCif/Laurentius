@@ -104,7 +104,7 @@ public abstract class MSHPluginInterceptorAbstract extends AbstractSoapIntercept
     if (inMail != null || outMail != null) {
       List<SEDInterceptor> lst = getLookups().getSEDInterceptors();
       for (SEDInterceptor intc : lst) {
-        if (intc.getActive() && Objects.equals(intc.getInterceptEvent(),
+        if (intc.isActive() && Objects.equals(intc.getInterceptEvent(),
                 se.getValue())) {
 
           boolean intercept = interceptMail(outMail, inMail, intc);

@@ -43,7 +43,7 @@
 
                                 <h:outputText value="#{msg['Id']}:"   />
                                 <p:inputText id="partyId" value="#{pModePartyView.editable.id}" 
-                                             disabled="#{!pModePartyView.isEditableNew()}"  style="width: 100%"  />
+                                             disabled="#{!pModePartyView.editableNew}"  style="width: 100%"  />
 
 
                                 <h:outputText value="#{msg['Active']}:"   />
@@ -246,10 +246,10 @@
                                 </p:column>
                                 
                                 <p:column headerText="#{msg['GzipCompression']}" width="50" >
-                                    <h:outputText value="#{sp.gzipCompress}" /> 
+                                    <h:outputText value="#{spgzipCompress()}" />
                                 </p:column>
                                 <p:column headerText="#{msg['base64Encoded']}" width="50" >
-                                    <h:outputText value="#{sp.base64Encoded}" />                                  
+                                    <h:outputText value="#{spbase64Encoded()}" />
                                 </p:column>
 
 

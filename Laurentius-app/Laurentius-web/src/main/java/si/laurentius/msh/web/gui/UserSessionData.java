@@ -171,7 +171,7 @@ public class UserSessionData extends AbstractJSFView {
   
   public boolean showPluginForUser(Plugin plg){
     
-     return getUser().getAdminRole() || plg.getWebRoles().contains(SEDGUIConstants.ROLE_USER);
+     return getUser().isAdminRole() || plg.getWebRoles().contains(SEDGUIConstants.ROLE_USER);
 
   }
 

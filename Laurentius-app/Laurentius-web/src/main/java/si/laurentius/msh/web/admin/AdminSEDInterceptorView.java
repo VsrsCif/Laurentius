@@ -89,7 +89,7 @@ public class AdminSEDInterceptorView extends AbstractAdminJSFView<SEDInterceptor
 
     for (PluginPropertyModelItem tmi : mtpmPropertyModel.
             getPluginProperties()) {
-      if (tmi.getPropertyDef().getMandatory() && Utils.isEmptyString(tmi.
+      if (tmi.getPropertyDef().isMandatory() && Utils.isEmptyString(tmi.
               getValue())) {
         addError(
                 "Property value: '" + tmi.getPropertyDef().getKey() + "' is required!");

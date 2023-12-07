@@ -166,7 +166,7 @@ public class FilePModeManager implements PModeInterface {
         // retrieve data
         PartyIdentitySet sPID = getPartyIdentitySetForSEDAddress(mail.
                 getSenderEBox());
-        if (!sPID.getIsLocalIdentity()) {
+        if (!sPID.isIsLocalIdentity()) {
             String msg = String.format(
                     "Sender '%s' (identityId '%s') for mail '%d' is not local identity and can not send messages!",
                     mail.getSenderEBox(), sPID.getId(), mail.getId());
@@ -316,7 +316,7 @@ public class FilePModeManager implements PModeInterface {
 
         PartyIdentitySet sPID = getPartyIdentitySetForSEDAddress(mail.
                 getSenderEBox());
-        if (!sPID.getIsLocalIdentity()) {
+        if (!sPID.isIsLocalIdentity()) {
             String msg = String.format(
                     "Sender '%s' (identityId '%s') for mail '%d' is not local identity and can not send messages!",
                     mail.getSenderEBox(), sPID.getId(), mail.getId());
@@ -563,7 +563,7 @@ public class FilePModeManager implements PModeInterface {
         List<PartyIdentitySet> candidates = new ArrayList<>();
         for (PartyIdentitySet pis : getPartyIdentitySets()) {
 
-            if (pis.getUseFourCornerModel()!=null && pis.getUseFourCornerModel()) {
+            if (pis.isUseFourCornerModel()!=null && pis.isUseFourCornerModel()) {
                 //check if partyType match
                 if (!Objects.equals(EBMSConstants.EBMS_ECORE_PARTY_TYPE_UNREGISTERED, partyType)) {
                     continue;
@@ -572,7 +572,7 @@ public class FilePModeManager implements PModeInterface {
                 // domain is case insensitive
                 String domain = partyIdValue.toLowerCase();
 
-                if (pis.getIsLocalIdentity()
+                if (pis.isIsLocalIdentity()
                         ? domain.endsWith(getLocalDomain().toLowerCase())
                         : domain.endsWith(pis.getDomain().toLowerCase())) {
                     candidates.add(pis);
@@ -612,7 +612,7 @@ public class FilePModeManager implements PModeInterface {
                         // domain is case insensitive
                         domain = domain.toLowerCase();
 
-                        if (pis.getIsLocalIdentity()
+                        if (pis.isIsLocalIdentity()
                                 ? domain.endsWith(getLocalDomain().toLowerCase())
                                 : domain.endsWith(pis.getDomain().toLowerCase())) {
                             candidates.add(pis);
@@ -655,7 +655,7 @@ public class FilePModeManager implements PModeInterface {
         List<PartyIdentitySet> candidates = new ArrayList<>();
         for (PartyIdentitySet pis : getPartyIdentitySets()) {
             // check domain
-            if (pis.getIsLocalIdentity()
+            if (pis.isIsLocalIdentity()
                     ? domainPart.endsWith(localDomain)
                     : domainPart.endsWith(pis.getDomain().toLowerCase())) {
                 iDomainCount++;

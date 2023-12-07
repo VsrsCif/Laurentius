@@ -64,11 +64,11 @@ public class AssertEntities {
 
     public static void assertValuesEquals(SEDCronJob expected, SEDCronJob actual) {
         assertEquals(expected.getName(), actual.getName());
-        assertEquals(expected.getActive(), actual.getActive());
+        assertEquals(expected.isActive(), actual.isActive());
         assertEquals(expected.getDayOfMonth(), actual.getDayOfMonth());
         assertEquals(expected.getDayOfWeek(), actual.getDayOfWeek());
         assertEquals(expected.getHour(), actual.getHour());
-        assertEquals(expected.getIgnoreOnWorkFreeDays(), actual.getIgnoreOnWorkFreeDays());
+        assertEquals(expected.isIgnoreOnWorkFreeDays(), actual.isIgnoreOnWorkFreeDays());
         assertEquals(expected.getMinute(), actual.getMinute());
         assertEquals(expected.getMonth(), actual.getMonth());
         assertEquals(expected.getSecond(), actual.getSecond());
@@ -83,7 +83,7 @@ public class AssertEntities {
     }
 
     public static void assertValuesEquals(SEDTask expected, SEDTask actual) {
-        assertEquals(expected.getActive(), actual.getActive());
+        assertEquals(expected.isActive(), actual.isActive());
         assertEquals(expected.getName(), actual.getName());
         assertEquals(expected.getPlugin(), actual.getPlugin());
         assertEquals(expected.getSEDTaskProperties().size(), actual.getSEDTaskProperties().size());
@@ -110,7 +110,7 @@ public class AssertEntities {
 
     public static void assertValuesEquals(SEDInterceptor expected, SEDInterceptor actual) {
         assertEquals(expected.getName(), actual.getName());
-        assertEquals(expected.getActive(), actual.getActive());
+        assertEquals(expected.isActive(), actual.isActive());
         assertEquals(expected.getInterceptEvent(), actual.getInterceptEvent());
         assertEquals(expected.getInterceptRole(), actual.getInterceptRole());
 
@@ -137,8 +137,8 @@ public class AssertEntities {
 
     public static void assertValuesEquals(SEDProcessor expected, SEDProcessor actual) {
         assertEquals(expected.getName(), actual.getName());
-        assertEquals(expected.getActive(), actual.getActive());
-        assertEquals(expected.getDeliveredOnSuccess(), actual.getDeliveredOnSuccess());
+        assertEquals(expected.isActive(), actual.isActive());
+        assertEquals(expected.isDeliveredOnSuccess(), actual.isDeliveredOnSuccess());
 
 
         assertEquals(expected.getSEDProcessorRules().size(), actual.getSEDProcessorRules().size());
