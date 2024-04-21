@@ -7,7 +7,7 @@ quit () {
 	echo "\nUsage:\n"
 	echo "laurentius-demo.sh -l [LAU_HOME]\n"
 	echo "  -s WILDFLY_HOME   - server home: default value: '../?"
-	echo "  -l LAU_HOME  - path tom application home folder  (laurentius.home) if is not given and --init is setted than '[WILDFLY_HOME]\standalone\data\' is setted."	
+	echo "  -l LAU_HOME  - path tom application home folder  (laurentius.home) if is not given and --init is setted than '[WILDFLY_HOME]\standalone\data\' is setted."
         exit
 }
 
@@ -25,8 +25,8 @@ key="$1"
       LAU_HOME="$2"
       shift # past argument
     ;;
-   
-   
+
+
 
     *)
       # unknown option
@@ -85,6 +85,6 @@ echo "**************************************************************************
 DOMAIN=test-laurentius.si
 DIALECT=org.hibernate.dialect.H2Dialect
 
-$WILDFLY_HOME/bin/standalone.sh -c standalone-laurentius.xml -Dlaurentius.home=/opt/jboss/wildfly/standalone/data/laurentius-home/ -Dlaurentius.hibernate.hbm2ddl.auto=create -Dlaurentius.hibernate.dialect=$DIALECT -Dlaurentius.init=true -Dlaurentius.domain=$DOMAIN -b $LISTEN_MASK -bmanagement $LISTEN_MASK
+$WILDFLY_HOME/bin/standalone.sh -c standalone-laurentius.xml -Dlaurentius.home=/opt/wildfly/standalone/data/laurentius-home/ -Dlaurentius.hibernate.hbm2ddl.auto=create -Dlaurentius.hibernate.dialect=$DIALECT -Dlaurentius.init=true -Dlaurentius.domain=$DOMAIN -b $LISTEN_MASK -bmanagement $LISTEN_MASK
 
 

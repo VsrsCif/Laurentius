@@ -8,11 +8,11 @@ COPY . .
 # build
 RUN mvn install
 
-FROM jboss/wildfly as package
+FROM digicssi/wildfly:10.0.0.Final as package
 
 ENV VERSION 2.0
 ENV SERVER_VERSION wildfly-11.0
-ENV WILDFLY_HOME /opt/jboss/wildfly
+ENV WILDFLY_HOME /opt/wildfly
 
 
 # si.laurentius module libralies
@@ -58,4 +58,4 @@ RUN  cd $WILDFLY_HOME/modules/si/laurentius/main/ \
 user jboss
 
 # Set the default command to run on boot
-CMD ["/opt/jboss/wildfly/bin/laurentius-demo.sh", "--init", "-d", "test-laurentius.si"]
+CMD ["/opt/wildfly/bin/laurentius-demo.sh", "--init", "-d", "test-laurentius.si"]
