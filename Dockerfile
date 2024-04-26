@@ -1,8 +1,8 @@
-FROM jboss/wildfly:11.0.0.Final as package
+FROM digicssi/wildfly:11.0.0.Final as package
 
 ENV VERSION 2.1
 ENV SERVER_VERSION wildfly-11.0
-ENV WILDFLY_HOME /opt/jboss/wildfly
+ENV WILDFLY_HOME /opt/wildfly
 
 
 # si.laurentius module libralies
@@ -49,4 +49,4 @@ RUN  cd $WILDFLY_HOME/modules/si/laurentius/main/ && \
 user jboss
 
 # Set the default command to run on boot
-CMD ["/opt/jboss/wildfly/bin/laurentius-demo.sh"]
+CMD ["/opt/wildfly/bin/laurentius.sh"]
