@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"   
+<html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:p="http://primefaces.org/ui"
@@ -11,7 +11,7 @@
       xmlns:pnl="http://java.sun.com/jsf/composite/laurentius-ui/panel"
       >
     <h:head>
-        <title>Laurentius pmode security configuratio</title> 
+        <title>Laurentius pmode security configuratio</title>
     </h:head>
     <composite:interface>
     </composite:interface>
@@ -19,7 +19,7 @@
     <composite:implementation >
         <dlg:dlg-abstract   id="pModeSecurityDialog"
                             formId="pModeSecurityDialogForm"
-                            dialogTitle="#{msg['PModeSecurityDialog']}" 
+                            dialogTitle="#{msg['PModeSecurityDialog']}"
                             editable="#{pModeSecurityView.editable}"
                             width="800"
                             height="500"
@@ -36,9 +36,9 @@
                         </f:facet>
 
                         <h:outputText value="#{msg['Id']}:" />
-                        <p:inputText  value="#{pModeSecurityView.editable.id}" 
+                        <p:inputText  value="#{pModeSecurityView.editable.id}"
                                       disabled="#{!pModeSecurityView.editableNew}"
-                                      style="width:100%" 
+                                      style="width:100%"
                                       />
 
 
@@ -57,86 +57,86 @@
 
                         <h:outputText value="#{msg['Algorithm']}" />
                         <p:selectOneMenu id="sigAlg"
-                                         value="#{pModeSecurityView.editableSignature.algorithm}" 
-                                         style="width:100%" 
+                                         value="#{pModeSecurityView.editableSignature.algorithm}"
+                                         style="width:100%"
                                          disabled="#{not pModeSecurityView.signatureToEditable}"
                                          >
-                            <f:selectItems value="#{pModeSecurityView.signatureAlgorithms}"  var="plg" itemLabel="#{plg.desc}" 
+                            <f:selectItems value="#{pModeSecurityView.signatureAlgorithms}"  var="plg" itemLabel="#{plg.desc}"
                                            itemValue="#{plg.value}" itemDescription="#{plg.value}"
-                                           />                    
+                                           />
                         </p:selectOneMenu>
 
                         <h:outputText value="#{msg['HashFunctions']}:" />
-                        <p:selectOneMenu id="sigHash" value="#{pModeSecurityView.editableSignature.hashFunction}" 
-                                         style="width:100%" 
+                        <p:selectOneMenu id="sigHash" value="#{pModeSecurityView.editableSignature.hashFunction}"
+                                         style="width:100%"
                                          disabled="#{not pModeSecurityView.signatureToEditable}"
                                          >
-                            <f:selectItems value="#{pModeSecurityView.hashFunction}"  var="plg" itemLabel="#{plg.desc}" 
+                            <f:selectItems value="#{pModeSecurityView.hashFunction}"  var="plg" itemLabel="#{plg.desc}"
                                            itemValue="#{plg.value}" itemDescription="#{plg.value}"
-                                           />                    
+                                           />
                         </p:selectOneMenu>
 
                         <h:outputText value="." />
-                        <p:selectOneMenu  value="" 
-                                          style="width:100%" 
+                        <p:selectOneMenu  value=""
+                                          style="width:100%"
                                           disabled="true"
                                           >
 
                         </p:selectOneMenu>
                         <h:outputText value="." />
-                        <p:selectOneMenu  value="" 
-                                          style="width:100%" 
+                        <p:selectOneMenu  value=""
+                                          style="width:100%"
                                           disabled="true"
                                           >
 
                         </p:selectOneMenu>
 
 
-                        <h:outputText value="#{msg['KeyIdentifier']}:" />                    
+                        <h:outputText value="#{msg['KeyIdentifier']}:" />
                         <p:selectOneMenu id="sigKeyIdent"
-                                         value="#{pModeSecurityView.editableSignature.keyIdentifierType}" 
-                                         style="width:100%" 
+                                         value="#{pModeSecurityView.editableSignature.keyIdentifierType}"
+                                         style="width:100%"
                                          disabled="#{not pModeSecurityView.signatureToEditable}"
                                          >
-                            <f:selectItems value="#{pModeSecurityView.x509KeyIdentifier}"  var="plg" itemLabel="#{plg.desc}" 
+                            <f:selectItems value="#{pModeSecurityView.x509KeyIdentifier}"  var="plg" itemLabel="#{plg.desc}"
                                            itemValue="#{plg.value}" itemDescription="#{plg.value}"
-                                           />                    
+                                           />
                         </p:selectOneMenu>
 
                         <h:outputText value="#{msg['SignAllAttachmetns']}:" />
                         <h:selectBooleanCheckbox id="sigAllAtt"
-                                                 value="#{pModeSecurityView.editableSignature.referenceallAttachments()}"
+                                                 value="#{pModeSecurityView.editableSignature.reference.allAttachments()}"
                                                  disabled="#{not pModeSecurityView.signatureToEditable}"/>
 
                     </p:panelGrid>
 
-                    <p:dataTable id="TblSignElements" 
-                                 var="sp" 
+                    <p:dataTable id="TblSignElements"
+                                 var="sp"
                                  value="#{pModeSecurityView.editableSignatureXPaths}"
                                  selectionMode="single"
                                  selection="#{pModeSecurityView.selectedSignXPath}"
                                  rowKey="#{sp.xpath}"
                                  style="padding: 0px; margin: 0px"
-                                 scrollable="true" 
+                                 scrollable="true"
                                  scrollHeight="120"
 
                                  >
-                        <p:ajax event="rowDblselect" 
-                                listener="#{pModeSecurityView.startEditSelectedSignXPath()}" 
+                        <p:ajax event="rowDblselect"
+                                listener="#{pModeSecurityView.startEditSelectedSignXPath()}"
                                 update=":dlgPModeXPath:pModeXPathDialog:pModeXPathDialogForm"
                                 />
 
                         <f:facet name="header">
                             <h3>#{msg['SOAPMessage']}</h3>
-                            <pnl:pnl-table-control 
+                            <pnl:pnl-table-control
                                 dialogVar="pModeXPathDialog"
                                 updateDialog=":dlgPModeXPath:pModeXPathDialog:pModeXPathDialogForm"
                                 updateTable=":dlgPModeSecurity:pModeSecurityDialog:pModeSecurityDialogForm:TblSignElements"
                                 addActionListener="#{pModeSecurityView.createSignXPath()}"
                                 editActionListener="#{pModeSecurityView.startEditSelectedSignXPath()}"
-                                removeActionListener="#{pModeSecurityView.removeSelectedSignXPath()}"      
+                                removeActionListener="#{pModeSecurityView.removeSelectedSignXPath()}"
                                 disabled="#{not pModeSecurityView.signatureToEditable}"
-                                />       
+                                />
                         </f:facet>
 
                         <p:column style="width:16px">
@@ -145,7 +145,7 @@
 
                         <p:column headerText="#{msg['xpath']}" >#{sp.xpath}</p:column>
                         <p:rowExpansion>
-                            <p:dataTable var="ns" 
+                            <p:dataTable var="ns"
                                          value="#{sp.namespaces}"
                                          scrollable="true"
                                          scrollHeight="60"
@@ -171,93 +171,93 @@
 
                     <p:panelGrid  style="width:100%;" columns="2" columnClasses="grid-label, value"  >
 
-                        <h:outputText value="#{msg['Algorithm']}:" />                         
-                        <p:selectOneMenu id="encAlg" value="#{pModeSecurityView.editableEncryption.algorithm}" 
-                                         style="width:100%" 
+                        <h:outputText value="#{msg['Algorithm']}:" />
+                        <p:selectOneMenu id="encAlg" value="#{pModeSecurityView.editableEncryption.algorithm}"
+                                         style="width:100%"
                                          disabled="#{not pModeSecurityView.encryptionToEditable}"
                                          >
-                            <f:selectItems value="#{pModeSecurityView.encryptionAlgorithm}"  var="plg" itemLabel="#{plg.desc}" 
+                            <f:selectItems value="#{pModeSecurityView.encryptionAlgorithm}"  var="plg" itemLabel="#{plg.desc}"
                                            itemValue="#{plg.value}" itemDescription="#{plg.value}"
-                                           />                    
+                                           />
                         </p:selectOneMenu>
-                        <h:outputText value="#{msg['KeyTransport']}:" />                         
-                        <p:selectOneMenu id="encKeyTransport" value="#{pModeSecurityView.editableEncryption.keyTransport}" 
-                                         style="width:100%" 
+                        <h:outputText value="#{msg['KeyTransport']}:" />
+                        <p:selectOneMenu id="encKeyTransport" value="#{pModeSecurityView.editableEncryption.keyTransport}"
+                                         style="width:100%"
                                          disabled="#{not pModeSecurityView.encryptionToEditable}"
                                          >
                              <p:ajax update="encMGF1Alg encDigest"/>
                             <f:selectItem noSelectionOption="true" />
-                            <f:selectItems value="#{pModeSecurityView.encryptionKeyTransport}"  var="plg" itemLabel="#{plg.desc}" 
+                            <f:selectItems value="#{pModeSecurityView.encryptionKeyTransport}"  var="plg" itemLabel="#{plg.desc}"
                                            itemValue="#{plg.value}" itemDescription="#{plg.value}"
-                                           />                    
+                                           />
                         </p:selectOneMenu>
 
-                        <h:outputText value="#{msg['MGF1Algorithm']}:" />                         
-                        <p:selectOneMenu id="encMGF1Alg" value="#{pModeSecurityView.editableEncryption.mgf1Algorithm}" 
-                                         style="width:100%" 
-                                         disabled="#{not pModeSecurityView.encryptionToEditableKeyTransport 
+                        <h:outputText value="#{msg['MGF1Algorithm']}:" />
+                        <p:selectOneMenu id="encMGF1Alg" value="#{pModeSecurityView.editableEncryption.mgf1Algorithm}"
+                                         style="width:100%"
+                                         disabled="#{not pModeSecurityView.encryptionToEditableKeyTransport
                                                      }"
                                          >
                             <f:selectItem noSelectionOption="true" />
-                            <f:selectItems value="#{pModeSecurityView.encryptionMGFAlgorithm}"  var="plg" itemLabel="#{plg.desc}" 
+                            <f:selectItems value="#{pModeSecurityView.encryptionMGFAlgorithm}"  var="plg" itemLabel="#{plg.desc}"
                                            itemValue="#{plg.value}" itemDescription="#{plg.value}"
-                                           />                    
+                                           />
                         </p:selectOneMenu>
-                        <h:outputText value="#{msg['Digest']}:" />                         
-                        <p:selectOneMenu id="encDigest" value="#{pModeSecurityView.editableEncryption.digest}" 
-                                         style="width:100%" 
+                        <h:outputText value="#{msg['Digest']}:" />
+                        <p:selectOneMenu id="encDigest" value="#{pModeSecurityView.editableEncryption.digest}"
+                                         style="width:100%"
                                          disabled="#{not pModeSecurityView.encryptionToEditableKeyTransport
                                                        }"
                                          >
                             <f:selectItem noSelectionOption="true" />
-                            <f:selectItems value="#{pModeSecurityView.encryptionDigest}"  var="plg" itemLabel="#{plg.desc}" 
+                            <f:selectItems value="#{pModeSecurityView.encryptionDigest}"  var="plg" itemLabel="#{plg.desc}"
                                            itemValue="#{plg.value}" itemDescription="#{plg.value}"
-                                           />                    
+                                           />
                         </p:selectOneMenu>
 
-                        <h:outputText value="#{msg['KeyIdentifier']}:" />                         
-                        <p:selectOneMenu id="encKeyIdent" value="#{pModeSecurityView.editableEncryption.keyIdentifierType}" 
-                                         style="width:100%" 
+                        <h:outputText value="#{msg['KeyIdentifier']}:" />
+                        <p:selectOneMenu id="encKeyIdent" value="#{pModeSecurityView.editableEncryption.keyIdentifierType}"
+                                         style="width:100%"
                                          disabled="#{not pModeSecurityView.encryptionToEditable}"
                                          >
-                            <f:selectItems value="#{pModeSecurityView.x509KeyIdentifier}"  var="plg" itemLabel="#{plg.desc}" 
+                            <f:selectItems value="#{pModeSecurityView.x509KeyIdentifier}"  var="plg" itemLabel="#{plg.desc}"
                                            itemValue="#{plg.value}" itemDescription="#{plg.value}"
-                                           />                    
+                                           />
                         </p:selectOneMenu>
 
-                        <h:outputText value="#{msg['EncryptAllAttachmetns']}:" />                    
+                        <h:outputText value="#{msg['EncryptAllAttachmetns']}:" />
                         <h:selectBooleanCheckbox id="encAllAtt"
                                                  value="#{pModeSecurityView.editableEncryption.referenceallAttachments()}"
                                                  disabled="#{not pModeSecurityView.encryptionToEditable}"/>
                     </p:panelGrid>
 
 
-                    <p:dataTable id="TblEncElements" 
-                                 var="sp" 
+                    <p:dataTable id="TblEncElements"
+                                 var="sp"
                                  value="#{pModeSecurityView.editableEncryptionXPaths}"
                                  selectionMode="single"
                                  selection="#{pModeSecurityView.selectedEncryptXPath}"
                                  rowKey="#{sp}"
 
                                  style="padding: 0px; margin: 0px"
-                                 scrollable="true" 
+                                 scrollable="true"
                                  scrollHeight="120"
                                  >
-                        <p:ajax event="rowDblselect" listener="#{pModeSecurityView.startEditSelectedEncXPath()}" 
+                        <p:ajax event="rowDblselect" listener="#{pModeSecurityView.startEditSelectedEncXPath()}"
                                 update=":dlgPModeXPath:pModeXPathDialog:pModeXPathDialogForm"
                                 oncomplete="PF('pModeXPathDialog').show()"/>
 
                         <f:facet name="header">
                             <h3>#{msg['SOAPMessage']}</h3>
-                            <pnl:pnl-table-control 
+                            <pnl:pnl-table-control
                                 dialogVar="pModeXPathDialog"
                                 updateDialog=":dlgPModeXPath:pModeXPathDialog:pModeXPathDialogForm"
                                 updateTable=":dlgPModeSecurity:pModeSecurityDialog:pModeSecurityDialogForm:TblEncElements"
                                 addActionListener="#{pModeSecurityView.createEncXPath()}"
                                 editActionListener="#{pModeSecurityView.startEditSelectedEncXPath()}"
-                                removeActionListener="#{pModeSecurityView.removeSelectedEncXPath()}"         
+                                removeActionListener="#{pModeSecurityView.removeSelectedEncXPath()}"
                                 disabled="#{not pModeSecurityView.encryptionToEditable}"
-                                />       
+                                />
                         </f:facet>
                         <p:column style="width:16px">
                             <p:rowToggler />
@@ -266,7 +266,7 @@
                             <h:outputText value="#{sp.xpath}" />
                         </p:column>
                         <p:rowExpansion>
-                            <p:dataTable var="ns" 
+                            <p:dataTable var="ns"
                                          value="#{sp.namespaces}"
                                          scrollable="true"
                                          scrollHeight="60"

@@ -37,7 +37,7 @@ COPY ./Laurentius-examples/example-web-plugin/target/example-web-plugin.war $WIL
 # copy laurentius home
 COPY ./scripts/install/laurentius-home/  $WILDFLY_HOME/standalone/data/laurentius-home/
 
-COPY ./scripts/install/$SERVER_VERSION/laurentius-demo.sh  $WILDFLY_HOME/bin/
+COPY ./scripts/install/$SERVER_VERSION/laurentius.sh  $WILDFLY_HOME/bin/
 COPY ./scripts/install/$SERVER_VERSION/laurentius-init.sh  $WILDFLY_HOME/bin/
 
 RUN echo "test=544e00c06e8229f4face117c31564c8b" >> $WILDFLY_HOME/standalone/configuration/mgmt-users.properties
