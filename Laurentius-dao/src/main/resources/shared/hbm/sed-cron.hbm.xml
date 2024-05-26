@@ -18,7 +18,9 @@
         <property column="CRON_DAY_OF_MONTH" name="DayOfMonth"  length="64" type="java.lang.String"/>
         <property column="CRON_MONTH" name="Month"  length="64" type="java.lang.String"/>
         <property column="CRON_DAY_OF_WEEK" name="DayOfWeek"  length="64" type="java.lang.String"/>
-        <property column="CRON_IGNORE_ON_WORK_FREE_DAYS" name="IgnoreOnWorkFreeDays" type="java.lang.Boolean"/>
+        <property name="IgnoreOnWorkFreeDays" type="java.lang.Boolean">
+            <column name="CRON_IGNORE_ON_WORK_FREE_DAYS" not-null="false" default="false"/>
+        </property>
         
          <list name="sedTasks" access="field" cascade="all, delete-orphan" lazy="false" >
             <key column="CRON_ID" />
