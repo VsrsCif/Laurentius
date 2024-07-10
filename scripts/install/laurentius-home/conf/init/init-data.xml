@@ -132,7 +132,7 @@
                 <ns2:SEDTaskProperty id="92" key="file.submit.mail.type">File</ns2:SEDTaskProperty>
             </ns2:SEDTask>
         </ns2:SEDCronJob>
-        <ns2:SEDCronJob id="10" name="ZKPSign" active="true" second="0" minute="*/5" hour="8-16" dayOfMonth="*" month="*" dayOfWeek="1-5">
+        <ns2:SEDCronJob id="10" name="ZKPSign" active="true" second="0" minute="*/5" hour="8-16" dayOfMonth="*" month="*" dayOfWeek="1-5" ignoreOnWorkFreeDays="false">
             <ns2:SEDTask plugin="LegalZKP" type="zkp-test-delivery" pluginVersion="1.0.0" id="15" name="ZKPSign-B-Department" active="true">
                 <ns2:SEDTaskProperty id="93" key="zkp.sedbox">b.department</ns2:SEDTaskProperty>
                 <ns2:SEDTaskProperty id="94" key="zkp.sign.key.alias">test-zpp-sign</ns2:SEDTaskProperty>
@@ -144,7 +144,7 @@
                 <ns2:SEDTaskProperty id="98" key="zkp.max.mail.count">100</ns2:SEDTaskProperty>
             </ns2:SEDTask>
         </ns2:SEDCronJob>
-        <ns2:SEDCronJob id="11" name="ZKPDeleteNotDelivered" active="true" second="0" minute="*" hour="*" dayOfMonth="*" month="*" dayOfWeek="*">
+        <ns2:SEDCronJob id="11" name="ZKPDeleteNotDelivered" active="true" second="0" minute="*" hour="*" dayOfMonth="*" month="*" dayOfWeek="*" ignoreOnWorkFreeDays="false">
             <ns2:SEDTask plugin="LegalZKP" type="zkp-delete-parcel-test" pluginVersion="1.0.0" id="17" name="ZKPTaskDeleteParcelForTest" active="false">
                 <ns2:SEDTaskProperty id="99" key="zkp.sign.key.alias">test-laurentius</ns2:SEDTaskProperty>
                 <ns2:SEDTaskProperty id="100" key="zkp.max.mail.count">100</ns2:SEDTaskProperty>

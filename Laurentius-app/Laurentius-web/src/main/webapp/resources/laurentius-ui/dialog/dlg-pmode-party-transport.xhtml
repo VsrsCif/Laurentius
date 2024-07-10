@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"   
+<html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:p="http://primefaces.org/ui"      
+      xmlns:p="http://primefaces.org/ui"
       xmlns:composite="http://java.sun.com/jsf/composite"
       xmlns:dlg="http://java.sun.com/jsf/composite/laurentius-ui/dialog"
       xmlns:pnl="http://java.sun.com/jsf/composite/laurentius-ui/panel"
       >
     <h:head>
-        <title>Laurentius</title>       
+        <title>Laurentius</title>
     </h:head>
     <composite:interface>
     </composite:interface>
@@ -18,7 +18,7 @@
     <composite:implementation >
         <dlg:dlg-abstract   id="pModePartyTransportDialog"
                             formId="pModePartyTransportDialogForm"
-                            dialogTitle="#{msg['PModePartyTransportDialog']}" 
+                            dialogTitle="#{msg['PModePartyTransportDialog']}"
                             editable="#{pModePartyTransportView.editable}"
                             width="850"
                             height="480"
@@ -36,10 +36,10 @@
                 <h:inputText value="#{pModePartyTransportView.editable.id}"  style="width:100%;"/>
 
                 <h:outputText value="#{msg['base64Encoded']}:" />
-                <p:selectBooleanCheckbox value="#{pModePartyTransportView.editablebase64Encoded()}" />
+                <p:selectBooleanCheckbox value="#{pModePartyTransportView.editable.base64Encoded}" />
 
                 <h:outputText value="#{msg['GzipCompression']}: "  />
-                <p:selectBooleanCheckbox value="#{pModePartyTransportView.editablegzipCompress()}" />
+                <p:selectBooleanCheckbox value="#{pModePartyTransportView.editable.gzipCompress}" />
 
             </p:panelGrid>
             <hr />
@@ -57,9 +57,9 @@
 
 
                 <h:outputText value="Connection timeout:" />
-                <p:inputNumber value="#{pModePartyTransportView.editableAddress.connectionTimeout}" 
-                               minValue="0" 
-                               decimalPlaces="0" 
+                <p:inputNumber value="#{pModePartyTransportView.editableAddress.connectionTimeout}"
+                               minValue="0"
+                               decimalPlaces="0"
                                thousandSeparator="" />
 
                 <h:outputText value="Chunked:" />
@@ -67,12 +67,12 @@
 
 
                 <h:outputText value="Receive timeout:" />
-                <p:inputNumber value="#{pModePartyTransportView.editableAddress.receiveTimeout}"                                                           
-                               minValue="0" 
-                               decimalPlaces="0" 
+                <p:inputNumber value="#{pModePartyTransportView.editableAddress.receiveTimeout}"
+                               minValue="0"
+                               decimalPlaces="0"
                                thousandSeparator=""/>
             </p:panelGrid>
-            <hr />                                
+            <hr />
 
             <p:panelGrid  columns="4" columnClasses="grid-label, value,grid-label, value"  style="width:100%;">
 
@@ -82,28 +82,28 @@
 
 
                 <h:outputText value="#{msg['ServerTrustCert']}:" />
-                <p:selectOneMenu id="tlsServerCertAlias" 
+                <p:selectOneMenu id="tlsServerCertAlias"
                                  value="#{pModePartyTransportView.editableTransportTLS.serverTrustCertAlias}"
                                  style="width: 160px" >
                     <f:selectItem noSelectionOption="true" />
-                    <f:selectItems value="#{adminSEDKeystoreView.list}" 
-                                   var="cs" itemLabel="#{cs.alias}"                                                        
-                                   itemValue="#{cs.alias}" 
-                                   /> 
+                    <f:selectItems value="#{adminSEDKeystoreView.list}"
+                                   var="cs" itemLabel="#{cs.alias}"
+                                   itemValue="#{cs.alias}"
+                                   />
 
                 </p:selectOneMenu>
                 <h:outputText value="#{msg['DisableCNCheck']}:" />
                 <p:selectBooleanCheckbox value="#{pModePartyTransportView.editableTransportTLS.disableCNAndHostnameCheck}" />
 
                 <h:outputText value="#{msg['ClientKeyAlias']}:"  />
-                <p:selectOneMenu id="tlskeyAlias" 
+                <p:selectOneMenu id="tlskeyAlias"
                                  value="#{pModePartyTransportView.editableTransportTLS.clientKeyAlias}"
                                  style="width: 160px" >
                     <f:selectItem noSelectionOption="true" />
-                    <f:selectItems value="#{adminSEDKeystoreView.list}" 
+                    <f:selectItems value="#{adminSEDKeystoreView.list}"
                                    var="cs" itemLabel="#{cs.alias}"
-                                   itemValue="#{cs.alias}"                                                           
-                                   itemDisabled="#{!cs.keyEntry}"/> 
+                                   itemValue="#{cs.alias}"
+                                   itemDisabled="#{!cs.keyEntry}"/>
 
                 </p:selectOneMenu>
 
