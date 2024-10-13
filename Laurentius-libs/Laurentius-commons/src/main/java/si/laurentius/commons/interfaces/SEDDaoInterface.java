@@ -342,6 +342,11 @@ public interface SEDDaoInterface {
           SEDOutboxMailStatus status, String statusdesc, String userId,
           String applicationId) throws StorageException;
 
+  boolean updateInMailPayload(MSHInMail mi, List<MSHInPart> lstAddParts,
+                               List<MSHInPart> lstUpdateParts, List<MSHInPart> lstDeleteParts,
+                              SEDInboxMailStatus status, String statusdesc, String userId,
+                               String applicationId) throws StorageException;
+
   boolean updateOutMailPayload(MSHOutMail mi, List<MSHOutPart> lstAddParts,
           List<MSHOutPart> lstUpdateParts, List<MSHOutPart> lstDeleteParts,
           SEDOutboxMailStatus status, String statusdesc, String userId,

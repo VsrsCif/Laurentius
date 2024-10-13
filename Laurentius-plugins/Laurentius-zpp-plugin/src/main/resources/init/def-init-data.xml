@@ -257,19 +257,20 @@
                 </pmd:PartyInfo>
             </pmd:ExchangeParties>
             <pmd:MEP>
-                <pmd:MEPType>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/oneWay</pmd:MEPType>
-                <pmd:MEPChannelBinding>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/push</pmd:MEPChannelBinding>
-                <pmd:MEPInitiatorRole>Sender</pmd:MEPInitiatorRole>
-                <pmd:Leg>
-                    <pmd:MPC>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/defaultMPC</pmd:MPC>
-                    <pmd:Transport>
-                        <pmd:ForeChannel action="DeliveryNotification" securityIdRef="sign_sha256">
-                            <pmd:ReceptionAwareness raPatternIdRef="AS4ReceiptResponse"/>
-                        </pmd:ForeChannel>
-                        <pmd:BackChannel securityIdRef="sign_sha256"/>
-                    </pmd:Transport>
-                </pmd:Leg>
-            </pmd:MEP>
+            <pmd:MEPType>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/oneWay</pmd:MEPType>
+            <pmd:MEPChannelBinding>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/push</pmd:MEPChannelBinding>
+            <pmd:MEPInitiatorRole>Sender</pmd:MEPInitiatorRole>
+            <pmd:Leg>
+                <pmd:MPC>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/defaultMPC</pmd:MPC>
+                <pmd:Transport>
+                    <pmd:ForeChannel action="DeliveryNotification" securityIdRef="sign_sha256">
+                        <pmd:ReceptionAwareness raPatternIdRef="AS4ReceiptResponse"/>
+                    </pmd:ForeChannel>
+                    <pmd:BackChannel securityIdRef="sign_sha256"/>
+                </pmd:Transport>
+            </pmd:Leg>
+        </pmd:MEP>
+
             <pmd:MEP>
                 <pmd:MEPType>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/twoWay</pmd:MEPType>
                 <pmd:MEPChannelBinding>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/sync</pmd:MEPChannelBinding>
