@@ -253,6 +253,107 @@ public class SEDDaoBean implements SEDDaoInterface {
     }
 
     @Override
+    public boolean updateInMailPayload(MSHInMail mail, List<MSHInPart> lstAddParts, List<MSHInPart> lstUpdateParts, List<MSHInPart> lstDeleteParts, SEDInboxMailStatus status, String statusdesc, String userId, String applicationId) throws StorageException {
+        // persits parts
+        long l = LOG.logStart();
+        boolean suc = false;
+        String strMsg = String.format("a: %d, u: %d, d %d", lstAddParts.size(),
+                lstUpdateParts.size(), lstDeleteParts.size());
+        try {
+            mutUTransaction.begin();
+            for (MSHInPart ip : lstAddParts) {
+                ip.setMailId(mail.getId());
+                File f = StorageUtils.getFile(ip.getFilepath());
+                ip.setSize(BigInteger.valueOf(f.length()));
+                ip.setSha256Value(DigestUtils.getBase64Sha256Digest(f));
+                if (Utils.isEmptyString(ip.getEbmsId())) {
+                    ip.setEbmsId(Utils.getUUIDWithLocalDomain());
+                }
+                memEManager.persist(ip);
+            }
+
+            for (MSHInPart ip : lstUpdateParts) {
+                ip.setMailId(mail.getId());
+                File f = StorageUtils.getFile(ip.getFilepath());
+                ip.setSize(BigInteger.valueOf(f.length()));
+                ip.setSha256Value(DigestUtils.getBase64Sha256Digest(f));
+                if (Utils.isEmptyString(ip.getEbmsId())) {
+                    ip.setEbmsId(Utils.getUUIDWithLocalDomain());
+                }
+                memEManager.merge(ip);
+            }
+
+            for (MSHInPart ip : lstDeleteParts) {
+                ip.setMailId(mail.getId());
+                memEManager.remove(l);
+            }
+
+        } catch (NotSupportedException | SystemException ex) {
+            String msg = String.format(MSG_ERR_PESIST_PARTS, strMsg, mail.getClass().
+                    getName(), mail.getId(), ex.getMessage());
+            LOG.logError(l, msg, null);
+            try {
+                mutUTransaction.rollback();
+            } catch (IllegalStateException | SecurityException | SystemException ex1) {
+                LOG.logWarn(l, ex1.getMessage(), ex1);
+            }
+            throw new StorageException(msg, ex);
+
+        }
+
+        // if merge cause locking
+        mail.setStatusDate(Calendar.getInstance().getTime());
+        mail.setStatus(status.getValue());
+
+        Query updq = memEManager.createNamedQuery(SEDNamedQueries.UPDATE_INMAIL);
+        updq.setParameter(SEDNamedQueries.QUERY_PARAM_ID, mail.getId());
+        updq.setParameter(SEDNamedQueries.QUERY_PARAM_STATUS_DATE, mail.
+                getStatusDate());
+        updq.setParameter(SEDNamedQueries.QUERY_PARAM_STATUS, mail.getStatus());
+
+        int iVal = updq.executeUpdate();
+        if (iVal != 1) {
+            try {
+                mutUTransaction.rollback();
+            } catch (IllegalStateException | SecurityException | SystemException ex1) {
+                LOG.logWarn(l, ex1.getMessage(), ex1);
+            }
+            String msg = String.format(MSG_ERR_STATUS, mail.getStatus(), mail.
+                    getClass().getName(), mail.getId(), iVal);
+            LOG.logError(l, msg, null);
+            throw new StorageException(msg, null);
+        }
+
+        // persist mail event
+        MSHInEvent me = new MSHInEvent();
+        me.setMailId(mail.getId());
+        me.setDescription(statusdesc + " " + strMsg);
+        me.setStatus(mail.getStatus());
+        me.setDate(mail.getStatusDate());
+        me.setUserId(userId);
+        me.setApplicationId(applicationId);
+        try {
+            memEManager.persist(me);
+            mutUTransaction.commit();
+
+            suc = true;
+        } catch (SystemException | RollbackException | HeuristicMixedException
+                 | HeuristicRollbackException | SecurityException | IllegalStateException ex) {
+            String msg = String.format(MSG_ERR_COMMIT_PARTS, strMsg, mail.getClass().
+                    getName(), mail.getId(), ex.getMessage());
+            LOG.logError(l, msg, null);
+            try {
+                mutUTransaction.rollback();
+            } catch (IllegalStateException | SecurityException | SystemException ex1) {
+                LOG.logWarn(l, MSG_ERR_ROLLBACK, ex1);
+            }
+            throw new StorageException(msg, ex);
+        }
+
+        return suc;
+    }
+
+    @Override
     public boolean updateOutMailPayload(MSHOutMail mail,
             List<MSHOutPart> lstAddParts, List<MSHOutPart> lstUpdateParts,
             List<MSHOutPart> lstDeleteParts,

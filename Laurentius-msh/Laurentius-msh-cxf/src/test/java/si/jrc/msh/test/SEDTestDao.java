@@ -221,7 +221,12 @@ public class SEDTestDao implements SEDDaoInterface{
   @Override
   public void updateOutMail(MSHOutMail mail, String statusDesc, String userID)
       throws StorageException {
-    }
+  }
+
+  @Override
+  public boolean updateInMailPayload(MSHInMail mi, List<MSHInPart> lstAddParts, List<MSHInPart> lstUpdateParts, List<MSHInPart> lstDeleteParts, SEDInboxMailStatus status, String statusdesc, String userId, String applicationId) throws StorageException {
+    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+  }
 
   @Override
   public boolean updateOutMailPayload(MSHOutMail mi,
