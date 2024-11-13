@@ -52,7 +52,7 @@
         Linux:<br /> <pre><code>/opt/Server/</code></pre>
 
         Nato poženite skripto za namestitev:<br />        
-        <pre><code>Laurentius-[yyyy-mm-dd]/wildfly-*/deploy-laurentius.(bat|sh) --init -w [WILDFLY_HOME]</code></pre>
+        <pre><code>Laurentius-[yyyy-mm-dd]/wildfly-*/deploy-laurentius.(bat|sh) --init -s [WILDFLY_HOME]</code></pre>
         Vsi parametri skripte deploy-laurentius.(bat|sh) so opisani <a href="#install/install:deploy-script">na koncu poglavja.</a><br />
         Skripta namesti:
         <ul>
@@ -117,9 +117,9 @@
             <a href="#gui/admin-sed-appl" >aplikacije</a>.
         
          <h2  id="install/install:deploy-script">Parametri skripte deploy-laurentius.(bat|sh)</h2>
-        <pre><code>deploy-laurentius.(bat|sh) --init -b [SED_BUNDLE] -w [WILDFLY_HOME] -l [LAURENTIUS_HOME]</code></pre>
+        <pre><code>deploy-laurentius.(bat|sh) --init -b [SED_BUNDLE] -s [SERVER_HOME] -l [LAURENTIUS_HOME]</code></pre>
         <ul><li>--init: parameter "inicializira" mapo [LAURENTIUS_HOME] in nastavitve wildfly strežnika.</li>
-            <li>-w   WILDFLY_HOME - pot do wildfly aplikacijskega strežnika. Npr.: c:\temp\wildfly-10.1.0.Final</li>
+            <li>-s   SERVER_HOME - pot do wildfly aplikacijskega strežnika. Npr.: c:\temp\wildfly-10.1.0.Final</li>
             <li>-b   SED_BUNDLE   - pot do "razširjenega" Laurentius paketa. Če parameter ni podan je privzeta mapa: "..\".</li>
             <li>-l   LAURENTIUS_HOME     - pot do [LAURENTIUS_HOME] mape. Če ni podana je privzeta mapa '[WILDFLY_HOME]\standalone\data\laurentius-home'.</li>
         </ul>
