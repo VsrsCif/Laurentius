@@ -4,9 +4,11 @@
 <module xmlns="urn:jboss:module:1.5" name="org.apache.pdfbox">
 
     <resources>
- 	    <resource-root path="fontbox-2.0.8.jar"/>
-        <resource-root path="pdfbox-2.0.8.jar"/>
- 	    <resource-root path="preflight-2.0.8.jar"/>
+ 	    <resource-root path="fontbox-3.0.4.jar"/>
+        <resource-root path="pdfbox-3.0.4.jar"/>
+        <resource-root path="pdfbox-io-3.0.4.jar"/>
+        <resource-root path="xmpbox-3.0.4.jar"/>
+ 	    <resource-root path="preflight-3.0.4.jar"/>
     </resources>
 
     <dependencies>

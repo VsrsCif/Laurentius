@@ -89,3 +89,8 @@
 .classpath
 target/
 .run/
+/Laurentius-libs/Laurentius-wsdl/src/main/java/
+maven.config
+/.mvn/local-settings.xml
+/Laurentius-libs/Laurentius-lce/.mvn/local-settings.xml
+/Laurentius-libs/Laurentius-lce/src/test/resources/certs/test-ss-keystore.jks
