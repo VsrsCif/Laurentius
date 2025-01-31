@@ -51,7 +51,7 @@
                     <fo:block margin-top="6pt" font-size="12pt">
                         Pošiljko lahko prevzamete v roku 15 dni v vašem varnem elektronskem predalu na naslovu
                         <fo:inline font-weight="bold"><xsl:value-of select="/msh:MSHOutMail/@receiverEBox"/></fo:inline>.
-                        Rok za prevzem začne teči od dne 
+                        Rok za prevzem začne teči naslednji dan od dne 
                         <fo:inline font-weight="bold">
                              <xsl:call-template name="currentDate"/>
                         </fo:inline>. Če v tem roku pošiljke ne boste prevzeli, se bo po sedmem odstavku 141.a člena ZPP s potekom tega roka vročitev štela za opravljeno.
