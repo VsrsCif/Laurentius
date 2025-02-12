@@ -539,7 +539,7 @@ public class SEDDaoBean implements SEDDaoInterface {
         if (searchParams != null) {
             Class cls = searchParams.getClass();
             Method[] methodList = cls.getMethods();
-            for (Method m : methodList) {
+            for (Method  m : methodList) {
                 // only getters (public, starts with get, no arguments)
                 String mName = m.getName();
                 if (Modifier.isPublic(m.getModifiers()) && m.getParameterCount() == 0
@@ -559,7 +559,12 @@ public class SEDDaoBean implements SEDDaoInterface {
                         continue;
                     }
 
-                    if (fieldName.endsWith("List") && searchValue instanceof List) {
+                    if (fieldName.endsWith("Like") && searchValue instanceof String) {
+                        LOG.formatedDebug("Set parameter like %s  for method %s",
+                                searchValue, fieldName);
+                        lstPredicate.add(cb.like(om.get(fieldName.substring(0, fieldName.
+                                lastIndexOf("Like"))), searchValue.toString()));
+                    } else if (fieldName.endsWith("List") && searchValue instanceof List) {
                         LOG.formatedDebug("Set parameter list %s  for method %s",
                                 searchValue, fieldName);
                         String property = fieldName.substring(0, fieldName.lastIndexOf(
