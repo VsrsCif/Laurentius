@@ -1,7 +1,7 @@
 #/!bin/sh
 
 # laurentius version
-VERSION="2.0"
+VERSION="2.1"
 # releases folder 
 LAU_RELEASE_FOLDER="releases"
 # release zip file name
@@ -21,7 +21,7 @@ AS_ARRAY=($AS_WILDFLY_10_1 $AS_WILDFLY_11_0 $AS_JBOSS_EAP_7_0)
 # 
 LAU_PROJECT=$1
 if [ "x$LAU_PROJECT" = "x" ]; then
-	LAU_PROJECT="../"
+	LAU_PROJECT="./.."
 fi
 
 if [ ! -d "$LAU_RELEASE_FOLDER" ]; then
@@ -83,7 +83,7 @@ cp "$LAU_PROJECT/Laurentius-plugins/Laurentius-ecf-plugin/target/plugin-court-fi
 
 #--------------------------------------------------------------------------------------
 # SET APPLICATION SETTINGS AND DEMO DEPLOY/START SCRIPT
-
+pwd
 for asItem in ${AS_ARRAY[*]}
 do
 	# copy application server config script
