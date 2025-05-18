@@ -646,5 +646,33 @@
 
 
         </profile>
+        <profile>
+            <id>dependency-check</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.owasp</groupId>
+                        <artifactId>dependency-check-maven</artifactId>
+                        <version>10.0.4</version>
+                        <inherited>false</inherited>
+                        <configuration>
+                            <nvdApiServerId>laurentius-owasp</nvdApiServerId>
+                            <skipProvidedScope>true</skipProvidedScope>
+                            <skipRuntimeScope>true</skipRuntimeScope>
+                            <!-- Disable .Net Assembly Analyzer -->
+                            <assemblyAnalyzerEnabled>false</assemblyAnalyzerEnabled>
+                            <suppressionFile>owasp-false-positive-warnings.xml</suppressionFile>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>aggregate</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
 </project>
