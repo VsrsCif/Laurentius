@@ -44,7 +44,6 @@ import si.laurentius.commons.utils.Utils;
 import java.util.Collections;
 import static java.lang.String.format;
 import si.laurentius.commons.cxf.EBMSConstants;
-import static si.laurentius.commons.pmode.FilePModeManager.LOG;
 import si.laurentius.commons.pmode.enums.ActionRole;
 import static si.laurentius.commons.utils.xml.XMLUtils.deserialize;
 import static si.laurentius.commons.utils.xml.XMLUtils.serialize;
@@ -571,14 +570,10 @@ public class FilePModeManager implements PModeInterface {
 
                 // domain is case insensitive
                 String domain = partyIdValue.toLowerCase();
-
-                if (pis.isIsLocalIdentity()
-                        ? domain.endsWith(getLocalDomain().toLowerCase())
-                        : domain.endsWith(pis.getDomain().toLowerCase())) {
+                if (isDomainMatchingParty(pis, domain)){
                     candidates.add(pis);
                 }
-                // fou
-                continue;
+                   continue;
             } else {
 
                 for (PartyIdentitySet.PartyId pid : pis.getPartyIds()) {
@@ -612,16 +607,13 @@ public class FilePModeManager implements PModeInterface {
                         // domain is case insensitive
                         domain = domain.toLowerCase();
 
-                        if (pis.isIsLocalIdentity()
-                                ? domain.endsWith(getLocalDomain().toLowerCase())
-                                : domain.endsWith(pis.getDomain().toLowerCase())) {
+                        if (isDomainMatchingParty(pis, domain)) {
                             candidates.add(pis);
                         }
                     }
                     // ignore other sources
                 }
             }
-
         }
 
         if (candidates.size() > 1) {
@@ -632,9 +624,17 @@ public class FilePModeManager implements PModeInterface {
         return candidates.isEmpty() ? null : candidates.get(0);
     }
 
+    /**
+     *  Method returns PMode Party identifier configuration for given address value. If not party PartyIdentitySet is matching
+     *  the given address, then null is returned.
+     * @param address the lookup address value
+     * @return PMode configuration PartyIdentitySet
+     * @throws PModeException in case of bad PMode configuration or invalid address
+     */
     @Override
     public PartyIdentitySet getPartyIdentitySetForSEDAddress(String address)
             throws PModeException {
+
         if (Utils.isEmptyString(address) || !address.contains("@")) {
             throw new PModeException(String.format("SED Address must be "
                     + "composed with [localpart]@[domain]. Address '%s'", address));
@@ -644,33 +644,29 @@ public class FilePModeManager implements PModeInterface {
         String localPart = addrTb[0];
         String domainPart = addrTb[1].toLowerCase();
 
-        String localDomain = getLocalDomain().toLowerCase();
+        String[] localDomain = getLocalDomains();
 
-        if (Utils.isEmptyString(localDomain)) {
+        if (localDomain == null || localDomain.length == 0) {
             throw new PModeException(
-                    "Bad aplication configuratin. Missing domain parameter");
+                    "Bad application configuration. Missing domain parameter");
         }
 
         int iDomainCount = 0;
         List<PartyIdentitySet> candidates = new ArrayList<>();
         for (PartyIdentitySet pis : getPartyIdentitySets()) {
-            // check domain
-            if (pis.isIsLocalIdentity()
-                    ? domainPart.endsWith(localDomain)
-                    : domainPart.endsWith(pis.getDomain().toLowerCase())) {
-                iDomainCount++;
+            if (isDomainMatchingParty(pis, domainPart )) {
                 boolean bContaisIdetifierId = false;
                 for (PartyIdentitySetType.PartyId pi : pis.getPartyIds()) {
                     if (pi.getValueSource().equals(
                             PModeConstants.PARTY_ID_SOURCE_TYPE_IDENTIFIER)) {
                         bContaisIdetifierId = true;
-                        // if contains with identifier return this Etity-set
+                        // if contains with identifier return this Entity-set
                         if (pi.getIdentifiers().contains(localPart)) {
                             return pis;
                         }
                     }
                 }
-                // add only identifier  with no idetifiers
+                // add only identifier with no identifiers
                 if (!bContaisIdetifierId) {
                     candidates.add(pis);
                 }
@@ -688,6 +684,38 @@ public class FilePModeManager implements PModeInterface {
                     iDomainCount, address));
         }
         return candidates.get(0);
+    }
+
+    /**
+     * Method validates if PartyIdentitySet matches the party domain from the message
+     * @param pModeParty party configuration
+     * @return true if domain matches the pModeParty
+     */
+    private boolean isDomainMatchingParty(PartyIdentitySet pModeParty, String messagePartyDomain){
+        // check domain
+        if (pModeParty.isIsLocalIdentity()){
+            String[] localDomains = getLocalDomains();
+            return isDomainMatchingPartyDomains(localDomains, messagePartyDomain);
+        }
+
+        String[] localDomains = pModeParty.getDomain().toLowerCase().split(",");
+        return isDomainMatchingPartyDomains(localDomains, messagePartyDomain);
+    }
+
+    /**
+     * Method validates if any item from the party domains match the party domain from the message
+     * @param pModePartyDomains party domain list
+     * @return true if domain matches the pModeParty
+     */
+    private boolean isDomainMatchingPartyDomains(String[] pModePartyDomains, String messagePartyDomain) {
+        // check if any party domain matches the message Party Domain
+        for (String localDomain: pModePartyDomains) {
+            if (messagePartyDomain.endsWith(localDomain.trim())) {
+                LOG.log(messagePartyDomain, "matches",  localDomain);
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -936,8 +964,10 @@ public class FilePModeManager implements PModeInterface {
         LOG.logEnd(l);
     }
 
-    public String getLocalDomain() {
-        return System.getProperty(SEDSystemProperties.SYS_PROP_LAU_DOMAIN);
+    public String[] getLocalDomains() {
+        String domainList = System.getProperty(SEDSystemProperties.SYS_PROP_LAU_DOMAIN);
+
+        return domainList.toLowerCase().split(",");
     }
 
     @Override

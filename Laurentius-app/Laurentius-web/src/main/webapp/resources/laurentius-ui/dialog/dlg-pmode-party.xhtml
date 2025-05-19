@@ -32,7 +32,6 @@
                     <p:tabView id="partyTab" style="height: 100%" cache="false" >
                         <p:tab id="IdentityTab" title="#{msg['MailData']}">
                             <f:facet name="title">
-
                                 <h:outputText value="#{msg['Identity']}" />
                             </f:facet>
 
@@ -53,13 +52,29 @@
                                                          disabled="#{pModePartyView.editableLocalIdentity}"
                                                          />
 
-
-
-
-                                <h:outputText value="#{msg['Domain']}:"  />
-                                <p:inputText id="domain" value="#{pModePartyView.editable.domain}"
+                                <h:outputText value="#{msg['Domains']}:"  />
+                                <p:inputText id="domain"
+                                             value="#{pModePartyView.editable.domain}"
                                              disabled="#{pModePartyView.editableLocalIdentity}"
-                                            style="width: 100%"   />
+                                             required="true"
+                                             requiredMessage="#{msg['Domains']} #{msg['ValidationRequired']}"
+                                             style="width: 100%"
+                                >
+                                    <f:validateRegex
+                                            pattern="^([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}(\s*,\s*([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6})*$" />
+                                    <p:ajax event="blur" update="domainsMsg" />
+                                </p:inputText>
+                                <p:message id="domainsMsg" for="domain" />
+<!--                                <p:inputText id="domainsInput"-->
+<!--                                             value="#{pModePartyView.editable.domain}"-->
+<!--                                             required="true"-->
+<!--                                             requiredMessage="#{msg['Domains']} #{msg['ValidationRequired']}"-->
+<!--                                             style="width:300px;" />-->
+<!--                                    <f:validateRegex-->
+<!--                                            pattern="^([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}(\s*,\s*([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6})*$" />-->
+<!--                                    <p:ajax event="blur" update="domainsMsg" />-->
+<!--                                </p:inputText>-->
+<!--                                <p:message id="domainsMsg" for="domainsInput" />-->
 
 
                                 <h:outputText value="#{msg['IsLocalIdentity']}:"   />
