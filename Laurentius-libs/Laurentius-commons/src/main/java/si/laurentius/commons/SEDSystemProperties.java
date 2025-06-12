@@ -17,8 +17,6 @@ package si.laurentius.commons;
 import java.io.File;
 import static java.lang.System.getProperty;
 import static java.lang.System.setProperty;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import si.laurentius.commons.utils.StringFormater;
@@ -241,7 +239,7 @@ public class SEDSystemProperties {
                   String.format(
                           "Could not create folder '%s' for system property '%s'!",
                           val, property));
-        };
+        }
       }
       // replace system property
       System.setProperty(property, val);
@@ -262,9 +260,15 @@ public class SEDSystemProperties {
 
   }
 
+  /**
+   * Method returns first default domain
+   * @return the first domain out of CSV list of domains.
+   */
   public static String getLocalDomain() {
-    return System.getProperty(SYS_PROP_LAU_DOMAIN,
-            S_DEF_VALUES.get(SYS_PROP_LAU_DOMAIN));
+    String[] domains =  System.getProperty(SYS_PROP_LAU_DOMAIN,
+            S_DEF_VALUES.get(SYS_PROP_LAU_DOMAIN)).split(",");
+      // first domain is default domaim
+      return domains[0];
   }
 
   public static File getLogFolder() {
@@ -364,7 +368,7 @@ public class SEDSystemProperties {
     }
 
     // No properties
-    if (properties == false) {
+    if (!properties) {
       return string;
     }
 

@@ -12,7 +12,6 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import javax.jms.Connection;
@@ -24,17 +23,13 @@ import javax.jms.Session;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.JoinType;
-import javax.persistence.criteria.Root;
+
 import org.junit.Assert;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.BeforeClass;
 import si.laurentius.commons.SEDSystemProperties;
@@ -50,8 +45,6 @@ import si.laurentius.ejb.entity.TestEntity;
 import si.laurentius.ejb.utils.InitialContextFactoryForTest;
 import si.laurentius.ejb.utils.TestLookupUtils;
 import si.laurentius.ejb.utils.TestUtils;
-import static si.laurentius.ejb.utils.TestUtils.LAU_TEST_DOMAIN;
-import static si.laurentius.ejb.utils.TestUtils.setLogger;
 import si.laurentius.lce.DigestUtils;
 import si.laurentius.msh.inbox.event.MSHInEvent;
 import si.laurentius.msh.inbox.mail.MSHInMail;
@@ -564,30 +557,59 @@ public class SEDDaoBeanTest extends TestUtils {
       System.out.println("Test :" + te.getReceiverEBox() + " lastDeliveryDate" + te.getDeliveredDate()  + " last  " + c1.getTime().toString() );
 
     }
-    
- /*   
-    String hql2
-            = "select om"
-            + " from MSHOutMail AS om  join MSHInMail AS im "
-            + "  on om.ConversationId = im.ConversationId "
-            + "  on om.Service =im.Service "
-            + " with (im.Action=:inAction) "            
-            + "  where om.Service = :service "
-            + "  and om.Action=:outAction "
-            + "  and om.ReceivedDate > :receivedDate ";
-    
+  }
 
-    
-    
-    
-     List<MSHOutMail> lst2 = mTestInstance.
-            getDataList(MSHOutMail.class, hql2, prms);
-     */
+  @Test
+  public void testGetMSHInmailEBoxLike() throws StorageException {
 
+    class TestInMailFilter {
 
+      String senderEBoxLike;
 
+      public TestInMailFilter() {
+      }
 
+      public TestInMailFilter(String senderEBoxLike) {
+        this.senderEBoxLike = senderEBoxLike;
+      }
 
+      public String getSenderEBoxLike() {
+        return senderEBoxLike;
+      }
+
+      public void setSenderEBoxLike(String senderEBoxLike) {
+        this.senderEBoxLike = senderEBoxLike;
+      }
+    }
+
+    Calendar c1 = Calendar.getInstance();
+    c1.add(Calendar.MINUTE, -5);
+
+    addTestConversation(c1, "test-like@like-address.com");
+    c1.add(Calendar.MINUTE, -5);
+    addTestConversation(c1, "test-like@like-address.com");
+    c1.add(Calendar.MINUTE, -5);
+    addTestConversation(c1,"test-like@new.like-address.com");
+
+    c1.add(Calendar.MINUTE, -5);
+    MSHOutMail mo2 = TestLookupUtils.createOutMail();
+    mo2.setMessageId(Utils.getUUID("test"));
+    mo2.setSentDate(c1.getTime());
+    mo2.setReceivedDate(c1.getTime());
+    mo2.setConversationId("transaction-1");
+    mo2.setService("LegalDelivery_ZPP");
+    mo2.setAction("DeliveryNotification");
+    mTestInstance.add(mo2);
+
+    List<MSHInMail> justTest = mTestInstance.getDataList(MSHInMail.class, -1, 10,
+            "Id", "ASC", new TestInMailFilter("test-like%"));
+    assertEquals(3, justTest.size());
+    List<MSHInMail> newOnly = mTestInstance.getDataList(MSHInMail.class, -1, 10,
+            "Id", "ASC", new TestInMailFilter("%new.like%"));
+    assertEquals(1, newOnly.size());
+    List<MSHInMail> addressOnly = mTestInstance.getDataList(MSHInMail.class, -1, 10,
+            "Id", "ASC", new TestInMailFilter("%like-address.com"));
+    assertEquals(3, addressOnly.size());
   }
 
 }

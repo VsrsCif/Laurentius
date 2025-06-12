@@ -213,7 +213,7 @@ public class FilePModeManagerTest {
           ex.getMessage()));
     }
 
-    // check find for idetifiers
+    // check find for identifiers
     idValue = "ceftestparty2gw";
     idType = "urn:oasis:names:tc:ebcore:partyid-type:unregistered";
     expectedID = "test-sed-cef";
@@ -226,7 +226,7 @@ public class FilePModeManagerTest {
           ex.getMessage()));
     }
 
-    // not exists for idetifiers
+    // not exists for identifiers
     idValue = "ceftestparty2gw-notExist";
     idType = "urn:oasis:names:tc:ebcore:partyid-type:unregistered";
     expectedID = null;
@@ -238,7 +238,7 @@ public class FilePModeManagerTest {
           ex.getMessage()));
     }
 
-    // not exists for idetifiers
+    // not exists for identifiers
     idValue = "ceftestparty2gw";
     idType = "urn:oasis:names:tc:ebcore:partyid-type:unregistered-notExist";
     expectedID = null;

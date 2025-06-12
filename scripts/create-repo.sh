@@ -2,7 +2,7 @@
 
 REPO_FOLDER=../../laurentius-maven-repo
 GROUP_ID=si.vsrs.cif.sed
-VERSION=1.1
+VERSION=2.1
 COMM_PROP="-DlocalRepositoryPath=$REPO_FOLDER -DcreateChecksum=true -Dpackaging=jar -DgroupId=$GROUP_ID -Dversion=$VERSION"
 
 #install commons
