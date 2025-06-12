@@ -1,6 +1,8 @@
 FROM digicssi/wildfly:11.0.0.Final as package
 
-ENV VERSION 2.2-SNAPSHOT
+ARG VERSION
+
+ENV VERSION $VERSION
 ENV SERVER_VERSION wildfly-11.0
 ENV WILDFLY_HOME /opt/wildfly
 
