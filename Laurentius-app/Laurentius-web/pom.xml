@@ -5,7 +5,7 @@
     <parent>
         <groupId>si.vsrs.cif.sed</groupId>
         <artifactId>Laurentius</artifactId>
-        <version>2.1</version>
+        <version>2.3-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -44,7 +44,8 @@
     <scm>
         <connection>scm:git:git://localhost/${basedir}</connection>
         <developerConnection>scm:git:git://localhost/${basedir}</developerConnection>
-    </scm>
+      <tag>Laurentius-2.2</tag>
+  </scm>
 
     <properties>
         <war.final.name>laurentius-web</war.final.name>
