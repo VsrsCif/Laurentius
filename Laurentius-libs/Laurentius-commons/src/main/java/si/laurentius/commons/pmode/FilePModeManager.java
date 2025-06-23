@@ -710,7 +710,7 @@ public class FilePModeManager implements PModeInterface {
     private boolean isDomainMatchingPartyDomains(String[] pModePartyDomains, String messagePartyDomain) {
         // check if any party domain matches the message Party Domain
         for (String localDomain: pModePartyDomains) {
-            if (messagePartyDomain.endsWith(localDomain.trim())) {
+            if (messagePartyDomain.equalsIgnoreCase(localDomain.trim())) {
                 LOG.log(messagePartyDomain, "matches",  localDomain);
                 return true;
             }
