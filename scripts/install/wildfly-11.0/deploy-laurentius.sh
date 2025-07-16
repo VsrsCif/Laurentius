@@ -125,8 +125,8 @@ if [ "$INIT" = "TRUE" ]; then
 	chmod u+x "$SERVER_HOME/bin/laurentius-init.sh"
 	
 	# copy start scripts
-	cp "$LAU_BUNDLE/$APPL_SERVER/laurentius-demo.sh" "$SERVER_HOME/bin/"
-	chmod u+x "$SERVER_HOME/bin/laurentius-demo.sh"
+	cp "$LAU_BUNDLE/$APPL_SERVER/laurentius.sh" "$SERVER_HOME/bin/"
+	chmod u+x "$SERVER_HOME/bin/laurentius.sh"
 
 	# create home folder
 	mkdir -p  "$LAU_HOME"
