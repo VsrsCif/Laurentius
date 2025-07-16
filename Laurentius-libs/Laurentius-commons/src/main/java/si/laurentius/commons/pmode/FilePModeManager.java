@@ -26,6 +26,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import javax.xml.bind.JAXBException;
+
+import si.laurentius.commons.utils.PartyIdentifierUtils;
 import si.laurentius.msh.outbox.mail.MSHOutMail;
 import si.laurentius.msh.pmode.AgreementRef;
 import si.laurentius.msh.pmode.MSHSetings;
@@ -644,9 +646,8 @@ public class FilePModeManager implements PModeInterface {
         String localPart = addrTb[0];
         String domainPart = addrTb[1].toLowerCase();
 
-        String[] localDomain = getLocalDomains();
-
-        if (localDomain == null || localDomain.length == 0) {
+        String[] localDomain = PartyIdentifierUtils.getLocalDomains();
+        if (localDomain.length == 0) {
             throw new PModeException(
                     "Bad application configuration. Missing domain parameter");
         }
@@ -694,29 +695,14 @@ public class FilePModeManager implements PModeInterface {
     private boolean isDomainMatchingParty(PartyIdentitySet pModeParty, String messagePartyDomain){
         // check domain
         if (pModeParty.isIsLocalIdentity()){
-            String[] localDomains = getLocalDomains();
-            return isDomainMatchingPartyDomains(localDomains, messagePartyDomain);
+            String[] localDomains = PartyIdentifierUtils.getLocalDomains();
+            return PartyIdentifierUtils.isDomainMatchingPartyDomains(localDomains, messagePartyDomain);
         }
 
         String[] localDomains = pModeParty.getDomain().toLowerCase().split(",");
-        return isDomainMatchingPartyDomains(localDomains, messagePartyDomain);
+        return PartyIdentifierUtils.isDomainMatchingPartyDomains(localDomains, messagePartyDomain);
     }
 
-    /**
-     * Method validates if any item from the party domains match the party domain from the message
-     * @param pModePartyDomains party domain list
-     * @return true if domain matches the pModeParty
-     */
-    private boolean isDomainMatchingPartyDomains(String[] pModePartyDomains, String messagePartyDomain) {
-        // check if any party domain matches the message Party Domain
-        for (String localDomain: pModePartyDomains) {
-            if (messagePartyDomain.equalsIgnoreCase(localDomain.trim())) {
-                LOG.log(messagePartyDomain, "matches",  localDomain);
-                return true;
-            }
-        }
-        return false;
-    }
 
     @Override
     public List<PartyIdentitySet> getPartyIdentitySets() {
@@ -962,12 +948,6 @@ public class FilePModeManager implements PModeInterface {
             throw new RuntimeException(msg, ex);
         }
         LOG.logEnd(l);
-    }
-
-    public String[] getLocalDomains() {
-        String domainList = System.getProperty(SEDSystemProperties.SYS_PROP_LAU_DOMAIN);
-
-        return domainList.toLowerCase().split(",");
     }
 
     @Override

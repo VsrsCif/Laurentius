@@ -1,7 +1,7 @@
-#/!bin/sh
+#!/bin/bash
 
 # laurentius version
-VERSION="2.1"
+VERSION="2.3-SNAPSHOT"
 # releases folder 
 LAU_RELEASE_FOLDER="releases"
 # release zip file name
@@ -15,7 +15,7 @@ FOLDER_DEPLOY="test-deploy"
 AS_WILDFLY_11_0="wildfly-11.0"
 AS_JBOSS_EAP_7_0="jboss-eap-7.0"
 
-AS_ARRAY=($AS_WILDFLY_10_1 $AS_WILDFLY_11_0 $AS_JBOSS_EAP_7_0)
+AS_ARRAY=("$AS_WILDFLY_10_1" "$AS_WILDFLY_11_0" "$AS_JBOSS_EAP_7_0")
 
 
 # 
@@ -92,7 +92,7 @@ do
 	cp "$LAU_PROJECT/scripts/install/$asItem/deploy-laurentius.sh" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/$asItem"
 	cp "$LAU_PROJECT/scripts/install/$asItem/deploy-laurentius.bat" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/$asItem"
 	
-	cp "$LAU_PROJECT/scripts/install/$asItem/laurentius-demo.sh" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/$asItem"
+	cp "$LAU_PROJECT/scripts/install/$asItem/laurentius.sh" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/$asItem"
 	cp "$LAU_PROJECT/scripts/install/$asItem/laurentius-demo.bat" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/$asItem"
 	
 	cp "$LAU_PROJECT/scripts/install/$asItem/laurentius-init.sh" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/$asItem"
