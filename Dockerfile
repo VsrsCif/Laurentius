@@ -1,10 +1,10 @@
-FROM digicssi/wildfly:11.0.0.Final as package
+FROM digicssi/wildfly:11.0.0.Final AS package
 
 ARG VERSION
 
-ENV VERSION $VERSION
-ENV SERVER_VERSION wildfly-11.0
-ENV WILDFLY_HOME /opt/wildfly
+ENV VERSION=$VERSION
+ENV SERVER_VERSION=wildfly-11.0
+ENV WILDFLY_HOME=/opt/wildfly
 
 
 # si.laurentius module libralies
