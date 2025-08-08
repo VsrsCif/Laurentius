@@ -95,3 +95,5 @@ maven.config
 /Laurentius-libs/Laurentius-lce/.mvn/local-settings.xml
 /Laurentius-libs/Laurentius-lce/src/test/resources/certs/test-ss-keystore.jks
 *.iml
+.dev-data/
+.plans/
