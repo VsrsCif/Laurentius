@@ -141,14 +141,20 @@ public abstract class MSHPluginInterceptorAbstract extends AbstractSoapIntercept
                         "('%s') Plugin '%s' not registred! Check deployment folder!",
                         strMsg, jndiName, ex.getMessage());
                 LOG_PRIVATE.logError(l, errmsg, ex);
+                // Use actual MessageId as RefToMessageId, not debug string
+                String refToMessageId = inMail != null ? inMail.getMessageId() : 
+                                       outMail != null ? outMail.getMessageId() : null;
                 throw new EBMSError(EBMSErrorCode.PModeConfigurationError,
-                        strMsg, errmsg, ex, SoapFault.FAULT_CODE_SERVER);
+                        refToMessageId, errmsg, ex, SoapFault.FAULT_CODE_SERVER);
               } catch (Throwable ex) {
                 String errmsg = String.format(
                         "('%s') SoapInterceptorInterface '%s' throws an error with message: %s!",
                         strMsg, jndiName, ex.getMessage());
                 LOG_PRIVATE.logError(l, errmsg, ex);
-                throw new EBMSError(EBMSErrorCode.Other, strMsg, errmsg, ex,
+                // Use actual MessageId as RefToMessageId, not debug string
+                String refToMessageId = inMail != null ? inMail.getMessageId() : 
+                                       outMail != null ? outMail.getMessageId() : null;
+                throw new EBMSError(EBMSErrorCode.Other, refToMessageId, errmsg, ex,
                         SoapFault.FAULT_CODE_CLIENT);
               }
             }

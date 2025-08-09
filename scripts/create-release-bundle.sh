@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # laurentius version
-VERSION="2.3"
+VERSION="2.3.1-SNAPSHOT"
 # releases folder 
 LAU_RELEASE_FOLDER="releases"
 # release zip file name
@@ -52,6 +52,11 @@ cp "$LAU_PROJECT/Laurentius-libs/Laurentius-wsdl/target/Laurentius-wsdl-$VERSION
 cp "$LAU_PROJECT/Laurentius-libs/Laurentius-commons/target/Laurentius-commons-$VERSION.jar" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/modules/si/laurentius/main/"
 cp "$LAU_PROJECT/Laurentius-libs/Laurentius-lce/target/Laurentius-lce-$VERSION.jar" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/modules/si/laurentius/main/"
 cp "$LAU_PROJECT/Laurentius-libs/Laurentius-plugin-interfaces/target/Laurentius-plugin-interfaces-$VERSION.jar" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/modules/si/laurentius/main/"
+
+# Copy Bouncy Castle JARs from Maven repository
+cp ~/.m2/repository/org/bouncycastle/bcprov-jdk18on/1.75/bcprov-jdk18on-1.75.jar "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/modules/si/laurentius/main/"
+cp ~/.m2/repository/org/bouncycastle/bcpkix-jdk18on/1.75/bcpkix-jdk18on-1.75.jar "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/modules/si/laurentius/main/"
+cp ~/.m2/repository/org/bouncycastle/bcutil-jdk18on/1.75/bcutil-jdk18on-1.75.jar "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/modules/si/laurentius/main/"
 
 #create module descriptions for application servers 
 for asItem in ${AS_ARRAY[*]}

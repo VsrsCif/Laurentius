@@ -7,6 +7,9 @@
         <resource-root path="Laurentius-commons-VERSION.jar"/>
         <resource-root path="Laurentius-lce-VERSION.jar"/>
         <resource-root path="Laurentius-plugin-interfaces-VERSION.jar"/>
+        <resource-root path="bcprov-jdk18on-1.75.jar"/>
+        <resource-root path="bcpkix-jdk18on-1.75.jar"/>
+        <resource-root path="bcutil-jdk18on-1.75.jar"/>
     </resources>
     <dependencies>
         <module name="javax.annotation.api"/>
@@ -26,7 +29,6 @@
         <module name="org.apache.ws.security"/>
         <module name="org.hibernate"/>
         <module name="org.javassist"/>
-        <module name="org.bouncycastle"/>
     </dependencies>
 </module>
 
