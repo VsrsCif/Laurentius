@@ -4,7 +4,7 @@
 
     <groupId>si.vsrs.cif.sed</groupId>
     <artifactId>Laurentius</artifactId>
-    <version>2.3</version>
+    <version>2.3.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <organization>
@@ -125,7 +125,7 @@
             - org.apache.activemq.artemis.jms.client: 1.5.5  / latest 2.3.0
         -->
         <org.apache.santuario.xmlsec.version>2.0.6</org.apache.santuario.xmlsec.version>
-        <org.bouncycastle.version>1.56</org.bouncycastle.version>
+        <org.bouncycastle.version>1.75</org.bouncycastle.version>
         <cxf-rt.version>3.1.6</cxf-rt.version>
         <org.apache.activemq.artemis-jms-client.version>1.5.5</org.apache.activemq.artemis-jms-client.version>
 
@@ -178,6 +178,12 @@
                 <groupId>org.apache.cxf</groupId>
                 <artifactId>cxf-rt-ws-security</artifactId>
                 <version>${cxf-rt.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.bouncycastle</groupId>
+                        <artifactId>bcprov-jdk15on</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.apache.cxf</groupId>
@@ -207,13 +213,18 @@
             </dependency>
             <dependency>
                 <groupId>org.bouncycastle</groupId>
-                <artifactId>bcprov-jdk15on</artifactId>
+                <artifactId>bcprov-jdk18on</artifactId>
                 <version>${org.bouncycastle.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.bouncycastle</groupId>
-                <artifactId>bcpkix-jdk15on</artifactId>
+                <artifactId>bcpkix-jdk18on</artifactId>
+                <version>${org.bouncycastle.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcutil-jdk18on</artifactId>
                 <version>${org.bouncycastle.version}</version>
             </dependency>
 

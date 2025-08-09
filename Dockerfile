@@ -13,6 +13,11 @@ COPY ./Laurentius-libs/Laurentius-wsdl/target/Laurentius-wsdl-$VERSION.jar $WILD
 COPY ./Laurentius-libs/Laurentius-commons/target/Laurentius-commons-$VERSION.jar $WILDFLY_HOME/modules/si/laurentius/main/
 COPY ./Laurentius-libs/Laurentius-lce/target/Laurentius-lce-$VERSION.jar $WILDFLY_HOME/modules/si/laurentius/main/
 COPY ./Laurentius-libs/Laurentius-plugin-interfaces/target/Laurentius-plugin-interfaces-$VERSION.jar $WILDFLY_HOME/modules/si/laurentius/main/
+
+# Copy Bouncy Castle JARs - these should be downloaded during Maven build
+ADD https://repo1.maven.org/maven2/org/bouncycastle/bcprov-jdk18on/1.75/bcprov-jdk18on-1.75.jar $WILDFLY_HOME/modules/si/laurentius/main/
+ADD https://repo1.maven.org/maven2/org/bouncycastle/bcpkix-jdk18on/1.75/bcpkix-jdk18on-1.75.jar $WILDFLY_HOME/modules/si/laurentius/main/
+ADD https://repo1.maven.org/maven2/org/bouncycastle/bcutil-jdk18on/1.75/bcutil-jdk18on-1.75.jar $WILDFLY_HOME/modules/si/laurentius/main/
 # set module
 COPY ./scripts/install/$SERVER_VERSION/modules/si.laurentius.module.xml $WILDFLY_HOME/modules/si/laurentius/main/module.xml
 
@@ -44,11 +49,11 @@ COPY ./scripts/install/$SERVER_VERSION/laurentius-init.sh  $WILDFLY_HOME/bin/
 
 RUN echo "test=544e00c06e8229f4face117c31564c8b" >> $WILDFLY_HOME/standalone/configuration/mgmt-users.properties
 
-user root
-RUN  cd $WILDFLY_HOME/modules/si/laurentius/main/ && \
+USER root
+RUN cd $WILDFLY_HOME/modules/si/laurentius/main/ && \
      sed -i -- "s/VERSION/$VERSION/g" "module.xml"  && \
      chown -R jboss:jboss $WILDFLY_HOME
-user jboss
+USER jboss
 
 # Set the default command to run on boot
 CMD ["/opt/wildfly/bin/laurentius.sh"]
