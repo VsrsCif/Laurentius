@@ -27,6 +27,7 @@ import si.laurentius.commons.interfaces.SEDDaoInterface;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StorageUtils;
 import si.laurentius.commons.utils.Utils;
+import si.laurentius.commons.utils.FilenameUtils;
 import si.laurentius.msh.inbox.event.MSHInEvent;
 import si.laurentius.msh.inbox.mail.MSHInMail;
 import si.laurentius.msh.inbox.payload.MSHInPart;
@@ -150,13 +151,36 @@ public class InMailDataView extends AbstractMailView<TableInMail, MSHInMail, MSH
             }
         }
         if (inpart != null) {
+            String originalFilename = inpart.getFilename();
+            String filepath = inpart.getFilepath();
+            String mimeType = inpart.getMimeType();
+            
+            // Enhanced logging for filename encoding issues
+            LOG.formatedDebug("Download attempt - Original filename: '%s', filepath: '%s', MIME: '%s'", 
+                originalFilename, filepath, mimeType);
+            
+            if (originalFilename != null) {
+                FilenameUtils.FilenameInfo info = FilenameUtils.analyzeFilename(originalFilename);
+                LOG.formatedDebug("Filename analysis: %s", info.toString());
+            }
+            
             try {
-                File f = StorageUtils.getFile(inpart.getFilepath());
-                return new DefaultStreamedContent(new FileInputStream(f), inpart.getMimeType(),
-                        inpart.getFilename());
+                File f = StorageUtils.getFile(filepath);
+                
+                // Sanitize filename for HTTP headers to prevent encoding issues
+                String safeFilename = FilenameUtils.sanitizeFilenameForDownload(originalFilename);
+                LOG.formatedDebug("Using sanitized filename for download: '%s'", safeFilename);
+                
+                return new DefaultStreamedContent(new FileInputStream(f), mimeType, safeFilename);
+                
             } catch (FileNotFoundException ex) {
-                LOG.logError(l, ex);
-                addError("File '" + inpart.getFilepath() + "' reading error: " + ex.getMessage());
+                LOG.formatedError("File not found - filepath: '%s', original filename: '%s', error: %s", 
+                    filepath, originalFilename, ex.getMessage());
+                addError("File '" + filepath + "' with filename '" + originalFilename + "' not found: " + ex.getMessage());
+            } catch (Exception ex) {
+                LOG.formatedError("File download failed - filepath: '%s', filename: '%s', error: %s", 
+                    filepath, originalFilename, ex.getMessage());
+                addError("File download error for '" + originalFilename + "': " + ex.getMessage());
             }
         }
         return null;
