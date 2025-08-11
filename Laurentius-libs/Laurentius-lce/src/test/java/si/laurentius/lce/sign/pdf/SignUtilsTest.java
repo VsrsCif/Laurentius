@@ -57,7 +57,7 @@ public class SignUtilsTest {
     protected static final String PDF_SIGN_HOME = "target/";
     protected static final String PDF_SIGN_VISUALIZATION = "signed_visualization.pdf";
     protected static final String PDF_SIGN_VISUALIZATION_DEF = "signed_def_visualization.pdf";
-    protected static final String PDF_SIGN_SERVER = "double_signed.pdf";
+    protected static final String PDF_SIGN_SERVER = "triple_signed.pdf";
 
     @BeforeClass
     public static void setUpClass()
@@ -241,7 +241,8 @@ public class SignUtilsTest {
     public void testValidateSignedPDF() throws IOException, CertificateException, NoSuchAlgorithmException {
         ValidateSignatureUtils vsu = new ValidateSignatureUtils();
         final ClassLoader classLoader = getClass().getClassLoader();
-        final InputStream adviceOfDelivery = classLoader.getResourceAsStream("advice-of-delivery-2023-08-31-167219@court-laurentius.si.pdf");
+        //final InputStream adviceOfDelivery = classLoader.getResourceAsStream("advice-of-delivery-2023-08-31-167219@court-laurentius.si.pdf");
+        final InputStream adviceOfDelivery = classLoader.getResourceAsStream("triple_signed.pdf");
         final List<SignatureInfo> adviceOfDeliverySignatures = vsu.validateSignatures(adviceOfDelivery);
 
         assertThat(adviceOfDeliverySignatures.size(), is(3));

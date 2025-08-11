@@ -41,7 +41,7 @@ import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
 import org.bouncycastle.asn1.ASN1Primitive;
 import org.bouncycastle.asn1.ASN1TaggedObject;
-import org.bouncycastle.asn1.DERIA5String;
+import org.bouncycastle.asn1.ASN1IA5String;
 import org.bouncycastle.asn1.x509.CRLDistPoint;
 import org.bouncycastle.asn1.x509.DistributionPoint;
 import org.bouncycastle.asn1.x509.DistributionPointName;
@@ -185,8 +185,8 @@ public class CRLVerifier {
           GeneralName[] names = generalNames.getNames();
           for (GeneralName name : names) {
             if (name.getTagNo() == GeneralName.uniformResourceIdentifier) {
-              DERIA5String derStr
-                      = DERIA5String.getInstance((ASN1TaggedObject) name.
+              ASN1IA5String derStr
+                      = ASN1IA5String.getInstance((ASN1TaggedObject) name.
                               toASN1Primitive(), false);
               String val = derStr.getString().toLowerCase();
               
