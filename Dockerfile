@@ -1,4 +1,4 @@
-FROM digicssi/wildfly:11.0.0.Final AS package
+FROM digicssi/wildfly:11.0.0.Final as package
 
 ARG VERSION
 
