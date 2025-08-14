@@ -18,15 +18,22 @@ import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.security.Key;
 import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.crypto.KeyGenerator;
 
 import org.bouncycastle.cms.CMSException;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import si.laurentius.lce.enc.SEDCrypto;
+import si.laurentius.commons.exception.SEDSecurityException;
 import si.laurentius.lce.sign.pdf.SignatureInfo;
 import si.laurentius.lce.sign.pdf.ValidateSignatureUtils;
 
@@ -90,6 +97,105 @@ public class ZPPIssuesReproductionTest {
     }
 
     /**
+     * Test that null certificate extraction is properly handled and doesn't cause NPE
+     */
+    @Test
+    public void testNullCertificateHandling() throws Exception {
+        // Create mock signature info with null certificate (simulating extraction failure)
+        SignatureInfo mockSigInfo = new SignatureInfo();
+        mockSigInfo.setSignerCert(null);  // This simulates certificate extraction failure
+        mockSigInfo.setIsSignatureValid(true);  // But signature validation succeeded
+        
+        List<SignatureInfo> mockSignatures = new ArrayList<>();
+        mockSignatures.add(mockSigInfo);
+        
+        // Test that SEDCrypto properly validates null certificate
+        SEDCrypto crypto = new SEDCrypto();
+        
+        try {
+            // Generate a test key
+            KeyGenerator keyGen = KeyGenerator.getInstance("AES");
+            keyGen.init(128);
+            Key testKey = keyGen.generateKey();
+            
+            // This should throw SEDSecurityException, not NPE
+            crypto.encryptedKeyWithReceiverPublicKey(
+                testKey, 
+                null,  // null certificate - should be caught gracefully
+                "test@example.com", 
+                "test-key-id"
+            );
+            
+            fail("Should have thrown SEDSecurityException for null certificate");
+            
+        } catch (SEDSecurityException e) {
+            // Expected - proper error handling
+            assertTrue("Error message should mention null certificate", 
+                      e.getMessage().contains("Certificate cannot be null"));
+            System.out.println("✓ Null certificate properly handled: " + e.getMessage());
+            
+        } catch (NullPointerException e) {
+            fail("Should not throw NPE - should throw SEDSecurityException instead. NPE: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Test certificate validation in the signature extraction flow
+     */
+    @Test
+    public void testCertificateExtractionValidation() throws Exception {
+        File problematicPdf = new File(PROBLEMATIC_PDF_FILE);
+        assertTrue("Problematic PDF test file should exist", problematicPdf.exists());
+
+        // Validate signatures and check certificate extraction
+        List<SignatureInfo> signatures = signatureValidator.validateSignatures(problematicPdf);
+        
+        System.out.println("✓ Testing certificate extraction for " + signatures.size() + " signatures");
+        
+        for (int i = 0; i < signatures.size(); i++) {
+            SignatureInfo sig = signatures.get(i);
+            X509Certificate cert = sig.getSignerCert();
+            
+            System.out.println("Signature " + (i + 1) + ":");
+            System.out.println("  Valid: " + sig.isIsSignatureValid());
+            System.out.println("  Certificate: " + (cert != null ? "Present" : "NULL"));
+            
+            if (cert != null) {
+                System.out.println("  Subject: " + cert.getSubjectDN());
+                System.out.println("  Public Key: " + (cert.getPublicKey() != null ? "Present" : "NULL"));
+                
+                // Validate that certificate has required components for encryption
+                assertNotNull("Certificate must not be null for valid signature", cert);
+                assertNotNull("Certificate must have a public key", cert.getPublicKey());
+                assertNotNull("Certificate must have subject DN", cert.getSubjectDN());
+                
+            } else {
+                // If certificate is null, signature should be marked invalid or have error messages
+                if (sig.isIsSignatureValid()) {
+                    System.out.println("  WARNING: Signature marked valid but certificate is null!");
+                    System.out.println("  This could cause NPE in downstream processing");
+                    
+                    // Check if there are error messages explaining the null certificate
+                    if (sig.getErrorMessages().isEmpty()) {
+                        System.out.println("  ERROR: No error messages for null certificate!");
+                    } else {
+                        System.out.println("  Error messages: " + String.join(", ", sig.getErrorMessages()));
+                    }
+                }
+            }
+        }
+        
+        // Ensure all certificates are extracted for valid signatures
+        for (int i = 0; i < signatures.size(); i++) {
+            SignatureInfo sig = signatures.get(i);
+            if (sig.isIsSignatureValid()) {
+                assertNotNull("Valid signature " + (i + 1) + " must have certificate extracted", 
+                             sig.getSignerCert());
+            }
+        }
+    }
+
+    /**
      * Note: Additional tests for RefToMessageId issue are available in:
      * Laurentius-msh-cxf/src/test/java/si/jrc/msh/interceptor/RefToMessageIdIssueTest.java
      * 
@@ -101,6 +207,8 @@ public class ZPPIssuesReproductionTest {
         System.out.println("✓ ZPP_A issues are comprehensively tested in:");
         System.out.println("  - PDF validation: ValidateSignatureUtilsBounycCastleTest.java");
         System.out.println("  - RefToMessageId: RefToMessageIdIssueTest.java");
+        System.out.println("  - Null certificate handling: testNullCertificateHandling()");
+        System.out.println("  - Certificate extraction validation: testCertificateExtractionValidation()");
         assertTrue("Documentation test always passes", true);
     }
 }
