@@ -451,6 +451,25 @@ public class SEDCrypto {
   public Element encryptedKeyWithReceiverPublicKey(Key key, X509Certificate rsaCert,
       String recipient, String keyId) throws SEDSecurityException {
 
+    // Validate required parameters
+    if (key == null) {
+      throw new SEDSecurityException(
+          SEDSecurityException.SEDSecurityExceptionCode.EncryptionException, 
+          "Encryption key cannot be null");
+    }
+    
+    if (rsaCert == null) {
+      throw new SEDSecurityException(
+          SEDSecurityException.SEDSecurityExceptionCode.EncryptionException, 
+          "Certificate cannot be null - required for encryption");
+    }
+    
+    if (rsaCert.getPublicKey() == null) {
+      throw new SEDSecurityException(
+          SEDSecurityException.SEDSecurityExceptionCode.EncryptionException, 
+          "Certificate public key cannot be null");
+    }
+
     // create document factory
     DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
     dbf.setNamespaceAware(true);
