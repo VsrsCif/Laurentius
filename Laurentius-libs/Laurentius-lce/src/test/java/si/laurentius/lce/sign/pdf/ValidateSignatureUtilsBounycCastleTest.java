@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.List;
 
 import org.bouncycastle.cms.CMSException;
@@ -235,5 +236,106 @@ public class ValidateSignatureUtilsBounycCastleTest {
         } catch (Exception e) {
             return "unknown (" + e.getMessage() + ")";
         }
+    }
+
+    /**
+     * Test certificate extraction robustness - ensures certificates are always extracted
+     * when signatures are valid, preventing downstream NPE issues
+     */
+    @Test
+    public void testCertificateExtractionRobustness() throws Exception {
+        File testFile = new File(PROBLEMATIC_PDF);
+        assertTrue("Test PDF should exist", testFile.exists());
+
+        ValidateSignatureUtils validator = new ValidateSignatureUtils();
+        List<SignatureInfo> signatures = validator.validateSignatures(testFile);
+        
+        System.out.println("=== Certificate Extraction Robustness Test ===");
+        System.out.println("Found " + signatures.size() + " signatures");
+        
+        for (int i = 0; i < signatures.size(); i++) {
+            SignatureInfo sig = signatures.get(i);
+            System.out.println("\nSignature " + (i + 1) + ":");
+            System.out.println("  Valid: " + sig.isIsSignatureValid());
+            System.out.println("  Certificate: " + (sig.getSignerCert() != null ? "EXTRACTED" : "NULL"));
+            
+            if (sig.getSignerCert() != null) {
+                X509Certificate cert = sig.getSignerCert();
+                System.out.println("  Subject: " + cert.getSubjectDN());
+                System.out.println("  Public Key Present: " + (cert.getPublicKey() != null));
+                System.out.println("  Certificate Type: " + cert.getType());
+                
+                // Verify certificate is usable for encryption
+                assertNotNull("Certificate must have public key for encryption", cert.getPublicKey());
+                assertNotNull("Certificate must have subject DN", cert.getSubjectDN());
+                
+            } else {
+                System.out.println("  WARNING: Certificate is NULL!");
+                if (!sig.getErrorMessages().isEmpty()) {
+                    System.out.println("  Error messages: " + String.join(", ", sig.getErrorMessages()));
+                }
+                
+                // This is the critical test - valid signatures MUST have certificates
+                if (sig.isIsSignatureValid()) {
+                    fail("Signature " + (i + 1) + " is marked as valid but certificate is null. " +
+                         "This will cause NPE in downstream processing (ZPPOutInterceptor). " +
+                         "Certificate extraction must be fixed.");
+                }
+            }
+        }
+        
+        // Verify that all valid signatures have certificates extracted
+        long validSignaturesWithCerts = signatures.stream()
+            .filter(sig -> sig.isIsSignatureValid() && sig.getSignerCert() != null)
+            .count();
+        
+        long totalValidSignatures = signatures.stream()
+            .filter(SignatureInfo::isIsSignatureValid)
+            .count();
+            
+        System.out.println("\nSummary:");
+        System.out.println("  Total signatures: " + signatures.size());
+        System.out.println("  Valid signatures: " + totalValidSignatures);
+        System.out.println("  Valid signatures with certificates: " + validSignaturesWithCerts);
+        
+        assertEquals("All valid signatures must have certificates extracted to prevent NPE", 
+                    totalValidSignatures, validSignaturesWithCerts);
+    }
+
+    /**
+     * Test that demonstrates the fix for the NPE issue in ZPPOutInterceptor
+     */
+    @Test
+    public void testZPPOutInterceptorCompatibility() throws Exception {
+        File testFile = new File(PROBLEMATIC_PDF);
+        assertTrue("Test PDF should exist", testFile.exists());
+
+        ValidateSignatureUtils validator = new ValidateSignatureUtils();
+        List<SignatureInfo> signatures = validator.validateSignatures(testFile);
+        
+        System.out.println("=== ZPPOutInterceptor Compatibility Test ===");
+        
+        // Simulate the ZPPOutInterceptor processing logic
+        for (SignatureInfo sigInfo : signatures) {
+            X509Certificate xc = sigInfo.getSignerCert();
+            
+            System.out.println("Processing signature:");
+            System.out.println("  Valid: " + sigInfo.isIsSignatureValid());
+            System.out.println("  Certificate: " + (xc != null ? "Present" : "NULL"));
+            
+            if (sigInfo.isIsSignatureValid()) {
+                // This is the critical check that prevents NPE in ZPPOutInterceptor
+                assertNotNull("Certificate must be available for valid signature to prevent NPE in ZPPOutInterceptor.processInZPPAdviceOfDelivery:543", 
+                             xc);
+                
+                // Additional validation that would be done in ZPPOutInterceptor
+                assertNotNull("Public key must be available for encryption", xc.getPublicKey());
+                
+                System.out.println("  ✓ Certificate is usable for ZPP encryption");
+                System.out.println("  Subject: " + xc.getSubjectDN());
+            }
+        }
+        
+        System.out.println("✓ All signatures compatible with ZPPOutInterceptor processing");
     }
 }

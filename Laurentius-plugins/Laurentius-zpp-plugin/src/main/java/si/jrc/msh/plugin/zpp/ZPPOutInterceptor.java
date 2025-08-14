@@ -536,6 +536,17 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
 
                     X509Certificate xc = sigInfo.getSignerCert();
 
+                    // Validate certificate extraction before proceeding
+                    if (xc == null) {
+                        String errorMsg = "Certificate extraction failed for signature in advice of delivery. " +
+                            "This is required for ZPP encryption. Signature valid: " + sigInfo.isIsSignatureValid();
+                        if (!sigInfo.getErrorMessages().isEmpty()) {
+                            errorMsg += ". Error messages: " + String.join(", ", sigInfo.getErrorMessages());
+                        }
+                        LOG.formatedWarning("processInZPPAdviceOfDelivery - %s", errorMsg);
+                        throw new RuntimeException(errorMsg);
+                    }
+
                     // get key
                     Key key = mzppZPPUtils.getEncKeyFromOut(mom);
                     LOG.log("processInZPPAdviceoFDelivery - get key" + key);
