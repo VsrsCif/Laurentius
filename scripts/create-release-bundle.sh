@@ -1,7 +1,7 @@
-#/!bin/sh
+#!/bin/bash
 
 # laurentius version
-VERSION="2.3-SNAPSHOT"
+VERSION="2.3.2"
 # releases folder 
 LAU_RELEASE_FOLDER="releases"
 # release zip file name
@@ -15,7 +15,7 @@ FOLDER_DEPLOY="test-deploy"
 AS_WILDFLY_11_0="wildfly-11.0"
 AS_JBOSS_EAP_7_0="jboss-eap-7.0"
 
-AS_ARRAY=($AS_WILDFLY_10_1 $AS_WILDFLY_11_0 $AS_JBOSS_EAP_7_0)
+AS_ARRAY=("$AS_WILDFLY_10_1" "$AS_WILDFLY_11_0" "$AS_JBOSS_EAP_7_0")
 
 
 # 
@@ -52,6 +52,11 @@ cp "$LAU_PROJECT/Laurentius-libs/Laurentius-wsdl/target/Laurentius-wsdl-$VERSION
 cp "$LAU_PROJECT/Laurentius-libs/Laurentius-commons/target/Laurentius-commons-$VERSION.jar" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/modules/si/laurentius/main/"
 cp "$LAU_PROJECT/Laurentius-libs/Laurentius-lce/target/Laurentius-lce-$VERSION.jar" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/modules/si/laurentius/main/"
 cp "$LAU_PROJECT/Laurentius-libs/Laurentius-plugin-interfaces/target/Laurentius-plugin-interfaces-$VERSION.jar" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/modules/si/laurentius/main/"
+
+# Copy Bouncy Castle JARs from Maven repository
+cp ~/.m2/repository/org/bouncycastle/bcprov-jdk18on/1.75/bcprov-jdk18on-1.75.jar "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/modules/si/laurentius/main/"
+cp ~/.m2/repository/org/bouncycastle/bcpkix-jdk18on/1.75/bcpkix-jdk18on-1.75.jar "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/modules/si/laurentius/main/"
+cp ~/.m2/repository/org/bouncycastle/bcutil-jdk18on/1.75/bcutil-jdk18on-1.75.jar "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/modules/si/laurentius/main/"
 
 #create module descriptions for application servers 
 for asItem in ${AS_ARRAY[*]}
@@ -92,7 +97,7 @@ do
 	cp "$LAU_PROJECT/scripts/install/$asItem/deploy-laurentius.sh" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/$asItem"
 	cp "$LAU_PROJECT/scripts/install/$asItem/deploy-laurentius.bat" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/$asItem"
 	
-	cp "$LAU_PROJECT/scripts/install/$asItem/laurentius-demo.sh" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/$asItem"
+	cp "$LAU_PROJECT/scripts/install/$asItem/laurentius.sh" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/$asItem"
 	cp "$LAU_PROJECT/scripts/install/$asItem/laurentius-demo.bat" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/$asItem"
 	
 	cp "$LAU_PROJECT/scripts/install/$asItem/laurentius-init.sh" "$LAU_RELEASE_FOLDER/$ZIP_FILENAME/$asItem"

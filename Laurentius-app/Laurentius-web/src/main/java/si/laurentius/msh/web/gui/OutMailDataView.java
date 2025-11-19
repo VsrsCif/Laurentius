@@ -44,6 +44,7 @@ import si.laurentius.commons.interfaces.SEDDaoInterface;
 import si.laurentius.commons.interfaces.SEDLookupsInterface;
 import si.laurentius.commons.utils.SEDLogger;
 import si.laurentius.commons.utils.StorageUtils;
+import si.laurentius.commons.utils.FilenameUtils;
 import si.laurentius.commons.utils.Utils;
 import si.laurentius.msh.outbox.event.MSHOutEvent;
 import si.laurentius.msh.outbox.mail.MSHOutMail;
@@ -169,15 +170,37 @@ public class OutMailDataView extends AbstractMailView<TableOutMail, MSHOutMail, 
       }
     }
     if (part != null) {
-      try {
-        File f = StorageUtils.getFile(part.getFilepath());
-        return new DefaultStreamedContent(new FileInputStream(f), part.
-                getMimeType(),
-                part.getFilename());
-      } catch (FileNotFoundException ex) {
-        LOG.logError(l, ex);
-        addError("File '"+part.getFilepath()+"' reading error: " + ex.getMessage());
-      }
+        String originalFilename = part.getFilename();
+        String filepath = part.getFilepath();
+        String mimeType = part.getMimeType();
+        
+        // Enhanced logging for filename encoding issues
+        LOG.formatedDebug("Download attempt - Original filename: '%s', filepath: '%s', MIME: '%s'", 
+            originalFilename, filepath, mimeType);
+        
+        if (originalFilename != null) {
+            FilenameUtils.FilenameInfo info = FilenameUtils.analyzeFilename(originalFilename);
+            LOG.formatedDebug("Filename analysis: %s", info.toString());
+        }
+        
+        try {
+            File f = StorageUtils.getFile(filepath);
+            
+            // Sanitize filename for HTTP headers to prevent encoding issues
+            String safeFilename = FilenameUtils.sanitizeFilenameForDownload(originalFilename);
+            LOG.formatedDebug("Using sanitized filename for download: '%s'", safeFilename);
+            
+            return new DefaultStreamedContent(new FileInputStream(f), mimeType, safeFilename);
+            
+        } catch (FileNotFoundException ex) {
+            LOG.formatedError("File not found - filepath: '%s', original filename: '%s', error: %s", 
+                filepath, originalFilename, ex.getMessage());
+            addError("File '" + filepath + "' with filename '" + originalFilename + "' not found: " + ex.getMessage());
+        } catch (Exception ex) {
+            LOG.formatedError("File download failed - filepath: '%s', filename: '%s', error: %s", 
+                filepath, originalFilename, ex.getMessage());
+            addError("File download error for '" + originalFilename + "': " + ex.getMessage());
+        }
     }
     return null;
   }
@@ -339,5 +362,6 @@ public class OutMailDataView extends AbstractMailView<TableOutMail, MSHOutMail, 
             "Laurentius-web",
             pmd);
   }
+
 
 }
