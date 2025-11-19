@@ -554,6 +554,7 @@ public class ZPPUtils {
     ptNew.setType(partType.getPartType());
     ptNew.setDescription(partType.getDescription(null));
     ptNew.setFilepath(StorageUtils.getRelativePath(fDNViz));
+    ptNew.setSize(BigInteger.valueOf(fDNViz.length()));
     ptNew.setFilename(String.format("%s.%s", partType.getPartName(),
             partType.getFileSuffix()));
 
@@ -565,7 +566,6 @@ public class ZPPUtils {
     LOG.logEnd(l, String.format(
             "Generated SignedDeliveryNotification part (new part id: %s) for mail: %d'",
             ptNew.getEbmsId(), outMail.getId()));
-    ;
     return ptNew;
   }
 

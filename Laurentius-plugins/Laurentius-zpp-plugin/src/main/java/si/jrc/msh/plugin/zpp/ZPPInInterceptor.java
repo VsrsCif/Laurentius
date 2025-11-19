@@ -105,13 +105,8 @@ public class ZPPInInterceptor implements SoapInterceptorInterface {
    */
   protected final SEDLogger LOG = new SEDLogger(ZPPInInterceptor.class);
   SEDCrypto mSedCrypto = new SEDCrypto();
-  DocumentSodBuilder dsbSodBuilder = new DocumentSodBuilder();
-  KeystoreUtils mkeyUtils = new KeystoreUtils();
-  StorageUtils msuStorage = new StorageUtils();
   ZPPUtils mzppZPPUtils = new ZPPUtils();
-
   FOPUtils mfpFop = null;
-  StringFormater msfFormat = new StringFormater();
 
   @EJB(mappedName = SEDJNDI.JNDI_SEDDAO)
   SEDDaoInterface mDB;
@@ -125,8 +120,8 @@ public class ZPPInInterceptor implements SoapInterceptorInterface {
   @EJB(mappedName = SEDJNDI.JNDI_DBCERTSTORE)
   SEDCertStoreInterface mCertBean;
 
-
-
+  @EJB(beanName = "ZPPFaultInInterceptor")
+  SoapInterceptorInterface zppFaultInInterceptor;
 
 
   @Override
@@ -153,7 +148,11 @@ public class ZPPInInterceptor implements SoapInterceptorInterface {
     EBMSMessageContext eInctx = SoapUtils.getEBMSMessageInContext(msg);
     MSHOutMail moutMail = SoapUtils.getMSHOutMail(msg);
     MSHInMail mInMail = SoapUtils.getMSHInMail(msg);
-
+    // If the response contains errors, handle them and stop further message processing.
+    Object errors = SoapUtils.getInErrors(msg);
+    if (errors != null && moutMail != null) {
+      return zppFaultInInterceptor.handleMessage(msg, contextProperties);
+    }
        
     if (mInMail != null) {
       switch (mInMail.getService()) {
