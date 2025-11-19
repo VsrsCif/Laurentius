@@ -5,6 +5,7 @@ WILDFLY_HOME="wildfly-11.0.0.Final"
 BOUNDLE_TEST="Laurentius-test"
 FOLDER_DEPLOY="test-deploy"
 BOUNDLE_NAME="Laurentius-test"
+export JAVA_OPTS="-Xdebug -Xrunjdwp:transport=dt_socket,address=8787,suspend=n,server=y"
 
 rm -rf "$FOLDER_DEPLOY/$WILDFLY_HOME"
 unzip -q "../../settings/$WILDFLY_HOME.zip" -d $FOLDER_DEPLOY

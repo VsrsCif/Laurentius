@@ -23,6 +23,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Calendar;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.TrustManager;
 import javax.xml.namespace.QName;
@@ -44,6 +45,7 @@ import org.apache.cxf.transport.ConduitInitiatorManager;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 import org.oasis_open.docs.ebxml_msg.ebms.v3_0.ns.core._200704.SignalMessage;
+import org.oasis_open.docs.ebxml_msg.ebms.v3_0.ns.core._200704.Error;
 import si.jrc.msh.interceptor.*;
 import si.laurentius.msh.outbox.mail.MSHOutMail;
 import si.laurentius.msh.pmode.PartyIdentitySet;
@@ -284,15 +286,29 @@ public class MshClient {
       r.setResult(soapRes);
       LOG.formatedlog("Submit mail %s in ( %d ms).", mail.getMessageId(), (LOG.
               getTime() - st));
-      
-      
+
       if (client.getResponseContext().containsKey(EBMSConstants.EBMS_CP_OUTMAIL_RECIEPT)) {
         SignalMessage sm = (SignalMessage)client.getResponseContext().get(EBMSConstants.EBMS_CP_OUTMAIL_RECIEPT);
         mail.setReceivedDate(sm.getMessageInfo().getTimestamp());
       } else {
-        mail.setReceivedDate(Calendar.getInstance().getTime());
+        Object errors = client.getResponseContext().get(EBMSConstants.EBMS_SIGNAL_ERRORS);
+        List<Error> listOfErrors =  convertToListOfErrors(errors);
+        if (listOfErrors!= null && !listOfErrors.isEmpty()) {
+          Error firstError = listOfErrors.get(0);
+          EBMSErrorCode ec = EBMSErrorCode.
+                getByCode(firstError.getErrorCode());
+          EBMSError err = new EBMSError(ec, mail.
+                getMessageId(), firstError.getShortDescription(), null,
+                SoapFault.FAULT_CODE_SERVER);
+          r.setError(err);
+        } else {
+            EBMSError err = new EBMSError(EBMSErrorCode.InvalidReceipt, mail.
+                    getMessageId(), "Missing AS4Receipt in response", null,
+                    SoapFault.FAULT_CODE_SERVER);
+            r.setError(err);
+        }
       }
-      LOG.formatedlog("Parse signalmessage  %s at %d", mail.getMessageId(), (LOG.getTime()-l));
+      LOG.formatedlog("Parse signalmessage  %s at %d", mail.getMessageId(), (LOG.getTime() - l));
 
       if (soapRes != null) {
         File file;
@@ -442,11 +458,31 @@ public class MshClient {
     return r;
   }
 
+
+    /**
+     * Method converts a given object into a List of Error objects.
+     * If the object is a List, it filters its elements to include only those
+     * that are instances of {@link Error}, casts them safely, and collects them
+     * into a new {@code List<Error>}.</p>
+     *
+     * @param errorObject the object to be converted, expected to be a List containing Error elements
+     * @return a List of Error objects if conversion is successful, or {@code null} if the input is not a List
+     */
+    protected List<Error> convertToListOfErrors(Object errorObject) {
+        if (!(errorObject instanceof List)) {
+            LOG.getLogger().debug("Object is not an List");
+            return null;
+        }
+        List<?> list = (List<?>) errorObject;
+        return list.stream().filter(e -> e instanceof Error)
+                .map(e -> (Error) e).collect(Collectors.toList());
+    }
+
   /**
    * Method sets Truststore and key (if needed) to https client for TLS
    *
    * @param client - http(s) client
-   * @param tls - pmode tls configuration
+   * @param tls    - pmode tls configuration
    * @throws FileNotFoundException
    * @throws IOException
    * @throws SEDSecurityException
@@ -455,7 +491,7 @@ public class MshClient {
           Protocol.TLS tls, SEDCertUtilsInterface sec) {
     long l = LOG.logStart();
     TLSClientParameters tlsCP = null;
-    // create 
+    // create
     String serverTrustAlias = tls.getServerTrustCertAlias();
     String keyAlias = tls.getClientKeyAlias();
     LOG.formatedWarning("SET TLS : keyalias %s , cert alias %s", keyAlias,
