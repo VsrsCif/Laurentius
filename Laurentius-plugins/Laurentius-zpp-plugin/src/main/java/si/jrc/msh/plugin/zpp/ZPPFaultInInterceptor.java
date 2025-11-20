@@ -166,7 +166,7 @@ public class ZPPFaultInInterceptor implements SoapInterceptorInterface {
 
         if (err.getErrorCode() != null && err.getErrorCode().equalsIgnoreCase(
                 ZPPErrorCode.ReceiverNotExists.getCode())) {
-          processReciepientNotExists(outMail, eInctx, msg);
+          processRecipientNotExists(outMail, eInctx, msg);
           break;
         }
       
@@ -181,40 +181,37 @@ public class ZPPFaultInInterceptor implements SoapInterceptorInterface {
    * @param eInctx
    * @param msg
    */
-  public void processReciepientNotExists(MSHOutMail outMail,
-          EBMSMessageContext eoutCtx, SoapMessage msg) {
+  public void processRecipientNotExists(MSHOutMail outMail,
+                                        EBMSMessageContext eoutCtx, SoapMessage msg) {
     // create in mail
 
     String signAlias = eoutCtx.getSenderPartyIdentitySet().
             getExchangePartySecurity().
             getSignatureCertAlias();
 
-    MSHInMail min = createReciepientNotExistsAdvice(outMail,
+    MSHInMail min = createRecipientNotExistsAdvice(outMail,
             signAlias);
 
     try {
       mDB.serializeInMail(min, ZPPConstants.S_ZPP_PLUGIN_TYPE);
     } catch (StorageException ex) {
       String strMessage = String.format(
-              "Error occured while serialize MailNotExists message Error for out mail %d ",
+              "Error occurred while serialize MailNotExists message Error for out mail %d ",
               outMail.
                       getId());
       LOG.logError(strMessage, ex);
       return;
     }
-
-   
-
   }
 
-  public MSHInMail createReciepientNotExistsAdvice(MSHOutMail outMail,
-          String signAlias) {
+  public MSHInMail createRecipientNotExistsAdvice(MSHOutMail outMail,
+                                                  String signAlias) {
     long l = LOG.logStart();
     // create delivery advice
 
     MSHInMail min = new MSHInMail();
     min.setMessageId(Utils.getUUIDWithLocalDomain());
-    min.setService(ZPPConstants.S_ZPPB_SERVICE);
+    min.setService(outMail.getService());
     min.setAction(ZPPConstants.S_ZPP_ACTION_ADDRESS_NOT_EXISTS);
     min.setConversationId(outMail.getConversationId());
     min.setSenderEBox(outMail.getReceiverEBox());
