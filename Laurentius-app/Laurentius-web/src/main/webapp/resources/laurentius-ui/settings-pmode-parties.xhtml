@@ -57,8 +57,11 @@
                         <p:column headerText="#{msg['Domains']}" width="200">
                             <h:outputText value="#{sp.domain}"></h:outputText>                
                         </p:column>
+                        <p:column headerText="#{msg['Active']}" width="60">
+                            <h:selectBooleanCheckbox value="#{sp.active}" disabled="true" />
+                        </p:column>
                         <p:column headerText="#{msg['LocalIdentity']}">
-                            <h:outputText value="#{sp.isLocalIdentity}"></h:outputText>                
+                            <h:outputText value="#{sp.isLocalIdentity}"></h:outputText>
                         </p:column>
 
 
