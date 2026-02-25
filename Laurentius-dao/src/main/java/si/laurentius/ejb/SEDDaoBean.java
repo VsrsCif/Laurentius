@@ -600,9 +600,16 @@ public class SEDDaoBean implements SEDDaoInterface {
                                     searchValue, fieldName);
                         } else if (searchValue instanceof String) {
                             if (!((String) searchValue).isEmpty()) {
-                                LOG.formatedDebug("Set parameter as String %s  for method %s",
-                                        searchValue, fieldName);
-                                lstPredicate.add(cb.equal(om.get(fieldName), searchValue));
+                                String strValue = (String) searchValue;
+                                if (strValue.contains("%")) {
+                                    LOG.formatedDebug("Set parameter like %s  for method %s",
+                                            searchValue, fieldName);
+                                    lstPredicate.add(cb.like(om.get(fieldName), strValue));
+                                } else {
+                                    LOG.formatedDebug("Set parameter as String %s  for method %s",
+                                            searchValue, fieldName);
+                                    lstPredicate.add(cb.equal(om.get(fieldName), searchValue));
+                                }
                             }
                         } else if (searchValue instanceof BigInteger) {
                             LOG.formatedDebug("Set parameter as integer %s  for method %s",
