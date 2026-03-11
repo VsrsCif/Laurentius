@@ -39,7 +39,11 @@ public class SEDScheduler {
 
   @PostConstruct
   void init() {
-    testNetwork();
+    // Network status will be determined by the @Schedule timer (every 30s).
+    // Calling testNetwork() here blocks startup when DNS is unreachable
+    // (e.g. Docker container without internet), causing ConcurrentAccessTimeoutException
+    // on other singletons in this deployment unit.
+    LOG.log("SEDScheduler initialized. Network test will run on schedule.");
   }
 
   // do not lock thread!

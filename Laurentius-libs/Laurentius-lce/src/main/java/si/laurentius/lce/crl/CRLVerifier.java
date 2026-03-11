@@ -107,6 +107,7 @@ public class CRLVerifier {
      /* URLConnection uc = proxy == null ? url.openConnection() : url.
               openConnection(proxy);*/
      
+      uc.setConnectTimeout(10000);
       uc.setReadTimeout(10000);
       uc.connect();
       try (InputStream crlStream = uc.getInputStream()) {
