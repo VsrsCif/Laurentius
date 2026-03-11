@@ -120,7 +120,11 @@ public class SEDCertStoreBean implements SEDCertStoreInterface {
   @PostConstruct
   public void initCachedListsValues(){
     refreshPasswords();
-    refreshCrlLists();
+    try {
+      refreshCrlLists();
+    } catch (Exception ex) {
+      LOG.formatedError("Error occurred while initializing CRL lists (startup continues): %s", ex.getMessage());
+    }
     try {
       refreshCertificates();
     } catch (SEDSecurityException error) {
