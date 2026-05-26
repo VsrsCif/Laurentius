@@ -4,6 +4,7 @@
  */
 package si.jrc.msh.plugin.zpp;
 
+import com.jrc.xml.DateAdapter;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.security.Key;
@@ -26,6 +27,8 @@ import si.laurentius.msh.inbox.mail.MSHInMail;
 import si.laurentius.msh.outbox.mail.MSHOutMail;
 import si.laurentius.msh.outbox.payload.MSHOutPart;
 import si.laurentius.msh.outbox.payload.MSHOutPayload;
+import si.laurentius.msh.outbox.property.MSHOutProperties;
+import si.laurentius.msh.outbox.property.MSHOutProperty;
 
 import si.jrc.msh.plugin.zpp.exception.ZPPException;
 import si.jrc.msh.plugin.zpp.utils.ZPPUtils;
@@ -248,6 +251,18 @@ public class ZPPTaskFictionByLastDelivery implements TaskExecutionInterface {
     return ttp;
   }
 
+  private void addMailProperty(MSHOutMail mail, String key, String value) {
+    MSHOutProperties mop = mail.getMSHOutProperties();
+    if (mop == null) {
+      mop = new MSHOutProperties();
+      mail.setMSHOutProperties(mop);
+    }
+    MSHOutProperty p = new MSHOutProperty();
+    p.setName(key);
+    p.setValue(value);
+    mop.getMSHOutProperties().add(p);
+  }
+
   /**
    *
    * @param mInMail
@@ -257,7 +272,7 @@ public class ZPPTaskFictionByLastDelivery implements TaskExecutionInterface {
    * @throws HashException
    * @throws si.jrc.msh.plugin.zpp.exception.ZPPException
    */
-  private void processZPPFictionDelivery(MSHOutMail mOutMail, String sigAlias)
+  void processZPPFictionDelivery(MSHOutMail mOutMail, String sigAlias)
           throws FOPException,
           HashException,
           ZPPException,
@@ -266,9 +281,12 @@ public class ZPPTaskFictionByLastDelivery implements TaskExecutionInterface {
     long l = LOG.logStart();
 
     MSHOutMail fn = createZPPFictionNotification(mOutMail, sigAlias);
+    addMailProperty(fn, ZPPConstants.S_MAIL_PROPERTY_DELIVERED_BY_FICTION,
+            DateAdapter.printDateTime(mOutMail.getDeliveredDate()));
+
     MSHInMail fi = createZPPAdviceOfDeliveryFiction(mOutMail, sigAlias);
 
-    
+
     mDB.serializeInOutMail(fi, fn, ZPPConstants.S_ZPP_PLUGIN_TYPE, null);
     mDB.setStatusToOutMail(mOutMail, SEDOutboxMailStatus.DELIVERED, "Fiction ",
             "ZPP plugin", "");
@@ -284,7 +302,7 @@ public class ZPPTaskFictionByLastDelivery implements TaskExecutionInterface {
    * @throws ZPPException
    * @throws SEDSecurityException
    */
-  private MSHOutMail createZPPFictionNotification(MSHOutMail mOutMail,
+  MSHOutMail createZPPFictionNotification(MSHOutMail mOutMail,
           String sigAlias)
           throws ZPPException, SEDSecurityException {
 
@@ -380,7 +398,7 @@ public class ZPPTaskFictionByLastDelivery implements TaskExecutionInterface {
    * @throws FOPException
    * @throws SEDSecurityException
    */
-  private MSHInMail createZPPAdviceOfDeliveryFiction(MSHOutMail mOutMail,
+  MSHInMail createZPPAdviceOfDeliveryFiction(MSHOutMail mOutMail,
           String signAlias)
           throws ZPPException, FOPException, SEDSecurityException {
     long l = LOG.logStart();
