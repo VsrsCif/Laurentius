@@ -66,6 +66,7 @@ public class ZPPConstants {
   
   public static final String S_MAIL_PROPERTY_ORIGINAL_SENDER = "originalSender";
   public static final String S_MAIL_PROPERTY_FINAL_RECIPIENT = "finalRecipient";
+  public static final String S_MAIL_PROPERTY_DELIVERED_BY_FICTION = "DeliverdByFiction";
   
 
   

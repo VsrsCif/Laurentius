@@ -171,6 +171,10 @@ public class AdminCustomSettings extends AbstractJSFView {
                       getNoProxyHosts(), DBSettingsInterface.SYSTEM_SETTINGS);
     }
 
+    // clean up deprecated key from previous versions (singular -> plural)
+    msedSettingsData.removeSEDProperty("http.nonProxyHost",
+            DBSettingsInterface.SYSTEM_SETTINGS);
+
     addCallbackParam("saved", true);
     update(":forms:SettingsCustomPanel:settingsPanel:sysProperties",
             ":forms:SettingsCustomPanel:settingsPanel:sedProperties");
