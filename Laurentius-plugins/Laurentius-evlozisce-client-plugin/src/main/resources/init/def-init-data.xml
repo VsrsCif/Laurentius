@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ns1:DefaultInitData xmlns:ns3="http://laurentius.si/interceptor"
+                     xmlns:ns2="http://laurentius.si/cron"
+                     xmlns:ns1="http://laurentius.si/plugin/def"
+                     xmlns:pmd="http://msh.laurentius.si/pmode">
+    <ns1:PModeData>
+        <pmd:Service id="CourtFiling" serviceName="CourtFiling" serviceType="SVEV" useSEDProperties="true">
+            <pmd:Initiator role="Sender"/>
+            <pmd:Executor role="Receiver"/>
+            <pmd:Action name="ServeFiling" invokeRole="initiator" messageType="userMessage">
+                <pmd:Properties>
+                    <pmd:Property name="SodiSif" type="" required="false"/>
+                    <pmd:Property name="AplikSif" type="" required="false"/>
+                    <pmd:Property name="Vpisnik" type="" required="false"/>
+                    <pmd:Property name="VpisnikKratica" type="" required="false"/>
+                    <pmd:Property name="OpravilnaSt" type="" required="false"/>
+                    <pmd:Property name="PravnoPodrocje" type="" required="false"/>
+                    <pmd:Property name="Vsebina" type="" required="false"/>
+                    <pmd:Property name="finalRecipientName" type="" required="false"/>
+                </pmd:Properties>
+                <pmd:PayloadProfiles maxSize="15000">
+                    <pmd:PayloadProfile name="payload" MIME="application/pdf" maxOccurs="100" minOccurs="0"/>
+                    <pmd:PayloadProfile name="metadata" MIME="application/xml" maxOccurs="100" minOccurs="0"/>
+                </pmd:PayloadProfiles>
+            </pmd:Action>
+        </pmd:Service>
+
+        <pmd:Security id="sign_sha256" WSSVersion="1.1">
+            <pmd:X509>
+                <pmd:Signature hashFunction="http://www.w3.org/2001/04/xmlenc#sha256"
+                              algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256">
+                    <pmd:Reference allAttachments="true">
+                        <pmd:Elements>
+                            <pmd:XPath xpath="env:Header/eb3:Messaging">
+                                <pmd:Namespace prefix="eb3" namespace="http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/"/>
+                                <pmd:Namespace prefix="env" namespace="http://www.w3.org/2003/05/soap-envelope"/>
+                            </pmd:XPath>
+                        </pmd:Elements>
+                    </pmd:Reference>
+                </pmd:Signature>
+            </pmd:X509>
+        </pmd:Security>
+
+        <pmd:ReceptionAwareness id="AS4ReceiptResponse" replyPattern="response" receiptType="AS4Receipt">
+            <pmd:Retry maxRetries="10" multiplyPeriod="3" period="5678"/>
+            <pmd:DuplicateDetection windowPeriode="P1Y" eliminate="true"/>
+        </pmd:ReceptionAwareness>
+
+        <pmd:PMode id="CourtFiling" isTest="false" priority="5">
+            <pmd:ServiceIdRef>CourtFiling</pmd:ServiceIdRef>
+            <pmd:MEP>
+                <pmd:MEPType>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/oneWay</pmd:MEPType>
+                <pmd:MEPChannelBinding>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/push</pmd:MEPChannelBinding>
+                <pmd:MEPInitiatorRole>Sender</pmd:MEPInitiatorRole>
+                <pmd:Leg>
+                    <pmd:MPC>http://docs.oasis-open.org/ebxml-msg/ebms/v3.0/ns/core/200704/defaultMPC</pmd:MPC>
+                    <pmd:Transport>
+                        <pmd:ForeChannel action="ServeFiling" securityIdRef="sign_sha256">
+                            <pmd:ReceptionAwareness raPatternIdRef="AS4ReceiptResponse"/>
+                        </pmd:ForeChannel>
+                        <pmd:BackChannel securityIdRef="sign_sha256" action="ServeFiling"/>
+                    </pmd:Transport>
+                </pmd:Leg>
+            </pmd:MEP>
+        </pmd:PMode>
+    </ns1:PModeData>
+    <ns1:PluginData>
+        <ns3:SEDInterceptor name="EVlozisceClient_OutMessages" active="true"
+                            interceptEvent="OutMessage" interceptRole="All">
+            <ns3:SEDInterceptorRule property="Service" predicate="InList" value="CourtFiling"/>
+            <ns3:SEDInterceptorInstance plugin="EVlozisceClient" type="EVlozisceClientOutInterceptor"
+                                        pluginVersion="1.0.0"/>
+        </ns3:SEDInterceptor>
+    </ns1:PluginData>
+</ns1:DefaultInitData>

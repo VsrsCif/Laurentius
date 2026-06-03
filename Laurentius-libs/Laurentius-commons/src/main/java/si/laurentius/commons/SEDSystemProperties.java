@@ -133,7 +133,7 @@ public class SEDSystemProperties {
    */
   public static final String PROXY_HTTP_HOST = "http.proxyHost";
   public static final String PROXY_HTTP_PORT = "http.proxyPort";
-  public static final String PROXY_HTTP_NO_PROXY = "http.nonProxyHost";
+  public static final String PROXY_HTTP_NO_PROXY = "http.nonProxyHosts";
   public static final String PROXY_HTTPS_HOST = "https.proxyHost";
   public static final String PROXY_HTTPS_PORT = "https.proxyPort";
   public static final String PROXY_HTTPS_NO_PROXY = "https.nonProxyHosts";

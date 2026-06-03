@@ -15,7 +15,10 @@
 package si.laurentius.ejb;
 
 import si.laurentius.ejb.cache.SimpleListCache;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -49,6 +52,13 @@ public class DBSettings implements DBSettingsInterface {
   
 
   protected static final SEDLogger LOG = new SEDLogger(DBSettings.class);
+
+  private static final Map<String, String> RENAMED_KEYS;
+  static {
+    Map<String, String> m = new HashMap<>();
+    m.put("http.nonProxyHost", "http.nonProxyHosts");
+    RENAMED_KEYS = Collections.unmodifiableMap(m);
+  }
 
   SimpleListCache mListCache = new SimpleListCache();
   /**
@@ -88,6 +98,10 @@ public class DBSettings implements DBSettingsInterface {
         String part = sd.getGroup();
         if (!Utils.isEmptyString(key) && val != null && SYSTEM_SETTINGS.equals(part)) {
           System.setProperty(key, val);
+          String correctedKey = RENAMED_KEYS.get(key);
+          if (correctedKey != null) {
+            System.setProperty(correctedKey, val);
+          }
         }
       });
       mListCache.cacheList(t, c);
