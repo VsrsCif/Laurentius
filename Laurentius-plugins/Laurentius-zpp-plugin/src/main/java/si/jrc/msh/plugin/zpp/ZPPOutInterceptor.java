@@ -85,6 +85,7 @@ import si.laurentius.msh.inbox.mail.MSHInMail;
 import si.laurentius.commons.interfaces.SEDCertStoreInterface;
 import si.laurentius.commons.utils.Utils;
 import si.laurentius.lce.sign.pdf.SignatureInfo;
+import com.jrc.xml.DateAdapter;
 import si.laurentius.msh.outbox.property.MSHOutProperties;
 import si.laurentius.msh.outbox.property.MSHOutProperty;
 import si.laurentius.plugin.interceptor.MailInterceptorDef;
@@ -198,6 +199,9 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
                     && Objects.equals(ZPPConstants.S_ZPP_ACTION_ADVICE_OF_DELIVERY,
                             outMail.getAction())) {
                 processOutZPPAdviceOfDelivery(outMail, ectx, msg);
+            } else if (ZPPConstants.S_ZPP_ACTION_FICTION_NOTIFICATION.equals(
+                    outMail.getAction())) {
+                addDeliveredByFictionProperty(outMail);
             }
 
         }
@@ -241,6 +245,30 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
             p.setName(key);
             p.setValue(value);
             mop.getMSHOutProperties().add(p);
+        }
+    }
+
+    private void addDeliveredByFictionProperty(MSHOutMail fictionNotification) {
+        String refMsgId = fictionNotification.getRefToMessageId();
+        if (Utils.isEmptyString(refMsgId)) {
+            LOG.formatedWarning(
+                    "FictionNotification mail %s has no RefToMessageId, cannot set DeliveredByFiction property",
+                    fictionNotification.getId());
+            return;
+        }
+        List<MSHOutMail> originalMails = mDB.getMailByMessageId(
+                MSHOutMail.class, refMsgId);
+        if (originalMails.isEmpty()) {
+            LOG.formatedWarning(
+                    "Original mail with MessageId %s not found for FictionNotification %s",
+                    refMsgId, fictionNotification.getId());
+            return;
+        }
+        MSHOutMail originalMail = originalMails.get(0);
+        if (originalMail.getDeliveredDate() != null) {
+            updateMailProperty(fictionNotification,
+                    ZPPConstants.S_MAIL_PROPERTY_DELIVERED_BY_FICTION,
+                    DateAdapter.printDateTime(originalMail.getDeliveredDate()));
         }
     }
 

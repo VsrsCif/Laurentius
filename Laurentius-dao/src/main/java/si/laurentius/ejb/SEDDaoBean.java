@@ -84,7 +84,6 @@ import si.laurentius.commons.utils.xml.XMLUtils;
 import si.laurentius.lce.DigestUtils;
 import si.laurentius.msh.inbox.payload.MSHInPart;
 import si.laurentius.msh.outbox.payload.MSHOutPart;
-import si.laurentius.msh.outbox.property.MSHOutProperty;
 import si.laurentius.msh.pmode.PMode;
 
 /**
@@ -1278,12 +1277,6 @@ public class SEDDaoBean implements SEDDaoInterface {
                     memEManager.persist(mp);
                 }
             }
-            // update properties
-            if (outMail.getMSHOutProperties() != null) {
-                for (MSHOutProperty mp : outMail.getMSHOutProperties().getMSHOutProperties()) {
-                    memEManager.persist(mp);
-                }
-            }
             // set conversation id
             if (Utils.isEmptyString(outMail.getConversationId())) {
                 outMail.setConversationId(outMail.getId().toString() + "@" + locadomain);
@@ -1528,12 +1521,6 @@ public class SEDDaoBean implements SEDDaoInterface {
                 for (MSHOutPart mp : mail.getMSHOutPayload().getMSHOutParts()) {
 
                     mp.setMailId(mail.getId());
-                    memEManager.persist(mp);
-                }
-            }
-            // update properties
-            if (mail.getMSHOutProperties() != null) {
-                for (MSHOutProperty mp : mail.getMSHOutProperties().getMSHOutProperties()) {
                     memEManager.persist(mp);
                 }
             }
