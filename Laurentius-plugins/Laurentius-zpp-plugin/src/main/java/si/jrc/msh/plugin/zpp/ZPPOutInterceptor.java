@@ -268,7 +268,7 @@ public class ZPPOutInterceptor implements SoapInterceptorInterface {
         if (originalMail.getDeliveredDate() != null) {
             updateMailProperty(fictionNotification,
                     ZPPConstants.S_MAIL_PROPERTY_DELIVERED_BY_FICTION,
-                    DateAdapter.printDateTime(originalMail.getDeliveredDate()));
+                    DateAdapter.printDate(originalMail.getDeliveredDate()));
         }
     }
 
