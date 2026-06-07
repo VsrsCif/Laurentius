@@ -146,15 +146,21 @@ public class ZPPFictionPropertyTest {
         assertTrue("FictionNotification must carry DeliveredByFiction property",
                 prop.isPresent());
 
-        // Verify the value is a valid dateTime
+        // Verify the value is a valid date (format: 2024-05-14+02:00)
         String propValue = prop.get().getValue();
         assertNotNull("Property value should not be null", propValue);
-        Date parsedDate = DateAdapter.parseDateTime(propValue);
-        assertNotNull("Property value should be a valid xs:dateTime", parsedDate);
+        Date parsedDate = DateAdapter.parseDate(propValue);
+        assertNotNull("Property value should be a valid xs:date", parsedDate);
 
-        // Verify it matches the deliveredDate set on the original mail
+        // Verify it matches the date portion of deliveredDate
+        Calendar expected = Calendar.getInstance();
+        expected.setTime(outMail.getDeliveredDate());
+        Calendar actual = Calendar.getInstance();
+        actual.setTime(parsedDate);
         assertEquals("Property date should match the mail's deliveredDate",
-                outMail.getDeliveredDate().getTime(), parsedDate.getTime());
+                expected.get(Calendar.YEAR), actual.get(Calendar.YEAR));
+        assertEquals("Property date should match the mail's deliveredDate",
+                expected.get(Calendar.DAY_OF_YEAR), actual.get(Calendar.DAY_OF_YEAR));
     }
 
     /**
@@ -199,10 +205,16 @@ public class ZPPFictionPropertyTest {
         assertTrue("FictionNotification must carry DeliveredByFiction property",
                 prop.isPresent());
 
-        // For 6th paragraph, the property value should be the lastDate
-        Date parsedDate = DateAdapter.parseDateTime(prop.get().getValue());
+        // For 6th paragraph, the property value should be the lastDate (date portion)
+        Date parsedDate = DateAdapter.parseDate(prop.get().getValue());
+        Calendar expected = Calendar.getInstance();
+        expected.setTime(lastDate);
+        Calendar actual = Calendar.getInstance();
+        actual.setTime(parsedDate);
         assertEquals("Property date should match lastDate (pickup date of other mail)",
-                lastDate.getTime(), parsedDate.getTime());
+                expected.get(Calendar.YEAR), actual.get(Calendar.YEAR));
+        assertEquals("Property date should match lastDate (pickup date of other mail)",
+                expected.get(Calendar.DAY_OF_YEAR), actual.get(Calendar.DAY_OF_YEAR));
     }
 
     private MSHOutMail createTestOutMail() {
