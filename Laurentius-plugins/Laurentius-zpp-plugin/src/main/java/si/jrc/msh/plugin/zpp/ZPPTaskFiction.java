@@ -219,7 +219,7 @@ public class ZPPTaskFiction implements TaskExecutionInterface {
 
     MSHOutMail fn = createZPPFictionNotification(mOutMail, sigAlias);
     addMailProperty(fn, ZPPConstants.S_MAIL_PROPERTY_DELIVERED_BY_FICTION,
-            DateAdapter.printDateTime(fictionDate));
+            DateAdapter.printDate(fictionDate));
 
     MSHInMail fi = createZPPAdviceOfDeliveryFiction(mOutMail, sigAlias);
 
