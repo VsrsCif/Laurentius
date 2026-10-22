@@ -83,12 +83,26 @@ public class XSLTExtensions {
     if (str == null || str.trim().isEmpty()) {
       return null;
     }
-    Date dt = parseDateTime(str);
-    Calendar c = new GregorianCalendar();
-    c.setTime(dt);
-    c.add(DAY_OF_MONTH, 15);
-    return S_DATE_FORMAT.get().format(c.getTime());
+    return S_DATE_FORMAT.get().format(calculateZPPFictionDate(parseDateTime(str)));
 
+  }
+
+  /**
+   * Fiction date by 7th paragraph of 141.a ZPP: last day of the 15 day
+   * period, which starts the day after the mail was sent to the receiver's box.
+   *
+   * @param sentDate - date when mail was sent to receiver
+   * @return start of the day sentDate + 15 days
+   */
+  public static Date calculateZPPFictionDate(Date sentDate) {
+    Calendar c = new GregorianCalendar();
+    c.setTime(sentDate);
+    c.add(DAY_OF_MONTH, 15);
+    c.set(Calendar.HOUR_OF_DAY, 0);
+    c.set(Calendar.MINUTE, 0);
+    c.set(Calendar.SECOND, 0);
+    c.set(Calendar.MILLISECOND, 0);
+    return c.getTime();
   }
   
    /**

@@ -50,6 +50,8 @@ import si.laurentius.commons.utils.Utils;
 import si.laurentius.lce.KeystoreUtils;
 import si.laurentius.msh.inbox.payload.MSHInPart;
 import si.laurentius.msh.inbox.payload.MSHInPayload;
+import si.laurentius.msh.inbox.property.MSHInProperties;
+import si.laurentius.msh.inbox.property.MSHInProperty;
 import si.laurentius.msh.pmode.PartyIdentitySet;
 import si.laurentius.commons.interfaces.SEDCertStoreInterface;
 import si.laurentius.plugin.crontask.CronTaskDef;
@@ -263,6 +265,18 @@ public class ZPPTaskFictionByLastDelivery implements TaskExecutionInterface {
     mop.getMSHOutProperties().add(p);
   }
 
+  private void addMailProperty(MSHInMail mail, String key, String value) {
+    MSHInProperties mip = mail.getMSHInProperties();
+    if (mip == null) {
+      mip = new MSHInProperties();
+      mail.setMSHInProperties(mip);
+    }
+    MSHInProperty p = new MSHInProperty();
+    p.setName(key);
+    p.setValue(value);
+    mip.getMSHInProperties().add(p);
+  }
+
   /**
    *
    * @param mInMail
@@ -280,11 +294,16 @@ public class ZPPTaskFictionByLastDelivery implements TaskExecutionInterface {
           SEDSecurityException {
     long l = LOG.logStart();
 
+    String strFictionDate = DateAdapter.printDate(mOutMail.getDeliveredDate());
+
     MSHOutMail fn = createZPPFictionNotification(mOutMail, sigAlias);
     addMailProperty(fn, ZPPConstants.S_MAIL_PROPERTY_DELIVERED_BY_FICTION,
-            DateAdapter.printDate(mOutMail.getDeliveredDate()));
+            strFictionDate);
 
     MSHInMail fi = createZPPAdviceOfDeliveryFiction(mOutMail, sigAlias);
+    // delivery date for the sender's back-end systems (e.g. EVIP)
+    addMailProperty(fi, ZPPConstants.S_MAIL_PROPERTY_DELIVERED_BY_FICTION,
+            strFictionDate);
 
 
     mDB.serializeInOutMail(fi, fn, ZPPConstants.S_ZPP_PLUGIN_TYPE, null);
