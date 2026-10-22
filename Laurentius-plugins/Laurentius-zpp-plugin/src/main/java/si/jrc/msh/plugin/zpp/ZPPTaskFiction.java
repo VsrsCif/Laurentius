@@ -26,6 +26,7 @@ import si.laurentius.msh.outbox.property.MSHOutProperties;
 import si.laurentius.msh.outbox.property.MSHOutProperty;
 
 import si.jrc.msh.plugin.zpp.exception.ZPPException;
+import si.jrc.msh.plugin.zpp.utils.XSLTExtensions;
 import si.jrc.msh.plugin.zpp.utils.ZPPUtils;
 import si.laurentius.lce.enc.SEDCrypto;
 import si.laurentius.commons.enums.SEDInboxMailStatus;
@@ -45,6 +46,8 @@ import si.laurentius.commons.utils.Utils;
 import si.laurentius.lce.KeystoreUtils;
 import si.laurentius.msh.inbox.payload.MSHInPart;
 import si.laurentius.msh.inbox.payload.MSHInPayload;
+import si.laurentius.msh.inbox.property.MSHInProperties;
+import si.laurentius.msh.inbox.property.MSHInProperty;
 import si.laurentius.msh.pmode.PartyIdentitySet;
 import si.laurentius.commons.interfaces.SEDCertStoreInterface;
 import si.laurentius.plugin.crontask.CronTaskDef;
@@ -198,6 +201,18 @@ public class ZPPTaskFiction implements TaskExecutionInterface {
     mop.getMSHOutProperties().add(p);
   }
 
+  private void addMailProperty(MSHInMail mail, String key, String value) {
+    MSHInProperties mip = mail.getMSHInProperties();
+    if (mip == null) {
+      mip = new MSHInProperties();
+      mail.setMSHInProperties(mip);
+    }
+    MSHInProperty p = new MSHInProperty();
+    p.setName(key);
+    p.setValue(value);
+    mip.getMSHInProperties().add(p);
+  }
+
   /**
    *
    * @param mInMail
@@ -215,13 +230,20 @@ public class ZPPTaskFiction implements TaskExecutionInterface {
           SEDSecurityException {
     long l = LOG.logStart();
 
-    Date fictionDate = Calendar.getInstance().getTime();
+    // delivery is deemed done on the last day of the period - same date as in
+    // the AdviceOfDeliveryFiction document
+    Date fictionDate = XSLTExtensions.calculateZPPFictionDate(
+            mOutMail.getSentDate());
+    String strFictionDate = DateAdapter.printDate(fictionDate);
 
     MSHOutMail fn = createZPPFictionNotification(mOutMail, sigAlias);
     addMailProperty(fn, ZPPConstants.S_MAIL_PROPERTY_DELIVERED_BY_FICTION,
-            DateAdapter.printDate(fictionDate));
+            strFictionDate);
 
     MSHInMail fi = createZPPAdviceOfDeliveryFiction(mOutMail, sigAlias);
+    // delivery date for the sender's back-end systems (e.g. EVIP)
+    addMailProperty(fi, ZPPConstants.S_MAIL_PROPERTY_DELIVERED_BY_FICTION,
+            strFictionDate);
 
     // do it in transaction!
     mDB.serializeInOutMail(fi, fn,ZPPConstants.S_ZPP_PLUGIN_TYPE,null);
